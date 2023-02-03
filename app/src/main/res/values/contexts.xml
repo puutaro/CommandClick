@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="index_terminal_fragment">index_terminal_fragment</string>
+    <string name="edit_execute_terminal_fragment">edit_execute_terminal_fragment</string>
+    <string name="command_index_fragment">command_index_fragment</string>
+    <string name="cmd_variable_edit_fragment">cmd_variable_edit_fragment</string>
+    <string name="setting_variable_edit_fragment">setting_variable_edit_fragment</string>
+    <string name="api_cmd_variable_edit_api_fragment">api_cmd_variable_edit_api_fragment</string>
+    <string name="cmd_config_variable_edit_fragment">cmd_config_variable_edit_fragment</string>
+    <string name="app_dir_admin">app_dir_admin</string>
+</resources>

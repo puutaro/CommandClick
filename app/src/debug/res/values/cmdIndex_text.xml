@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="history">history</string>
+    <string name="setting">setting</string>
+    <string name="internet">internet</string>
+    <string name="page_search">page_search</string>
+</resources>

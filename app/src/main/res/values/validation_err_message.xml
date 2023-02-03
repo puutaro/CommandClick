@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="holder_num_err">holder num err: %1$s (%2$d)</string>
+    <string name="holder_set_no_match_err">holder set no match err: %1$s, %2$s</string>
+    <string name="holder_order_err">holder order err: %1$s</string>
+    <string name="variable_blank_no_surrounded_by_quote_err">blank no surrounded by quote_err in variable: %1$s</string>
+    <string name="variable_quote_set_err">quote set err: %1$s</string>
+    <string name="variable_exist_backslash_err">exist backslash err: %1$s</string>
+</resources>

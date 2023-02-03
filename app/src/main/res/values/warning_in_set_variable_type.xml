@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="warning_no_colon_in_set_variable_type">invalid setVariableType for no colon: %1$s</string>
+    <string name="warning_no_equal_in_set_variable_type">invalid setVariableType for no equal: %1$s</string>
+</resources>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:color="#ffffff" android:state_enabled="false"/>
+    <item android:color="#EBEBEB" android:state_pressed="true"/>
+    <item android:color="#ffffff"/>
+<!--        <item-->
+<!--            android:state_enabled="false"-->
+<!--            android:alpha="0.4"-->
+<!--            android:color="@color/white"-->
+<!--            />-->
+<!--        <item-->
+<!--            android:state_pressed="true"-->
+<!--            android:alpha="0.4"-->
+<!--            android:color="#EBEBEB"-->
+<!--            />-->
+<!--        <item-->
+<!--            android:alpha="1"-->
+<!--            android:color="@color/white"/>-->
+</selector>

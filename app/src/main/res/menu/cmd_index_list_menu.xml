@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <item android:id="@+id/shell_script_menu_edit"
+        android:title="@string/shell_script_menu_edit" />
+    <item android:id="@+id/shell_script_menu_write"
+        android:title="@string/shell_script_menu_write" />
+    <item android:id="@+id/shell_script_menu_utility" android:title="@string/shell_script_menu_utility">
+        <menu>
+            <item android:id="@+id/shell_script_menu_delete"
+                android:title="@string/shell_script_menu_delete" />
+            <item android:id="@+id/shell_script_menu_kill"
+                android:title="@string/shell_script_menu_kill" />
+            <item android:id="@+id/shell_script_menu_init"
+                android:title="@string/shell_script_menu_init" />
+            <item android:id="@+id/shell_script_menu_description"
+                android:title="@string/shell_script_menu_description" />
+        </menu>
+    </item>
+    <item android:id="@+id/shell_script_menu_copy" android:title="@string/shell_script_menu_copy">
+        <menu>
+            <item android:id="@+id/shell_script_menu_copy_path"
+                android:title="@string/shell_script_menu_copy_path"
+                />
+            <item android:id="@+id/shell_script_menu_copy_file"
+                android:title="@string/shell_script_menu_copy_file"/>
+        </menu>
+    </item>
+</menu>

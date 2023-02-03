@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="cmdclick_layout_marginHorizontal">10dp</dimen>
+</resources>

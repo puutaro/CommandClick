@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/global_setting_menu_add"
+        android:title="@string/global_setting_menu_string_add"/>
+    <item
+        android:id="@+id/menu_setting"
+        android:title="設定"/>
+    <item
+        android:id="@+id/menu_about"
+        android:title="このアプリについて"/>
+</menu>

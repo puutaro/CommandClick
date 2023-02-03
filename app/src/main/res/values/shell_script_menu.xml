@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="shell_script_menu_title">please select bellow</string>
+    <string name="shell_script_menu_delete">delete</string>
+    <string name="shell_script_menu_edit">edit</string>
+    <string name="shell_script_menu_write">write</string>
+    <string name="shell_script_menu_kill">kill</string>
+    <string name="shell_script_menu_utility">utility</string>
+    <string name="shell_script_menu_config">config</string>
+    <string name="shell_script_menu_copy">copy</string>
+    <string name="shell_script_menu_copy_file">copy_file</string>
+    <string name="shell_script_menu_copy_path">copy_path</string>
+    <string name="shell_script_menu_copy_app_dir">copy_app_dir</string>
+    <string name="shell_script_menu_add">add</string>
+    <string name="shell_script_menu_description">description</string>
+    <string name="shell_script_menu_init">init</string>
+</resources>
