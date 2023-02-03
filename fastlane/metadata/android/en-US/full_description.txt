@@ -1,0 +1,32 @@
+<strong>Command Click</strong> allow you change shellscript to Gui App.
+
+<strong><font color="#339933">[Feature]</font></strong>
+
+* Allow you change shellscript to Gui App
+* One click execution for Shellscript
+* Versatile usage for Terminal, Crome, OS setting, etc..
+* Not only termux gui client but also web browser..
+* Offer ritch edit dialog to termux.
+
+<strong><font color="#339933">[Objective]</font></strong>
+
+* Execute shellscript by one click.
+* Handling termux command line by GUI.
+* Self made Original browser by shellscript.
+
+<strong><font color="#339933">[How to use]</font></strong>
+
+See the following page.
+https://github.com/puutaro/CommandClick/blob/master/README.md
+
+<strong><font color="#339933">[Source]</font></strong>
+
+GitHub
+https://github.com/puutaro/CommandClick
+
+<strong><font color="#339933">[Issue]</font></strong>
+
+GitHub Issue
+https://github.com/puutaro/CommandClick/issues
+
+Please post here if you have bug reports, Future requests, or other information.
