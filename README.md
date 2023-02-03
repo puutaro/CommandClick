@@ -85,6 +85,24 @@ This feature is basic and great feature in `Command Click` This always allow you
 torigger by left botom history button clicked.
 And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 
+### add
 
+This feature display when toolbar right setting button long pressed. Then, click `add`, so new shellscript adding.
+At the same time, if you installed code editor, edit new file.
+
+ -  various settingVriables feature in `CommandClick`'s shellscript
+
+    | settingVariable| set value | description  |
+    | --------- | --------- | ------------ |
+    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal: `ON`: in web terminal view, `Termux`: in termux, `OFF`: backgrond exe   |
+    | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size: `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
+    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change: `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
+    | `setVariableType` | string  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `afterCommand` | command | before run shellscript, run command |
+    | `afterCommand` | command | before run shellscript, run command |
+    | `ExecBeforeCtrlCmd` | command | before run shellscript, run cmdclik crtl command (prefix NO: only apply when editExecute is NO, prefix `ONCE`: only apply when editExecute is `ONCE`, prefix `ALWAYS`: only apply when editExecute is ALWAYS. no prefix is apply to all editExecute value), prefix `#`: escape ctrl cmd execute|
+    | `execAfterCtrlCmd` | command | after run shellscript, run command, detail above same |
+    | `shellFileName`  | string | shellscript file name  |
+    | `appIconPath`  | string | icon file path for `Shell2Gui`  |
 
  
