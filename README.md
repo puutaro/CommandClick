@@ -110,3 +110,20 @@ At the same time, if you installed code editor, edit new file.
     | `shellFileName`  | string | shellscript file name  |
 
  
+  - setVariableType option
+    | option| description | example  |
+    | --------- | --------- | ------------ |
+    | `CB` | checkbox | {variablebName}:CB=value1!value2!|..   |
+    | `H` | password input | {variablebName}:H={password ..etc}   |
+    | `RO` | read only | {variablebName}:RO= |
+    | `NUM` | increment or decrement number | {variablebName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
+    | `FL` | file select button | {variablebName}:FL=  |
+    | `MFL` | file select button | {variablebName}:MFL=  |
+    | `DIR`  | directory select button | {variablebName}:DIR= |
+    | `MDIR`  | directory select button | {variablebName}:MDIR= |
+    | `DT`  | create file button | {variablebName}:DT=  |
+    | `CLR` | select color  | {variablebName}:CLR={default value}    |
+    | `BTN` | botton  | {variablebName}:BTN={command}    |
+    | `FBTN` | botton  | {variablebName}:FBTN={command}    |
+
+
