@@ -275,29 +275,6 @@ class MainActivity:
                 )
                 return true
             }
-//            KeyEvent.KEYCODE_VOLUME_UP -> {
-//                try {
-//                    val audio = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-//                    audio.adjustStreamVolume(
-//                        AudioManager.STREAM_MUSIC,
-//                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI
-//                    )
-//                } catch(e: Exception){
-//                    return true
-//                }
-//            }
-//            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-//                try {
-//                    val audio = getSystemService(Context.AUDIO_SERVICE) as AudioManager
-//                    audio.adjustStreamVolume(
-//                        AudioManager.STREAM_MUSIC,
-//                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI
-//                    )
-//                } catch (e: Exception){
-//                    return true
-//                }
-//            }
-
         }
         return super.onKeyDown(keyCode, event)
     }
