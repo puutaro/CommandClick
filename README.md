@@ -60,9 +60,10 @@ For Instance, bellow process.
 5. Execute `termux-setup-storage` on termux
 
 
-Configration
+
+Usage
 -----
-Command click is roughly divided two mode
+
 
 ### Index mode
 This mode is main mode. Top is 'web terminal view', down is 'shellscript name list', bottom is toolbar.
@@ -70,22 +71,14 @@ Main usage is executigin shellscript by list item clicking, other usage is maint
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
-### Edit mode
-This mode main porpose is for edit shellscript. But also, execute shellscript when `editExecute` at shell variables is `ALWAYS` 
 
-![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
-
-
-Usage
------
-
-### history
+#### history
 
 This feature is basic and great feature in `Command Click` This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 torigger by left botom history button clicked.
 And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 
-### add
+#### add
 
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new shellscript adding.
 At the same time, if you installed code editor, edit new file.
@@ -127,7 +120,14 @@ At the same time, if you installed code editor, edit new file.
     | `FBTN` | botton  | {variablebName}:FBTN={command}    |
 
 
-### run
+#### run
 
 Run shellscript by click list item in index mode or play button edit mode (editExecute variable is `Always`)
+
+
+#### Edit mode
+This mode main porpose is for edit shellscript. But also, execute shellscript when `editExecute` at shell variables is `ALWAYS` 
+
+![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
+
 
