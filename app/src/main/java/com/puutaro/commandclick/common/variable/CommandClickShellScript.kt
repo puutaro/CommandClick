@@ -148,9 +148,8 @@ class CommandClickShellScript {
                 |#  - ${autoExecSelectsOff}: exec off (default)
                 |# * ${ON_UPDATE_LAST_MODIFY} is how updating file last modified status when executing
                 |#  - ${onUpdateLastModifyOn}: update this (default)
-                |#  - ${onUpdateLastModifyOn}: no update this
+                |#  - ${onUpdateLastModifyOff}: no update this
                 |# * ${CMDCLICK_ON_HISTORY_URL_TITLE} is how adding url title to history
-                |#  - ${historySwitchInherit}: inherit config setting
                 |#  - ${historySwitchOn}: add
                 |#  - ${historySwitchOff}: no
                 |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC} switch url history or button script exec
