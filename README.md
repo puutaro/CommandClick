@@ -97,12 +97,16 @@ At the same time, if you installed code editor, edit new file.
     | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal: `ON`: in web terminal view, `Termux`: in termux, `OFF`: backgrond exe   |
     | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size: `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
     | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change: `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
-    | `setVariableType` | string  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `terminalOutputMode`  | `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` | `NORMAL`: normal terminal output, `REFLASH`: Before terminal output, screen resflesh, `REFLASH_AND_FIRST_ROW`: Before terminal output, screen resflesh and focus first row, `DEBUG`: stdr + stderr, `NO`: no output (bacground exec)
+    | `onAutoExec`  | `NO`/`OFF` | ready for start and end script: `ON`: start or end exec on, `OFF`: exec off (default)
+    | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing: `ON`: update this, `OFF`: no update this
+    | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history: `ON`: add, `OFF`: no
+    | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec: `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
+    | `setVariableType` | 'string'  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
+    | `terminalFontColor` | `string` | adjust terminal font color |
+    | `terminalColor` | `string` | adjust terminal background color |
     | `afterCommand` | command | before run shellscript, run command |
-    | `afterCommand` | command | before run shellscript, run command |
-    | `ExecBeforeCtrlCmd` | command | before run shellscript, run cmdclik crtl command (prefix NO: only apply when editExecute is NO, prefix `ONCE`: only apply when editExecute is `ONCE`, prefix `ALWAYS`: only apply when editExecute is ALWAYS. no prefix is apply to all editExecute value), prefix `#`: escape ctrl cmd execute|
-    | `execAfterCtrlCmd` | command | after run shellscript, run command, detail above same |
     | `shellFileName`  | string | shellscript file name  |
-    | `appIconPath`  | string | icon file path for `Shell2Gui`  |
 
  
