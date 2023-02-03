@@ -64,7 +64,7 @@ Usage
 -----
 
 ### Index mode
-This mode is main mode. Top is 'web terminal view', down is 'shellscript name list', bottom is toolbar.
+This mode is main mode. Top is `web terminal view`, down is `shellscript name list`, bottom is toolbar.
 Main usage is executigin shellscript by list item clicking, other usage is maintenance shellscript or app by longpress or toolbar.
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
@@ -75,7 +75,7 @@ Main usage is executigin shellscript by list item clicking, other usage is maint
 This feature is basic and great feature in `Command Click` This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 torigger by left botom history button clicked.
 And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
-* history item display mecanizm {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is 'Always')
+* history item display mecanizm {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is `Always`)
 
 #### Change term size
 
@@ -99,7 +99,7 @@ At the same time, if you installed code editor, edit new file.
     | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing: `ON`: update this, `OFF`: no update this
     | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history: `ON`: add, `OFF`: no
     | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec: `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
-    | `setVariableType` | 'string'  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
@@ -173,12 +173,12 @@ Add new shellscript by `add`   when long click setting button(toolbar right) in 
 #### Change app dir
 
 
-Start `App directory` Manager by 'setting' -> `change_app_dir`   when long click setting button(toolbar right) in index mode
+Start `App directory` Manager by `setting` -> `change_app_dir`   when long click setting button(toolbar right) in index mode
 `App directory` is directory which index mode retreive
-- when item long press, poupu 'add', 'delete' and 'edit' menu 
-    - 'add': add `App directory` 
-    - 'delete': delete `App directory`
-    - 'edit': edit `App directory` name
+- when item long press, poupu `add`, `delete` and `edit` menu 
+    - `add`: add `App directory` 
+    - `delete`: delete `App directory`
+    - `edit`: edit `App directory` name
    
 
 
@@ -235,13 +235,13 @@ One time edit and exedute
 
 ![image](https://user-images.githubusercontent.com/55217593/216652110-4bc01a73-2b8b-42f2-8253-49062e775b66.png)
 
-Always edit and execute. So called 'Shell2GUI'. It's great feature. 
+Always edit and execute. So called `Shell2GUI`. It's great feature. 
 How the shell turns into a GUI Application! 
 
 
 ### Edit api
 
-Type bellow command in termux, so that you can use 'Command Click Gui Edit Dialog'  from termux command line
+Type bellow command in termux, so that you can use `Command Click Gui Edit Dialog`  from termux command line
 
 ```
 am start \
