@@ -9,7 +9,7 @@ It's a shellscript manager app from gui that have execution, edit, delete, and c
 Pros
 ----
 - Easily turn shellscript into a GUI application in android.
-- Versatile usage for Terminal, Crome, OS setting, etc.
+- Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only termux gui client but also web browser.
 - Offer ritch edit dialog to termux.
 
