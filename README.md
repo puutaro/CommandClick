@@ -18,11 +18,12 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Pre Setting](#pre-setting)
+* [Pre Setting(Mandatory)](#pre-setting)
 * [Configration](#configration)
   * [Index Mode](#index-mode) 
   * [Edit Mode](#edit-mode) 
 * [Usage](#usage)
+  * [History](#history)
   * [Add](#add)
   * [Run](#run)
   * [Edit](#edit)
@@ -71,7 +72,18 @@ Main usage is executigin shellscript by list item clicking, other usage is maint
 
 ### Edit mode
 This mode main porpose is for edit shellscript. But also, execute shellscript when `editExecute` at shell variables is `ALWAYS` 
+
 ![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
+
+
+Usage
+-----
+
+### history
+
+This feature is basic and great feature in `Command Click` This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
+torigger by left botom history button clicked.
+And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 
 
 
