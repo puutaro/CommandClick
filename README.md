@@ -19,33 +19,33 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Pre Setting(Mandatory)](#pre-setting)
-* [Configration](#configration)
-  * [Index Mode](#index-mode) 
-  * [Edit Mode](#edit-mode) 
 * [Usage](#usage)
   * [History](#history)
+  * [Change term size](#change-term-size)
   * [Add](#add)
   * [Run](#run)
   * [Edit](#edit)
-  	* [by gui](#by-gui)
-  	* [by editor](#by-editor)
-  	* [description by gui](#description-by-gui)
-  * [Exit](#exit)
-  * [Move](#move)
+  * [Write](#write)
+  * [Kill](#kill)
+  * [Init](#init)
+  * [Description](#description)
+  * [Copy file](#copy-file)
+  * [Copy file path](#copy-file-path)
+  * [Add](#add)
+  * [Change app dir](#change-app-dir)
+  * [Create shortcut](#create-shortcut)
   * [Install](#install)
-  * [Setting](#setting)
-  * [Delete](#delete)
-  * [App directory manager](#app-directory-manager)
-      * [Launch](#launch)
-      * [Add](#add)
-      * [Change directory](#change-directory)
-      * [Edit](#edit)
-      * [Exit](#exit)
-      * [Delete](#delete)
-  * [Shell to Gui](#shell-to-gui)
-  * [Shortcut table](#shortcut-table)
-  * [Trouble Shouting](#trouble-shouting)
-  	 * [Not Startup](#not-startup)
+  * [Config](#config)
+  * [Select term](#select-term)
+  * [Term reflesh](#term-reflesh)
+  * [Forward](#forward)
+  * [Search mode](#search-mode)
+    * [Terminal filter](#terminal-filter)
+    * [Terminal search](#terminal-search)
+    * [Web search](#web-search)
+  * [Edit execute once](#edit-execute-once)
+  * [Edit execute always](#edit-execute-always)
+  * [Edit api](#edit-api)
 
 
 Pre Setting
@@ -64,7 +64,6 @@ For Instance, bellow process.
 Usage
 -----
 
-
 ### Index mode
 This mode is main mode. Top is 'web terminal view', down is 'shellscript name list', bottom is toolbar.
 Main usage is executigin shellscript by list item clicking, other usage is maintenance shellscript or app by longpress or toolbar.
@@ -72,13 +71,19 @@ Main usage is executigin shellscript by list item clicking, other usage is maint
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
 
-#### history
+#### History
 
 This feature is basic and great feature in `Command Click` This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 torigger by left botom history button clicked.
 And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
+* history item display mecanizm {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is 'Always')
 
-#### add
+#### Change term size
+
+Click toolbar left setting button, and terminal size change.
+
+
+#### Add
 
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new shellscript adding.
 At the same time, if you installed code editor, edit new file.
@@ -120,14 +125,137 @@ At the same time, if you installed code editor, edit new file.
     | `FBTN` | botton  | {variablebName}:FBTN={command}    |
 
 
-#### run
+#### Run
 
 Run shellscript by click list item in index mode or play button edit mode (editExecute variable is `Always`)
 
+#### Edit
 
-#### Edit mode
-This mode main porpose is for edit shellscript. But also, execute shellscript when `editExecute` at shell variables is `ALWAYS` 
+Edit shellscript by form when long click list item in index mode 
+
+
+#### Write
+
+Edit shellscript by editor when long click list item in index mode 
+
+#### Delete
+
+Delete shellscript by `utility` -> `delete`  when long click list item in index mode 
+
+#### Kill
+
+Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
+
+
+#### Init
+
+Revert default setting varable in shellscript proccess by `utility` -> `kill`  when long click list item in index mode
+(only setting variable, but excluede `setVariableType`)
+
+#### Description
+
+Display description for shellscript by `utility` -> `description`  when long click list item in index mode
+
+
+#### Copy file
+
+Copy file for shellscript by `copy` -> `copy file`  when long click list item in index mode
+
+
+#### Copy file path
+
+Copy file path for shellscript by `copy` -> `copy file path`  when long click list item in index mode
+
+#### Add
+
+Add new shellscript by `add`   when long click setting button(toolbar right) in index mode
+
+
+#### Change app dir
+
+
+Start `App directory` Manager by 'setting' -> `change_app_dir`   when long click setting button(toolbar right) in index mode
+`App directory` is directory which index mode retreive
+- when item long press, poupu 'add', 'delete' and 'edit' menu 
+    - 'add': add `App directory` 
+    - 'delete': delete `App directory`
+    - 'edit': edit `App directory` name
+   
+
+
+#### Create shortcut
+ 
+You can create shortcut for current `App directory` or `shellscript` in only `index mode` or `edit execute Always`
+
+#### Install
+
+You can move shellscript from download directory.
+
+#### Config
+
+You can setting `CommandClick` Configration
+- detail setting reffernce [Add](#add)
+
+#### Select term
+
+You can select terminal tab form `term_1` to `term_4`.
+
+#### Term reflesh
+
+You can reflesh `web terminal view`.
+
+#### Forward
+
+You can forward `web terminla view` history.
+
+#### Search mode
+
+You can search `web terminal view` by toolbar search item.
+
+##### Terminal filter
+
+It's default setting in terminla short size. If you type string, realtime filter start.
+
+##### Terminal search
+
+When terminla mark or web mark long press, you can search typing word.
+
+##### Web search
+
+If you web mark long press when terminal size long, you can web search.
+Click url on web terminal view, this mode is automatic set
+
+### Edit execute once
+
+One time edit and exedute
 
 ![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
 
 
+### Edit execute always
+
+![image](https://user-images.githubusercontent.com/55217593/216652110-4bc01a73-2b8b-42f2-8253-49062e775b66.png)
+
+Always edit and execute. So called 'Shell2GUI'. It's great feature. 
+How the shell turns into a GUI Application! 
+
+
+### Edit api
+
+Type bellow command in termux, so that you can use 'Command Click Gui Edit Dialog'  from termux command line
+
+```
+am start \
+-n "com.puutaro.commandclick/.activity.MainActivity" \
+--es current_app_dir "{current_app_dir}" \
+--es current_shell_file_name "{current_shell_file_name}" \
+--es on_shortcut "EDIT_API"
+
+---
+
+ex) am start \
+-n "com.puutaro.commandclick/.activity.MainActivity" \
+--es current_app_dir "/storage/emulated/0/cmdclick/AppDir/default" \
+--es current_shell_file_name "twitter_test.sh" \
+--es on_shortcut "EDIT_API"
+```
