@@ -1,10 +1,9 @@
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)
 # Command Click
-So called 'shell browser', It's termux gui client with web browser feature
+So called `shell browser`, It's termux gui client with web browser feature
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
-It's a shellscript manager app from gui that have execution, edit, delete, and create as feature.
 
 Pros
 ----
