@@ -127,3 +127,7 @@ At the same time, if you installed code editor, edit new file.
     | `FBTN` | botton  | {variablebName}:FBTN={command}    |
 
 
+### run
+
+Run shellscript by click list item in index mode or play button edit mode (editExecute variable is `Always`)
+
