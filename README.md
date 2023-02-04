@@ -73,7 +73,7 @@ Main usage is executoin shellscript by list item clicking, other usage is mainte
 
 #### History
 
-This feature is basic and great feature in `Command Click` This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
+This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 torigger by left botom history button clicked.
 And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 * history item display mecanizm {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is `Always`)
