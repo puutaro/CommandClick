@@ -48,6 +48,7 @@ class TerminalFragment: Fragment() {
     var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
     var terminalFontColor = CommandClickShellScript.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
+    var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
 
 
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

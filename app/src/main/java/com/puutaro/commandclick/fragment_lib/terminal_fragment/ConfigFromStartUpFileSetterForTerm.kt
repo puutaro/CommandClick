@@ -20,7 +20,7 @@ class ConfigFromStartUpFileSetterForTerm {
         ){
             val activity = terminalFragment.activity
             val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-            val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
+            terminalFragment.currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
             )
@@ -74,7 +74,7 @@ class ConfigFromStartUpFileSetterForTerm {
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
-                    currentAppDirPath,
+                    terminalFragment.currentAppDirPath,
                     currentShellFileName
                 ).txetToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
@@ -96,7 +96,7 @@ class ConfigFromStartUpFileSetterForTerm {
             ) ?: terminalFragment.onHistoryUrlTitle
             FirstUrlHistoryFile.delete(
                 terminalFragment,
-                currentAppDirPath
+                terminalFragment.currentAppDirPath
             )
 
             terminalFragment.terminalColor = MakeVariableStringValue.make(

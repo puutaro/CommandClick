@@ -19,7 +19,6 @@ import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 class ItemClickListenerSetter {
@@ -138,17 +137,14 @@ class ItemClickListenerSetter {
                         selectedShellFileName
                     )
                 }
-                val latestCurrentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-                    sharedPref,
-                    SharePrefferenceSetting.current_app_dir
-                )
+
                 cmdListAdapter.clear()
                 CommandListManager.execListUpdate(
-                    latestCurrentAppDirPath,
+                    currentAppDirPath,
                     cmdListAdapter,
                     cmdListView,
                 )
-                //⑥コールバックインターフェースを実装しているアクティビティにイベントを知らせる
+
                 val listener = cmdIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
                 listener?.onListItemClicked(
                     curentFragmentTag

@@ -35,17 +35,8 @@ class WebHistoryUpdater {
             if(
                 commandIndexFragment?.isVisible != true
             ) return
-            val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-            val currentAppDirName = FileSystems.filterSuffixShellFiles(
-                cmdclickAppDirAdminPath,
-                "on"
-            ).firstOrNull()?.removeSuffix(
-                CommandClickShellScript.SHELL_FILE_SUFFIX
-            ) ?: return
-            if (terminalViewModel.readlinesNum == ReadLines.SHORTH) return
 
-            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-            val currentAppDirPath = "${cmdclickAppDirPath}/${currentAppDirName}"
+            val currentAppDirPath = terminalFragment.currentAppDirPath
             val ulrTitle = webView?.title ?: "-"
             val escapeStr = WebUrlVariables.escapeStr
             if (ulrTitle.endsWith("\t${escapeStr}")) return
