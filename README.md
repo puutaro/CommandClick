@@ -42,6 +42,10 @@ Table of Contents
     * [Terminal filter](#terminal-filter)
     * [Terminal search](#terminal-search)
     * [Web search](#web-search)
+  * [Auto exec script](#auto-exec-script)
+    * [Startup script](#startup-script)
+    * [end script](#end-script)
+  * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
@@ -99,6 +103,7 @@ At the same time, if you installed code editor, edit new file.
     | `onAutoExec`  | `NO`/`OFF` | ready for start and end script; `ON`: start or end exec on, `OFF`: exec off (default)
     | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing; `ON`: update this, `OFF`: no update this
     | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history; `ON`: add, `OFF`: no
+    | 'historySwitch'  | `ON`/`OFF` | switch app history with url history; `ON`: switch, `OFF`: no switch ,`INHERIT`: inherit config setting
     | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
@@ -225,6 +230,25 @@ When terminal mark or web mark long press, you can search typing word.
 If you web mark press when terminal size long, you can web search.
 Also, Click url on web terminal view, this mode is automatic set
 
+
+### Auto exec script
+
+`Command Click` have auto exec script. This is used when `index mode` startup or end.
+
+#### Startup script
+This script is automaticaly executed when `index mode` startup.
+But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+
+#### End script
+
+This script is automaticaly executed when `index mode` end.
+But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+
+### Button exec script
+
+This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
+Also whether click or long click torigger, due to `historySwitch` setting  (reffrence to [add](#add)).
+  
 ### Edit execute once
 
 One time edit and exedute
