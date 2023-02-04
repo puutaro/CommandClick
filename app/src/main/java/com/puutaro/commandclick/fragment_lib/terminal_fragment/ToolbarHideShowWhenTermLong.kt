@@ -1,8 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.MotionEvent
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -34,28 +36,41 @@ class ToolbarHideShowWhenTermLong {
                             v.performClick()
                         }
                         MotionEvent.ACTION_UP -> {
-
-                                val oldCurrYDff = oldPositionY - event.rawY
-                                if(-170 < oldCurrYDff && oldCurrYDff < -10){
-                                    listener?.onToolBarVisibleChange(
-                                        true,
-                                        changeTargetFragment
-                                    )
-                                    v.performClick()
-                                }
-                                if(oldCurrYDff > 10) {
-                                    listener?.onToolBarVisibleChange(
-                                        false,
-                                        changeTargetFragment
-                                    )
-                                    v.performClick()
-                                }
+                                execHideShow(
+                                    changeTargetFragment,
+                                    oldPositionY,
+                                    event.rawY,
+                                    listener
+                                )
                             }
                         }
                     }
+                    v.performClick()
                     false
                 }
             }
         }
+    }
+}
+
+
+private fun execHideShow(
+    changeTargetFragment: ChangeTargetFragment,
+    oldPositionY: Float,
+    rawY: Float,
+    listener: TerminalFragment.OnToolBarVisibleChangeListener?
+) {
+    val oldCurrYDff = oldPositionY - rawY
+    if(-170 < oldCurrYDff && oldCurrYDff < -10){
+        listener?.onToolBarVisibleChange(
+            true,
+            changeTargetFragment
+        )
+    }
+    if(oldCurrYDff > 10) {
+        listener?.onToolBarVisibleChange(
+            false,
+            changeTargetFragment
+        )
     }
 }
