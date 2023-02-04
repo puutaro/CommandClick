@@ -206,7 +206,7 @@ You can reflesh `web terminal view`.
 
 #### Forward
 
-You can forward `web terminla view` history.
+You can forward `web terminal view` history.
 
 #### Search mode
 
@@ -214,11 +214,11 @@ You can search `web terminal view` by toolbar search item.
 
 ##### Terminal filter
 
-It's default setting in terminla short size. If you type string, realtime filter start.
+It's default setting in terminal short size. If you type string, realtime filter start.
 
 ##### Terminal search
 
-When terminla mark or web mark long press, you can search typing word.
+When terminal mark or web mark long press, you can search typing word.
 
 ##### Web search
 
