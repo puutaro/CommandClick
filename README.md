@@ -303,5 +303,5 @@ ex) am broadcast \
 
 ### Ubuntu, Debian or Widnows10 version
 
-reference to [url](https://github.com/puutaro/cmdclick)
+Reference to [url](https://github.com/puutaro/cmdclick)
 
