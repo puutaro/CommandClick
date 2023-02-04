@@ -45,6 +45,7 @@ Table of Contents
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
+  * [Url command](#url-command)
 
 
 Pre Setting
@@ -173,7 +174,7 @@ Add new shellscript by `add`   when long click setting button(toolbar right) in 
 #### Change app dir
 
 
-Start `App directory` Manager by `setting` -> `change_app_dir`   when long click setting button(toolbar right) in index mode
+Start `App directory` Manager by `setting` -> `change_app_dir` when long click setting button(toolbar right) in index mode
 `App directory` is directory which index mode retreive
 - when item long press, poupu `add`, `delete` and `edit` menu 
     - `add`: add `App directory` 
@@ -205,7 +206,7 @@ You can reflesh `web terminal view`.
 
 #### Forward
 
-You can forward `web terminla view` history.
+You can forward `web terminal view` history.
 
 #### Search mode
 
@@ -213,16 +214,16 @@ You can search `web terminal view` by toolbar search item.
 
 ##### Terminal filter
 
-It's default setting in terminla short size. If you type string, realtime filter start.
+It's default setting in terminal short size. If you type string, realtime filter start.
 
 ##### Terminal search
 
-When terminla mark or web mark long press, you can search typing word.
+When terminal mark or web mark long press, you can search typing word.
 
 ##### Web search
 
-If you web mark long press when terminal size long, you can web search.
-Click url on web terminal view, this mode is automatic set
+If you web mark press when terminal size long, you can web search.
+Also, Click url on web terminal view, this mode is automatic set
 
 ### Edit execute once
 
@@ -257,4 +258,21 @@ ex) am start \
 --es current_app_dir "/storage/emulated/0/cmdclick/AppDir/default" \
 --es current_shell_file_name "twitter_test.sh" \
 --es on_shortcut "EDIT_API"
+```
+
+### Url command
+
+Exec bellow command in `CommandClick` shellscript, so that you can launch web site.
+(This command is only active when command click focus)
+
+```
+am broadcast \
+ -a "com.puutaro.commandclick.url.launch" \
+ --es url "{url}"
+
+---
+
+ex) am broadcast \
+ -a "com.puutaro.commandclick.url.launch" \
+ --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
 ```
