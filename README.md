@@ -74,9 +74,9 @@ Main usage is executoin shellscript by list item clicking, other usage is mainte
 #### History
 
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
-torigger by left botom history button clicked.
-And more you look in url history  by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
-* history item display mecanizm {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is `Always`)
+Torigger by left botom history button clicked.
+And more you look in url history by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
+* history item display mechanism {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is `Always`)
 
 #### Change term size
 
@@ -92,14 +92,14 @@ At the same time, if you installed code editor, edit new file.
 
     | settingVariable| set value | description  |
     | --------- | --------- | ------------ |
-    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal: `ON`: in web terminal view, `Termux`: in termux, `OFF`: backgrond exe   |
-    | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size: `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
-    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change: `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
+    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal; `ON`: in web terminal view, `Termux`: in termux, `OFF`: backgrond exe   |
+    | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size; `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
+    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change; `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
     | `terminalOutputMode`  | `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` | `NORMAL`: normal terminal output, `REFLASH`: Before terminal output, screen resflesh, `REFLASH_AND_FIRST_ROW`: Before terminal output, screen resflesh and focus first row, `DEBUG`: stdr + stderr, `NO`: no output (bacground exec)
-    | `onAutoExec`  | `NO`/`OFF` | ready for start and end script: `ON`: start or end exec on, `OFF`: exec off (default)
-    | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing: `ON`: update this, `OFF`: no update this
-    | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history: `ON`: add, `OFF`: no
-    | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec: `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
+    | `onAutoExec`  | `NO`/`OFF` | ready for start and end script; `ON`: start or end exec on, `OFF`: exec off (default)
+    | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing; `ON`: update this, `OFF`: no update this
+    | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history; `ON`: add, `OFF`: no
+    | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
