@@ -11,6 +11,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.CommandListManager
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.util.ReadText
 
 
@@ -25,19 +26,22 @@ class ConfirmDialogForDelete {
         ){
             val context = cmdIndexFragment.context
 
-            val curentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
-            val readShellContents = ReadText(
+            val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
+            val shellContents = ReadText(
                 currentAppDirPath,
                 shellScriptName
+            ).readText()
+            val displayContents = "\tpath: ${currentAppDirPathTermux}/${shellScriptName}" +
+                    "\n---\n${shellContents}"
+            val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
+                context,
+                displayContents
             )
             val alertDialog = AlertDialog.Builder(context)
                 .setTitle(
                     "Delete bellow contents, ok?"
                 )
-                .setMessage(
-                    "\tpath: ${curentAppDirPathTermux}/${shellScriptName}" +
-                            "\n---\n${readShellContents.readText()}"
-                )
+                .setView(linearLayoutForDialog)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                     FileSystems.removeFiles(
                         currentAppDirPath,

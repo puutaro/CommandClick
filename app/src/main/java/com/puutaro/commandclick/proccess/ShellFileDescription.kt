@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
 class ShellFileDescription {
@@ -26,7 +27,7 @@ class ShellFileDescription {
                 currentShellContentsList
             )
 
-            val linearLayout = addLinearLayout(
+            val linearLayout = LinearLayoutAdderForDialog.add(
                 context,
                 descripitionContents
             ) ?: return
@@ -43,41 +44,6 @@ class ShellFileDescription {
                 context.getColor(android.R.color.black) as Int
             )
             alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        }
-
-        private fun addLinearLayout (
-            context: Context?,
-            descripitionContents: String,
-        ): LinearLayout? {
-            val textView = TextView(context)
-            textView.setText(descripitionContents)
-            textView.setTextIsSelectable(true)
-            if(Build.VERSION.SDK_INT > 29) textView.breakStrategy = LineBreaker.BREAK_STRATEGY_SIMPLE
-            if(context == null) return null
-            textView.setTextColor(
-                context.getColor(R.color.black)
-            )
-            textView.textSize = 17F
-            textView.setPadding(10, 0, 10, 0)
-
-            val scrollView = ScrollView(context)
-            val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-            )
-            scrollView.layoutParams = linearLayoutForScrollViewParam
-            scrollView.addView(textView)
-
-            val linearLayout = LinearLayout(context)
-            linearLayout.orientation =  LinearLayout.VERTICAL
-            linearLayout.weightSum = 1F
-            val linearLayoutParam = LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-            )
-            linearLayout.layoutParams = linearLayoutParam
-            linearLayout.addView(scrollView)
-            return linearLayout
         }
 
 
