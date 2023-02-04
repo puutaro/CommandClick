@@ -103,7 +103,7 @@ At the same time, if you installed code editor, edit new file.
     | `onAutoExec`  | `NO`/`OFF` | ready for start and end script; `ON`: start or end exec on, `OFF`: exec off (default)
     | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing; `ON`: update this, `OFF`: no update this
     | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history; `ON`: add, `OFF`: no
-    | 'historySwitch'  | `ON`/`OFF` | switch app history with url history; `ON`: switch, `OFF`: no switch ,`INHERIT`: inherit config setting
+    | `historySwitch`  | `ON`/`OFF` | switch app history with url history; `ON`: switch, `OFF`: no switch, `INHERIT`: inherit config setting
     | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
@@ -199,7 +199,7 @@ You can move shellscript from download directory.
 #### Config
 
 You can setting `CommandClick` Configration
-- detail setting reffernce [Add](#add)
+- detail setting reference [Add](#add)
 
 #### Select term
 
@@ -237,17 +237,17 @@ Also, Click url on web terminal view, this mode is automatic set
 
 #### Startup script
 This script is automaticaly executed when `index mode` startup.
-But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
 
 #### End script
 
 This script is automaticaly executed when `index mode` end.
-But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
 
 ### Button exec script
 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
-Also whether click or long click torigger, due to `historySwitch` setting  (reffrence to [add](#add)).
+Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
   
 ### Edit execute once
 
@@ -300,3 +300,8 @@ ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
 ```
+
+### Ubuntu, Debian or Widnows10 version
+
+Reference to [url](https://github.com/puutaro/cmdclick)
+
