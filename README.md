@@ -199,7 +199,7 @@ You can move shellscript from download directory.
 #### Config
 
 You can setting `CommandClick` Configration
-- detail setting reffernce [Add](#add)
+- detail setting reference [Add](#add)
 
 #### Select term
 
@@ -237,17 +237,17 @@ Also, Click url on web terminal view, this mode is automatic set
 
 #### Startup script
 This script is automaticaly executed when `index mode` startup.
-But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
 
 #### End script
 
 This script is automaticaly executed when `index mode` end.
-But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reffrence to [add](#add)).
+But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
 
 ### Button exec script
 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
-Also whether click or long click torigger, due to `historySwitch` setting  (reffrence to [add](#add)).
+Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
   
 ### Edit execute once
 
@@ -300,3 +300,8 @@ ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
 ```
+
+### Ubuntu, Debian or Widnows10 version
+
+reference to [url](https://github.com/puutaro/cmdclick)
+
