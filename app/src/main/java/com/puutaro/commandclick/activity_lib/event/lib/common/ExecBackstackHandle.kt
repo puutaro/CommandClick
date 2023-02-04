@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -121,7 +122,19 @@ internal fun execBack(
     }
     if (webVeiw.canGoBack()) {
         webVeiw.goBack()
+        return
     }
+    val terminalViewModel: TerminalViewModel =
+        ViewModelProvider(activity).get(TerminalViewModel::class.java)
+    if(
+        terminalViewModel.onBackStackWhenSizeLong
+        != SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name
+    ) return
+    execPopBackStackImmediate(
+        activity,
+        supportFragmentManager,
+        readLinesNum
+    )
 }
 
 internal fun execPopBackStackImmediate(
@@ -132,6 +145,16 @@ internal fun execPopBackStackImmediate(
     if(
         supportFragmentManager.backStackEntryCount == 0
         && readlinesNum == ReadLines.SHORTH
+    ) {
+        activity.finish()
+        return
+    }
+    val terminalViewModel: TerminalViewModel =
+        ViewModelProvider(activity).get(TerminalViewModel::class.java)
+    if(
+        supportFragmentManager.backStackEntryCount == 0
+        && terminalViewModel.onBackStackWhenSizeLong
+        == SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name
     ) {
         activity.finish()
         return

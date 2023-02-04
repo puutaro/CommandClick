@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
@@ -8,12 +9,16 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.MakeVariableCbValue
 import com.puutaro.commandclick.util.MakeVariableStringValue
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class SetConfigInfo {
     companion object {
         fun set(
             editFragment: EditFragment
         ){
+
+            val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
@@ -33,6 +38,18 @@ class SetConfigInfo {
                 listOf(
                     SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
                     SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+                ),
+            )
+
+            terminalViewModel.onBackStackWhenSizeLong =  MakeVariableCbValue.make(
+                settingVariableList,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
+                SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
+                listOf(
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name,
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
                 ),
             )
 

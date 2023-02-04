@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ConfigFromShellFileSetter {
     companion object {
@@ -16,6 +18,8 @@ class ConfigFromShellFileSetter {
             editFragment: EditFragment,
             readSharePreffernceMap: Map<String, String>,
         ){
+            val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+
             val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.on_shortcut
@@ -47,7 +51,7 @@ class ConfigFromShellFileSetter {
             editFragment.historySwitch = MakeVariableCbValue.make(
                 settingVariableList,
                 CommandClickShellScript.CMDCLICK_HISTORY_SWITCH,
-                CommandClickShellScript.HISTORY_SWITCH_DEFAULT_VALUE,
+                editFragment.historySwitch,
                 SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
                 editFragment.historySwitch,
                 listOf(
@@ -56,10 +60,22 @@ class ConfigFromShellFileSetter {
                 ),
             )
 
+            terminalViewModel.onBackStackWhenSizeLong =  MakeVariableCbValue.make(
+                settingVariableList,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG,
+                terminalViewModel.onBackStackWhenSizeLong,
+                SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name,
+                terminalViewModel.onBackStackWhenSizeLong,
+                listOf(
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name,
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
+                ),
+            )
+
             editFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
                 settingVariableList,
                 CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-                CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
+                editFragment.urlHistoryOrButtonExec,
                 SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
                 editFragment.urlHistoryOrButtonExec,
                 listOf(
@@ -71,7 +87,7 @@ class ConfigFromShellFileSetter {
             editFragment.statusBarIconColorMode = MakeVariableCbValue.make(
                 settingVariableList,
                 CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE,
-                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
+                editFragment.statusBarIconColorMode,
                 SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
                 editFragment.urlHistoryOrButtonExec,
                 listOf(

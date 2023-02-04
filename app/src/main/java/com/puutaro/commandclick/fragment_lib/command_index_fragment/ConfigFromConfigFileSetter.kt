@@ -1,16 +1,21 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ConfigFromConfigFileSetter {
     companion object {
         fun set(
             cmdIndexFragment: CommandIndexFragment
         ){
+
+            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
@@ -42,6 +47,18 @@ class ConfigFromConfigFileSetter {
                 listOf(
                     SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                     SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+                ),
+            )
+
+            terminalViewModel.onBackStackWhenSizeLong =  MakeVariableCbValue.make(
+                settingVariableList,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
+                SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name,
+                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
+                listOf(
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name,
+                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
                 ),
             )
 

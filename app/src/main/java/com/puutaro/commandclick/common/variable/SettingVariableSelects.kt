@@ -61,6 +61,12 @@ class SettingVariableSelects {
             INHERIT,
         }
 
+        enum class OnBackstackWhenSizeLongSelects {
+            ON,
+            OFF,
+            INHERIT,
+        }
+
     }
 
 }

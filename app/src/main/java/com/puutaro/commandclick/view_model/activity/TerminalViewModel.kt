@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.view_model.activity
 
 import androidx.lifecycle.ViewModel
+import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.FileSystems
@@ -14,6 +15,7 @@ class TerminalViewModel: ViewModel() {
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
+    var onBackStackWhenSizeLong = CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE
 }
 
 
