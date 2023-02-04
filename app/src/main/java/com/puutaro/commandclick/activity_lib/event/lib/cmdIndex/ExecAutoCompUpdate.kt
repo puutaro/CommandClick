@@ -5,7 +5,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.AutoCompleteThreshold
 
 class ExecAutoCompUpdate {
     companion object {
@@ -26,7 +25,6 @@ class ExecAutoCompUpdate {
                 activity,
                 cmdIndexFragment.binding.cmdSearchEditText,
                 currentAppDirPath,
-                AutoCompleteThreshold.ON.num
             )
         }
     }

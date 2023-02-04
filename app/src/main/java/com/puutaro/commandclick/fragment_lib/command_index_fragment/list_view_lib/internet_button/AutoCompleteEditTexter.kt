@@ -8,7 +8,6 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.UrlTexter
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.AutoCompleteThreshold
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
 import java.net.URLDecoder
@@ -30,65 +29,53 @@ class AutoCompleteEditTexter(
         fun setAdapter(
             context: Context?,
             cmdSearchEditText: AutoCompleteTextView,
-            currentAppDirPath: String,
-            threshold: Int
+            currentAppDirPath: String? = null,
         ) {
             if(context == null) return
             cmdSearchEditText.setAdapter(
                 makeUrlComAdapter(
                     context,
                     currentAppDirPath,
-                    threshold
                 )
             )
-            cmdSearchEditText.setThreshold(threshold)
+            cmdSearchEditText.setThreshold(0)
         }
 
         private fun makeUrlComAdapter(
             context: Context,
-            currentAppDirPath: String,
-            threshold: Int
+            currentAppDirPath: String?,
         ): ArrayAdapter<String> {
             return ArrayAdapter(
                 context,
                 R.layout.simple_list_item_1,
                 makeCompleteListSource(
                     currentAppDirPath,
-                    threshold
                 )
             )
         }
 
         fun makeCompleteListSource(
-            currentAppDirPath: String,
-            threshold: Int,
+            currentAppDirPath: String?,
             takeListNum: Int = 200,
         ):List<String> {
+            if(
+                currentAppDirPath.isNullOrEmpty()
+            ) return emptyList()
             val usedTitle = mutableSetOf<String>()
             val usedUrl = mutableSetOf<String>()
-            return when(threshold) {
-                AutoCompleteThreshold.ON.num -> {
-                    return ReadText(
-                        currentAppDirPath,
-                        UsePath.cmdclickUrlHistoryFileName
-                    ).txetToList()
-                        .distinct()
-                        .take(takeListNum)
-                        .filter {
-                            makeUrlHistoryList(
-                                it,
-                                usedTitle,
-                                usedUrl,
-                            )
-                        }
+            return ReadText(
+                currentAppDirPath,
+                UsePath.cmdclickUrlHistoryFileName
+            ).txetToList()
+                .distinct()
+                .take(takeListNum)
+                .filter {
+                    makeUrlHistoryList(
+                        it,
+                        usedTitle,
+                        usedUrl,
+                    )
                 }
-                AutoCompleteThreshold.OFF.num -> {
-                    emptyList()
-                }
-                else -> {
-                    emptyList()
-                }
-            }
         }
     }
 

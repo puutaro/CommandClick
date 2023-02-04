@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.AutoCompleteThreshold
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.UrlTitleTrimmer
 
@@ -96,7 +95,6 @@ class UrlHistoryButtonEvent(
                 urlHistoryList.getOrNull(
                     pos
                 ) ?: return@setOnItemClickListener
-//                parent.getItemAtPosition(pos) as String
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
             if(selectedUrl == null) return@setOnItemClickListener
             alertDialog.dismiss()
@@ -111,7 +109,6 @@ class UrlHistoryButtonEvent(
         val takeListNum = 60
         return AutoCompleteEditTexter.makeCompleteListSource(
             currentAppDirPath,
-            AutoCompleteThreshold.ON.num,
             takeListNum
         ).reversed()
     }

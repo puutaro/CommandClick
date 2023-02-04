@@ -22,7 +22,6 @@ class CommandClickShellScript {
         val TERMINAL_OUTPUT_MODE = "terminalOutputMode"
         val SET_VARIABLE_TYPE = "setVariableType"
         val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
-        val ON_BACKSTACK_WHEN_SIZE_LONG = "onBackStackWhenSizeLong"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
         val SHELL_FILE_NAME = "shellFileName"
@@ -48,7 +47,6 @@ class CommandClickShellScript {
             CMDCLICK_HISTORY_SWITCH,
             CMDCLICK_ON_AUTO_EXEC,
             ON_UPDATE_LAST_MODIFY,
-            ON_BACKSTACK_WHEN_SIZE_LONG,
             TERMINAL_COLOR,
             TERMINAL_FONT_COLOR,
             STATUS_BAR_ICON_COLOR_MODE,
@@ -85,9 +83,6 @@ class CommandClickShellScript {
         private val urlHistoryOrButtonExecUrlInherit = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name
         private val onUpdateLastModifyOn = SettingVariableSelects.Companion.OnUpdateLastModifySelects.ON.name
         private val onUpdateLastModifyOff = SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
-        private val onBackStackWhenSizeLongSelectsInherit = SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name
-        private val onBackStackWhenSizeLongOnSelects = SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name
-        private val onBackStackWhenSizeLongSelectsOff = SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
         private val onHistoryUrlTitleON = SettingVariableSelects.Companion.OnHistoryUrlTitle.ON.name
         private val onHistoryUrlTitleOff = SettingVariableSelects.Companion.OnHistoryUrlTitle.OFF.name
         private val statusBarIconColorModeWhite = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.WHITE.name
@@ -99,7 +94,6 @@ class CommandClickShellScript {
         val TERMINAL_OUTPUT_MODE_DEFAULT_VALUE = terminalOutPutModeNormal
         val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
         val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
-        val ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE = onBackStackWhenSizeLongSelectsOff
         val TERMINAL_COLOR_DEFAULT_VALUE = "#121212"
         val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
         val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
@@ -118,7 +112,6 @@ class CommandClickShellScript {
             "${CMDCLICK_ON_AUTO_EXEC}:CB=${autoExecSelectsOn}!${autoExecSelectsOff}",
             "${CMDCLICK_ON_HISTORY_URL_TITLE}:CB=${onHistoryUrlTitleON}!${onHistoryUrlTitleOff}",
             "${CMDCLICK_HISTORY_SWITCH}:CB=${historySwitchOff}!${historySwitchOn}!${historySwitchInherit}",
-            "${ON_BACKSTACK_WHEN_SIZE_LONG}:CB=${onBackStackWhenSizeLongOnSelects}!${onBackStackWhenSizeLongSelectsOff}!${onBackStackWhenSizeLongSelectsInherit}",
             "${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}:CB=${urlHistoryOrButtonExecUrlHistory}!${urlHistoryOrButtonExecUrlButtonExec}!${urlHistoryOrButtonExecUrlInherit}",
             "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=1..1000!1",
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
@@ -157,10 +150,6 @@ class CommandClickShellScript {
                 |#  - ${onUpdateLastModifyOn}: update this (default)
                 |#  - ${onUpdateLastModifyOff}: no update this
                 |#  - ${CMDCLICK_HISTORY_SWITCH}: switch app history with url history
-                |# * ${ON_BACKSTACK_WHEN_SIZE_LONG}: in long size, backstack enable
-                |#  - ${onBackStackWhenSizeLongOnSelects}: on
-                |#  - ${onBackStackWhenSizeLongSelectsOff}: off
-                |#  - ${onBackStackWhenSizeLongSelectsInherit}: inherit config setting (default)
                 |#  - ${historySwitchOn}: switch
                 |#  - ${historySwitchOff}: no switch
                 |#  - ${historySwitchInherit}: inherit config setting (default)
@@ -212,7 +201,6 @@ class CommandClickShellScript {
             |${TERMINAL_OUTPUT_MODE}=${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}
             |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyValue}
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
-            |${ON_BACKSTACK_WHEN_SIZE_LONG}=${onBackStackWhenSizeLongSelectsInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
             |${TERMINAL_FONT_COLOR}=${STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
@@ -328,7 +316,6 @@ class CommandClickShellScript {
             |${CMDCLICK_RUN_SHELL}=${CMDCLICK_RUN_SHELL_DEFAULT_VALUE}
             |${CMDCLICK_SHIBAN}=${CMDCLICK_SHIBAN_DEFAULT_VALUE}
             |${CMDCLICK_HISTORY_SWITCH}=${HISTORY_SWITCH_DEFAULT_VALUE}
-            |${ON_BACKSTACK_WHEN_SIZE_LONG}=${onBackStackWhenSizeLongSelectsOff}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}
             |${TERMINAL_COLOR}=${TERMINAL_COLOR_DEFAULT_VALUE}
@@ -375,7 +362,6 @@ class CommandClickShellScript {
             |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyOff}
             |${CMDCLICK_ON_HISTORY_URL_TITLE}=${CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE}
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
-            |${ON_BACKSTACK_WHEN_SIZE_LONG}=${onBackStackWhenSizeLongSelectsInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
             |${TERMINAL_FONT_COLOR}=

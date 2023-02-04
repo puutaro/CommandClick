@@ -6,7 +6,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.AutoCompleteThreshold
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -16,7 +15,7 @@ class ExecSetTermSizeForCmdIndexFragment {
     companion object {
         fun execSetTermSizeForCmdIndexFragment(
             cmdIndexFragment: CommandIndexFragment,
-            recentAppDirPath: String,
+            recentAppDirPath: String? = null,
         ){
             val context = cmdIndexFragment.context
             val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
@@ -39,8 +38,6 @@ class ExecSetTermSizeForCmdIndexFragment {
                     AutoCompleteEditTexter.setAdapter(
                         context,
                         binding.cmdSearchEditText,
-                        recentAppDirPath,
-                        AutoCompleteThreshold.OFF.num
                     )
                 }
             } else {

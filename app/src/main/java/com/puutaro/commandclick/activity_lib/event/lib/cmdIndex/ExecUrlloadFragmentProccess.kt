@@ -12,7 +12,6 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.AutoCompleteThreshold
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -63,7 +62,6 @@ class ExecUrlloadFragmentProccess {
                 context,
                 binding.cmdSearchEditText,
                 currentAppDirPath,
-                AutoCompleteThreshold.ON.num
             )
 
         }

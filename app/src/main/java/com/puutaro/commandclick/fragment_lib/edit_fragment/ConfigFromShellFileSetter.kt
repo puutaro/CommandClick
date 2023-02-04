@@ -60,18 +60,6 @@ class ConfigFromShellFileSetter {
                 ),
             )
 
-            terminalViewModel.onBackStackWhenSizeLong =  MakeVariableCbValue.make(
-                settingVariableList,
-                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG,
-                terminalViewModel.onBackStackWhenSizeLong,
-                SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name,
-                terminalViewModel.onBackStackWhenSizeLong,
-                listOf(
-                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name,
-                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
-                ),
-            )
-
             editFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
                 settingVariableList,
                 CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,

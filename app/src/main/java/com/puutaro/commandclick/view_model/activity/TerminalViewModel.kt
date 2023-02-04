@@ -15,7 +15,6 @@ class TerminalViewModel: ViewModel() {
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
-    var onBackStackWhenSizeLong = CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE
 }
 
 

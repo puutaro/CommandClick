@@ -60,13 +60,6 @@ class SettingVariableSelects {
             WHITE,
             INHERIT,
         }
-
-        enum class OnBackstackWhenSizeLongSelects {
-            ON,
-            OFF,
-            INHERIT,
-        }
-
     }
 
 }

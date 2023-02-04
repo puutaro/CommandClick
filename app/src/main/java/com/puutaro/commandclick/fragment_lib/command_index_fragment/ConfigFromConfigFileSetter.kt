@@ -50,18 +50,6 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            terminalViewModel.onBackStackWhenSizeLong =  MakeVariableCbValue.make(
-                settingVariableList,
-                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG,
-                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
-                SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.INHERIT.name,
-                CommandClickShellScript.ON_BACKSTACK_WHEN_SIZE_LONG_DEFAULT_VALUE,
-                listOf(
-                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name,
-                    SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.OFF.name
-                ),
-            )
-
             cmdIndexFragment.statusBarIconColorMode = MakeVariableCbValue.make(
                 settingVariableList,
                 CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE,

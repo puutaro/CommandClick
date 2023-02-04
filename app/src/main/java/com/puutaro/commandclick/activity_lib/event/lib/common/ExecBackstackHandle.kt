@@ -7,7 +7,10 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -124,17 +127,43 @@ internal fun execBack(
         webVeiw.goBack()
         return
     }
-    val terminalViewModel: TerminalViewModel =
-        ViewModelProvider(activity).get(TerminalViewModel::class.java)
-    if(
-        terminalViewModel.onBackStackWhenSizeLong
-        != SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name
-    ) return
-    execPopBackStackImmediate(
+    val targetFragmentInstance = TargetFragmentInstance()
+    val cmdIndexFragment = targetFragmentInstance.getFromActivity<CommandIndexFragment>(
         activity,
-        supportFragmentManager,
-        readLinesNum
+        activity.getString(
+            R.string.command_index_fragment
+        )
     )
+    if(
+        cmdIndexFragment != null
+        && cmdIndexFragment.isVisible
+    ) {
+        ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
+            cmdIndexFragment
+        )
+        return
+    }
+
+    val cmdVariableEditFragmentTag = activity.getString(R.string.cmd_variable_edit_fragment)
+    val cmdVariableEditFragment = targetFragmentInstance.getFromActivity<EditFragment>(
+        activity,
+        activity.getString(
+            R.string.cmd_variable_edit_fragment
+        )
+    )
+    if(
+        cmdVariableEditFragment != null
+        && cmdVariableEditFragment.isVisible
+    ) {
+        val terminalViewModel: TerminalViewModel =
+            ViewModelProvider(activity).get(TerminalViewModel::class.java)
+        ExecTerminalLongOrShort.open<EditFragment>(
+            cmdVariableEditFragmentTag,
+            activity.supportFragmentManager,
+            terminalViewModel
+        )
+    }
+
 }
 
 internal fun execPopBackStackImmediate(
@@ -145,16 +174,6 @@ internal fun execPopBackStackImmediate(
     if(
         supportFragmentManager.backStackEntryCount == 0
         && readlinesNum == ReadLines.SHORTH
-    ) {
-        activity.finish()
-        return
-    }
-    val terminalViewModel: TerminalViewModel =
-        ViewModelProvider(activity).get(TerminalViewModel::class.java)
-    if(
-        supportFragmentManager.backStackEntryCount == 0
-        && terminalViewModel.onBackStackWhenSizeLong
-        == SettingVariableSelects.Companion.OnBackstackWhenSizeLongSelects.ON.name
     ) {
         activity.finish()
         return
