@@ -120,12 +120,14 @@ class ConfigFromShellFileSetter {
                 editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
                 || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
             ) {
+                editFragment.editTerminalInitType = EditInitType.TERMINAL_SHRINK
                 val listener = context
                         as? EditFragment.OnTerminalWebViewInitListenerForEdit
                 listener?.onTerminalWebViewInitForEdit(
                     EditInitType.TERMINAL_SHRINK,
                 )
             } else {
+                editFragment.editTerminalInitType = EditInitType.TERMINAL_SHOW
                 val listener = context
                         as? EditFragment.OnTerminalWebViewInitListenerForEdit
                 listener?.onTerminalWebViewInitForEdit(

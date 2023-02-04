@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatc
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.util.*
@@ -101,6 +102,17 @@ class ToolbarButtonProducerForEdit(
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING -> {
+                    if(
+                        editFragment.editTerminalInitType
+                        == EditInitType.TERMINAL_SHRINK
+                    ) {
+                        Toast.makeText(
+                            view.context,
+                            "no terminal",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return@setOnClickListener
+                    }
                     val listener =
                         context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                     listener?.onToolbarMenuCategoriesForEdit(

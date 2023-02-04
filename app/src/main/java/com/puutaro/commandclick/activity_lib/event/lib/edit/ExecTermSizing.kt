@@ -10,30 +10,30 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 class ExecTermSizing {
     companion object {
 
-
-        fun linearLayoutSizing(
-            size: Float
-        ): LinearLayout.LayoutParams {
-            val linearLayoutShrink = LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-            0
-            )
-            linearLayoutShrink.weight = size
-            return linearLayoutShrink
-        }
-
-
         fun execTermSizing(
             activity: MainActivity,
             size: Float
         ){
             val terminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
                 activity,
-                activity.getString(R.string.edit_execute_terminal_fragment)
-            )
-            if(terminalFragment == null) return
+                activity.getString(
+                    R.string.edit_execute_terminal_fragment
+                )
+            ) ?: return
             terminalFragment.binding.terminalWebView.onPause()
             terminalFragment.binding.terminalFragment.layoutParams = linearLayoutSizing(size)
         }
+
+        private fun linearLayoutSizing(
+            size: Float
+        ): LinearLayout.LayoutParams {
+            val linearLayoutShrink = LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                0
+            )
+            linearLayoutShrink.weight = size
+            return linearLayoutShrink
+        }
+
     }
 }

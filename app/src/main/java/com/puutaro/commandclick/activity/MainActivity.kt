@@ -281,7 +281,7 @@ class MainActivity:
 
 
     override fun onInitEditFragment() {
-        RestartWhenPreferenceCheckErr.restartWhenpreferenceCheckErr(
+        RestartWhenPreferenceCheckErr.restartWhenPreferenceCheckErr(
             this,
         )
     }

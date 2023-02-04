@@ -41,6 +41,7 @@ class EditFragment: Fragment() {
     var terminalOn = CommandClickShellScript.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
+    var editTerminalInitType = EditInitType.TERMINAL_SHRINK
 
 
     override fun onCreateView(
@@ -150,11 +151,6 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-//        window?.decorView?.systemUiVisibility = if(
-//            statusBarIconColorMode ==
-//            CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
-//        ) 0
-//        else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
 
         val editModeHandler = EditModeHandler(
             this,

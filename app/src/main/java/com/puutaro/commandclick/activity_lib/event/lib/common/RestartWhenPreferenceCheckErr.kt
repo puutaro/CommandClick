@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 class RestartWhenPreferenceCheckErr {
     companion object {
-        fun restartWhenpreferenceCheckErr(
+        fun restartWhenPreferenceCheckErr(
             activity: MainActivity?
         ){
             val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)

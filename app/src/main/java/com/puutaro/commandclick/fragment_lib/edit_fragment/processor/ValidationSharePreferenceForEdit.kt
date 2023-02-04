@@ -150,12 +150,12 @@ class ValidationSharePreferenceForEdit(
             listener?.onInitEditFragment()
             return false
         }
-        val checkok = editExecuteCheck(
+        val checkOk = editExecuteCheck(
             on_shortcut,
             checkCurrentAppDirPath,
             checkCurrentShellName
         )
-        if(!checkok) return false
+        if(!checkOk) return false
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
             mapOf(
