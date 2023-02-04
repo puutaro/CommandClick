@@ -149,13 +149,17 @@ class CommandClickShellScript {
                 |# * ${ON_UPDATE_LAST_MODIFY} is how updating file last modified status when executing
                 |#  - ${onUpdateLastModifyOn}: update this (default)
                 |#  - ${onUpdateLastModifyOff}: no update this
+                |#  - ${CMDCLICK_HISTORY_SWITCH}: switch app history with url history
+                |#  - ${historySwitchOn}: switch
+                |#  - ${historySwitchOff}: no switch
+                |#  - ${historySwitchInherit}: inherit config setting (default)
                 |# * ${CMDCLICK_ON_HISTORY_URL_TITLE} is how adding url title to history
-                |#  - ${historySwitchOn}: add
-                |#  - ${historySwitchOff}: no
+                |#  - ${onHistoryUrlTitleON}: add
+                |#  - ${onHistoryUrlTitleOff}: no
                 |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC} switch url history or button script exec
-                |#  - ${urlHistoryOrButtonExecUrlInherit} is inherit config setting
-                |#  - ${urlHistoryOrButtonExecUrlHistory} switch url history
-                |#  - ${urlHistoryOrButtonExecUrlButtonExec} switch url button script exec
+                |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
+                |#  - ${urlHistoryOrButtonExecUrlHistory}: switch url history
+                |#  - ${urlHistoryOrButtonExecUrlButtonExec}: switch url button script exec
                 |# * ${SET_VARIABLE_TYPE} is cmdsection gui edit mini program, reference to github for detail (like gtk yad)
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
