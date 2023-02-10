@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,7 +16,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.AutoShellExecManager
-import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.MakeListView
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -35,6 +36,7 @@ class CommandIndexFragment: Fragment() {
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
+    var onUrlLaunchIntent = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -83,100 +85,13 @@ class CommandIndexFragment: Fragment() {
         )
 
         ConfigFromConfigFileSetter.set(this)
-        val appDirAdminTag = getString(R.string.app_dir_admin)
-        if(
-            thisFragmentTag == appDirAdminTag
-        ){
-            SharePreffrenceMethod.putSharePreffrence(
-                startUpPref,
-                mapOf(
-                    SharePrefferenceSetting.current_app_dir.name
-                            to UsePath.cmdclickAppDirAdminPath,
-                )
-            )
-        } else {
-//            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
-//            listener?.onBackstackDelete()
-            val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
 
-            if(
-                IntentAction.judge(this)
-            ){
-                FileSystems.updateLastModified(
-                    cmdclickAppDirAdminPath,
-                    UsePath.cmdclickDefaultAppDirName +
-                            CommandClickShellScript.SHELL_FILE_SUFFIX
-                )
-            } else {
-                UpdateLastModifyFromSharePrefDir.update(startUpPref)
-            }
-
-            val currentDirName = FileSystems.filterSuffixShellFiles(
-                cmdclickAppDirAdminPath,
-                "on"
-            ).firstOrNull()?.removeSuffix(
-                CommandClickShellScript.SHELL_FILE_SUFFIX
-            ) ?: UsePath.cmdclickDefaultAppDirName
-            val currentAppDirPath = "${cmdclickAppDirPath}/${currentDirName}"
-
-            SharePreffrenceMethod.putSharePreffrence(
-                startUpPref,
-                mapOf(
-                    SharePrefferenceSetting.current_app_dir.name
-                            to currentAppDirPath,
-                    SharePrefferenceSetting.current_shell_file_name.name
-                            to SharePrefferenceSetting.current_shell_file_name.defalutStr,
-                    SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr,
-                )
-            )
-
-            FileSystems.updateLastModified(
-                UsePath.cmdclickAppHistoryDirAdminPath,
-                AppHistoryManager.makeAppHistoryFileNameForInit(
-                    currentAppDirPath,
-                )
-            )
-            CommandClickShellScript.makeButtonExecShell(
-                shiban,
-                currentAppDirPath,
-                UsePath.cmdclickButtonExecShellFileName
-            )
-            CommandClickShellScript.makeAutoShellFile(
-                CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
-                currentAppDirPath,
-                UsePath.cmdclickStartupShellName
-            )
-            CommandClickShellScript.makeAutoShellFile(
-                CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
-                currentAppDirPath,
-                UsePath.cmdclickEndShellName
-            )
-            ConfigFromStartUpFileSetter.set(
-                this,
-                currentAppDirPath,
-            )
-
-            val pageSearchToolbarManager =
-                PageSearchToolbarManager(this)
-
-            pageSearchToolbarManager.cancleButtonClickListner()
-            pageSearchToolbarManager.pageSearchTextChangeListner()
-            pageSearchToolbarManager.onKeyListner()
-            pageSearchToolbarManager.searchTopClickLisnter()
-            pageSearchToolbarManager.searchDownClickLisnter()
-        }
+        IndexInitHandler.handle(this)
 
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
-//            window?.decorView?.systemUiVisibility = if(
-//                statusBarIconColorMode ==
-//                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
-//            ) 0
-//            else View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-
         }
 
 
@@ -214,6 +129,10 @@ class CommandIndexFragment: Fragment() {
             cmdListAdapter,
         )
         registerForContextMenu(cmdListView)
+
+        val appDirAdminTag = context?.getString(
+            R.string.app_dir_admin
+        )
         if(
             thisFragmentTag == appDirAdminTag
         ) {
@@ -312,7 +231,7 @@ class CommandIndexFragment: Fragment() {
         super.onCreateContextMenu(menu, view, menuInfo)
         val inflater = this.getActivity()?.getMenuInflater();
         if(
-            thisFragmentTag ==  getString(R.string.app_dir_admin)
+            thisFragmentTag == getString(R.string.app_dir_admin)
         ) {
             inflater?.inflate(R.menu.app_dir_admin_list_menu, menu)
         } else {
@@ -394,12 +313,6 @@ class CommandIndexFragment: Fragment() {
         fun onPageSearchToolbarClick(
             pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant,
             searchText: String = String(),
-        )
-    }
-
-    interface OnTerminalWebViewInitListener {
-        fun onTerminalWebViewInit(
-            fontZoomPercent: Int
         )
     }
 }

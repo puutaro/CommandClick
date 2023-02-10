@@ -2,7 +2,10 @@ package com.puutaro.commandclick.activity_lib.manager
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
@@ -10,6 +13,7 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
@@ -25,35 +29,25 @@ class InitFragmentManager(
 
 
     fun registerSharePreferenceFromIntentExtra(){
-        if(on_shortcut == ShortcutOnValueStr.EDIT_API.name) return
-        val recieveAppDirPath = intent.getStringExtra(
-            SharePrefferenceSetting.current_app_dir.name
-        )
-        val currentShellFileName = intent.getStringExtra(
-            SharePrefferenceSetting.current_shell_file_name.name
-        ) ?: SharePrefferenceSetting.current_shell_file_name.defalutStr
-        if(
-            recieveAppDirPath.isNullOrEmpty()
+        if (
+            on_shortcut == ShortcutOnValueStr.EDIT_API.name
         ) return
-        SharePreffrenceMethod.putSharePreffrence(
-            startUpPref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
-                SharePrefferenceSetting.current_shell_file_name.name to currentShellFileName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to ShortcutOnValueStr.ON.name
-            )
-        )
-        val reatartIntent = Intent(activity, activity::class.java)
-        activity.finish()
-        activity.startActivity(reatartIntent)
+        if (
+            IntentAction.judge(activity)
+            && !activity.isTaskRoot
+        ){
+            execUrlIntent()
+            return
+        }
+
+        execShortcutIntent()
     }
 
 
     fun startFragment(
         savedInstanceState: Bundle?,
     ){
-        if(on_shortcut == ShortcutOnValueStr.EDIT_API.name) {
+        if (on_shortcut == ShortcutOnValueStr.EDIT_API.name) {
             WrapFragmentManager.changeFragmentEdit(
                 activity.supportFragmentManager,
                 activity.getString(R.string.api_cmd_variable_edit_api_fragment),
@@ -77,7 +71,7 @@ class InitFragmentManager(
 
         val emptyShellFileName = CommandClickShellScript.EMPTY_STRING
 
-        if(
+        if (
             startUpShellFileName == emptyShellFileName
             || startUpAppDirName == UsePath.cmdclickAppDirAdminPath
             || startUpAppDirName == UsePath.cmdclickAppHistoryDirAdminPath
@@ -97,12 +91,67 @@ class InitFragmentManager(
             activity,
             cmdVariableEditFragmentTag
         )
-        if(cmdVariableEditFragment != null) return
+        if (cmdVariableEditFragment != null) return
         WrapFragmentManager.changeFragmentEdit(
             activity.supportFragmentManager,
             activity.getString(R.string.cmd_variable_edit_fragment),
             activity.getString(R.string.edit_execute_terminal_fragment),
             true
         )
+    }
+
+    private fun execUrlIntent(){
+        val execIntent = Intent(activity, activity::class.java)
+        execIntent.setAction(Intent.ACTION_VIEW)
+            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        execIntent.setData(
+            Uri.parse(intent?.dataString)
+        )
+        SharePreffrenceMethod.putSharePreffrence(
+            startUpPref,
+            mapOf(
+                SharePrefferenceSetting.current_shell_file_name.name
+                        to SharePrefferenceSetting.current_shell_file_name.defalutStr,
+                SharePrefferenceSetting.on_shortcut.name
+                        to SharePrefferenceSetting.on_shortcut.defalutStr
+            )
+        )
+        exedRestartIntent(
+            execIntent
+        )
+    }
+
+
+    private fun execShortcutIntent(){
+        val recieveAppDirPath = intent.getStringExtra(
+            SharePrefferenceSetting.current_app_dir.name
+        )
+        if (
+            recieveAppDirPath.isNullOrEmpty()
+        ) return
+
+        val currentShellFileName = intent.getStringExtra(
+            SharePrefferenceSetting.current_shell_file_name.name
+        ) ?: SharePrefferenceSetting.current_shell_file_name.defalutStr
+        SharePreffrenceMethod.putSharePreffrence(
+            startUpPref,
+            mapOf(
+                SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
+                SharePrefferenceSetting.current_shell_file_name.name to currentShellFileName,
+                SharePrefferenceSetting.on_shortcut.name
+                        to ShortcutOnValueStr.ON.name
+            )
+        )
+        exedRestartIntent(
+            Intent(activity, activity::class.java)
+        )
+    }
+
+
+    private fun exedRestartIntent(
+        sendIntent: Intent
+    ){
+        activity.finish()
+        activity.startActivity(sendIntent)
     }
 }

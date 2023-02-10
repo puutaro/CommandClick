@@ -6,9 +6,8 @@ import android.os.Environment
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.CommandListManager
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.util.FileSystems
 
 class InstallFromDownloadDir(

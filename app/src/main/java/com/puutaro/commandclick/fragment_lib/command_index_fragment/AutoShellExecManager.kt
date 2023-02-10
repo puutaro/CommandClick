@@ -14,9 +14,15 @@ class AutoShellExecManager {
         fun fire(
             cmdIndexFragment: CommandIndexFragment,
             cmdclickStartupOrEndShellName: String,
-            readSharePreffernceMap: Map<String, String>? = null
         ){
-            if(readSharePreffernceMap.isNullOrEmpty()) return
+            if(
+                cmdIndexFragment.onUrlLaunchIntent
+            ) return
+
+            val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
+            if(
+                readSharePreffernceMap.isEmpty()
+            ) return
             val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
@@ -43,7 +49,6 @@ class AutoShellExecManager {
                 substituteSettingVariableList,
                 CommandClickShellScript.CMDCLICK_ON_AUTO_EXEC
             )
-            
             if(
                 onAutoShell !=
                 SettingVariableSelects.Companion.AutoExecSelects.ON.name

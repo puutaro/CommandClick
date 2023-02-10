@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment
+package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -16,8 +16,6 @@ class ConfigFromStartUpFileSetter {
             cmdIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
         ){
-
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(

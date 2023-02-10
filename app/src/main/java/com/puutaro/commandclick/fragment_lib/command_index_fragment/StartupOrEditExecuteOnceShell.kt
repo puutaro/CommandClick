@@ -40,7 +40,6 @@ class StartupOrEditExecuteOnceShell {
                 AutoShellExecManager.fire(
                     cmdIndexFragment,
                     UsePath.cmdclickStartupShellName,
-                    readSharePreffernceMap
                 )
             } else {
                 TargetFragmentInstance()

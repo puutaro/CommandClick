@@ -8,6 +8,7 @@ import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.ItemClickListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.KeyListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder

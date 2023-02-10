@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment
+package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import android.text.Editable
 import android.text.TextWatcher

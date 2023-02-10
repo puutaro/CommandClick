@@ -5,9 +5,8 @@ import android.widget.ArrayAdapter
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.CommandListManager
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppDirectoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnOnceEditExecuteEvent

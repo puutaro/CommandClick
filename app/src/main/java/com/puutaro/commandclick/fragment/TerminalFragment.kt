@@ -104,7 +104,7 @@ class TerminalFragment: Fragment() {
         WebViewSettings.set(this)
 
         if(
-            IntentAction.judge(this)
+            IntentAction.judge(this.activity)
         ){
             val urlString = activity?.intent?.dataString
             urlString?.let {

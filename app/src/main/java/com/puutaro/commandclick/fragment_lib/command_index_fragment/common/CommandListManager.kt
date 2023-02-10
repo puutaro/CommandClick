@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment
+package com.puutaro.commandclick.fragment_lib.command_index_fragment.common
 
 import android.widget.ArrayAdapter
 import android.widget.ListView

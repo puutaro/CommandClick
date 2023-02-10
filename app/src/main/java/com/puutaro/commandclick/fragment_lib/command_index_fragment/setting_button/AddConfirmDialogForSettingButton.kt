@@ -6,7 +6,7 @@ import android.widget.ArrayAdapter
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.CommandListManager
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.util.*
