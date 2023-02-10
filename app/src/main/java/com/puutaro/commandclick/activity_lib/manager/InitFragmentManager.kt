@@ -1,11 +1,11 @@
 package com.puutaro.commandclick.activity_lib.manager
 
+import android.app.ActivityManager
 import android.content.Context
+import android.content.Context.ACTIVITY_SERVICE
 import android.content.Intent
-import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
@@ -21,32 +21,44 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 class InitFragmentManager(
     private val activity: MainActivity
 ) {
-    private val startUpPref =  activity.getPreferences(Context.MODE_PRIVATE)
+    private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
     private val on_shortcut = intent.getStringExtra(
         SharePrefferenceSetting.on_shortcut.name
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
 
 
-    fun registerSharePreferenceFromIntentExtra(){
+    fun registerSharePreferenceFromIntentExtra() {
         if (
             on_shortcut == ShortcutOnValueStr.EDIT_API.name
         ) return
+        val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
+        val normalTaskNum = 1
+        val okOneTask = mngr?.appTasks?.size == normalTaskNum //?.getRunningTasks(10)
+
+        val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
         if (
-            IntentAction.judge(activity)
-            && !activity.isTaskRoot
-        ){
+            disableOneTaskForUrlLaunch
+        ) {
+            removeTask(mngr)
             execUrlIntent()
             return
         }
 
+        val disableTaskRootForUrlLaunch = IntentAction.judge(activity) && !activity.isTaskRoot
+        if (
+            disableTaskRootForUrlLaunch
+        ) {
+            execUrlIntent()
+            return
+        }
         execShortcutIntent()
     }
 
 
     fun startFragment(
         savedInstanceState: Bundle?,
-    ){
+    ) {
         if (on_shortcut == ShortcutOnValueStr.EDIT_API.name) {
             WrapFragmentManager.changeFragmentEdit(
                 activity.supportFragmentManager,
@@ -100,7 +112,7 @@ class InitFragmentManager(
         )
     }
 
-    private fun execUrlIntent(){
+    private fun execUrlIntent() {
         val execIntent = Intent(activity, activity::class.java)
         execIntent.setAction(Intent.ACTION_VIEW)
             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -122,7 +134,7 @@ class InitFragmentManager(
     }
 
 
-    private fun execShortcutIntent(){
+    private fun execShortcutIntent() {
         val recieveAppDirPath = intent.getStringExtra(
             SharePrefferenceSetting.current_app_dir.name
         )
@@ -150,8 +162,17 @@ class InitFragmentManager(
 
     private fun exedRestartIntent(
         sendIntent: Intent
-    ){
+    ) {
         activity.finish()
         activity.startActivity(sendIntent)
+    }
+
+    private fun removeTask(
+        mngr: ActivityManager?
+    ) {
+        if (mngr == null) return
+        mngr.appTasks.forEach {
+            it.finishAndRemoveTask()
+        }
     }
 }
