@@ -19,6 +19,7 @@ class IndexInitHandler {
             cmdIndexFragment: CommandIndexFragment
         ){
             val context = cmdIndexFragment.context
+            val activity = cmdIndexFragment.activity
             val startUpPref = cmdIndexFragment.activity?.getPreferences(
                 Context.MODE_PRIVATE
             )
@@ -43,8 +44,10 @@ class IndexInitHandler {
             val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
             val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
             cmdIndexFragment.onUrlLaunchIntent = IntentAction.judge(
-                cmdIndexFragment.activity
+                activity
             )
+            activity?.intent?.action = String()
+
             if(
                 cmdIndexFragment.onUrlLaunchIntent
             ){
