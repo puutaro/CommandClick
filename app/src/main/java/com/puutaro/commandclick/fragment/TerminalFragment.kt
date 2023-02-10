@@ -126,6 +126,7 @@ class TerminalFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
+        activity?.intent?.action = String()
         BroadcastManager.unregisterBloadcastReciever(this)
         binding.terminalWebView.onPause()
     }

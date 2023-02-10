@@ -46,7 +46,6 @@ class IndexInitHandler {
             cmdIndexFragment.onUrlLaunchIntent = IntentAction.judge(
                 activity
             )
-            activity?.intent?.action = String()
 
             if(
                 cmdIndexFragment.onUrlLaunchIntent
