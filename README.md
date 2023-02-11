@@ -109,8 +109,8 @@ At the same time, if you installed code editor, edit new file.
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
-    | `afterCommand` | command | before run shellscript, run command |
-    | `shellFileName`  | string | shellscript file name  |
+    | `afterCommand` | `shell command string` | before run shellscript, run command |
+    | `shellFileName`  | `string` | shellscript file name  |
 
  
   - setVariableType option
