@@ -236,8 +236,11 @@ Also, Click url on web terminal view, this mode is automatic set
 `Command Click` have auto exec script. This is used when `index mode` startup or end.
 
 #### Startup script
-This script is automaticaly executed when `index mode` startup.
+1. This script is automaticaly executed when `index mode` startup.
 But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
+
+2. Override `config setting variable`, if you are change default value with your set value.
+
 
 #### End script
 
@@ -251,7 +254,7 @@ Also whether click or long click torigger, due to `historySwitch` setting  (refe
   
 ### Edit execute once
 
-One time edit and exedute
+One time edit and execute
 
 ![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
 
