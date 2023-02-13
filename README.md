@@ -60,9 +60,10 @@ For Instance, bellow process.
 1. Add com.termux.permission.RUN_COMMAND permission
       `Android Settings` -> `Apps` -> `CommandClick` -> `Permissions` -> `Additional permissions` -> `Run commands in Termux environment`
 3. 
-paste bellow command to termux, and press `Enter`
+paste bellow command to termux, press `Enter` ,and continue press `Enter` when comfirm
 ```
-yes | termux-setup-storage \
+pkg update -y && pkg upgrade -y \
+&& yes | termux-setup-storage \
 && sed -r 's/^\#(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
 ```
 - reference
