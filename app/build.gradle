@@ -7,7 +7,7 @@ plugins {
 def applicationName = "CommandClick"
 def versionMajor = 0
 def versionMinor = 0
-def versionPatch = 5
+def versionPatch = 6
 
 android {
     namespace 'com.puutaro.commandclick'
@@ -17,7 +17,7 @@ android {
         applicationId "com.puutaro.commandclick"
         minSdk 27
         targetSdk 33
-        versionCode 5
+        versionCode 6
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -28,7 +28,7 @@ android {
             return
         }
         variant.outputs.all {
-            outputFileName = "${applicationName}-${versionName}.apk"  // ←ココ
+            outputFileName = "${applicationName}-${versionName}.apk"
         }
     }
 
