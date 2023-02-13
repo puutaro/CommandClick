@@ -57,13 +57,42 @@ Pre Setting
 Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
 and, require termux storage setting.
 For Instance, bellow process.
+
 1. Add com.termux.permission.RUN_COMMAND permission
       `Android Settings` -> `Apps` -> `CommandClick` -> `Permissions` -> `Additional permissions` -> `Run commands in Termux environment`
-3. Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
-4. Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
-5. Execute `termux-setup-storage` on termux
+2. Paste bellow command to termux, press `Enter` ,and continue press `Enter` when comfirm
 
+```
+pkg update -y && pkg upgrade -y \
+&& yes | termux-setup-storage \
+&& sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
+```
 
+- reference
+   - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory))
+   - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
+   - Execute `termux-setup-storage` on termux
+
+4. Set `Draw Over Apps permission` in `android 11+` (Optinal)
+
+> You can grant Termux the Draw Over Apps permission from its App Info activity:
+> `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
+
+[detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent/06f1de1b262d7612497e76463d8cc34ba7f49832#draw-over-apps-permission-optional)
+
+- When command not working, try execute bellow command, so `RUN_COMMAND SERVIDE` probably start up.
+
+```
+am startservice --user 0 -n com.termux/com.termux.app.RunCommandService \
+-a com.termux.RUN_COMMAND \
+--es com.termux.RUN_COMMAND_PATH '/data/data/com.termux/files/usr/bin/top' \
+--esa com.termux.RUN_COMMAND_ARGUMENTS '-n,1' \
+--es com.termux.RUN_COMMAND_WORKDIR '/data/data/com.termux/files/home' \
+--ez com.termux.RUN_COMMAND_BACKGROUND 'false' \
+--es com.termux.RUN_COMMAND_SESSION_ACTION '0'
+```
+
+- When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
 Usage
 -----
@@ -109,8 +138,9 @@ At the same time, if you installed code editor, edit new file.
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
-    | `afterCommand` | command | before run shellscript, run command |
-    | `shellFileName`  | string | shellscript file name  |
+    | `beforeCommand` | `shell command string` | before run shellscript, run command |
+    | `afterCommand` | `shell command string` | after run shellscript, run command |
+    | `shellFileName`  | `string` | shellscript file name  |
 
  
   - setVariableType option
@@ -236,8 +266,11 @@ Also, Click url on web terminal view, this mode is automatic set
 `Command Click` have auto exec script. This is used when `index mode` startup or end.
 
 #### Startup script
-This script is automaticaly executed when `index mode` startup.
+1. This script is automaticaly executed when `index mode` startup.
 But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
+
+2. Override `config setting variable`, if you are change default value with your set value.
+
 
 #### End script
 
@@ -251,7 +284,7 @@ Also whether click or long click torigger, due to `historySwitch` setting  (refe
   
 ### Edit execute once
 
-One time edit and exedute
+One time edit and execute
 
 ![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
 
