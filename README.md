@@ -59,9 +59,16 @@ and, require termux storage setting.
 For Instance, bellow process.
 1. Add com.termux.permission.RUN_COMMAND permission
       `Android Settings` -> `Apps` -> `CommandClick` -> `Permissions` -> `Additional permissions` -> `Run commands in Termux environment`
-3. Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
-4. Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
-5. Execute `termux-setup-storage` on termux
+3. 
+paste bellow command to termux, and press `Enter`
+```
+yes | termux-setup-storage \
+&& sed -r 's/^\#(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
+```
+- reference
+   - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory))
+   - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
+   - Execute `termux-setup-storage` on termux
 
 
 
