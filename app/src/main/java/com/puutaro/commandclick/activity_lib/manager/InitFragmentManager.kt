@@ -76,7 +76,7 @@ class InitFragmentManager(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
-        val on_shortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val onShortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
             SharePrefferenceSetting.on_shortcut
         )
@@ -88,7 +88,7 @@ class InitFragmentManager(
             || startUpAppDirName == UsePath.cmdclickAppDirAdminPath
             || startUpAppDirName == UsePath.cmdclickAppHistoryDirAdminPath
             || startUpAppDirName == UsePath.cmdclickConfigDirPath
-            || on_shortcut == SharePrefferenceSetting.on_shortcut.defalutStr
+            || onShortcut == SharePrefferenceSetting.on_shortcut.defalutStr
         ) {
             WrapFragmentManager.initFragment(
                 savedInstanceState,

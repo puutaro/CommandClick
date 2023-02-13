@@ -5,7 +5,8 @@ import android.os.Environment
 
 class UsePath {
     companion object {
-        val rootPath = Environment.getExternalStorageDirectory().absolutePath
+        val rootPath = Environment.getExternalStorageDirectory().absolutePath +
+                "/" + Environment.DIRECTORY_DOCUMENTS
         val cmdclickDirName = "cmdclick"
         val cmdclickDirPath = "$rootPath/$cmdclickDirName"
         val cmdclickConfDirName = "conf"

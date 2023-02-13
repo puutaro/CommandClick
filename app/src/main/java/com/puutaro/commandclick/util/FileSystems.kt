@@ -48,7 +48,10 @@ class FileSystems {
             fileName: String,
             contents: String
         ) {
-            if(fileName == "-") return
+            if(
+                fileName == "-"
+                || fileName.isEmpty()
+            ) return
             val filePath = File(dirPath, fileName)
             try {
                 filePath.writeText(contents)
@@ -124,11 +127,11 @@ class FileSystems {
 
         fun sortedFiles(
             dirPath: String,
-            reverse: String = ""
+            reverse: String = String()
         ): List<String> {
             val dirfiles = File(dirPath).listFiles()
-            if(dirfiles == null) return listOf("-")
-            if( reverse == "") {
+            if(dirfiles == null) return listOf(String())
+            if( reverse.isEmpty()) {
                 dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_COMPARATOR)
             } else {
                 dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_REVERSE)
@@ -140,7 +143,7 @@ class FileSystems {
 
         fun filterSuffixShellFiles(
             dirPath: String,
-            reverse: String = ""
+            reverse: String = String()
         ): List<String> {
             return sortedFiles(
                 dirPath,
@@ -148,21 +151,6 @@ class FileSystems {
             ).filter {
                 it.endsWith(
                     CommandClickShellScript.SHELL_FILE_SUFFIX
-                )
-            }
-        }
-
-        fun filtersStartWithFileName(
-            dirPath: String,
-            reverse: String = ""
-        ): List<String> {
-            val cmdclickMonitorFileNameSuffix = UsePath.cmdclickMonitorFileNameSuffix
-            return sortedFiles(
-                dirPath,
-                reverse
-            ).filter {
-                it.startsWith(
-                    cmdclickMonitorFileNameSuffix
                 )
             }
         }

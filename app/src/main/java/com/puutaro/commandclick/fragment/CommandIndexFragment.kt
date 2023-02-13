@@ -1,11 +1,11 @@
 package com.puutaro.commandclick.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,8 +15,6 @@ import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.AutoShellExecManager
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.MakeListView
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -58,6 +56,7 @@ class CommandIndexFragment: Fragment() {
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val thisFragmentTag = this.tag
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
+
         FileSystems.createDirs(
             UsePath.cmdclickDefaultAppDirPath
         )
@@ -73,6 +72,7 @@ class CommandIndexFragment: Fragment() {
                 UsePath.cmdclickDefaultAppDirName,
             )
         )
+
         CommandClickShellScript.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +

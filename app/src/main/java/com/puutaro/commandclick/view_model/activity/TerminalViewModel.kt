@@ -20,10 +20,15 @@ class TerminalViewModel: ViewModel() {
 
 internal fun makeDetectCurrentMonitorFileName(): String {
     deleteInvalieMonitorFile()
-    return FileSystems.sortedFiles(
+    val recentUpdatedFileSource = FileSystems.sortedFiles(
         UsePath.cmdclickMonitorDirPath,
         "on"
-    ).firstOrNull() ?: String()
+    ).firstOrNull() ?: UsePath.cmdClickMonitorFileName_1
+    return if(recentUpdatedFileSource.isEmpty()) {
+        UsePath.cmdClickMonitorFileName_1
+    } else {
+        recentUpdatedFileSource
+    }
 }
 
 

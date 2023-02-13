@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.lib
 
 
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript

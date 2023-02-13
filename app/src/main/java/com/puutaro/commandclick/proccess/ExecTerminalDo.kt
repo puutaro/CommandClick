@@ -13,6 +13,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
+import kotlin.contracts.contract
 
 
 class ExecTerminalDo {
@@ -30,6 +31,7 @@ class ExecTerminalDo {
                     selectedShellFileName
                 ).isFile
             ) return
+
             val runShell = when(currentFragment){
                 is CommandIndexFragment -> currentFragment.runShell
                 is EditFragment -> currentFragment.runShell

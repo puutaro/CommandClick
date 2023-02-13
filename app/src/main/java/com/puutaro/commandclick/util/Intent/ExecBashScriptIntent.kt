@@ -1,13 +1,10 @@
 package com.puutaro.commandclick.util.Intent
 
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteCmdClickVariable
-import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteVariableListFromHolder
-import com.puutaro.commandclick.util.ReadText
 import com.termux.shared.termux.TermuxConstants
 
 
@@ -19,6 +16,16 @@ class ExecBashScriptIntent {
             execCmd: String,
             backgroundExec: Boolean = true,
         ) {
+            try {
+                val serviceIntent = Intent()
+                serviceIntent.component = ComponentName(
+                    TermuxConstants.TERMUX_PACKAGE_NAME,
+                    TermuxConstants.TERMUX_APP.TERMUX_SERVICE_NAME
+                )
+                context?.startService(serviceIntent)
+            } catch (e: Exception){
+                Log.d("no", "runcommand service no start")
+            }
             try {
                 val intent = ToTermux(
                     runShell,

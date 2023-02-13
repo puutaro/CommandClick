@@ -76,34 +76,17 @@ class MainActivity:
             }
         }
 
-    val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                InitManager.startFragment(
-                    this,
-                    savedInstanceStateVal
-                )
-            } else {
-                this.finish()
-            }
-        }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceStateVal = savedInstanceState
         val actionBar = getSupportActionBar()
         actionBar?.hide();
-        setVolumeControlStream(AudioManager.STREAM_MUSIC)
+        volumeControlStream = AudioManager.STREAM_MUSIC
 
 
-        InitManager.invoke(
-            this,
-            savedInstanceStateVal,
-            requestPermissionLauncher
+        InitManager(this).invoke(
+            savedInstanceStateVal
         )
     }
 
@@ -118,7 +101,7 @@ class MainActivity:
 
     override fun onResume() {
         super.onResume()
-        setVolumeControlStream(AudioManager.STREAM_MUSIC)
+        volumeControlStream = AudioManager.STREAM_MUSIC
     }
 
 
