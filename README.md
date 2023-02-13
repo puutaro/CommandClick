@@ -64,7 +64,7 @@ paste bellow command to termux, press `Enter` ,and continue press `Enter` when c
 ```
 pkg update -y && pkg upgrade -y \
 && yes | termux-setup-storage \
-&& sed -r 's/^\#(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
+&& sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
 ```
 - reference
    - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory))
