@@ -61,7 +61,7 @@ private fun execHideShow(
     listener: TerminalFragment.OnToolBarVisibleChangeListener?
 ) {
     val oldCurrYDff = oldPositionY - rawY
-    if(-170 < oldCurrYDff && oldCurrYDff < -10){
+    if(-250 < oldCurrYDff && oldCurrYDff < -10){
         listener?.onToolBarVisibleChange(
             true,
             changeTargetFragment
