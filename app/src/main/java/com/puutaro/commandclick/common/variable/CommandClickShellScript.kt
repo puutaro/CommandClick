@@ -203,9 +203,9 @@ class CommandClickShellScript {
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
-            |${SET_VARIABLE_TYPE}=
             |${TERMINAL_COLOR}=
             |${TERMINAL_FONT_COLOR}=
+            |${SET_VARIABLE_TYPE}=
             |${BEFORE_COMMAND}=
             |${AFTER_COMMAND}=
             |${SHELL_FILE_NAME}=${shellScriptName}

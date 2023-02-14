@@ -23,11 +23,6 @@ class ToolbarHideShowWhenTermLong {
             val listener =
                 context as? TerminalFragment.OnToolBarVisibleChangeListener
             var oldPositionY = 0f
-            Toast.makeText(
-                terminalFragment.context,
-                (getScreenHeight(terminalFragment)).toString(),
-                Toast.LENGTH_LONG
-            ).show()
             val hideShowThreshold = getScreenHeight(terminalFragment)
             with(binding.terminalWebView){
                 setOnTouchListener {
@@ -106,6 +101,9 @@ private fun getScreenHeight(
         display?.getMetrics(outMetrics)
         outMetrics.heightPixels / density
     }
-    val hideShowRate = 3.5f
+    val hideShowRate =
+        if(dpHeight > 670f) 3.0f
+        else if(dpHeight > 630) 3.5F
+        else 4.0f
     return -(dpHeight / hideShowRate).toInt()
 }

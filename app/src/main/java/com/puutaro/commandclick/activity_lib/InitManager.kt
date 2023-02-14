@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
-import android.view.Gravity
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -144,6 +143,11 @@ class InitManager(
                     dialog, which ->
                 activity.finish()
             })
+        .setOnCancelListener(object : DialogInterface.OnCancelListener {
+            override fun onCancel(dialog: DialogInterface?) {
+                activity.finish()
+            }
+        })
             .show()
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
             activity.getColor(android.R.color.black) as Int
