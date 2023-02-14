@@ -8,11 +8,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import androidx.core.content.contentValuesOf
 import androidx.databinding.DataBindingUtil
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.R
@@ -43,7 +45,7 @@ class InitManager(
             checkPermissionGranted()
         ) {
             PackageManager.PERMISSION_GRANTED ->
-                runCommandAndStorageAccessPermissionProcess()
+                runCommandAndStartFragmentProcess()
             else -> {
                 getStoragePermissionHandler()
             }
@@ -68,28 +70,28 @@ class InitManager(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                runCommandAndStorageAccessPermissionProcess()
+                runCommandAndStartFragmentProcess()
                 return@registerForActivityResult
             }
             activity.finish()
         }
 
 
-    private fun runCommandAndStorageAccessPermissionProcess(){
+    private fun runCommandAndStartFragmentProcess(){
         val checkingRunCommandPermission =
             ContextCompat.checkSelfPermission(
                 activity,
                 runCommandPermissionName
             )
         if(
-            checkingRunCommandPermission !=
-            PackageManager.PERMISSION_DENIED
+            checkingRunCommandPermission ==
+            PackageManager.PERMISSION_GRANTED
         ) {
             startFragment()
             return
         }
         try {
-            getRunCommandAndStorageAccessPermissionLauncher.launch(
+            getRunCommandPermissionAndStartFragmentLauncher.launch(
                 runCommandPermissionName
             )
         } catch (e: Exception){
@@ -97,7 +99,7 @@ class InitManager(
         }
     }
 
-    private val getRunCommandAndStorageAccessPermissionLauncher =
+    private val getRunCommandPermissionAndStartFragmentLauncher =
         activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
@@ -119,8 +121,8 @@ class InitManager(
             .setTitle(
                 "To setup termux"
             )
-            .setMessage("1. paste clipboard \n" +
-                    "2. continue pressing Enter on termux")
+            .setMessage("\n1. Long press on termux \n2. Click paste popup on termux\n" +
+                    "3. Continue pressing Enter on termux")
             .setView(dialogLinearLayout)
             .setPositiveButton("OK", DialogInterface.OnClickListener {
                     dialog, which ->
@@ -128,6 +130,11 @@ class InitManager(
                     activity.getPackageManager().getLaunchIntentForPackage(
                         TermuxConstants.TERMUX_PACKAGE_NAME
                     ) ?: return@OnClickListener
+                Toast.makeText(
+                    activity,
+                    "Long press and click paste popup on termux",
+                    Toast.LENGTH_LONG
+                ).show()
                 activity.startActivity(launchIntent)
                 startFragment()
             })
@@ -262,7 +269,7 @@ class InitManager(
             if (
                 Environment.isExternalStorageManager()
             ) {
-                runCommandAndStorageAccessPermissionProcess()
+                runCommandAndStartFragmentProcess()
                 return@ActivityResultCallback
             }
             activity.finish()

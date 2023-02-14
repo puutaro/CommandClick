@@ -75,7 +75,6 @@ class MainActivity:
                 filePath = null
             }
         }
-    var isFocus = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,13 +99,7 @@ class MainActivity:
 
     override fun onResume() {
         super.onResume()
-        isFocus = true
         volumeControlStream = AudioManager.STREAM_MUSIC
-    }
-
-    override fun onPause() {
-        super.onPause()
-        isFocus = false
     }
 
 
