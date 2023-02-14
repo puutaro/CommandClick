@@ -17,16 +17,6 @@ class ExecBashScriptIntent {
             backgroundExec: Boolean = true,
         ) {
             try {
-                val serviceIntent = Intent()
-                serviceIntent.component = ComponentName(
-                    TermuxConstants.TERMUX_PACKAGE_NAME,
-                    TermuxConstants.TERMUX_APP.TERMUX_SERVICE_NAME
-                )
-                context?.startService(serviceIntent)
-            } catch (e: Exception){
-                Log.d("no", "runcommand service no start")
-            }
-            try {
                 val intent = ToTermux(
                     runShell,
                     execCmd,
