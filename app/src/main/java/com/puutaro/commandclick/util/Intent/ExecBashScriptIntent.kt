@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.util.Intent
 
-import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import com.termux.shared.termux.TermuxConstants
 
