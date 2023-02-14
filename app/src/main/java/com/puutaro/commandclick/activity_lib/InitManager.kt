@@ -138,32 +138,31 @@ class InitManager(
             .setView(dialogLinearLayout)
             .setPositiveButton("OK", DialogInterface.OnClickListener {
                     dialog, which ->
-                val launchIntent =
-                    activity.getPackageManager().getLaunchIntentForPackage(
-                        TermuxConstants.TERMUX_PACKAGE_NAME
-                    ) ?: return@OnClickListener
-                Toast.makeText(
-                    activity,
-                    "Long press and click paste popup on termux",
-                    Toast.LENGTH_LONG
-                ).show()
-                activity.startActivity(launchIntent)
-                startFragment()
+                execTermuxSetupAndStorageAccessPermissionProcessLauncher()
             })
             .setOnCancelListener(object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
-                    val launchIntent =
-                        activity.getPackageManager().getLaunchIntentForPackage(
-                            TermuxConstants.TERMUX_PACKAGE_NAME
-                        ) ?: return
-                    activity.startActivity(launchIntent)
-                    startFragment()
+                    execTermuxSetupAndStorageAccessPermissionProcessLauncher()
                 }
             })
             .show()
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
             activity.getColor(android.R.color.black)
         )
+    }
+
+    private fun execTermuxSetupAndStorageAccessPermissionProcessLauncher(){
+        val launchIntent =
+            activity.getPackageManager().getLaunchIntentForPackage(
+                TermuxConstants.TERMUX_PACKAGE_NAME
+            ) ?: return
+        Toast.makeText(
+            activity,
+            "Long press and click paste popup on termux",
+            Toast.LENGTH_LONG
+        ).show()
+        activity.startActivity(launchIntent)
+        startFragment()
     }
 
 
