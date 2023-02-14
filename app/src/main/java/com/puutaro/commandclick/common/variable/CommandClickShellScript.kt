@@ -202,7 +202,6 @@ class CommandClickShellScript {
             |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyValue}
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
-            |${TERMINAL_FONT_COLOR}=${STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
             |${SET_VARIABLE_TYPE}=
             |${TERMINAL_COLOR}=
