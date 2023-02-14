@@ -79,7 +79,7 @@ class EditModeHandler(
         ) {
             editCommandVariable()
         }
-        else editSettingCommandVariable()
+        else editSettingVariable()
     }
 
     private fun editCommandVariable(
@@ -146,7 +146,7 @@ class EditModeHandler(
         )
     }
 
-    private fun editSettingCommandVariable(
+    private fun editSettingVariable(
     ) {
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
