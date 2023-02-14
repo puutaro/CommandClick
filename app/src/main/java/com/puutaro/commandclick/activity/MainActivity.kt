@@ -75,6 +75,7 @@ class MainActivity:
                 filePath = null
             }
         }
+    var isFocus = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,9 +86,7 @@ class MainActivity:
         volumeControlStream = AudioManager.STREAM_MUSIC
 
 
-        InitManager(this).invoke(
-            savedInstanceStateVal
-        )
+        InitManager(this).invoke()
     }
 
 
@@ -101,7 +100,13 @@ class MainActivity:
 
     override fun onResume() {
         super.onResume()
+        isFocus = true
         volumeControlStream = AudioManager.STREAM_MUSIC
+    }
+
+    override fun onPause() {
+        super.onPause()
+        isFocus = false
     }
 
 

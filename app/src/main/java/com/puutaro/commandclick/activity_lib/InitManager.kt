@@ -2,12 +2,10 @@ package com.puutaro.commandclick.activity_lib
 
 import android.Manifest
 import android.app.AlertDialog
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
-import android.os.Bundle
 import android.os.Environment
 import android.provider.Settings
 import androidx.activity.result.ActivityResult
@@ -20,72 +18,183 @@ import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.InitFragmentManager
+import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
+import com.termux.shared.termux.TermuxConstants
 
 
 class InitManager(
     private val activity: MainActivity,
 ) {
 
-    @RequiresApi(Build.VERSION_CODES.R)
-    val manageFullStoragePermissionResultLauncher = activity.registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-        ActivityResultCallback<ActivityResult?> {
-            if (
-                Environment.isExternalStorageManager()
-            ) {
-                startFragment(
-                    activity.savedInstanceStateVal
-                )
-                return@ActivityResultCallback
+    private val runCommandPermissionName = "com.termux.permission.RUN_COMMAND"
+    private val termuxSetUpCommand = "pkg update -y && pkg upgrade -y \\\n" +
+            "&& yes | termux-setup-storage \\\n" +
+            "&& sed -r 's/^\\#\\s(allow-external-apps.*)/\\1/' -i \"\$HOME/.termux/termux.properties\""
+    private var clipboard =
+        activity.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE)
+                as ClipboardManager
+
+    fun invoke(){
+        storageAccessProcess()
+    }
+
+    private fun storageAccessProcess(){
+        when (
+            checkPermissionGranted()
+        ) {
+            PackageManager.PERMISSION_GRANTED ->
+                runCommandAndStorageAccessPermissionProcess()
+            else -> {
+                getStoragePermissionHandler()
             }
-            activity.finish()
-        })
+        }
+    }
+
+
+    private fun getStoragePermissionHandler(){
+        if(
+            Build.VERSION.SDK_INT < 30
+        ){
+            storageAccessPermissionLauncher.launch(
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            return
+        }
+        getManagedFullStorageGrantedHandler()
+    }
 
     private val storageAccessPermissionLauncher =
         activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                startFragment(
-                    activity.savedInstanceStateVal
-                )
+                runCommandAndStorageAccessPermissionProcess()
                 return@registerForActivityResult
             }
             activity.finish()
         }
 
 
-    fun startFragment (
-        savedInstanceStateVal: Bundle?
+    private fun runCommandAndStorageAccessPermissionProcess(){
+        val checkingRunCommandPermission =
+            ContextCompat.checkSelfPermission(
+                activity,
+                runCommandPermissionName
+            )
+        if(
+            checkingRunCommandPermission !=
+            PackageManager.PERMISSION_DENIED
+        ) {
+            startFragment()
+            return
+        }
+        try {
+            getRunCommandAndStorageAccessPermissionLauncher.launch(
+                runCommandPermissionName
+            )
+        } catch (e: Exception){
+            launchDialogTitleMessageOnly("termux not installed")
+        }
+    }
 
+    private val getRunCommandAndStorageAccessPermissionLauncher =
+        activity.registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                termuxSetupAndStorageAccessPermissionProcessLauncher()
+                return@registerForActivityResult
+            }
+            startFragmentWithAlert()
+        }
+
+    private fun termuxSetupAndStorageAccessPermissionProcessLauncher(){
+        val clipData = ClipData.newPlainText("termux_setup", termuxSetUpCommand)
+        clipboard.setPrimaryClip(clipData)
+        val dialogLinearLayout = LinearLayoutAdderForDialog.add(
+            activity,
+            "\n\n( clipboard contents:\n\n${termuxSetUpCommand} )"
+        )
+        val alertDialog = AlertDialog.Builder(activity)
+            .setTitle(
+                "To setup termux"
+            )
+            .setMessage("1. paste clipboard \n" +
+                    "2. continue pressing Enter on termux")
+            .setView(dialogLinearLayout)
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
+                val launchIntent =
+                    activity.getPackageManager().getLaunchIntentForPackage(
+                        TermuxConstants.TERMUX_PACKAGE_NAME
+                    ) ?: return@OnClickListener
+                activity.startActivity(launchIntent)
+                startFragment()
+            })
+            .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                override fun onCancel(dialog: DialogInterface?) {
+                    val launchIntent =
+                        activity.getPackageManager().getLaunchIntentForPackage(
+                            TermuxConstants.TERMUX_PACKAGE_NAME
+                        ) ?: return
+                    activity.startActivity(launchIntent)
+                    startFragment()
+                }
+            })
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            activity.getColor(android.R.color.black)
+        )
+    }
+
+
+    private fun startFragmentWithAlert(){
+        val alertDialog = AlertDialog.Builder(activity)
+            .setTitle("not exist run_command permission or termux app")
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
+                startFragment()
+
+            })
+            .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                override fun onCancel(dialog: DialogInterface?) {
+                    startFragment()
+                }
+            })
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            activity.getColor(android.R.color.black)
+        )
+    }
+
+    private fun launchDialogTitleMessageOnly(
+        title: String
     ){
+        val alertDialog = AlertDialog.Builder(activity)
+            .setTitle(title)
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
 
+            })
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            activity.getColor(android.R.color.black) as Int
+        )
+    }
+
+
+    private fun startFragment(){
         val initFragmentManager = InitFragmentManager(activity)
         initFragmentManager.registerSharePreferenceFromIntentExtra()
         activity.activityMainBinding = DataBindingUtil.setContentView(
             activity,
             R.layout.activity_main
         )
-        initFragmentManager.startFragment(savedInstanceStateVal)
+        initFragmentManager.startFragment(
+            activity.savedInstanceStateVal
+        )
     }
 
-    fun invoke(
-        savedInstanceStateVal: Bundle?,
-    ){
-        val checkedSelfPermission =
-            checkPermissionGranted()
-        when (checkedSelfPermission) {
-            PackageManager.PERMISSION_GRANTED -> {
-                startFragment (
-                    savedInstanceStateVal,
-
-                )
-            }
-            else -> {
-                getStoragePermissionHandler()
-            }
-        }
-    }
 
     private fun checkPermissionGranted(): Int {
         if(
@@ -99,6 +208,7 @@ class InitManager(
         return checkedManagedFullStorageGranted()
     }
 
+
     @RequiresApi(Build.VERSION_CODES.R)
     private fun checkedManagedFullStorageGranted(): Int {
         return if(
@@ -108,18 +218,6 @@ class InitManager(
         } else {
             PackageManager.PERMISSION_DENIED
         }
-    }
-
-    private fun getStoragePermissionHandler(){
-        if(
-            Build.VERSION.SDK_INT < 30
-        ){
-            storageAccessPermissionLauncher.launch(
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            )
-            return
-        }
-        getManagedFullStorageGrantedHandler()
     }
 
 
@@ -156,4 +254,18 @@ class InitManager(
             activity.getColor(android.R.color.black)
         )
     }
+
+    @RequiresApi(Build.VERSION_CODES.R)
+    val manageFullStoragePermissionResultLauncher = activity.registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+        ActivityResultCallback<ActivityResult?> {
+            if (
+                Environment.isExternalStorageManager()
+            ) {
+                runCommandAndStorageAccessPermissionProcess()
+                return@ActivityResultCallback
+            }
+            activity.finish()
+        })
+
 }
