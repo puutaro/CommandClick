@@ -14,7 +14,6 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.contentValuesOf
 import androidx.databinding.DataBindingUtil
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.R
@@ -36,6 +35,7 @@ class InitManager(
         activity.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE)
                 as ClipboardManager
 
+
     fun invoke(){
         storageAccessProcess()
     }
@@ -47,6 +47,12 @@ class InitManager(
             PackageManager.PERMISSION_GRANTED ->
                 runCommandAndStartFragmentProcess()
             else -> {
+                if(
+                    activity.supportFragmentManager.fragments.size > 0
+                ){
+                    execRestartIntent()
+                    return
+                }
                 getStoragePermissionHandler()
             }
         }
@@ -88,6 +94,12 @@ class InitManager(
             PackageManager.PERMISSION_GRANTED
         ) {
             startFragment()
+            return
+        }
+        if(
+            activity.supportFragmentManager.fragments.size > 0
+        ){
+            execRestartIntent()
             return
         }
         try {
@@ -274,5 +286,16 @@ class InitManager(
             }
             activity.finish()
         })
+
+
+    private fun execRestartIntent() {
+        val execIntent = Intent(
+            activity, activity::class.java
+        )
+        execIntent.setAction(Intent.ACTION_VIEW)
+            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        activity.startActivity(execIntent)
+        activity.finish()
+    }
 
 }

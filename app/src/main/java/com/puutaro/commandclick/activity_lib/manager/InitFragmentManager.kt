@@ -34,7 +34,7 @@ class InitFragmentManager(
         ) return
         val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
-        val okOneTask = mngr?.appTasks?.size == normalTaskNum //?.getRunningTasks(10)
+        val okOneTask = mngr?.appTasks?.size == normalTaskNum
 
         val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
         if (
