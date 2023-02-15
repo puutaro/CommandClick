@@ -15,11 +15,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.InitFragmentManager
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import com.termux.shared.termux.TermuxConstants
 
 
@@ -123,6 +126,9 @@ class InitManager(
         }
 
     private fun termuxSetupAndStorageAccessPermissionProcessLauncher(){
+        val terminalViewModel: TerminalViewModel =
+            ViewModelProvider(activity).get(TerminalViewModel::class.java)
+        terminalViewModel.launchUrl = WebUrlVariables.termuxSetupUrl
         val clipData = ClipData.newPlainText("termux_setup", termuxSetUpCommand)
         clipboard.setPrimaryClip(clipData)
         val dialogLinearLayout = LinearLayoutAdderForDialog.add(

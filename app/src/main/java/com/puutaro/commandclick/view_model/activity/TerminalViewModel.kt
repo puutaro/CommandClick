@@ -18,6 +18,7 @@ class TerminalViewModel: ViewModel() {
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
+    var launchUrl: String? = null
 }
 
 

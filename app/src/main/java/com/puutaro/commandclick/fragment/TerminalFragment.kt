@@ -113,14 +113,12 @@ class TerminalFragment: Fragment() {
             }
         }
 
-        jobCoroutine = DisplaySwich.update(
+        DisplaySwich.update(
             this,
-            terminalViewModel
+        terminalViewModel,
         )
-
         return binding.root
     }
-
 
 
     override fun onPause() {

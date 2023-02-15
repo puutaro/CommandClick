@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.os.Handler
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
@@ -45,7 +46,7 @@ private fun monitorOutput(
                 readText.readTextForHtml()
             }
             withContext(Dispatchers.IO){
-                terminalFragment.firstDisplayUpdateRunner = updateWebView(
+                terminalFragment.firstDisplayUpdateRunner = firstUpdateWebView(
                     terminalFragment,
                     terminalContents,
                     terminalViewModel,
@@ -71,6 +72,7 @@ private fun monitorOutput(
                     if(
                         terminalContents
                         == secondTerminalContents
+                        && terminalViewModel.launchUrl.isNullOrEmpty()
                     ){
                         continue
                     }
@@ -93,25 +95,25 @@ private fun monitorOutput(
 }
 
 
-private fun updateWebView(
+private fun firstUpdateWebView(
     terminalFragment: TerminalFragment,
     terminalContents: String,
     terminalViewModel: TerminalViewModel
 ): Runnable {
     return Runnable {
-        setWebView(
+        firstSetWebView(
             terminalFragment,
             terminalContents,
-            terminalViewModel
+            terminalViewModel,
         )
     }
 }
 
 
-private fun setWebView(
+private fun firstSetWebView(
     terminalFragment: TerminalFragment,
     text: String,
-    terminalViewModel: TerminalViewModel
+    terminalViewModel: TerminalViewModel,
 ) {
     try {
         val webView = terminalFragment.binding.terminalWebView
@@ -133,6 +135,54 @@ private fun setWebView(
 }
 
 
+private fun updateWebView(
+    terminalFragment: TerminalFragment,
+    terminalContents: String,
+    terminalViewModel: TerminalViewModel
+): Runnable {
+    val launchUrl = terminalViewModel.launchUrl
+    terminalViewModel.launchUrl = null
+    return Runnable {
+        setWebView(
+            terminalFragment,
+            terminalContents,
+            terminalViewModel,
+            launchUrl
+        )
+    }
+}
+
+private fun setWebView(
+    terminalFragment: TerminalFragment,
+    text: String,
+    terminalViewModel: TerminalViewModel,
+    launchUrl: String? = null
+) {
+    try {
+        val webView = terminalFragment.binding.terminalWebView
+        if(!launchUrl.isNullOrEmpty()){
+            webView.loadUrl(
+                launchUrl
+            )
+            return
+        }
+        webView.loadDataWithBaseURL(
+            "",
+            HtmlDescriber.make(
+                terminalFragment.terminalColor,
+                terminalFragment.terminalFontColor,
+                text,
+                terminalViewModel.onBottomScrollbyJs
+            ),
+            "text/html",
+            "utf-8",
+            null
+        );
+    } catch(e: Exception){
+        return
+    }
+}
+
 
 private fun registerRunner(
     terminalViewModel: TerminalViewModel? = null,
@@ -148,33 +198,4 @@ private fun registerRunner(
     trminalViewhandler.post (
         DisplayUpdateRunner
     )
-}
-
-//private fun bottomTo(
-//    terminalFragment: TerminalFragment,
-//    binding: TerminalFragmentBinding
-//) {
-//    try {
-//        val scrollViewTop = terminalFragment.binding.terminalFragment
-//        scrollViewTop.post {
-////            binding.terminalTextView.setTextIsSelectable(false)
-//            Thread.sleep(10)
-////            binding.terminalFragment.scrollTo(0, 100000)
-////            binding.terminalFragment.scrollTo(0, view.getContentHeight());
-////            scrollViewTop.fullScroll(View.FOCUS_DOWN)
-////            binding.terminalTextView.setTextIsSelectable(true)
-//        }
-//    } catch (e: Exception){
-//       return
-//    }
-//}
-
-
-private fun takeLastLines(
-    contensts: String,
-    readlinesNum: Int
-): String {
-    return contensts.lines()
-        .takeLast(readlinesNum)
-        .joinToString("\n")
 }

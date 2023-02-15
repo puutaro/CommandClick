@@ -7,5 +7,6 @@ class WebUrlVariables {
         val httpPrefix = "http://"
         val httpsPrefix = "https://"
         val filePrefix = "file:"
+        val termuxSetupUrl = "https://github.com/puutaro/CommandClick#pre-setting"
     }
 }

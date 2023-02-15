@@ -80,7 +80,7 @@ class MainActivity:
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         savedInstanceStateVal = savedInstanceState
-        val actionBar = getSupportActionBar()
+        val actionBar = supportActionBar
         actionBar?.hide();
         volumeControlStream = AudioManager.STREAM_MUSIC
 
