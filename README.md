@@ -92,18 +92,6 @@ pkg update -y && pkg upgrade -y \
 
 [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent/06f1de1b262d7612497e76463d8cc34ba7f49832#draw-over-apps-permission-optional)
 
-- When command not working, try execute bellow command, so `RUN_COMMAND SERVIDE` probably start up.
-
-```
-am startservice --user 0 -n com.termux/com.termux.app.RunCommandService \
--a com.termux.RUN_COMMAND \
---es com.termux.RUN_COMMAND_PATH '/data/data/com.termux/files/usr/bin/top' \
---esa com.termux.RUN_COMMAND_ARGUMENTS '-n,1' \
---es com.termux.RUN_COMMAND_WORKDIR '/data/data/com.termux/files/home' \
---ez com.termux.RUN_COMMAND_BACKGROUND 'false' \
---es com.termux.RUN_COMMAND_SESSION_ACTION '0'
-```
-
 - When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
 Usage
