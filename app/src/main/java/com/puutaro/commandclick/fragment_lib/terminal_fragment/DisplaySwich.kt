@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.util.ReadText
@@ -160,7 +161,14 @@ private fun setWebView(
 ) {
     try {
         val webView = terminalFragment.binding.terminalWebView
-        if(!launchUrl.isNullOrEmpty()){
+        if(
+            !launchUrl.isNullOrEmpty()
+            && (
+                    launchUrl.startsWith(WebUrlVariables.httpsPrefix)
+                            || launchUrl.startsWith(WebUrlVariables.httpPrefix)
+                            || launchUrl.startsWith(WebUrlVariables.filePrefix)
+                    )
+        ){
             webView.loadUrl(
                 launchUrl
             )
