@@ -73,6 +73,18 @@ pkg update -y && pkg upgrade -y \
    - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
    - Execute `termux-setup-storage` on termux
 
+4. Set strage access again in `android 11+` (Optional)
+
+> You may get "Permission denied" error when trying to access shared storage, even though the permission has been granted.
+>  
+> Workaround:
+>
+> Go to Android Settings --> Applications --> Termux --> Permissions
+> Revoke Storage permission
+> Grant Storage permission again
+
+[detail](https://wiki.termux.com/wiki/Termux-setup-storage)
+
 4. Set `Draw Over Apps permission` in `android 11+` (Optinal)
 
 > You can grant Termux the Draw Over Apps permission from its App Info activity:
