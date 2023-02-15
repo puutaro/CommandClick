@@ -73,7 +73,7 @@ pkg update -y && pkg upgrade -y \
    - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
    - Execute `termux-setup-storage` on termux
 
-4. Set strage access again in `android 11+` (Optional)
+4. Set strage access again in `android 11` (Optional)
 
 > You may get "Permission denied" error when trying to access shared storage, even though the permission has been granted.
 >  
