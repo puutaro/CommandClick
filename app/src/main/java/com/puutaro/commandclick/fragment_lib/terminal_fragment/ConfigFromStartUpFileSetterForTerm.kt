@@ -30,7 +30,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
-                ).txetToList(),
+                ).textToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END
             )
@@ -76,7 +76,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 ReadText(
                     terminalFragment.currentAppDirPath,
                     currentShellFileName
-                ).txetToList(),
+                ).textToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END
             )

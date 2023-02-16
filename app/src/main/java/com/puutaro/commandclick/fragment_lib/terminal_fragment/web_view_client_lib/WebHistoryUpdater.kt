@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_
 import android.webkit.WebView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -63,7 +62,7 @@ class WebHistoryUpdater {
             val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
                 currentAppDirPath,
                 cmdclickUrlHistoryFileName
-            ).txetToList().take(takeHistoryNum).joinToString("\n")
+            ).textToList().take(takeHistoryNum).joinToString("\n")
             FileSystems.writeFile(
                 currentAppDirPath,
                 cmdclickUrlHistoryFileName,

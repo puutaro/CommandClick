@@ -1,13 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 class ConfigFromStartUpFileSetter {
@@ -21,7 +18,7 @@ class ConfigFromStartUpFileSetter {
                 ReadText(
                     currentAppDirPath,
                     UsePath.cmdclickStartupShellName
-                ).txetToList(),
+                ).textToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END
             )

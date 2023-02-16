@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess
 
+import android.content.Context
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
@@ -13,7 +15,6 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
-import kotlin.contracts.contract
 
 
 class ExecTerminalDo {
@@ -44,7 +45,7 @@ class ExecTerminalDo {
                 ReadText(
                     recentAppdirPath,
                     selectedShellFileName
-                ).txetToList()
+                ).textToList()
             } else shellContentsListSource
             val substituteSettingVariableList =
                 CommandClickVariables.substituteVariableListFromHolder(
@@ -70,6 +71,12 @@ class ExecTerminalDo {
                 substituteSettingVariableList,
                 CommandClickShellScript.ON_UPDATE_LAST_MODIFY
             ) ?: CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
+
+            urlLaunchMacroProcessor(
+                substituteSettingVariableList,
+                terminalViewModel,
+                recentAppdirPath,
+            )
 
             val execCmd = MakeExecCmdForTermux.make(
                     currentFragment,
@@ -100,3 +107,38 @@ class ExecTerminalDo {
     }
 }
 
+
+private fun urlLaunchMacroProcessor(
+    substituteSettingVariableList: List<String>?,
+    terminalViewModel: TerminalViewModel,
+    recentAppdirPath: String,
+) {
+    val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
+        substituteSettingVariableList,
+        CommandClickShellScript.ON_URL_LAUNCH_MACRO
+    ) ?: CommandClickShellScript.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
+    when(onUrlLaunchMacro){
+        SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name -> {
+            terminalViewModel.launchUrl = ReadText(
+                recentAppdirPath,
+                UsePath.cmdclickUrlHistoryFileName
+            ).textToList()
+                .firstOrNull()
+                ?.split("\t")?.lastOrNull()
+        }
+        SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREAQUENCY.name -> {
+            terminalViewModel.launchUrl = ReadText(
+                recentAppdirPath,
+                UsePath.cmdclickUrlHistoryFileName
+            ).textToList().groupBy { it }
+                .mapValues { it.value.size }
+                .maxBy { it.value }
+                .key
+                .split("\t")
+                .lastOrNull()
+        }
+        else -> {
+
+        }
+    }
+}

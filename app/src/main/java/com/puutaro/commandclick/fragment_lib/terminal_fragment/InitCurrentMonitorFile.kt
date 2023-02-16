@@ -21,7 +21,7 @@ class InitCurrentMonitorFile () {
                 val trimedMonitorContents = ReadText(
                     cmdclickMonitorDirPath,
                     currentMonitorFileName
-                ).txetToList().takeLast(trimLastLine).joinToString("\n")
+                ).textToList().takeLast(trimLastLine).joinToString("\n")
                 FileSystems.writeFile(
                     cmdclickMonitorDirPath,
                     currentMonitorFileName,

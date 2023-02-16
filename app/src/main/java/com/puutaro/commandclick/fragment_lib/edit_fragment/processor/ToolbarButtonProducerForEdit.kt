@@ -539,7 +539,7 @@ internal fun popupMenuItemSelectedForEdit(
                 val shellContentsList = ReadText(
                     configDirPath,
                     configShellName
-                ).txetToList()
+                ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     editFragment,
                     shellContentsList

@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.os.Handler
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath

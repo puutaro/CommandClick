@@ -70,7 +70,7 @@ class ExecOnLongClickDo {
                     val shellContentsList = ReadText(
                         currentAppDirPath,
                         shellScriptName
-                    ).txetToList()
+                    ).textToList()
                     val validateErrMessage = ValidateShell.correct(
                         cmdIndexFragment,
                         shellContentsList
@@ -164,7 +164,7 @@ class ExecOnLongClickDo {
                         ReadText(
                             currentAppDirPath,
                             shellScriptName
-                        ).txetToList()
+                        ).textToList()
                     )
                 }
                 R.id.shell_script_menu_init -> {

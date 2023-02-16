@@ -44,7 +44,7 @@ class AppHistoryAdminEvent {
             val shellContentsList = ReadText(
                 selectedAppDirPath,
                 selectedAppShellFileName
-            ).txetToList()
+            ).textToList()
             val updateEditExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
                 shellContentsList
             )

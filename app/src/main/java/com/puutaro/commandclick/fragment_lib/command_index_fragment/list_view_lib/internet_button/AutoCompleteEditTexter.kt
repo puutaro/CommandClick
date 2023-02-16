@@ -66,7 +66,7 @@ class AutoCompleteEditTexter(
             return ReadText(
                 currentAppDirPath,
                 UsePath.cmdclickUrlHistoryFileName
-            ).txetToList()
+            ).textToList()
                 .distinct()
                 .take(takeListNum)
                 .filter {

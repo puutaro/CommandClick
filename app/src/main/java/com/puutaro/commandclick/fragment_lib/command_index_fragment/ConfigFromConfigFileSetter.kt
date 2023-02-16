@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -21,7 +20,7 @@ class ConfigFromConfigFileSetter {
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
-                ).txetToList(),
+                ).textToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END
             )

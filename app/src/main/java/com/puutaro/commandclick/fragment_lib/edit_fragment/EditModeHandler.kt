@@ -45,7 +45,7 @@ class EditModeHandler(
     private val currentShellContentsList = ReadText(
         currentAppDirPath,
         currentShellFileName
-    ).txetToList()
+    ).textToList()
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
         currentShellContentsList

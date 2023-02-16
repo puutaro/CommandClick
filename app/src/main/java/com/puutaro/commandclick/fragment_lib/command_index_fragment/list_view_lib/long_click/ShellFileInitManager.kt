@@ -119,7 +119,7 @@ class ShellFileInitManager {
             val initedShellcontents = ReadText(
                 currentAppDirPath,
                 shellScriptName
-            ).txetToList().map {
+            ).textToList().map {
                 if(
                     it.startsWith(settingSectionStart)
                     && it.endsWith(settingSectionStart)

@@ -64,7 +64,7 @@ class ReadText(
 
     }
 
-    fun txetToList(
+    fun textToList(
     ): List<String> {
         val shellFile = File(
             dirPath,

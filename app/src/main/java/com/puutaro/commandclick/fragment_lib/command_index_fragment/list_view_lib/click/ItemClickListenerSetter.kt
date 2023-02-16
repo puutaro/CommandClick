@@ -60,7 +60,7 @@ class ItemClickListenerSetter {
                 val shellContentsList = ReadText(
                     currentAppDirPath,
                     selectedShellFileName
-                ).txetToList()
+                ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     cmdIndexFragment,
                     shellContentsList

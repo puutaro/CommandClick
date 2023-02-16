@@ -35,7 +35,7 @@ class AddConfirmDialogForSettingButton {
                     val shellContentsList = ReadText(
                         currentAppDirPath,
                         shellScriptName
-                    ).txetToList()
+                    ).textToList()
 
 
                     val newShellScriptName = makeNewShellName(

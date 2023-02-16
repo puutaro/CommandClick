@@ -181,7 +181,7 @@ class ValidationSharePreferenceForEdit(
             checkCurrentAppDirPath,
             recentShellFileName
         )
-        val shellContentsList = readText.txetToList()
+        val shellContentsList = readText.textToList()
         val variablesCommandHolderListSize = CommandClickVariables.substituteVariableListFromHolder(
             shellContentsList,
             CommandClickShellScript.CMD_VARIABLE_SECTION_START,

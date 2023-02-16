@@ -11,7 +11,7 @@ class CmdClickConfigVariables {
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
-                ).txetToList(),
+                ).textToList(),
                 CommandClickShellScript.CMD_VARIABLE_SECTION_START,
                 CommandClickShellScript.CMD_VARIABLE_SECTION_END
             )

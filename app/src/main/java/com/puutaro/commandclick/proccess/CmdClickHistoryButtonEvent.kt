@@ -223,7 +223,7 @@ internal fun makeHistoryListRow(
         appDirPath,
         UsePath.cmdclickFirstHistoryTitle
 //                UsePath.cmdclickUrlHistoryFileName
-    ).txetToList()
+    ).textToList()
         .firstOrNull()
         ?.split("\t")
         ?.firstOrNull() ?: return historyRow

@@ -38,7 +38,7 @@ class AutoShellExecManager {
             val shellContentsList = ReadText(
                 currentAppDirPath,
                 cmdclickStartupOrEndShellName
-            ).txetToList()
+            ).textToList()
             val substituteSettingVariableList =
                 CommandClickVariables.substituteVariableListFromHolder(
                     shellContentsList,

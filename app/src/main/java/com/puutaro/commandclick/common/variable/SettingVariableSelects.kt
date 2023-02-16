@@ -60,6 +60,12 @@ class SettingVariableSelects {
             WHITE,
             INHERIT,
         }
+
+        enum class OnUrlLaunchMacroSelects {
+            RECENT,
+            FREAQUENCY,
+            OFF,
+        }
     }
 
 }

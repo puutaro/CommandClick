@@ -22,6 +22,7 @@ class CommandClickShellScript {
         val TERMINAL_OUTPUT_MODE = "terminalOutputMode"
         val SET_VARIABLE_TYPE = "setVariableType"
         val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
+        val ON_URL_LAUNCH_MACRO = "onUrlLaunchMacro"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
         val SHELL_FILE_NAME = "shellFileName"
@@ -55,6 +56,7 @@ class CommandClickShellScript {
             CMDCLICK_ON_HISTORY_URL_TITLE,
             CMDCLICK_RUN_SHELL,
             CMDCLICK_SHIBAN,
+            ON_URL_LAUNCH_MACRO,
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SHELL_FILE_NAME,
@@ -88,6 +90,9 @@ class CommandClickShellScript {
         private val statusBarIconColorModeWhite = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.WHITE.name
         private val statusBarIconColorModeBlack = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
         private val statusBarIconColorInherit = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name
+        private val onUrlLaunchMacroRecent = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name
+        private val onUrlLaunchMacroFreaquency = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREAQUENCY.name
+        private val onUrlLaunchMacroOff = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
         val TERMINAL_DO_DEFAULT_VALUE = terminalOn
         val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
         val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
@@ -97,6 +102,7 @@ class CommandClickShellScript {
         val TERMINAL_COLOR_DEFAULT_VALUE = "#121212"
         val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
         val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
+        val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
         val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
         val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.OFF.name
@@ -117,6 +123,7 @@ class CommandClickShellScript {
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
+            "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFreaquency}"
         )
 
         fun makeShellScriptName(): String {
@@ -160,6 +167,10 @@ class CommandClickShellScript {
                 |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
                 |#  - ${urlHistoryOrButtonExecUrlHistory}: switch url history
                 |#  - ${urlHistoryOrButtonExecUrlButtonExec}: switch url button script exec
+                |# * ${ON_URL_LAUNCH_MACRO}: url launch macro
+                |#  - ${onUrlLaunchMacroRecent}: recent use url launch
+                |#  - ${onUrlLaunchMacroFreaquency}: most use url launch
+                |#  - ${onUrlLaunchMacroOff}: no launch
                 |# * ${SET_VARIABLE_TYPE} is cmdsection gui edit mini program, reference to github for detail (like gtk yad)
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
@@ -362,6 +373,7 @@ class CommandClickShellScript {
             |${CMDCLICK_ON_HISTORY_URL_TITLE}=${CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE}
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
+            |${ON_URL_LAUNCH_MACRO}=${ON_URL_LAUNCH_MACRO_DEFAULT_VALUE}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
             |${TERMINAL_FONT_COLOR}=
             |${TERMINAL_COLOR}=

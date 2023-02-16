@@ -235,7 +235,7 @@ class ToolBarSettingButtonControl(
         val shellContentsList = ReadText(
             configDirPath,
             configShellName
-        ).txetToList()
+        ).textToList()
         val validateErrMessage = ValidateShell.correct(
             cmdIndexFragment,
             shellContentsList

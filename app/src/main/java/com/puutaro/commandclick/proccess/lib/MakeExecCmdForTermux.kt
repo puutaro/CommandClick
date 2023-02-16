@@ -51,9 +51,7 @@ class MakeExecCmdForTermux {
             )?.let{
                 trimBothEdgeQuote(it)
             }?.trim(' ') ?: String()
-            val beforeCommand =  if(beforeCommandSource.isNotEmpty()){
-                "${beforeCommandSource} ${normalOutputMark} \"${outputPath}\"${debugSign};"
-            } else String()
+
             val afterCommandSource = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
                 CommandClickShellScript.AFTER_COMMAND,
@@ -61,40 +59,29 @@ class MakeExecCmdForTermux {
                 trimBothEdgeQuote(it)
             }?.trim(' ') ?: String()
 
-            val afterCommand =  if(afterCommandSource.isNotEmpty()){
-                "${afterCommandSource} ${normalOutputMark} \"${outputPath}\"${debugSign};"
-            } else String()
-
             val execBashScript = "${recentAppdirPath}/" +
                     selectedShellFileName
             val factExecCmd = "${runShell} \"${execBashScript}\""
             val execTitle = "echo \"\n### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${selectedShellFileName}\" " +
                     " ${monitorFileReDirectMark} \"${outputPath}\";"
-//            val makeHtmlCmd =
-//                " | ansi2html | sed  -e '1,/^<pre class=/d' -e '/^<\\/pre>$/,\$d' | sed '\$d' "
 
 
             val execCmdSource = if(
                 terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
                 || terminalOutputMode == SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
+                || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                || !terminalViewModel.launchUrl.isNullOrEmpty()
             ) {
-                beforeCommand +
-                        " ${factExecCmd};" +
-                        afterCommand
-            } else if (
-                terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
-            ) {
-                execTitle +
-                        "${beforeCommandSource};" +
+                "${beforeCommandSource};" +
                         "${factExecCmd};" +
                         "${afterCommandSource};"
             } else {
                 execTitle +
-                        beforeCommand +
-                        " ${factExecCmd} ${normalOutputMark} \"${outputPath}\"${debugSign};" +
-                        afterCommand
+                        "${beforeCommandSource} ${normalOutputMark} \"${outputPath}\"${debugSign};" +
+                        "${factExecCmd} ${normalOutputMark} \"${outputPath}\"${debugSign};" +
+                        "${afterCommandSource} ${normalOutputMark} \"${outputPath}\"${debugSign};"
             }
-            return execCmdSource.replace(";;", ";")
+            return execCmdSource.trim(' ').trim(';').replace(";;", ";")
         }
     }
 }
