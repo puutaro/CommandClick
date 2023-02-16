@@ -85,7 +85,7 @@ For Instance, bellow process.
 
 [detail](https://wiki.termux.com/wiki/Termux-setup-storage)
 
-4. Set `Draw Over Apps permission` in `android 11+` (Optinal)
+5. Set `Draw Over Apps permission` in `android 11+` (Optinal)
 
 > You can grant Termux the Draw Over Apps permission from its App Info activity:
 > `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
