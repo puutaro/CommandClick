@@ -13,6 +13,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
@@ -219,6 +220,11 @@ class CommandIndexFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        ListViewUpdaterOnStart.update(this)
     }
 
 
