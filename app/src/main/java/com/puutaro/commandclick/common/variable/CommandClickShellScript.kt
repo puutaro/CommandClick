@@ -167,10 +167,13 @@ class CommandClickShellScript {
                 |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
                 |#  - ${urlHistoryOrButtonExecUrlHistory}: switch url history
                 |#  - ${urlHistoryOrButtonExecUrlButtonExec}: switch url button script exec
-                |# * ${ON_URL_LAUNCH_MACRO}: url launch macro
+                |# * ${ON_URL_LAUNCH_MACRO}: url launch macro(when set, cmdclick web terminal don't output)
+                |#  - ${onUrlLaunchMacroOff}: no launch
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFreaquency}: most use url launch
-                |#  - ${onUrlLaunchMacroOff}: no launch
+                |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
+                |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
+                |# * ${TERMINAL_COLOR} adjust terminal background color
                 |# * ${SET_VARIABLE_TYPE} is cmdsection gui edit mini program, reference to github for detail (like gtk yad)
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
@@ -183,9 +186,6 @@ class CommandClickShellScript {
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar1}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF"
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar2}:${EditTextSupportViewName.FILE_PICKER.str}="
                 |#  ${SET_VARIABLE_TYPE}="..."
-                |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
-                |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
-                |# * ${TERMINAL_COLOR} adjust terminal background color
                 |# * ${BEFORE_COMMAND} is before shell script execute, run command
                 |# * ${AFTER_COMMAND} is after shell script execute, run command
                 |# * ${SHELL_FILE_NAME} is your shell file name

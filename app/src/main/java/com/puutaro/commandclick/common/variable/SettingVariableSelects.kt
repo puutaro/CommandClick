@@ -62,9 +62,9 @@ class SettingVariableSelects {
         }
 
         enum class OnUrlLaunchMacroSelects {
+            OFF,
             RECENT,
             FREAQUENCY,
-            OFF,
         }
     }
 
