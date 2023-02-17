@@ -182,9 +182,11 @@ class CommandClickShellScript {
                 |#  - ex) button: {cmdVariable}:${EditTextSupportViewName.BUTTON.str}=
                 |#    - button execute command 
                 |#      ex) echo $0  
-                |#             ($0 is current shell path
+                |#             ("$0" is current shell path
                 |#      ex) ${backStackPrefix} ls
-                |#             (${backStackPrefix} is backstack, only work when prefix
+                |#             ("${backStackPrefix}" is backstack, only work when prefix
+                |#      ex) top -n 1 > /dev/null  
+                               (when suffix is "> /dev/null" or "> /dev/null 2>&1", no output
                 |#  - ex) dir selector: {cmdVariable}:${EditTextSupportViewName.DIRECTORY_PICKER.str}=
                 |#  - ex) read only: {cmdVariable}:${EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str}=
                 |#  - ex) password: {cmdVariable}:${EditTextSupportViewName.PASSWORD.str}=
