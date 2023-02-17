@@ -38,6 +38,11 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap,
     )
 
+    private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        readSharePreffernceMap,
+        SharePrefferenceSetting.current_shell_file_name
+    )
+
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
@@ -246,10 +251,7 @@ class ToolbarButtonProducerForEdit(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_shell_file_name
-        )
+
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         val onAppDirAdminMode = curentAppDirPath == cmdclickAppDirAdminPath
         execMoveDirWhenOk(
@@ -356,6 +358,7 @@ class ToolbarButtonProducerForEdit(
             editFragment,
             readSharePreffernceMap
         )
+
         val editedShellContentsList = when(
             editFragment.tag
         ) {
@@ -371,9 +374,12 @@ class ToolbarButtonProducerForEdit(
                 )
             }
             else -> {
-                editedTextContents.updateByCommandVariables(
+                val shellContentsListUpdatedCmdVariable = editedTextContents.updateByCommandVariables(
                     shellContentsList,
                     recordNumToMapNameValueInCommandHolder,
+                )
+                updateShellScriptNameForEditCmdVriable(
+                    shellContentsListUpdatedCmdVariable
                 )
             }
         }
@@ -404,6 +410,32 @@ class ToolbarButtonProducerForEdit(
                 beforeMoveDirPath,
                 afterMoveDirPath,
             )
+        }
+    }
+
+    private fun updateShellScriptNameForEditCmdVriable(
+        shellContentsListUpdatedCmdVariable: List<String>
+    ): List<String> {
+        val shellScriptNameVariableName = CommandClickShellScript.SHELL_FILE_NAME
+        var countSettingHolderStart = 0
+        var countSettingHolderEnd = 0
+        return shellContentsListUpdatedCmdVariable.map {
+            if (
+                it.startsWith(CommandClickShellScript.SETTING_SECTION_START)
+                && it.endsWith(CommandClickShellScript.SETTING_SECTION_START)
+            ) countSettingHolderStart++
+            if (
+                it.startsWith(CommandClickShellScript.SETTING_SECTION_END)
+                && it.endsWith(CommandClickShellScript.SETTING_SECTION_END)
+            ) countSettingHolderEnd++
+            if (
+                countSettingHolderStart == 0
+                || countSettingHolderEnd > 0
+            ) return@map it
+            if (
+                it.startsWith(shellScriptNameVariableName)
+            ) "${shellScriptNameVariableName}=${currentShellFileName}"
+            else it
         }
     }
 

@@ -131,6 +131,7 @@ private class ShellContntsList(
         startIdNum: Int
     ): List<String> {
         val factRecordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder.size - 1
+        if(factRecordNumToNameToValueInHolderSize <= -1) return shellContentsList
         val editedRecordNumToNameToValue = (0..factRecordNumToNameToValueInHolderSize).map {
             val currentId = startIdNum + it
             val editTextView = editLinearLayout.findViewById<EditText>(currentId)
@@ -144,7 +145,9 @@ private class ShellContntsList(
                                 to ComleteQuote.comp(currentVriableValue)
                     )
         }.toMap()
-        return (0..shellContentsList.size - 1).map {
+        val processShellScriptSize = shellContentsList.size - 1
+        if(processShellScriptSize <= -1) return shellContentsList
+        return (0..processShellScriptSize).map {
                 currentOrder ->
             val getReplaceValue = editedRecordNumToNameToValue.get(currentOrder)
             if(getReplaceValue.isNullOrEmpty()){

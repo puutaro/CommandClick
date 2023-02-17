@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -96,6 +97,7 @@ class EditModeHandler(
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END,
                 true,
+                currentShellFileName
             )
 
         if(
