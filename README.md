@@ -156,9 +156,14 @@ At the same time, if you installed code editor, edit new file.
     | `DIR`  | directory select button | {variablebName}:DIR= |
     | `MDIR`  | directory select button | {variablebName}:MDIR= |
     | `DT`  | create file button | {variablebName}:DT=  |
-    | `CLR` | select color  | {variablebName}:CLR={default value}    |
+    | `CLR` | select color  | {variablebName}:CLR={default value}   (detail bellow) |
     | `BTN` | botton  | {variablebName}:BTN={command}    |
     | `FBTN` | botton  | {variablebName}:FBTN={command}    |
+    
+      - button option usage  
+                 ex) echo $0   (`$0` is current shell path  
+                 ex) BackStack ls    (`BackStack` is backstack, only work when prefix 
+                 ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)
 
 
 #### Run
