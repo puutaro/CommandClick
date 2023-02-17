@@ -186,7 +186,6 @@ class TerminalFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        WebStorage.getInstance().deleteAllData()
         _binding = null
     }
 

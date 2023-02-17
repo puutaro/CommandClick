@@ -69,12 +69,6 @@ class WithButtonView(
             val execCmdEditable = insertEditText.text
             if(execCmdEditable.isNullOrEmpty()) return@setOnClickListener
 
-            val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-                ReadText(
-                    currentAppDirPath,
-                    currentShellName
-                ).textToList()
-            )
             val innerExecCmd = execCmdEditable
                 .trim('\'')
                 .trim('"')
