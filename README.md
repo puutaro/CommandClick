@@ -58,20 +58,20 @@ Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app
 and, require termux storage setting.
 For Instance, bellow process.
 
-1. Add com.termux.permission.RUN_COMMAND permission
-      `Android Settings` -> `Apps` -> `CommandClick` -> `Permissions` -> `Additional permissions` -> `Run commands in Termux environment`
-2. Paste bellow command to termux, press `Enter` ,and continue press `Enter` when comfirm
+1. Long press on termux
+2. Click paste popup on termux  
+3. Continue pressing `Enter` on termux
+- clipboard contents:
+   ```
+   pkg update -y && pkg upgrade -y \
+   && yes | termux-setup-storage \
+   && sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
+   ```
 
-```
-pkg update -y && pkg upgrade -y \
-&& yes | termux-setup-storage \
-&& sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
-```
-
-- reference
-   - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory))
-   - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
-   - Execute `termux-setup-storage` on termux
+   - reference
+      - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
+      - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
+      - Execute `termux-setup-storage` on termux
 
 4. Set strage access again in `android 11` (Optional)
 
@@ -85,7 +85,7 @@ pkg update -y && pkg upgrade -y \
 
 [detail](https://wiki.termux.com/wiki/Termux-setup-storage)
 
-4. Set `Draw Over Apps permission` in `android 11+` (Optinal)
+5. Set `Draw Over Apps permission` in `android 11+` (Optinal)
 
 > You can grant Termux the Draw Over Apps permission from its App Info activity:
 > `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
