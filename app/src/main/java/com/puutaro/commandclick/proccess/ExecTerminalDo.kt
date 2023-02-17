@@ -1,7 +1,5 @@
 package com.puutaro.commandclick.proccess
 
-import android.content.Context
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
@@ -126,7 +124,7 @@ private fun urlLaunchMacroProcessor(
                 .firstOrNull()
                 ?.split("\t")?.lastOrNull()
         }
-        SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREAQUENCY.name -> {
+        SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
             terminalViewModel.launchUrl = ReadText(
                 recentAppdirPath,
                 UsePath.cmdclickUrlHistoryFileName

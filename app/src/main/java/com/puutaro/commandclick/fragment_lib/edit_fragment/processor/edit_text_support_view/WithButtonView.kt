@@ -6,19 +6,22 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.proccess.ExecTerminalDo
+import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 class WithButtonView(
     private val editFragment: EditFragment,
-    readSharePreffernceMap: Map<String, String>,
+    private val readSharePreffernceMap: Map<String, String>,
 ) {
     private val context = editFragment.context
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -65,20 +68,46 @@ class WithButtonView(
             innerButtonView ->
             val execCmdEditable = insertEditText.text
             if(execCmdEditable.isNullOrEmpty()) return@setOnClickListener
-            ExecTerminalDo.execTerminalDo(
-                editFragment,
-                currentAppDirPath,
-                currentShellName,
+
+            val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
+                ReadText(
+                    currentAppDirPath,
+                    currentShellName
+                ).textToList()
             )
             val innerExecCmd = execCmdEditable
                 .trim('\'')
                 .trim('"')
-            val execCmd = "${innerExecCmd} >> \"${outputPath}\";"
+                .trim(' ')
+                .trim(';')
+                .replace(Regex("  *"), " ")
+                .replace("$0", "${currentAppDirPath}/${currentShellName}")
+            val backStackPrefix = SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name
+            val onEditExecuteOnce = innerExecCmd.startsWith(backStackPrefix)
+            val execCmdAfterTrimButtonEditExecVariant = if(
+                onEditExecuteOnce
+            ) innerExecCmd.removePrefix(backStackPrefix)
+            else innerExecCmd
+            val execCmd = if(
+                execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
+                || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
+            ) "${execCmdAfterTrimButtonEditExecVariant};"
+            else "${execCmdAfterTrimButtonEditExecVariant} >> \"${outputPath}\""
             ExecBashScriptIntent.ToTermux(
                 editFragment.runShell,
                 context,
                 execCmd,
                 true
+            )
+            if(
+                !onEditExecuteOnce
+            ) return@setOnClickListener
+            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+            listener?.onToolBarButtonClickForEditFragment(
+                editFragment.tag,
+                ToolbarButtonBariantForEdit.OK,
+                readSharePreffernceMap,
+                true,
             )
         }
 

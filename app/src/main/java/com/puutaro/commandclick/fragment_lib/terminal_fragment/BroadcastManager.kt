@@ -28,7 +28,7 @@ class BroadcastManager {
                 )
                 terminalFragment.activity?.unregisterReceiver(
                     terminalFragment.broadcastReceiver
-                );
+                )
             } catch(e: Exception){
                 return
             }

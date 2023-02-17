@@ -64,7 +64,11 @@ class SettingVariableSelects {
         enum class OnUrlLaunchMacroSelects {
             OFF,
             RECENT,
-            FREAQUENCY,
+            FREQUENCY,
+        }
+
+        enum class ButtonEditExecVarantSelects {
+            BackStack
         }
     }
 

@@ -68,8 +68,8 @@ internal fun okHandler(
         val execIntent = Intent(activity, activity::class.java)
         execIntent.setAction(Intent.ACTION_MAIN)
             .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        activity.finish();
-        activity.startActivity(execIntent);
+        activity.startActivity(execIntent)
+        activity.finish()
         return
     }
     ExecOkForEdit.execOkForEdit(
@@ -87,7 +87,7 @@ internal fun cancelHandler(
         ExecCancel.execCancel(
             activity,
         )
-    } else {
-        activity.supportFragmentManager.popBackStackImmediate();
+        return
     }
+    activity.supportFragmentManager.popBackStackImmediate()
 }

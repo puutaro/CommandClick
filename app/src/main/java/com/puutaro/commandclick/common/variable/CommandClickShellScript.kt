@@ -91,7 +91,7 @@ class CommandClickShellScript {
         private val statusBarIconColorModeBlack = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
         private val statusBarIconColorInherit = SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name
         private val onUrlLaunchMacroRecent = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name
-        private val onUrlLaunchMacroFreaquency = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREAQUENCY.name
+        private val onUrlLaunchMacroFrequency = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREQUENCY.name
         private val onUrlLaunchMacroOff = SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
         val TERMINAL_DO_DEFAULT_VALUE = terminalOn
         val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
@@ -123,7 +123,7 @@ class CommandClickShellScript {
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
-            "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFreaquency}"
+            "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}"
         )
 
         fun makeShellScriptName(): String {
@@ -135,6 +135,7 @@ class CommandClickShellScript {
         }
 
         fun makeDescription(): String {
+            val backStackPrefix = SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name
             return """
                 # * ${TERMINAL_DO} is terminal screen select option
                 |#  - ${terminalOn}: cmdclick terminal (default)
@@ -170,7 +171,7 @@ class CommandClickShellScript {
                 |# * ${ON_URL_LAUNCH_MACRO}: url launch macro(when set, cmdclick web terminal don't output)
                 |#  - ${onUrlLaunchMacroOff}: no launch
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
-                |#  - ${onUrlLaunchMacroFreaquency}: most use url launch
+                |#  - ${onUrlLaunchMacroFrequency}: most use url launch
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
@@ -178,6 +179,12 @@ class CommandClickShellScript {
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
                 |#  - ex) file selector: {cmdVariable}:${EditTextSupportViewName.FILE_PICKER.str}=
+                |#  - ex) button: {cmdVariable}:${EditTextSupportViewName.BUTTON.str}=
+                |#    - button execute command 
+                |#      ex) echo $0  
+                |#             ($0 is current shell path
+                |#      ex) ${backStackPrefix} ls
+                |#             (${backStackPrefix} is backstack, only work when prefix
                 |#  - ex) dir selector: {cmdVariable}:${EditTextSupportViewName.DIRECTORY_PICKER.str}=
                 |#  - ex) read only: {cmdVariable}:${EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str}=
                 |#  - ex) password: {cmdVariable}:${EditTextSupportViewName.PASSWORD.str}=

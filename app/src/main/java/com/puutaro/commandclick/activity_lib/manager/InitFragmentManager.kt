@@ -163,8 +163,8 @@ class InitFragmentManager(
     private fun exedRestartIntent(
         sendIntent: Intent
     ) {
-        activity.finish()
         activity.startActivity(sendIntent)
+        activity.finish()
     }
 
     private fun removeTask(
