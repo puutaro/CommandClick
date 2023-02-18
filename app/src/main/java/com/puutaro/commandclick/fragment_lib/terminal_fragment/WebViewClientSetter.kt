@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
@@ -75,6 +77,19 @@ class WebViewClientSetter {
                     )
                     previousUrl = url
 
+                }
+
+                override fun shouldInterceptRequest(
+                    view: WebView?,
+                    request: WebResourceRequest?
+                ): WebResourceResponse? {
+                    request?.let {
+                        val ad = AdBlocker.isAd(it.url.toString())
+                        if (ad) {
+                            return AdBlocker.createEmptyResource()
+                        }
+                    }
+                    return super.shouldInterceptRequest(view, request)
                 }
             })
         }

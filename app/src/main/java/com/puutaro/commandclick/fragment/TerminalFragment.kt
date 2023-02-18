@@ -21,6 +21,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -75,6 +76,7 @@ class TerminalFragment: Fragment() {
             container,
         false
         )
+        AdBlocker.init(this)
 
         if(savedInstanceState!=null) {
             binding.terminalWebView.restoreState(savedInstanceState)
