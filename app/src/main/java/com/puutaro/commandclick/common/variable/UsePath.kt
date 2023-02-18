@@ -44,6 +44,7 @@ class UsePath {
         val cmdclickStartupShellName = "cmdclick_startup.sh"
         val cmdclickEndShellName = "cmdclick_end.sh"
         val cmdclickFirstHistoryTitle = "firstHistoryTitle"
+        val urlLoadFinished = "urlLoadFinished"
 
 
         fun makeOmitPath(

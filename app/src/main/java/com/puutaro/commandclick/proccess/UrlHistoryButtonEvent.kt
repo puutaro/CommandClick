@@ -9,6 +9,7 @@ import android.widget.ListView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.UrlTitleTrimmer
@@ -22,6 +23,7 @@ class UrlHistoryButtonEvent(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
+    val fragmentTag = fragment.tag
     private val context = fragment.context
     private val tabReplaceStr = "\t"
 
@@ -98,10 +100,27 @@ class UrlHistoryButtonEvent(
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
             if(selectedUrl == null) return@setOnItemClickListener
             alertDialog.dismiss()
-            val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
-            listener?.onQueryTextChanged(
-                selectedUrl,
-            )
+            if(
+                fragmentTag == context?.getString(
+                    com.puutaro.commandclick.R.string.command_index_fragment
+                )
+            ) {
+                val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
+                listener?.onQueryTextChanged(
+                    selectedUrl,
+                )
+                return@setOnItemClickListener
+            } else if(
+                fragmentTag == context?.getString(
+                    com.puutaro.commandclick.R.string.cmd_variable_edit_fragment
+                )
+            ) {
+                val listener = context as? EditFragment.OnLaunchUrlByWebViewListener
+                listener?.onLaunchUrlByWebView(
+                    selectedUrl,
+                )
+                return@setOnItemClickListener
+            }
         }
     }
 

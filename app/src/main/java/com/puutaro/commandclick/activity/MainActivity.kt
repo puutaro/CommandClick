@@ -59,7 +59,8 @@ class MainActivity:
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
     EditFragment.OnInitEditFragmentListener,
-    EditFragment.OnTerminalWebViewInitListenerForEdit {
+    EditFragment.OnTerminalWebViewInitListenerForEdit,
+    EditFragment.OnLaunchUrlByWebViewListener {
 
     lateinit var activityMainBinding: ActivityMainBinding
     var filePath: ValueCallback<Array<Uri>>? = null
@@ -278,6 +279,13 @@ class MainActivity:
     override fun onQueryTextChanged(
         searchUrl: String
     ) {
+        ExecLoadUrlForWebView.execLoadUrlForWebView(
+            this,
+            searchUrl,
+        )
+    }
+
+    override fun onLaunchUrlByWebView(searchUrl: String) {
         ExecLoadUrlForWebView.execLoadUrlForWebView(
             this,
             searchUrl,

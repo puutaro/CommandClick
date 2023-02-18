@@ -203,4 +203,10 @@ class EditFragment: Fragment() {
         )
     }
 
+    interface OnLaunchUrlByWebViewListener {
+        fun onLaunchUrlByWebView(
+            searchUrl: String
+        )
+    }
+
 }

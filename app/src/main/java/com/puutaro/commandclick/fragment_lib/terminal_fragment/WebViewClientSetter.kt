@@ -6,12 +6,15 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
+import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -55,6 +58,11 @@ class WebViewClientSetter {
 
                 override fun onPageFinished(webView: WebView?, url: String?) {
                     super.onPageFinished(webView, url)
+                    FileSystems.writeFile(
+                        terminalFragment.currentAppDirPath,
+                        UsePath.urlLoadFinished,
+                        System.currentTimeMillis().toString()
+                    )
                 }
 
                 override fun doUpdateVisitedHistory(webView: WebView?, url: String?, isReload: Boolean) {
