@@ -11,6 +11,7 @@ Pros
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only termux gui client but also web browser.
 - Offer ritch edit dialog to termux.
+- Automate browser manipulate by javascript.
 
 
 Table of Contents
@@ -135,6 +136,7 @@ At the same time, if you installed code editor, edit new file.
     | `historySwitch`  | `ON`/`OFF` | switch app history with url history; `ON`: switch, `OFF`: no switch, `INHERIT`: inherit config setting
     | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
     | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
+    | `jsExecPath`  | `string` | execute javascript file path
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
