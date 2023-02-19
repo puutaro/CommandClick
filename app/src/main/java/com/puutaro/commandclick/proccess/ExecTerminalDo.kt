@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess
 
+import android.content.Intent
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
@@ -7,6 +9,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent.Companion.execSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
+import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
@@ -70,11 +73,26 @@ class ExecTerminalDo {
                 CommandClickShellScript.ON_UPDATE_LAST_MODIFY
             ) ?: CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
-            urlLaunchMacroProcessor(
+
+
+            val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
+                CommandClickShellScript.ON_URL_LAUNCH_MACRO
+            ) ?: CommandClickShellScript.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
+
+            urlLaunchMacroProcessor(
                 terminalViewModel,
                 recentAppdirPath,
+                onUrlLaunchMacro,
             )
+
+            jsExecuteProcessor(
+                terminalViewModel,
+                substituteSettingVariableList,
+                onUrlLaunchMacro,
+            )
+
+
 
             val execCmd = MakeExecCmdForTermux.make(
                     currentFragment,
@@ -107,14 +125,10 @@ class ExecTerminalDo {
 
 
 private fun urlLaunchMacroProcessor(
-    substituteSettingVariableList: List<String>?,
     terminalViewModel: TerminalViewModel,
     recentAppdirPath: String,
+    onUrlLaunchMacro: String,
 ) {
-    val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
-        substituteSettingVariableList,
-        CommandClickShellScript.ON_URL_LAUNCH_MACRO
-    ) ?: CommandClickShellScript.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
     when(onUrlLaunchMacro){
         SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name -> {
             terminalViewModel.launchUrl = ReadText(
@@ -139,4 +153,40 @@ private fun urlLaunchMacroProcessor(
 
         }
     }
+}
+
+
+private fun jsExecuteProcessor(
+    terminalViewModel: TerminalViewModel,
+    substituteSettingVariableList: List<String>?,
+    onUrlLaunchMacro: String,
+) {
+    if(
+      onUrlLaunchMacro
+      != SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
+    ) return
+    if(substituteSettingVariableList.isNullOrEmpty()) return
+    val execJsPath = CommandClickVariables.substituteCmdClickVariable(
+        substituteSettingVariableList,
+        CommandClickShellScript.EXEC_JS_PATH
+    ) ?: return
+    val jsFileObj = File(execJsPath)
+    if(!jsFileObj.isFile) return
+    val recentAppdirPath = jsFileObj.parent
+    if(recentAppdirPath.isNullOrEmpty()) return
+    val jsContents = ReadText(
+        recentAppdirPath,
+        jsFileObj.name
+    ).textToList().map {
+        val trimJsRow = it
+            .trim(' ')
+            .trim('\t')
+            .trim(' ')
+            .trim('\t')
+        if(
+            trimJsRow.startsWith("//")
+        ) return@map String()
+        trimJsRow
+    }.joinToString(" ")
+    terminalViewModel.launchUrl = "javascript:(function() { ${jsContents} })();"
 }

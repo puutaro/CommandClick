@@ -166,6 +166,7 @@ private fun setWebView(
                     launchUrl.startsWith(WebUrlVariables.httpsPrefix)
                             || launchUrl.startsWith(WebUrlVariables.httpPrefix)
                             || launchUrl.startsWith(WebUrlVariables.filePrefix)
+                            || launchUrl.startsWith(WebUrlVariables.jsPrefix)
                     )
         ){
             webView.loadUrl(

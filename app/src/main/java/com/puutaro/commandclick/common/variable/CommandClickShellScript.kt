@@ -23,6 +23,7 @@ class CommandClickShellScript {
         val SET_VARIABLE_TYPE = "setVariableType"
         val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
         val ON_URL_LAUNCH_MACRO = "onUrlLaunchMacro"
+        val EXEC_JS_PATH = "execJsPath"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
         val SHELL_FILE_NAME = "shellFileName"
@@ -57,6 +58,7 @@ class CommandClickShellScript {
             CMDCLICK_RUN_SHELL,
             CMDCLICK_SHIBAN,
             ON_URL_LAUNCH_MACRO,
+            EXEC_JS_PATH,
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SHELL_FILE_NAME,
@@ -123,7 +125,8 @@ class CommandClickShellScript {
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
-            "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}"
+            "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
+            "${EXEC_JS_PATH}:FL=",
         )
 
         fun makeShellScriptName(): String {
@@ -172,6 +175,8 @@ class CommandClickShellScript {
                 |#  - ${onUrlLaunchMacroOff}: no launch
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFrequency}: most use url launch
+                |# * ${EXEC_JS_PATH} execute javascript file path
+                |   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
@@ -222,6 +227,7 @@ class CommandClickShellScript {
             |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyValue}
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
+            |${EXEC_JS_PATH}=
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
             |${TERMINAL_COLOR}=
             |${TERMINAL_FONT_COLOR}=
@@ -383,6 +389,7 @@ class CommandClickShellScript {
             |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
             |${ON_URL_LAUNCH_MACRO}=${ON_URL_LAUNCH_MACRO_DEFAULT_VALUE}
+            |${EXEC_JS_PATH}=
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=
             |${TERMINAL_FONT_COLOR}=
             |${TERMINAL_COLOR}=
