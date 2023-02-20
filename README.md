@@ -46,6 +46,7 @@ Table of Contents
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
     * [end script](#end-script)
+  * [Internet Button exec script](#internet-button-exec-script)
   * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
@@ -285,10 +286,18 @@ But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable thi
 This script is automaticaly executed when `index mode` end.
 But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
 
+
+
+### Internet Button exec script
+
+This script is executed when internet buton is grey globle mark.
+
+
 ### Button exec script
 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
+
   
 ### Edit execute once
 
