@@ -291,7 +291,7 @@ But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` 
 
 ### Internet Button exec script
 
-This script is executed when internet buton is grey globle mark and long terminal mode is active.
+This script is executed, click when internet buton is grey globle mark and long terminal mode is active.
 
 
 ### Button exec script
