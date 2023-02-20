@@ -172,6 +172,7 @@ At the same time, if you installed code editor, edit new file.
 #### Run
 
 Run shellscript by click list item in index mode or play button edit mode (editExecute variable is `Always`)
+Or run javascript file.
 
 #### Edit
 
@@ -349,6 +350,11 @@ am broadcast \
 ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
+ 
+ 
+ex) am broadcast \
+ -a "com.puutaro.commandclick.url.launch" \
+ --es url "javascript:(function() { alert('hello command click') })();"
 ```
 
 ### Ubuntu, Debian or Widnows10 version
