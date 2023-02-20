@@ -9,9 +9,7 @@ import android.view.Gravity
 import android.view.View
 import android.webkit.*
 import android.widget.EditText
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
@@ -29,11 +27,6 @@ class WebChromeClientSetter {
                     super.onProgressChanged(view, newProgress)
                     if (newProgress == 100) {
                         progressBar.setVisibility(View.GONE)
-                        FileSystems.writeFile(
-                            terminalFragment.currentAppDirPath,
-                            UsePath.urlLoadFinished,
-                            System.currentTimeMillis().toString()
-                        )
                     } else {
                         progressBar.setVisibility(View.VISIBLE)
                         progressBar.setProgress(newProgress)
@@ -69,7 +62,12 @@ class WebChromeClientSetter {
                         message
                     )
                     val alertDialog = AlertDialog.Builder(terminalFragment.context)
-                        .setTitle(url)
+                        .setTitle(
+                            makeTitle(
+                                view,
+                                url
+                            )
+                        )
                         .setView(linearLayoutForDialog)
                         .setPositiveButton(
                             R.string.ok
@@ -102,7 +100,12 @@ class WebChromeClientSetter {
                         displayContents
                     )
                     val alertDialog = AlertDialog.Builder(context)
-                        .setTitle(url)
+                        .setTitle(
+                            makeTitle(
+                                view,
+                                url
+                            )
+                        )
                         .setView(linearLayoutForDialog)
                         .setPositiveButton(
                             R.string.ok
@@ -138,7 +141,12 @@ class WebChromeClientSetter {
                     input.inputType = InputType.TYPE_CLASS_TEXT
                     input.setText(defaultValue)
                     val alertDialog = AlertDialog.Builder(context)
-                        .setTitle(url)
+                        .setTitle(
+                            makeTitle(
+                                view,
+                                url
+                            )
+                        )
                         .setView(input)
                         .setMessage(message)
                         .setPositiveButton(
@@ -165,4 +173,16 @@ class WebChromeClientSetter {
             })
         }
     }
+}
+
+
+private fun makeTitle(
+    view: WebView?,
+    url: String?
+): String? {
+    val titleEntry = view?.title
+    if(
+        titleEntry.isNullOrEmpty()
+    ) return url
+    return titleEntry
 }

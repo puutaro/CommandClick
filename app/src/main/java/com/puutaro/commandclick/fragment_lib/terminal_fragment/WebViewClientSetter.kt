@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
@@ -87,6 +85,15 @@ class WebViewClientSetter {
                         }
                     }
                     return super.shouldInterceptRequest(view, request)
+                }
+
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    FileSystems.writeFile(
+                        terminalFragment.currentAppDirPath,
+                        UsePath.urlLoadFinished,
+                        System.currentTimeMillis().toString()
+                    )
                 }
             })
         }
