@@ -12,7 +12,7 @@ class CommandListManager {
             currentAppDirPath: String
         ): List<String> {
             FileSystems.createDirs(currentAppDirPath)
-            return FileSystems.filterSuffixShellFiles(
+            return FileSystems.filterSuffixShellOrJsFiles(
                 currentAppDirPath
             )
         }

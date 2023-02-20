@@ -7,7 +7,6 @@ import android.widget.Toast
 
 class BroadcastReceiverUrl: BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        val someValue = intent.getStringExtra("url")
         val extras = intent.getExtras();
         val ulrStr = extras?.getString("url")
         Toast.makeText(

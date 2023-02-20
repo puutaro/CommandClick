@@ -1,8 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.R
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.net.Uri
+import android.text.InputType
+import android.view.Gravity
 import android.view.View
 import android.webkit.*
+import android.widget.EditText
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -41,8 +47,88 @@ class WebChromeClientSetter {
                     )
                     return true
                 }
+
+                override fun onJsAlert(
+                    view: WebView?,
+                    url: String?,
+                    message: String?,
+                    result: JsResult
+                ): Boolean {
+                    val context = terminalFragment.context
+                    val alertDialog = AlertDialog.Builder(terminalFragment.context)
+                        .setTitle(url)
+                        .setMessage(message)
+                        .setPositiveButton(
+                            R.string.ok
+                        ) { dialog, which -> result.cancel() }
+                        .show()
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                            context?.getColor(R.color.black) as Int
+                        )
+                    alertDialog.window?.setGravity(Gravity.BOTTOM)
+                    return true
+                }
+
+
+                override fun onJsConfirm(
+                    view: WebView?,
+                    url: String?,
+                    message: String?,
+                    result: JsResult
+                ): Boolean {
+                    val context = terminalFragment.context
+                    val alertDialog = AlertDialog.Builder(context)
+                        .setTitle(url)
+                        .setMessage(message)
+                        .setPositiveButton(
+                            R.string.ok
+                        ) { dialog, which -> result.confirm() }
+                        .setNegativeButton(
+                            R.string.cancel
+                        ) { dialog, which -> result.cancel() }
+                        .show()
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                        context?.getColor(R.color.black) as Int
+                    )
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+                        context.getColor(R.color.black)
+                    )
+                    alertDialog.window?.setGravity(Gravity.BOTTOM)
+                    return true
+                }
+
+                override fun onJsPrompt(
+                    view: WebView?,
+                    url: String?,
+                    message: String?,
+                    defaultValue: String?,
+                    result: JsPromptResult
+                ): Boolean {
+                    val context = terminalFragment.context
+                    val input = EditText(context)
+                    input.inputType = InputType.TYPE_CLASS_TEXT
+                    input.setText(defaultValue)
+                    val alertDialog = AlertDialog.Builder(context)
+                        .setTitle(url)
+                        .setView(input)
+                        .setMessage(message)
+                        .setPositiveButton(
+                            R.string.ok
+                        ) { dialog, which -> result.confirm(input.text.toString()) }
+                        .setNegativeButton(
+                            R.string.cancel
+                        ) { dialog, which -> result.cancel() }
+                        .show()
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                        context?.getColor(R.color.black) as Int
+                    )
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+                        context.getColor(R.color.black)
+                    )
+                    alertDialog.window?.setGravity(Gravity.BOTTOM)
+                    return true
+                }
             })
         }
-
     }
 }

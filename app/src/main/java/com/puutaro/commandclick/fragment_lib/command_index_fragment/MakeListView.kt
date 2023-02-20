@@ -34,7 +34,7 @@ class MakeListView(
         context: Context
     ):  ArrayAdapter<String> {
         FileSystems.createDirs(currentAppDirPath)
-        val cmdList = FileSystems.filterSuffixShellFiles(
+        val cmdList = FileSystems.filterSuffixShellOrJsFiles(
             currentAppDirPath
         )
         val baskstackOrder =

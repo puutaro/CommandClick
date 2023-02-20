@@ -9,11 +9,8 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent.Companion.execSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
-import com.puutaro.commandclick.util.BroadCastIntent
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -170,23 +167,7 @@ private fun jsExecuteProcessor(
         substituteSettingVariableList,
         CommandClickShellScript.EXEC_JS_PATH
     ) ?: return
-    val jsFileObj = File(execJsPath)
-    if(!jsFileObj.isFile) return
-    val recentAppdirPath = jsFileObj.parent
-    if(recentAppdirPath.isNullOrEmpty()) return
-    val jsContents = ReadText(
-        recentAppdirPath,
-        jsFileObj.name
-    ).textToList().map {
-        val trimJsRow = it
-            .trim(' ')
-            .trim('\t')
-            .trim(' ')
-            .trim('\t')
-        if(
-            trimJsRow.startsWith("//")
-        ) return@map String()
-        trimJsRow
-    }.joinToString(" ")
-    terminalViewModel.launchUrl = "javascript:(function() { ${jsContents} })();"
+    terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
+        execJsPath,
+    )
 }

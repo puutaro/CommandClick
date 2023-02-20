@@ -2,6 +2,8 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.content.Context
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -15,9 +17,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShe
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.ExecTerminalDo
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 class ItemClickListenerSetter {
@@ -51,6 +52,30 @@ class ItemClickListenerSetter {
                     false
                 )
                 val selectedShellFileName = cmdListView.getItemAtPosition(position).toString()
+                if(
+                    selectedShellFileName.endsWith(
+                        CommandClickShellScript.JS_FILE_SUFFIX
+                    )
+                ) {
+                    val selectecJsFileName = selectedShellFileName
+                    BroadCastIntent.send(
+                        cmdIndexFragment,
+                        JavaScriptLoadUrl.make(
+                        "${currentAppDirPath}/${selectecJsFileName}",
+                        ),
+                    )
+                    FileSystems.updateLastModified(
+                        currentAppDirPath,
+                        selectecJsFileName
+                    )
+                    cmdListAdapter.clear()
+                    CommandListManager.execListUpdate(
+                        currentAppDirPath,
+                        cmdListAdapter,
+                        cmdListView,
+                    )
+                    return@setOnItemClickListener
+                }
                 if (
                     selectedShellFileName ==
                     CommandClickShellScript.EMPTY_STRING

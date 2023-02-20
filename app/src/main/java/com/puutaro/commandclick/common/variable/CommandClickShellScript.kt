@@ -8,6 +8,7 @@ import java.io.File
 class CommandClickShellScript {
     companion object {
         val SHELL_FILE_SUFFIX = ".sh"
+        val JS_FILE_SUFFIX = ".js"
         val EMPTY_STRING = "COMMAND_CLICK_EMPTY_STRING"
         val LABELING_SECTION_START = "### LABELING_SECTION_START"
         val LABELING_SECTION_END = "### LABELING_SECTION_END"

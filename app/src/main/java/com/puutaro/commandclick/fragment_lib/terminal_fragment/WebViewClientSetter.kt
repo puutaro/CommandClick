@@ -1,10 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.webkit.WebResourceRequest
-import android.webkit.WebResourceResponse
-import android.webkit.WebView
-import android.webkit.WebViewClient
-import android.widget.Toast
+import android.webkit.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -14,7 +10,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_l
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
