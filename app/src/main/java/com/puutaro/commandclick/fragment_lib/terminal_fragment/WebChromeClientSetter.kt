@@ -9,7 +9,9 @@ import android.view.Gravity
 import android.view.View
 import android.webkit.*
 import android.widget.EditText
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
@@ -27,6 +29,11 @@ class WebChromeClientSetter {
                     super.onProgressChanged(view, newProgress)
                     if (newProgress == 100) {
                         progressBar.setVisibility(View.GONE)
+                        FileSystems.writeFile(
+                            terminalFragment.currentAppDirPath,
+                            UsePath.urlLoadFinished,
+                            System.currentTimeMillis().toString()
+                        )
                     } else {
                         progressBar.setVisibility(View.VISIBLE)
                         progressBar.setProgress(newProgress)

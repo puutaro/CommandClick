@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -50,15 +51,6 @@ class WebViewClientSetter {
                         }
                     }
                     return allowedRequest
-                }
-
-                override fun onPageFinished(webView: WebView?, url: String?) {
-                    super.onPageFinished(webView, url)
-                    FileSystems.writeFile(
-                        terminalFragment.currentAppDirPath,
-                        UsePath.urlLoadFinished,
-                        System.currentTimeMillis().toString()
-                    )
                 }
 
                 override fun doUpdateVisitedHistory(webView: WebView?, url: String?, isReload: Boolean) {
