@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess
 
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
@@ -26,7 +25,7 @@ class CmdIndexToolbarSwitcher {
             ) return
             val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
             if(
-                cmdIndexFragment.SpecialSearchSwitch
+                cmdIndexFragment.WebSearchSwitch
                 && terminalViewModel.readlinesNum == ReadLines.SHORTH
             ) return
             val binding = cmdIndexFragment.binding

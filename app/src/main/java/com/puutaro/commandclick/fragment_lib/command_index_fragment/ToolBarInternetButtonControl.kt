@@ -5,10 +5,12 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
+import com.puutaro.commandclick.proccess.ExecTerminalDo
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -46,19 +48,35 @@ class ToolBarInternetButtonControl(
                 }
                 return@setOnClickListener
             }
-            if(cmdIndexFragment.SpecialSearchSwitch){
+
+            val enableExecInternetButtonShell =
+                terminalViewModel.readlinesNum != ReadLines.SHORTH
+                        && terminalViewModel.onExecInternetButtonShell
+                        && cmdIndexFragment.WebSearchSwitch
+            if(
+                enableExecInternetButtonShell
+            ) {
+                ExecTerminalDo.execTerminalDo(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    UsePath.cmdclickInternetButtonExecShellFileName,
+                )
+                return@setOnClickListener
+            }
+
+            if(cmdIndexFragment.WebSearchSwitch){
                 cmdindexInternet.imageTintList = blackStateList
                 cmdindexInternet.setBackgroundTintList(whiteStateList);
                 AutoCompleteEditTexter.setAdapter(
                     context,
                     cmdSearchEditText,
                 )
-                cmdIndexFragment.SpecialSearchSwitch = !cmdIndexFragment.SpecialSearchSwitch
+                cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
                 return@setOnClickListener
             }
             cmdindexInternet.imageTintList = blackStateList
             cmdindexInternet.setBackgroundTintList(grayStateList)
-            cmdIndexFragment.SpecialSearchSwitch = !cmdIndexFragment.SpecialSearchSwitch
+            cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) {

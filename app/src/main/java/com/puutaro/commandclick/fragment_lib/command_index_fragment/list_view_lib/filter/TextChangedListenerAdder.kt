@@ -31,7 +31,7 @@ class TextChangedListenerAdder {
                 override fun afterTextChanged(s: Editable?) {
                     if(!cmdSearchEditText.hasFocus()) return
                     if(
-                        !cmdIndexFragment.SpecialSearchSwitch
+                        !cmdIndexFragment.WebSearchSwitch
                     ) {
                         val listener = context as? CommandIndexFragment.OnFilterWebViewListener
                         listener?.onFilterWebView(

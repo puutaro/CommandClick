@@ -41,6 +41,7 @@ class WebHistoryUpdater {
             if (ulrTitle.endsWith("\t${escapeStr}")) return
 
             val urlCheckResult = EnableUrlPrefix.check(url)
+            terminalViewModel.onExecInternetButtonShell = urlCheckResult
             if(!urlCheckResult) return
             val searchViewTextSource = if(
                 url?.startsWith(WebUrlVariables.queryUrl) == true

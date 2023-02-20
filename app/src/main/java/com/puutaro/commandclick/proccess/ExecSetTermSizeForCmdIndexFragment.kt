@@ -51,7 +51,7 @@ class ExecSetTermSizeForCmdIndexFragment {
                     (it.getColor(R.color.white))
                 }
             }
-            cmdIndexFragment.SpecialSearchSwitch = false
+            cmdIndexFragment.WebSearchSwitch = false
             val listener =
                 context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(

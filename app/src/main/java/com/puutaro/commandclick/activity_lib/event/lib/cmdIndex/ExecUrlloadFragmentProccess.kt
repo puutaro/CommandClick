@@ -52,7 +52,7 @@ class ExecUrlloadFragmentProccess {
                     terminalViewModel
                 )
             }
-            cmdIndexFragment.SpecialSearchSwitch = true
+            cmdIndexFragment.WebSearchSwitch = true
             val sharePref =  activity.getPreferences(Context.MODE_PRIVATE)
             val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
                 sharePref,

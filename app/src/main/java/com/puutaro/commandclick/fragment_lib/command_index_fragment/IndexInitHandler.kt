@@ -89,6 +89,11 @@ class IndexInitHandler {
                 currentAppDirPath,
                 UsePath.cmdclickButtonExecShellFileName
             )
+            CommandClickShellScript.makeButtonExecShell(
+                cmdIndexFragment.shiban,
+                currentAppDirPath,
+                UsePath.cmdclickInternetButtonExecShellFileName
+            )
             CommandClickShellScript.makeAutoShellFile(
                 CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
                 currentAppDirPath,

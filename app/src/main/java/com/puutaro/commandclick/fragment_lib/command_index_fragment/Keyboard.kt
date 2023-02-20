@@ -60,7 +60,7 @@ class KeyboardForCmdIndex {
             cmdIndexHistory.layoutParams = linearLayoutParamForButtonWideWeight
             cmdIndexSetting.layoutParams = linearLayoutParamForButtonWideWeight
             cmdSearchEditText.layoutParams = linearLayoutParamShrinkForSearchTextShrinkWeight
-            if(!cmdIndexFragment.SpecialSearchSwitch) cmdSearchEditText.setText(String())
+            if(!cmdIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
             cmdSearchEditText.clearFocus()
             cmdIndexSwipToRefreshLayout.isVisible = true
             val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener

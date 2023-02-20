@@ -23,6 +23,7 @@ class UsePath {
         val cmdclickConfigDirPath =  "$rootPath/$cmdclickConfigDirRelativePath"
         val cmdclickConfigFileName = "cmdclickConfig${CommandClickShellScript.SHELL_FILE_SUFFIX}"
         val cmdclickButtonExecShellFileName = "cmdclickButtonExec${CommandClickShellScript.SHELL_FILE_SUFFIX}"
+        val cmdclickInternetButtonExecShellFileName = "internetButtonExec${CommandClickShellScript.SHELL_FILE_SUFFIX}"
         val cmdclickConfigFileRelativePath = "$cmdclickConfigDirRelativePath/$cmdclickConfigFileName"
         val cmdclickConfigFilePath =  "$rootPath/$cmdclickConfigFileRelativePath"
         val cmdclickNonitorDirName = "monitor"

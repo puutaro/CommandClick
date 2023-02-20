@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.fragment
 
-import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
@@ -15,7 +12,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
@@ -30,7 +26,7 @@ class CommandIndexFragment: Fragment() {
     val binding get() = _binding!!
     var mParentContextMenuListIndex: Int = 0
     var runShell = CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-    var SpecialSearchSwitch = WebSearchSwich.OFF.bool
+    var WebSearchSwitch = WebSearchSwich.OFF.bool
     var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE
@@ -179,7 +175,7 @@ class CommandIndexFragment: Fragment() {
             listener?.onKeyBoardVisibleChange(
                 isOpen,
                 this.isVisible,
-                this.SpecialSearchSwitch
+                this.WebSearchSwitch
             )
         }
 

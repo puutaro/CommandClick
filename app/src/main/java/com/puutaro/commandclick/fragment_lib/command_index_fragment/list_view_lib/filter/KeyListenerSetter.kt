@@ -43,7 +43,7 @@ class KeyListenerSetter {
                     if(
                         cmdSearchEditText.text.isNullOrEmpty()
                     ) return false
-                    if(!cmdIndexFragment.SpecialSearchSwitch) {
+                    if(!cmdIndexFragment.WebSearchSwitch) {
                         return false
                     }
                     UrlTexter.launch(

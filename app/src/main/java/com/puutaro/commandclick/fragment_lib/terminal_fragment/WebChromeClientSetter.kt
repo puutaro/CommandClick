@@ -10,6 +10,7 @@ import android.view.View
 import android.webkit.*
 import android.widget.EditText
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
 class WebChromeClientSetter {
@@ -54,13 +55,23 @@ class WebChromeClientSetter {
                     message: String?,
                     result: JsResult
                 ): Boolean {
+                    if(message.isNullOrEmpty()) return true
                     val context = terminalFragment.context
+                    val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
+                        context,
+                        message
+                    )
                     val alertDialog = AlertDialog.Builder(terminalFragment.context)
                         .setTitle(url)
-                        .setMessage(message)
+                        .setView(linearLayoutForDialog)
                         .setPositiveButton(
                             R.string.ok
                         ) { dialog, which -> result.cancel() }
+                        .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                            override fun onCancel(dialog: DialogInterface?) {
+                                result.cancel()
+                            }
+                        })
                         .show()
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
                             context?.getColor(R.color.black) as Int
@@ -76,16 +87,27 @@ class WebChromeClientSetter {
                     message: String?,
                     result: JsResult
                 ): Boolean {
+                    if(message.isNullOrEmpty()) return true
                     val context = terminalFragment.context
+                    val displayContents = message
+                    val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
+                        context,
+                        displayContents
+                    )
                     val alertDialog = AlertDialog.Builder(context)
                         .setTitle(url)
-                        .setMessage(message)
+                        .setView(linearLayoutForDialog)
                         .setPositiveButton(
                             R.string.ok
                         ) { dialog, which -> result.confirm() }
                         .setNegativeButton(
                             R.string.cancel
                         ) { dialog, which -> result.cancel() }
+                        .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                            override fun onCancel(dialog: DialogInterface?) {
+                                result.cancel()
+                            }
+                        })
                         .show()
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
                         context?.getColor(R.color.black) as Int
@@ -118,6 +140,11 @@ class WebChromeClientSetter {
                         .setNegativeButton(
                             R.string.cancel
                         ) { dialog, which -> result.cancel() }
+                        .setOnCancelListener(object : DialogInterface.OnCancelListener {
+                            override fun onCancel(dialog: DialogInterface?) {
+                                result.cancel()
+                            }
+                        })
                         .show()
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
                         context?.getColor(R.color.black) as Int
