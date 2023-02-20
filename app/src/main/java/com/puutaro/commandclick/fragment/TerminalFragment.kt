@@ -24,6 +24,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.util.LoadUrlPrefix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
@@ -51,10 +52,22 @@ class TerminalFragment: Fragment() {
         override fun onReceive(context: Context, intent: Intent) {
             val urlStr = intent.getStringExtra(
                 BroadCastIntentScheme.ULR_LAUNCH.scheme
-            )
-            urlStr?.let {
-                binding.terminalWebView.loadUrl(it)
+            ) ?: return
+            if(
+                LoadUrlPrefix.judge(urlStr)
+            ) {
+                binding.terminalWebView.loadUrl(urlStr)
+                return
             }
+            if(!urlStr.contains("html")) return
+            binding.terminalWebView.loadDataWithBaseURL(
+                "",
+                urlStr,
+                "text/html",
+                "utf-8",
+                null
+            );
+
         }
     }
 

@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.content.Context
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -64,15 +65,32 @@ class ItemClickListenerSetter {
                         "${currentAppDirPath}/${selectecJsFileName}",
                         ),
                     )
-                    FileSystems.updateLastModified(
+                    updateLastModifiedListView (
+                        cmdListView,
+                        cmdListAdapter,
                         currentAppDirPath,
                         selectecJsFileName
                     )
-                    cmdListAdapter.clear()
-                    CommandListManager.execListUpdate(
-                        currentAppDirPath,
-                        cmdListAdapter,
+                    return@setOnItemClickListener
+                }
+                if(
+                    selectedShellFileName.endsWith(
+                        CommandClickShellScript.HTML_FILE_SUFFIX
+                    )
+                ) {
+                    val selectecJsFileName = selectedShellFileName
+                    BroadCastIntent.send(
+                        cmdIndexFragment,
+                        ReadText(
+                            currentAppDirPath,
+                            selectecJsFileName
+                        ).readText()
+                    )
+                    updateLastModifiedListView (
                         cmdListView,
+                        cmdListAdapter,
+                        currentAppDirPath,
+                        selectecJsFileName
                     )
                     return@setOnItemClickListener
                 }
@@ -177,4 +195,22 @@ class ItemClickListenerSetter {
             }
         }
     }
+}
+
+private fun updateLastModifiedListView (
+    cmdListView: ListView,
+    cmdListAdapter: ArrayAdapter<String>,
+    currentAppDirPath: String,
+    selectecJsFileName: String
+) {
+    FileSystems.updateLastModified(
+        currentAppDirPath,
+        selectecJsFileName
+    )
+    cmdListAdapter.clear()
+    CommandListManager.execListUpdate(
+        currentAppDirPath,
+        cmdListAdapter,
+        cmdListView,
+    )
 }

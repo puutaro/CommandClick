@@ -12,11 +12,13 @@ class UrlTermLongProcess {
     companion object {
         fun torigger(
             terminalFragment: TerminalFragment,
+            terminalViewModel: TerminalViewModel,
             webView: WebView?,
             url: String?
         ){
             val urlCheckResult = EnableUrlPrefix.check(url)
             if(!urlCheckResult) return
+            terminalViewModel.onExecInternetButtonShell = urlCheckResult
             val context = terminalFragment.context
             val title = webView?.title ?: return
             if(title.isBlank() || title.isEmpty() ) return

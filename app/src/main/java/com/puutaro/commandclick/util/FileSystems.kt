@@ -2,7 +2,6 @@ package com.puutaro.commandclick.util
 
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
@@ -155,7 +154,7 @@ class FileSystems {
             }
         }
 
-        fun filterSuffixShellOrJsFiles(
+        fun filterSuffixShellOrJsOrHtmlFiles(
             dirPath: String,
             reverse: String = String()
         ): List<String> {
@@ -167,6 +166,8 @@ class FileSystems {
                     CommandClickShellScript.SHELL_FILE_SUFFIX
                 ) || it.endsWith(
                     CommandClickShellScript.JS_FILE_SUFFIX
+                ) || it.endsWith(
+                    CommandClickShellScript.HTML_FILE_SUFFIX
                 )
             }
         }

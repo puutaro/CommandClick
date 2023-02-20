@@ -161,11 +161,38 @@ private fun jsExecuteProcessor(
       != SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
     ) return
     if(substituteSettingVariableList.isNullOrEmpty()) return
-    val execJsPath = CommandClickVariables.substituteCmdClickVariable(
+    val execJsOrHtmlPath = CommandClickVariables.substituteCmdClickVariable(
         substituteSettingVariableList,
-        CommandClickShellScript.EXEC_JS_PATH
+        CommandClickShellScript.EXEC_JS_OR_HTML_PATH
     ) ?: return
-    terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
-        execJsPath,
-    )
+    if(
+        execJsOrHtmlPath.endsWith(
+            CommandClickShellScript.JS_FILE_SUFFIX
+        )
+        || execJsOrHtmlPath.endsWith(
+            CommandClickShellScript.JSX_FILE_SUFFIX
+        )
+    ) {
+        terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
+            execJsOrHtmlPath,
+        )
+        return
+    }
+    if(
+        execJsOrHtmlPath.endsWith(
+            CommandClickShellScript.HTML_FILE_SUFFIX
+        )
+        || execJsOrHtmlPath.endsWith(
+            CommandClickShellScript.HTM_FILE_SUFFIX
+        )
+    ) {
+        val htmlFileObj = File(execJsOrHtmlPath)
+        if(!htmlFileObj.isFile) return
+        val currentAppDir = htmlFileObj.parent
+        if(currentAppDir.isNullOrEmpty()) return
+        terminalViewModel.launchUrl = ReadText(
+            currentAppDir,
+            htmlFileObj.name
+        ).readText()
+    }
 }
