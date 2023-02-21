@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
-import com.puutaro.commandclick.util.LoadUrlPrefix
+import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -162,27 +162,11 @@ private fun setWebView(
         val webView = terminalFragment.binding.terminalWebView
         if(
             !launchUrl.isNullOrEmpty()
-            && LoadUrlPrefix.judge(launchUrl)
+            && LoadUrlPrefixSuffix.judge(launchUrl)
         ){
             webView.loadUrl(
                 launchUrl
             )
-            return
-        }
-        if(
-            !launchUrl.isNullOrEmpty()
-            &&  (
-                    launchUrl.contains("html")
-                            || launchUrl.contains("script")
-                    )
-        ){
-            webView.loadDataWithBaseURL(
-                "",
-                launchUrl,
-                "text/html",
-                "utf-8",
-                null
-            );
             return
         }
         webView.loadDataWithBaseURL(

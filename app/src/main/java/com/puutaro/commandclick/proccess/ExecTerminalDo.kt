@@ -178,21 +178,22 @@ private fun jsExecuteProcessor(
         )
         return
     }
+    val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
+        CommandClickShellScript.HTML_FILE_SUFFIX
+    )
+            || execJsOrHtmlPath.endsWith(
+        CommandClickShellScript.HTM_FILE_SUFFIX
+    )
+    val enableHtml =
+        execJsOrHtmlPath.startsWith(
+            WebUrlVariables.slashPrefix
+        ) && enableHtmlSuffix
+    if(!enableHtml) return
+    val htmlFileObj = File(execJsOrHtmlPath)
+    if(!htmlFileObj.isFile) return
+    val currentAppDir = htmlFileObj.parent
     if(
-        execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.HTML_FILE_SUFFIX
-        )
-        || execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.HTM_FILE_SUFFIX
-        )
-    ) {
-        val htmlFileObj = File(execJsOrHtmlPath)
-        if(!htmlFileObj.isFile) return
-        val currentAppDir = htmlFileObj.parent
-        if(currentAppDir.isNullOrEmpty()) return
-        terminalViewModel.launchUrl = ReadText(
-            currentAppDir,
-            htmlFileObj.name
-        ).readText()
-    }
+        currentAppDir.isNullOrEmpty()
+    ) return
+    terminalViewModel.launchUrl = "${currentAppDir}/${htmlFileObj.name}"
 }

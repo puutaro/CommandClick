@@ -20,6 +20,7 @@ import com.puutaro.commandclick.proccess.ExecTerminalDo
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 
 class ItemClickListenerSetter {
@@ -78,19 +79,20 @@ class ItemClickListenerSetter {
                         CommandClickShellScript.HTML_FILE_SUFFIX
                     )
                 ) {
-                    val selectecJsFileName = selectedShellFileName
+                    val selectecHtmlFileName = selectedShellFileName
                     BroadCastIntent.send(
                         cmdIndexFragment,
-                        ReadText(
-                            currentAppDirPath,
-                            selectecJsFileName
-                        ).readText()
+                        "${currentAppDirPath}/${selectecHtmlFileName}"
+//                        ReadText(
+//                            currentAppDirPath,
+//                            selectecJsFileName
+//                        ).readText()
                     )
                     updateLastModifiedListView (
                         cmdListView,
                         cmdListAdapter,
                         currentAppDirPath,
-                        selectecJsFileName
+                        selectecHtmlFileName
                     )
                     return@setOnItemClickListener
                 }

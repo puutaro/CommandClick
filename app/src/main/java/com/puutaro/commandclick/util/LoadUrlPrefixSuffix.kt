@@ -1,8 +1,9 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 
-class LoadUrlPrefix {
+class LoadUrlPrefixSuffix {
     companion object {
         fun judge(
             urlStr: String?
@@ -10,6 +11,16 @@ class LoadUrlPrefix {
             if(
                 urlStr.isNullOrEmpty()
             ) return false
+            val enableHtmlSuffix = urlStr.endsWith(
+                CommandClickShellScript.HTML_FILE_SUFFIX
+            )
+                    || urlStr.endsWith(
+                CommandClickShellScript.HTM_FILE_SUFFIX
+            )
+            val enableHtml =
+                    urlStr.startsWith(
+                        WebUrlVariables.slashPrefix
+                    ) && enableHtmlSuffix
             return urlStr.startsWith(
                 WebUrlVariables.filePrefix
             )
@@ -22,6 +33,7 @@ class LoadUrlPrefix {
                     || urlStr.startsWith(
                 WebUrlVariables.jsPrefix
             )
+                    || enableHtml
         }
     }
 }
