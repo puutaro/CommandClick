@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess
 
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
@@ -107,6 +108,18 @@ class ExecTerminalDo {
                 execCmd,
                 backgroundExec
             )
+
+            val editExecute = CommandClickVariables.substituteCmdClickVariable(
+                substituteSettingVariableList,
+                CommandClickShellScript.EDIT_EXECUTE
+            ) ?: CommandClickShellScript.EDIT_EXECUTE_DEFAULT_VALUE
+
+            ShellFilePathToHistory.insert(
+                recentAppDirPath,
+                selectedShellFileName,
+                editExecute
+            )
+
             if(
                 onUpdateLastModify
                 == SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
@@ -179,9 +192,6 @@ private fun jsExecuteProcessor(
         substituteSettingVariableList,
         CommandClickShellScript.EXEC_JS_OR_HTML_PATH
     ) ?: return
-    val jsOrHtmlFileObj = File(execJsOrHtmlPath)
-    val recentAppDirPath =
-        jsOrHtmlFileObj.parent ?: return
     if(
         execJsOrHtmlPath.endsWith(
             CommandClickShellScript.JS_FILE_SUFFIX
@@ -190,10 +200,6 @@ private fun jsExecuteProcessor(
             CommandClickShellScript.JSX_FILE_SUFFIX
         )
     ) {
-        JsFilePathToHistory.insert(
-            recentAppDirPath,
-            jsOrHtmlFileObj.name
-        )
         terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
             execJsOrHtmlPath,
         )
@@ -210,10 +216,42 @@ private fun jsExecuteProcessor(
             WebUrlVariables.slashPrefix
         ) && enableHtmlSuffix
     if(!enableHtml) return
+    val jsOrHtmlFileObj = File(execJsOrHtmlPath)
     if(!jsOrHtmlFileObj.isFile) return
     val currentAppDir = jsOrHtmlFileObj.parent
     if(
         currentAppDir.isNullOrEmpty()
     ) return
     terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
+}
+
+
+private class ShellFilePathToHistory {
+    companion object {
+        fun insert(
+            recentAppDirPath: String,
+            shellFileName: String,
+            editExecute: String,
+        ) {
+            if(
+                editExecute != CommandClickShellScript.EDIT_EXECUTE_DEFAULT_VALUE
+                || shellFileName == UsePath.cmdclickStartupShellName
+                || shellFileName == UsePath.cmdclickEndShellName
+            ) return
+            val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+            val shellFullPath = "${recentAppDirPath}/${shellFileName}"
+            if(
+                !File(shellFullPath).isFile
+            ) return
+            val insertedHistoryContentsList = listOf("${shellFullPath}\t${shellFullPath}") + ReadText(
+                recentAppDirPath,
+                cmdclickUrlHistoryFileName
+            ).textToList()
+            FileSystems.writeFile(
+                recentAppDirPath,
+                cmdclickUrlHistoryFileName,
+                insertedHistoryContentsList.joinToString("\n")
+            )
+        }
+    }
 }

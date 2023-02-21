@@ -21,7 +21,7 @@ import java.io.File
 
 
 class UrlHistoryButtonEvent(
-    fragment: Fragment,
+    private val fragment: Fragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
     val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -105,14 +105,22 @@ class UrlHistoryButtonEvent(
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
                 ?: return@setOnItemClickListener
             alertDialog.dismiss()
+
+            if(
+                selectedUrl.endsWith(CommandClickShellScript.SHELL_FILE_SUFFIX)
+            ) {
+                execShellFile(selectedUrl)
+                return@setOnItemClickListener
+            }
+
+            val launchSelectedUrl =
+                makeLaunchUrl(selectedUrl) ?: return@setOnItemClickListener
             if(
                 fragmentTag == context?.getString(
                     com.puutaro.commandclick.R.string.command_index_fragment
                 )
             ) {
                 val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
-                val launchSelectedUrl =
-                    makeLaunchUrl(selectedUrl) ?: return@setOnItemClickListener
                 listener?.onQueryTextChanged(
                     launchSelectedUrl,
                 )
@@ -124,7 +132,7 @@ class UrlHistoryButtonEvent(
             ) {
                 val listener = context as? EditFragment.OnLaunchUrlByWebViewListener
                 listener?.onLaunchUrlByWebView(
-                    selectedUrl,
+                    launchSelectedUrl,
                 )
                 return@setOnItemClickListener
             }
@@ -183,5 +191,19 @@ class UrlHistoryButtonEvent(
                     usedUrl,
                 )
             }
+    }
+
+    private fun execShellFile(
+        selectedUrlSource: String
+    ) {
+        val shellFileObj = File(selectedUrlSource)
+        if(!shellFileObj.isFile) return
+        val parentDirPath =
+            shellFileObj.parent ?: return
+        ExecTerminalDo.execTerminalDo(
+            fragment,
+            parentDirPath,
+            shellFileObj.name,
+        )
     }
 }

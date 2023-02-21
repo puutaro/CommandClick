@@ -91,6 +91,14 @@ class WebHistoryUpdater {
                 CommandClickShellScript.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
             ) ulrTitle
             else String()
+            if(
+                registerUrlTitle.endsWith(
+                    CommandClickShellScript.JS_FILE_SUFFIX
+                )
+                || registerUrlTitle.endsWith(
+                    CommandClickShellScript.JSX_FILE_SUFFIX
+                )
+            ) return
             FileSystems.writeFile(
                 currentAppDirPath,
                 UsePath.cmdclickFirstHistoryTitle,
