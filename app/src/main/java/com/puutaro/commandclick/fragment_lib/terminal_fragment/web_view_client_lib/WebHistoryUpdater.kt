@@ -139,22 +139,26 @@ class WebHistoryUpdater {
                 url: String,
             ) {
                 val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-                val takeHistoryNum = 1000
-                val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
-                    currentAppDirPath,
-                    cmdclickUrlHistoryFileName
-                ).textToList().take(takeHistoryNum).joinToString("\n")
-                FileSystems.writeFile(
-                    currentAppDirPath,
-                    cmdclickUrlHistoryFileName,
-                    updatingHistory
-                )
+                val takeHistoryNum = 500
+                try {
+                    val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
+                        currentAppDirPath,
+                        cmdclickUrlHistoryFileName
+                    ).textToList().take(takeHistoryNum).joinToString("\n")
+                    FileSystems.writeFile(
+                        currentAppDirPath,
+                        cmdclickUrlHistoryFileName,
+                        updatingHistory
+                    )
 
-                registerUrlHistoryTitle(
-                    terminalFragment,
-                    currentAppDirPath,
-                    ulrTitle
-                )
+                    registerUrlHistoryTitle(
+                        terminalFragment,
+                        currentAppDirPath,
+                        ulrTitle
+                    )
+                } catch (e: IOException){
+                    return
+                }
             }
         }
 
