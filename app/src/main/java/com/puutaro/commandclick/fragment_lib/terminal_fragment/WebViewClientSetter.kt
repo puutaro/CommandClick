@@ -29,7 +29,7 @@ class WebViewClientSetter {
             }
             var previousUrl: String? = null
 
-            binding.terminalWebView.setWebViewClient(object : WebViewClient() {
+            binding.terminalWebView.webViewClient = object : WebViewClient() {
                 override fun shouldOverrideUrlLoading(
                     view: WebView?,
                     request: WebResourceRequest?
@@ -37,7 +37,7 @@ class WebViewClientSetter {
                     val allowedRequest = false
                     val notAllowedRequest = true
 
-                    val url =  request?.url ?: return notAllowedRequest
+                    val url = request?.url ?: return notAllowedRequest
 
                     validation.isTransitionToOtherApp(url).let {
                         when (it) {
@@ -94,7 +94,7 @@ class WebViewClientSetter {
                         System.currentTimeMillis().toString()
                     )
                 }
-            })
+            }
         }
     }
 }

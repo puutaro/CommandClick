@@ -17,8 +17,8 @@ class UrlTermLongProcess {
             url: String?
         ){
             val urlCheckResult = EnableUrlPrefix.check(url)
-            if(!urlCheckResult) return
             terminalViewModel.onExecInternetButtonShell = urlCheckResult
+            if(!urlCheckResult) return
             val context = terminalFragment.context
             val title = webView?.title ?: return
             if(title.isBlank() || title.isEmpty() ) return
