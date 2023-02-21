@@ -40,7 +40,7 @@ object AdBlocker {
             terminalFragment.blocklist =
                 fis2.bufferedReader().use {
                     it.readText()
-                }
+                }.split("\n").toHashSet()
         } catch (e: IOException) {
             e.printStackTrace()
         }

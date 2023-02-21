@@ -67,11 +67,22 @@ class WebHistoryUpdater {
                 searchviewText,
             )
             if(searchviewText.isEmpty()) return
-            ExecWebHistoryUpdater.update(
+            val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+            val takeHistoryNum = 500
+            val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
+                currentAppDirPath,
+                cmdclickUrlHistoryFileName
+            ).textToList().take(takeHistoryNum).joinToString("\n")
+            FileSystems.writeFile(
+                currentAppDirPath,
+                cmdclickUrlHistoryFileName,
+                updatingHistory
+            )
+
+            registerUrlHistoryTitle(
                 terminalFragment,
                 currentAppDirPath,
-                ulrTitle,
-                url,
+                ulrTitle
             )
 
             val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
@@ -105,63 +116,6 @@ class WebHistoryUpdater {
                 registerUrlTitle
             )
         }
-
-        object ExecWebHistoryUpdater {
-            fun update(
-                terminalFragment: TerminalFragment,
-                currentAppDirPath: String,
-                ulrTitle: String,
-                url: String,
-            ) {
-                val context = terminalFragment.context
-                if(context == null) return
-                terminalFragment.lifecycleScope.launch {
-                    terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                        withContext(Dispatchers.IO) {
-                            apdateUrlHistoryAndTitle(
-                                terminalFragment,
-                                currentAppDirPath,
-                                ulrTitle,
-                                url,
-                            )
-                        }
-                    }
-                }
-            }
-
-
-            @WorkerThread
-            @Throws(IOException::class)
-            fun apdateUrlHistoryAndTitle(
-                terminalFragment: TerminalFragment,
-                currentAppDirPath: String,
-                ulrTitle: String,
-                url: String,
-            ) {
-                val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-                val takeHistoryNum = 500
-                try {
-                    val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
-                        currentAppDirPath,
-                        cmdclickUrlHistoryFileName
-                    ).textToList().take(takeHistoryNum).joinToString("\n")
-                    FileSystems.writeFile(
-                        currentAppDirPath,
-                        cmdclickUrlHistoryFileName,
-                        updatingHistory
-                    )
-
-                    registerUrlHistoryTitle(
-                        terminalFragment,
-                        currentAppDirPath,
-                        ulrTitle
-                    )
-                } catch (e: IOException){
-                    return
-                }
-            }
-        }
-
     }
 }
 
