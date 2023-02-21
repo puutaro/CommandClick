@@ -6,13 +6,18 @@ import android.view.Gravity
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.JsFilePathToHistory
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.UrlTitleTrimmer
+import java.io.File
 
 
 class UrlHistoryButtonEvent(
@@ -98,7 +103,7 @@ class UrlHistoryButtonEvent(
                     pos
                 ) ?: return@setOnItemClickListener
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
-            if(selectedUrl == null) return@setOnItemClickListener
+                ?: return@setOnItemClickListener
             alertDialog.dismiss()
             if(
                 fragmentTag == context?.getString(
@@ -106,8 +111,10 @@ class UrlHistoryButtonEvent(
                 )
             ) {
                 val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
+                val launchSelectedUrl =
+                    makeLaunchUrl(selectedUrl) ?: return@setOnItemClickListener
                 listener?.onQueryTextChanged(
-                    selectedUrl,
+                    launchSelectedUrl,
                 )
                 return@setOnItemClickListener
             } else if(
@@ -122,6 +129,30 @@ class UrlHistoryButtonEvent(
                 return@setOnItemClickListener
             }
         }
+    }
+
+    private fun makeLaunchUrl(
+        selectedUrl: String,
+    ): String? {
+        if(
+            !selectedUrl.endsWith(
+                CommandClickShellScript.JS_FILE_SUFFIX,
+            )
+            && !selectedUrl.endsWith(
+                CommandClickShellScript.JSX_FILE_SUFFIX,
+            )
+        ) return selectedUrl
+        val jsFileObj = File(selectedUrl)
+        if(!jsFileObj.isFile) return null
+        val parentDirPath =
+            jsFileObj.parent ?: return null
+        JsFilePathToHistory.insert(
+            parentDirPath,
+            jsFileObj.name
+        )
+        return JavaScriptLoadUrl.make(
+            jsFileObj.absolutePath,
+        )
     }
 
     private fun mekeUrlHistoryList(): List<String> {

@@ -18,13 +18,13 @@ class ExecTerminalDo {
     companion object {
         fun execTerminalDo(
             currentFragment: Fragment,
-            recentAppdirPath: String,
+            recentAppDirPath: String,
             selectedShellFileName: String,
             shellContentsListSource: List<String>? = null
         ){
             if(
                 !File(
-                    recentAppdirPath,
+                    recentAppDirPath,
                     selectedShellFileName
                 ).isFile
             ) return
@@ -39,7 +39,7 @@ class ExecTerminalDo {
 
             val shellContentsList = if(shellContentsListSource.isNullOrEmpty()) {
                 ReadText(
-                    recentAppdirPath,
+                    recentAppDirPath,
                     selectedShellFileName
                 ).textToList()
             } else shellContentsListSource
@@ -52,7 +52,7 @@ class ExecTerminalDo {
 
             execSetTermSizeForIntent(
                 currentFragment,
-                recentAppdirPath,
+                recentAppDirPath,
                 substituteSettingVariableList,
             )
 
@@ -77,7 +77,7 @@ class ExecTerminalDo {
 
             urlLaunchMacroProcessor(
                 terminalViewModel,
-                recentAppdirPath,
+                recentAppDirPath,
                 onUrlLaunchMacro,
             )
 
@@ -93,7 +93,7 @@ class ExecTerminalDo {
                     currentFragment,
                     terminalDo,
                     substituteSettingVariableList,
-                    recentAppdirPath,
+                    recentAppDirPath,
                     selectedShellFileName,
                     runShell,
             )
@@ -111,7 +111,7 @@ class ExecTerminalDo {
                 == SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
             ) return
             FileSystems.updateLastModified(
-                recentAppdirPath,
+                recentAppDirPath,
                 selectedShellFileName
             )
         }
@@ -160,11 +160,16 @@ private fun jsExecuteProcessor(
       onUrlLaunchMacro
       != SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
     ) return
-    if(substituteSettingVariableList.isNullOrEmpty()) return
+    if(
+        substituteSettingVariableList.isNullOrEmpty()
+    ) return
     val execJsOrHtmlPath = CommandClickVariables.substituteCmdClickVariable(
         substituteSettingVariableList,
         CommandClickShellScript.EXEC_JS_OR_HTML_PATH
     ) ?: return
+    val jsOrHtmlFileObj = File(execJsOrHtmlPath)
+    val recentAppDirPath =
+        jsOrHtmlFileObj.parent ?: return
     if(
         execJsOrHtmlPath.endsWith(
             CommandClickShellScript.JS_FILE_SUFFIX
@@ -173,6 +178,10 @@ private fun jsExecuteProcessor(
             CommandClickShellScript.JSX_FILE_SUFFIX
         )
     ) {
+        JsFilePathToHistory.insert(
+            recentAppDirPath,
+            jsOrHtmlFileObj.name
+        )
         terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
             execJsOrHtmlPath,
         )
@@ -189,11 +198,10 @@ private fun jsExecuteProcessor(
             WebUrlVariables.slashPrefix
         ) && enableHtmlSuffix
     if(!enableHtml) return
-    val htmlFileObj = File(execJsOrHtmlPath)
-    if(!htmlFileObj.isFile) return
-    val currentAppDir = htmlFileObj.parent
+    if(!jsOrHtmlFileObj.isFile) return
+    val currentAppDir = jsOrHtmlFileObj.parent
     if(
         currentAppDir.isNullOrEmpty()
     ) return
-    terminalViewModel.launchUrl = "${currentAppDir}/${htmlFileObj.name}"
+    terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
 }

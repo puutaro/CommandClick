@@ -3,8 +3,6 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -19,8 +17,6 @@ import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.ExecTerminalDo
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import java.io.File
 
 
 class ItemClickListenerSetter {
@@ -59,18 +55,22 @@ class ItemClickListenerSetter {
                         CommandClickShellScript.JS_FILE_SUFFIX
                     )
                 ) {
-                    val selectecJsFileName = selectedShellFileName
+                    val selectedJsFileName = selectedShellFileName
+                    JsFilePathToHistory.insert(
+                        currentAppDirPath,
+                        selectedShellFileName
+                    )
                     BroadCastIntent.send(
                         cmdIndexFragment,
                         JavaScriptLoadUrl.make(
-                        "${currentAppDirPath}/${selectecJsFileName}",
+                        "${currentAppDirPath}/${selectedJsFileName}",
                         ),
                     )
                     updateLastModifiedListView (
                         cmdListView,
                         cmdListAdapter,
                         currentAppDirPath,
-                        selectecJsFileName
+                        selectedJsFileName
                     )
                     return@setOnItemClickListener
                 }
@@ -83,10 +83,6 @@ class ItemClickListenerSetter {
                     BroadCastIntent.send(
                         cmdIndexFragment,
                         "${currentAppDirPath}/${selectecHtmlFileName}"
-//                        ReadText(
-//                            currentAppDirPath,
-//                            selectecJsFileName
-//                        ).readText()
                     )
                     updateLastModifiedListView (
                         cmdListView,
