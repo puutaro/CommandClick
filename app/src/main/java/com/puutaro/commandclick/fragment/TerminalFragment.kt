@@ -18,7 +18,10 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
@@ -46,6 +49,8 @@ class TerminalFragment: Fragment() {
     var terminalFontColor = CommandClickShellScript.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+    var blocklist = String()
+    var loddnormallist = "0"
 
 
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {

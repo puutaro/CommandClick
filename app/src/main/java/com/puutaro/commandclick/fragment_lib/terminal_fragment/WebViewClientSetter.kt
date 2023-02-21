@@ -4,13 +4,13 @@ import android.webkit.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.ByteArrayInputStream
 
 
 class WebViewClientSetter {
@@ -78,11 +78,10 @@ class WebViewClientSetter {
                     view: WebView?,
                     request: WebResourceRequest?
                 ): WebResourceResponse? {
-                    request?.let {
-                        val ad = AdBlocker.isAd(it.url.toString())
-                        if (ad) {
-                            return AdBlocker.createEmptyResource()
-                        }
+                    val EMPTY3 = ByteArrayInputStream("".toByteArray())
+                    val blocklist = terminalFragment.blocklist
+                    if (blocklist.contains(":::::" + request?.url?.host)) {
+                        return WebResourceResponse("text/plain", "utf-8", EMPTY3)
                     }
                     return super.shouldInterceptRequest(view, request)
                 }
