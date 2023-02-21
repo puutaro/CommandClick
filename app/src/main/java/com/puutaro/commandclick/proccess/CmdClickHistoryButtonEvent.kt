@@ -238,14 +238,14 @@ internal fun makeHistoryListRow(
 internal fun deleteOverHistory(
     cmdclickAppHistoryDirAdminPath: String
 ){
-    val levesHistoryNum = 50
-    val dirfiles = FileSystems.sortedFiles(
+    val leavesHistoryNum = 50
+    val dirFiles = FileSystems.sortedFiles(
         cmdclickAppHistoryDirAdminPath,
     )
-    if(dirfiles.isEmpty()) return
-    val deleteFileNum = dirfiles.size - levesHistoryNum
+    if(dirFiles.isEmpty()) return
+    val deleteFileNum = dirFiles.size - leavesHistoryNum
     if(deleteFileNum <= 0) return
-    val deletingFiles = dirfiles.take(deleteFileNum)
+    val deletingFiles = dirFiles.take(deleteFileNum)
     deletingFiles.forEach {
         try {
             val fileEntry = File(

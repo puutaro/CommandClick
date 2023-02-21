@@ -5,6 +5,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent.Companion.execSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
 import com.puutaro.commandclick.util.*
@@ -130,6 +131,11 @@ private fun urlLaunchMacroProcessor(
                 recentAppdirPath,
                 UsePath.cmdclickUrlHistoryFileName
             ).textToList()
+                .filter {
+                    EnableUrlPrefix.check(
+                        it.split("\t").lastOrNull()
+                    )
+                }
                 .firstOrNull()
                 ?.split("\t")?.lastOrNull()
         }
@@ -137,7 +143,13 @@ private fun urlLaunchMacroProcessor(
             terminalViewModel.launchUrl = ReadText(
                 recentAppdirPath,
                 UsePath.cmdclickUrlHistoryFileName
-            ).textToList().groupBy { it }
+            ).textToList()
+                .filter {
+                    EnableUrlPrefix.check(
+                        it.split("\t").lastOrNull()
+                    )
+                }
+                .groupBy { it }
                 .mapValues { it.value.size }
                 .maxBy { it.value }
                 .key

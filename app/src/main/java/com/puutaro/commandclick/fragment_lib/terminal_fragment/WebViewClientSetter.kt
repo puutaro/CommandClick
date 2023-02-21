@@ -1,7 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
+import androidx.annotation.WorkerThread
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -11,7 +15,12 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_l
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.io.InputStream
 
 
 class WebViewClientSetter {

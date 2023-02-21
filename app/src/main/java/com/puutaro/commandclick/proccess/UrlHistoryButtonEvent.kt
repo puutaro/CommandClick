@@ -10,13 +10,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.JsFilePathToHistory
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.UrlTitleTrimmer
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.*
 import java.io.File
 
 
@@ -156,10 +156,32 @@ class UrlHistoryButtonEvent(
     }
 
     private fun mekeUrlHistoryList(): List<String> {
-        val takeListNum = 60
-        return AutoCompleteEditTexter.makeCompleteListSource(
+        return makeCompleteListSourceNoJsExclude(
             currentAppDirPath,
-            takeListNum
         ).reversed()
+    }
+
+    private fun makeCompleteListSourceNoJsExclude(
+        currentAppDirPath: String?,
+    ):List<String> {
+        if(
+            currentAppDirPath.isNullOrEmpty()
+        ) return emptyList()
+        val usedTitle = mutableSetOf<String>()
+        val usedUrl = mutableSetOf<String>()
+        val takeListNum = 60
+        return ReadText(
+            currentAppDirPath,
+            UsePath.cmdclickUrlHistoryFileName
+        ).textToList()
+            .distinct()
+            .take(takeListNum)
+            .filter {
+                makeUrlHistoryList(
+                    it,
+                    usedTitle,
+                    usedUrl,
+                )
+            }
     }
 }

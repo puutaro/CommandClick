@@ -1,6 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.UsePath
@@ -12,11 +16,17 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.IOException
+import java.io.InputStream
 import java.net.URLDecoder
 
 
 class WebHistoryUpdater {
     companion object {
+
         fun webHistoryUpdater(
             terminalFragment: TerminalFragment,
             terminalViewModel: TerminalViewModel,
@@ -57,22 +67,11 @@ class WebHistoryUpdater {
                 searchviewText,
             )
             if(searchviewText.isEmpty()) return
-            val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-            val takeHistoryNum = 500
-            val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
-                currentAppDirPath,
-                cmdclickUrlHistoryFileName
-            ).textToList().take(takeHistoryNum).joinToString("\n")
-            FileSystems.writeFile(
-                currentAppDirPath,
-                cmdclickUrlHistoryFileName,
-                updatingHistory
-            )
-
-            registerUrlHistoryTitle(
+            ExecWebHistoryUpdater.update(
                 terminalFragment,
                 currentAppDirPath,
-                ulrTitle
+                ulrTitle,
+                url,
             )
 
             val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
@@ -97,6 +96,58 @@ class WebHistoryUpdater {
                 UsePath.cmdclickFirstHistoryTitle,
                 registerUrlTitle
             )
+        }
+
+        object ExecWebHistoryUpdater {
+            fun update(
+                terminalFragment: TerminalFragment,
+                currentAppDirPath: String,
+                ulrTitle: String,
+                url: String,
+            ) {
+                val context = terminalFragment.context
+                if(context == null) return
+                terminalFragment.lifecycleScope.launch {
+                    terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                        withContext(Dispatchers.IO) {
+                            apdateUrlHistoryAndTitle(
+                                terminalFragment,
+                                currentAppDirPath,
+                                ulrTitle,
+                                url,
+                            )
+                        }
+                    }
+                }
+            }
+
+
+            @WorkerThread
+            @Throws(IOException::class)
+            fun apdateUrlHistoryAndTitle(
+                terminalFragment: TerminalFragment,
+                currentAppDirPath: String,
+                ulrTitle: String,
+                url: String,
+            ) {
+                val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+                val takeHistoryNum = 1000
+                val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
+                    currentAppDirPath,
+                    cmdclickUrlHistoryFileName
+                ).textToList().take(takeHistoryNum).joinToString("\n")
+                FileSystems.writeFile(
+                    currentAppDirPath,
+                    cmdclickUrlHistoryFileName,
+                    updatingHistory
+                )
+
+                registerUrlHistoryTitle(
+                    terminalFragment,
+                    currentAppDirPath,
+                    ulrTitle
+                )
+            }
         }
 
     }
@@ -147,5 +198,4 @@ internal fun makeStrPosi(
     } else {
         sharpPosiSource
     }
-
 }

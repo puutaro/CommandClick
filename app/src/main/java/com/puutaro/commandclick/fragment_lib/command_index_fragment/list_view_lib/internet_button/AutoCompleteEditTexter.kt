@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.UrlTexter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
 import java.net.URLDecoder
@@ -56,7 +57,7 @@ class AutoCompleteEditTexter(
 
         fun makeCompleteListSource(
             currentAppDirPath: String?,
-            takeListNum: Int = 200,
+            takeListNum: Int = 500,
         ):List<String> {
             if(
                 currentAppDirPath.isNullOrEmpty()
@@ -67,6 +68,11 @@ class AutoCompleteEditTexter(
                 currentAppDirPath,
                 UsePath.cmdclickUrlHistoryFileName
             ).textToList()
+                .filter {
+                    EnableUrlPrefix.check(
+                        it.split("\t").lastOrNull()
+                    )
+                }
                 .distinct()
                 .take(takeListNum)
                 .filter {
