@@ -14,8 +14,6 @@ class ConfigFromConfigFileSetter {
             cmdIndexFragment: CommandIndexFragment
         ){
 
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     UsePath.cmdclickConfigDirPath,

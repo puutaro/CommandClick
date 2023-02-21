@@ -70,6 +70,12 @@ class SettingVariableSelects {
         enum class ButtonEditExecVarantSelects {
             BackStack
         }
+
+        enum class OnAdblockSelects {
+            INHERIT,
+            ON,
+            OFF,
+        }
     }
 
 }

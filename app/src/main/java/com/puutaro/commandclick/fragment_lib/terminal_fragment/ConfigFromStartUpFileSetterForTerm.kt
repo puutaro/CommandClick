@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
@@ -35,6 +36,18 @@ class ConfigFromStartUpFileSetterForTerm {
                 CommandClickShellScript.SETTING_SECTION_END
             )
 
+            terminalFragment.onAdBlock = MakeVariableCbValue.make(
+                settingVariableListFromConfig,
+                CommandClickShellScript.ON_ADBLOCK,
+                CommandClickShellScript.ON_ADBLOCK_DEFAULT_VALUE,
+                SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
+                CommandClickShellScript.ON_ADBLOCK_DEFAULT_VALUE,
+                listOf(
+                    SettingVariableSelects.Companion.OnAdblockSelects.ON.name,
+                    SettingVariableSelects.Companion.OnAdblockSelects.OFF.name,
+                ),
+            )
+
             terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
                 settingVariableListFromConfig,
                 CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM,
@@ -58,11 +71,6 @@ class ConfigFromStartUpFileSetterForTerm {
                 SharePrefferenceSetting.current_shell_file_name
             )
 
-            val editFragmentInstance =
-                TargetFragmentInstance().getFromFragment<EditFragment>(
-                    terminalFragment.activity,
-                    terminalFragment.getString(R.string.cmd_variable_edit_fragment)
-                )
             val currentShellFileName = if (
                 terminalFragment.tag ==
                 terminalFragment.context?.getString(
@@ -79,6 +87,18 @@ class ConfigFromStartUpFileSetterForTerm {
                 ).textToList(),
                 CommandClickShellScript.SETTING_SECTION_START,
                 CommandClickShellScript.SETTING_SECTION_END
+            )
+
+            terminalFragment.onAdBlock = MakeVariableCbValue.make(
+                settingVariableList,
+                CommandClickShellScript.ON_ADBLOCK,
+                terminalFragment.onAdBlock,
+                SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
+                terminalFragment.onAdBlock,
+                listOf(
+                    SettingVariableSelects.Companion.OnAdblockSelects.ON.name,
+                    SettingVariableSelects.Companion.OnAdblockSelects.OFF.name,
+                ),
             )
 
             terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(

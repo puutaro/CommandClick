@@ -17,8 +17,6 @@ class ConfigFromShellFileSetter {
             editFragment: EditFragment,
             readSharePreffernceMap: Map<String, String>,
         ){
-            val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-
             val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.on_shortcut

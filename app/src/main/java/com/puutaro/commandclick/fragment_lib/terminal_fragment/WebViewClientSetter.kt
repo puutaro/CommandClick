@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
@@ -78,6 +79,9 @@ class WebViewClientSetter {
                     view: WebView?,
                     request: WebResourceRequest?
                 ): WebResourceResponse? {
+                    if(
+                        terminalFragment.onAdBlock != SettingVariableSelects.Companion.OnAdblockSelects.ON.name
+                    ) return super.shouldInterceptRequest(view, request)
                     val EMPTY3 = ByteArrayInputStream("".toByteArray())
                     val blocklist = terminalFragment.blocklist
                     if (blocklist.contains(":::::" + request?.url?.host)) {
