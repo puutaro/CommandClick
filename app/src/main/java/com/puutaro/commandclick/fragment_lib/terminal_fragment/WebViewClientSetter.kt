@@ -74,6 +74,17 @@ class WebViewClientSetter {
                         webView,
                         url,
                     )
+                    terminalFragment.lifecycleScope.launch {
+                        terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            withContext(Dispatchers.IO) {
+                                FileSystems.writeFile(
+                                    terminalFragment.currentAppDirPath,
+                                    UsePath.urlLoadFinished,
+                                    System.currentTimeMillis().toString()
+                                )
+                            }
+                        }
+                    }
                     UrlTermLongProcess.torigger(
                         terminalFragment,
                         terminalViewModel,
@@ -101,11 +112,17 @@ class WebViewClientSetter {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    FileSystems.writeFile(
-                        terminalFragment.currentAppDirPath,
-                        UsePath.urlLoadFinished,
-                        System.currentTimeMillis().toString()
-                    )
+                    terminalFragment.lifecycleScope.launch {
+                        terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                            withContext(Dispatchers.IO) {
+                                FileSystems.writeFile(
+                                    terminalFragment.currentAppDirPath,
+                                    UsePath.urlLoadFinished,
+                                    System.currentTimeMillis().toString()
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

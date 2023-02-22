@@ -115,8 +115,8 @@ class CommandClickShellScript {
         val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
         val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
         val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
-        val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
-        val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.ON.name
+        val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
+        val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
         val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.OFF.name
         val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
 
@@ -133,7 +133,7 @@ class CommandClickShellScript {
             "${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}:CB=${urlHistoryOrButtonExecUrlHistory}!${urlHistoryOrButtonExecUrlButtonExec}!${urlHistoryOrButtonExecUrlInherit}",
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
             "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
-            "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOn}!${onAdBlockOff}",
+            "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
             "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=1..1000!1",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
@@ -358,7 +358,7 @@ class CommandClickShellScript {
             |${CMDCLICK_SHIBAN}=${CMDCLICK_SHIBAN_DEFAULT_VALUE}
             |${CMDCLICK_HISTORY_SWITCH}=${HISTORY_SWITCH_DEFAULT_VALUE}
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}
-            |${ON_ADBLOCK}=${onAdBlockOn}
+            |${ON_ADBLOCK}=${onAdBlockOff}
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}
             |${TERMINAL_COLOR}=${TERMINAL_COLOR_DEFAULT_VALUE}
             |${TERMINAL_FONT_COLOR}=${TERMINAL_FONT_COLOR_DEFAULT_VALUE}
