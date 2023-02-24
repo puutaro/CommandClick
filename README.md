@@ -52,7 +52,8 @@ Table of Contents
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
   * [Url command](#url-command)
-  * [Troubleshooting(#troubleshooting)
+  * [JavaScript interface](#javascript-interface)
+  * [Troubleshooting](#troubleshooting)
 
 
 Pre Setting
@@ -362,6 +363,13 @@ ex) am broadcast \
 ### Ubuntu, Debian or Widnows10 version
 
 Reference to [url](https://github.com/puutaro/cmdclick)
+
+
+### JavaScript interface
+ - Android.readLocalFile(path: String) -> String
+      - read local file and return file contents string
+ - Android.writeLocalFile(path: String, contents: String)
+      - wite local file
 
 
 ### Troubleshooting
