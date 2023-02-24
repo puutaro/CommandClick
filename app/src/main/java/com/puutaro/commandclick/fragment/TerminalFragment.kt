@@ -69,7 +69,6 @@ class TerminalFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        WebStorage.getInstance().deleteAllData()
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.readlinesNum = ReadLines.SHORTH
 
