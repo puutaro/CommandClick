@@ -30,9 +30,14 @@ class WebViewSettings {
             settings.setDisplayZoomControls(false)
             terminalWebView.addJavascriptInterface(
                 WebAppInterface(terminalFragment),
-                "Android"
+                JsInterfaceVariant.jsFileSystem.name
             )
 
         }
     }
+}
+
+
+private enum class JsInterfaceVariant {
+    jsFileSystem
 }
