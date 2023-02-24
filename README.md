@@ -52,6 +52,7 @@ Table of Contents
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
   * [Url command](#url-command)
+  * [Troubleshooting(#troubleshooting)
 
 
 Pre Setting
@@ -361,4 +362,10 @@ ex) am broadcast \
 ### Ubuntu, Debian or Widnows10 version
 
 Reference to [url](https://github.com/puutaro/cmdclick)
+
+
+### Troubleshooting
+
+- When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
+    - In many cases, occur in google search result page.
 
