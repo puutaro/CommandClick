@@ -4,7 +4,8 @@ enum class EditTextSupportViewId(
     val id: Int
 ) {
     SPINNER(500),
-    DIRECTORY_PICKER(1000),
-    NUM_INDE_CREMENTER(1500),
-    BUTTON(2000),
+    EDITABLE_SPINNER(1000),
+    DIRECTORY_PICKER(1500),
+    NUM_INDE_CREMENTER(2000),
+    BUTTON(2500),
 }

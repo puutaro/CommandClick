@@ -31,43 +31,47 @@ class EditTextProducerForEdit(
     )
 
 
-    val buttonViewHowActive = ButtonViewHowActive(
+    private val buttonViewHowActive = ButtonViewHowActive(
         binding,
         editFragment
     )
-    val validateErrEditTextNumberSet = mutableSetOf<Int>()
+    private val validateErrEditTextNumberSet = mutableSetOf<Int>()
 
-    val setVariableTypeList = makeSetVariableTypeList(
+    private val setVariableTypeList = makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder
     )
 
-    val recordNumToSetVariableMaps = makeRecordNumToSetVariableMaps(
+    private val recordNumToSetVariableMaps = makeRecordNumToSetVariableMaps(
         setVariableTypeList,
         recordNumToMapNameValueInCommandHolder
     )
 
-    val withSpinnerView = WithSpinnerView(
+    private val withSpinnerView = WithSpinnerView(
         editFragment.context
     )
 
-    val withDirOrFileChooseView = WithDirOrFileChooseView(
+    private val withEditableSpinnerView = WithEditableSpinnerView(
+        editFragment.context
+    )
+
+    private val withDirOrFileChooseView = WithDirOrFileChooseView(
         editFragment
     )
 
-    val withInDeCremenView = WithInDeCremenView(
+    private val withInDeCremenView = WithInDeCremenView(
         editFragment
     )
 
-    val withColorPickerView = WithColorPickerView(
+    private val withColorPickerView = WithColorPickerView(
         editFragment
     )
 
-    val withButtonView = WithButtonView(
+    private val withButtonView = WithButtonView(
         editFragment,
         readSharePreffernceMap
     )
 
-    val withDatePickerView = WithDatePickerView(
+    private val withDatePickerView = WithDatePickerView(
         editFragment,
     )
 
@@ -150,6 +154,15 @@ class EditTextProducerForEdit(
             ) {
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val innerLinearLayout = withSpinnerView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertEditText,
+                        setVariableMap
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableSpinnerView.create(
                         currentId,
                         currentVariableValue,
                         insertEditText,

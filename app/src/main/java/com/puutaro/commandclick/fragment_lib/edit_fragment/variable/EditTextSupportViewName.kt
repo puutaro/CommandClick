@@ -4,6 +4,7 @@ enum class EditTextSupportViewName(
         val str: String
     ) {
     CHECK_BOX("CB"),
+    EDITABLE_CHECK_BOX("ECB"),
     MDIRECTORY_PICKER("MDIR"),
     DIRECTORY_PICKER("DIR"),
     MFILE_PICKER("MFL"),
