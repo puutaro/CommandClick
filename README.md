@@ -154,6 +154,7 @@ At the same time, if you installed code editor, edit new file.
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `CB` | checkbox | {variablebName}:CB=value1!value2!|..   |
+    | `ECB` | editable checkbox | {variablebName}:ECB=value1!value2!|..   |
     | `H` | password input | {variablebName}:H={password ..etc}   |
     | `RO` | read only | {variablebName}:RO= |
     | `NUM` | increment or decrement number | {variablebName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
