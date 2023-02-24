@@ -2,20 +2,19 @@ package com.puutaro.commandclick.proccess
 
 import android.R
 import android.app.AlertDialog
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.Gravity
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.*
 import java.io.File
 
@@ -61,6 +60,11 @@ class UrlHistoryButtonEvent(
             urlHistoryListView,
             urlHistoryList,
             alertDialog
+        )
+
+        setUrlHistoryListViewOnItemLongClickListener (
+            urlHistoryListView,
+            urlHistoryList,
         )
     }
 
@@ -206,4 +210,64 @@ class UrlHistoryButtonEvent(
             shellFileObj.name,
         )
     }
+
+    private fun setUrlHistoryListViewOnItemLongClickListener (
+        urlHistoryListView: ListView,
+        urlHistoryList: List<String>,
+    ){
+        urlHistoryListView.setOnItemLongClickListener {
+                parent, listSelectedView, position, id ->
+            val popup = PopupMenu(context, listSelectedView)
+            val selectedLine = urlHistoryList[position]
+                .split("\t")
+                .lastOrNull()
+            val inflater = popup.menuInflater
+            inflater.inflate(
+                com.puutaro.commandclick.R.menu.history_admin_menu,
+                popup.menu
+            )
+            popup.menu.add(
+                UrlHistoryMenuEnums.COPY_URL.groupId,
+                UrlHistoryMenuEnums.COPY_URL.itemId,
+                UrlHistoryMenuEnums.COPY_URL.order,
+                UrlHistoryMenuEnums.COPY_URL.itemName,
+
+                )
+            popup.setOnMenuItemClickListener {
+                    menuItem ->
+                execCopyUrl(
+                    listSelectedView,
+                    selectedLine,
+                )
+                true
+            }
+            popup.show()
+            true
+        }
+    }
+}
+
+internal val mainMenuGroupId = 70000
+
+internal enum class UrlHistoryMenuEnums(
+    val groupId: Int,
+    val itemId: Int,
+    val order: Int,
+    val itemName: String
+) {
+    COPY_URL(mainMenuGroupId, 70100, 1, "copy_url"),
+}
+
+
+private fun execCopyUrl(
+    listSelectedView: View,
+    selectedLine: String?
+){
+    val clipboard = listSelectedView.context?.getSystemService(
+        Context.CLIPBOARD_SERVICE) as ClipboardManager
+    val clip: ClipData = ClipData.newPlainText(
+        "url",
+        selectedLine
+    )
+    clipboard.setPrimaryClip(clip)
 }

@@ -1,8 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.view.View
 import android.view.WindowManager
+import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.WebAppInterface
 
 class WebViewSettings {
     companion object {
@@ -23,6 +28,11 @@ class WebViewSettings {
             )
             settings.setBuiltInZoomControls(true)
             settings.setDisplayZoomControls(false)
+            terminalWebView.addJavascriptInterface(
+                WebAppInterface(terminalFragment),
+                "Android"
+            )
+
         }
     }
 }

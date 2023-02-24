@@ -121,10 +121,7 @@ class ExecOnLongClickDo {
                     return contextItemSelected
                 }
                 R.id.shell_script_menu_copy_path  -> {
-                    val currentAppDirPathByTermux = UsePath.makeTermuxPathByReplace(
-                        currentAppDirPath
-                    )
-                    val shellFilePathByTermux = "${currentAppDirPathByTermux}/${shellScriptName}"
+                    val shellFilePathByTermux = "${currentAppDirPath}/${shellScriptName}"
                     val clipboard = context?.getSystemService(
                         Context.CLIPBOARD_SERVICE) as ClipboardManager
                     val clip: ClipData = ClipData.newPlainText(
