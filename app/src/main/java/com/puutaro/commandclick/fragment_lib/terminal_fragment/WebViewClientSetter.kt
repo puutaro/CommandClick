@@ -74,17 +74,13 @@ class WebViewClientSetter {
                         webView,
                         url,
                     )
-                    terminalFragment.lifecycleScope.launch {
-                        terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                            withContext(Dispatchers.IO) {
-                                FileSystems.writeFile(
-                                    terminalFragment.currentAppDirPath,
-                                    UsePath.urlLoadFinished,
-                                    System.currentTimeMillis().toString()
-                                )
-                            }
-                        }
-                    }
+
+                    FileSystems.writeFile(
+                        terminalFragment.currentAppDirPath,
+                        UsePath.urlLoadFinished,
+                        System.currentTimeMillis().toString()
+                    )
+
                     UrlTermLongProcess.torigger(
                         terminalFragment,
                         terminalViewModel,
