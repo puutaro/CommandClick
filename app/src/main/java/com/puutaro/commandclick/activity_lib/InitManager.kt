@@ -202,7 +202,7 @@ class InitManager(
             })
             .show()
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black) as Int
+            activity.getColor(android.R.color.black)
         )
     }
 

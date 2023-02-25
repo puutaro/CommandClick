@@ -115,7 +115,7 @@ class TerminalFragment: Fragment() {
 
         DisplaySwich.update(
             this,
-        terminalViewModel,
+            terminalViewModel,
         )
         return binding.root
     }

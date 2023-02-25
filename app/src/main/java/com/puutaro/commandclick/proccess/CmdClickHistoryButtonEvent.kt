@@ -55,6 +55,16 @@ class CmdClickHistoryButtonEvent (
         )
         historyListView.adapter = historyListAdapter
         historyListView.setSelection(historyListAdapter.count);
+
+        val alertDialog = AlertDialog.Builder(
+            context
+        )
+            .setTitle("Select app history")
+            .setView(historyListView)
+            .create()
+        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+        alertDialog.show()
+
         invokeItemSetLongTimeClickListnerForHistory(
             currentViewContext,
             historyListView,
@@ -68,25 +78,20 @@ class CmdClickHistoryButtonEvent (
             fragment,
             historyListView,
             historyList,
+            alertDialog,
         )
-
-        val alertDialog = AlertDialog.Builder(
-            context
-        )
-            .setTitle("Select app history")
-            .setView(historyListView)
-            .show()
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
     }
 
     private fun invokeItemSetClickListnerForHistory(
         fragment: Fragment,
         historyListView: ListView,
         historyList: List<String>,
+        alertDialog: AlertDialog,
     ) {
         historyListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
+            alertDialog.dismiss()
             val selectedHistoryFile = historyList
                 .get(pos)
                 .split("\n")

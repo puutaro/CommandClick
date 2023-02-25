@@ -23,14 +23,14 @@ class InitFragmentManager(
 ) {
     private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
-    private val on_shortcut = intent.getStringExtra(
+    private val onShortcut = intent.getStringExtra(
         SharePrefferenceSetting.on_shortcut.name
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
 
 
     fun registerSharePreferenceFromIntentExtra() {
         if (
-            on_shortcut == ShortcutOnValueStr.EDIT_API.name
+            onShortcut == ShortcutOnValueStr.EDIT_API.name
         ) return
         val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
@@ -45,7 +45,8 @@ class InitFragmentManager(
             return
         }
 
-        val disableTaskRootForUrlLaunch = IntentAction.judge(activity) && !activity.isTaskRoot
+        val disableTaskRootForUrlLaunch =
+            IntentAction.judge(activity) && !activity.isTaskRoot
         if (
             disableTaskRootForUrlLaunch
         ) {
@@ -59,7 +60,7 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        if (on_shortcut == ShortcutOnValueStr.EDIT_API.name) {
+        if (onShortcut == ShortcutOnValueStr.EDIT_API.name) {
             WrapFragmentManager.changeFragmentEdit(
                 activity.supportFragmentManager,
                 activity.getString(R.string.api_cmd_variable_edit_api_fragment),
@@ -163,8 +164,8 @@ class InitFragmentManager(
     private fun exedRestartIntent(
         sendIntent: Intent
     ) {
-        activity.startActivity(sendIntent)
         activity.finish()
+        activity.startActivity(sendIntent)
     }
 
     private fun removeTask(

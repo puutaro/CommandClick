@@ -60,8 +60,8 @@ class ExecToolbarMenuCategoriesForCmdIndex {
                     val execIntent = Intent(activity, activity::class.java)
                     execIntent.setAction(Intent.ACTION_MAIN)
                         .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    activity.startActivity(execIntent)
                     activity.finish()
+                    activity.startActivity(execIntent)
                 }
                 ToolbarMenuCategoriesVariantForCmdIndex.CHDIR -> {
                     ExecSomeAdmin.execSomeAdmin(

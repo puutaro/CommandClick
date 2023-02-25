@@ -191,7 +191,7 @@ class CommandClickShellScript {
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFrequency}: most use url launch
                 |# * ${EXEC_JS_OR_HTML_PATH}: execute javascript or html file path
-                |   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
+                |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
@@ -206,7 +206,7 @@ class CommandClickShellScript {
                 |#      ex) ${backStackPrefix} ls
                 |#             ("${backStackPrefix}" is backstack, only work when prefix
                 |#      ex) top -n 1 > /dev/null  
-                               (when suffix is "> /dev/null" or "> /dev/null 2>&1", no output
+                |#             (when suffix is "> /dev/null" or "> /dev/null 2>&1", no output
                 |#  - ex) dir selector: {cmdVariable}:${EditTextSupportViewName.DIRECTORY_PICKER.str}=
                 |#  - ex) read only: {cmdVariable}:${EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str}=
                 |#  - ex) password: {cmdVariable}:${EditTextSupportViewName.PASSWORD.str}=

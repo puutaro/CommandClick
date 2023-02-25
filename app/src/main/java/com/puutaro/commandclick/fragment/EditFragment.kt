@@ -43,7 +43,6 @@ class EditFragment: Fragment() {
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
