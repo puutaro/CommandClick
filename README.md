@@ -11,7 +11,7 @@ Pros
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only termux gui client but also web browser.
 - Offer ritch edit dialog to termux.
-- javascript engine.
+- Javascript engine.
 
 
 Table of Contents
