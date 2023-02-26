@@ -154,6 +154,7 @@ At the same time, if you installed code editor, edit new file.
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `CB` | checkbox | {variablebName}:CB=value1!value2!|..   |
+    | `CBB` | checkbox with button | {variablebName}:CBB=value1!value2!`|`command string |..   |
     | `ECB` | editable checkbox | {variablebName}:ECB=value1!value2!|..   |
     | `H` | password input | {variablebName}:H={password ..etc}   |
     | `RO` | read only | {variablebName}:RO= |
