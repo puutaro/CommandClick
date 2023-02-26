@@ -115,16 +115,17 @@ class ButtonViewProducer {
             if(
                 cmdPrefixEntrySource.isNullOrEmpty()
             ) return String()
-            return if(
-                cmdPrefixEntrySource.contains(setVariableSetSeparator) == true
-            ) {
-                cmdPrefixEntrySource.split(setVariableSetSeparator).let {
+            if(
+                cmdPrefixEntrySource.contains(
+                    setVariableSetSeparator
+                )
+            ) return cmdPrefixEntrySource.split(setVariableSetSeparator).let {
                     val cmdPrefixEntry = it
-                        .slice(1..it.size - 1)
+                        .slice(1 until it.size)
                         .joinToString(setVariableSetSeparator)
                     BothEdgeQuote.trim(cmdPrefixEntry)
                 }
-            } else BothEdgeQuote.trim(cmdPrefixEntrySource)
+            return BothEdgeQuote.trim(cmdPrefixEntrySource)
         }
     }
 }
