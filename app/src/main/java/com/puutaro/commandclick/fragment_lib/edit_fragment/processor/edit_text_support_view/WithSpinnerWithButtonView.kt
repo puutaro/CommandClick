@@ -1,16 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view
 
-
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ButtonViewProducer
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-
-class WithButtonView(
+class WithSpinnerWithButtonView(
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
 ) {
@@ -32,9 +31,17 @@ class WithButtonView(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.001F
+        linearParamsForEditTextTest.weight = 0.5F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
+        val insertSpinner = SpinnerViewProducer.make(
+            context,
+            currentId,
+            insertEditText,
+            currentRecordNumToSetVariableMap,
+        0.3F,
+        )
+        horizontalLinearLayout.addView(insertSpinner)
         val insertButton = ButtonViewProducer.make(
             editFragment,
             readSharePreffernceMap,
@@ -42,7 +49,8 @@ class WithButtonView(
             insertTextView,
             insertEditText,
             currentRecordNumToSetVariableMap,
-            2F
+            0.2F,
+            true
         )
         horizontalLinearLayout.addView(insertButton)
         return horizontalLinearLayout

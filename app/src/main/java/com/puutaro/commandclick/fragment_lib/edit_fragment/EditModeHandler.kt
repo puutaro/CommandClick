@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -52,14 +51,14 @@ class EditModeHandler(
         currentShellContentsList
     )
 
-    private val on_shortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
     ) == ShortcutOnValueStr.ON.name
 
     private val enableEditExecute =
         (editExecuteValue == SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
-                && on_shortcut)
+                && onShortcut)
 
 
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(

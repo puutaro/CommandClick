@@ -50,16 +50,37 @@ class EditTextProducerForEdit(
         editFragment.context
     )
 
+    private val withSpinnerWithButtonView = WithSpinnerWithButtonView(
+        editFragment,
+        readSharePreffernceMap
+    )
+
     private val withEditableSpinnerView = WithEditableSpinnerView(
         editFragment.context
     )
+
+    private val withEditableSpinnerWithButtonView = WithEditableSpinnerWithButtonView(
+        editFragment,
+        readSharePreffernceMap
+    )
+
 
     private val withDirOrFileChooseView = WithDirOrFileChooseView(
         editFragment
     )
 
+    private val withDirOrFileChooseViewWithButtonView = WithDirOrFileChooseViewWithButtonView(
+        editFragment,
+        readSharePreffernceMap
+    )
+
     private val withInDeCremenView = WithInDeCremenView(
         editFragment
+    )
+
+    private val withInDeCremenViewWithButtonView = WithInDeCremenViewWithButtonView(
+        editFragment,
+        readSharePreffernceMap
     )
 
     private val withColorPickerView = WithColorPickerView(
@@ -161,10 +182,30 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withSpinnerWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
                     val innerLinearLayout = withEditableSpinnerView.create(
                         currentId,
                         currentVariableValue,
+                        insertEditText,
+                        setVariableMap
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withEditableSpinnerWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
                         insertEditText,
                         setVariableMap
                     )
@@ -178,6 +219,16 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.DIRECTORY_PICKER_BUTTON.str -> {
+                    val innerLinearLayout = withDirOrFileChooseViewWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.FILE_PICKER.str,
                 EditTextSupportViewName.MFILE_PICKER.str -> {
                     val innerLinearLayout = withDirOrFileChooseView.create(
@@ -186,10 +237,30 @@ class EditTextProducerForEdit(
                         false
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
-
+                }
+                EditTextSupportViewName.FILE_PICKER_BUTTON.str -> {
+                    val innerLinearLayout = withDirOrFileChooseViewWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap,
+                        false
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
-                    val innerLayout = withInDeCremenView.createNumInDeCreamenter(
+                    val innerLayout = withInDeCremenView.createNumInDeCrementer(
+                        currentVariableValue,
+                        insertEditText,
+                        setVariableMap
+                    )
+                    binding.editLinearLayout.addView(innerLayout)
+                }
+                EditTextSupportViewName.NUM_INDE_CREMENTER_BUTTON.str -> {
+                    val innerLayout = withInDeCremenViewWithButtonView.create(
+                        currentId,
+                        insertTextView,
                         currentVariableValue,
                         insertEditText,
                         setVariableMap
@@ -203,6 +274,7 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertTextView,
                         insertEditText,
+                        setVariableMap
                     )
                     binding.editLinearLayout.addView(innerLayout)
                 }

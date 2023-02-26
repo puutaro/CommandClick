@@ -1,21 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view
 
-
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.*
-import androidx.fragment.app.activityViewModels
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.DirOrFileChooseProducer
 
-
-class WithButtonView(
+class WithDirOrFileChooseViewWithButtonView(
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
 ) {
     private val context = editFragment.context
-    val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
     fun create(
         currentId: Int,
@@ -23,18 +21,27 @@ class WithButtonView(
         insertTextView: TextView,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        onDirectoryPick: Boolean = true
     ): LinearLayout {
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
+        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
+        insertEditText.setText(currentVariableValue)
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
             0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.001F
+        linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
+        insertEditText.isFocusableInTouchMode = true;
         horizontalLinearLayout.addView(insertEditText)
+        val insertChooseButtonView = DirOrFileChooseProducer.make(
+            editFragment,
+            onDirectoryPick,
+            insertEditText,
+            0.2F,
+        )
+        horizontalLinearLayout.addView(insertChooseButtonView)
         val insertButton = ButtonViewProducer.make(
             editFragment,
             readSharePreffernceMap,
@@ -42,7 +49,8 @@ class WithButtonView(
             insertTextView,
             insertEditText,
             currentRecordNumToSetVariableMap,
-            2F
+            0.2F,
+            true
         )
         horizontalLinearLayout.addView(insertButton)
         return horizontalLinearLayout

@@ -35,7 +35,10 @@ class TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler : Handler = Handler(Looper.getMainLooper())
-    var jobCoroutine: Job? = null
+    var displayUpdateCoroutineJob: Job? = null
+    var loadAssetCoroutineJob: Job? = null
+    var onPageFinishedCoroutineJob: Job? = null
+    var registerUrlHistoryTitleCoroutineJob: Job? = null
     var firstDisplayUpdateRunner: Runnable? = null
     var lastDisplayUpdateRunner: Runnable? = null
     private var outputFileLength: Int = 0
@@ -191,6 +194,10 @@ class TerminalFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        this.loadAssetCoroutineJob?.cancel()
+        this.onPageFinishedCoroutineJob?.cancel()
+        this.registerUrlHistoryTitleCoroutineJob?.cancel()
+        this.displayUpdateCoroutineJob?.cancel()
         _binding = null
     }
 

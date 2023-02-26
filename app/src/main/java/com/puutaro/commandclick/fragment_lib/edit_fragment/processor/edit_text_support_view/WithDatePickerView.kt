@@ -33,11 +33,11 @@ class WithDatePickerView(
         )
         linearParamsForEditTextTest.weight = 0.8F
         insertEditText.layoutParams = linearParamsForEditTextTest
-        insertEditText.setFocusableInTouchMode(true);
+        insertEditText.isFocusableInTouchMode = true;
         innerLayout.addView(insertEditText)
 
         val insertButtonView = Button(context)
-        insertButtonView.setText(chooseButtonStr)
+        insertButtonView.text = chooseButtonStr
 
         setOnButtonClickListener(
             insertButtonView,

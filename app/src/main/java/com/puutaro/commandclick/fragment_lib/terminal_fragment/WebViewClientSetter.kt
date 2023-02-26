@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
-import androidx.annotation.WorkerThread
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -19,8 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
-import java.io.IOException
-import java.io.InputStream
 
 
 class WebViewClientSetter {
@@ -108,7 +105,7 @@ class WebViewClientSetter {
 
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)
-                    terminalFragment.lifecycleScope.launch {
+                    terminalFragment.onPageFinishedCoroutineJob = terminalFragment.lifecycleScope.launch {
                         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             withContext(Dispatchers.IO) {
                                 FileSystems.writeFile(

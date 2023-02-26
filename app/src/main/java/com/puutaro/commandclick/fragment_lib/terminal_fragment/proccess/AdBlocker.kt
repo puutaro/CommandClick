@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -15,9 +14,7 @@ object AdBlocker {
     private const val AD_HOSTS_FILE = "hosts.txt"
 
     fun init(terminalFragment: TerminalFragment) {
-        val context = terminalFragment.context
-        if(context == null) return
-        terminalFragment.lifecycleScope.launch {
+        terminalFragment.loadAssetCoroutineJob = terminalFragment.lifecycleScope.launch {
             terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 withContext(Dispatchers.IO) {
                     loadFromAssets(terminalFragment)
@@ -27,8 +24,6 @@ object AdBlocker {
     }
 
 
-    @WorkerThread
-    @Throws(IOException::class)
     fun loadFromAssets(
         terminalFragment: TerminalFragment
     ) {

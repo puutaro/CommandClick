@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
-import androidx.annotation.WorkerThread
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -19,8 +18,6 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.IOException
-import java.io.InputStream
 import java.net.URLDecoder
 
 
@@ -79,11 +76,17 @@ class WebHistoryUpdater {
                 updatingHistory
             )
 
-            registerUrlHistoryTitle(
-                terminalFragment,
-                currentAppDirPath,
-                ulrTitle
-            )
+            terminalFragment.registerUrlHistoryTitleCoroutineJob = terminalFragment.lifecycleScope.launch {
+                terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    withContext(Dispatchers.IO) {
+                        registerUrlHistoryTitle(
+                            terminalFragment,
+                            currentAppDirPath,
+                            ulrTitle
+                        )
+                    }
+                }
+            }
 
             val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
             autoCompUpdateListner?.onAutoCompUpdate(

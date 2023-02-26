@@ -4,17 +4,25 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.InDeCrementerViewProducer
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.numEntityMapColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.SetVariableTypeColumn
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class WithInDeCremenView(
+class WithInDeCremenViewWithButtonView(
     private val editFragment: EditFragment,
+    private val readSharePreffernceMap: Map<String, String>,
 ) {
     private val context = editFragment.context
+    val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
-    fun createNumInDeCrementer(
+    fun create(
+        currentId: Int,
+        insertTextView: TextView,
         currentVariableValueSource: String?,
         insertEditText: EditText,
         setVariableMap: Map<String, String>
@@ -49,8 +57,8 @@ class WithInDeCremenView(
         insertEditText.setText(currentVariableValue)
         insertEditText.inputType = InputType.TYPE_CLASS_NUMBER
         insertEditText.layoutParams = linearParamsForEditTextTest
-        insertEditText.isFocusableInTouchMode = true;
-        linearParamsForEditTextTest.weight = 0.6F
+        insertEditText.setFocusableInTouchMode(true);
+        linearParamsForEditTextTest.weight = 0.4F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
 
@@ -70,6 +78,17 @@ class WithInDeCremenView(
             false
         )
         horizontalLinearLayout.addView(decButton)
+        val insertButton = ButtonViewProducer.make(
+            editFragment,
+            readSharePreffernceMap,
+            currentId,
+            insertTextView,
+            insertEditText,
+            setVariableMap,
+            0.2F,
+        true
+        )
+        horizontalLinearLayout.addView(insertButton)
         return horizontalLinearLayout
     }
 }

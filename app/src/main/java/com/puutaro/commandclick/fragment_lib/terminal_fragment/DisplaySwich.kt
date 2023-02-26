@@ -19,7 +19,7 @@ class DisplaySwich {
             terminalViewModel: TerminalViewModel,
         ): Job {
             try {
-                terminalFragment.jobCoroutine?.cancel()
+                terminalFragment.displayUpdateCoroutineJob?.cancel()
             } catch (e: Exception){
                 println("not cancel")
             }
