@@ -154,23 +154,24 @@ At the same time, if you installed code editor, edit new file.
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `CB` | checkbox | {variablebName}:CB=value1!value2!|..   |
-    | `CBB` | checkbox with exec button | {variablebName}:CBB=value1!value2!&#124;command string |..   |
+    | `CBB` | checkbox with exec button | {variablebName}:CBB=value1!value2!&#124;{command string} |..   |
     | `ECB` | editable checkbox | {variablebName}:ECB=value1!value2!|..   |
-    | `ECBB` | editable checkbox with exec button | {variablebName}:ECB=value1!value2&#124;command string |..   |
+    | `ECBB` | editable checkbox with exec button | {variablebName}:ECB=value1!value2&#124;{command string} |..   |
     | `H` | password input | {variablebName}:H={password ..etc}   |
     | `RO` | read only | {variablebName}:RO= |
     | `NUM` | increment or decrement number | {variablebName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
-    | `NUMB` | increment or decrement number with exec button | {variablebName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;command string |
+    | `NUMB` | increment or decrement number with exec button | {variablebName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;{command string} |
     | `FL` | file select button | {variablebName}:FL=  |
-    | `FLB` | file select button with exec button | {variablebName}:FLB=command string  |
+    | `FLB` | file select button with exec button | {variablebName}:FLB={command string}  |
     | `MFL` | file select button | {variablebName}:MFL=  |
     | `DIR`  | directory select button | {variablebName}:DIR= |
-    | `DIRB`  | directory select button | {variablebName}:DIRB=command string |
+    | `DIRB`  | directory select button | {variablebName}:DIRB={command string} |
     | `MDIR`  | directory select button | {variablebName}:MDIR= |
     | `DT`  | create file button | {variablebName}:DT=  |
-    | `CLR` | select color  | {variablebName}:CLR={default value}   (detail bellow) |
-    | `BTN` | botton  | {variablebName}:BTN={command}    |
-    | `FBTN` | botton  | {variablebName}:FBTN={command}    |
+    | `CLR` | select color  | {variablebName}:CLR= |
+    | `CLRB` | select color with exec button | {variablebName}:CLRB={command string} |
+    | `BTN` | botton  | {variablebName}:BTN={{command string}}    |
+    | `FBTN` | botton  | {variablebName}:FBTN={{command string}}    |
     
       - button option usage  
                  ex) echo $0   (`$0` is current shell path  
