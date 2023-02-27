@@ -53,7 +53,9 @@ Table of Contents
   * [Edit api](#edit-api)
   * [Url command](#url-command)
   * [JavaScript interface](#javascript-interface)
+  * [Html tag output](#html-tag-output)
   * [Troubleshooting](#troubleshooting)
+  * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 
 Pre Setting
@@ -367,20 +369,31 @@ ex) am broadcast \
  --es url "javascript:(function() { alert('hello command click') })();"
 ```
 
-### Ubuntu, Debian or Widnows10 version
-
-Reference to [url](https://github.com/puutaro/cmdclick)
-
-
 ### JavaScript interface
  - Android.readLocalFile(path: String) -> String
       - read local file and return file contents string
  - Android.writeLocalFile(path: String, contents: String)
       - wite local file
 
+### Html tag output
+
+`CommandClick` shell output trminal as html, so html tag is valid. You can use tag by bellow.
+ - `<` -> `cmdclickLeastTag`
+ - `>` -> `cmdclickGreatTag`
+
+   - `Span tag` no working in shell output. If you wont to use this, launch html file.
+   - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
+
 
 ### Troubleshooting
 
 - When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
+
+
+
+### Ubuntu debian or widnows version
+
+Reference to [url](https://github.com/puutaro/cmdclick)
+
 
