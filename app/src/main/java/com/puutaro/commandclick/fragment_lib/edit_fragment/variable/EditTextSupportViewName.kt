@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.variable
 enum class EditTextSupportViewName(
         val str: String
     ) {
+    EDITABLE_BUTTON("EB"),
     CHECK_BOX("CB"),
     CHECK_BOX_BUTTON("CBB"),
     EDITABLE_CHECK_BOX("ECB"),
@@ -21,5 +22,6 @@ enum class EditTextSupportViewName(
     FBUTTON("FBTN"),
     DATE("DT"),
     COLOR("CLR"),
+    COLOR_BUTTON("CLRB"),
 
 }

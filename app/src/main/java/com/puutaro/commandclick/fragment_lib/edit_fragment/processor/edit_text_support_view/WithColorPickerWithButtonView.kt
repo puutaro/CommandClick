@@ -4,16 +4,21 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.TextView
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ColorPickerViewProducer
 
-
-class WithColorPickerView(
+class WithColorPickerWithButtonView(
     private val editFragment: EditFragment,
+    private val readSharePreffernceMap: Map<String, String>,
 ) {
     fun create(
-        insertEditText: EditText,
+        currentId: Int,
         currentVariableValue: String?,
+        insertTextView: TextView,
+        insertEditText: EditText,
+        currentRecordNumToSetVariableMap: Map<String,String>,
     ): LinearLayout {
         val context = editFragment.context
         val horizontalLinearLayout = LinearLayout(context)
@@ -24,7 +29,7 @@ class WithColorPickerView(
             0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearParamsForEditTextTest.weight = 0.8F
+        linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         insertEditText.isFocusableInTouchMode = true;
         horizontalLinearLayout.addView(insertEditText)
@@ -36,7 +41,18 @@ class WithColorPickerView(
         )
         horizontalLinearLayout.addView(colorPickerButtonView)
 
+        val insertButton = ButtonViewProducer.make(
+            editFragment,
+            readSharePreffernceMap,
+            currentId,
+            insertTextView,
+            insertEditText,
+            currentRecordNumToSetVariableMap,
+            0.2F,
+            true
+        )
+        horizontalLinearLayout.addView(insertButton)
+
         return horizontalLinearLayout
     }
 }
-

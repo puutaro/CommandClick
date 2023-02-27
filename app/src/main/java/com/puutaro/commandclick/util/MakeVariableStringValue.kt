@@ -11,10 +11,11 @@ class MakeVariableStringValue {
                 cmdVariableList,
                 variableName
             ) ?: variableDefaultStrValue
-           return if(
-                runShellSource == String()
+            val runShellSourceTrim = BothEdgeQuote.trim(runShellSource)
+            return if(
+                runShellSourceTrim == String()
             ) variableDefaultStrValue
-            else runShellSource
+            else runShellSourceTrim
         }
     }
 }

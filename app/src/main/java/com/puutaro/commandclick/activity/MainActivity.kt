@@ -186,11 +186,11 @@ class MainActivity:
         isVisible: Boolean
     ) {
         if(!isVisible) return
-        if(!isKeyboardShowing) getCurrentFocus()?.clearFocus()
+        if(!isKeyboardShowing) currentFocus?.clearFocus()
         WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
             isKeyboardShowing,
             supportFragmentManager,
-            getString(R.string.index_terminal_fragment),
+            getString(R.string.edit_execute_terminal_fragment),
         )
     }
 

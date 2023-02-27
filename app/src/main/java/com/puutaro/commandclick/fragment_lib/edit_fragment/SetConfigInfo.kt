@@ -17,8 +17,6 @@ class SetConfigInfo {
             editFragment: EditFragment
         ){
 
-            val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     UsePath.cmdclickConfigDirPath,

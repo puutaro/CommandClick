@@ -46,6 +46,12 @@ class EditTextProducerForEdit(
         recordNumToMapNameValueInCommandHolder
     )
 
+    private val withEditTextWithButton = WithEditTextWithButton(
+        editFragment,
+        readSharePreffernceMap
+    )
+
+
     private val withSpinnerView = WithSpinnerView(
         editFragment.context
     )
@@ -94,6 +100,11 @@ class EditTextProducerForEdit(
 
     private val withDatePickerView = WithDatePickerView(
         editFragment,
+    )
+
+    private val withColorPickerWithButtonView = WithColorPickerWithButtonView(
+        editFragment,
+        readSharePreffernceMap,
     )
 
 
@@ -173,6 +184,16 @@ class EditTextProducerForEdit(
                     SetVariableTypeColumn.VARIABLE_TYPE.name
                 )
             ) {
+                EditTextSupportViewName.EDITABLE_BUTTON.str -> {
+                    val innerLinearLayout = withEditTextWithButton.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val innerLinearLayout = withSpinnerView.create(
                         currentId,
@@ -292,6 +313,16 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(insertingEditText)
                 }
+                EditTextSupportViewName.COLOR_BUTTON.str -> {
+                    val insertingEditText = withColorPickerWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap
+                    )
+                    binding.editLinearLayout.addView(insertingEditText)
+                }
                 EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
                     val insertingEditText = execInsertEditText(
                         insertEditText,
@@ -338,14 +369,14 @@ class EditTextProducerForEdit(
                     )
             else ->  insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         }
-        addTextChangeListnerForEditText(
+        addTextChangeListenerForEditText(
             insertEditText,
             currentId
         )
         return insertEditText
     }
 
-    private fun addTextChangeListnerForEditText(
+    private fun addTextChangeListenerForEditText(
         insertEditText: EditText,
         currentOrder: Int,
     ){
@@ -402,7 +433,7 @@ class EditTextProducerForEdit(
 internal enum class EditTextType {
     PASSWORD,
     PLAIN,
-    READ_ONLY
+    READ_ONLY,
 }
 
 internal fun makeDescriptionButton(

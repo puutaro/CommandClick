@@ -15,12 +15,13 @@ class MakeVariableCbValue {
                 cmdVariableList,
                 variableName
             ) ?: defaultVariableStrValue
+            val historySwitchSourceTrim = BothEdgeQuote.trim(historySwitchSource)
 
             return if(
-                noDefaultValueList.contains(historySwitchSource)
-            ) historySwitchSource
+                noDefaultValueList.contains(historySwitchSourceTrim)
+            ) historySwitchSourceTrim
             else if(
-                historySwitchSource == inheritVariableValue
+                historySwitchSourceTrim == inheritVariableValue
             ) inheritVariableReturnValue
             else defaultVariableStrValue
         }
