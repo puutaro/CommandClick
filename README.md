@@ -382,6 +382,7 @@ ex) am broadcast \
  - `>` -> `cmdclickGreatTag`
 
    - `Span tag` no working in shell output. If you wont to use this, launch html file.
+   - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
 
 
 ### Troubleshooting
