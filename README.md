@@ -53,6 +53,7 @@ Table of Contents
   * [Edit api](#edit-api)
   * [Url command](#url-command)
   * [JavaScript interface](#javascript-interface)
+  * [Html tag output](#html-tag-output)
   * [Troubleshooting](#troubleshooting)
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
@@ -374,11 +375,13 @@ ex) am broadcast \
  - Android.writeLocalFile(path: String, contents: String)
       - wite local file
 
-### Html tag putput
+### Html tag output
 
 `CommandClick` shell output trminal as html, so html tag is valid. You can use tag by bellow.
  - `<` -> `cmdclickLeastTag`
  - `>` -> `cmdclickGreatTag`
+
+   - `Span tag` no working in shell output. If you wont to use this, launch html file.
 
 
 ### Troubleshooting
