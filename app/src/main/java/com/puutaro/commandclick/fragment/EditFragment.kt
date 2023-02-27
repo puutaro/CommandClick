@@ -7,24 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdatelastModifyForEdit
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.ConfigFromShellFileSetter
-import com.puutaro.commandclick.fragment_lib.edit_fragment.EditModeHandler
-import com.puutaro.commandclick.fragment_lib.edit_fragment.MakeReadPreffernceMapForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.SetConfigInfo
+import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.io.File
 
@@ -157,9 +155,17 @@ class EditFragment: Fragment() {
             readSharePreffernceMap
         )
         editModeHandler.execByHowFullEdit()
+        val terminalViewModel: TerminalViewModel by activityViewModels()
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
+            if(
+                terminalViewModel.readlinesNum != ReadLines.SHORTH
+            ) {
+                binding.editToolBar.isVisible = !isOpen
+                binding.editTextScroll.isVisible = !isOpen
+                return@setEventListener
+            }
             val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
             listener?.onKeyBoardVisibleChangeForEditFragment(
                 isOpen,

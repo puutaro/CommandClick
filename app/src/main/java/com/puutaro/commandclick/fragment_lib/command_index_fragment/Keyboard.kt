@@ -43,7 +43,7 @@ class KeyboardForCmdIndex {
             val cmdIndexSetting = binding.cmdindexSettingButton
             val cmdSearchEditText = binding.cmdSearchEditText
             val linearLayoutParamForButtonWideWeight = ToolbarWidgetWeightForLinearLayout.buttonWideWeight
-            val linearLayoutParamShrinkForButtonShrinkWeight =ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
+            val linearLayoutParamShrinkForButtonShrinkWeight = ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
             val linearLayoutParamForSearchTextWideWeight = ToolbarWidgetWeightForLinearLayout.searchEditTextWideWeight
             val linearLayoutParamShrinkForSearchTextShrinkWeight =ToolbarWidgetWeightForLinearLayout.searchEditTextShrinkWeight
             if(isOpen){

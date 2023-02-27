@@ -44,24 +44,36 @@ class HtmlDescriber {
             <body class="body_foreground body_background" style="font-size: normal;" >
             <p>---</p>
             <pre id="onCmdClickFilter" class="ansi2html-content">${text}</pre>
+            </body>
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-              <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
             <script>
             const scrollingElement = (document.scrollingElement || document.body);
             if(%b){
                 scrollingElement.scrollTop = document.body.offsetHeight;
             }
-            let toFilterSource = $('#onCmdClickFilter');
-            let exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/&#37;?=~_|!:,.;]*[-A-Z0-9+&@#\/&#37;=~_|])/ig;
-            $('#onCmdClickFilter')
+            let toFilterSource = ${'$'}('#onCmdClickFilter');
+            function hankaku2Zenkaku() {
+                return '％'.replace(/[％]/g, function(s) {
+                    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+                });
+            }
+            const percent = hankaku2Zenkaku();
+            let exp = /[^href=\"](\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/&#37;?=~_|!:,.;]*[-A-Z0-9+&@#\/&#37;=~_|])/ig;
+            let regexPattern = "(\b(https?|ftp|file))"
+            let regex = new RegExp(regexPattern, "ig");
+            ${'$'}('#onCmdClickFilter')
                 .html(
-                    $('#onCmdClickFilter')
-                    .html().replace(exp,"<a href='$1' target='_blank'>$1</a>")
+                    ${'$'}('#onCmdClickFilter')
+                    .html().replaceAll(percent, "CMDCLICK_PERCENT_CHAR")
+                    .replace(exp,"<a href='${'$'}1' target='_blank'>${'$'}1</a>")
+                    .replaceAll("CMDCLICK_PERCENT_CHAR", percent)
                     .replace(/cmdclickLeastTagspan/g, "<a")
                     .replace(/cmdclickLeastTag\/span/g, "</a")
                     .replace(/cmdclickLeastTag/g, "<")
                     .replace(/cmdclickGreatTag/g, ">")
                 );
+               
             
             function terminalFilter(thisInput){
                 var thisInputValue = thisInput.toLowerCase().trim()
@@ -70,7 +82,7 @@ class HtmlDescriber {
                   /* Split lines using spans, but include ending new line char */
                   var oldTextSource = toFilter.html();
                   var oldText = oldTextSource
-                                    .replace(exp,"<a href='$1' target='_blank'>$1</a>")
+                                    .replace(exp,"<a href='${'$'}1' target='_blank'>${'$'}1</a>")
                                     .replace(/cmdclickLeastTagspan/g, "<a")
                                     .replace(/cmdclickLeastTag\/span/g, "</a")
                                     .replace(/cmdclickLeastTag/g, "<")
@@ -82,7 +94,7 @@ class HtmlDescriber {
                 if (thisInputValue) {
                   /* Filter (hide) rows which contain no filter */
                   toFilter.find('span').each(function(i) {
-                    var thisRow = $(this);
+                    var thisRow = ${'$'}(this);
                     var thisRowText = thisRow.text().toLowerCase();
                     if (thisRowText.indexOf(thisInputValue) < 0) {
                       thisRow.addClass('invisible-row');
@@ -99,7 +111,6 @@ class HtmlDescriber {
             }
             
             </script>
-            </body>
             </html>
             """.trimMargin().format(onBottomScrollbyJs)
         }

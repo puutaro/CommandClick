@@ -117,7 +117,6 @@ class ExecTerminalDo {
             ShellFilePathToHistory.insert(
                 recentAppDirPath,
                 selectedShellFileName,
-                editExecute
             )
 
             if(
@@ -231,11 +230,9 @@ private class ShellFilePathToHistory {
         fun insert(
             recentAppDirPath: String,
             shellFileName: String,
-            editExecute: String,
         ) {
             if(
-                editExecute != CommandClickShellScript.EDIT_EXECUTE_DEFAULT_VALUE
-                || shellFileName == UsePath.cmdclickStartupShellName
+                shellFileName == UsePath.cmdclickStartupShellName
                 || shellFileName == UsePath.cmdclickEndShellName
             ) return
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
