@@ -60,12 +60,15 @@ class ButtonViewProducer {
             insertButton.setOnClickListener {
                     innerButtonView ->
                 val execCmdEditable = insertEditText.text
-                if(execCmdEditable.isNullOrEmpty()) return@setOnClickListener
 
                 val cmdPrefixEntrySource = currentRecordNumToSetVariableMap.get(
                     SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
                 )
                 val cmdPrefix = makeCmdPrefix(cmdPrefixEntrySource)
+                if(
+                    execCmdEditable.isNullOrEmpty()
+                    && cmdPrefix.isEmpty()
+                ) return@setOnClickListener
 
                 val innerExecCmd = (
                         "$cmdPrefix " +
@@ -86,7 +89,7 @@ class ButtonViewProducer {
                     execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
                     || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
                 ) "${execCmdAfterTrimButtonEditExecVariant};"
-                else "${execCmdAfterTrimButtonEditExecVariant} >> \"${outputPath}\""
+                else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
                 ExecBashScriptIntent.ToTermux(
                     editFragment.runShell,
                     context,
