@@ -8,9 +8,11 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatched
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
@@ -67,7 +69,8 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.layoutParams = insertImageButtonParam
         makeButtonView.tag = toolbarButtonBariantForEdit.str
 
-        makeButtonView.setOnLongClickListener { view ->
+        makeButtonView.setOnLongClickListener {
+                view ->
             onLongClickHandler(
                 view,
                 toolbarButtonBariantForEdit,
@@ -107,9 +110,17 @@ class ToolbarButtonProducerForEdit(
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING -> {
+                    val existEditExecuteTerminalFragment = ExistTerminalFragment
+                        .how(
+                            editFragment,
+                            editFragment.context?.getString(
+                                R.string.edit_execute_terminal_fragment
+                            )
+                        )
                     if(
                         editFragment.editTerminalInitType
                         == EditInitType.TERMINAL_SHRINK
+                        || existEditExecuteTerminalFragment == null
                     ) {
                         Toast.makeText(
                             view.context,
@@ -165,13 +176,21 @@ class ToolbarButtonProducerForEdit(
                 )
             }
             ToolbarButtonBariantForEdit.SETTING -> {
-                ExistTerminalFragment
+                val existEditExecuteTerminalFragment = ExistTerminalFragment
                     .how(
                         editFragment,
                         editFragment.context?.getString(
                             R.string.edit_execute_terminal_fragment
                         )
-                    ) ?: return
+                    )
+                if(existEditExecuteTerminalFragment == null){
+                    Toast.makeText(
+                        view.context,
+                        "no working",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return
+                }
                 createPopUpForSetting(
                     editFragment,
                     context,
@@ -284,6 +303,10 @@ class ToolbarButtonProducerForEdit(
         ) {
             Keyboard.hiddenKeyboardForFragment(
                 editFragment
+            )
+            TerminalShowByTerminalDo.show(
+                editFragment,
+                shellContentsList
             )
             ExecTerminalDo.execTerminalDo(
                 editFragment,

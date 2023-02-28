@@ -7,11 +7,9 @@ import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
+import com.puutaro.commandclick.util.*
 import java.io.File
 
 
@@ -91,7 +89,7 @@ class ValidationSharePreferenceForEdit(
         checkCurrentAppDirPathSource: String? = null,
         checkCurrentShellNameSource: String? = null
     ): Boolean {
-        val on_shortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val onShortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
             sharePref,
             SharePrefferenceSetting.on_shortcut
         )
@@ -115,7 +113,7 @@ class ValidationSharePreferenceForEdit(
             && File("${checkCurrentAppDirPath}/${checkCurrentShellName}").isFile
         ) {
             return editExecuteCheck(
-                on_shortcut,
+                onShortcut,
                 checkCurrentAppDirPath,
                 checkCurrentShellName
             )
@@ -151,7 +149,7 @@ class ValidationSharePreferenceForEdit(
             return false
         }
         val checkOk = editExecuteCheck(
-            on_shortcut,
+            onShortcut,
             checkCurrentAppDirPath,
             checkCurrentShellName
         )
@@ -220,6 +218,11 @@ class ValidationSharePreferenceForEdit(
             listener?.onInitEditFragment()
             return false
         }
+        TerminalShowByTerminalDo.show(
+            editFragment,
+            variablesSettingHolderList
+        )
         return true
     }
+
 }

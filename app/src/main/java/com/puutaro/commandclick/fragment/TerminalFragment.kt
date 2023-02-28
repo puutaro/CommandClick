@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -116,7 +117,6 @@ class TerminalFragment: Fragment() {
                 webView.loadUrl(it);
             }
         }
-
         DisplaySwich.update(
             this,
             terminalViewModel,

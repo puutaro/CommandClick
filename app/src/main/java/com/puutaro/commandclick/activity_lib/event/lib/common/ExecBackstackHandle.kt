@@ -1,6 +1,10 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
+import android.os.Build
+import android.util.DisplayMetrics
 import android.view.KeyEvent
+import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
@@ -151,9 +155,17 @@ internal fun execBack(
             R.string.cmd_variable_edit_fragment
         )
     )
+    val settingVariableEditFragment = targetFragmentInstance.getFromActivity<EditFragment>(
+        activity,
+        activity.getString(
+            R.string.setting_variable_edit_fragment
+        )
+    )
+
     if(
         cmdVariableEditFragment != null
         && cmdVariableEditFragment.isVisible
+        && cmdVariableEditFragment.view?.height != 0
     ) {
         val terminalViewModel: TerminalViewModel =
             ViewModelProvider(activity).get(TerminalViewModel::class.java)

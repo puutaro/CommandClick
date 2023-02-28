@@ -16,7 +16,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Sea
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class ExecUrlloadFragmentProccess {
+class ExecUrlLoadFragmentProccess {
     companion object {
 
         fun execUrlLoadCmdIndexFragment (
@@ -83,7 +83,9 @@ class ExecUrlloadFragmentProccess {
                 return
             }
             if(!editFragment.isVisible) return
-            if(terminalViewModel.readlinesNum != ReadLines.SHORTH) return
+            if(
+                terminalViewModel.readlinesNum != ReadLines.SHORTH
+            ) return
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 editFragmentTag,
                 supportFragmentManager,

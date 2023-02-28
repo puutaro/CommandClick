@@ -85,14 +85,14 @@ private fun getScreenHeight(
     terminalFragment: TerminalFragment
 ): Int {
     val defaultDpheight = -600
-    val density = terminalFragment.activity?.resources?.getDisplayMetrics()?.density
+    val density = terminalFragment.activity?.resources?.displayMetrics?.density
         ?: return defaultDpheight
     if(density == 0F) return defaultDpheight
     val dpHeight = if(
         Build.VERSION.SDK_INT > 30
     ) {
         val windowMetrics =
-            terminalFragment.activity?.windowManager?.getCurrentWindowMetrics()
+            terminalFragment.activity?.windowManager?.currentWindowMetrics
                 ?: return defaultDpheight
         windowMetrics.bounds.height() / density
     } else {

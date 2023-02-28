@@ -25,7 +25,9 @@ class ExecTerminalLongOrShort {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0
             )
-            param.weight = if(terminalViewModel.readlinesNum == ReadLines.SHORTH) {
+            param.weight = if(
+                terminalViewModel.readlinesNum == ReadLines.SHORTH
+            ) {
                 terminalViewModel.readlinesNum = ReadLines.LONGTH
                 ReadLines.SHORTH
             } else {

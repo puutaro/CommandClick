@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -62,8 +61,7 @@ class EditFragment: Fragment() {
             this
         )
         SetConfigInfo.set(this)
-
-        val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
             this,
             sharePref
@@ -137,10 +135,10 @@ class EditFragment: Fragment() {
             )
         }
 
-        val baskstackOrder =
+        val backstackOrder =
             this.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
         val currentShellFilePath =
-            "(${baskstackOrder}) ${UsePath.makeOmitPath(currentAppDirPath)}/${currentShellFileName}"
+            "(${backstackOrder}) ${UsePath.makeOmitPath(currentAppDirPath)}/${currentShellFileName}"
         binding.editTextView.setText(currentShellFilePath)
 
         val window = activity?.window
@@ -156,17 +154,18 @@ class EditFragment: Fragment() {
         )
         editModeHandler.execByHowFullEdit()
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) {
-                binding.editToolBar.isVisible = !isOpen
                 binding.editTextScroll.isVisible = !isOpen
+                binding.editToolBar.isVisible = !isOpen
+                if(!isOpen) activity?.currentFocus?.clearFocus()
                 return@setEventListener
             }
-            val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
             listener?.onKeyBoardVisibleChangeForEditFragment(
                 isOpen,
                 this.isVisible

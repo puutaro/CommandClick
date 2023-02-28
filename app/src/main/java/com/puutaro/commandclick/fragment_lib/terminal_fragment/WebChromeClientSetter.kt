@@ -22,7 +22,7 @@ class WebChromeClientSetter {
             val binding = terminalFragment.binding
             val progressBar = binding.progressBar
 
-            binding.terminalWebView.setWebChromeClient(object : WebChromeClient() {
+            binding.terminalWebView.webChromeClient = object : WebChromeClient() {
                 override fun onProgressChanged(view: WebView, newProgress: Int) {
                     super.onProgressChanged(view, newProgress)
                     if (newProgress == 100) {
@@ -32,7 +32,7 @@ class WebChromeClientSetter {
                         progressBar.setProgress(newProgress)
                     }
                 }
-                
+
                 override fun onShowFileChooser(
                     mWebView:WebView,
                     filePathCallback:ValueCallback<Array<Uri>>,
@@ -79,8 +79,8 @@ class WebChromeClientSetter {
                         })
                         .show()
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                            context?.getColor(R.color.black) as Int
-                        )
+                        context?.getColor(R.color.black) as Int
+                    )
                     alertDialog.window?.setGravity(Gravity.BOTTOM)
                     return true
                 }
@@ -171,7 +171,7 @@ class WebChromeClientSetter {
                     alertDialog.window?.setGravity(Gravity.BOTTOM)
                     return true
                 }
-            })
+            }
         }
     }
 }
