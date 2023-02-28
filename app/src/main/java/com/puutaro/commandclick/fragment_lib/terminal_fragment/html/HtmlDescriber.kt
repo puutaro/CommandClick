@@ -6,7 +6,7 @@ class HtmlDescriber {
             terminalColor: String,
             terminalFontColor: String,
             text:String,
-            onBottomScrollbyJs: Boolean
+            onBottomScrollByJs: Boolean
         ): String {
             return """
             <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -45,23 +45,16 @@ class HtmlDescriber {
             <p>---</p>
             <pre id="onCmdClickFilter" class="ansi2html-content">${text}</pre>
             </body>
-            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-            <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="file:///android_asset/js/bootstrap.bundle.min.js"></script>
+            <script src="file:///android_asset/js/jquery-3.6.3.min.js"></script>
             <script>
             const scrollingElement = (document.scrollingElement || document.body);
             if(%b){
                 scrollingElement.scrollTop = document.body.offsetHeight;
             }
             let toFilterSource = ${'$'}('#onCmdClickFilter');
-            function hankaku2Zenkaku() {
-                return '％'.replace(/[％]/g, function(s) {
-                    return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
-                });
-            }
-            const percent = hankaku2Zenkaku();
+            const percent = String.fromCharCode('％'.charCodeAt(0) - 0xFEE0);
             let exp = /[^href=\"](\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/&#37;?=~_|!:,.;]*[-A-Z0-9+&@#\/&#37;=~_|])/ig;
-            let regexPattern = "(\b(https?|ftp|file))"
-            let regex = new RegExp(regexPattern, "ig");
             ${'$'}('#onCmdClickFilter')
                 .html(
                     ${'$'}('#onCmdClickFilter')
@@ -112,7 +105,7 @@ class HtmlDescriber {
             
             </script>
             </html>
-            """.trimMargin().format(onBottomScrollbyJs)
+            """.trimMargin().format(onBottomScrollByJs)
         }
     }
 }

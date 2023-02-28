@@ -78,7 +78,7 @@ class WebViewClientSetter {
                         System.currentTimeMillis().toString()
                     )
 
-                    UrlTermLongProcess.torigger(
+                    UrlTermLongProcess.trigger(
                         terminalFragment,
                         terminalViewModel,
                         webView,

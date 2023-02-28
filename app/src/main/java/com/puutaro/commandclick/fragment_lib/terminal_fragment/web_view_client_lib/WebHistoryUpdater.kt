@@ -54,16 +54,16 @@ class WebHistoryUpdater {
             ) {
                 queryUrlToText(url)
             } else url ?:return
-            val searchviewText = if(
+            val searchViewText = if(
                 searchViewTextSource.startsWith(escapeStr)
             ) {
                 String()
             } else searchViewTextSource
             val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
             listener?.onSearchTextChange(
-                searchviewText,
+                searchViewText,
             )
-            if(searchviewText.isEmpty()) return
+            if(searchViewText.isEmpty()) return
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             val takeHistoryNum = 500
             val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
@@ -92,7 +92,6 @@ class WebHistoryUpdater {
             autoCompUpdateListner?.onAutoCompUpdate(
                 currentAppDirPath,
             )
-            terminalViewModel.onDisplayUpdate = false
         }
 
         private fun registerUrlHistoryTitle(

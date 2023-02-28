@@ -8,13 +8,12 @@ import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-class InitCurrentMonitorFile () {
+class InitCurrentMonitorFile {
         companion object {
             fun trim(
                 terminalFragment: TerminalFragment
             ) {
                 val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-                terminalViewModel.onDisplayUpdate = true
                 val trimLastLine = 500
                 val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
                 val currentMonitorFileName = terminalViewModel.currentMonitorFileName

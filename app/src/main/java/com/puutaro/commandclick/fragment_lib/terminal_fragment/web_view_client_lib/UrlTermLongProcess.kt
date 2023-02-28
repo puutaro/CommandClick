@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
-import com.puutaro.commandclick.common.variable.ReadLines
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
@@ -10,13 +10,14 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class UrlTermLongProcess {
     companion object {
-        fun torigger(
+        fun trigger(
             terminalFragment: TerminalFragment,
             terminalViewModel: TerminalViewModel,
             webView: WebView?,
             url: String?
         ){
             val urlCheckResult = EnableUrlPrefix.check(url)
+            terminalViewModel.onDisplayUpdate = !urlCheckResult
             terminalViewModel.onExecInternetButtonShell = urlCheckResult
             if(!urlCheckResult) return
             val context = terminalFragment.context
