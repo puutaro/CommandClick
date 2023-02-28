@@ -52,6 +52,7 @@ Table of Contents
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
   * [Url command](#url-command)
+  * [File api](#file-api)
   * [JavaScript interface](#javascript-interface)
   * [Html tag output](#html-tag-output)
   * [Troubleshooting](#troubleshooting)
@@ -368,6 +369,13 @@ ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "javascript:(function() { alert('hello command click') })();"
 ```
+
+### File api
+`CommandClick` automaticaly create files. This is used by system, alse is userinterface for app signal.
+- `cmdclickUrlHistory` 
+      - This is made bellow `App directory`. CommandClick use recent used url launch etc.
+- `urlLoadFinished`
+      - This is made when url load finished. When you make `fannenl`(shell, html, and html application), you may use this.
 
 ### JavaScript interface
  - Android.readLocalFile(path: String) -> String
