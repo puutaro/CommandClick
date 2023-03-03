@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
+package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
 import android.widget.EditText
@@ -66,7 +66,7 @@ class EditedTextContents(
     fun save(
         lastShellContentsList: List<String>,
     ){
-        if(lastShellContentsList.size == 0) return
+        if(lastShellContentsList.isEmpty()) return
 
         val submitShellContentsList = CommentOutLabelingSection.commentOut(
             lastShellContentsList

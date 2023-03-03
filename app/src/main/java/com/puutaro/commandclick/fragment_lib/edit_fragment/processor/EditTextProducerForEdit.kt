@@ -48,7 +48,9 @@ class EditTextProducerForEdit(
 
     private val withEditTextWithButton = WithEditTextWithButton(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
 
@@ -58,7 +60,9 @@ class EditTextProducerForEdit(
 
     private val withSpinnerWithButtonView = WithSpinnerWithButtonView(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
     private val withEditableSpinnerView = WithEditableSpinnerView(
@@ -67,7 +71,9 @@ class EditTextProducerForEdit(
 
     private val withEditableSpinnerWithButtonView = WithEditableSpinnerWithButtonView(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
 
@@ -77,7 +83,9 @@ class EditTextProducerForEdit(
 
     private val withDirOrFileChooseViewWithButtonView = WithDirOrFileChooseViewWithButtonView(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
     private val withInDeCremenView = WithInDeCremenView(
@@ -86,7 +94,9 @@ class EditTextProducerForEdit(
 
     private val withInDeCremenViewWithButtonView = WithInDeCremenViewWithButtonView(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
     private val withColorPickerView = WithColorPickerView(
@@ -95,7 +105,9 @@ class EditTextProducerForEdit(
 
     private val withButtonView = WithButtonView(
         editFragment,
-        readSharePreffernceMap
+        readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
     private val withDatePickerView = WithDatePickerView(
@@ -105,6 +117,8 @@ class EditTextProducerForEdit(
     private val withColorPickerWithButtonView = WithColorPickerWithButtonView(
         editFragment,
         readSharePreffernceMap,
+        currentShellContentsList,
+        recordNumToMapNameValueInCommandHolder
     )
 
 

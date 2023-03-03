@@ -148,8 +148,11 @@ class CommandClickShellScript {
             return (1..10000).random().toString()
         }
 
+        private val colons = "::"
+
         fun makeDescription(): String {
-            val backStackPrefix = SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name
+            val backstackMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name + colons
+            val termOutMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name + colons
             return """
                 # * ${TERMINAL_DO} is terminal screen select option
                 |#  - ${terminalOn}: cmdclick terminal (default)
@@ -203,8 +206,10 @@ class CommandClickShellScript {
                 |#    - button execute command 
                 |#      ex) echo $0  
                 |#             ("$0" is current shell path
-                |#      ex) ${backStackPrefix} ls
-                |#             ("${backStackPrefix}" is backstack, only work when prefix
+                |#      ex) ${backstackMacroSignal} ls
+                |#             ("${backstackMacroSignal}" is backstack, only work when prefix
+                |#      ex) ${termOutMacroSignal} ls
+                |#             ("${termOutMacroSignal}" enable terminal output
                 |#      ex) top -n 1 > /dev/null  
                 |#             (when suffix is "> /dev/null" or "> /dev/null 2>&1", no output
                 |#  - ex) dir selector: {cmdVariable}:${EditTextSupportViewName.DIRECTORY_PICKER.str}=

@@ -1,21 +1,20 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view
 
-import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class WithEditTextWithButton(
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
+    private val currentShellContentsList: List<String>,
+    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
     private val context = editFragment.context
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
@@ -46,6 +45,8 @@ class WithEditTextWithButton(
             insertEditText,
             currentRecordNumToSetVariableMap,
             0.2F,
+            currentShellContentsList,
+            recordNumToMapNameValueInCommandHolder,
             true
         )
         horizontalLinearLayout.addView(insertButton)

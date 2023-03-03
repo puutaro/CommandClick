@@ -67,7 +67,6 @@ class WebViewClientSetter {
                     listener?.onPageLoadPageSearchDisable()
                     WebHistoryUpdater.webHistoryUpdater(
                         terminalFragment,
-                        terminalViewModel,
                         webView,
                         url,
                     )

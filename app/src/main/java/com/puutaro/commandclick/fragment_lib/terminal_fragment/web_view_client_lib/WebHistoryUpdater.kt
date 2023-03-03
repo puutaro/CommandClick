@@ -9,6 +9,7 @@ import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.FileSystems
@@ -26,20 +27,28 @@ class WebHistoryUpdater {
 
         fun webHistoryUpdater(
             terminalFragment: TerminalFragment,
-            terminalViewModel: TerminalViewModel,
             webView: WebView?,
             url: String?,
         ) {
             val activity = terminalFragment.activity
             val context = terminalFragment.context
             val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
+            val cmdVariableEditFragmentTag = context?.getString(
+                    R.string.cmd_variable_edit_fragment
+                )
             val commandIndexFragment =
                 TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
                     activity,
                     cmdIndexFragmentTag
                 )
+            val cmdVariableEditFragment =
+                TargetFragmentInstance().getFromFragment<EditFragment>(
+                    activity,
+                    cmdVariableEditFragmentTag
+                )
             if(
                 commandIndexFragment?.isVisible != true
+                && cmdVariableEditFragment?.isVisible != true
             ) return
 
             val currentAppDirPath = terminalFragment.currentAppDirPath
@@ -59,11 +68,14 @@ class WebHistoryUpdater {
             ) {
                 String()
             } else searchViewTextSource
-            val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
-            listener?.onSearchTextChange(
+            updateSearchViewString(
+                terminalFragment,
+                commandIndexFragment,
                 searchViewText,
             )
-            if(searchViewText.isEmpty()) return
+            if(
+                searchViewText.isEmpty()
+            ) return
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             val takeHistoryNum = 500
             val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
@@ -88,9 +100,44 @@ class WebHistoryUpdater {
                 }
             }
 
+            autoCompUpdater(
+                terminalFragment,
+                commandIndexFragment,
+                currentAppDirPath,
+            )
+        }
+
+        private fun autoCompUpdater(
+            terminalFragment: TerminalFragment,
+            commandIndexFragment: CommandIndexFragment?,
+            currentAppDirPath: String,
+        ){
+            if(
+                commandIndexFragment == null
+            ) return
+            if(
+                !commandIndexFragment.isVisible
+            ) return
             val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
             autoCompUpdateListner?.onAutoCompUpdate(
                 currentAppDirPath,
+            )
+        }
+
+        private fun updateSearchViewString(
+            terminalFragment: TerminalFragment,
+            commandIndexFragment: CommandIndexFragment?,
+            searchViewText: String,
+        ) {
+            if(
+                commandIndexFragment == null
+            ) return
+            if(
+                !commandIndexFragment.isVisible
+            ) return
+            val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
+            listener?.onSearchTextChange(
+                searchViewText,
             )
         }
 

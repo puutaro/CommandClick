@@ -13,6 +13,8 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class WithButtonView(
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
+    private val currentShellContentsList: List<String>,
+    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
     private val context = editFragment.context
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
@@ -42,7 +44,10 @@ class WithButtonView(
             insertTextView,
             insertEditText,
             currentRecordNumToSetVariableMap,
-            2F
+            2F,
+            currentShellContentsList,
+            recordNumToMapNameValueInCommandHolder,
+            false
         )
         horizontalLinearLayout.addView(insertButton)
         return horizontalLinearLayout

@@ -68,7 +68,8 @@ class SettingVariableSelects {
         }
 
         enum class ButtonEditExecVarantSelects {
-            BackStack
+            BackStack,
+            TermOut,
         }
 
         enum class OnAdblockSelects {

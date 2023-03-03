@@ -12,6 +12,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_s
 class WithColorPickerWithButtonView(
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
+    private val currentShellContentsList: List<String>,
+    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
     fun create(
         currentId: Int,
@@ -49,6 +51,8 @@ class WithColorPickerWithButtonView(
             insertEditText,
             currentRecordNumToSetVariableMap,
             0.2F,
+            currentShellContentsList,
+            recordNumToMapNameValueInCommandHolder,
             true
         )
         horizontalLinearLayout.addView(insertButton)

@@ -8,7 +8,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatched
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -43,6 +42,12 @@ class ToolbarButtonProducerForEdit(
     private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_shell_file_name
+    )
+
+    private val shellScriptSaver = ShellScriptSaver(
+        binding,
+        editFragment,
+        readSharePreffernceMap,
     )
 
     fun make(
@@ -198,7 +203,7 @@ class ToolbarButtonProducerForEdit(
                 )
             }
             ToolbarButtonBariantForEdit.OK -> {
-                exedForOkLongClick(
+                execForOkLongClick(
                     shellContentsList,
                     toolbarButtonBariantForEdit,
                     recordNumToMapNameValueInCommandHolder,
@@ -209,7 +214,7 @@ class ToolbarButtonProducerForEdit(
         }
     }
 
-    private fun exedForOkLongClick(
+    private fun execForOkLongClick(
         shellContentsList: List<String>,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
@@ -224,11 +229,12 @@ class ToolbarButtonProducerForEdit(
             context?.getString(R.string.cmd_variable_edit_fragment)
             || onShortcut != ShortcutOnValueStr.ON.name
         ) return
-        execShellFileSaveWhenOk(
+        shellScriptSaver.save(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
+
         val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
         listener?.onToolBarButtonClickForEditFragment(
             editFragment.tag,
@@ -256,8 +262,7 @@ class ToolbarButtonProducerForEdit(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_shell_file_name
         )
-
-        execShellFileSaveWhenOk(
+        shellScriptSaver.save(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -371,45 +376,6 @@ class ToolbarButtonProducerForEdit(
         )
     }
 
-    private fun execShellFileSaveWhenOk(
-        shellContentsList: List<String>,
-        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>? = null,
-        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>? = null,
-    ){
-        val editedTextContents = EditedTextContents(
-            binding,
-            editFragment,
-            readSharePreffernceMap
-        )
-
-        val editedShellContentsList = when(
-            editFragment.tag
-        ) {
-            context?.getString(
-                R.string.setting_variable_edit_fragment
-            ),
-            context?.getString(
-                R.string.cmd_config_variable_edit_fragment
-            ) -> {
-                editedTextContents.updateBySettingVariables(
-                    shellContentsList,
-                    recordNumToMapNameValueInSettingHolder,
-                )
-            }
-            else -> {
-                val shellContentsListUpdatedCmdVariable = editedTextContents.updateByCommandVariables(
-                    shellContentsList,
-                    recordNumToMapNameValueInCommandHolder,
-                )
-                updateShellScriptNameForEditCmdVriable(
-                    shellContentsListUpdatedCmdVariable
-                )
-            }
-        }
-        editedTextContents.save(
-            editedShellContentsList,
-        )
-    }
 
     private fun execMoveDirWhenOk(
         onAppDirAdminMode: Boolean,
@@ -436,31 +402,6 @@ class ToolbarButtonProducerForEdit(
         }
     }
 
-    private fun updateShellScriptNameForEditCmdVriable(
-        shellContentsListUpdatedCmdVariable: List<String>
-    ): List<String> {
-        val shellScriptNameVariableName = CommandClickShellScript.SHELL_FILE_NAME
-        var countSettingHolderStart = 0
-        var countSettingHolderEnd = 0
-        return shellContentsListUpdatedCmdVariable.map {
-            if (
-                it.startsWith(CommandClickShellScript.SETTING_SECTION_START)
-                && it.endsWith(CommandClickShellScript.SETTING_SECTION_START)
-            ) countSettingHolderStart++
-            if (
-                it.startsWith(CommandClickShellScript.SETTING_SECTION_END)
-                && it.endsWith(CommandClickShellScript.SETTING_SECTION_END)
-            ) countSettingHolderEnd++
-            if (
-                countSettingHolderStart == 0
-                || countSettingHolderEnd > 0
-            ) return@map it
-            if (
-                it.startsWith(shellScriptNameVariableName)
-            ) "${shellScriptNameVariableName}=${currentShellFileName}"
-            else it
-        }
-    }
 
     private fun createPopUpForSetting(
         editFragment: EditFragment,

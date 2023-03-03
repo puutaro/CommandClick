@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ShellScriptSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
@@ -28,10 +29,13 @@ class ButtonViewProducer {
             insertEditText: EditText,
             currentRecordNumToSetVariableMap: Map<String,String>,
             weight: Float,
+            currentShellContentsList: List<String>,
+            recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
             isInsertTextViewVisible: Boolean = false
         ): Button {
 
             val context = editFragment.context
+            val binding = editFragment.binding
             val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
@@ -41,6 +45,13 @@ class ButtonViewProducer {
             val currentShellName = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_shell_file_name
+            )
+
+            val shellScriptSaver = ShellScriptSaver(
+                binding,
+                editFragment,
+                readSharePreffernceMap,
+                true ,
             )
 
             val linearParamsForButton = LinearLayout.LayoutParams(
@@ -79,33 +90,46 @@ class ButtonViewProducer {
                     .trim(';')
                     .replace(Regex("  *"), " ")
                     .replace("$0", "${currentAppDirPath}/${currentShellName}")
-                val backStackPrefix = SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name
-                val onEditExecuteOnce = innerExecCmd.startsWith(backStackPrefix)
-                val execCmdAfterTrimButtonEditExecVariant = if(
-                    onEditExecuteOnce
-                ) innerExecCmd.removePrefix(backStackPrefix)
-                else innerExecCmd
+                val doubleColon = "::"
+                val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name + doubleColon
+                val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.TermOut.name + doubleColon
+
+                val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
+                val onTermOutMacro = innerExecCmd.contains(termOutMacro)
+                val execCmdAfterTrimButtonEditExecVariant =
+                    innerExecCmd
+                        .replace(backStackMacro, "")
+                        .replace(termOutMacro, "")
+                        .replace(Regex("  *"), " ")
+                        .replace(";;*", ";")
                 val execCmd = if(
                     execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
                     || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
                 ) "${execCmdAfterTrimButtonEditExecVariant};"
                 else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
+                shellScriptSaver.save(
+                    currentShellContentsList,
+                    recordNumToMapNameValueInCommandHolder,
+                )
                 ExecBashScriptIntent.ToTermux(
                     editFragment.runShell,
                     context,
                     execCmd,
                     true
                 )
-                if(
-                    !onEditExecuteOnce
-                ) return@setOnClickListener
-                val listener = context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-                listener?.onToolBarButtonClickForEditFragment(
-                    editFragment.tag,
-                    ToolbarButtonBariantForEdit.OK,
-                    readSharePreffernceMap,
-                    true,
-                )
+                if(onEditExecuteOnce) {
+                    val listener =
+                        context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    listener?.onToolBarButtonClickForEditFragment(
+                        editFragment.tag,
+                        ToolbarButtonBariantForEdit.OK,
+                        readSharePreffernceMap,
+                        true,
+                    )
+                }
+                if(onTermOutMacro) {
+                    terminalViewModel.onDisplayUpdate = true
+                }
             }
 
             insertButton.layoutParams = linearParamsForButton
