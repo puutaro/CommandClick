@@ -1,13 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.lib
 
-import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.fragment.EditFragment
 import java.io.File
+
 
 class DirOrFileChooseProducer {
     companion object {
@@ -24,10 +25,10 @@ class DirOrFileChooseProducer {
                 "file"
             }
             val insertButtonView = Button(context)
-            insertButtonView.setText(chooseButtonStr)
-
+            insertButtonView.text = chooseButtonStr
 
             val prefixRegex = Regex("^content.*fileprovider/root/storage")
+
             val getFile = editFragment.registerForActivityResult(
                 ActivityResultContracts.OpenDocument()) { uri ->
                 if (
@@ -46,10 +47,15 @@ class DirOrFileChooseProducer {
             }
 
             insertButtonView.setOnClickListener { view ->
-                val contentIntent = Intent(Intent.ACTION_OPEN_DOCUMENT)
-                contentIntent.type = "*/*"
-                contentIntent.addCategory(Intent.CATEGORY_OPENABLE)
-                getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
+                if(Build.VERSION.SDK_INT < 30){
+                    getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
+                    return@setOnClickListener
+                }
+                val listener = context as? EditFragment.OnFileChooserListenerForEdit
+                listener?.onFileChooserListenerForEdit(
+                    onDirectoryPick,
+                    insertEditText
+                )
             }
             val insertButtonViewParam = LinearLayout.LayoutParams(
                 0,

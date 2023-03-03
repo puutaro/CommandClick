@@ -74,4 +74,5 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'com.github.omadahealth:swipy:1.2.3@aar'
     implementation "com.github.skydoves:colorpickerview:2.2.4"
+    implementation "com.anggrayudi:storage:1.5.4"
 }

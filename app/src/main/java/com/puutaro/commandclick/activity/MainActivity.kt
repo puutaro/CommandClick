@@ -8,9 +8,12 @@ import android.os.Bundle
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.anggrayudi.storage.SimpleStorageHelper
+import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
 import com.puutaro.commandclick.activity_lib.event.*
@@ -60,7 +63,8 @@ class MainActivity:
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
     EditFragment.OnInitEditFragmentListener,
     EditFragment.OnTerminalWebViewInitListenerForEdit,
-    EditFragment.OnLaunchUrlByWebViewListener {
+    EditFragment.OnLaunchUrlByWebViewListener,
+    EditFragment.OnFileChooserListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     var filePath: ValueCallback<Array<Uri>>? = null
@@ -76,6 +80,7 @@ class MainActivity:
                 filePath = null
             }
         }
+    private val storageHelper = SimpleStorageHelper(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -363,5 +368,24 @@ class MainActivity:
             this,
             editInitType,
         )
+    }
+
+    override fun onFileChooserListenerForEdit(
+        onDirectoryPick: Boolean,
+        insertEditText: EditText
+    ) {
+        if (onDirectoryPick) {
+            storageHelper.openFolderPicker()
+            storageHelper.onFolderSelected = { requestCode, folder ->
+                val absolutePath = folder.getAbsolutePath(this)
+                insertEditText.setText(absolutePath)
+            }
+            return
+        }
+        storageHelper.openFilePicker()
+        storageHelper.onFileSelected = { requestCode, file ->
+            val absolutePath = file.getOrNull(0)?.getAbsolutePath(this)
+            insertEditText.setText(absolutePath)
+        }
     }
 }

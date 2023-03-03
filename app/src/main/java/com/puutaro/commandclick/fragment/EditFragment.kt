@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.EditText
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -210,6 +211,13 @@ class EditFragment: Fragment() {
     interface OnLaunchUrlByWebViewListener {
         fun onLaunchUrlByWebView(
             searchUrl: String
+        )
+    }
+
+    interface OnFileChooserListenerForEdit {
+        fun onFileChooserListenerForEdit(
+            onDirectoryPick: Boolean,
+            insertEditText: EditText
         )
     }
 
