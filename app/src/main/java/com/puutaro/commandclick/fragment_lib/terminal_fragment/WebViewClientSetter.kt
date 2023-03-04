@@ -1,15 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -104,6 +107,28 @@ class WebViewClientSetter {
                     webview: WebView?,
                     url: String?
                 ) {
+                    val goBackFlag = terminalViewModel.goBackFlag
+                    if (
+                        terminalViewModel.goBackFlag
+                    ) terminalViewModel.goBackFlag = false
+                    if(
+                        goBackFlag
+                        && (
+                                url?.startsWith(WebUrlVariables.httpPrefix) != true
+                                        && url?.startsWith(WebUrlVariables.httpsPrefix) != true
+                                        && webview?.title != WebUrlVariables.escapeStr
+                                )
+                    ) {
+                        webview?.loadUrl(url.toString())
+                        return
+                    }
+                    if(
+                        goBackFlag
+                        && webview?.title?.trim(' ') == WebUrlVariables.escapeStr
+                    ) {
+                        terminalViewModel.onDisplayUpdate = true
+                        return
+                    }
                     super.onPageFinished(webview, url)
                     terminalFragment.onPageFinishedCoroutineJob = terminalFragment.lifecycleScope.launch {
                         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -120,4 +145,15 @@ class WebViewClientSetter {
             }
         }
     }
+}
+
+private fun reloadUrlWhenFile(
+    webview: WebView?,
+    url: String?
+){
+    if(
+        url?.startsWith(WebUrlVariables.httpPrefix) == true
+        || url?.startsWith(WebUrlVariables.httpsPrefix) == true
+    ) return
+    webview?.loadUrl(url.toString())
 }

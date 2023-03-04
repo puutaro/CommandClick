@@ -108,6 +108,8 @@ internal fun execBack(
     terminalFragment: TerminalFragment,
     readLinesNum: Float
 ){
+    val terminalViewModel: TerminalViewModel =
+        ViewModelProvider(activity).get(TerminalViewModel::class.java)
     val supportFragmentManager = activity.supportFragmentManager
     val webVeiw = try {
         terminalFragment.binding.terminalWebView
@@ -129,6 +131,7 @@ internal fun execBack(
     }
     if (webVeiw.canGoBack()) {
         webVeiw.goBack()
+        terminalViewModel.goBackFlag = true
         return
     }
     val targetFragmentInstance = TargetFragmentInstance()
