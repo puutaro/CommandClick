@@ -16,6 +16,9 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
@@ -26,9 +29,13 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class TerminalFragment: Fragment() {
@@ -53,6 +60,7 @@ class TerminalFragment: Fragment() {
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
     var blocklist = hashSetOf<String>()
+    var onWebHistoryUpdaterJob: Job? = null
 
 
     var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
@@ -199,6 +207,7 @@ class TerminalFragment: Fragment() {
         this.onPageFinishedCoroutineJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()
+        this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
     }
 

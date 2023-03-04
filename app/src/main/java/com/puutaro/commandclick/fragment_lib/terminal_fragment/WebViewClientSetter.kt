@@ -8,10 +8,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.ImplicitIntentStarter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.UrlTermLongProcess
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebHistoryUpdater
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.WebViewRequestValidation
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
@@ -61,22 +58,23 @@ class WebViewClientSetter {
                 override fun doUpdateVisitedHistory(webView: WebView?, url: String?, isReload: Boolean) {
                     super.doUpdateVisitedHistory(webView, url, isReload)
                     terminalFragment.currentUrl = url
-                    if(previousUrl?.length == url?.length) return
-                    val listener =
-                        context as? TerminalFragment.OnPageLoadPageSearchDisableListener
-                    listener?.onPageLoadPageSearchDisable()
-                    WebHistoryUpdater.webHistoryUpdater(
+                    WrapWebHistoryUpdater.update(
+                        terminalFragment,
+                        webView,
+                        url,
+                        previousUrl
+                    )
+                    if(
+                        previousUrl?.length == url?.length
+                    ) return
+                    SearchViewAndAutoCompUpdater.update(
                         terminalFragment,
                         webView,
                         url,
                     )
-
-                    FileSystems.writeFile(
-                        terminalFragment.currentAppDirPath,
-                        UsePath.urlLoadFinished,
-                        System.currentTimeMillis().toString()
-                    )
-
+                    val listener =
+                        context as? TerminalFragment.OnPageLoadPageSearchDisableListener
+                    listener?.onPageLoadPageSearchDisable()
                     UrlTermLongProcess.trigger(
                         terminalFragment,
                         terminalViewModel,
@@ -102,8 +100,11 @@ class WebViewClientSetter {
                     return super.shouldInterceptRequest(view, request)
                 }
 
-                override fun onPageFinished(view: WebView?, url: String?) {
-                    super.onPageFinished(view, url)
+                override fun onPageFinished(
+                    webview: WebView?,
+                    url: String?
+                ) {
+                    super.onPageFinished(webview, url)
                     terminalFragment.onPageFinishedCoroutineJob = terminalFragment.lifecycleScope.launch {
                         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             withContext(Dispatchers.IO) {

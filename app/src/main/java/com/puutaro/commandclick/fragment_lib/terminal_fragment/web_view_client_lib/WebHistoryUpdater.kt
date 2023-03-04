@@ -1,31 +1,21 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.TargetFragmentInstance
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.net.URLDecoder
 
 
-class WebHistoryUpdater {
+class SearchViewAndAutoCompUpdater {
     companion object {
 
-        fun webHistoryUpdater(
+        fun update(
             terminalFragment: TerminalFragment,
             webView: WebView?,
             url: String?,
@@ -52,7 +42,7 @@ class WebHistoryUpdater {
             ) return
 
             val currentAppDirPath = terminalFragment.currentAppDirPath
-            val ulrTitle = webView?.title ?: "-"
+            val ulrTitle = BothEdgeQuote.trim(webView?.title)
             val escapeStr = WebUrlVariables.escapeStr
             if (ulrTitle.endsWith("\t${escapeStr}")) return
 
@@ -76,29 +66,6 @@ class WebHistoryUpdater {
             if(
                 searchViewText.isEmpty()
             ) return
-            val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-            val takeHistoryNum = 500
-            val updatingHistory = "${ulrTitle}\t${url}\n" + ReadText(
-                currentAppDirPath,
-                cmdclickUrlHistoryFileName
-            ).textToList().take(takeHistoryNum).joinToString("\n")
-            FileSystems.writeFile(
-                currentAppDirPath,
-                cmdclickUrlHistoryFileName,
-                updatingHistory
-            )
-
-            terminalFragment.registerUrlHistoryTitleCoroutineJob = terminalFragment.lifecycleScope.launch {
-                terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    withContext(Dispatchers.IO) {
-                        registerUrlHistoryTitle(
-                            terminalFragment,
-                            currentAppDirPath,
-                            ulrTitle
-                        )
-                    }
-                }
-            }
 
             autoCompUpdater(
                 terminalFragment,
@@ -140,32 +107,6 @@ class WebHistoryUpdater {
                 searchViewText,
             )
         }
-
-        private fun registerUrlHistoryTitle(
-            terminalFragment: TerminalFragment,
-            currentAppDirPath: String,
-            ulrTitle: String
-        ){
-            val registerUrlTitle = if(
-                terminalFragment.onHistoryUrlTitle !=
-                CommandClickShellScript.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
-            ) ulrTitle
-            else String()
-            if(
-                registerUrlTitle.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
-                )
-                || registerUrlTitle.endsWith(
-                    CommandClickShellScript.JSX_FILE_SUFFIX
-                )
-            ) return
-            FileSystems.writeFile(
-                currentAppDirPath,
-                UsePath.cmdclickFirstHistoryTitle,
-                registerUrlTitle
-            )
-        }
-
     }
 }
 
