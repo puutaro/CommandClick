@@ -42,7 +42,7 @@ class WrapWebHistoryUpdater {
             terminalFragment.onWebHistoryUpdaterJob = terminalFragment.lifecycleScope.launch {
                 terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     if(webViewUrl.isNullOrEmpty()) return@repeatOnLifecycle
-                    delay(1000)
+                    delay(1500)
                     val webViewUrlLast = withContext(Dispatchers.Main) {
                         webView.url
                     }
@@ -53,7 +53,7 @@ class WrapWebHistoryUpdater {
                                 urlTitleString = siteTitle
                             })
                     }
-                    delay(300)
+                    delay(500)
                     if(urlTitleString.isNullOrEmpty()) return@repeatOnLifecycle
                     withContext(Dispatchers.IO) {
                         execUpdate(

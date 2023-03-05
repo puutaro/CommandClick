@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<title>edit urls template</title>
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<header>
+   <h1 id="header">edit urls template</h1>
+</header>
+<body>
+   <div class="container">
+      
+      <!-- form for entering site information -->
+      <form class="form" id="form" action="#">
+         <div class="input-field">
+            <label for="mySiteTitle">Save Title</label>
+            <input name="mySiteTitle" 
+            id="mySiteTitle" 
+            onfocus="selectAllwhenFocus(this)"
+            type="text" 
+            placeholder="name">
+         </div>
+         <div id="mySiteTitleSuggest" style="display:none;"></div>
+         <div class="button-field">
+            <input type="button" class="save_button" onClick="saveTitleAndUrl()" value="Save">
+            <input type="button" class="launch_button" onClick="launchUrl(this)" value="Jump">
+         </div>
+      </form>
+      
+      <!-- the area in which bookmarks will be shown -->
+      <h2></h2>
+      <ol class="view_bookmarks" id="view_bookmarks"></ol>
+   </div>
+   
+   <!-- link the JavaScript file here -->
+   <style>
+   *{
+      box-sizing: border-box;
+      font-family: sans-serif;
+   }
+   body{
+      margin: 0;
+      padding: 0;
+      background-color: #fff;
+   }
+
+
+   header{
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%;
+      margin: 0 auto;
+      z-index: 10;
+   }
+
+   h1{
+      margin: 0;
+      padding: 10px;
+      background-color: #fff;
+      width: 100%;
+      text-align: center;
+      font-size: 1.4em;
+      color: #464040;
+      word-wrap: break-word;
+   }
+   h2{
+      font-size: 1.0em;
+      color: #464040;
+      text-align: center;
+      margin-left: 10px;
+      margin-right: 10px;
+      word-wrap: break-word;
+   }
+   .container{
+      width: 100%;
+      min-height: 160px;
+      background-color: #fff;
+      margin: 0 auto;
+   }
+
+   .form{
+      width: 100%;
+      height: auto;
+      background-color: #37abbb;
+   }
+
+   .input-field{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 15px;
+   }
+
+   #mySiteTitleSuggest {
+      background-color: #FFFFFF;
+      border: 1px solid #CCCCFF;
+      font-size: 90%;
+      width: 90%;
+      margin: 0 auto;
+   }
+   #mySiteTitleSuggest div {
+      display: block;
+      padding: 10px;
+      overflow: hidden;
+      word-wrap: break-word;
+   }
+   #mySiteTitleSuggest div.select{ /* keydown, keyup */
+      color: #FFFFFF;
+      background-color: #3366FF;
+   }
+   #mySiteTitleSuggest div.over{ /* mouse over */
+      background-color: #99CCFF;
+   }
+
+   .input-field input[type="text"]{
+      width: 90%;
+      height: 26px;
+      outline: none;
+      border: none;
+      background-color: #fff;
+      border-bottom: 2px solid #fff;
+      padding-left: 10px;
+      color: #000000;
+   }
+   .input-field label{
+      color: #464040;
+      color: #fff;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-top: 5px;
+      margin-bottom: 5px;
+   }
+
+   .button-field {
+      display: flex;
+      justify-content: center;
+   }
+
+   .save_button {
+      margin-right: 10px;
+   }
+
+   .launch_button {
+      margin-left: 10px;
+   }
+
+   .save_button, .launch_button {
+      border: none;
+      width: 80px;
+      font-size: 1.1em;
+      height: 26px;
+      background-color: #464040;
+      color: #fff;
+      cursor: pointer;
+      outline: none;
+      font-weight: 500;
+   }
+
+   /*Bookmarks section style*/
+   .view_bookmarks{
+      width: 100%;
+      background-color: #37abbb;
+      padding: 20px;
+
+      counter-reset:li; /* Initiate a counter */
+       list-style:none; /* Disable the normal item numbering */
+   }
+   .btn_bookmark{
+      align-items: center;
+      padding: 10px 0px;
+      margin-bottom: 10px;
+      background-color: #fff;
+      position:relative; /* Create a positioning context */
+      margin:0 0 6px 2em; /* Give each list item a left margin to make room for the numbers */
+   }
+
+
+   ol li:before {
+       content:counter(li); /* Use the counter as content */
+       counter-increment:li; /* Increment the counter by 1 */
+       /* Position and style the number */
+       position:absolute;
+       top:0px;
+       left:-2em;
+       width:2em;
+       padding:4px 0;
+       color:#fff;
+       background:#464040;
+       font-weight:bold;
+       font-family:"Helvetica Neue", Arial, sans-serif;
+       text-align:center;
+   }
+
+
+   .btn_bookmark .url-launch{
+      width: 100%;
+      word-wrap: break-word;
+      line-height: 25px;
+      text-align: center;
+      font-weight: 500;
+      text-overflow: ellipsis;
+   }
+
+   a{
+      text-decoration: none;
+      color: #464040;
+      display: block;
+      width:100%;
+      height:100%;
+      margin: -10px -20px;
+      margin-right: 20px; 
+      padding:10px 20px;
+      position:relative;
+      top: 0px;
+      left: 20px;
+   }
+   </style>
+   <script src="file:///android_asset/js/Sortable.js"></script>
+   <script src="file:///android_asset/js/suggest.js"></script>
+   <script>
+   // Choose the input field.
+   const CommandClickSiteTitle = "Cmd List Template"
+   const editTargetUrlsFilePath = "require path";
+   const addUrlsSourceFilePath = "";
+   const clickSortTop = true
+   let url = document.querySelector("[name='url']");
+   let view_bookmarksSection = document.querySelector(".view_bookmarks");
+
+   const urlSourceContents = jsFileSystem.readLocalFile(addUrlsSourceFilePath);
+   function filterListByUrl(){
+      if(!addUrlsSourceFilePath) {
+         return ["", ""]
+      }
+      return urlSourceContents.split('\n').filter( function( line ) {
+         const urlString = line.split('\t').at(-1);
+         const urlTitle = line.split('\t').at(0);
+         return CommandClickFilterBoolean
+      });
+   }
+
+
+   let latestUrlStringRowsList = filterListByUrl();
+   let latestUrlStringRowFirst = latestUrlStringRowsList.at(0)
+
+   function tabHandlerforTitleOrUrl(latestUrlStringRowFirst, posi){
+      try {
+         return latestUrlStringRowFirst.split('\t').at(posi);
+      } catch(e) {
+         return  ""
+      }
+   }
+   let latestUrlTitle = tabHandlerforTitleOrUrl(latestUrlStringRowFirst, 0)
+   let latestUrlString =  tabHandlerforTitleOrUrl(latestUrlStringRowFirst, -1)
+
+   function addBookmark(addName, addUrl){
+      let dataLink = addUrl;
+      if(!addUrl.includes("http")){
+         addUrl = "//" + addUrl;
+      }
+      let item = '<li class="btn_bookmark"><a class="url-launch" href="' + addUrl + '" target="_blank" data-link=' + dataLink + '>' + addName + "</a></li>"
+      view_bookmarksSection.innerHTML += item;
+   }
+
+   function fetchBoookmark(){
+      let bookmarkContents = jsFileSystem.readLocalFile(editTargetUrlsFilePath);
+      if(!bookmarkContents) return
+      let arrayItems = bookmarkContents.split("\n");
+      
+
+      let suggestJsonList = arrayItems.map(
+         (item) => {
+         var suggestJsonObj = new Object();
+         let lineList = item.split("\t")
+         suggestJsonObj.title = lineList.at(0)
+         suggestJsonObj.url = lineList.at(-1)
+         return suggestJsonObj;
+      })
+
+      arrayItems.length;
+      for(item of arrayItems){
+         if(!item.includes("\t")) break
+         let itemSpli = item.split('\t');
+         addBookmark(itemSpli[0], itemSpli[1]);
+      }
+      bookmarkListClickListner()
+   }
+
+   function saveSortedBookmark(){
+      const sortedContents = [...document.querySelectorAll(".url-launch")].map((item) => {
+        return item.textContent + "\t" + item.dataset.link
+      }).join("\n")
+      jsFileSystem.writeLocalFile(
+         editTargetUrlsFilePath,
+         sortedContents
+      )
+   }
+
+
+   function removeBookmark(thisItem){
+
+      let arrayItems = [],
+      index,
+      item = thisItem.parentNode,
+      itemURL = item.querySelector(".url-launch").dataset.link;
+      itemTitle = item.querySelector(".url-launch").textContent
+
+      var result = window.confirm("delete ok?\n\t" + itemTitle);
+      if(!result) {
+         location.reload()
+         return
+      }
+
+      let bookmarkContents = jsFileSystem.readLocalFile(editTargetUrlsFilePath);
+      if(!bookmarkContents) return
+      let bookmarkContentsList = bookmarkContents.split('\n')
+      let changedBookmarkContentsList = bookmarkContentsList.filter( function( line ) {
+         const urlString = line.split('\t').at(-1);
+         return urlString !== itemURL
+      });
+      let removedBookmarkContents = changedBookmarkContentsList.join("\n");
+
+      jsFileSystem.writeLocalFile(
+         editTargetUrlsFilePath,
+         removedBookmarkContents
+      )
+   }
+
+
+   function sortableJsWrapper(){
+      var el = document.getElementById('view_bookmarks');
+      var sortable = new Sortable(el, {
+         delay: 100,
+         removeOnSpill: true,
+         onEnd: function (/**Event*/evt) {
+            var target = evt.originalEvent.target;
+            if (el !== target && !el.contains(target)) {
+                  removeBookmark(target)
+                  return false
+            }
+            var draggingItem = evt.from.parentNode
+            var draggedItemURL = draggingItem.querySelector(".url-launch").dataset.link;
+            var draggedItem = evt.to.parentNode,
+            draggedItemURL = draggedItem.querySelector(".url-launch").dataset.link;
+            if(evt.oldIndex === evt.newIndex) return
+               saveSortedBookmark()
+          },
+      });
+   }
+
+   window.onload = function() {
+      document.title = CommandClickSiteTitle;
+      document.getElementsByTagName("h1")[0].textContent = CommandClickSiteTitle;
+      var headerHeight = document.getElementById("header").offsetHeight;
+      if(!addUrlsSourceFilePath) document.getElementById("form").style.display ="none";
+      document.getElementsByTagName("body")[0].style.marginTop = parseInt(headerHeight) + 10 + "px";
+      sortableJsWrapper();
+      fetchBoookmark();
+      bookmarkListClickListner()
+      let mySiteTitle = document.getElementById('mySiteTitle');
+      mySiteTitle.defaultValue = latestUrlTitle;
+      document.getElementsByTagName("h2")[0].textContent = editTargetUrlsFilePath;
+      let urlSourceContentsSet = new Set(urlSourceContents.split("\n"))
+      new Suggest.LocalMulti(
+         "mySiteTitle",
+         "mySiteTitleSuggest",
+         Array.from(urlSourceContentsSet),
+         {
+           dispAllKey: true
+         }
+     );
+   };
+
+
+   function selectAllwhenFocus(focusedInput) {
+      focusedInput.select();
+   }
+
+
+   function launchUrl(thisItem){
+      setTimeout(
+         function(){
+            document.location.href = latestUrlString;
+         },
+         100
+      );
+      return false
+   }
+
+   function bookmarkListClickListner(){
+      var trigger = document.querySelectorAll(".url-launch");
+      trigger.forEach(function(target) {
+         target.addEventListener('click', function(e) {
+            if(!clickSortTop) return
+            item = this.parentNode,
+            itemURL = item.querySelector(".url-launch").dataset.link;
+            let bookmarkContentsList = jsFileSystem.readLocalFile(editTargetUrlsFilePath).split('\n');
+            let bookmarkExecludedList = bookmarkContentsList.filter( function( line ) {
+               const urlString = line.split('\t').at(-1);
+               return urlString !== itemURL
+            });
+            let clickedBookmarkList = bookmarkContentsList.filter( function( line ) {
+               const urlString = line.split('\t').at(-1);
+               return urlString === itemURL
+            });
+            let updatedBookmarkList = clickedBookmarkList.concat(bookmarkExecludedList);
+            let updatedBookmarkContents = updatedBookmarkList.join('\n')
+            jsFileSystem.writeLocalFile(
+               editTargetUrlsFilePath,
+               updatedBookmarkContents
+            )
+         });
+      });
+   }
+
+
+   function saveTitleAndUrl() {
+      let bookmarkContents = jsFileSystem.readLocalFile(editTargetUrlsFilePath);
+      let patterURL = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/gi;
+      let inputUrlTitle = document.querySelector("[name='mySiteTitle']").value;
+      let duplicationTitleList = bookmarkContents.split('\n').filter( function( line ) {
+         const urlTitle = line.split('\t').at(0);
+         return urlTitle === inputUrlTitle
+      });
+      if(duplicationTitleList.length > 0){
+         alert("you must specify unique site title");
+         return
+      }
+      if(inputUrlTitle === ""){
+         alert("you must fill the siteName input");
+         return
+      } else if(latestUrlString === ""){
+         alert("you must fill the url input");
+         return
+      } else if(!patterURL.test(latestUrlString)){
+         alert("you must enter a valid url");
+         return
+      }
+      let writeBookmarkContents = inputUrlTitle + "\t" + latestUrlString + "\n" + bookmarkContents;
+      jsFileSystem.writeLocalFile(editTargetUrlsFilePath, writeBookmarkContents)
+      location.reload()
+   };
+
+   </script>
+</body>
+</html>

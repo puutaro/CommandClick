@@ -1,33 +1,39 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.content.BroadcastReceiver
 import android.content.IntentFilter
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 class BroadcastManager {
     companion object {
 
-        fun registerBloadcastReciever(
-            terminalFragment: TerminalFragment
+        fun registerBroadcastReceiver(
+            terminalFragment: TerminalFragment,
+            broadcastReceiver: BroadcastReceiver,
+            actionName: String
         ){
             try {
                 val intentFilter = IntentFilter()
-                intentFilter.addAction(BroadCastIntentScheme.ULR_LAUNCH.action)
-                terminalFragment.activity?.registerReceiver(terminalFragment.broadcastReceiver, intentFilter)
+                intentFilter.addAction(actionName)
+                terminalFragment.activity?.registerReceiver(
+                    broadcastReceiver,
+                    intentFilter
+                )
             } catch(e: Exception){
                 return
             }
         }
 
-        fun unregisterBloadcastReciever(
-            terminalFragment: TerminalFragment
+        fun unregisterBroadcastReceiver(
+            terminalFragment: TerminalFragment,
+            broadcastReceiver: BroadcastReceiver
         ){
             try {
                 terminalFragment.terminalViewhandler.removeCallbacksAndMessages(
                     null
                 )
                 terminalFragment.activity?.unregisterReceiver(
-                    terminalFragment.broadcastReceiver
+                    broadcastReceiver
                 )
             } catch(e: Exception){
                 return

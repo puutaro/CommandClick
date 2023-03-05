@@ -11,10 +11,11 @@ class ReadText(
     fun readText(): String {
         val success = FileSystems.createDirs(dirPath)
         if(!success) {
-            val err_message = "cannnot mkdir: ${dirPath}"
+            val err_message = "cannot mkdir: ${dirPath}"
             Log.e(javaClass.name, err_message)
             return err_message
         }
+        if(fileName.isEmpty()) return String()
         try {
             FileSystems.createFiles(
                 dirPath,
@@ -29,7 +30,7 @@ class ReadText(
         return try{
             targetFile.readText()
         } catch(e: Exception) {
-            ""
+            String()
         }
 
     }

@@ -102,7 +102,7 @@ class InstallFromDownloadDir(
     }
 
     private fun mekeDownloadShellFileList(): List<String> {
-        return FileSystems.filterSuffixShellFiles(
+        return FileSystems.filterSuffixShellOrJsOrHtmlFiles(
             downloadDirPath,
         )
     }

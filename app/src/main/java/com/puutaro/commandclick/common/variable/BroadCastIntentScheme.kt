@@ -7,5 +7,9 @@ enum class BroadCastIntentScheme(
     ULR_LAUNCH(
         "com.puutaro.commandclick.url.launch",
         "url",
+    ),
+    HTML_LAUNCH(
+    "com.puutaro.commandclick.html.launch",
+    "title",
     )
 }

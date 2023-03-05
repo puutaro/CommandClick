@@ -11,31 +11,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.ReadLines
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.BroadcastReceiverMethodForHtml
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.io.InputStream
 
 
 class TerminalFragment: Fragment() {
@@ -63,7 +54,7 @@ class TerminalFragment: Fragment() {
     var onWebHistoryUpdaterJob: Job? = null
 
 
-    var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+    var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val urlStr = intent.getStringExtra(
                 BroadCastIntentScheme.ULR_LAUNCH.scheme
@@ -72,6 +63,17 @@ class TerminalFragment: Fragment() {
                 !LoadUrlPrefixSuffix.judge(urlStr)
             ) return
             binding.terminalWebView.loadUrl(urlStr)
+        }
+    }
+
+    var broadcastReceiverForHtml: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            BroadcastReceiverMethodForHtml.launchHtml(
+                intent,
+                context,
+                binding,
+                currentAppDirPath
+            )
         }
     }
 
@@ -136,7 +138,14 @@ class TerminalFragment: Fragment() {
     override fun onPause() {
         super.onPause()
         activity?.intent?.action = String()
-        BroadcastManager.unregisterBloadcastReciever(this)
+        BroadcastManager.unregisterBroadcastReceiver(
+            this,
+            broadcastReceiverForUrl
+        )
+        BroadcastManager.unregisterBroadcastReceiver(
+            this,
+            broadcastReceiverForHtml
+        )
         binding.terminalWebView.onPause()
     }
 
@@ -145,7 +154,16 @@ class TerminalFragment: Fragment() {
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
         InitCurrentMonitorFile.trim(this)
-        BroadcastManager.registerBloadcastReciever(this)
+        BroadcastManager.registerBroadcastReceiver(
+            this,
+            broadcastReceiverForUrl,
+            BroadCastIntentScheme.ULR_LAUNCH.action
+        )
+        BroadcastManager.registerBroadcastReceiver(
+            this,
+            broadcastReceiverForHtml,
+            BroadCastIntentScheme.HTML_LAUNCH.action
+        )
     }
 
 
