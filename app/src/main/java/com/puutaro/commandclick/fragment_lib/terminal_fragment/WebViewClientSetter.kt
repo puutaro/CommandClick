@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -138,20 +139,6 @@ class WebViewClientSetter {
                                     appUrlSystemDirPath,
                                     UsePath.urlLoadFinished,
                                     System.currentTimeMillis().toString()
-                                )
-                            }
-                            withContext(Dispatchers.IO) {
-                                val firstRow = ReadText(
-                                    appUrlSystemDirPath,
-                                    UsePath.cmdclickUrlHistoryFileName
-                                )
-                                    .textToList()
-                                    .firstOrNull()
-                                    ?: return@withContext
-                                FileSystems.writeFile(
-                                    appUrlSystemDirPath,
-                                    UsePath.cmdclickFirstHistoryTitle,
-                                    firstRow
                                 )
                             }
                         }

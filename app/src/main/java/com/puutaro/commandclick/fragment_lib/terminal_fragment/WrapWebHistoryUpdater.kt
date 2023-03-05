@@ -13,6 +13,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
@@ -65,7 +66,6 @@ class WrapWebHistoryUpdater {
                     withContext(Dispatchers.IO) {
                         registerUrlHistoryTitle(
                             terminalFragment,
-                            terminalFragment.currentAppDirPath,
                             webViewUrl
                         )
                     }
@@ -138,7 +138,6 @@ class WrapWebHistoryUpdater {
 
         private fun registerUrlHistoryTitle(
             terminalFragment: TerminalFragment,
-            currentAppDirPath: String,
             ulrTitle: String?
         ){
             if(ulrTitle.isNullOrEmpty()) return
@@ -155,11 +154,8 @@ class WrapWebHistoryUpdater {
                     CommandClickShellScript.JSX_FILE_SUFFIX
                 )
             ) return
-            val appUrlSystemDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-            FileSystems.writeFile(
-                appUrlSystemDirPath,
-                UsePath.cmdclickFirstHistoryTitle,
-                registerUrlTitle
+            FirstUrlHistoryFile.update(
+                terminalFragment
             )
         }
     }
