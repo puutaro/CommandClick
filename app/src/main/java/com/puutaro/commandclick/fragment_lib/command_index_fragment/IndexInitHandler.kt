@@ -39,6 +39,9 @@ class IndexInitHandler {
                 return
             }
 
+            terminalShowInit(
+                cmdIndexFragment
+            )
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
 //            listener?.onBackstackDelete()
             val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
@@ -119,6 +122,18 @@ class IndexInitHandler {
             pageSearchToolbarManager.onKeyListner()
             pageSearchToolbarManager.searchTopClickLisnter()
             pageSearchToolbarManager.searchDownClickLisnter()
+
         }
     }
+}
+
+private fun terminalShowInit(
+    cmdIndexFragment: CommandIndexFragment
+){
+    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
+    listener?.onKeyBoardVisibleChange(
+        false,
+        true,
+        cmdIndexFragment.WebSearchSwitch
+    )
 }
