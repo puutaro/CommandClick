@@ -53,8 +53,12 @@ class AddConfirmDialog {
                     } else {
                         inputShellFileName
                     }
+                    val createAppDirPath = "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
                     FileSystems.createDirs(
-                        "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
+                        createAppDirPath
+                    )
+                    FileSystems.createDirs(
+                        "${createAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                     )
                     CommandListManager.execListUpdate(
                         currentAppDirPath,

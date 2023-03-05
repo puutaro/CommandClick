@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager
 
 import android.content.BroadcastReceiver
 import android.content.IntentFilter

@@ -74,7 +74,7 @@ class CmdClickHistoryButtonEvent (
             cmdclickAppHistoryDirAdminPath
         )
 
-        invokeItemSetClickListnerForHistory(
+        invokeItemSetClickListenerForHistory(
             fragment,
             historyListView,
             historyList,
@@ -82,7 +82,7 @@ class CmdClickHistoryButtonEvent (
         )
     }
 
-    private fun invokeItemSetClickListnerForHistory(
+    private fun invokeItemSetClickListenerForHistory(
         fragment: Fragment,
         historyListView: ListView,
         historyList: List<String>,
@@ -219,15 +219,15 @@ internal fun makeHistoryListRow(
             historyRow
         )
     val appDirPath = "${UsePath.cmdclickAppDirPath}/${appDirName}"
+    val appUrlSystemDirPath = "${appDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
     val currentUrlHistoryPath =
-        "${appDirPath}/${UsePath.cmdclickUrlHistoryFileName}"
+        "${appUrlSystemDirPath}/${UsePath.cmdclickUrlHistoryFileName}"
     if(
         !File(currentUrlHistoryPath).isFile
     ) return historyRow
     val urlTitleSource = ReadText(
-        appDirPath,
+        appUrlSystemDirPath,
         UsePath.cmdclickFirstHistoryTitle
-//                UsePath.cmdclickUrlHistoryFileName
     ).textToList()
         .firstOrNull()
         ?.split("\t")

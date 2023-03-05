@@ -18,15 +18,14 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager.BroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.BroadcastReceiverMethodForHtml
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
-import java.io.InputStream
 
 
 class TerminalFragment: Fragment() {
@@ -68,7 +67,7 @@ class TerminalFragment: Fragment() {
 
     var broadcastReceiverForHtml: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            BroadcastReceiverMethodForHtml.launchHtml(
+            HtmlLauncher.launch(
                 intent,
                 context,
                 binding,

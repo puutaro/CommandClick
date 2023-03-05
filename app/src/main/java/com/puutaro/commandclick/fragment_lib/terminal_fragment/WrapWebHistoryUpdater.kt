@@ -120,14 +120,16 @@ class WrapWebHistoryUpdater {
             if(
                 searchViewText.isEmpty()
             ) return
+
+            val appUrlSystemDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             val takeHistoryNum = 500
             val updatingHistory = "${ulrTitle}\t${webViewUrl}\n" + ReadText(
-                currentAppDirPath,
+                appUrlSystemDirPath,
                 cmdclickUrlHistoryFileName
             ).textToList().take(takeHistoryNum).joinToString("\n")
             FileSystems.writeFile(
-                currentAppDirPath,
+                appUrlSystemDirPath,
                 cmdclickUrlHistoryFileName,
                 updatingHistory
             )
@@ -153,8 +155,9 @@ class WrapWebHistoryUpdater {
                     CommandClickShellScript.JSX_FILE_SUFFIX
                 )
             ) return
+            val appUrlSystemDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             FileSystems.writeFile(
-                currentAppDirPath,
+                appUrlSystemDirPath,
                 UsePath.cmdclickFirstHistoryTitle,
                 registerUrlTitle
             )

@@ -55,9 +55,9 @@ class CommandIndexFragment: Fragment() {
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val thisFragmentTag = this.tag
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-
+        val defaultSystemPath = "${UsePath.cmdclickUrlSystemDirRelativePath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         FileSystems.createDirs(
-            UsePath.cmdclickDefaultAppDirPath
+            defaultSystemPath
         )
         FileSystems.createDirs(
             UsePath.cmdclickAppDirAdminPath

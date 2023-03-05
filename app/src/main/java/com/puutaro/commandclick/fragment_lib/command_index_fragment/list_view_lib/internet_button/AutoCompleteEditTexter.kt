@@ -55,7 +55,7 @@ class AutoCompleteEditTexter(
             )
         }
 
-        fun makeCompleteListSource(
+        private fun makeCompleteListSource(
             currentAppDirPath: String?,
             takeListNum: Int = 500,
         ):List<String> {
@@ -64,8 +64,9 @@ class AutoCompleteEditTexter(
             ) return emptyList()
             val usedTitle = mutableSetOf<String>()
             val usedUrl = mutableSetOf<String>()
+            val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             return ReadText(
-                currentAppDirPath,
+                appUrlSystemPath,
                 UsePath.cmdclickUrlHistoryFileName
             ).textToList()
                 .filter {

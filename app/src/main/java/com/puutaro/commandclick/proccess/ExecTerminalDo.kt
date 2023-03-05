@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
@@ -134,13 +133,14 @@ class ExecTerminalDo {
 
 private fun urlLaunchMacroProcessor(
     terminalViewModel: TerminalViewModel,
-    recentAppdirPath: String,
+    recentAppDirPath: String,
     onUrlLaunchMacro: String,
 ) {
+    val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
     when(onUrlLaunchMacro){
         SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name -> {
             terminalViewModel.launchUrl = ReadText(
-                recentAppdirPath,
+                appUrlSystemPath,
                 UsePath.cmdclickUrlHistoryFileName
             ).textToList()
                 .filter {
@@ -153,7 +153,7 @@ private fun urlLaunchMacroProcessor(
         }
         SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
             terminalViewModel.launchUrl = ReadText(
-                recentAppdirPath,
+                appUrlSystemPath,
                 UsePath.cmdclickUrlHistoryFileName
             ).textToList()
                 .filter {
@@ -235,17 +235,18 @@ private class ShellFilePathToHistory {
                 shellFileName == UsePath.cmdclickStartupShellName
                 || shellFileName == UsePath.cmdclickEndShellName
             ) return
+            val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             val shellFullPath = "${recentAppDirPath}/${shellFileName}"
             if(
                 !File(shellFullPath).isFile
             ) return
             val insertedHistoryContentsList = listOf("${shellFullPath}\t${shellFullPath}") + ReadText(
-                recentAppDirPath,
+                appUrlSystemPath,
                 cmdclickUrlHistoryFileName
             ).textToList()
             FileSystems.writeFile(
-                recentAppDirPath,
+                appUrlSystemPath,
                 cmdclickUrlHistoryFileName,
                 insertedHistoryContentsList.joinToString("\n")
             )

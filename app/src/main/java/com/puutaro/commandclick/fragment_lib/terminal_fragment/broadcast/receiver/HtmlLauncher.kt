@@ -1,19 +1,16 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import java.io.InputStream
 
-object BroadcastReceiverMethodForHtml{
+object HtmlLauncher{
 
-    fun launchHtml(
+    fun launch(
         intent: Intent,
         context: Context,
         binding: TerminalFragmentBinding,
@@ -22,13 +19,21 @@ object BroadcastReceiverMethodForHtml{
         val title = intent.getStringExtra(
             BroadCastIntentScheme.HTML_LAUNCH.scheme
         ) ?: return
-        val htmlFileName = title
-            .lowercase()
-            .replace(" ", "_")
-            .replace("　", "_") + ".html"
         val editFilePath = intent.getStringExtra(
             BroadCastIntentExtraForHtml.EDIT_PATH.scheme
         ) ?: return
+        val editFileName =
+            editFilePath
+                .split('/')
+                .lastOrNull()
+                ?.lowercase()
+                ?.replace(" ", "_")
+                ?.replace("　", "_")
+                ?: return
+        val htmlFileName = title
+            .lowercase()
+            .replace(" ", "_")
+            .replace("　", "_")  + '_' + editFileName + ".html"
         val srcFilePath = intent.getStringExtra(
             BroadCastIntentExtraForHtml.SCR_PATH.scheme
         ) ?: String()

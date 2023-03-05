@@ -66,7 +66,9 @@ class IndexInitHandler {
                 CommandClickShellScript.SHELL_FILE_SUFFIX
             ) ?: UsePath.cmdclickDefaultAppDirName
             val currentAppDirPath = "${cmdclickAppDirPath}/${currentDirName}"
-
+            FileSystems.createDirs(
+                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+            )
             SharePreffrenceMethod.putSharePreffrence(
                 startUpPref,
                 mapOf(

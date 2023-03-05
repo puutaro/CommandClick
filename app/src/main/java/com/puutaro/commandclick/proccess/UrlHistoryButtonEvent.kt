@@ -183,7 +183,7 @@ class UrlHistoryButtonEvent(
         val usedUrl = mutableSetOf<String>()
         val takeListNum = 60
         return ReadText(
-            currentAppDirPath,
+            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
             UsePath.cmdclickUrlHistoryFileName
         ).textToList()
             .distinct()

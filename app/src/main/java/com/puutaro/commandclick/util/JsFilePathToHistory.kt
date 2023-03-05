@@ -9,17 +9,18 @@ class JsFilePathToHistory {
             recentAppDirPath: String,
             jsFileName: String,
         ) {
+            val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             val jsFullPath = "${recentAppDirPath}/${jsFileName}"
             if(
                 !File(jsFullPath).isFile
             ) return
             val insertedHistoryContentsList = listOf("${jsFullPath}\t${jsFullPath}") + ReadText(
-                recentAppDirPath,
+                appUrlSystemPath,
                 cmdclickUrlHistoryFileName
             ).textToList()
             FileSystems.writeFile(
-                recentAppDirPath,
+                appUrlSystemPath,
                 cmdclickUrlHistoryFileName,
                 insertedHistoryContentsList.joinToString("\n")
             )

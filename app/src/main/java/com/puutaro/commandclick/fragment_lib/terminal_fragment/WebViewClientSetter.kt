@@ -130,13 +130,28 @@ class WebViewClientSetter {
                         return
                     }
                     super.onPageFinished(webview, url)
+                    val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                     terminalFragment.onPageFinishedCoroutineJob = terminalFragment.lifecycleScope.launch {
                         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
                             withContext(Dispatchers.IO) {
                                 FileSystems.writeFile(
-                                    terminalFragment.currentAppDirPath,
+                                    appUrlSystemDirPath,
                                     UsePath.urlLoadFinished,
                                     System.currentTimeMillis().toString()
+                                )
+                            }
+                            withContext(Dispatchers.IO) {
+                                val firstRow = ReadText(
+                                    appUrlSystemDirPath,
+                                    UsePath.cmdclickUrlHistoryFileName
+                                )
+                                    .textToList()
+                                    .firstOrNull()
+                                    ?: return@withContext
+                                FileSystems.writeFile(
+                                    appUrlSystemDirPath,
+                                    UsePath.cmdclickFirstHistoryTitle,
+                                    firstRow
                                 )
                             }
                         }

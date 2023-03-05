@@ -18,12 +18,12 @@ class WebViewSettings {
             settings.allowContentAccess = true
             settings.allowFileAccess = true
             terminalWebView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
-            terminalFragment.activity?.getWindow()?.setFlags(
+            terminalFragment.activity?.window?.setFlags(
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
             )
-            settings.setBuiltInZoomControls(true)
-            settings.setDisplayZoomControls(false)
+            settings.builtInZoomControls = true
+            settings.displayZoomControls = false
             terminalWebView.addJavascriptInterface(
                 WebAppInterface(terminalFragment),
                 JsInterfaceVariant.jsFileSystem.name
