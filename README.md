@@ -382,7 +382,7 @@ am broadcast \
 		--es filter_code "{javascript filter code}"
 ```
   - `title` is also used to html file name   
-	- ex) Cmd Play List -> cmd_play_list.html  
+	- ex) Cmd Play List -> cmd_play_list_{edit_path(to lowarcase)}.html  
   - `edit_path` is file path edit by html  
 	- ex)  Target edit file is tsv, which composed two row.
                 urltitle1  urlString1
@@ -414,9 +414,9 @@ ex) am broadcast \
 
 
 ### File api
-`CommandClick` automaticaly create files. This is used by system, alse is userinterface for app signal.
+`CommandClick` automaticaly create files in `App directory`/`system`/`url`. This is used by system, alse is userinterface for app signal.
 - `cmdclickUrlHistory` 
-      - This is made bellow `App directory`. CommandClick use recent used url launch etc.
+      - CommandClick use recent used url launch etc.
 - `urlLoadFinished`
       - This is made when url load finished. When you make `fannenl`(shell, html, and html application), you may use this.
 
