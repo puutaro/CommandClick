@@ -381,20 +381,21 @@ am broadcast \
 		--es on_click_sort "boolean(sortable when link click)" \
 		--es filter_code "{javascript filter code}"
 ```
-  - `title` is also used to html file name 
-        - ex) Cmd Play List -> cmd_play_list.html
-  - `edit_path` is file path edit by html
-        - ex)  Target edit file is tsv, which composed two row.
+  - `title` is also used to html file name   
+	- ex) Cmd Play List -> cmd_play_list.html  
+  - `edit_path` is file path edit by html  
+	- ex)  Target edit file is tsv, which composed two row.
                 urltitle1  urlString1
                 urltitle2  urlString2
                 urltitle3  urlString3
                 .
                 .
-                .
-  - `src_path` is source file path for input text string, Ordinaly, first hit one line's title display default string, and hold first hit line's url
-        - ex)  Source file is tsv, which composed two row like above.
-  - `on_click_sort` is how to sort top when link click.
-  - `filter_code` filter target source file  by javascript code. default value is `true`. You can use `urlString` and `urlTitle` variable to filter.
+                .  
+		  
+  - (Optional) `src_path` is source file path for input text string, Ordinaly, first hit one line's title display default string, and hold first hit line's url  
+	- ex)  Source file is tsv, which composed two row like above.  
+  - (Optional) `on_click_sort` is how to sort top when link click.  
+  - (Optional) `filter_code` filter target source file  by javascript code. default value is `true`. You can use `urlString` and `urlTitle` variable to filter.  
   
 ```
 ex) am broadcast \
