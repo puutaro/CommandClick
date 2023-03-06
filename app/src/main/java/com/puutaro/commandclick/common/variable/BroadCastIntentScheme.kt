@@ -10,6 +10,6 @@ enum class BroadCastIntentScheme(
     ),
     HTML_LAUNCH(
     "com.puutaro.commandclick.html.launch",
-    "title",
+    "edit_path",
     )
 }

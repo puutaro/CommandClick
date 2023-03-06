@@ -16,23 +16,17 @@ object HtmlLauncher{
         binding: TerminalFragmentBinding,
         currentAppDirPath: String,
     ) {
-        val title = intent.getStringExtra(
+        val editFilePath = intent.getStringExtra(
             BroadCastIntentScheme.HTML_LAUNCH.scheme
         ) ?: return
-        val editFilePath = intent.getStringExtra(
-            BroadCastIntentExtraForHtml.EDIT_PATH.scheme
-        ) ?: return
-        val editFileName =
+        val title =
             editFilePath
                 .split('/')
                 .lastOrNull()
-                ?.replace(" ", "_")
-                ?.replace("　", "_")
                 ?: return
         val htmlFileName = title
-            .lowercase()
             .replace(" ", "_")
-            .replace("　", "_")  + '_' + editFileName + ".html"
+            .replace("　", "_") + ".html"
         val srcFilePath = intent.getStringExtra(
             BroadCastIntentExtraForHtml.SCR_PATH.scheme
         ) ?: String()
