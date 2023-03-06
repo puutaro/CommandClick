@@ -26,7 +26,6 @@ object HtmlLauncher{
             editFilePath
                 .split('/')
                 .lastOrNull()
-                ?.lowercase()
                 ?.replace(" ", "_")
                 ?.replace("　", "_")
                 ?: return
