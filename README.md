@@ -380,10 +380,9 @@ am broadcast \
 		--es src_path "{source file path}" \
 		--es on_click_sort "boolean(sortable when link click)" \
 		--es filter_code "{javascript filter code}"
-```
-  - `title` is also used to html file name   
-	- ex) Cmd Play List -> cmd_play_list_{edit_path(to lowarcase)}.html  
-  - `edit_path` is file path edit by html  
+``` 
+
+  - `edit_path` is file path edit by html, also file name is title  
 	- ex)  Target edit file is tsv, which composed two row.
                 urltitle1  urlString1
                 urltitle2  urlString2
@@ -400,7 +399,6 @@ am broadcast \
 ```
 ex) am broadcast \
 		-a "com.puutaro.commandclick.html.launch" \
-		--es title "Cmd Play List" \
 		--es edit_path "${PARENT_DIR_PATH}/tubePlayList" \
 		--es src_path "${PARENT_DIR_PATH}/cmdclickUrlHistory" \
 		--es on_click_sort "false" \
