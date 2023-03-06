@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view
 
 import android.content.Context
+import android.graphics.Color
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
@@ -23,6 +24,7 @@ class WithSpinnerView(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
+        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
         linearParamsForEditTextTest.weight = 0.001F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)

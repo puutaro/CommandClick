@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view
 
+import android.graphics.Color
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
@@ -33,7 +34,8 @@ class WithSpinnerWithButtonView(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.5F
+        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
+        linearParamsForEditTextTest.weight = 0.001F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
         val insertSpinner = SpinnerViewProducer.make(
@@ -41,7 +43,7 @@ class WithSpinnerWithButtonView(
             currentId,
             insertEditText,
             currentRecordNumToSetVariableMap,
-        0.3F,
+        0.8F,
         )
         horizontalLinearLayout.addView(insertSpinner)
         val insertButton = ButtonViewProducer.make(
