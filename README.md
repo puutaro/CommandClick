@@ -419,10 +419,19 @@ ex) am broadcast \
       - This is made when url load finished. When you make `fannenl`(shell, html, and html application), you may use this.
 
 ### JavaScript interface
- - Android.readLocalFile(path: String) -> String
-      - read local file and return file contents string
- - Android.writeLocalFile(path: String, contents: String)
-      - wite local file
+ - jsFileStystem
+ 	- jsFileStystem.readLocalFile(path: String) -> String
+      		- read local file and return file contents string
+ 	- jsFileStystem.writeLocalFile(path: String, contents: String)
+      		- write local file
+ 	- jsFileStystem.jsEcho(fileName: String, terminalOutPutOption: String, contents: String)
+      		- write local monitor file
+ - JsIntent
+ 	- jsIntent  
+ 		- launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+
+### javascript pre order word
+	- `${0}` -> current file path
 
 ### Html tag output
 
