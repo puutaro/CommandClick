@@ -213,26 +213,26 @@ Kill shellscript proccess by `utility` -> `kill`  when long click list item in i
 
 #### Init
 
-Revert default setting varable in shellscript proccess by `utility` -> `kill`  when long click list item in index mode
+Revert default setting varable in script proccess by `utility` -> `kill`  when long click list item in index mode
 (only setting variable, but excluede `setVariableType`)
 
 #### Description
 
-Display description for shellscript by `utility` -> `description`  when long click list item in index mode
+Display description for script by `utility` -> `description`  when long click list item in index mode
 
 
 #### Copy file
 
-Copy file for shellscript by `copy` -> `copy file`  when long click list item in index mode
+Copy file for script by `copy` -> `copy file`  when long click list item in index mode
 
 
 #### Copy file path
 
-Copy file path for shellscript by `copy` -> `copy file path`  when long click list item in index mode
+Copy file path for script by `copy` -> `copy file path`  when long click list item in index mode
 
 #### Add
 
-Add new shellscript by `add`   when long click setting button(toolbar right) in index mode
+Add new script by `add`   when long click setting button(toolbar right) in index mode
 
 
 #### Change app dir
@@ -249,11 +249,11 @@ Start `App directory` Manager by `setting` -> `change_app_dir` when long click s
 
 #### Create shortcut
  
-You can create shortcut for current `App directory` or `shellscript` in only `index mode` or `edit execute Always`
+You can create shortcut for current `App directory` or `script` in only `index mode` or `edit execute Always`
 
 #### Install
 
-You can move shellscript from download directory.
+You can move script from download directory.
 
 #### Config
 
@@ -330,8 +330,8 @@ One time edit and execute
 
 ![image](https://user-images.githubusercontent.com/55217593/216652110-4bc01a73-2b8b-42f2-8253-49062e775b66.png)
 
-Always edit and execute. So called `Shell2GUI`. It's great feature. 
-How the shell turns into a GUI Application! 
+Always edit and execute. So called `Script2GUI`. It's great feature. 
+How the script file turns into a GUI Application! 
 
 
 ### Edit api
@@ -342,7 +342,7 @@ Type bellow command in termux, so that you can use `Command Click Gui Edit Dialo
 am start \
 -n "com.puutaro.commandclick/.activity.MainActivity" \
 --es current_app_dir "{current_app_dir}" \
---es current_shell_file_name "{current_shell_file_name}" \
+--es current_script_file_name "{current_script_file_name}" \
 --es on_shortcut "EDIT_API"
 
 ---
@@ -350,7 +350,7 @@ am start \
 ex) am start \
 -n "com.puutaro.commandclick/.activity.MainActivity" \
 --es current_app_dir "/storage/emulated/0/cmdclick/AppDir/default" \
---es current_shell_file_name "twitter_test.sh" \
+--es current_script_file_name "twitter_test.js" \
 --es on_shortcut "EDIT_API"
 ```
 
@@ -428,11 +428,27 @@ ex) am broadcast \
       		- read local file and return file contents string
  	- jsFileStystem.writeLocalFile(path: String, contents: String)
       		- write local file
- 	- jsFileStystem.jsEcho(fileName: String, terminalOutPutOption: String, contents: String)
+      	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)
       		- write local monitor file
+ 	- jsFileStystem.jsEcho(terminalOutPutOption: String, contents: String)
+      		- write local monitor file
+ - JsArgs 
+	- jsArgs.get() -> tabsepalete string  
+		jsArgs soruce is jsf argument in edit  
+		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
+			-> `fristargment`\t`secondargument 2`  
+
  - JsIntent
  	- jsIntent  
  		- launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+ - JsDialog
+ 	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
+ 	- jsDialog.formJsDialog(formSource: String(tab sepalate))
+ 		 - formSource tabsepalete string  return {key}={value} contents
+ 		 - ex) 
+ 				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")    
+ 				-> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
+				
 
 ### javascript pre order word
 	- `${0}` -> current file path
