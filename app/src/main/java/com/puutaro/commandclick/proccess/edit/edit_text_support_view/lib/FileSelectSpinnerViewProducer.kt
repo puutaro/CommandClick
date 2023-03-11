@@ -41,7 +41,8 @@ object FileSelectSpinnerViewProducer {
             BothEdgeQuote.trim(it)
         } ?: String()
         val editableSpinnerList = FileSystems.sortedFiles(
-            currentAppDirPath
+            currentAppDirPath,
+            "on"
         ).filter {
             it.startsWith(filterPrefix)
         }
