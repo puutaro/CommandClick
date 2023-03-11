@@ -161,6 +161,8 @@ At the same time, if you installed code editor, edit new file.
     | `CBB` | checkbox with exec button | {variablebName}:CBB=value1!value2!&#124;{command string} |..   |
     | `ECB` | editable checkbox | {variablebName}:ECB=value1!value2!|..   |
     | `ECBB` | editable checkbox with exec button | {variablebName}:ECB=value1!value2&#124;{command string} |..   |
+    | `EFCB` | editable file checkbox | {variablebName}:EFCB={grep prefix} |..   |
+    | `EFCBB` | editable file checkbox with exec button | {variablebName}:EFCB={grep prefix}&#124;{command string} |..   |
     | `H` | password input | {variablebName}:H={password ..etc}   |
     | `RO` | read only | {variablebName}:RO= |
     | `NUM` | increment or decrement number | {variablebName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
