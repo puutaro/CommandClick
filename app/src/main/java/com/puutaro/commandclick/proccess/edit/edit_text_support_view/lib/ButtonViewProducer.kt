@@ -93,11 +93,6 @@ object ButtonViewProducer {
                 .replace(Regex("  *"), " ")
                 .replace("\${0}", currentScriptPath)
                 .replace("\${01}", currentScriptName)
-            Toast.makeText(
-                editFragment.context,
-                innerExecCmd,
-                Toast.LENGTH_LONG
-            ).show()
             val doubleColon = "::"
             val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + doubleColon
             val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermOut.name + doubleColon
