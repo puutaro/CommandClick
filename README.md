@@ -183,7 +183,7 @@ At the same time, if you installed code editor, edit new file.
       		 ex) jsf '$0' (`jsf` execute javascript file  
 		 ex) ::NoJsTermOut:: jsf '$0' (`::NoJsTermOut::` disable terminal output when only javascript  
                  ex) echo $0   (`$0` is current shell path  
-                 ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix 
+                 ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
                  ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
                  ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
 
