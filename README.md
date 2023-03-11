@@ -1,6 +1,6 @@
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)
 # Command Click
-So called `shell browser`, It's termux gui client with web browser feature, and javascript engine.
+So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
@@ -67,8 +67,8 @@ Usage
 -----
 
 ### Index mode
-This mode is main mode. Top is `web terminal view`, down is `shellscript name list`, bottom is toolbar.
-Main usage is executoin shellscript by list item clicking, other usage is maintenance shellscript or app by longpress or toolbar.
+This mode is main mode. Top is `web terminal view`, down is `script name list`, bottom is toolbar.
+Main usage is executoin script by list item clicking, other usage is maintenance script or app by longpress or toolbar.
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
@@ -78,7 +78,7 @@ Main usage is executoin shellscript by list item clicking, other usage is mainte
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 Torigger by left botom history button clicked.
 And more you look in url history by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
-* history item display mechanism {current_app_dir}__({current_shellscript}) (when exist current shellscript, edit execute is `Always`)
+* history item display mechanism {current_app_dir}__({current_script}) (when exist current script, edit execute is `Always`)
 
 #### Change term size
 
@@ -87,10 +87,10 @@ Click toolbar left setting button, and terminal size change.
 
 #### Add
 
-This feature display when toolbar right setting button long pressed. Then, click `add`, so new shellscript adding.
+This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
 At the same time, if you installed code editor, edit new file.
 
- -  various settingVriables feature in `CommandClick`'s shellscript
+ -  various settingVriables feature in `CommandClick`'s script
 
     | settingVariable| set value | description  |
     | --------- | --------- | ------------ |
@@ -144,7 +144,7 @@ At the same time, if you installed code editor, edit new file.
       		 ex) jsf '$0' (`jsf` execute javascript file path  
 		 ex) jsf '$01' (`jsf` execute javascript parrent directory path   
 		 ex) ::NoJsTermOut:: jsf '$0' (`::NoJsTermOut::` disable terminal output when only javascript  
-                 ex) echo $0   (`$0` is current shell path  
+                 ex) echo $0   (`$0` is current script path  
                  ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
                  ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
                  ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
@@ -152,21 +152,21 @@ At the same time, if you installed code editor, edit new file.
 
 #### Run
 
-Run shellscript by click list item in index mode or play button edit mode (editExecute variable is `Always`)
+Run script by click list item in index mode or play button edit mode (editExecute variable is `Always`)
 Or run javascript file.
 
 #### Edit
 
-Edit shellscript by form when long click list item in index mode 
+Edit script by form when long click list item in index mode 
 
 
 #### Write
 
-Edit shellscript by editor when long click list item in index mode 
+Edit script by editor when long click list item in index mode 
 
 #### Delete
 
-Delete shellscript by `utility` -> `delete`  when long click list item in index mode 
+Delete script by `utility` -> `delete`  when long click list item in index mode 
 
 #### Kill
 
@@ -429,7 +429,7 @@ ex) am broadcast \
 - `cmdclickUrlHistory` 
       - CommandClick use recent used url launch etc.
 - `urlLoadFinished`
-      - This is made when url load finished. When you make `fannenl`(shell, html, and html application), you may use this.
+      - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.
 
 ### JavaScript interface
  - jsFileStystem
@@ -465,11 +465,11 @@ ex) am broadcast \
 
 ### Html tag output
 
-`CommandClick` shell output trminal as html, so html tag is valid. You can use tag by bellow.
+`CommandClick` script output trminal as html, so html tag is valid. You can use tag by bellow.
  - `<` -> `cmdclickLeastTag`
  - `>` -> `cmdclickGreatTag`
 
-   - `Span tag` no working in shell output. If you wont to use this, launch html file.
+   - `Span tag` no working in script output. If you wont to use this, launch html file.
    - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
 
 
