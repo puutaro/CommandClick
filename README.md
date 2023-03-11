@@ -445,6 +445,7 @@ ex) am broadcast \
  	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
  	- jsDialog.formJsDialog(formSource: String(tab sepalate))
  		 - formSource tabsepalete string  return {key}={value} contents
+ 		 - setting reference [Add](#add)
  		 - ex) 
  				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")    
  				-> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
