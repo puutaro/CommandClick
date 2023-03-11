@@ -7,11 +7,12 @@ So called `shell browser`, It's termux gui client with web browser feature, and 
 
 Pros
 ----
+- Javascript engine.
+- Javascript enforce web brawser
 - Easily turn shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
-- Not only termux gui client but also web browser.
+- Not only web browser but also termux gui client.
 - Offer ritch edit dialog to termux.
-- Javascript engine.
 
 
 Table of Contents
@@ -36,6 +37,7 @@ Table of Contents
   * [Create shortcut](#create-shortcut)
   * [Install](#install)
   * [Config](#config)
+  * [Termux setting](#termux-setting)
   * [Select term](#select-term)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
@@ -60,47 +62,6 @@ Table of Contents
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 
-Pre Setting
------
-Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
-and, require termux storage setting.
-For Instance, bellow process.
-
-1. Long press on termux
-2. Click paste popup on termux  
-3. Continue pressing `Enter` on termux
-- clipboard contents:
-   ```
-   pkg update -y && pkg upgrade -y \
-   && yes | termux-setup-storage \
-   && sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
-   ```
-
-   - reference
-      - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
-      - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
-      - Execute `termux-setup-storage` on termux
-
-4. Set strage access again in `android 11` (Optional)
-
-> You may get "Permission denied" error when trying to access shared storage, even though the permission has been granted.
->  
-> Workaround:
->
-> Go to Android Settings --> Applications --> Termux --> Permissions
-> Revoke Storage permission
-> Grant Storage permission again
-
-[detail](https://wiki.termux.com/wiki/Termux-setup-storage)
-
-5. Set `Draw Over Apps permission` in `android 11+` (Optinal)
-
-> You can grant Termux the Draw Over Apps permission from its App Info activity:
-> `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
-
-[detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent/06f1de1b262d7612497e76463d8cc34ba7f49832#draw-over-apps-permission-optional)
-
-- When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
 Usage
 -----
@@ -260,6 +221,53 @@ You can move script from download directory.
 
 You can setting `CommandClick` Configration
 - detail setting reference [Add](#add)
+
+
+#### Termux Setting
+
+Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
+and, require termux storage setting.
+You can set by onley this menu press.
+
+* Below is a supplement.
+
+1. Long press on termux
+2. Click paste popup on termux  
+3. Continue pressing `Enter` on termux
+- clipboard contents:
+   ```
+   pkg update -y && pkg upgrade -y \
+   && yes | termux-setup-storage \
+   && sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
+   ```
+
+   - reference
+      - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
+      - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
+      - Execute `termux-setup-storage` on termux
+
+4. Set strage access again in `android 11` (Optional)
+
+> You may get "Permission denied" error when trying to access shared storage, even though the permission has been granted.
+>  
+> Workaround:
+>
+> Go to Android Settings --> Applications --> Termux --> Permissions
+> Revoke Storage permission
+> Grant Storage permission again
+
+[detail](https://wiki.termux.com/wiki/Termux-setup-storage)
+
+5. Set `Draw Over Apps permission` in `android 11+` (Optinal)
+
+> You can grant Termux the Draw Over Apps permission from its App Info activity:
+> `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
+
+[detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent/06f1de1b262d7612497e76463d8cc34ba7f49832#draw-over-apps-permission-optional)
+
+- When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
+
+
 
 #### Select term
 
