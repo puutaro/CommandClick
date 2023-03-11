@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ConfigFromConfigFileSetter {
     companion object {
@@ -14,13 +13,25 @@ class ConfigFromConfigFileSetter {
             cmdIndexFragment: CommandIndexFragment
         ){
 
+            val languageType = LanguageTypeSelects.JAVA_SCRIPT
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                    languageType
+                )
+            val settingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            ) as String
+
+            val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            ) as String
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
                 ).textToList(),
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                settingSectionStart,
+                settingSectionEnd
             )
 
             cmdIndexFragment.historySwitch = MakeVariableCbValue.make(

@@ -16,6 +16,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillCon
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -41,7 +42,7 @@ class ToolbarButtonProducerForEdit(
 
     private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_shell_file_name
+        SharePrefferenceSetting.current_script_file_name
     )
 
     private val shellScriptSaver = ShellScriptSaver(
@@ -89,7 +90,7 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.setOnClickListener { view ->
             when (toolbarButtonBariantForEdit) {
                 ToolbarButtonBariantForEdit.HISTORY -> {
-                    HistoryBottunSwicher.switch(
+                    HistoryBottunSwitcher.switch(
                         editFragment,
                         view,
                         editFragment.context?.getString(
@@ -167,7 +168,7 @@ class ToolbarButtonProducerForEdit(
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
-                HistoryBottunSwicher.switch(
+                HistoryBottunSwitcher.switch(
                     editFragment,
                     view,
                     editFragment.context?.getString(
@@ -260,7 +261,7 @@ class ToolbarButtonProducerForEdit(
         )
         val beforeUpdateShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_shell_file_name
+            SharePrefferenceSetting.current_script_file_name
         )
         shellScriptSaver.save(
             shellContentsList,
@@ -269,7 +270,7 @@ class ToolbarButtonProducerForEdit(
         )
         val afterUpdateShellFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
-            SharePrefferenceSetting.current_shell_file_name
+            SharePrefferenceSetting.current_script_file_name
         )
         val curentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -313,7 +314,7 @@ class ToolbarButtonProducerForEdit(
                 editFragment,
                 shellContentsList
             )
-            ExecTerminalDo.execTerminalDo(
+            ExecJsOrSellHandler.handle(
                 editFragment,
                 curentAppDirPath,
                 currentShellFileName,
@@ -389,11 +390,11 @@ class ToolbarButtonProducerForEdit(
             val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
             val beforeMoveDirPath = cmdclickAppDirPath + '/' +
                     beforeUpdateShellFileName.removeSuffix(
-                        CommandClickShellScript.SHELL_FILE_SUFFIX
+                        CommandClickShellScript.JS_FILE_SUFFIX
                     )
             val afterMoveDirPath = cmdclickAppDirPath + '/' +
                     afterUpdateShellFileName.removeSuffix(
-                        CommandClickShellScript.SHELL_FILE_SUFFIX
+                        CommandClickShellScript.JS_FILE_SUFFIX
                     )
             FileSystems.moveDirectory(
                 beforeMoveDirPath,
@@ -528,7 +529,7 @@ internal fun popupMenuItemSelectedForEdit(
             MenuEnumsForEdit.CONFIG.itemId -> {
                 val configDirPath = UsePath.cmdclickConfigDirPath
                 val configShellName = UsePath.cmdclickConfigFileName
-                CommandClickShellScript.makeConfigShellFile(
+                CommandClickShellScript.makeConfigJsFile(
                     configDirPath,
                     configShellName
                 )
@@ -538,7 +539,8 @@ internal fun popupMenuItemSelectedForEdit(
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     editFragment,
-                    shellContentsList
+                    shellContentsList,
+                    configShellName
                 )
                 if(validateErrMessage.isNotEmpty()){
                     val shellScriptPath = "${configDirPath}/${configShellName}"
@@ -574,7 +576,7 @@ internal fun popupMenuItemSelectedForEdit(
                     ),
                     SharePreffrenceMethod.getReadSharePreffernceMap(
                         readSharePreffernceMap,
-                        SharePrefferenceSetting.current_shell_file_name
+                        SharePrefferenceSetting.current_script_file_name
                     ),
                     terminalViewModel.currentMonitorFileName,
                 )

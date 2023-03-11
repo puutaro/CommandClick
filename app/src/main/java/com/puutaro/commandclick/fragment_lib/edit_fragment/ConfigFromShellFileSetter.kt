@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -9,7 +8,6 @@ import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ConfigFromShellFileSetter {
     companion object {
@@ -31,8 +29,9 @@ class ConfigFromShellFileSetter {
             )
             val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_shell_file_name
+                SharePrefferenceSetting.current_script_file_name
             )
+
             val context = editFragment.context
             val currentShellContentsList = ReadText(
                 currentAppDirPath,
@@ -41,8 +40,8 @@ class ConfigFromShellFileSetter {
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 currentShellContentsList,
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd
             )
 
             editFragment.historySwitch = MakeVariableCbValue.make(

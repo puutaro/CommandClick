@@ -71,7 +71,7 @@ class InitFragmentManager(
         }
         val startUpShellFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
-            SharePrefferenceSetting.current_shell_file_name
+            SharePrefferenceSetting.current_script_file_name
         )
         val startUpAppDirName = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
@@ -123,8 +123,8 @@ class InitFragmentManager(
         SharePreffrenceMethod.putSharePreffrence(
             startUpPref,
             mapOf(
-                SharePrefferenceSetting.current_shell_file_name.name
-                        to SharePrefferenceSetting.current_shell_file_name.defalutStr,
+                SharePrefferenceSetting.current_script_file_name.name
+                        to SharePrefferenceSetting.current_script_file_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.name
                         to SharePrefferenceSetting.on_shortcut.defalutStr
             )
@@ -144,13 +144,13 @@ class InitFragmentManager(
         ) return
 
         val currentShellFileName = intent.getStringExtra(
-            SharePrefferenceSetting.current_shell_file_name.name
-        ) ?: SharePrefferenceSetting.current_shell_file_name.defalutStr
+            SharePrefferenceSetting.current_script_file_name.name
+        ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
         SharePreffrenceMethod.putSharePreffrence(
             startUpPref,
             mapOf(
                 SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
-                SharePrefferenceSetting.current_shell_file_name.name to currentShellFileName,
+                SharePrefferenceSetting.current_script_file_name.name to currentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
                         to ShortcutOnValueStr.ON.name
             )

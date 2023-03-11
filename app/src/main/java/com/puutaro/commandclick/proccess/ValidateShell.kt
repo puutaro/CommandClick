@@ -4,56 +4,80 @@ import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 
 
-class ValidateShell {
+class ValidateShell() {
     companion object {
         fun correct (
             fragment: Fragment,
             shellContentsList: List<String>,
+            shellFileName: String,
         ): String {
             val context = fragment.context
+            val languageType =
+                JsOrShellFromSuffix.judge(shellFileName)
+
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+            ) as String
+            val labelingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+            ) as String
+            val settingSectionStart = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            ) as String
+            val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            ) as String
+
+            val commandSectionStart = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+            ) as String
+            val commandSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+            ) as String
 
 
             val holderList = shellContentsList.filter {
-                it == CommandClickShellScript.LABELING_SECTION_START
-                        || it == CommandClickShellScript.LABELING_SECTION_END
-                        || it == CommandClickShellScript.SETTING_SECTION_START
-                        || it == CommandClickShellScript.SETTING_SECTION_END
-                        || it == CommandClickShellScript.CMD_VARIABLE_SECTION_START
-                        || it == CommandClickShellScript.CMD_VARIABLE_SECTION_END
+                it == labelingSectionStart
+                        || it == labelingSectionEnd
+                        || it == settingSectionStart
+                        || it == settingSectionEnd
+                        || it == commandSectionStart
+                        || it == commandSectionEnd
             }
             val holderCheck = HolderCheck(
                 context,
-                holderList
+                holderList,
+                shellFileName
             )
-            val checkHolderNumErrMesseage =
+            val checkHolderNumErrMessage =
                 holderCheck.aboutHolderNum()
-            if(checkHolderNumErrMesseage.isNotEmpty()) {
-                return checkHolderNumErrMesseage
+            if(checkHolderNumErrMessage.isNotEmpty()) {
+                return checkHolderNumErrMessage
             }
-            val checkHoderSetEqualErrMesseage =
+            val checkHolderSetEqualErrMessage =
                 holderCheck.aboutHoderSetMatch()
-            if(checkHoderSetEqualErrMesseage.isNotEmpty()) {
-                return checkHoderSetEqualErrMesseage
+            if(checkHolderSetEqualErrMessage.isNotEmpty()) {
+                return checkHolderSetEqualErrMessage
             }
-            val checkHoderOrderErrMesseage =
+            val checkHolderOrderErrMessage =
                 holderCheck.aboutHolderOrder()
-            if(checkHoderOrderErrMesseage.isNotEmpty()) {
-                return checkHoderOrderErrMesseage
+            if(checkHolderOrderErrMessage.isNotEmpty()) {
+                return checkHolderOrderErrMessage
             }
 
-            val checkVriableValue = CheckVriableValue(
+            val checkVariableValue = CheckVariableValue(
                 context,
-                shellContentsList
+                shellContentsList,
+                shellFileName
             )
-            val checkBlankSurroundedByQuote = checkVriableValue.aboutBlankSurroundedByQuote()
-            if(checkBlankSurroundedByQuote.isNotEmpty()){
-                return checkBlankSurroundedByQuote
-            }
-            val checkQuoteSetOrIsBackslash = checkVriableValue.aboutQuoteSetOrIsBackSlash()
+            val checkQuoteSetOrIsBackslash = checkVariableValue.aboutQuoteSetOrIsBackSlash()
             if(checkQuoteSetOrIsBackslash.isNotEmpty()){
                 return checkQuoteSetOrIsBackslash
             }
@@ -62,45 +86,43 @@ class ValidateShell {
     }
 }
 
-private class CheckVriableValue(
+private class CheckVariableValue(
     private val context: Context?,
-    shellContentsList: List<String>
+    shellContentsList: List<String>,
+    shellFileName: String
 ){
+    val languageType =
+        JsOrShellFromSuffix.judge(shellFileName)
+
+    val languageTypeToSectionHolderMap =
+        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+    val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+    ) as String
+    val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+    ) as String
+    val settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+    ) as String
+    val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    val commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+    ) as String
+    val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+    ) as String
+
+
     private val recordNumToMapNameValueInHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_END
+            commandSectionStart,
+            commandSectionEnd
         )
-
-    fun aboutBlankSurroundedByQuote(): String {
-        recordNumToMapNameValueInHolder?.forEach{
-            numToNameToValueMap ->
-            val currentVariableName = numToNameToValueMap.value?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) ?: String()
-            val currentVariableValue = numToNameToValueMap.value?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            ) ?: String()
-            val currentValueLength = currentVariableValue.length - 1
-            if(currentVariableValue.isEmpty()) return@forEach
-            if(currentVariableValue.indexOf(' ') == -1) return@forEach
-            if(
-                currentVariableValue.indexOf('\'') == 0
-                && currentVariableValue.lastIndexOf('\'') == currentValueLength
-            ) return@forEach
-            if(
-                currentVariableValue.indexOf('"') == 0
-                && currentVariableValue.lastIndexOf('"') == currentValueLength
-                && currentVariableValue.filter { it == '"' }.count() == 2
-            ) return@forEach
-            return context?.getString(
-                R.string.variable_blank_no_surrounded_by_quote_err,
-                "${currentVariableName}=${currentVariableValue}"
-            ) ?: String()
-        }
-        return String()
-    }
 
     fun aboutQuoteSetOrIsBackSlash(): String {
         recordNumToMapNameValueInHolder?.forEach{
@@ -113,10 +135,12 @@ private class CheckVriableValue(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
             ) ?: String()
             val currentValueLength = currentVariableValueString.length - 1
-            if(currentVariableValueString.indexOf('\\') != -1) return context?.getString(
-                R.string.variable_exist_backslash_err,
-                "${currentVariableName}=${currentVariableValueString}"
-            ) ?: String()
+            if(currentVariableValueString.indexOf('\\') != -1) {
+                return context?.getString(
+                    R.string.variable_exist_backslash_err,
+                    "${currentVariableName}=${currentVariableValueString}"
+                ) ?: String()
+            }
             if(currentVariableValueString.indexOf('\'') == -1) return@forEach
             if(currentVariableValueString.indexOf('"') == -1) return@forEach
             val middleCurrentVariableValueString = currentVariableValueString.substring(
@@ -153,15 +177,42 @@ private class CheckVriableValue(
 private class HolderCheck(
     private val context: Context?,
     private val holderList: List<String>,
+    shellFileName: String
 ) {
 
+    val languageType =
+        JsOrShellFromSuffix.judge(shellFileName)
+
+    val languageTypeToSectionHolderMap =
+        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+    val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+    ) as String
+    val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+    ) as String
+    val settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+    ) as String
+    val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    val commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+    ) as String
+    val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+    ) as String
+
+
     private val holderListForValidateList = listOf(
-        CommandClickShellScript.LABELING_SECTION_START,
-        CommandClickShellScript.LABELING_SECTION_END,
-        CommandClickShellScript.SETTING_SECTION_START,
-        CommandClickShellScript.SETTING_SECTION_END,
-        CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-        CommandClickShellScript.CMD_VARIABLE_SECTION_END,
+        labelingSectionStart,
+        labelingSectionEnd,
+        settingSectionStart,
+        settingSectionEnd,
+        commandSectionStart,
+        commandSectionEnd,
     )
 
     fun aboutHolderNum(): String {
@@ -184,12 +235,12 @@ private class HolderCheck(
 
     fun aboutHoderSetMatch(): String {
         return mapOf(
-            CommandClickShellScript.LABELING_SECTION_START to
-            CommandClickShellScript.LABELING_SECTION_END,
-            CommandClickShellScript.SETTING_SECTION_START to
-            CommandClickShellScript.SETTING_SECTION_END,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_START to
-            CommandClickShellScript.CMD_VARIABLE_SECTION_END,
+            labelingSectionStart to
+            labelingSectionEnd,
+            settingSectionStart to
+            settingSectionEnd,
+            commandSectionStart to
+            commandSectionEnd,
         ).map {
             checkHolderMap ->
             val startHolderNum = holderList.filter {

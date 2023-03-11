@@ -39,7 +39,7 @@ class EditModeHandler(
     )
     private val currentShellFileName =SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_shell_file_name
+        SharePrefferenceSetting.current_script_file_name
     )
 
     private val currentShellContentsList = ReadText(
@@ -48,7 +48,8 @@ class EditModeHandler(
     ).textToList()
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-        currentShellContentsList
+        currentShellContentsList,
+        editFragment.languageType
     )
 
     private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -67,10 +68,18 @@ class EditModeHandler(
         readSharePreffernceMap,
         enableCmdEdit,
     )
-    val buttonViewHowActive = ButtonViewHowActive(
+    private val buttonViewHowActive = ButtonViewHowActive(
         binding,
         editFragment
     )
+
+
+    val settingSectionStart = editFragment.settingSectionStart
+    val settingSectionEnd = editFragment.settingSectionEnd
+
+    val commandSectionStart = editFragment.commandSectionStart
+    val commandSectionEnd = editFragment.commandSectionEnd
+
 
     fun execByHowFullEdit(){
         if(
@@ -84,17 +93,28 @@ class EditModeHandler(
 
     private fun editCommandVariable(
     ) {
+        val languageTypeToSectionHolderMap =
+            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+                .get(editFragment.languageType)
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
-                CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-                CommandClickShellScript.CMD_VARIABLE_SECTION_END
+                languageTypeToSectionHolderMap?.get(
+                    CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+                ) as String,
+                languageTypeToSectionHolderMap[
+                        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+                ] as String,
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END,
+                languageTypeToSectionHolderMap.get(
+                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                ) as String,
+                languageTypeToSectionHolderMap[
+                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                ] as String,
                 true,
                 currentShellFileName
             )
@@ -152,14 +172,14 @@ class EditModeHandler(
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
-                CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-                CommandClickShellScript.CMD_VARIABLE_SECTION_END
+                commandSectionStart,
+                commandSectionEnd
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END,
+                settingSectionStart,
+                settingSectionEnd,
                 true,
                 currentShellFileName
             )

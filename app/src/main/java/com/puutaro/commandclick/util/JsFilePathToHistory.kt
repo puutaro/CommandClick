@@ -11,6 +11,9 @@ class JsFilePathToHistory {
         ) {
             val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+            if(
+                jsFileName == UsePath.cmdclickStartupJsName
+            ) return
             val jsFullPath = "${recentAppDirPath}/${jsFileName}"
             if(
                 !File(jsFullPath).isFile

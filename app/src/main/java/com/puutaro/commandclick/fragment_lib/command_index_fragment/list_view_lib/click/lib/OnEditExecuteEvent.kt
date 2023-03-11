@@ -5,7 +5,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.JudgeOpenTerminal
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -23,7 +22,7 @@ class OnEditExecuteEvent {
             SharePreffrenceMethod.putSharePreffrence(
                 sharedPref,
                 mapOf(
-                    SharePrefferenceSetting.current_shell_file_name.name
+                    SharePrefferenceSetting.current_script_file_name.name
                             to selectedShellFileName,
                     SharePrefferenceSetting.on_shortcut.name
                             to ShortcutOnValueStr.ON.name

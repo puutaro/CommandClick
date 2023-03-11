@@ -20,8 +20,8 @@ class UrlTexter {
                 queryUrl + inputUrl
             }
             cmdSearchEditText.setText(searchUrl)
-            val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
-            listener?.onQueryTextChanged(
+            val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+            listener?.onLaunchUrlByWebView(
                 searchUrl,
             )
         }

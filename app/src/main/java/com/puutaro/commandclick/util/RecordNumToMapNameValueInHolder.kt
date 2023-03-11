@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 
 
 class RecordNumToMapNameValueInHolder {
@@ -15,7 +15,7 @@ class RecordNumToMapNameValueInHolder {
             onForSetting: Boolean = false,
             currentShellFileName: String? = null
         ): Map<Int, Map<String, String>?>? {
-            if(shellContentsList.size == 0) return null
+            if(shellContentsList.isEmpty()) return null
             val commandPromptStartNum = shellContentsList.indexOf(
                 startHolderName
             )
@@ -112,7 +112,7 @@ private fun makeResultEntryMap(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name to
                         variableName,
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name to
-                        variableValue
+                        BothEdgeQuote.trim(variableValue)
             )
         }
         recordNum to insertVariableMap
@@ -128,7 +128,7 @@ private fun returnUpdateShellFileName(
         variableName: String?,
         currentShellFileName: String?
     ): String {
-        return if (variableName == CommandClickShellScript.SHELL_FILE_NAME) {
+        return if (variableName == CommandClickShellScript.SCRIPT_FILE_NAME) {
             currentShellFileName ?: substituteCmdStartEndContentStr.substring(
                 equalIndex + 1, substituteCmdStartEndContentStr.length
             )

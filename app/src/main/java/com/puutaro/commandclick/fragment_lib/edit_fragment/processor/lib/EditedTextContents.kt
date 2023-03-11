@@ -1,16 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
-import android.widget.EditText
-import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
-import com.puutaro.commandclick.util.ComleteQuote
+import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
@@ -27,9 +25,9 @@ class EditedTextContents(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
     private val currentShellFileName = readSharePreffernceMap.get(
-        SharePrefferenceSetting.current_shell_file_name.name
-    ) ?: SharePrefferenceSetting.current_shell_file_name.defalutStr
-    private val shellContentsList = ShellContntsList(
+        SharePrefferenceSetting.current_script_file_name.name
+    ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
+    private val shellContentsLister = ShellContentsLister(
         binding.editLinearLayout
     )
 
@@ -40,7 +38,7 @@ class EditedTextContents(
         return if(recordNumToMapNameValueInCommandHolder.isNullOrEmpty()) {
             shellContentsList
         } else {
-            this.shellContentsList.update(
+            this.shellContentsLister.update(
                 recordNumToMapNameValueInCommandHolder,
                 shellContentsList,
                 EditTextIdForEdit.COMMAND_VARIABLE.id
@@ -55,7 +53,7 @@ class EditedTextContents(
         return if (recordNumToMapNameValueInSettingHolder == null) {
             editedShellContentsList
         } else {
-            shellContentsList.update(
+            shellContentsLister.update(
                 recordNumToMapNameValueInSettingHolder,
                 editedShellContentsList,
                 EditTextIdForEdit.SETTING_VARIABLE.id
@@ -69,7 +67,8 @@ class EditedTextContents(
         if(lastShellContentsList.isEmpty()) return
 
         val submitShellContentsList = CommentOutLabelingSection.commentOut(
-            lastShellContentsList
+            lastShellContentsList,
+            currentShellFileName
         )
 
         val updateShellFileName = makeUpdateShellFileName(
@@ -87,7 +86,7 @@ class EditedTextContents(
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
             mapOf(
-                SharePrefferenceSetting.current_shell_file_name.name
+                SharePrefferenceSetting.current_script_file_name.name
                         to updateShellFileName
             )
         )
@@ -96,71 +95,31 @@ class EditedTextContents(
             currentShellFileName,
         )
     }
-}
 
-
-private fun makeUpdateShellFileName(
-    lastShellContentsList: List<String>,
-    currentShellFileName: String
-): String {
-    val substituteSettingVariableList = substituteVariableListFromHolder(
-        lastShellContentsList,
-        CommandClickShellScript.SETTING_SECTION_START,
-        CommandClickShellScript.SETTING_SECTION_END,
-    )
-    val updateShellFileNameSource = substituteCmdClickVariable(
-        substituteSettingVariableList,
-        CommandClickShellScript.SHELL_FILE_NAME
-    ) ?: currentShellFileName
-    val shellFileSuffix = CommandClickShellScript.SHELL_FILE_SUFFIX
-    return if(
-        updateShellFileNameSource.endsWith(shellFileSuffix)
-    ) {
-        updateShellFileNameSource
-    } else {
-        updateShellFileNameSource + shellFileSuffix
-    }
-}
-
-private class ShellContntsList(
-    private val editLinearLayout: LinearLayout,
-) {
-    fun update(
-        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>,
-        shellContentsList: List<String>,
-        startIdNum: Int
-    ): List<String> {
-        val factRecordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder.size - 1
-        if(factRecordNumToNameToValueInHolderSize <= -1) return shellContentsList
-        val editedRecordNumToNameToValue = (0..factRecordNumToNameToValueInHolderSize).map {
-            val currentId = startIdNum + it
-            val editTextView = editLinearLayout.findViewById<EditText>(currentId)
-            val currentRecordNumToMapNameValue = recordNumToMapNameValueInHolder.entries.elementAt(it)
-            val currentVriableValue = editTextView.text.toString()
-            currentRecordNumToMapNameValue.key to
-                    mapOf(
-                        RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-                                to editTextView.tag.toString(),
-                        RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-                                to ComleteQuote.comp(currentVriableValue)
-                    )
-        }.toMap()
-        val processShellScriptSize = shellContentsList.size - 1
-        if(processShellScriptSize <= -1) return shellContentsList
-        return (0..processShellScriptSize).map {
-                currentOrder ->
-            val getReplaceValue = editedRecordNumToNameToValue.get(currentOrder)
-            if(getReplaceValue.isNullOrEmpty()){
-                shellContentsList[currentOrder]
-            } else {
-                val currentVariableName = getReplaceValue.get(
-                    RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-                )
-                val currentVariableValue = getReplaceValue.get(
-                    RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-                )
-                "${currentVariableName}=${currentVariableValue}"
-            }
+    private fun makeUpdateShellFileName(
+        lastShellContentsList: List<String>,
+        currentShellFileName: String
+    ): String {
+        val substituteSettingVariableList = substituteVariableListFromHolder(
+            lastShellContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+        )
+        val updateShellFileNameSource = substituteCmdClickVariable(
+            substituteSettingVariableList,
+            CommandClickShellScript.SCRIPT_FILE_NAME
+        ) ?: currentShellFileName
+        val scriptFileSuffix = when(editFragment.languageType){
+            LanguageTypeSelects.SHELL_SCRIPT -> CommandClickShellScript.SHELL_FILE_SUFFIX
+            else -> CommandClickShellScript.JS_FILE_SUFFIX
+        }
+        return if(
+            updateShellFileNameSource.endsWith(scriptFileSuffix)
+        ) {
+            updateShellFileNameSource
+        } else {
+            updateShellFileNameSource + scriptFileSuffix
         }
     }
+
 }

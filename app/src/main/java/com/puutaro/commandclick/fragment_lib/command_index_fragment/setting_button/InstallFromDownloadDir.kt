@@ -24,13 +24,13 @@ class InstallFromDownloadDir(
     ).toString()
 
     fun install(){
-        val downlaodShellFileListView = ListView(
+        val downloadShellFileListView = ListView(
             context
         )
         val downloadShellFileList = mekeDownloadShellFileList()
 
         setDownloadShellFileListView(
-            downlaodShellFileListView,
+            downloadShellFileListView,
             downloadShellFileList,
         )
 
@@ -38,14 +38,14 @@ class InstallFromDownloadDir(
             context
         )
             .setTitle("Select from download shell files")
-            .setView(downlaodShellFileListView)
+            .setView(downloadShellFileListView)
         val alertDialog = alertDialogBuilder.create()
         alertDialog
             .getWindow()?.setGravity(Gravity.BOTTOM);
         alertDialog.show()
 
         setDownloadShellFileListViewOnItemClickListener(
-            downlaodShellFileListView,
+            downloadShellFileListView,
             downloadShellFileList,
             alertDialog
         )
@@ -54,7 +54,7 @@ class InstallFromDownloadDir(
     }
 
     private fun setDownloadShellFileListView(
-        downlaodShellFileListView: ListView,
+        downloadShellFileListView: ListView,
         downloadShellFileList: List<String>
 
     ){
@@ -65,8 +65,8 @@ class InstallFromDownloadDir(
                     R.layout.simple_list_item_1,
                     downloadShellFileList
                 )
-            downlaodShellFileListView.adapter = urlHistoryDisplayListAdapter
-            downlaodShellFileListView.setSelection(urlHistoryDisplayListAdapter.count)
+            downloadShellFileListView.adapter = urlHistoryDisplayListAdapter
+            downloadShellFileListView.setSelection(urlHistoryDisplayListAdapter.count)
         }
     }
 

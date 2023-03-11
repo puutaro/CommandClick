@@ -11,8 +11,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddConfirmDialogForSettingButton
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddShellScript
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromDownloadDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -99,11 +98,7 @@ class ToolBarSettingButtonControl(
                 val groupId = it.groupId
                 if( groupId != submenuTermSlectGroupId) return@forEach
                 val itemId = it.itemId
-                val checked = if(it.itemName == currentMonitorFileName){
-                    true
-                } else {
-                    false
-                }
+                val checked = it.itemName == currentMonitorFileName
                 sub.add(
                     groupId,
                     itemId,
@@ -134,25 +129,12 @@ class ToolBarSettingButtonControl(
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 MenuEnums.ADD.itemId -> {
-                    val shellScriptName =
-                        CommandClickShellScript.makeShellScriptName()
-                    AddShellScript.addShellScript(
+                    AddScriptHandler(
                         cmdIndexFragment,
                         sharedPref,
                         currentAppDirPath,
-                        shellScriptName
-                    )
-                    AddConfirmDialogForSettingButton.invoke(
-                        cmdIndexFragment,
-                        binding,
-                        currentAppDirPath,
-                        shellScriptName,
                         cmdListAdapter,
-                    )
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.ADD
-                    )
+                    ).handle()
                 }
                 MenuEnums.SETTING.itemId -> {
                     print("pass")
@@ -165,6 +147,12 @@ class ToolBarSettingButtonControl(
                 }
                 MenuEnums.CONFIG.itemId -> {
                     configEdit()
+                }
+                MenuEnums.TERMUX_SETUP.itemId -> {
+                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    listener?.onToolbarMenuCategories(
+                        ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
+                    )
                 }
                 MenuEnums.SHORTCUT.itemId -> {
                     val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
@@ -228,7 +216,7 @@ class ToolBarSettingButtonControl(
     private fun configEdit(){
         val configDirPath = UsePath.cmdclickConfigDirPath
         val configShellName = UsePath.cmdclickConfigFileName
-        CommandClickShellScript.makeConfigShellFile(
+        CommandClickShellScript.makeConfigJsFile(
             configDirPath,
             configShellName
         )
@@ -238,7 +226,8 @@ class ToolBarSettingButtonControl(
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
             cmdIndexFragment,
-            shellContentsList
+            shellContentsList,
+            configShellName
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${configDirPath}/${configShellName}"
@@ -273,7 +262,8 @@ internal enum class MenuEnums(
     CHDIR(submenuSettingGroupId, 60301, 1, "change_app_dir"),
     SHORTCUT(submenuSettingGroupId, 60302, 2, "create_short_cut"),
     INSTALL(submenuSettingGroupId, 60303, 3, "install"),
-    CONFIG(submenuSettingGroupId, 60304, 4, "config"),
+    TERMUX_SETUP(submenuSettingGroupId, 60304, 4, "termux_setup"),
+    CONFIG(submenuSettingGroupId, 60305, 5, "config"),
     SELECTTERM(mainMenuGroupId, 60400, 4, "select_term"),
     TERM1(submenuTermSlectGroupId, 60401, 1, "term_1"),
     TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),

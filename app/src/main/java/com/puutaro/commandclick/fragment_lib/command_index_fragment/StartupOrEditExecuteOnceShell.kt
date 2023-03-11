@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.ExecTerminalDo
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -39,7 +39,7 @@ class StartupOrEditExecuteOnceShell {
             ) {
                 AutoShellExecManager.fire(
                     cmdIndexFragment,
-                    UsePath.cmdclickStartupShellName,
+                    UsePath.cmdclickStartupJsName,
                 )
             } else {
                 TargetFragmentInstance()
@@ -47,7 +47,7 @@ class StartupOrEditExecuteOnceShell {
                         activity,
                         activity?.getString(R.string.index_terminal_fragment)
                     ) ?: return
-                ExecTerminalDo.execTerminalDo(
+                ExecJsOrSellHandler.handle(
                     cmdIndexFragment,
                     currentAppDirPath,
                     editExecuteOnceCurrentShellFileName,

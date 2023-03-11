@@ -56,17 +56,17 @@ class IndexInitHandler {
                 FileSystems.updateLastModified(
                     cmdclickAppDirAdminPath,
                     UsePath.cmdclickDefaultAppDirName +
-                            CommandClickShellScript.SHELL_FILE_SUFFIX
+                            CommandClickShellScript.JS_FILE_SUFFIX
                 )
             } else {
                 UpdateLastModifyFromSharePrefDir.update(startUpPref)
             }
 
-            val currentDirName = FileSystems.filterSuffixShellFiles(
+            val currentDirName = FileSystems.filterSuffixJsFiles(
                 cmdclickAppDirAdminPath,
                 "on"
             ).firstOrNull()?.removeSuffix(
-                CommandClickShellScript.SHELL_FILE_SUFFIX
+                CommandClickShellScript.JS_FILE_SUFFIX
             ) ?: UsePath.cmdclickDefaultAppDirName
             val currentAppDirPath = "${cmdclickAppDirPath}/${currentDirName}"
             FileSystems.createDirs(
@@ -77,37 +77,28 @@ class IndexInitHandler {
                 mapOf(
                     SharePrefferenceSetting.current_app_dir.name
                             to currentAppDirPath,
-                    SharePrefferenceSetting.current_shell_file_name.name
-                            to SharePrefferenceSetting.current_shell_file_name.defalutStr,
+                    SharePrefferenceSetting.current_script_file_name.name
+                            to SharePrefferenceSetting.current_script_file_name.defalutStr,
                     SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr,
                 )
             )
-
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppHistoryDirAdminPath,
                 AppHistoryManager.makeAppHistoryFileNameForInit(
                     currentAppDirPath,
                 )
             )
-            CommandClickShellScript.makeButtonExecShell(
-                cmdIndexFragment.shiban,
+            CommandClickShellScript.makeButtonExecJS(
                 currentAppDirPath,
                 UsePath.cmdclickButtonExecShellFileName
             )
-            CommandClickShellScript.makeButtonExecShell(
-                cmdIndexFragment.shiban,
+            CommandClickShellScript.makeButtonExecJS(
                 currentAppDirPath,
-                UsePath.cmdclickInternetButtonExecShellFileName
+                UsePath.cmdclickInternetButtonExecJsFileName
             )
-            CommandClickShellScript.makeAutoShellFile(
-                CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
+            CommandClickShellScript.makeAutoJsFile(
                 currentAppDirPath,
-                UsePath.cmdclickStartupShellName
-            )
-            CommandClickShellScript.makeAutoShellFile(
-                CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
-                currentAppDirPath,
-                UsePath.cmdclickEndShellName
+                UsePath.cmdclickStartupJsName
             )
             ConfigFromStartUpFileSetter.set(
                 cmdIndexFragment,

@@ -14,30 +14,20 @@ import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.activity_lib.manager.InitFragmentManager
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
+import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
 import com.puutaro.commandclick.common.variable.WebUrlVariables
-import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import com.termux.shared.termux.TermuxConstants
 
 
 class InitManager(
     private val activity: MainActivity,
 ) {
-
-    private val runCommandPermissionName = "com.termux.permission.RUN_COMMAND"
-    private val termuxSetUpCommand = "pkg update -y && pkg upgrade -y \\\n" +
-            "&& yes | termux-setup-storage \\\n" +
-            "&& sed -r 's/^\\#\\s(allow-external-apps.*)/\\1/' -i \"\$HOME/.termux/termux.properties\""
-    private var clipboard =
-        activity.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE)
-                as ClipboardManager
-
+    val terminalViewModel: TerminalViewModel =
+        ViewModelProvider(activity).get(TerminalViewModel::class.java)
 
     fun invoke(){
         storageAccessProcess()
@@ -48,12 +38,12 @@ class InitManager(
             checkPermissionGranted()
         ) {
             PackageManager.PERMISSION_GRANTED ->
-                runCommandAndStartFragmentProcess()
+                FragmentStartHandler.handle(activity)
             else -> {
                 if(
                     activity.supportFragmentManager.fragments.size > 0
                 ){
-                    execRestartIntent()
+                    ExecRestartIntent.execRestartIntent(activity)
                     return
                 }
                 getStoragePermissionHandler()
@@ -79,146 +69,12 @@ class InitManager(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                runCommandAndStartFragmentProcess()
+                terminalViewModel.launchUrlList.add(WebUrlVariables.commandClickGitUrl)
+                FragmentStartHandler.handle(activity)
                 return@registerForActivityResult
             }
             activity.finish()
         }
-
-
-    private fun runCommandAndStartFragmentProcess(){
-        val checkingRunCommandPermission =
-            ContextCompat.checkSelfPermission(
-                activity,
-                runCommandPermissionName
-            )
-        if(
-            checkingRunCommandPermission ==
-            PackageManager.PERMISSION_GRANTED
-        ) {
-            startFragment()
-            return
-        }
-        if(
-            activity.supportFragmentManager.fragments.size > 0
-        ){
-            execRestartIntent()
-            return
-        }
-        try {
-            getRunCommandPermissionAndStartFragmentLauncher.launch(
-                runCommandPermissionName
-            )
-        } catch (e: Exception){
-            launchDialogTitleMessageOnly("termux not installed")
-        }
-    }
-
-    private val getRunCommandPermissionAndStartFragmentLauncher =
-        activity.registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                termuxSetupAndStorageAccessPermissionProcessLauncher()
-                return@registerForActivityResult
-            }
-            startFragmentWithAlert()
-        }
-
-    private fun termuxSetupAndStorageAccessPermissionProcessLauncher(){
-        val terminalViewModel: TerminalViewModel =
-            ViewModelProvider(activity).get(TerminalViewModel::class.java)
-        terminalViewModel.launchUrl = WebUrlVariables.termuxSetupUrl
-        val clipData = ClipData.newPlainText("termux_setup", termuxSetUpCommand)
-        clipboard.setPrimaryClip(clipData)
-        val dialogLinearLayout = LinearLayoutAdderForDialog.add(
-            activity,
-            "\n\n( clipboard contents:\n\n${termuxSetUpCommand} )"
-        )
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(
-                "To setup termux"
-            )
-            .setMessage("\n1. Long press on termux \n2. Click paste popup on termux\n" +
-                    "3. Continue pressing Enter on termux")
-            .setView(dialogLinearLayout)
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                execTermuxSetupAndStorageAccessPermissionProcessLauncher()
-            })
-            .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    execTermuxSetupAndStorageAccessPermissionProcessLauncher()
-                }
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
-        )
-    }
-
-    private fun execTermuxSetupAndStorageAccessPermissionProcessLauncher(){
-        val launchIntent =
-            activity.getPackageManager().getLaunchIntentForPackage(
-                TermuxConstants.TERMUX_PACKAGE_NAME
-            ) ?: return
-        Toast.makeText(
-            activity,
-            "Long press and click paste popup on termux",
-            Toast.LENGTH_LONG
-        ).show()
-        activity.startActivity(launchIntent)
-        startFragment()
-    }
-
-
-    private fun startFragmentWithAlert(){
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle("not exist run_command permission or termux app")
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                startFragment()
-
-            })
-            .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    startFragment()
-                }
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
-        )
-    }
-
-    private fun launchDialogTitleMessageOnly(
-        title: String
-    ){
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(title)
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
-        )
-    }
-
-
-    private fun startFragment(){
-        val initFragmentManager = InitFragmentManager(activity)
-        initFragmentManager.registerSharePreferenceFromIntentExtra()
-        activity.activityMainBinding = DataBindingUtil.setContentView(
-            activity,
-            R.layout.activity_main
-        )
-        initFragmentManager.startFragment(
-            activity.savedInstanceStateVal
-        )
-    }
-
 
     private fun checkPermissionGranted(): Int {
         if(
@@ -286,21 +142,10 @@ class InitManager(
             if (
                 Environment.isExternalStorageManager()
             ) {
-                runCommandAndStartFragmentProcess()
+                terminalViewModel.launchUrlList.add(WebUrlVariables.commandClickGitUrl)
+                FragmentStartHandler.handle(activity)
                 return@ActivityResultCallback
             }
             activity.finish()
         })
-
-
-    private fun execRestartIntent() {
-        val execIntent = Intent(
-            activity, activity::class.java
-        )
-        execIntent.setAction(Intent.ACTION_VIEW)
-            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        activity.startActivity(execIntent)
-        activity.finish()
-    }
-
 }

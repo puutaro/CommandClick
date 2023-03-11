@@ -15,6 +15,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
 import java.io.File
 
@@ -100,7 +101,8 @@ class UrlHistoryButtonEvent(
         urlHistoryList: List<String>,
         alertDialog: AlertDialog
     ){
-        urlHistoryListView.setOnItemClickListener { parent, View, pos, id
+        urlHistoryListView.setOnItemClickListener {
+                parent, View, pos, id
             ->
             val selectedUrlSource =
                 urlHistoryList.getOrNull(
@@ -111,22 +113,28 @@ class UrlHistoryButtonEvent(
             alertDialog.dismiss()
 
             if(
-                selectedUrl.endsWith(CommandClickShellScript.SHELL_FILE_SUFFIX)
+                selectedUrl.endsWith(
+                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                )
+                || selectedUrl.endsWith(
+                    CommandClickShellScript.JS_FILE_SUFFIX
+                )
+                || selectedUrl.endsWith(
+                    CommandClickShellScript.JSX_FILE_SUFFIX,
+                )
             ) {
                 execShellFile(selectedUrl)
                 return@setOnItemClickListener
             }
 
-            val launchSelectedUrl =
-                makeLaunchUrl(selectedUrl) ?: return@setOnItemClickListener
             if(
                 fragmentTag == context?.getString(
                     com.puutaro.commandclick.R.string.command_index_fragment
                 )
             ) {
-                val listener = context as? CommandIndexFragment.OnQueryTextChangedListener
-                listener?.onQueryTextChanged(
-                    launchSelectedUrl,
+                val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+                listener?.onLaunchUrlByWebView(
+                    selectedUrl,
                 )
                 return@setOnItemClickListener
             } else if(
@@ -134,37 +142,13 @@ class UrlHistoryButtonEvent(
                     com.puutaro.commandclick.R.string.cmd_variable_edit_fragment
                 )
             ) {
-                val listener = context as? EditFragment.OnLaunchUrlByWebViewListener
-                listener?.onLaunchUrlByWebView(
-                    launchSelectedUrl,
+                val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                listener?.onLaunchUrlByWebViewForEdit(
+                    selectedUrl,
                 )
                 return@setOnItemClickListener
             }
         }
-    }
-
-    private fun makeLaunchUrl(
-        selectedUrl: String,
-    ): String? {
-        if(
-            !selectedUrl.endsWith(
-                CommandClickShellScript.JS_FILE_SUFFIX,
-            )
-            && !selectedUrl.endsWith(
-                CommandClickShellScript.JSX_FILE_SUFFIX,
-            )
-        ) return selectedUrl
-        val jsFileObj = File(selectedUrl)
-        if(!jsFileObj.isFile) return null
-        val parentDirPath =
-            jsFileObj.parent ?: return null
-        JsFilePathToHistory.insert(
-            parentDirPath,
-            jsFileObj.name
-        )
-        return JavaScriptLoadUrl.make(
-            jsFileObj.absolutePath,
-        )
     }
 
     private fun mekeUrlHistoryList(): List<String> {
@@ -204,7 +188,7 @@ class UrlHistoryButtonEvent(
         if(!shellFileObj.isFile) return
         val parentDirPath =
             shellFileObj.parent ?: return
-        ExecTerminalDo.execTerminalDo(
+        ExecJsOrSellHandler.handle(
             fragment,
             parentDirPath,
             shellFileObj.name,

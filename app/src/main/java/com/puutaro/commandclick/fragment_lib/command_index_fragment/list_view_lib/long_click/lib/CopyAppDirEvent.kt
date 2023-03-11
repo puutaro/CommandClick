@@ -57,19 +57,19 @@ class CopyAppDirEvent(
         val destiDirNameEditable = editText.text
         if(destiDirNameEditable.isNullOrEmpty()) return
         val destiDirNameSource = destiDirNameEditable.toString()
-        val SHELL_FILE_SUFFIX = CommandClickShellScript.SHELL_FILE_SUFFIX
+        val jsFileSuffix = CommandClickShellScript.JS_FILE_SUFFIX
         val destiDirName = if(
-            destiDirNameSource.endsWith(SHELL_FILE_SUFFIX)
+            destiDirNameSource.endsWith(jsFileSuffix)
         ){
-            destiDirNameSource.removeSuffix(SHELL_FILE_SUFFIX)
+            destiDirNameSource.removeSuffix(jsFileSuffix)
         } else destiDirNameSource
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val sourceAppDirPath = cmdclickAppDirPath +
                 "/${shellScriptName.removeSuffix(
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickShellScript.JS_FILE_SUFFIX
                 )}"
         val destiAppDirPath = "${cmdclickAppDirPath}/${destiDirName}"
-        val destiAppFileName = destiDirName + SHELL_FILE_SUFFIX
+        val destiAppFileName = destiDirName + jsFileSuffix
         if(
             File(
                 currentAppDirPath,

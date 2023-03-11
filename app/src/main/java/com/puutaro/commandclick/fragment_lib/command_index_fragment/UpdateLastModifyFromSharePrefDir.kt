@@ -25,11 +25,11 @@ class UpdateLastModifyFromSharePrefDir {
                 )
             ) {
                 val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                val currentDirName = FileSystems.filterSuffixShellFiles(
+                val currentDirName = FileSystems.filterSuffixJsFiles(
                     cmdclickAppDirAdminPath,
                     "on"
                 ).first().removeSuffix(
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickShellScript.JS_FILE_SUFFIX
                 )
                 "${cmdclickAppDirPath}/${currentDirName}"
             } else {
@@ -42,7 +42,7 @@ class UpdateLastModifyFromSharePrefDir {
             val currentDirName = currenDirObj.name
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
-                currentDirName + CommandClickShellScript.SHELL_FILE_SUFFIX
+                currentDirName + CommandClickShellScript.JS_FILE_SUFFIX
             )
         }
     }

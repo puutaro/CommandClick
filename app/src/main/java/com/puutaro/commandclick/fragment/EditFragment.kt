@@ -23,6 +23,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.io.File
 
@@ -31,6 +32,25 @@ class EditFragment: Fragment() {
 
     private var _binding: EditFragmentBinding? = null
     val binding get() = _binding!!
+    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+    var languageTypeToSectionHolderMap =
+            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                languageType
+            )
+    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+    ) as String
+
+    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    var commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+    ) as String
+    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+    ) as String
     var runShell = CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var historySwitch =  SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
@@ -40,6 +60,7 @@ class EditFragment: Fragment() {
     var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
+    var jsExecuteJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -84,7 +105,7 @@ class EditFragment: Fragment() {
                 SharePrefferenceSetting.current_app_dir.name
             )
             val currentShellFileNameSource = getIntent?.getStringExtra(
-                SharePrefferenceSetting.current_shell_file_name.name
+                SharePrefferenceSetting.current_script_file_name.name
             )
             val checkOkForAppDirPath = validationSharePreferenceForEdit.checkCurrentAppDirPreference(
                 currentAppDirPathSource
@@ -116,15 +137,35 @@ class EditFragment: Fragment() {
         )
         val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_shell_file_name
+            SharePrefferenceSetting.current_script_file_name
         )
+
+        languageType =
+            JsOrShellFromSuffix.judge(currentShellFileName)
+
+        val languageTypeToSectionHolderMap =
+            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        ) as String
+        settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        commandSectionStart = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        ) as String
+        commandSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        ) as String
+
         if(
             UpdatelastModifyForEdit().judge(currentAppDirPath)
             && tag != apiEditFragmentTag
         ) {
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                File(currentAppDirPath).name + CommandClickShellScript.SHELL_FILE_SUFFIX
+                File(currentAppDirPath).name + CommandClickShellScript.JS_FILE_SUFFIX
             )
             FileSystems.updateLastModified(
                 currentAppDirPath,
@@ -140,7 +181,7 @@ class EditFragment: Fragment() {
             this.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
         val currentShellFilePath =
             "(${backstackOrder}) ${UsePath.makeOmitPath(currentAppDirPath)}/${currentShellFileName}"
-        binding.editTextView.setText(currentShellFilePath)
+        binding.editTextView.text = currentShellFilePath
 
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -159,6 +200,7 @@ class EditFragment: Fragment() {
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
+            if(terminalViewModel.onDialog) return@setEventListener
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) {
@@ -174,6 +216,10 @@ class EditFragment: Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        jsExecuteJob?.cancel()
+    }
 
     interface onToolBarButtonClickListenerForEditFragment {
         fun onToolBarButtonClickForEditFragment(
@@ -208,8 +254,8 @@ class EditFragment: Fragment() {
         )
     }
 
-    interface OnLaunchUrlByWebViewListener {
-        fun onLaunchUrlByWebView(
+    interface OnLaunchUrlByWebViewForEditListener {
+        fun onLaunchUrlByWebViewForEdit(
             searchUrl: String
         )
     }

@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.CLICLTYPE
-import com.puutaro.commandclick.proccess.HistoryBottunSwicher
+import com.puutaro.commandclick.proccess.HistoryBottunSwitcher
 import com.puutaro.commandclick.proccess.UrlHistoryButtonEvent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -29,7 +28,7 @@ class ToolBarHistoryButtonControl(
     fun historyButtonClick() {
         historyButtonView.setOnClickListener {
             historyButtonInnerView ->
-            HistoryBottunSwicher.switch(
+            HistoryBottunSwitcher.switch(
                 cmdIndexFragment,
                 historyButtonInnerView,
                 cmdIndexFragment.context?.getString(
@@ -45,7 +44,7 @@ class ToolBarHistoryButtonControl(
 
         historyButtonView.setOnLongClickListener {
                 historyButtonInnerView ->
-            HistoryBottunSwicher.switch(
+            HistoryBottunSwitcher.switch(
                 cmdIndexFragment,
                 historyButtonInnerView,
                 cmdIndexFragment.context?.getString(

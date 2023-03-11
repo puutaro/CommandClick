@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 
 
@@ -18,14 +19,18 @@ class CommandClickVariables {
             if(equalIndex == -1) return null
             return shellFileNameRowString.substring(
                 equalIndex + 1, shellFileNameRowString.length
-            )
+            ).let {
+                BothEdgeQuote.trim(it)
+            }
         }
 
         fun substituteVariableListFromHolder(
             shellContentsList: List<String>?,
-            startHolderName: String,
-            endHolderName: String,
+            startHolderName: String?,
+            endHolderName: String?,
         ): List<String>? {
+            if(startHolderName.isNullOrEmpty()) return null
+            if(endHolderName.isNullOrEmpty()) return null
             if(shellContentsList == null) return null
             val sectionPromptStartNum = shellContentsList.indexOf(
                 startHolderName
@@ -45,13 +50,22 @@ class CommandClickVariables {
         }
 
         fun returnEditExecuteValueStr(
-            shellContentsList: List<String>
+            shellContentsList: List<String>,
+            languageTypeSelects: LanguageTypeSelects
         ): String {
+            val languageTypeHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                    languageTypeSelects
+                )
             val variablesSettingHolderList =
                 substituteVariableListFromHolder(
                     shellContentsList,
-                    CommandClickShellScript.SETTING_SECTION_START,
-                    CommandClickShellScript.SETTING_SECTION_END
+                    languageTypeHolderMap?.get(
+                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                    ),
+                    languageTypeHolderMap?.get(
+                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                    )
                 )
 
             return substituteCmdClickVariable(

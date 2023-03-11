@@ -28,7 +28,7 @@ class CopyFileEvent(
     val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
 
     fun invoke(){
-        val appDirList = FileSystems.filterSuffixShellFiles(
+        val appDirList = FileSystems.filterSuffixJsFiles(
             cmdclickAppDirAdminPath
         )
         val appDirListView = ListView(context)
@@ -118,7 +118,7 @@ internal fun makeSelectedShellFilePath(
 ): String {
     val selectedAppDirPath = UsePath.cmdclickAppDirPath + '/' +
             selectedShellFileName.removeSuffix(
-                CommandClickShellScript.SHELL_FILE_SUFFIX
+                CommandClickShellScript.JS_FILE_SUFFIX
             )
     val selectedShellFilePathSource = if(sourceAppDirPath == selectedAppDirPath) {
         sourceAppDirPath +

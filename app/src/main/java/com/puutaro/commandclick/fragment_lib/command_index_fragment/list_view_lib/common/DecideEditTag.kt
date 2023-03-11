@@ -3,24 +3,42 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
 class DecideEditTag(
     private val shellContentsList: List<String>,
+    private val selectedShellFileName: String,
 ) {
 
     fun decide(
         context: Context?,
         cmdSettingEditFragmentTag: String? = null
     ): String? {
+        val languageType =
+            JsOrShellFromSuffix.judge(selectedShellFileName)
 
-        val enableCommandHolderVariablesEdit = howEnablevaliableHolder(
-            CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_END
+        val languageTypeToSectionHolderMap =
+            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        ) as String
+        val commandSectionStart = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        ) as String
+        val commandSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        ) as String
+        val enableCommandHolderVariablesEdit = howEnableVariableHolder(
+            commandSectionStart,
+            commandSectionEnd
         )
 
-        val enableSettingHolderVariablesEdit = howEnablevaliableHolder(
-            CommandClickShellScript.SETTING_SECTION_START,
-            CommandClickShellScript.SETTING_SECTION_END
+        val enableSettingHolderVariablesEdit = howEnableVariableHolder(
+            settingSectionStart,
+            settingSectionEnd
         )
         if(!enableCommandHolderVariablesEdit
             && !enableSettingHolderVariablesEdit
@@ -35,7 +53,7 @@ class DecideEditTag(
 
     }
 
-    fun howEnablevaliableHolder(
+    private fun howEnableVariableHolder(
         startHolderName: String,
         endHolderName: String,
     ): Boolean {

@@ -67,9 +67,10 @@ class SettingVariableSelects {
             FREQUENCY,
         }
 
-        enum class ButtonEditExecVarantSelects {
+        enum class ButtonEditExecVariantSelects {
             BackStack,
             TermOut,
+            NoJsTermOut,
         }
 
         enum class OnAdblockSelects {

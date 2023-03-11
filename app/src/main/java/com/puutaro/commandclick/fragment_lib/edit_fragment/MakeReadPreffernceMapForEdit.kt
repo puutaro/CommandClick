@@ -30,9 +30,9 @@ class MakeReadPreffernceMapForEdit {
                             ) ?: String()
                             )
                     ,
-                    SharePrefferenceSetting.current_shell_file_name.name to  (
+                    SharePrefferenceSetting.current_script_file_name.name to  (
                             getIntent?.getStringExtra(
-                                SharePrefferenceSetting.current_shell_file_name.name
+                                SharePrefferenceSetting.current_script_file_name.name
                             ) ?: String()
                             ),
                     SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr
@@ -40,7 +40,7 @@ class MakeReadPreffernceMapForEdit {
             } else {
                 mapOf(
                     SharePrefferenceSetting.current_app_dir.name to UsePath.cmdclickConfigDirPath,
-                    SharePrefferenceSetting.current_shell_file_name.name to UsePath.cmdclickConfigFileName,
+                    SharePrefferenceSetting.current_script_file_name.name to UsePath.cmdclickConfigFileName,
                     SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr
                 )
             }

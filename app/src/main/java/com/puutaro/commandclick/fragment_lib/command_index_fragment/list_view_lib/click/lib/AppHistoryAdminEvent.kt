@@ -33,7 +33,7 @@ class AppHistoryAdminEvent {
             }
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                selectedAppDirName + CommandClickShellScript.SHELL_FILE_SUFFIX
+                selectedAppDirName + CommandClickShellScript.JS_FILE_SUFFIX
             )
 
             val selectedAppShellFileName = AppHistoryManager
@@ -46,7 +46,8 @@ class AppHistoryAdminEvent {
                 selectedAppShellFileName
             ).textToList()
             val updateEditExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-                shellContentsList
+                shellContentsList,
+                JsOrShellFromSuffix.judge(selectedAppShellFileName)
             )
             val onEditExecute = updateEditExecuteValue ==
                     SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
@@ -56,8 +57,8 @@ class AppHistoryAdminEvent {
                     mapOf(
                         SharePrefferenceSetting.current_app_dir.name to
                                 selectedAppDirPath,
-                        SharePrefferenceSetting.current_shell_file_name.name to
-                                SharePrefferenceSetting.current_shell_file_name.defalutStr,
+                        SharePrefferenceSetting.current_script_file_name.name to
+                                SharePrefferenceSetting.current_script_file_name.defalutStr,
                     )
                 )
                 return true
@@ -84,7 +85,7 @@ class AppHistoryAdminEvent {
                 CommandClickShellScript.EMPTY_STRING
                 || selectedAppShellFileName ==
                 CommandClickShellScript.EMPTY_STRING +
-                CommandClickShellScript.SHELL_FILE_SUFFIX
+                CommandClickShellScript.JS_FILE_SUFFIX
             ) {
                 SharePrefferenceSetting.on_shortcut.defalutStr
             } else {
@@ -95,7 +96,7 @@ class AppHistoryAdminEvent {
                 mapOf(
                     SharePrefferenceSetting.current_app_dir.name to
                             selectedAppDirPath,
-                    SharePrefferenceSetting.current_shell_file_name.name to
+                    SharePrefferenceSetting.current_script_file_name.name to
                             selectedAppShellFileName,
                     SharePrefferenceSetting.on_shortcut.name to
                             onShortCut,

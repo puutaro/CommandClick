@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -14,7 +15,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
-import com.puutaro.commandclick.proccess.ExecTerminalDo
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.*
 
@@ -39,7 +40,12 @@ class ItemClickListenerSetter {
                                                  position,
                                                  id
                 ->
-                if (binding.cmdListSwipeToRefresh.isRefreshing()) return@setOnItemClickListener
+                if (
+                    binding.cmdListSwipeToRefresh.isRefreshing
+                ) return@setOnItemClickListener
+                val selectedShellFileName = binding.cmdList.getItemAtPosition(
+                    position
+                ) as String
                 Keyboard.hiddenKeyboard(
                     activity,
                     View
@@ -49,54 +55,33 @@ class ItemClickListenerSetter {
                     cmdIndexFragment,
                     false
                 )
-                val selectedShellFileName = cmdListView.getItemAtPosition(position).toString()
-                if(
-                    selectedShellFileName.endsWith(
-                        CommandClickShellScript.JS_FILE_SUFFIX
-                    )
-                ) {
-                    val selectedJsFileName = selectedShellFileName
-                    JsFilePathToHistory.insert(
-                        currentAppDirPath,
-                        selectedShellFileName
-                    )
-                    BroadCastIntent.send(
-                        cmdIndexFragment,
-                        JavaScriptLoadUrl.make(
-                        "${currentAppDirPath}/${selectedJsFileName}",
-                        ),
-                    )
-                    updateLastModifiedListView (
-                        cmdListView,
-                        cmdListAdapter,
-                        currentAppDirPath,
-                        selectedJsFileName
-                    )
-                    return@setOnItemClickListener
-                }
                 if(
                     selectedShellFileName.endsWith(
                         CommandClickShellScript.HTML_FILE_SUFFIX
                     )
                 ) {
-                    val selectecHtmlFileName = selectedShellFileName
                     BroadCastIntent.send(
                         cmdIndexFragment,
-                        "${currentAppDirPath}/${selectecHtmlFileName}"
+                        "${currentAppDirPath}/$selectedShellFileName"
                     )
-                    updateLastModifiedListView (
+                    updateLastModifiedListView(
                         cmdListView,
                         cmdListAdapter,
                         currentAppDirPath,
-                        selectecHtmlFileName
+                        selectedShellFileName
                     )
                     return@setOnItemClickListener
                 }
                 if (
-                    selectedShellFileName ==
-                    CommandClickShellScript.EMPTY_STRING
+                    selectedShellFileName.contains(
+                        CommandClickShellScript.EMPTY_STRING
+                    )
                 ) return@setOnItemClickListener
-                val curentFragmentTag = cmdIndexFragment.tag ?: String()
+                val currentFragmentTag =
+                    cmdIndexFragment.tag ?: String()
+                val appDirAdminTag = context?.getString(
+                    R.string.app_dir_admin
+                )
 
                 val shellContentsList = ReadText(
                     currentAppDirPath,
@@ -104,7 +89,8 @@ class ItemClickListenerSetter {
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     cmdIndexFragment,
-                    shellContentsList
+                    shellContentsList,
+                    selectedShellFileName
                 )
                 if (validateErrMessage.isNotEmpty()) {
                     val shellScriptPath =
@@ -116,12 +102,23 @@ class ItemClickListenerSetter {
                     )
                     return@setOnItemClickListener
                 }
+                val languageType =
+                    JsOrShellFromSuffix.judge(selectedShellFileName)
+
+                val languageTypeToSectionHolderMap =
+                    CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                val settingSectionStart = languageTypeToSectionHolderMap?.get(
+                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                ) as String
+                val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                ) as String
 
                 val settingSectionVariableList =
                     CommandClickVariables.substituteVariableListFromHolder(
                         shellContentsList,
-                        CommandClickShellScript.SETTING_SECTION_START,
-                        CommandClickShellScript.SETTING_SECTION_END,
+                        settingSectionStart,
+                        settingSectionEnd,
                     )
 
                 val editExecuteValue =
@@ -132,7 +129,8 @@ class ItemClickListenerSetter {
                 when (editExecuteValue) {
                     SettingVariableSelects.Companion.EditExecuteSelects.ONCE.name -> {
                         val editFragmentTag = DecideEditTag(
-                            shellContentsList
+                            shellContentsList,
+                            selectedShellFileName
                         ).decide(context) ?: return@setOnItemClickListener
                         OnOnceEditExecuteEvent.invoke(
                             cmdIndexFragment,
@@ -144,7 +142,8 @@ class ItemClickListenerSetter {
                     }
                     SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name -> {
                         val editFragmentTag = DecideEditTag(
-                            shellContentsList
+                            shellContentsList,
+                            selectedShellFileName
                         ).decide(context) ?: return@setOnItemClickListener
 
                         OnEditExecuteEvent.invoke(
@@ -159,17 +158,15 @@ class ItemClickListenerSetter {
                     }
                 }
                 if (
-                    curentFragmentTag == cmdIndexFragmentTag
+                    currentFragmentTag == cmdIndexFragmentTag
                 ) {
-                    ExecTerminalDo.execTerminalDo(
+                    ExecJsOrSellHandler.handle(
                         cmdIndexFragment,
                         currentAppDirPath,
                         selectedShellFileName,
                     )
                 } else if(
-                    curentFragmentTag == context?.getString(
-                        R.string.app_dir_admin
-                    )
+                    currentFragmentTag == appDirAdminTag
                 ) {
                     AppDirectoryAdminEvent.invoke(
                         sharedPref,
@@ -187,7 +184,7 @@ class ItemClickListenerSetter {
 
                 val listener = cmdIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
                 listener?.onListItemClicked(
-                    curentFragmentTag
+                    currentFragmentTag
                 )
                 return@setOnItemClickListener
             }

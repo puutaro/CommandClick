@@ -16,8 +16,8 @@ class TerminalShowByTerminalDo {
             ) return
             val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
                 shellContentsList,
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd
             )
             val terminalDo = CommandClickVariables.substituteCmdClickVariable(
                 variablesSettingHolderList,

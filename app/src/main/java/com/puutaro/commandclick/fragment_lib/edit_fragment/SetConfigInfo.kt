@@ -22,8 +22,8 @@ class SetConfigInfo {
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
                 ).textToList(),
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd
             )
 
 

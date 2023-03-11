@@ -16,6 +16,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 
@@ -34,6 +35,7 @@ class CommandIndexFragment: Fragment() {
     var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var onUrlLaunchIntent = false
+    var jsExecuteJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -75,10 +77,10 @@ class CommandIndexFragment: Fragment() {
         CommandClickShellScript.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickShellScript.JS_FILE_SUFFIX
         )
 
-        CommandClickShellScript.makeConfigShellFile(
+        CommandClickShellScript.makeConfigJsFile(
             UsePath.cmdclickConfigDirPath,
             UsePath.cmdclickConfigFileName
         )
@@ -117,7 +119,7 @@ class CommandIndexFragment: Fragment() {
         val cmdListAdapter = makeListView.makeList(
             requireContext()
         )
-        makeListView.makeClickItemListner(
+        makeListView.makeClickItemListener(
             cmdListAdapter
         )
         makeListView.cmdListSwipeToRefresh(
@@ -149,6 +151,7 @@ class CommandIndexFragment: Fragment() {
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
+            if(terminalViewModel.onDialog) return@setEventListener
             val enableInternetButton = (
                     !isOpen
                     || terminalViewModel.readlinesNum != ReadLines.SHORTH
@@ -208,16 +211,13 @@ class CommandIndexFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        AutoShellExecManager.fire(
-            this,
-            UsePath.cmdclickEndShellName
-        )
+        jsExecuteJob?.cancel()
         _binding = null
     }
 
     override fun onResume() {
         super.onResume()
-        activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
+        activity?.volumeControlStream = AudioManager.STREAM_MUSIC
     }
 
     override fun onStart() {
@@ -233,7 +233,7 @@ class CommandIndexFragment: Fragment() {
     ) {
         val thisFragmentTag = this.tag
         super.onCreateContextMenu(menu, view, menuInfo)
-        val inflater = this.getActivity()?.getMenuInflater();
+        val inflater = this.activity?.menuInflater;
         if(
             thisFragmentTag == getString(R.string.app_dir_admin)
         ) {
@@ -292,7 +292,7 @@ class CommandIndexFragment: Fragment() {
 
     interface OnListItemClickListener {
         fun onListItemClicked(
-            curentFragmentTag: String
+            currentFragmentTag: String
         )
     }
 
@@ -300,12 +300,12 @@ class CommandIndexFragment: Fragment() {
         outState.putBoolean("isKeyboardShowing", isKeyboardShowing)
     }
 
-    interface OnBackstackDeleteListner {
+    interface OnBackstackDeleteListener {
         fun onBackstackDelete()
     }
 
-    interface OnQueryTextChangedListener {
-        fun onQueryTextChanged(searchUrl: String)
+    interface OnLaunchUrlByWebViewListener {
+        fun onLaunchUrlByWebView(searchUrl: String)
     }
 
     interface OnFilterWebViewListener {

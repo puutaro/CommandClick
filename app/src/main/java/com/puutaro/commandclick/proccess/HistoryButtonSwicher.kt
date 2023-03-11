@@ -9,11 +9,12 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button.CmdClickHistoryButtonEvent
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
 
 
-class HistoryBottunSwicher {
+class HistoryBottunSwitcher {
     companion object {
 
         fun switch(
@@ -61,7 +62,7 @@ class HistoryBottunSwicher {
 }
 
 
-internal fun urlHistoryButtonHandler(
+private fun urlHistoryButtonHandler(
     fragment: Fragment,
     innerView: View,
     readSharePreffernceMap: Map<String, String>,
@@ -92,7 +93,7 @@ internal fun urlHistoryButtonHandler(
             currentShellFileName
         ).isFile
     ) return
-    ExecTerminalDo.execTerminalDo(
+    ExecJsOrSellHandler.handle(
         fragment,
         currentAppDirPath,
         currentShellFileName,

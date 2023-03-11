@@ -45,7 +45,7 @@ class SharePreffrenceMethod {
 
             val sharedCurrentShellFileName = getStringFromSharePreffrence(
                 startUpPref,
-                SharePrefferenceSetting.current_shell_file_name
+                SharePrefferenceSetting.current_script_file_name
             )
 
             val sharedOnShortcut = getStringFromSharePreffrence(
@@ -56,7 +56,7 @@ class SharePreffrenceMethod {
             return mapOf(
                 SharePrefferenceSetting.current_app_dir.name
                         to sharedCurrentAppPath,
-                SharePrefferenceSetting.current_shell_file_name.name
+                SharePrefferenceSetting.current_script_file_name.name
                         to sharedCurrentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
                         to sharedOnShortcut,

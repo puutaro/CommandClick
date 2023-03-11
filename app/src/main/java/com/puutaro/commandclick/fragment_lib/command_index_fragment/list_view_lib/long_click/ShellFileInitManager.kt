@@ -10,10 +10,7 @@ import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.MakeSettingVariableNameOrValue
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.*
 
 
 class ShellFileInitManager {
@@ -59,14 +56,22 @@ class ShellFileInitManager {
             cmdListAdapter: ArrayAdapter<String>,
             cmdListView: ListView
         ){
-            val settingSectionStart = CommandClickShellScript.SETTING_SECTION_START
-            val settingSectionEnd = CommandClickShellScript.SETTING_SECTION_END
+
+            val languageType =
+                JsOrShellFromSuffix.judge(shellScriptName)
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            val settingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            ) as String
+            val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            ) as String
+
             val ShellContentsList = if(
-                shellScriptName == UsePath.cmdclickStartupShellName
-                || shellScriptName == UsePath.cmdclickEndShellName
+                shellScriptName == UsePath.cmdclickStartupJsName
             ) {
-                CommandClickShellScript.makeAutoShellContents(
-                    CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
+                CommandClickShellScript.makeAutoJsContents(
                     shellScriptName
                 ).split("\n")
             } else {

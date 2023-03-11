@@ -17,7 +17,7 @@ class OnOnceEditExecuteEvent {
             SharePreffrenceMethod.putSharePreffrence(
                 sharedPref,
                 mapOf(
-                    SharePrefferenceSetting.current_shell_file_name.name
+                    SharePrefferenceSetting.current_script_file_name.name
                             to selectedShellFileName,
                 )
             )

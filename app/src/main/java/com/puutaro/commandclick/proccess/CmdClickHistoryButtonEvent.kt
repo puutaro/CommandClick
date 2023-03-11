@@ -42,7 +42,7 @@ class CmdClickHistoryButtonEvent (
                 UsePath.cmdclickDefaultAppDirName,
             )
         )
-        val historyList = FileSystems.filterSuffixShellFiles(
+        val historyList = FileSystems.filterSuffixShellOrJsFiles(
             cmdclickAppHistoryDirAdminPath
         ).map { makeHistoryListRow(it) }
 

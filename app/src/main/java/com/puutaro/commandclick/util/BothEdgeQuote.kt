@@ -7,6 +7,7 @@ class BothEdgeQuote {
         ): String {
             return targetStr
                 ?.trim(' ')
+                ?.trim('　')
                 .let {
                 execTrim(
                     it,

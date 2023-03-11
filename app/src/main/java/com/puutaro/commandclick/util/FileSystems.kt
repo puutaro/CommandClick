@@ -140,7 +140,21 @@ class FileSystems {
             }
         }
 
-        fun filterSuffixShellFiles(
+        fun filterSuffixJsFiles(
+            dirPath: String,
+            reverse: String = String()
+        ): List<String> {
+            return sortedFiles(
+                dirPath,
+                reverse
+            ).filter {
+                it.endsWith(
+                    CommandClickShellScript.JS_FILE_SUFFIX
+                )
+            }
+        }
+
+        fun filterSuffixShellOrJsFiles(
             dirPath: String,
             reverse: String = String()
         ): List<String> {
@@ -150,6 +164,8 @@ class FileSystems {
             ).filter {
                 it.endsWith(
                     CommandClickShellScript.SHELL_FILE_SUFFIX
+                ) || it.endsWith(
+                    CommandClickShellScript.JS_FILE_SUFFIX
                 )
             }
         }
@@ -171,6 +187,7 @@ class FileSystems {
                 )
             }
         }
+
 
         fun copyDirectory(
             sourceDirPath: String,

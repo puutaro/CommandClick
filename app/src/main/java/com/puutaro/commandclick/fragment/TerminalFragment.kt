@@ -51,6 +51,7 @@ class TerminalFragment: Fragment() {
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
     var blocklist = hashSetOf<String>()
     var onWebHistoryUpdaterJob: Job? = null
+    var runShell = "bash"
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {

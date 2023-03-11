@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.fragment.TerminalFragment
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -14,11 +12,9 @@ object AdBlocker {
     private const val AD_HOSTS_FILE = "hosts.txt"
 
     fun init(terminalFragment: TerminalFragment) {
-        terminalFragment.loadAssetCoroutineJob = terminalFragment.lifecycleScope.launch {
-            terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                withContext(Dispatchers.IO) {
-                    loadFromAssets(terminalFragment)
-                }
+        terminalFragment.loadAssetCoroutineJob = CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                loadFromAssets(terminalFragment)
             }
         }
     }

@@ -9,6 +9,6 @@ class WebUrlVariables {
         val filePrefix = "file:"
         val slashPrefix = "/"
         val jsPrefix = "javascript:"
-        val termuxSetupUrl = "https://github.com/puutaro/CommandClick#pre-setting"
+        val commandClickGitUrl = "https://github.com/puutaro/CommandClick#readme"
     }
 }

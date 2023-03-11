@@ -69,7 +69,7 @@ class MakeListView(
         )
     }
 
-    fun makeClickItemListner(
+    fun makeClickItemListener(
         cmdListAdapter: ArrayAdapter<String>
     ){
         ItemClickListenerSetter.set(

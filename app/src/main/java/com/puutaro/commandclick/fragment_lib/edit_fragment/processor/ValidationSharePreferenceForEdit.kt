@@ -55,11 +55,11 @@ class ValidationSharePreferenceForEdit(
             return false
         }
         val cmdclickAppDirPath = UsePath.cmdclickAppDirAdminPath
-        val updateDirName = FileSystems.filterSuffixShellFiles(
+        val updateDirName = FileSystems.filterSuffixJsFiles(
             cmdclickAppDirPath,
             "on"
         ).firstOrNull()?.removeSuffix(
-            CommandClickShellScript.SHELL_FILE_SUFFIX
+            CommandClickShellScript.JS_FILE_SUFFIX
         ).toString()
         val updateAppDirPath = "${UsePath.cmdclickAppDirPath}/${updateDirName}"
         if(
@@ -102,14 +102,14 @@ class ValidationSharePreferenceForEdit(
 
         val checkCurrentShellName = if(checkCurrentShellNameSource.isNullOrEmpty()) {
             sharePref?.getString(
-                SharePrefferenceSetting.current_shell_file_name.name,
-                SharePrefferenceSetting.current_shell_file_name.defalutStr
-            ) ?: SharePrefferenceSetting.current_shell_file_name.defalutStr
+                SharePrefferenceSetting.current_script_file_name.name,
+                SharePrefferenceSetting.current_script_file_name.defalutStr
+            ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
         } else  checkCurrentShellNameSource
 
         if(
             checkCurrentShellName !=
-            SharePrefferenceSetting.current_shell_file_name.defalutStr
+            SharePrefferenceSetting.current_script_file_name.defalutStr
             && File("${checkCurrentAppDirPath}/${checkCurrentShellName}").isFile
         ) {
             return editExecuteCheck(
@@ -130,8 +130,8 @@ class ValidationSharePreferenceForEdit(
             editFragment.activity?.finish()
             return false
         }
-
-        val recentShellFileName = FileSystems.filterSuffixShellFiles(
+        return false
+        val recentShellFileName = FileSystems.filterSuffixJsFiles(
             checkCurrentAppDirPath,
             "on"
         ).firstOrNull().toString()
@@ -157,7 +157,7 @@ class ValidationSharePreferenceForEdit(
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
             mapOf(
-                SharePrefferenceSetting.current_shell_file_name.name
+                SharePrefferenceSetting.current_script_file_name.name
                         to recentShellFileName,
 
             )
@@ -180,10 +180,29 @@ class ValidationSharePreferenceForEdit(
             recentShellFileName
         )
         val shellContentsList = readText.textToList()
+        val languageType =
+            JsOrShellFromSuffix.judge(recentShellFileName)
+
+        val languageTypeToSectionHolderMap =
+            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        val commandSectionStart = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        ) as String
+        val commandSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        ) as String
+
         val variablesCommandHolderListSize = CommandClickVariables.substituteVariableListFromHolder(
             shellContentsList,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_START,
-            CommandClickShellScript.CMD_VARIABLE_SECTION_END
+            commandSectionStart,
+            commandSectionEnd
         )?.size ?: 0
         if(variablesCommandHolderListSize <= 2){
             Toast.makeText(
@@ -198,8 +217,8 @@ class ValidationSharePreferenceForEdit(
         }
         val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
             shellContentsList,
-            CommandClickShellScript.SETTING_SECTION_START,
-            CommandClickShellScript.SETTING_SECTION_END
+            settingSectionStart,
+            settingSectionEnd
         )
         val editExecuteValue = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,

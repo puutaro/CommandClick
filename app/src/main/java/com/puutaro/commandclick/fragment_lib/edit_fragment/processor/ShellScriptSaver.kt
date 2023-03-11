@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -18,7 +17,7 @@ class ShellScriptSaver(
     private val context = editFragment.context
     private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_shell_file_name
+        SharePrefferenceSetting.current_script_file_name
     )
     fun save(
         shellContentsList: List<String>,
@@ -68,17 +67,17 @@ class ShellScriptSaver(
     private fun updateShellScriptNameForEditCmdVriable(
         shellContentsListUpdatedCmdVariable: List<String>
     ): List<String> {
-        val shellScriptNameVariableName = CommandClickShellScript.SHELL_FILE_NAME
+        val shellScriptNameVariableName = CommandClickShellScript.SCRIPT_FILE_NAME
         var countSettingHolderStart = 0
         var countSettingHolderEnd = 0
         return shellContentsListUpdatedCmdVariable.map {
             if (
-                it.startsWith(CommandClickShellScript.SETTING_SECTION_START)
-                && it.endsWith(CommandClickShellScript.SETTING_SECTION_START)
+                it.startsWith(editFragment.settingSectionStart)
+                && it.endsWith(editFragment.settingSectionStart)
             ) countSettingHolderStart++
             if (
-                it.startsWith(CommandClickShellScript.SETTING_SECTION_END)
-                && it.endsWith(CommandClickShellScript.SETTING_SECTION_END)
+                it.startsWith(editFragment.settingSectionEnd)
+                && it.endsWith(editFragment.settingSectionEnd)
             ) countSettingHolderEnd++
             if (
                 countSettingHolderStart == 0
@@ -86,7 +85,7 @@ class ShellScriptSaver(
             ) return@map it
             if (
                 it.startsWith(shellScriptNameVariableName)
-            ) "${shellScriptNameVariableName}=${currentShellFileName}"
+            ) "${shellScriptNameVariableName}=\"${currentShellFileName}\""
             else it
         }
     }

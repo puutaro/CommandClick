@@ -1,27 +1,47 @@
 package com.puutaro.commandclick.proccess
 
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
 class CommentOutLabelingSection {
     companion object {
         fun commentOut(
-            shellContentsList: List<String>
+            shellContentsList: List<String>,
+            shellScriptName: String,
         ): List<String> {
+            val languageType =
+                JsOrShellFromSuffix.judge(shellScriptName)
+
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+            ) as String
+            val labelingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+            ) as String
+            val commentOutMark = when(languageType) {
+                LanguageTypeSelects.SHELL_SCRIPT -> "#"
+                else -> "//"
+            }
+
             var countLabelingSectionStart = 0
             var countLabelingSectionEnd = 0
             return shellContentsList.map {
                 if(
-                    it.startsWith(CommandClickShellScript.LABELING_SECTION_START)
-                    && it.endsWith(CommandClickShellScript.LABELING_SECTION_START)
+                    it.startsWith(labelingSectionStart)
+                    && it.endsWith(labelingSectionEnd)
                 ) countLabelingSectionStart++
                 if(
-                    it.startsWith(CommandClickShellScript.LABELING_SECTION_END)
-                    && it.endsWith(CommandClickShellScript.LABELING_SECTION_END)
+                    it.startsWith(labelingSectionStart)
+                    && it.endsWith(labelingSectionEnd)
                 ) countLabelingSectionEnd++
                 execCommentOut(
                     it,
                     countLabelingSectionStart,
-                    countLabelingSectionEnd
+                    countLabelingSectionEnd,
+                    commentOutMark
                 )
             }
         }
@@ -29,16 +49,17 @@ class CommentOutLabelingSection {
         private fun execCommentOut(
             rowStr: String,
             countLabelingSectionStart: Int,
-            countLabelingSectionEnd: Int
+            countLabelingSectionEnd: Int,
+            commentOutMark: String,
         ): String {
             if(
                 countLabelingSectionStart == 0
                 || countLabelingSectionEnd > 0
             ) return rowStr
             if(
-                rowStr.startsWith("#")
+                rowStr.startsWith(commentOutMark)
             ) return rowStr
-            return "# ${rowStr}"
+            return "${commentOutMark} ${rowStr}"
 
         }
     }

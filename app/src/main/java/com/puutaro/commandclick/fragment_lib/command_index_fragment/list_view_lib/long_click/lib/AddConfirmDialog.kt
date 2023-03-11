@@ -34,12 +34,12 @@ class AddConfirmDialog {
                 .setView(editText)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                     val inputShellFileName = editText.text.toString()
-                    val shellFileSuffix = CommandClickShellScript.SHELL_FILE_SUFFIX
-                    val isShellSuffix = inputShellFileName.endsWith(shellFileSuffix)
+                    val jsFileSuffix = CommandClickShellScript.JS_FILE_SUFFIX
+                    val isShellSuffix = inputShellFileName.endsWith(jsFileSuffix)
                     val shellFileName = if (isShellSuffix) {
                         inputShellFileName
                     } else {
-                        inputShellFileName + shellFileSuffix
+                        inputShellFileName + jsFileSuffix
                     }
 
                     CommandClickShellScript.makeAppDirAdminFile(
@@ -49,7 +49,7 @@ class AddConfirmDialog {
                     val createAppDirName = if (
                         isShellSuffix
                     ) {
-                        inputShellFileName.removeSuffix(shellFileSuffix)
+                        inputShellFileName.removeSuffix(jsFileSuffix)
                     } else {
                         inputShellFileName
                     }
@@ -74,7 +74,7 @@ class AddConfirmDialog {
             alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
                 context.getColor(R.color.black)
             )
-            alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+            alertDialog.window?.setGravity(Gravity.BOTTOM)
         }
     }
 }

@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.activity
 
 import android.app.Activity
-import android.content.Intent
+import android.app.AlertDialog
+import android.content.*
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -12,10 +14,12 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
+import com.puutaro.commandclick.activity_lib.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
@@ -25,9 +29,11 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisible
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
 import com.puutaro.commandclick.activity_lib.init.MonitorFiles
+import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -38,6 +44,9 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.termux.shared.termux.TermuxConstants
 
 
 class MainActivity:
@@ -54,8 +63,8 @@ class MainActivity:
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
     CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener,
-    CommandIndexFragment.OnBackstackDeleteListner,
-    CommandIndexFragment.OnQueryTextChangedListener,
+    CommandIndexFragment.OnBackstackDeleteListener,
+    CommandIndexFragment.OnLaunchUrlByWebViewListener,
     CommandIndexFragment.OnFilterWebViewListener,
     CommandIndexFragment.OnPageSearchToolbarClickListener,
     EditFragment.onToolBarButtonClickListenerForEditFragment,
@@ -63,7 +72,7 @@ class MainActivity:
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
     EditFragment.OnInitEditFragmentListener,
     EditFragment.OnTerminalWebViewInitListenerForEdit,
-    EditFragment.OnLaunchUrlByWebViewListener,
+    EditFragment.OnLaunchUrlByWebViewForEditListener,
     EditFragment.OnFileChooserListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
@@ -81,6 +90,9 @@ class MainActivity:
             }
         }
     private val storageHelper = SimpleStorageHelper(this)
+
+    val getRunCommandPermissionAndStartFragmentLauncher =
+        RunCommandSetter.set(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -230,11 +242,11 @@ class MainActivity:
 
 
     override fun onListItemClicked(
-        curentFragmentTag: String
+        currentFragmentTag: String
     ) {
         ExecListItemClick.invoke(
             this,
-            curentFragmentTag
+            currentFragmentTag
         )
     }
 
@@ -281,7 +293,7 @@ class MainActivity:
         fragmentManagerForActivity.deleteAllBackStack()
     }
 
-    override fun onQueryTextChanged(
+    override fun onLaunchUrlByWebView(
         searchUrl: String
     ) {
         ExecLoadUrlForWebView.execLoadUrlForWebView(
@@ -290,7 +302,9 @@ class MainActivity:
         )
     }
 
-    override fun onLaunchUrlByWebView(searchUrl: String) {
+    override fun onLaunchUrlByWebViewForEdit(
+        searchUrl: String
+    ) {
         ExecLoadUrlForWebView.execLoadUrlForWebView(
             this,
             searchUrl,

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -13,14 +14,26 @@ class ConfigFromStartUpFileSetter {
             cmdIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
         ){
+            val languageType = LanguageTypeSelects.JAVA_SCRIPT
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                    languageType
+                )
+            val settingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            ) as String
+
+            val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            ) as String
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     currentAppDirPath,
-                    UsePath.cmdclickStartupShellName
+                    UsePath.cmdclickStartupJsName
                 ).textToList(),
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                settingSectionStart,
+                settingSectionEnd
             )
 
             cmdIndexFragment.historySwitch = MakeVariableCbValue.make(

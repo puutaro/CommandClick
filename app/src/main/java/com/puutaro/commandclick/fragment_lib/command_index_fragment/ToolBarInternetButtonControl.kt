@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
-import com.puutaro.commandclick.proccess.ExecTerminalDo
+import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -49,17 +49,17 @@ class ToolBarInternetButtonControl(
                 return@setOnClickListener
             }
 
-            val enableExecInternetButtonShell =
+            val enableExecInternetButtonJs =
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
                         && terminalViewModel.onExecInternetButtonShell
                         && cmdIndexFragment.WebSearchSwitch
             if(
-                enableExecInternetButtonShell
+                enableExecInternetButtonJs
             ) {
-                ExecTerminalDo.execTerminalDo(
+                ExecJsLoad.execJsLoad(
                     cmdIndexFragment,
                     currentAppDirPath,
-                    UsePath.cmdclickInternetButtonExecShellFileName,
+                    UsePath.cmdclickInternetButtonExecJsFileName,
                 )
                 return@setOnClickListener
             }

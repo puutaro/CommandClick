@@ -19,7 +19,7 @@ class RestartWhenPreferenceCheckErr {
                 mapOf(
                     SharePrefferenceSetting.current_app_dir.name
                             to SharePrefferenceSetting.current_app_dir.defalutStr,
-                    SharePrefferenceSetting.current_shell_file_name.name
+                    SharePrefferenceSetting.current_script_file_name.name
                             to CommandClickShellScript.EMPTY_STRING,
                     SharePrefferenceSetting.on_shortcut.name
                             to SharePrefferenceSetting.on_shortcut.defalutStr

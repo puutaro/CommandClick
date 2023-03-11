@@ -54,7 +54,7 @@ class ConfirmDialogForDelete {
                     )
                     if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
                         val deleteAppDirName = shellScriptName.removeSuffix(
-                            CommandClickShellScript.SHELL_FILE_SUFFIX
+                            CommandClickShellScript.JS_FILE_SUFFIX
                         )
                         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
                         val displayDeleteAppDirPath =
@@ -80,10 +80,10 @@ class ConfirmDialogForDelete {
                             .show()
                         alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
                             context?.getColor(R.color.black) as Int
-                        );
+                        )
                         alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
                             context.getColor(R.color.black) as Int
-                        );
+                        )
 
                     }
                 })
@@ -95,7 +95,7 @@ class ConfirmDialogForDelete {
             alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
                 context.getColor(R.color.black)
             )
-            alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+            alertDialog.window?.setGravity(Gravity.BOTTOM)
         }
     }
 }

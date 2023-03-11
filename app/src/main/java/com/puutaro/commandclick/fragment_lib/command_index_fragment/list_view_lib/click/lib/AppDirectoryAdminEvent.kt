@@ -20,7 +20,7 @@ class AppDirectoryAdminEvent {
             )
             val updateAppDirPath = UsePath.cmdclickAppDirPath + '/' +
                     selectedShellFileName.removeSuffix(
-                        CommandClickShellScript.SHELL_FILE_SUFFIX
+                        CommandClickShellScript.JS_FILE_SUFFIX
                     )
             FileSystems.createDirs(updateAppDirPath)
             SharePreffrenceMethod.putSharePreffrence(

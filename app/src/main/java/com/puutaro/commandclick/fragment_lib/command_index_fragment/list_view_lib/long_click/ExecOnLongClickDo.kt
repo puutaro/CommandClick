@@ -10,7 +10,6 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
@@ -63,7 +62,7 @@ class ExecOnLongClickDo {
                     SharePreffrenceMethod.putSharePreffrence(
                         sharedPref,
                         mapOf(
-                            SharePrefferenceSetting.current_shell_file_name.name
+                            SharePrefferenceSetting.current_script_file_name.name
                                     to shellScriptName,
                         )
                     )
@@ -73,7 +72,8 @@ class ExecOnLongClickDo {
                     ).textToList()
                     val validateErrMessage = ValidateShell.correct(
                         cmdIndexFragment,
-                        shellContentsList
+                        shellContentsList,
+                        shellScriptName
                     )
                     if(validateErrMessage.isNotEmpty()){
                         val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
@@ -86,6 +86,7 @@ class ExecOnLongClickDo {
                     }
                     val editFragmentTag = DecideEditTag(
                         shellContentsList,
+                        shellScriptName
                     ).decide(
                         context,
                         context?.getString(
@@ -161,7 +162,8 @@ class ExecOnLongClickDo {
                         ReadText(
                             currentAppDirPath,
                             shellScriptName
-                        ).textToList()
+                        ).textToList(),
+                        shellScriptName
                     )
                 }
                 R.id.shell_script_menu_init -> {

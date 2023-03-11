@@ -64,7 +64,7 @@ class ShortCutManager(
         )
         val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_shell_file_name
+            SharePrefferenceSetting.current_script_file_name
         )
 
         val execIntent = Intent(activity, activity::class.java)
@@ -76,7 +76,7 @@ class ShortCutManager(
             curentAppDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_shell_file_name.name,
+            SharePrefferenceSetting.current_script_file_name.name,
             currentShellFileName
         )
         return execIntent

@@ -2,11 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.util.*
@@ -26,14 +22,26 @@ class ConfigFromStartUpFileSetterForTerm {
                 SharePrefferenceSetting.current_app_dir
             )
 
+            val languageType = LanguageTypeSelects.JAVA_SCRIPT
+            val languageTypeToSectionHolderMap =
+                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                    languageType
+                )
+            val settingSectionStart = languageTypeToSectionHolderMap?.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            ) as String
+
+            val settingSectionEnd = languageTypeToSectionHolderMap.get(
+                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            ) as String
 
             val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
                 ReadText(
                     UsePath.cmdclickConfigDirPath,
                     UsePath.cmdclickConfigFileName
                 ).textToList(),
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                settingSectionStart,
+                settingSectionEnd
             )
 
             terminalFragment.onAdBlock = MakeVariableCbValue.make(
@@ -55,6 +63,12 @@ class ConfigFromStartUpFileSetterForTerm {
                 "1"
             )
 
+            terminalFragment.runShell =  MakeVariableStringValue.make(
+                settingVariableListFromConfig,
+                CommandClickShellScript.CMDCLICK_RUN_SHELL,
+                CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+            )
+
             terminalFragment.terminalColor = MakeVariableStringValue.make(
                 settingVariableListFromConfig,
                 CommandClickShellScript.TERMINAL_COLOR,
@@ -68,7 +82,7 @@ class ConfigFromStartUpFileSetterForTerm {
 
             val currentShellFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
                 sharePref,
-                SharePrefferenceSetting.current_shell_file_name
+                SharePrefferenceSetting.current_script_file_name
             )
 
             val currentShellFileName = if (
@@ -76,7 +90,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 terminalFragment.context?.getString(
                     R.string.index_terminal_fragment
                 )
-            ) UsePath.cmdclickStartupShellName
+            ) UsePath.cmdclickStartupJsName
             else currentShellFileNameSource
 
 
@@ -85,8 +99,8 @@ class ConfigFromStartUpFileSetterForTerm {
                     terminalFragment.currentAppDirPath,
                     currentShellFileName
                 ).textToList(),
-                CommandClickShellScript.SETTING_SECTION_START,
-                CommandClickShellScript.SETTING_SECTION_END
+                settingSectionStart,
+                settingSectionEnd
             )
 
             terminalFragment.onAdBlock = MakeVariableCbValue.make(
@@ -107,6 +121,13 @@ class ConfigFromStartUpFileSetterForTerm {
                 terminalFragment.fontZoomPercent,
                 "1"
             )
+
+            terminalFragment.runShell =  MakeVariableStringValue.make(
+                settingVariableList,
+                CommandClickShellScript.CMDCLICK_RUN_SHELL,
+                terminalFragment.runShell
+            )
+
             terminalFragment.binding.terminalWebView.settings.textZoom =
                 terminalFragment.fontZoomPercent
 

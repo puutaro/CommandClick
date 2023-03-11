@@ -8,16 +8,23 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.*
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.edit.EditTextType
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ButtonViewHowActive
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.edit_text_support_view.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ShellFileDescription
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 class EditTextProducerForEdit(
     editFragment: EditFragment,
-    readSharePreffernceMap: Map<String, String>,
+    private val readSharePreffernceMap: Map<String, String>,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
@@ -37,13 +44,18 @@ class EditTextProducerForEdit(
     )
     private val validateErrEditTextNumberSet = mutableSetOf<Int>()
 
-    private val setVariableTypeList = makeSetVariableTypeList(
+    private val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder
     )
 
-    private val recordNumToSetVariableMaps = makeRecordNumToSetVariableMaps(
+    private val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
         setVariableTypeList,
         recordNumToMapNameValueInCommandHolder
+    )
+
+    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        readSharePreffernceMap,
+        SharePrefferenceSetting.current_app_dir
     )
 
     private val withEditTextWithButton = WithEditTextWithButton(
@@ -76,9 +88,21 @@ class EditTextProducerForEdit(
         recordNumToMapNameValueInCommandHolder
     )
 
+    private val withEditableFileSelectSpinnerWithButtonView = WithEditableFileSelectSpinnerWithButtonView(
+        editFragment,
+        readSharePreffernceMap,
+        currentShellContentsList,
+        currentAppDirPath,
+        recordNumToMapNameValueInCommandHolder,
+    )
+
 
     private val withDirOrFileChooseView = WithDirOrFileChooseView(
         editFragment
+    )
+
+    private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView(
+        editFragment.context
     )
 
     private val withDirOrFileChooseViewWithButtonView = WithDirOrFileChooseViewWithButtonView(
@@ -89,7 +113,7 @@ class EditTextProducerForEdit(
     )
 
     private val withInDeCremenView = WithInDeCremenView(
-        editFragment
+        editFragment.context
     )
 
     private val withInDeCremenViewWithButtonView = WithInDeCremenViewWithButtonView(
@@ -128,7 +152,7 @@ class EditTextProducerForEdit(
         if(onSettingEdit){
             val setVariableListForSettingHolder =
                 CommandClickShellScript.setVariableForSettingHolder
-            val recordNumToSetVariableMapsForSettingHolder = makeRecordNumToSetVariableMaps(
+            val recordNumToSetVariableMapsForSettingHolder = SetVariableTyper.makeRecordNumToSetVariableMaps(
                 setVariableListForSettingHolder,
                 recordNumToMapNameValueInSettingHolder
             )
@@ -141,7 +165,8 @@ class EditTextProducerForEdit(
             binding.editLinearLayout.addView(
                 makeDescriptionButton(
                     context,
-                    currentShellContentsList
+                    currentShellContentsList,
+                    readSharePreffernceMap
                 )
             )
             return
@@ -154,12 +179,13 @@ class EditTextProducerForEdit(
         binding.editLinearLayout.addView(
             makeDescriptionButton(
                 context,
-                currentShellContentsList
+                currentShellContentsList,
+                readSharePreffernceMap
             )
         )
     }
 
-    internal fun execAdd(
+    private fun execAdd(
         recordNumToMapNameValueInHolder: Map<Int, Map<String,String>?>?,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
         editTextStartId: Int,
@@ -246,6 +272,26 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX.str -> {
+                    val innerLinearLayout = withFileSelectEditableSpinnerView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertEditText,
+                        setVariableMap,
+                        currentAppDirPath,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withEditableFileSelectSpinnerWithButtonView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.MDIRECTORY_PICKER.str,
                 EditTextSupportViewName.DIRECTORY_PICKER.str -> {
                     val innerLinearLayout = withDirOrFileChooseView.create(
@@ -285,7 +331,7 @@ class EditTextProducerForEdit(
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
-                    val innerLayout = withInDeCremenView.createNumInDeCrementer(
+                    val innerLayout = withInDeCremenView.create(
                         currentVariableValue,
                         insertEditText,
                         setVariableMap
@@ -367,7 +413,7 @@ class EditTextProducerForEdit(
         }
     }
 
-    private fun execInsertEditText(
+    fun execInsertEditText(
         insertEditText: EditText,
         currentId: Int,
         currentVariableValue: String?,
@@ -443,16 +489,10 @@ class EditTextProducerForEdit(
     }
 }
 
-
-internal enum class EditTextType {
-    PASSWORD,
-    PLAIN,
-    READ_ONLY,
-}
-
 internal fun makeDescriptionButton(
     context: Context?,
-    currentShellContentsList: List<String>
+    currentShellContentsList: List<String>,
+    readSharePreffernceMap: Map<String, String>
 ): Button {
     val descriptionButton = Button(context)
     val buttonLabel = "Desctiption"
@@ -469,93 +509,15 @@ internal fun makeDescriptionButton(
             innerButtonView ->
         ShellFileDescription.show(
             innerButtonView.context,
-            currentShellContentsList
+            currentShellContentsList,
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_script_file_name
+            )
         )
     }
     return descriptionButton
 }
-
-internal fun makeRecordNumToSetVariableMaps(
-    setVariableTypeList: List<String>?,
-    recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?
-): Map<Int, Map<String, String>>? {
-    if(setVariableTypeList == null) return null
-    val usedRecordNumSet = mutableSetOf<Int>()
-    val setVariableTypeListLength = setVariableTypeList.size -1
-    if(setVariableTypeListLength < 0) return null
-    return (0..setVariableTypeListLength).map {
-        val currentFetchSetVariableType = setVariableTypeList[it]
-        val currentFetchSetVariableTypeLength = currentFetchSetVariableType.length
-        val equalIndex = currentFetchSetVariableType.indexOf('=')
-        if(equalIndex == -1) {
-            return null
-        }
-        val variableNameAddType = currentFetchSetVariableType.substring(
-            0, equalIndex
-        )
-        val variableNameAddTypeLength = variableNameAddType.length;
-        val colonIndex = variableNameAddType.indexOf(':')
-        if(colonIndex == -1) {
-            return null
-        }
-        val variableName = variableNameAddType.substring(
-            0, colonIndex
-        )
-        val variableType = variableNameAddType.substring(
-            colonIndex+1, variableNameAddTypeLength
-        )
-        val variableTypeValue = currentFetchSetVariableType.substring(
-            equalIndex + 1, currentFetchSetVariableTypeLength
-        )
-        val hitRecordNumList = recordNumToMapNameValueInCommandHolder?.filterValues {
-                keyValueMap ->
-            keyValueMap?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) == variableName
-        }?.keys?.toList()
-        val aliveHitRecordNumList = hitRecordNumList?.filter {
-            !usedRecordNumSet.contains(it)
-        }
-        val aliveHitRecordNumFirst = aliveHitRecordNumList?.firstOrNull() ?: -1
-        usedRecordNumSet.add(aliveHitRecordNumFirst)
-        aliveHitRecordNumFirst to mapOf(
-                    SetVariableTypeColumn.VARIABLE_NAME.name
-                            to variableName,
-                    SetVariableTypeColumn.VARIABLE_TYPE.name
-                            to variableType,
-                    SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-                            to variableTypeValue,
-                )
-    }.toMap()
-}
-
-
-internal fun makeSetVariableTypeList(
-    recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
-): List<String>? {
-    return recordNumToMapNameValueInSettingHolder?.filter {
-            entry ->
-        entry.value?.get(
-            RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-        ) == CommandClickShellScript.SET_VARIABLE_TYPE
-    }?.map {
-            entry ->
-        val entryValue = entry.value
-        val setTargetVariableValueBeforeTrim = entryValue?.get(
-            RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-        )
-        if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
-            setTargetVariableValueBeforeTrim.trim('"')
-        } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
-            setTargetVariableValueBeforeTrim.trim('\'')
-        } else {
-            setTargetVariableValueBeforeTrim
-        } ?: String()
-    }?.joinToString(",")
-        ?.split(',')
-        ?.filter { it.isNotEmpty() }
-}
-
 
 
 internal fun checkMiddleText(

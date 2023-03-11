@@ -2,9 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.UsePath
@@ -19,10 +16,7 @@ import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.TargetFragmentInstance
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 class WrapWebHistoryUpdater {
@@ -40,35 +34,33 @@ class WrapWebHistoryUpdater {
             if(webView == null) return
             terminalFragment.onWebHistoryUpdaterJob?.cancel()
             var urlTitleString: String? = null
-            terminalFragment.onWebHistoryUpdaterJob = terminalFragment.lifecycleScope.launch {
-                terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    if(webViewUrl.isNullOrEmpty()) return@repeatOnLifecycle
-                    delay(1500)
-                    val webViewUrlLast = withContext(Dispatchers.Main) {
-                        webView.url
-                    }
-                    if(webViewUrlLast != webViewUrl) return@repeatOnLifecycle
-                    withContext(Dispatchers.Main) {
-                        webView.evaluateJavascript("(function() {  return document.title;})()",
-                            ValueCallback<String?> { siteTitle ->
-                                urlTitleString = siteTitle
-                            })
-                    }
-                    delay(500)
-                    if(urlTitleString.isNullOrEmpty()) return@repeatOnLifecycle
-                    withContext(Dispatchers.IO) {
-                        execUpdate(
-                            terminalFragment,
-                            urlTitleString,
-                            webViewUrl,
-                        )
-                    }
-                    withContext(Dispatchers.IO) {
-                        registerUrlHistoryTitle(
-                            terminalFragment,
-                            webViewUrl
-                        )
-                    }
+            terminalFragment.onWebHistoryUpdaterJob = CoroutineScope(Dispatchers.IO).launch {
+                if(webViewUrl.isNullOrEmpty()) return@launch
+                delay(1500)
+                val webViewUrlLast = withContext(Dispatchers.Main) {
+                    webView.url
+                }
+                if(webViewUrlLast != webViewUrl) return@launch
+                withContext(Dispatchers.Main) {
+                    webView.evaluateJavascript("(function() {  return document.title;})()",
+                        ValueCallback<String?> { siteTitle ->
+                            urlTitleString = siteTitle
+                        })
+                }
+                delay(500)
+                if(urlTitleString.isNullOrEmpty()) return@launch
+                withContext(Dispatchers.IO) {
+                    execUpdate(
+                        terminalFragment,
+                        urlTitleString,
+                        webViewUrl,
+                    )
+                }
+                withContext(Dispatchers.IO) {
+                    registerUrlHistoryTitle(
+                        terminalFragment,
+                        webViewUrl
+                    )
                 }
             }
         }

@@ -15,8 +15,11 @@ class ExecLoadUrlForWebView {
                 val indexTerminalFragment = activity.supportFragmentManager.findFragmentByTag(
                     activity.getString(R.string.index_terminal_fragment)
                 ) as TerminalFragment
-                val webView = indexTerminalFragment.binding.terminalWebView
-                webView.loadUrl(searchUrl)
+                if(indexTerminalFragment.isVisible) {
+                    val webView = indexTerminalFragment.binding.terminalWebView
+                    webView.loadUrl(searchUrl)
+                    return
+                }
             } catch (e: Exception){
                 println("pass")
             }
@@ -24,8 +27,11 @@ class ExecLoadUrlForWebView {
                 val editExecuteTerminalFragment = activity.supportFragmentManager.findFragmentByTag(
                     activity.getString(R.string.edit_execute_terminal_fragment)
                 ) as TerminalFragment
-                val webView = editExecuteTerminalFragment.binding.terminalWebView
-                webView.loadUrl(searchUrl)
+                if(editExecuteTerminalFragment.isVisible) {
+                    val webView = editExecuteTerminalFragment.binding.terminalWebView
+                    webView.loadUrl(searchUrl)
+                    return
+                }
             } catch (e: Exception){
                 return
             }

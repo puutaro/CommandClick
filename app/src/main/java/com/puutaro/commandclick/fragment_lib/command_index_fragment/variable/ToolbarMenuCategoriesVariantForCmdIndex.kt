@@ -7,6 +7,7 @@ enum class ToolbarMenuCategoriesVariantForCmdIndex(
     CHDIR,
     HISTORY,
     SHORTCUT,
+    TERMUX_SETUP,
     SELECTTERM,
     TERMMAX,
     TERMMAX_KEYBOARD_OPEN,

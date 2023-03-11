@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.view.View
 import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.WebAppInterface
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.*
 
 class WebViewSettings {
     companion object {
@@ -25,15 +25,36 @@ class WebViewSettings {
             settings.builtInZoomControls = true
             settings.displayZoomControls = false
             terminalWebView.addJavascriptInterface(
-                WebAppInterface(terminalFragment),
+                JsFileSystem(terminalFragment),
                 JsInterfaceVariant.jsFileSystem.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsIntent(terminalFragment),
+                JsInterfaceVariant.jsIntent.name
+            )
 
+            terminalWebView.addJavascriptInterface(
+                JsDialog(terminalFragment),
+                JsInterfaceVariant.jsDialog.name
+            )
+
+            terminalWebView.addJavascriptInterface(
+                JsArgs(terminalFragment),
+                JsInterfaceVariant.jsArgs.name
+            )
+            terminalWebView.addJavascriptInterface(
+                CmdIntent(terminalFragment),
+                JsInterfaceVariant.cmdIntent.name
+            )
         }
     }
 }
 
 
 private enum class JsInterfaceVariant {
-    jsFileSystem
+    jsFileSystem,
+    jsIntent,
+    jsDialog,
+    jsArgs,
+    cmdIntent,
 }

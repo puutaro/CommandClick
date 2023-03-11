@@ -34,7 +34,7 @@ class UpdateLastModifiedForAppHistory {
                     ),
                     SharePreffrenceMethod.getReadSharePreffernceMap(
                         readSharePreffernceMap,
-                        SharePrefferenceSetting.current_shell_file_name
+                        SharePrefferenceSetting.current_script_file_name
                     )
                 )
             )

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.os.Handler
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
@@ -72,7 +73,7 @@ private fun monitorOutput(
                     if(
                         terminalContents
                         == secondTerminalContents
-                        && terminalViewModel.launchUrl.isNullOrEmpty()
+                        && terminalViewModel.launchUrlList.isEmpty()
                     ){
                         continue
                     }
@@ -140,8 +141,10 @@ private fun updateWebView(
     terminalContents: String,
     terminalViewModel: TerminalViewModel
 ): Runnable {
-    val launchUrl = terminalViewModel.launchUrl
-    terminalViewModel.launchUrl = null
+    val launchUrl = terminalViewModel.launchUrlList.getOrNull(0)
+    if(terminalViewModel.launchUrlList.size > 0) {
+        terminalViewModel.launchUrlList.removeAt(0)
+    }
     return Runnable {
         setWebView(
             terminalFragment,

@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 
 import android.content.SharedPreferences
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.Editor
@@ -10,27 +11,29 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 class AddShellScript {
     companion object {
-        fun addShellScript (
+        fun addShellOrJavaScript (
             cmdIndexFragment: CommandIndexFragment,
             sharedPref: SharedPreferences?,
             currentAppDirPath: String,
             shellScriptName: String,
+            languageTypeSelects: LanguageTypeSelects
         ){
 
             val context = cmdIndexFragment.context
             SharePreffrenceMethod.putSharePreffrence(
                 sharedPref,
                 mapOf(
-                    SharePrefferenceSetting.current_shell_file_name.name
+                    SharePrefferenceSetting.current_script_file_name.name
                             to shellScriptName,
                 )
             )
 
             val cmdClickShibanStr = cmdIndexFragment.shiban
-            CommandClickShellScript.makeShellFile(
+            CommandClickShellScript.makeShellOrJsFile(
                 cmdClickShibanStr,
                 currentAppDirPath,
-                shellScriptName
+                shellScriptName,
+                shellOrJs = languageTypeSelects
             )
             val editor = Editor(
                 currentAppDirPath,

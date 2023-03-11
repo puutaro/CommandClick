@@ -1,25 +1,55 @@
 package com.puutaro.commandclick.common.variable
 
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
 
 class CommandClickShellScript {
     companion object {
+        enum class HolderTypeName {
+            LABELING_SEC_START,
+            LABELING_SEC_END,
+            SETTING_SEC_START,
+            SETTING_SEC_END,
+            CMD_SEC_START,
+            CMD_SEC_END,
+            SCRIPT_START
+        }
+
         val SHELL_FILE_SUFFIX = ".sh"
         val JS_FILE_SUFFIX = ".js"
         val JSX_FILE_SUFFIX = ".jsx"
         val HTML_FILE_SUFFIX = ".html"
         val HTM_FILE_SUFFIX = ".htm"
         val EMPTY_STRING = "COMMAND_CLICK_EMPTY_STRING"
-        val LABELING_SECTION_START = "### LABELING_SECTION_START"
-        val LABELING_SECTION_END = "### LABELING_SECTION_END"
-        val SETTING_SECTION_START = "### SETTING_SECTION_START"
-        val SETTING_SECTION_END = "### SETTING_SECTION_END"
-        val CMD_VARIABLE_SECTION_START = "### CMD_VARIABLE_SECTION_START"
-        val CMD_VARIABLE_SECTION_END = "### CMD_VARIABLE_SECTION_END"
-        val CMD_PROMPT_MESSAGE = "### Please write bellow with shell script"
+        private const val labelingSectionStartSentence = "LABELING_SECTION_START"
+        private const val labelingSectionEndSentence = "LABELING_SECTION_END"
+        private const val settingSectionStartSentence = "SETTING_SECTION_START"
+        private const val settingSectionEndSentence = "SETTING_SECTION_END"
+        private const val commandSectionStartSentence = "CMD_VARIABLE_SECTION_START"
+        private const val commandSectionEndSentence = "CMD_VARIABLE_SECTION_END"
+        val LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP = mapOf(
+            LanguageTypeSelects.SHELL_SCRIPT to mapOf(
+                HolderTypeName.LABELING_SEC_START to "### ${labelingSectionStartSentence}",
+                HolderTypeName.LABELING_SEC_END to "### ${labelingSectionEndSentence}",
+                HolderTypeName.SETTING_SEC_START to "### ${settingSectionStartSentence}",
+                HolderTypeName.SETTING_SEC_END to "### ${settingSectionEndSentence}",
+                HolderTypeName.CMD_SEC_START to "### ${commandSectionStartSentence}",
+                HolderTypeName.CMD_SEC_END to "### ${commandSectionEndSentence}",
+                HolderTypeName.SCRIPT_START to "### Please write bellow with shell script",
+
+            ),
+            LanguageTypeSelects.JAVA_SCRIPT to mapOf(
+                HolderTypeName.LABELING_SEC_START to "/// ${labelingSectionStartSentence}",
+                HolderTypeName.LABELING_SEC_END to "/// ${labelingSectionEndSentence}",
+                HolderTypeName.SETTING_SEC_START to "/// ${settingSectionStartSentence}",
+                HolderTypeName.SETTING_SEC_END to "/// ${settingSectionEndSentence}",
+                HolderTypeName.CMD_SEC_START to "/// ${commandSectionStartSentence}",
+                HolderTypeName.CMD_SEC_END to "/// ${commandSectionEndSentence}",
+                HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
+            )
+        )
         val TERMINAL_DO = "terminalDo"
         val EDIT_EXECUTE = "editExecute"
         val TERMINAL_SIZE_TYPE = "terminalSizeType"
@@ -30,7 +60,7 @@ class CommandClickShellScript {
         val EXEC_JS_OR_HTML_PATH = "execJsOrHtmlPath"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
-        val SHELL_FILE_NAME = "shellFileName"
+        val SCRIPT_FILE_NAME = "shellFileName"
         val CMDCLICK_SHIBAN = "cmdclickShiban"
         val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
         val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
@@ -67,7 +97,7 @@ class CommandClickShellScript {
             EXEC_JS_OR_HTML_PATH,
             BEFORE_COMMAND,
             AFTER_COMMAND,
-            SHELL_FILE_NAME,
+            SCRIPT_FILE_NAME,
         )
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
@@ -140,8 +170,14 @@ class CommandClickShellScript {
             "${EXEC_JS_OR_HTML_PATH}:FL=",
         )
 
-        fun makeShellScriptName(): String {
-            return (1..10000).random().toString() + SHELL_FILE_SUFFIX
+        fun makeShellScriptName(
+            shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
+        ): String {
+            val scriptSuffix = when(shellOrJs){
+                LanguageTypeSelects.SHELL_SCRIPT -> SHELL_FILE_SUFFIX
+                else -> JS_FILE_SUFFIX
+            }
+            return (1..10000).random().toString() + scriptSuffix
         }
 
         fun makeCopyPrefix(): String {
@@ -151,8 +187,8 @@ class CommandClickShellScript {
         private val colons = "::"
 
         fun makeDescription(): String {
-            val backstackMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name + colons
-            val termOutMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVarantSelects.BackStack.name + colons
+            val backstackMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
+            val termOutMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
             return """
                 # * ${TERMINAL_DO} is terminal screen select option
                 |#  - ${terminalOn}: cmdclick terminal (default)
@@ -222,7 +258,7 @@ class CommandClickShellScript {
                 |#  ${SET_VARIABLE_TYPE}="..."
                 |# * ${BEFORE_COMMAND} is before shell script execute, run command
                 |# * ${AFTER_COMMAND} is after shell script execute, run command
-                |# * ${SHELL_FILE_NAME} is your shell file name
+                |# * ${SCRIPT_FILE_NAME} is your shell file name
             """.trimIndent().replace("EX_INDENT_BLANK", "        ")
         }
 
@@ -230,40 +266,42 @@ class CommandClickShellScript {
             shiban: String,
             shellScriptName: String,
             onUpdateLastModifyValue: String,
+            shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
         ): String{
+            val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
             return """${shiban}
             |
             |
-            |${LABELING_SECTION_START}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
             |${makeDescription()}
-            |${LABELING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
             |
             |
-            |${SETTING_SECTION_START}
-            |${TERMINAL_DO}=${TERMINAL_DO_DEFAULT_VALUE}
-            |${EDIT_EXECUTE}=${EDIT_EXECUTE_DEFAULT_VALUE}
-            |${TERMINAL_SIZE_TYPE}=${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}
-            |${TERMINAL_OUTPUT_MODE}=${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}
-            |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyValue}
-            |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
-            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
-            |${ON_ADBLOCK}=${onAdBlockInherit}
-            |${EXEC_JS_OR_HTML_PATH}=
-            |${CMDCLICK_TERMINAL_FONT_ZOOM}=
-            |${TERMINAL_COLOR}=
-            |${TERMINAL_FONT_COLOR}=
-            |${SET_VARIABLE_TYPE}=
-            |${BEFORE_COMMAND}=
-            |${AFTER_COMMAND}=
-            |${SHELL_FILE_NAME}=${shellScriptName}
-            |${SETTING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+            |${TERMINAL_DO}="${TERMINAL_DO_DEFAULT_VALUE}"
+            |${EDIT_EXECUTE}="${EDIT_EXECUTE_DEFAULT_VALUE}"
+            |${TERMINAL_SIZE_TYPE}="${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}"
+            |${TERMINAL_OUTPUT_MODE}="${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}"
+            |${ON_UPDATE_LAST_MODIFY}="${onUpdateLastModifyValue}"
+            |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
+            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
+            |${ON_ADBLOCK}="${onAdBlockInherit}"
+            |${EXEC_JS_OR_HTML_PATH}=""
+            |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
+            |${TERMINAL_COLOR}=""
+            |${TERMINAL_FONT_COLOR}=""
+            |${SET_VARIABLE_TYPE}=""
+            |${BEFORE_COMMAND}=""
+            |${AFTER_COMMAND}=""
+            |${SCRIPT_FILE_NAME}="${shellScriptName}"
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
             |
-            |${CMD_VARIABLE_SECTION_START}
-            |${CMD_VARIABLE_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
+            |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
             |
             |
-            |${CMD_PROMPT_MESSAGE}
+            |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
             |
             |
             |
@@ -271,17 +309,31 @@ class CommandClickShellScript {
         }
 
 
-        fun makeShellFile(
+        fun makeShellOrJsFile(
             shiban: String,
             dirPath: String,
             shellScriptName: String,
-            onUpdateLastModifyValue: String = onUpdateLastModifyOn
+            onUpdateLastModifyValue: String = onUpdateLastModifyOn,
+            shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
         ) {
             val shellContents =  makeShellContents(
                 shiban,
                 shellScriptName,
                 onUpdateLastModifyValue,
-            )
+                shellOrJs
+            ).let {
+                if(shellOrJs != LanguageTypeSelects.JAVA_SCRIPT) return@let it
+                it
+                    .substring(
+                        it.indexOf('\n')+1
+                    )
+                    .split("\n")
+                    .map {
+                        it.replace(
+                            Regex("^#"), "//"
+                        )
+                }.joinToString("\n")
+            }
             FileSystems.createDirs(dirPath)
             val createFile = File(
                 dirPath,
@@ -291,22 +343,30 @@ class CommandClickShellScript {
         }
 
 
-        fun makeAppDirShellContents(
-            shellScriptName: String
+        private fun makeAppDirShellContents(
+            shellScriptName: String,
+            shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
         ): String{
-            return """${CMDCLICK_SHIBAN_DEFAULT_VALUE}
+            val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+            return """
             |
             |
-            |${LABELING_SECTION_START}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
             |${makeDescription()}
-            |${LABELING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
             |
             |
-            |${SETTING_SECTION_START}
-            |${SHELL_FILE_NAME}=${shellScriptName}
-            |${SETTING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+            |${SCRIPT_FILE_NAME}="${shellScriptName}"
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
         """.trimMargin()
+                .split("\n")
+                .map {
+                    it.replace(
+                        Regex("^#"), "//"
+                    )
+                }.joinToString("\n")
         }
 
         fun makeAppDirAdminFile(
@@ -321,16 +381,16 @@ class CommandClickShellScript {
             if(createFile.isFile) return
             createFile.writeText(
                 makeAppDirShellContents(
-                    shellScriptName
+                    shellScriptName,
                 )
             )
         }
 
-        fun makeButtonExecShell(
-            shiban: String,
+        fun makeButtonExecJS(
             dirPath: String,
             shellScriptName: String
         ){
+            val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
             FileSystems.createDirs(dirPath)
             if(
                 File(
@@ -338,44 +398,52 @@ class CommandClickShellScript {
                     shellScriptName
                 ).isFile
             ) return
-            makeShellFile(
-                shiban,
+            makeShellOrJsFile(
+                String(),
                 dirPath,
                 shellScriptName,
-                onUpdateLastModifyOff
+                onUpdateLastModifyOff,
+                shellOrJs
             )
         }
 
-        fun makeConfigShellFile(
+        fun makeConfigJsFile(
             dirPath: String,
-            shellScriptName: String
+            jsScriptName: String,
         ) {
-            val shellContents = """${CMDCLICK_SHIBAN_DEFAULT_VALUE}
+            val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
+            val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+            val jsContents = """
             |
             |
-            |${LABELING_SECTION_START}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
             |${makeDescription()}
-            |${LABELING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
             |
             |
-            |${SETTING_SECTION_START}
-            |${CMDCLICK_RUN_SHELL}=${CMDCLICK_RUN_SHELL_DEFAULT_VALUE}
-            |${CMDCLICK_SHIBAN}=${CMDCLICK_SHIBAN_DEFAULT_VALUE}
-            |${CMDCLICK_HISTORY_SWITCH}=${HISTORY_SWITCH_DEFAULT_VALUE}
-            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}
-            |${ON_ADBLOCK}=${onAdBlockOff}
-            |${CMDCLICK_TERMINAL_FONT_ZOOM}=${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}
-            |${TERMINAL_COLOR}=${TERMINAL_COLOR_DEFAULT_VALUE}
-            |${TERMINAL_FONT_COLOR}=${TERMINAL_FONT_COLOR_DEFAULT_VALUE}
-            |${SETTING_SECTION_END}
-            |
-            |
-            |
-            |${CMD_PROMPT_MESSAGE}
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+            |${CMDCLICK_RUN_SHELL}="${CMDCLICK_RUN_SHELL_DEFAULT_VALUE}"
+            |${CMDCLICK_SHIBAN}="${CMDCLICK_SHIBAN_DEFAULT_VALUE}"
+            |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
+            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}"
+            |${ON_ADBLOCK}="${onAdBlockOff}"
+            |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
+            |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
+            |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
             |
             |
-        """.trimMargin()
+            |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
+            |
+            |
+            |
+        """.trimMargin().split("\n")
+                .map {
+                    it.replace(
+                        Regex("^#"), "//"
+                    )
+                }.joinToString("\n")
             if(!File(dirPath).isDirectory){
                 FileSystems.createDirs(
                     dirPath
@@ -383,76 +451,78 @@ class CommandClickShellScript {
             }
             val createFile = File(
                 dirPath,
-                shellScriptName
+                jsScriptName
             )
             if(createFile.isFile) return
-            createFile.writeText(shellContents)
+            createFile.writeText(jsContents)
         }
 
-        fun makeAutoShellContents(
-            shiban: String,
-            shellScriptName: String
+        fun makeAutoJsContents(
+            jsScriptName: String,
         ): String {
-            return """${shiban}
+            val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
+            val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
+            return """
             |
             |
-            |${LABELING_SECTION_START}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
             |${makeDescription()}
-            |${LABELING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
             |
             |
-            |${SETTING_SECTION_START}
-            |${TERMINAL_DO}=${TERMINAL_DO_DEFAULT_VALUE}
-            |${TERMINAL_SIZE_TYPE}=${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}
-            |${TERMINAL_OUTPUT_MODE}=${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}
-            |${CMDCLICK_ON_AUTO_EXEC}=${CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE}
-            |${ON_UPDATE_LAST_MODIFY}=${onUpdateLastModifyOff}
-            |${CMDCLICK_ON_HISTORY_URL_TITLE}=${CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE}
-            |${CMDCLICK_HISTORY_SWITCH}=${historySwitchInherit}
-            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}=${urlHistoryOrButtonExecUrlInherit}
-            |${ON_ADBLOCK}=${onAdBlockInherit}
-            |${ON_URL_LAUNCH_MACRO}=${ON_URL_LAUNCH_MACRO_DEFAULT_VALUE}
-            |${EXEC_JS_OR_HTML_PATH}=
-            |${CMDCLICK_TERMINAL_FONT_ZOOM}=
-            |${TERMINAL_FONT_COLOR}=
-            |${TERMINAL_COLOR}=
-            |${SET_VARIABLE_TYPE}=
-            |${BEFORE_COMMAND}=
-            |${AFTER_COMMAND}=
-            |${SHELL_FILE_NAME}=${shellScriptName}
-            |${SETTING_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+            |${TERMINAL_SIZE_TYPE}="${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}"
+            |${TERMINAL_OUTPUT_MODE}="${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}"
+            |${CMDCLICK_ON_AUTO_EXEC}="${CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE}"
+            |${ON_UPDATE_LAST_MODIFY}="${onUpdateLastModifyOff}"
+            |${CMDCLICK_ON_HISTORY_URL_TITLE}="${CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE}"
+            |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
+            |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
+            |${ON_ADBLOCK}="${onAdBlockInherit}"
+            |${ON_URL_LAUNCH_MACRO}="${ON_URL_LAUNCH_MACRO_DEFAULT_VALUE}"
+            |${EXEC_JS_OR_HTML_PATH}=""
+            |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
+            |${TERMINAL_FONT_COLOR}=""
+            |${TERMINAL_COLOR}=""
+            |${SET_VARIABLE_TYPE}=""
+            |${SCRIPT_FILE_NAME}="${jsScriptName}"
+            |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
             |
-            |${CMD_VARIABLE_SECTION_START}
-            |${CMD_VARIABLE_SECTION_END}
+            |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
+            |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
             |
             |
-            |${CMD_PROMPT_MESSAGE}
+            |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}
             |
             |
             |
         """.trimMargin()
+                .split("\n")
+                .map {
+                    it.replace(
+                        Regex("^#"), "//"
+                    )
+                }.joinToString("\n")
         }
 
-        fun makeAutoShellFile(
-            shiban: String,
+        fun makeAutoJsFile(
             dirPath: String,
-            shellScriptName: String
+            jsScriptName: String,
         ) {
             FileSystems.createDirs(dirPath)
             if(
                 File(
                     dirPath,
-                    shellScriptName
+                    jsScriptName
                 ).isFile
             ) return
-            val shellContents = makeAutoShellContents(
-                shiban,
-                shellScriptName
-            )
+            val shellContents = makeAutoJsContents(
+            jsScriptName
+        )
             val createFile = File(
                 dirPath,
-                shellScriptName
+                jsScriptName
             )
             createFile.writeText(shellContents)
         }

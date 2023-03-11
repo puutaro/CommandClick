@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.lib
 
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
@@ -70,7 +69,7 @@ class MakeExecCmdForTermux {
                 terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
                 || terminalOutputMode == SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
                 || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
-                || !terminalViewModel.launchUrl.isNullOrEmpty()
+                || terminalViewModel.launchUrlList.isNotEmpty()
             ) {
                 "${beforeCommandSource};" +
                         "${factExecCmd};" +

@@ -18,9 +18,12 @@ class TerminalViewModel: ViewModel() {
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
-    var launchUrl: String? = null
+    var launchUrlList = mutableListOf<String?>()
     var onExecInternetButtonShell = false
     var goBackFlag = false
+    var onDialog = false
+    var jsArguments = String()
+    var onNoJsTermOut = false
 }
 
 
