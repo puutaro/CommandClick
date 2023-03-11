@@ -424,14 +424,14 @@ ex) am broadcast \
 
 ### JavaScript interface
  - jsFileStystem
- 	- jsFileStystem.readLocalFile(path: String) -> String
-      		- read local file and return file contents string
- 	- jsFileStystem.writeLocalFile(path: String, contents: String)
-      		- write local file
-      	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)
-      		- write local monitor file
- 	- jsFileStystem.jsEcho(terminalOutPutOption: String, contents: String)
-      		- write local monitor file
+ 	- jsFileStystem.readLocalFile(path: String) -> String  
+		- read local file and return file contents string  
+	- jsFileStystem.writeLocalFile(path: String, contents: String)  
+		- write local file
+	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)  
+		- write local monitor file  
+	- jsFileStystem.jsEcho(terminalOutPutOption: String, contents: String)   
+		- write local monitor file  
  - JsArgs 
 	- jsArgs.get() -> tabsepalete string  
 		jsArgs soruce is jsf argument in edit  
@@ -447,8 +447,8 @@ ex) am broadcast \
  		 - formSource tabsepalete string  return {key}={value} contents
  		 - setting reference [Add](#add)
  		 - ex) 
- 				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")    
- 				-> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
+ 				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")      
+ 			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
 				
 
 ### javascript pre order word
