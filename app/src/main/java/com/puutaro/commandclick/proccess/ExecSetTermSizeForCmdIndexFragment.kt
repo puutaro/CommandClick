@@ -32,9 +32,7 @@ class ExecSetTermSizeForCmdIndexFragment {
                 context?.let {
                     cmdindexInternetButton.imageTintList =
                         it.getColorStateList(R.color.black)
-                    cmdindexInternetButton.setBackgroundTintList(
-                        it.getColorStateList(R.color.white)
-                    )
+                    cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.gray_out)
                     AutoCompleteEditTexter.setAdapter(
                         context,
                         binding.cmdSearchEditText,
@@ -47,11 +45,11 @@ class ExecSetTermSizeForCmdIndexFragment {
                 )
                 context?.let {
                     cmdindexInternetButton.imageTintList = it.getColorStateList(R.color.black)
-                    cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.white));
+                    cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.gray_out));
                     (it.getColor(R.color.white))
                 }
             }
-            cmdIndexFragment.WebSearchSwitch = false
+            cmdIndexFragment.WebSearchSwitch = true
             val listener =
                 context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(

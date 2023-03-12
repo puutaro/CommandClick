@@ -60,7 +60,7 @@ class CommandClickShellScript {
         val EXEC_JS_OR_HTML_PATH = "execJsOrHtmlPath"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
-        val SCRIPT_FILE_NAME = "shellFileName"
+        val SCRIPT_FILE_NAME = "scriptFileName"
         val CMDCLICK_SHIBAN = "cmdclickShiban"
         val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
         val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"

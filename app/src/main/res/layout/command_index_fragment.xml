@@ -150,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_terminal"
                     app:tint="@color/black"
-                    android:backgroundTint="@color/white"
+                    android:backgroundTint="@color/gray_out"
                     android:layout_gravity="center"
                     android:enabled="false"
                     android:contentDescription="@string/setting"

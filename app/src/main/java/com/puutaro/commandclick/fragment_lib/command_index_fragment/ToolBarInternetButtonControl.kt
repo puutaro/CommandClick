@@ -44,7 +44,7 @@ class ToolBarInternetButtonControl(
             } catch(e: Exception){
                 context?.let {
                     cmdindexInternet.imageTintList = it.getColorStateList(R.color.black)
-                    cmdindexInternet.setBackgroundTintList(it.getColorStateList(R.color.white))
+                    cmdindexInternet.backgroundTintList = it.getColorStateList(R.color.gray_out)
                 }
                 return@setOnClickListener
             }
@@ -66,7 +66,7 @@ class ToolBarInternetButtonControl(
 
             if(cmdIndexFragment.WebSearchSwitch){
                 cmdindexInternet.imageTintList = blackStateList
-                cmdindexInternet.setBackgroundTintList(whiteStateList);
+                cmdindexInternet.backgroundTintList = whiteStateList;
                 AutoCompleteEditTexter.setAdapter(
                     context,
                     cmdSearchEditText,
@@ -75,7 +75,7 @@ class ToolBarInternetButtonControl(
                 return@setOnClickListener
             }
             cmdindexInternet.imageTintList = blackStateList
-            cmdindexInternet.setBackgroundTintList(grayStateList)
+            cmdindexInternet.backgroundTintList = grayStateList
             cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH

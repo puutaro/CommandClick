@@ -35,11 +35,9 @@ object RunCommandSetter {
             checkingRunCommandPermission ==
             PackageManager.PERMISSION_GRANTED
         ) {
-            Toast.makeText(
-                activity,
-                "already setting ok",
-                Toast.LENGTH_LONG
-            ).show()
+            termuxSetupAndStorageAccessPermissionProcessLauncher(
+                activity
+            )
             return
         }
         try {

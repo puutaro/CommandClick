@@ -27,7 +27,7 @@ class CommandIndexFragment: Fragment() {
     val binding get() = _binding!!
     var mParentContextMenuListIndex: Int = 0
     var runShell = CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-    var WebSearchSwitch = WebSearchSwich.OFF.bool
+    var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE

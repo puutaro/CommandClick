@@ -5,6 +5,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent.Companion.execSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
@@ -93,7 +94,7 @@ class ExecTerminalDo {
                 onUrlLaunchMacro,
             )
 
-            jsExecuteProcessor(
+            JavascriptExecuter.exec(
                 terminalViewModel,
                 substituteSettingVariableList,
                 onUrlLaunchMacro,
@@ -134,60 +135,6 @@ class ExecTerminalDo {
             )
         }
     }
-}
-
-
-private fun jsExecuteProcessor(
-    terminalViewModel: TerminalViewModel,
-    substituteSettingVariableList: List<String>?,
-    onUrlLaunchMacro: String,
-) {
-    if(
-      onUrlLaunchMacro
-      != SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
-    ) return
-    if(
-        substituteSettingVariableList.isNullOrEmpty()
-    ) return
-    val execJsOrHtmlPath = CommandClickVariables.substituteCmdClickVariable(
-        substituteSettingVariableList,
-        CommandClickShellScript.EXEC_JS_OR_HTML_PATH
-    ) ?: return
-    if(
-        execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.JS_FILE_SUFFIX
-        )
-        || execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.JSX_FILE_SUFFIX
-        )
-    ) {
-        terminalViewModel.launchUrlList.add(
-            JavaScriptLoadUrl.make(
-                execJsOrHtmlPath,
-            )
-        )
-        return
-    }
-    val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
-        CommandClickShellScript.HTML_FILE_SUFFIX
-    )
-            || execJsOrHtmlPath.endsWith(
-        CommandClickShellScript.HTM_FILE_SUFFIX
-    )
-    val enableHtml =
-        execJsOrHtmlPath.startsWith(
-            WebUrlVariables.slashPrefix
-        ) && enableHtmlSuffix
-    if(!enableHtml) return
-    val jsOrHtmlFileObj = File(execJsOrHtmlPath)
-    if(!jsOrHtmlFileObj.isFile) return
-    val currentAppDir = jsOrHtmlFileObj.parent
-    if(
-        currentAppDir.isNullOrEmpty()
-    ) return
-    terminalViewModel.launchUrlList.add(
-        "${currentAppDir}/${jsOrHtmlFileObj.name}"
-    )
 }
 
 
