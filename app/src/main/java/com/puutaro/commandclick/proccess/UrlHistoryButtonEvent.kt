@@ -6,6 +6,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
@@ -30,7 +31,7 @@ class UrlHistoryButtonEvent(
     private val fragment: Fragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
-    val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
@@ -38,6 +39,7 @@ class UrlHistoryButtonEvent(
     private val context = fragment.context
     private val tabReplaceStr = "\t"
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+    private val searchTextHeight = 100
 
 
     fun invoke(
@@ -73,7 +75,7 @@ class UrlHistoryButtonEvent(
         linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForSearch = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            100,
+            searchTextHeight,
         )
         linearLayoutParamForSearch.weight = 0.1F
         linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
@@ -143,6 +145,7 @@ class UrlHistoryButtonEvent(
         linearLayoutParamForSearchText.topMargin = 20
         linearLayoutParamForSearchText.bottomMargin = 20
         searchText.layoutParams = linearLayoutParamForSearchText
+        searchText.inputType = InputType.TYPE_CLASS_TEXT
         searchText.background = null
         searchText.hint = "search"
         searchText.setPadding(30, 0, 20, 10)
@@ -160,7 +163,10 @@ class UrlHistoryButtonEvent(
                         urlTitleSource
                     )
                 }.filter {
-                    Regex(searchText.text.toString()).containsMatchIn(it)
+                    Regex(
+                        searchText.text.toString()
+                            .replace("\n", "")
+                    ).containsMatchIn(it)
                 }
 
                 CommandListManager.execListUpdateByEditText(

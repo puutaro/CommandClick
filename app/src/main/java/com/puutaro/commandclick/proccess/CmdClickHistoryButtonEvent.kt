@@ -4,6 +4,7 @@ import android.R
 import android.app.AlertDialog
 import android.content.SharedPreferences
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
@@ -33,15 +34,16 @@ class CmdClickHistoryButtonEvent (
     private val sharedPref: SharedPreferences?,
     )
 {
-    val context = fragment.context
-    val currentViewContext = historyButtonInnerView.context
-    val historyListView = ListView(currentViewContext)
-    val linearLayoutForTotal = LinearLayout(currentViewContext)
-    val linearLayoutForListView = LinearLayout(currentViewContext)
-    val linearLayoutForSearch = LinearLayout(currentViewContext)
-    val searchText = EditText(currentViewContext)
-    val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
+    private val context = fragment.context
+    private val currentViewContext = historyButtonInnerView.context
+    private val historyListView = ListView(currentViewContext)
+    private val linearLayoutForTotal = LinearLayout(currentViewContext)
+    private val linearLayoutForListView = LinearLayout(currentViewContext)
+    private val linearLayoutForSearch = LinearLayout(currentViewContext)
+    private val searchText = EditText(currentViewContext)
+    private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+    private val searchTextHeight = 100
 
     fun invoke() {
         deleteOverHistory(
@@ -86,7 +88,7 @@ class CmdClickHistoryButtonEvent (
         linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForSearch = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            100,
+            searchTextHeight,
         )
         linearLayoutParamForSearch.weight = 0.1F
         linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
@@ -128,6 +130,7 @@ class CmdClickHistoryButtonEvent (
         linearLayoutParamForSearchText.bottomMargin = 20
         searchText.layoutParams = linearLayoutParamForSearchText
         searchText.background = null
+        searchText.inputType = InputType.TYPE_CLASS_TEXT
         searchText.hint = "search"
         searchText.setPadding(30, 0, 20, 10)
         searchText.addTextChangedListener(object : TextWatcher {
@@ -141,7 +144,10 @@ class CmdClickHistoryButtonEvent (
                 ).map { makeHistoryListRow(it) }
 
                 val filteredCmdStrList = updateHistoryList.filter {
-                    Regex(s.toString()).containsMatchIn(it)
+                    Regex(
+                        s.toString()
+                            .replace("\n", "")
+                    ).containsMatchIn(it)
                 }
                 CommandListManager.execListUpdateByEditText(
                     filteredCmdStrList,
