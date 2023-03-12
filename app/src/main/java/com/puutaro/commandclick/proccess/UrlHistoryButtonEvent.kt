@@ -5,18 +5,24 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
 
@@ -28,54 +34,55 @@ class UrlHistoryButtonEvent(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    val fragmentTag = fragment.tag
+    private val fragmentTag = fragment.tag
     private val context = fragment.context
     private val tabReplaceStr = "\t"
+    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
 
 
     fun invoke(
         historyButtonInnerView: View,
     ){
+        terminalViewModel.onDialog = true
         val historyButtonInnerViewContext = historyButtonInnerView.context
         val urlHistoryListView = ListView(
             historyButtonInnerViewContext
         )
-        val alertDialogBuilder = AlertDialog.Builder(
-            historyButtonInnerViewContext
-        )
-            .setTitle("Select from url history")
-            .setView(urlHistoryListView)
-        val alertDialog = alertDialogBuilder.create()
-        alertDialog
-            .getWindow()?.setGravity(Gravity.BOTTOM);
-        alertDialog.show()
 
         val urlHistoryList = mekeUrlHistoryList()
-
-        setUrlHistoryListView(
-            urlHistoryListView,
-            historyButtonInnerView,
-            urlHistoryList,
+        val linearLayoutForTotal = LinearLayout(historyButtonInnerViewContext)
+        linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
+        linearLayoutForTotal.weightSum = 1F
+        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
         )
-        setUrlHistoryListViewOnItemClickListener(
-            urlHistoryListView,
-            urlHistoryList,
-            alertDialog
+        linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
+
+        val linearLayoutForListView = LinearLayout(historyButtonInnerViewContext)
+        linearLayoutForListView.orientation =  LinearLayout.VERTICAL
+        val linearLayoutParamForListView = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
         )
+        linearLayoutParamForListView.weight = 0.9F
+        linearLayoutForListView.layoutParams = linearLayoutParamForListView
+        linearLayoutForListView.addView(urlHistoryListView)
 
-        setUrlHistoryListViewOnItemLongClickListener (
-            urlHistoryListView,
-            urlHistoryList,
+        val linearLayoutForSearch = LinearLayout(historyButtonInnerViewContext)
+        linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
+        val linearLayoutParamForSearch = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            100,
         )
-    }
+        linearLayoutParamForSearch.weight = 0.1F
+        linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
 
 
-    private fun setUrlHistoryListView(
-        urlHistoryListView: ListView,
-        historyButtonInnerView: View,
-        urlHistoryList: List<String>
-
-    ){
+        val searchText = EditText(historyButtonInnerViewContext)
+        linearLayoutForSearch.addView(searchText)
+        linearLayoutForTotal.addView(linearLayoutForListView)
+        linearLayoutForTotal.addView(linearLayoutForSearch)
 
         val urlDisplayHistoryList = urlHistoryList.map {
             val urlTitleSource =
@@ -93,23 +100,108 @@ class UrlHistoryButtonEvent(
         )
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter
         urlHistoryListView.setSelection(urlHistoryDisplayListAdapter.count)
+
+        makeSearchEditText(
+            urlHistoryListView,
+            urlHistoryDisplayListAdapter,
+            searchText
+        )
+
+        val alertDialogBuilder = AlertDialog.Builder(
+            historyButtonInnerViewContext
+        )
+            .setTitle("Select from url history")
+            .setView(linearLayoutForTotal)
+        val alertDialog = alertDialogBuilder.create()
+        alertDialog.window?.setGravity(Gravity.BOTTOM);
+        alertDialog.show()
+
+
+
+        setUrlHistoryListViewOnItemClickListener(
+            urlHistoryListView,
+            urlHistoryList,
+            alertDialog,
+            searchText
+        )
+
+        setUrlHistoryListViewOnItemLongClickListener (
+            urlHistoryListView,
+            urlHistoryList,
+        )
+    }
+
+    private fun makeSearchEditText(
+        urlHistoryListView: ListView,
+        urlHistoryListAdapter: ArrayAdapter<String>,
+        searchText: EditText
+    ) {
+        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        linearLayoutParamForSearchText.topMargin = 20
+        linearLayoutParamForSearchText.bottomMargin = 20
+        searchText.layoutParams = linearLayoutParamForSearchText
+        searchText.background = null
+        searchText.hint = "search"
+        searchText.setPadding(30, 0, 20, 10)
+        searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if(!searchText.hasFocus()) return
+                val filteredUrlHistoryList = mekeUrlHistoryList().map {
+                    val urlTitleSource =
+                        it.split(tabReplaceStr)
+                            .firstOrNull() ?:String()
+                    UrlTitleTrimmer.trim(
+                        urlTitleSource
+                    )
+                }.filter {
+                    Regex(searchText.text.toString()).containsMatchIn(it)
+                }
+
+                CommandListManager.execListUpdateByEditText(
+                    filteredUrlHistoryList,
+                    urlHistoryListAdapter,
+                    urlHistoryListView
+                )
+                urlHistoryListView.setSelection(urlHistoryListAdapter.count)
+            }
+        })
     }
 
 
     private fun setUrlHistoryListViewOnItemClickListener (
         urlHistoryListView: ListView,
         urlHistoryList: List<String>,
-        alertDialog: AlertDialog
+        alertDialog: AlertDialog,
+        searchText: EditText,
     ){
         urlHistoryListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
+            val filteredUrlHistoryTitle = mekeUrlHistoryList().map {
+                    val urlTitleSource =
+                        it.split(tabReplaceStr)
+                            .firstOrNull() ?:String()
+                    UrlTitleTrimmer.trim(
+                        urlTitleSource
+                    )
+                }.filter {
+                        Regex(searchText.text.toString()).containsMatchIn(it)
+                    }.getOrNull(pos)
+                        ?: return@setOnItemClickListener
             val selectedUrlSource =
-                urlHistoryList.getOrNull(
-                    pos
-                ) ?: return@setOnItemClickListener
+                urlHistoryList.filter {
+                    it.startsWith(filteredUrlHistoryTitle)
+                }.firstOrNull()
+                    ?: return@setOnItemClickListener
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
                 ?: return@setOnItemClickListener
+            terminalViewModel.onDialog = false
             alertDialog.dismiss()
 
             if(
@@ -165,7 +257,7 @@ class UrlHistoryButtonEvent(
         ) return emptyList()
         val usedTitle = mutableSetOf<String>()
         val usedUrl = mutableSetOf<String>()
-        val takeListNum = 60
+        val takeListNum = 200
         return ReadText(
             "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
             UsePath.cmdclickUrlHistoryFileName

@@ -2,12 +2,15 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_bu
 
 import android.R
 import android.app.AlertDialog
-import android.content.Context
 import android.content.SharedPreferences
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -20,17 +23,25 @@ import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.UrlTitleTrimmer
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
 
 class CmdClickHistoryButtonEvent (
-    private val historyButtonInnerView: View,
+    historyButtonInnerView: View,
     private val fragment: Fragment,
     private val sharedPref: SharedPreferences?,
     )
 {
     val context = fragment.context
+    val currentViewContext = historyButtonInnerView.context
+    val historyListView = ListView(currentViewContext)
+    val linearLayoutForTotal = LinearLayout(currentViewContext)
+    val linearLayoutForListView = LinearLayout(currentViewContext)
+    val linearLayoutForSearch = LinearLayout(currentViewContext)
+    val searchText = EditText(currentViewContext)
     val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
+    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
 
     fun invoke() {
         deleteOverHistory(
@@ -45,57 +56,121 @@ class CmdClickHistoryButtonEvent (
         val historyList = FileSystems.filterSuffixShellOrJsFiles(
             cmdclickAppHistoryDirAdminPath
         ).map { makeHistoryListRow(it) }
-
-        val currentViewContext = historyButtonInnerView.context
-        val historyListView = ListView(currentViewContext)
         val historyListAdapter = ArrayAdapter(
-            historyButtonInnerView.context,
+            currentViewContext,
             R.layout.simple_list_item_1,
             historyList
         )
         historyListView.adapter = historyListAdapter
-        historyListView.setSelection(historyListAdapter.count);
+        historyListView.setSelection(historyListAdapter.count)
+
+        linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
+        linearLayoutForTotal.weightSum = 1F
+        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
+
+        linearLayoutForListView.orientation =  LinearLayout.VERTICAL
+        val linearLayoutParamForListView = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        linearLayoutParamForListView.weight = 0.9F
+        linearLayoutForListView.layoutParams = linearLayoutParamForListView
+        linearLayoutForListView.addView(historyListView)
+
+        makeSearchEditText(historyListAdapter)
+
+        linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
+        val linearLayoutParamForSearch = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            100,
+        )
+        linearLayoutParamForSearch.weight = 0.1F
+        linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
+        linearLayoutForSearch.addView(searchText)
+
+        linearLayoutForTotal.addView(linearLayoutForListView)
+        linearLayoutForTotal.addView(linearLayoutForSearch)
+
 
         val alertDialog = AlertDialog.Builder(
             context
         )
             .setTitle("Select app history")
-            .setView(historyListView)
+            .setView(linearLayoutForTotal)
             .create()
         alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
         alertDialog.show()
+        terminalViewModel.onDialog = true
 
-        invokeItemSetLongTimeClickListnerForHistory(
-            currentViewContext,
-            historyListView,
+        invokeItemSetLongTimeClickListenerForHistory(
             historyListAdapter,
             historyList,
-            historyButtonInnerView,
             cmdclickAppHistoryDirAdminPath
         )
 
         invokeItemSetClickListenerForHistory(
-            fragment,
-            historyListView,
-            historyList,
             alertDialog,
         )
     }
 
+    private fun makeSearchEditText(
+        historyListAdapter: ArrayAdapter<String>
+    ){
+        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        linearLayoutParamForSearchText.topMargin = 20
+        linearLayoutParamForSearchText.bottomMargin = 20
+        searchText.layoutParams = linearLayoutParamForSearchText
+        searchText.background = null
+        searchText.hint = "search"
+        searchText.setPadding(30, 0, 20, 10)
+        searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if(!searchText.hasFocus()) return
+                val updateHistoryList = FileSystems.filterSuffixShellOrJsFiles(
+                    cmdclickAppHistoryDirAdminPath
+                ).map { makeHistoryListRow(it) }
+
+                val filteredCmdStrList = updateHistoryList.filter {
+                    Regex(s.toString()).containsMatchIn(it)
+                }
+                CommandListManager.execListUpdateByEditText(
+                    filteredCmdStrList,
+                    historyListAdapter,
+                    historyListView
+                )
+                historyListView.setSelection(historyListAdapter.count)
+            }
+        })
+    }
+
     private fun invokeItemSetClickListenerForHistory(
-        fragment: Fragment,
-        historyListView: ListView,
-        historyList: List<String>,
         alertDialog: AlertDialog,
     ) {
         historyListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
+
             alertDialog.dismiss()
-            val selectedHistoryFile = historyList
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
+            terminalViewModel.onDialog = false
+            val updateHistoryList = FileSystems.filterSuffixShellOrJsFiles(
+                cmdclickAppHistoryDirAdminPath
+            ).map { makeHistoryListRow(it) }
+            val selectedHistoryFile = updateHistoryList.filter {
+                Regex(searchText.text.toString()).containsMatchIn(it)
+            }
+                .getOrNull(pos)
+                ?.split("\n")
+                ?.firstOrNull()
                 ?: return@setOnItemClickListener
             val resultBool = AppHistoryAdminEvent.invoke(
                 fragment,
@@ -118,6 +193,106 @@ class CmdClickHistoryButtonEvent (
             return@setOnItemClickListener
         }
     }
+
+    private fun invokeItemSetLongTimeClickListenerForHistory(
+        historyListAdapter: ArrayAdapter<String>,
+        historyList: List<String>,
+        cmdclickAppHistoryDirAdminPath: String,
+    ){
+        historyListView.onItemLongClickListener =
+            AdapterView.OnItemLongClickListener {
+                    parent, listSelectedView, pos, id ->
+                val popup = PopupMenu(currentViewContext, listSelectedView)
+                val selectedHistoryFile = historyList.filter {
+                    Regex(searchText.text.toString()).containsMatchIn(it)
+                }.get(pos)
+                val inflater = popup.menuInflater
+                inflater.inflate(
+                    com.puutaro.commandclick.R.menu.history_admin_menu,
+                    popup.menu
+                )
+                popup.menu.add(
+                    HistoryMenuEnums.DELETE.groupId,
+                    HistoryMenuEnums.DELETE.itemId,
+                    HistoryMenuEnums.DELETE.order,
+                    HistoryMenuEnums.DELETE.itemName,
+
+                    )
+                popup.setOnMenuItemClickListener {
+                        menuItem ->
+                    execDeleteHistoryFile(
+                        selectedHistoryFile,
+                        cmdclickAppHistoryDirAdminPath,
+                        historyListAdapter,
+                    )
+                    searchText.text.clear()
+                    true
+                }
+                popup.show()
+                true
+            }
+    }
+
+
+    fun execDeleteHistoryFile(
+        selectedHistoryFile: String,
+        cmdclickAppHistoryDirAdminPath: String,
+        historyListAdapter: ArrayAdapter<String>,
+    ) {
+        val selectedDeleteFile =
+            selectedHistoryFile
+                .split("\n")
+                .firstOrNull()
+                ?: return
+
+        FileSystems.removeFiles(
+            cmdclickAppHistoryDirAdminPath,
+            selectedDeleteFile,
+        )
+        CommandListManager.execListUpdate(
+            cmdclickAppHistoryDirAdminPath,
+            historyListAdapter,
+            historyListView
+        )
+    }
+
+
+
+    internal fun makeHistoryListRow(
+        historyRow: String
+    ): String {
+        val selectedAppShellFileName = AppHistoryManager
+            .getShellFileNameFromAppHistoryFileName(
+                historyRow
+            )
+        if(selectedAppShellFileName != CommandClickShellScript.EMPTY_STRING) {
+            return historyRow
+        }
+        val appDirName =
+            AppHistoryManager.getAppDirNameFromAppHistoryFileName(
+                historyRow
+            )
+        val appDirPath = "${UsePath.cmdclickAppDirPath}/${appDirName}"
+        val appUrlSystemDirPath = "${appDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val currentUrlHistoryPath =
+            "${appUrlSystemDirPath}/${UsePath.cmdclickUrlHistoryFileName}"
+        if(
+            !File(currentUrlHistoryPath).isFile
+        ) return historyRow
+        val urlTitleSource = ReadText(
+            appUrlSystemDirPath,
+            UsePath.cmdclickFirstHistoryTitle
+        ).textToList()
+            .firstOrNull()
+            ?.split("\t")
+            ?.firstOrNull() ?: return historyRow
+        val urlTitle = UrlTitleTrimmer.trim(
+            urlTitleSource
+        )
+        return "${historyRow}\n\t- ${urlTitle}"
+
+    }
+
 }
 
 
@@ -132,115 +307,8 @@ internal enum class HistoryMenuEnums(
     DELETE(mainMenuGroupId, 30100, 1, "delete"),
 }
 
-internal fun invokeItemSetLongTimeClickListnerForHistory(
-    context: Context,
-    historyListView: ListView,
-    historyListAdapter: ArrayAdapter<String>,
-    historyList: List<String>,
-    currentView: View,
-    cmdclickAppHistoryDirAdminPath: String,
-){
-    historyListView.onItemLongClickListener =
-        AdapterView.OnItemLongClickListener { parent, listSelectedView, pos, id ->
-            val popup = PopupMenu(context, listSelectedView)
-            val selectedHistoryFile = historyList.get(pos)
-            val inflater = popup.menuInflater
-            inflater.inflate(
-                com.puutaro.commandclick.R.menu.history_admin_menu,
-                popup.menu
-            )
-            popup.menu.add(
-                HistoryMenuEnums.DELETE.groupId,
-                HistoryMenuEnums.DELETE.itemId,
-                HistoryMenuEnums.DELETE.order,
-                HistoryMenuEnums.DELETE.itemName,
 
-                )
-            popup.setOnMenuItemClickListener {
-                    menuItem ->
-                execDeleteHistoryFile(
-                    historyListView,
-                    currentView,
-                    selectedHistoryFile,
-                    cmdclickAppHistoryDirAdminPath,
-                    historyListAdapter,
-                )
-                true
-            }
-            popup.show()
-            true
-        }
-}
-
-
-fun execDeleteHistoryFile(
-    historyListView: ListView,
-    currentView: View,
-    selectedHistoryFile: String,
-    cmdclickAppHistoryDirAdminPath: String,
-    historyListAdapter: ArrayAdapter<String>,
-) {
-    val selectedDeleteFile =
-        selectedHistoryFile
-            .split("\n")
-            .firstOrNull()
-            ?: return
-    Toast.makeText(
-        currentView.context,
-        "${selectedDeleteFile}, ${HistoryMenuEnums.DELETE.itemName}",
-        Toast.LENGTH_SHORT
-    ).show()
-
-    FileSystems.removeFiles(
-        cmdclickAppHistoryDirAdminPath,
-        selectedDeleteFile,
-    )
-    CommandListManager.execListUpdate(
-        cmdclickAppHistoryDirAdminPath,
-        historyListAdapter,
-        historyListView
-    )
-}
-
-
-
-internal fun makeHistoryListRow(
-    historyRow: String
-): String {
-    val selectedAppShellFileName = AppHistoryManager
-        .getShellFileNameFromAppHistoryFileName(
-            historyRow
-        )
-    if(selectedAppShellFileName != CommandClickShellScript.EMPTY_STRING) {
-        return historyRow
-    }
-    val appDirName =
-        AppHistoryManager.getAppDirNameFromAppHistoryFileName(
-            historyRow
-        )
-    val appDirPath = "${UsePath.cmdclickAppDirPath}/${appDirName}"
-    val appUrlSystemDirPath = "${appDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-    val currentUrlHistoryPath =
-        "${appUrlSystemDirPath}/${UsePath.cmdclickUrlHistoryFileName}"
-    if(
-        !File(currentUrlHistoryPath).isFile
-    ) return historyRow
-    val urlTitleSource = ReadText(
-        appUrlSystemDirPath,
-        UsePath.cmdclickFirstHistoryTitle
-    ).textToList()
-        .firstOrNull()
-        ?.split("\t")
-        ?.firstOrNull() ?: return historyRow
-    val urlTitle = UrlTitleTrimmer.trim(
-        urlTitleSource
-    )
-    return "${historyRow}\n\t- ${urlTitle}"
-
-}
-
-
-internal fun deleteOverHistory(
+private fun deleteOverHistory(
     cmdclickAppHistoryDirAdminPath: String
 ){
     val leavesHistoryNum = 50
