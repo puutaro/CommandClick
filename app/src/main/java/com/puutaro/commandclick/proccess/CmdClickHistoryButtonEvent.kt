@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_bu
 
 import android.R
 import android.app.AlertDialog
+import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.text.Editable
 import android.text.InputType
@@ -106,6 +107,11 @@ class CmdClickHistoryButtonEvent (
             .create()
         alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
         alertDialog.show()
+        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+            override fun onCancel(dialog: DialogInterface?) {
+                terminalViewModel.onDialog = false
+            }
+        })
         terminalViewModel.onDialog = true
 
         invokeItemSetLongTimeClickListenerForHistory(
@@ -141,13 +147,18 @@ class CmdClickHistoryButtonEvent (
                 if(!searchText.hasFocus()) return
                 val updateHistoryList = FileSystems.filterSuffixShellOrJsFiles(
                     cmdclickAppHistoryDirAdminPath
-                ).map { makeHistoryListRow(it) }
+                ).map {
+                    makeHistoryListRow(it)
+                }
 
                 val filteredCmdStrList = updateHistoryList.filter {
                     Regex(
                         s.toString()
+                            .lowercase()
                             .replace("\n", "")
-                    ).containsMatchIn(it)
+                    ).containsMatchIn(
+                        it.lowercase()
+                    )
                 }
                 CommandListManager.execListUpdateByEditText(
                     filteredCmdStrList,
@@ -172,7 +183,13 @@ class CmdClickHistoryButtonEvent (
                 cmdclickAppHistoryDirAdminPath
             ).map { makeHistoryListRow(it) }
             val selectedHistoryFile = updateHistoryList.filter {
-                Regex(searchText.text.toString()).containsMatchIn(it)
+                Regex(
+                    searchText.text
+                        .toString()
+                        .lowercase()
+                ).containsMatchIn(
+                    it.lowercase()
+                )
             }
                 .getOrNull(pos)
                 ?.split("\n")
@@ -210,7 +227,13 @@ class CmdClickHistoryButtonEvent (
                     parent, listSelectedView, pos, id ->
                 val popup = PopupMenu(currentViewContext, listSelectedView)
                 val selectedHistoryFile = historyList.filter {
-                    Regex(searchText.text.toString()).containsMatchIn(it)
+                    Regex(
+                        searchText.text
+                            .toString()
+                            .lowercase()
+                    ).containsMatchIn(
+                        it.lowercase()
+                    )
                 }.get(pos)
                 val inflater = popup.menuInflater
                 inflater.inflate(

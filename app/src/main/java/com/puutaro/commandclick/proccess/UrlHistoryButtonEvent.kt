@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
+import android.content.DialogInterface
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -114,7 +115,14 @@ class UrlHistoryButtonEvent(
         )
             .setTitle("Select from url history")
             .setView(linearLayoutForTotal)
-        val alertDialog = alertDialogBuilder.create()
+        val alertDialog =
+            alertDialogBuilder
+                .create()
+        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+            override fun onCancel(dialog: DialogInterface?) {
+                terminalViewModel.onDialog = false
+            }
+        })
         alertDialog.window?.setGravity(Gravity.BOTTOM);
         alertDialog.show()
 
@@ -165,8 +173,11 @@ class UrlHistoryButtonEvent(
                 }.filter {
                     Regex(
                         searchText.text.toString()
+                            .lowercase()
                             .replace("\n", "")
-                    ).containsMatchIn(it)
+                    ).containsMatchIn(
+                        it.lowercase()
+                    )
                 }
 
                 CommandListManager.execListUpdateByEditText(
@@ -197,7 +208,13 @@ class UrlHistoryButtonEvent(
                         urlTitleSource
                     )
                 }.filter {
-                        Regex(searchText.text.toString()).containsMatchIn(it)
+                        Regex(
+                            searchText.text
+                                .toString()
+                                .lowercase()
+                        ).containsMatchIn(
+                            it.lowercase()
+                        )
                     }.getOrNull(pos)
                         ?: return@setOnItemClickListener
             val selectedUrlSource =

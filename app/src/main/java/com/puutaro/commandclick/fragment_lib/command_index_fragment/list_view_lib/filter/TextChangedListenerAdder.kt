@@ -43,7 +43,11 @@ class TextChangedListenerAdder {
                         terminalViewModel.readlinesNum != ReadLines.SHORTH
                     ) return
                     val filteredCmdStrList = filteringCmdStrList.filter {
-                        Regex(s.toString()).containsMatchIn(it)
+                        Regex(
+                            s.toString().lowercase()
+                        ).containsMatchIn(
+                            it.lowercase()
+                        )
                     }
                     CommandListManager.execListUpdateByEditText(
                         filteredCmdStrList,
