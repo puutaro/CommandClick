@@ -23,6 +23,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -40,7 +41,8 @@ class UrlHistoryButtonEvent(
     private val context = fragment.context
     private val tabReplaceStr = "\t"
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-    private val searchTextHeight = 100
+    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
+    private val listLinearWeight = 1F - searchTextLinearWeight
 
 
     fun invoke(
@@ -66,9 +68,9 @@ class UrlHistoryButtonEvent(
         linearLayoutForListView.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForListView = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearLayoutParamForListView.weight = 0.9F
+        linearLayoutParamForListView.weight = listLinearWeight
         linearLayoutForListView.layoutParams = linearLayoutParamForListView
         linearLayoutForListView.addView(urlHistoryListView)
 
@@ -76,9 +78,9 @@ class UrlHistoryButtonEvent(
         linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForSearch = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            searchTextHeight,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearLayoutParamForSearch.weight = 0.1F
+        linearLayoutParamForSearch.weight = searchTextLinearWeight
         linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
 
 
@@ -156,7 +158,7 @@ class UrlHistoryButtonEvent(
         searchText.inputType = InputType.TYPE_CLASS_TEXT
         searchText.background = null
         searchText.hint = "search"
-        searchText.setPadding(30, 0, 20, 10)
+        searchText.setPadding(30, 10, 20, 10)
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

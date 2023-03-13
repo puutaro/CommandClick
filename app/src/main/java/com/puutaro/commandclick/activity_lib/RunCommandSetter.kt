@@ -86,9 +86,14 @@ object RunCommandSetter {
     private fun termuxSetupAndStorageAccessPermissionProcessLauncher(
         activity: MainActivity
     ){
-        val termuxSetUpCommand = "pkg update -y && pkg upgrade -y \\\n" +
+        val termuxSetUpCommand = "echo \"# The main termux repository: \n" +
+                "deb https://packages-cf.termux.org/apt/termux-main stable main\n\" " +
+                "> /data/data/com.termux/files/usr/etc/apt/sources.list \\\n" +
+                "&& pkg update -y && pkg upgrade -y \\\n" +
                 "&& yes | termux-setup-storage \\\n" +
-                "&& sed -r 's/^\\#\\s(allow-external-apps.*)/\\1/' -i \"\$HOME/.termux/termux.properties\""
+                "&& pkg install -y termux-api \\\n" +
+                "&& sed -r 's/^\\#\\s(allow-external-apps.*)/\\1/' \\\n" +
+                "-i \"\$HOME/.termux/termux.properties\" \n"
 
         val clipboard =
             activity.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE)

@@ -21,6 +21,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Comma
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppHistoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -44,7 +45,8 @@ class CmdClickHistoryButtonEvent (
     private val searchText = EditText(currentViewContext)
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-    private val searchTextHeight = 100
+    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
+    private val listLinearWeight = 1F - searchTextLinearWeight
 
     fun invoke() {
         deleteOverHistory(
@@ -78,9 +80,9 @@ class CmdClickHistoryButtonEvent (
         linearLayoutForListView.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForListView = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearLayoutParamForListView.weight = 0.9F
+        linearLayoutParamForListView.weight = listLinearWeight
         linearLayoutForListView.layoutParams = linearLayoutParamForListView
         linearLayoutForListView.addView(historyListView)
 
@@ -89,9 +91,9 @@ class CmdClickHistoryButtonEvent (
         linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
         val linearLayoutParamForSearch = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            searchTextHeight,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearLayoutParamForSearch.weight = 0.1F
+        linearLayoutParamForSearch.weight = searchTextLinearWeight
         linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
         linearLayoutForSearch.addView(searchText)
 
@@ -138,7 +140,7 @@ class CmdClickHistoryButtonEvent (
         searchText.background = null
         searchText.inputType = InputType.TYPE_CLASS_TEXT
         searchText.hint = "search"
-        searchText.setPadding(30, 0, 20, 10)
+        searchText.setPadding(30, 10, 20, 10)
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -361,3 +363,4 @@ private fun deleteOverHistory(
         }
     }
 }
+
