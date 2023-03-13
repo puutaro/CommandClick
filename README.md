@@ -112,7 +112,7 @@ At the same time, if you installed code editor, edit new file.
     | `terminalColor` | `string` | adjust terminal background color |
     | `beforeCommand` | `shell command string` | before run shellscript, run command |
     | `afterCommand` | `shell command string` | after run shellscript, run command |
-    | `shellFileName`  | `string` | shellscript file name  |
+    | `FileName`  | `string` | shellscript file name  |
 
  
   - setVariableType option
