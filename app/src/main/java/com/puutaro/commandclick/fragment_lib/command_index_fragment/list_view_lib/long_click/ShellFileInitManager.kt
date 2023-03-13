@@ -32,6 +32,7 @@ class ShellFileInitManager {
                 .setPositiveButton("OK", DialogInterface.OnClickListener {
                         dialog, which ->
                     excInit(
+                        cmdIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -51,6 +52,7 @@ class ShellFileInitManager {
 
 
         private fun excInit(
+            cmdIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             shellScriptName: String,
             cmdListAdapter: ArrayAdapter<String>,
@@ -68,7 +70,7 @@ class ShellFileInitManager {
                 CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
-            val ShellContentsList = if(
+            val shellContentsList = if(
                 shellScriptName == UsePath.cmdclickStartupJsName
             ) {
                 CommandClickShellScript.makeAutoJsContents(
@@ -76,13 +78,14 @@ class ShellFileInitManager {
                 ).split("\n")
             } else {
                 CommandClickShellScript.makeShellContents(
-                    CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE,
+                    cmdIndexFragment.shiban,
                     shellScriptName,
-                    CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
+                    CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
+                    languageType
                 ).split("\n")
             }
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-                ShellContentsList,
+                shellContentsList,
                 settingSectionStart,
                 settingSectionEnd
             )?.filter {

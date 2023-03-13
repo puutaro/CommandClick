@@ -1,10 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
+import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.util.*
@@ -112,9 +109,11 @@ class ConfigFromShellFileSetter {
                 settingVariableList,
                 CommandClickShellScript.TERMINAL_DO
             ) ?: CommandClickShellScript.TERMINAL_DO_DEFAULT_VALUE
+            val onTerminalShrink = editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+                    || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
             if(
-                editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
+                && onTerminalShrink
             ) {
                 editFragment.editTerminalInitType = EditInitType.TERMINAL_SHRINK
                 val listener = context
