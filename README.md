@@ -94,7 +94,7 @@ At the same time, if you installed code editor, edit new file.
 
     | settingVariable| set value | description  |
     | --------- | --------- | ------------ |
-    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal; `ON`: in web terminal view, `Termux`: in termux, `OFF`: backgrond exe   |
+    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal; `ON`: in web terminal view, `Termux`: in termux (only shell), `OFF`: backgrond exe (only shell)  |
     | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size; `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
     | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change; `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
     | `terminalOutputMode`  | `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` | `NORMAL`: normal terminal output, `REFLASH`: Before terminal output, screen resflesh, `REFLASH_AND_FIRST_ROW`: Before terminal output, screen resflesh and focus first row, `DEBUG`: stdr + stderr, `NO`: no output (bacground exec)
@@ -112,7 +112,7 @@ At the same time, if you installed code editor, edit new file.
     | `terminalColor` | `string` | adjust terminal background color |
     | `beforeCommand` | `shell command string` | before run shellscript, run command |
     | `afterCommand` | `shell command string` | after run shellscript, run command |
-    | `shellFileName`  | `string` | shellscript file name  |
+    | `FileName`  | `string` | shellscript file name  |
 
  
   - setVariableType option
