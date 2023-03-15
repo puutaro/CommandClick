@@ -441,6 +441,8 @@ ex) am broadcast \
 		- write local monitor file  
 	- jsFileStystem.jsEcho(terminalOutPutOption: String, contents: String)   
 		- write local monitor file  
+
+
  - JsArgs 
 	- jsArgs.get() -> tabsepalete string  
 		jsArgs soruce is jsf argument in edit  
@@ -448,8 +450,7 @@ ex) am broadcast \
 			-> `fristargment`\t`secondargument 2`  
 
  - JsIntent
- 	- jsIntent  
- 		- launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+ 	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
  - JsDialog
  	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
  	- jsDialog.formJsDialog(formSource: String(tab sepalate))
@@ -458,6 +459,13 @@ ex) am broadcast \
  		 - ex) 
  				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")      
  			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
+ - JsStop
+ 	- jsStop.how() (mesure for `while roop` crush when application focus out)
+ - JsToast
+ 	- jsToast.short(contents: string)   
+	- jsToast.long(contents: string)   
+ - JsCurl
+ 	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..))   
 				
 
 ### javascript pre order word
