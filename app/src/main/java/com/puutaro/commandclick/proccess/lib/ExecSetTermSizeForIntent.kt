@@ -24,11 +24,11 @@ class ExecSetTermSizeForIntent {
             val context = currentFragment.context
             val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
 
-            val terminamlSizeType = CommandClickVariables.substituteCmdClickVariable(
+            val terminalSizeType = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
                 CommandClickShellScript.TERMINAL_SIZE_TYPE
             ) ?: String()
-            val onSetTerminalSize = when(terminamlSizeType){
+            val onSetTerminalSize = when(terminalSizeType){
                 SettingVariableSelects.Companion.TerminalSizeTypeSelects.SHORT.name -> {
                     ReadLines.SHORTH != terminalViewModel.readlinesNum
                 }

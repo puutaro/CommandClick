@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -11,11 +12,13 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ShellScriptSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -72,6 +75,10 @@ object ButtonViewProducer {
 
         insertButton.setOnClickListener {
                 innerButtonView ->
+            shellScriptSaver.save(
+                currentShellContentsList,
+                recordNumToMapNameValueInCommandHolder,
+            )
             val execCmdEditable = insertEditText.text
 
             val cmdPrefixEntrySource = currentRecordNumToSetVariableMap.get(
@@ -103,7 +110,7 @@ object ButtonViewProducer {
             if(onTermOutMacro) {
                 terminalViewModel.onDisplayUpdate = true
             }
-            terminalViewModel.onNoJsTermOut = innerExecCmd.contains(noJsTermOut)
+            terminalViewModel.onDisplayUpdate = !innerExecCmd.contains(noJsTermOut)
             val execCmdAfterTrimButtonEditExecVariant =
                 innerExecCmd
                     .replace(backStackMacro, "")
@@ -137,10 +144,6 @@ object ButtonViewProducer {
                 || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
             ) "${execCmdAfterTrimButtonEditExecVariant};"
             else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
-            shellScriptSaver.save(
-                currentShellContentsList,
-                recordNumToMapNameValueInCommandHolder,
-            )
             ExecBashScriptIntent.ToTermux(
                 editFragment.runShell,
                 context,
@@ -231,6 +234,12 @@ object ButtonViewProducer {
         if(
             !File(jsFilePath).isFile
         ) return
+        val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+        listener?.onKeyBoardVisibleChangeForEditFragment(
+            false,
+            true,
+        )
+        Keyboard.hiddenKeyboardForFragment(editFragment)
         terminalViewModel.jsArguments = if(execCmdReplaceBlankList.size > 1){
             execCmdReplaceBlankList
                 .slice(2..execCmdReplaceBlankList.size-1)
@@ -240,11 +249,23 @@ object ButtonViewProducer {
                     )
                 }.joinToString("\t")
         } else String()
-        val listener = editFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-        listener?.onLaunchUrlByWebViewForEdit(
-            JavaScriptLoadUrl.make(
-                jsFilePath,
-            ).toString()
-        )
+        editFragment.jsExecuteJob?.cancel()
+        editFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
+            val onLaunchUrl = EnableTerminalWebView.check(
+                editFragment,
+                editFragment.context?.getString(
+                    R.string.edit_execute_terminal_fragment
+                )
+            )
+            if(!onLaunchUrl) return@launch
+            withContext(Dispatchers.Main) {
+                val listenerForWebLaunch = editFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
+                    JavaScriptLoadUrl.make(
+                        jsFilePath,
+                    ).toString()
+                )
+            }
+        }
     }
 }

@@ -69,7 +69,7 @@ class MakeExecCmdForTermux {
                 terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
                 || terminalOutputMode == SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
                 || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
-                || terminalViewModel.launchUrlList.isNotEmpty()
+                || !terminalViewModel.launchUrl.isNullOrEmpty()
             ) {
                 "${beforeCommandSource};" +
                         "${factExecCmd};" +

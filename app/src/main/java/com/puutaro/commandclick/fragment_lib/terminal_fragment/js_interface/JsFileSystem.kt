@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
@@ -11,6 +12,9 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -48,9 +52,6 @@ class JsFileSystem(
         fileName: String,
         outPutOption: String,
     ) {
-        if(
-            terminalViewModel.onNoJsTermOut
-        ) return
         if(
             SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
             == outPutOption
@@ -92,9 +93,18 @@ class JsFileSystem(
         outPutOption: String,
         contents: String,
     ) {
-        if(
-            terminalViewModel.onNoJsTermOut
-        ) return
+        execJsEcho(
+            outPutOption,
+            contents,
+            "yes"
+        )
+    }
+
+    private fun execJsEcho(
+        outPutOption: String,
+        contents: String,
+        wrap: String
+    ) {
         if (
             SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
             == outPutOption
@@ -119,10 +129,13 @@ class JsFileSystem(
             parentDir,
             fileObj.name
         ).readText() + contents
+        val wrapChar = if(wrap == "yes"){
+            "\n"
+        } else String()
         FileSystems.writeFile(
             parentDir,
             fileObj.name,
-            "${echoContents}\n"
+            "${echoContents}${wrapChar}"
         )
     }
 

@@ -18,7 +18,7 @@ class LinearLayoutAdderForDialog {
             descriptionContents: String,
         ): LinearLayout? {
                 val textView = TextView(context)
-                textView.setText(descriptionContents)
+            textView.text = descriptionContents
                 textView.setTextIsSelectable(true)
                 if(Build.VERSION.SDK_INT > 29) textView.breakStrategy = LineBreaker.BREAK_STRATEGY_SIMPLE
                 if(context == null) return null

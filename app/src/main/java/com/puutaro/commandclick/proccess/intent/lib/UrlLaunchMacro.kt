@@ -15,7 +15,7 @@ object UrlLaunchMacro {
         val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         when(onUrlLaunchMacro){
             SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.RECENT.name -> {
-                terminalViewModel.launchUrlList += ReadText(
+                terminalViewModel.launchUrl += ReadText(
                     appUrlSystemPath,
                     UsePath.cmdclickUrlHistoryFileName
                 ).textToList()
@@ -28,7 +28,7 @@ object UrlLaunchMacro {
                     ?.split("\t")?.lastOrNull()
             }
             SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
-                terminalViewModel.launchUrlList += ReadText(
+                terminalViewModel.launchUrl += ReadText(
                     appUrlSystemPath,
                     UsePath.cmdclickUrlHistoryFileName
                 ).textToList()

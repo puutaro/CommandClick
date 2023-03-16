@@ -38,6 +38,7 @@ class TerminalFragment: Fragment() {
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
+    var onWebHistoryUpdaterJob: Job? = null
     var firstDisplayUpdateRunner: Runnable? = null
     var lastDisplayUpdateRunner: Runnable? = null
     private var outputFileLength: Int = 0
@@ -49,8 +50,6 @@ class TerminalFragment: Fragment() {
     var terminalFontColor = CommandClickShellScript.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    var blocklist = hashSetOf<String>()
-    var onWebHistoryUpdaterJob: Job? = null
     var runShell = "bash"
 
 
@@ -137,6 +136,11 @@ class TerminalFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
+        val terminalViewModel: TerminalViewModel by activityViewModels()
+        terminalViewModel.isStop = true
+        val terminalWebView = binding.terminalWebView
+        terminalWebView.stopLoading()
+        terminalWebView.removeAllViews()
         activity?.intent?.action = String()
         BroadcastManager.unregisterBroadcastReceiver(
             this,
@@ -147,10 +151,16 @@ class TerminalFragment: Fragment() {
             broadcastReceiverForHtml
         )
         binding.terminalWebView.onPause()
+        loadAssetCoroutineJob?.cancel()
+        onPageFinishedCoroutineJob?.cancel()
+        registerUrlHistoryTitleCoroutineJob?.cancel()
+        onWebHistoryUpdaterJob?.cancel()
     }
 
     override fun onResume() {
         super.onResume()
+        val terminalViewModel: TerminalViewModel by activityViewModels()
+        terminalViewModel.isStop = false
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
         InitCurrentMonitorFile.trim(this)
@@ -221,7 +231,6 @@ class TerminalFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        this.loadAssetCoroutineJob?.cancel()
         this.onPageFinishedCoroutineJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()

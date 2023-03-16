@@ -33,10 +33,8 @@ object JavascriptExecuter {
                 CommandClickShellScript.JSX_FILE_SUFFIX
             )
         ) {
-            terminalViewModel.launchUrlList.add(
-                JavaScriptLoadUrl.make(
-                    execJsOrHtmlPath,
-                )
+            terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
+                execJsOrHtmlPath,
             )
             return
         }
@@ -57,8 +55,6 @@ object JavascriptExecuter {
         if(
             currentAppDir.isNullOrEmpty()
         ) return
-        terminalViewModel.launchUrlList.add(
-            "${currentAppDir}/${jsOrHtmlFileObj.name}"
-        )
+        terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
     }
 }

@@ -46,6 +46,22 @@ class WebViewSettings {
                 CmdIntent(terminalFragment),
                 JsInterfaceVariant.cmdIntent.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsCurl(terminalFragment),
+                JsInterfaceVariant.jsCurl.name
+            )
+            terminalWebView.addJavascriptInterface(
+                JsToast(terminalFragment),
+                JsInterfaceVariant.jsToast.name
+            )
+            terminalWebView.addJavascriptInterface(
+                JsStop(terminalFragment),
+                JsInterfaceVariant.jsStop.name
+            )
+            terminalWebView.addJavascriptInterface(
+                JsUtil(),
+                JsInterfaceVariant.jsUtil.name
+            )
         }
     }
 }
@@ -57,4 +73,8 @@ private enum class JsInterfaceVariant {
     jsDialog,
     jsArgs,
     cmdIntent,
+    jsCurl,
+    jsToast,
+    jsStop,
+    jsUtil,
 }

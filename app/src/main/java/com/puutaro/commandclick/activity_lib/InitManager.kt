@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
-import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -69,7 +68,7 @@ class InitManager(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                terminalViewModel.launchUrlList.add(WebUrlVariables.commandClickGitUrl)
+                terminalViewModel.launchUrl = WebUrlVariables.commandClickGitUrl
                 FragmentStartHandler.handle(activity)
                 return@registerForActivityResult
             }
@@ -142,7 +141,7 @@ class InitManager(
             if (
                 Environment.isExternalStorageManager()
             ) {
-                terminalViewModel.launchUrlList.add(WebUrlVariables.commandClickGitUrl)
+                terminalViewModel.launchUrl = WebUrlVariables.commandClickGitUrl
                 FragmentStartHandler.handle(activity)
                 return@ActivityResultCallback
             }

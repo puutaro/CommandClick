@@ -194,6 +194,10 @@ class CommandClickShellScript {
                 |#  - ${terminalOn}: cmdclick terminal (default)
                 |#  - ${terminalTermux}: termux terminal,
                 |#  - ${terminalOff}: no terminal(backend exec)
+                |# * ${EDIT_EXECUTE} is edit mode change
+                |#  - ${editExecuteNo} is normal edit
+                |#  - ${editExecuteOnce} is one time edit and execute
+                |#  - ${editExecuteAlways} is always edit and execute
                 |# * ${TERMINAL_SIZE_TYPE} is cmdclick terminal size option
                 |#  - ${terminalSizeTypeOff}: no adjust (default)
                 |#  - ${terminalSizeTypeLong}: LongSize

@@ -1,16 +1,13 @@
 package com.puutaro.commandclick.proccess.intent
 
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
@@ -123,6 +120,15 @@ object ExecJsLoad {
             selectedJsFileName,
         )
 
+        val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
+            substituteSettingVariableList,
+            CommandClickShellScript.TERMINAL_OUTPUT_MODE,
+        )?.trim(' ') ?: CommandClickShellScript.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+        terminalViewModel.onBottomScrollbyJs = !(
+                terminalOutputMode ==
+                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                )
+
         if (
             onUpdateLastModify
             == SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
@@ -141,7 +147,7 @@ object ExecJsLoad {
             is CommandIndexFragment -> {
                 currentFragment.jsExecuteJob?.cancel()
                 currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-                    val onLaunchUrl = enableTerminalWebView(
+                    val onLaunchUrl = EnableTerminalWebView.check(
                         currentFragment,
                         currentFragment.context?.getString(
                             R.string.index_terminal_fragment
@@ -157,7 +163,7 @@ object ExecJsLoad {
             is EditFragment -> {
                 currentFragment.jsExecuteJob?.cancel()
                 currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-                    val onLaunchUrl = enableTerminalWebView(
+                    val onLaunchUrl = EnableTerminalWebView.check(
                         currentFragment,
                         currentFragment.context?.getString(
                             R.string.edit_execute_terminal_fragment
@@ -170,29 +176,6 @@ object ExecJsLoad {
                     )
                 }
             }
-        }
-    }
-
-
-    private suspend fun enableTerminalWebView(
-        currentFragment: Fragment,
-        fragmentTag: String?
-    ): Boolean {
-        return withContext(Dispatchers.IO) {
-            for (i in 1..10) {
-                val targetTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
-                    currentFragment.activity,
-                    fragmentTag,
-                )
-                if(
-                    targetTerminalFragment?.isResumed == true
-                    && targetTerminalFragment.binding.terminalWebView.isVisible
-                ) {
-                    return@withContext true
-                }
-                delay(200)
-            }
-            return@withContext false
         }
     }
 
