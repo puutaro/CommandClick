@@ -96,7 +96,7 @@ At the same time, if you installed code editor, edit new file.
     | --------- | --------- | ------------ |
     | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal; `ON`: in web terminal view, `Termux`: in termux (only shell), `OFF`: backgrond exe (only shell)  |
     | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size; `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
-    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change; `NO`: normal edit, `ONCE`: one time edit and exedute, `ALWAYS`: always edit and execute
+    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change; `NO`: normal edit, `ONCE`: one time edit and execute, `ALWAYS`: always edit and execute
     | `terminalOutputMode`  | `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` | `NORMAL`: normal terminal output, `REFLASH`: Before terminal output, screen resflesh, `REFLASH_AND_FIRST_ROW`: Before terminal output, screen resflesh and focus first row, `DEBUG`: stdr + stderr, `NO`: no output (bacground exec)
     | `onAutoExec`  | `NO`/`OFF` | ready for start and end script; `ON`: start or end exec on, `OFF`: exec off (default)
     | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing; `ON`: update this, `OFF`: no update this
@@ -118,27 +118,27 @@ At the same time, if you installed code editor, edit new file.
   - setVariableType option
     | option| description | example  |
     | --------- | --------- | ------------ |
-    | `CB` | checkbox | {variablebName}:CB=value1!value2!|..   |
-    | `CBB` | checkbox with exec button | {variablebName}:CBB=value1!value2!&#124;{command string} |..   |
-    | `ECB` | editable checkbox | {variablebName}:ECB=value1!value2!|..   |
-    | `ECBB` | editable checkbox with exec button | {variablebName}:ECB=value1!value2&#124;{command string} |..   |
-    | `EFCB` | editable file checkbox | {variablebName}:EFCB={grep prefix} |..   |
-    | `EFCBB` | editable file checkbox with exec button | {variablebName}:EFCB={grep prefix}&#124;{command string} |..   |
-    | `H` | password input | {variablebName}:H={password ..etc}   |
-    | `RO` | read only | {variablebName}:RO= |
-    | `NUM` | increment or decrement number | {variablebName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
-    | `NUMB` | increment or decrement number with exec button | {variablebName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;{command string} |
-    | `FL` | file select button | {variablebName}:FL=  |
-    | `FLB` | file select button with exec button | {variablebName}:FLB={command string}  |
-    | `MFL` | file select button | {variablebName}:MFL=  |
-    | `DIR`  | directory select button | {variablebName}:DIR= |
-    | `DIRB`  | directory select button | {variablebName}:DIRB={command string} |
-    | `MDIR`  | directory select button | {variablebName}:MDIR= |
-    | `DT`  | create file button | {variablebName}:DT=  |
-    | `CLR` | select color  | {variablebName}:CLR= |
-    | `CLRB` | select color with exec button | {variablebName}:CLRB={command string} |
-    | `BTN` | botton  | {variablebName}:BTN={{command string}}    |
-    | `FBTN` | botton  | {variablebName}:FBTN={{command string}}    |
+    | `CB` | checkbox | {variableName}:CB=value1!value2!|..   |
+    | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;{command string} |..   |
+    | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
+    | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;{command string} |..   |
+    | `EFCB` | editable file checkbox | {variableName}:EFCB={grep prefix} |..   |
+    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={grep prefix}&#124;{command string} |..   |
+    | `H` | password input | {variableName}:H={password ..etc}   |
+    | `RO` | read only | {variableName}:RO= |
+    | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
+    | `NUMB` | increment or decrement number with exec button | {variableName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;{command string} |
+    | `FL` | file select button | {variableName}:FL=  |
+    | `FLB` | file select button with exec button | {variableName}:FLB={command string}  |
+    | `MFL` | file select button | {variableName}:MFL=  |
+    | `DIR`  | directory select button | {variableName}:DIR= |
+    | `DIRB`  | directory select button | {variableName}:DIRB={command string} |
+    | `MDIR`  | directory select button | {variableName}:MDIR= |
+    | `DT`  | create file button | {variableName}:DT=  |
+    | `CLR` | select color  | {variableName}:CLR= |
+    | `CLRB` | select color with exec button | {variableName}:CLRB={command string} |
+    | `BTN` | botton  | {variableName}:BTN={{command string}}    |
+    | `FBTN` | botton  | {variableName}:FBTN={{command string}}    |
     
       - button option usage  
       		 ex) jsf '${0}' (`jsf` execute javascript file path  
@@ -460,12 +460,14 @@ ex) am broadcast \
  				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")      
  			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
  - JsStop
- 	- jsStop.how() (mesure for `while roop` crush when application focus out)
+ 	- jsStop.how() (measure for `while roop` crush when application focus out)
  - JsToast
  	- jsToast.short(contents: string)   
 	- jsToast.long(contents: string)   
  - JsCurl
  	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..))   
+ - JsUtil
+ 	- jsUtil.sleep(sleepMiriTime: Int)   
 				
 
 ### javascript pre order word
