@@ -460,12 +460,14 @@ ex) am broadcast \
  				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")      
  			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
  - JsStop
- 	- jsStop.how() (mesure for `while roop` crush when application focus out)
+ 	- jsStop.how() (measure for `while roop` crush when application focus out)
  - JsToast
  	- jsToast.short(contents: string)   
 	- jsToast.long(contents: string)   
  - JsCurl
  	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..))   
+ - JsUtil
+ 	- jsUtil.sleep(sleepMiriTime: Int)   
 				
 
 ### javascript pre order word
