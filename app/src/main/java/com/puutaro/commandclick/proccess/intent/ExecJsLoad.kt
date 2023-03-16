@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
@@ -106,6 +107,7 @@ object ExecJsLoad {
         terminalViewModel.onDisplayUpdate = true
         val launchUrlString = JavaScriptLoadUrl.make(
             "${recentAppDirPath}/${selectedJsFileName}",
+            jsContentsList
         ).toString()
 
         terminalViewModel.jsArguments = String()
@@ -175,6 +177,9 @@ object ExecJsLoad {
                         launchUrlString
                     )
                 }
+            }
+            is TerminalFragment -> {
+                currentFragment.binding.terminalWebView.loadUrl(launchUrlString)
             }
         }
     }

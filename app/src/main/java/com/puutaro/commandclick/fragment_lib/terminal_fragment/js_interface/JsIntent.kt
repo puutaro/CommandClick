@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
+import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -13,6 +14,8 @@ class JsIntent(
     private val terminalFragment: TerminalFragment
 ) {
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+
+
     @JavascriptInterface
     fun launchEditSite(
         editPath: String,
@@ -39,5 +42,17 @@ class JsIntent(
             filterCode
         )
         terminalFragment.activity?.sendBroadcast(jsIntent)
+    }
+
+
+    @JavascriptInterface
+    fun launchUrl(
+        currentPageUrl: String
+    ){
+        val openUrlIntent = Intent(
+            Intent.ACTION_VIEW,
+            Uri.parse(currentPageUrl)
+        )
+        terminalFragment.startActivity(openUrlIntent)
     }
 }

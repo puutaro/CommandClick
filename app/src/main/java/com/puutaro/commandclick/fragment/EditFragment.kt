@@ -122,6 +122,7 @@ class EditFragment: Fragment() {
             val checkOkForShellName = validationSharePreferenceForEdit.checkCurrentShellNamePreference()
             if(!checkOkForShellName) return
         }
+
         val readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
             getIntent,
             howConfigEdit,

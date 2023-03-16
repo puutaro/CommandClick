@@ -72,6 +72,9 @@ class IndexInitHandler {
             FileSystems.createDirs(
                 "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             )
+            FileSystems.createDirs(
+                "${currentAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
+            )
             SharePreffrenceMethod.putSharePreffrence(
                 startUpPref,
                 mapOf(

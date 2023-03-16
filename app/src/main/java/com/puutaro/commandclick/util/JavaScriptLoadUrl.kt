@@ -8,6 +8,7 @@ class JavaScriptLoadUrl {
     companion object {
         fun make (
             execJsPath: String,
+            jsListSource: List<String>? = null
         ):String? {
             val jsFileObj = File(execJsPath)
             if(!jsFileObj.isFile) return null
@@ -32,10 +33,15 @@ class JavaScriptLoadUrl {
             var countSettingSectionEnd = 0
             var countCmdSectionStart = 0
             var countCmdSectionEnd = 0
-            val loadJsUrl = ReadText(
-                recentAppDirPath,
-                jsFileObj.name
-            ).textToList().map{
+            val jsList = if(
+                jsListSource.isNullOrEmpty()
+            ) {
+                ReadText(
+                    recentAppDirPath,
+                    jsFileObj.name
+                ).textToList()
+            } else jsListSource
+            val loadJsUrl = jsList.map {
                 if(
                     it.startsWith(settingSectionStart)
                     && it.endsWith(settingSectionStart)

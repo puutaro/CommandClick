@@ -183,7 +183,6 @@ class EditModeHandler(
                 true,
                 currentShellFileName
             )
-
         if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()

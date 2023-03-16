@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.Files
 
 
@@ -229,6 +231,35 @@ class FileSystems {
             } catch (e: Exception) {
                 return
             }
+        }
+
+        fun copyFromAssets(
+            context: Context?,
+            assetRelativePath: String,
+            destiScriptFilePath: String
+        ){
+            val scriptFileObj = File(destiScriptFilePath)
+            val parentDir = scriptFileObj.parent
+                ?: return
+            if(
+                scriptFileObj.isFile
+            ) return
+            val fis2: InputStream =
+                context?.assets?.open(
+                    assetRelativePath
+                ) ?: return
+            val contents = try {
+                fis2.bufferedReader().use {
+                    it.readText()
+                }
+            } catch(e: Exception) {
+                return
+            }
+            writeFile(
+                parentDir,
+                scriptFileObj.name,
+                contents
+            )
         }
 
         fun moveFile(

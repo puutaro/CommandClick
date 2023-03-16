@@ -101,7 +101,6 @@ class TerminalFragment: Fragment() {
 
 
         ExecDownLoadManager.set(this)
-        ImageOnLongClickListner.set(this)
         ToolbarHideShowWhenTermLong.invoke(
             this,
             terminalViewModel,
@@ -115,7 +114,8 @@ class TerminalFragment: Fragment() {
         WebViewClientSetter.set(this@TerminalFragment)
 
         WebViewSettings.set(this)
-
+        LongClickJsMaker.make(this)
+        ImageOnLongClickListener.set(this)
         if(
             IntentAction.judge(this.activity)
         ){
