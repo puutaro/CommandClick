@@ -47,8 +47,8 @@ Table of Contents
     * [Web search](#web-search)
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
-    * [end script](#end-script)
   * [Internet Button exec script](#internet-button-exec-script)
+  * [Long Press exec script](#long-press-exec-script)
   * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
@@ -310,12 +310,6 @@ But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable thi
 2. Override `config setting variable`, if you are change default value with your set value.
 
 
-#### End script
-
-This script is automaticaly executed when `index mode` end.
-But, in default, `onAutoExec` is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
-
-
 
 ### Internet Button exec script
 
@@ -327,6 +321,26 @@ This script is executed, click when internet buton is grey globle mark and long 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
 
+
+
+### Long press exec script
+
+This script is executed when long press.   
+
+- `long_press_src_image_anchor.js`   
+		- When image anchor long press, trigger. In Default, display link page summary dialog.  
+		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
+		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
+		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
+- `long_press_src_anchor.js`  
+		- When source anchor long press, trigger. In Default, display link page summary dialog.  
+		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
+		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
+- `long_press_image_anchor.js`    
+		- When image long press, trigger.  In Default, launch current page url intent.  
+		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
+		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
+    
   
 ### Edit execute once
 
