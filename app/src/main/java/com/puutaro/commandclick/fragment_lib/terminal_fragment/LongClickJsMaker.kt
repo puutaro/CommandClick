@@ -9,6 +9,10 @@ object LongClickJsMaker {
     fun make(
         terminalFragment: TerminalFragment
     ){
+        if(
+            terminalFragment.currentAppDirPath == UsePath.cmdclickAppDirAdminPath
+            || terminalFragment.currentAppDirPath == UsePath.cmdclickConfigDirPath
+        ) return
         execMake(
             terminalFragment,
             UsePath.longPressSrcImageAnchorJsName
