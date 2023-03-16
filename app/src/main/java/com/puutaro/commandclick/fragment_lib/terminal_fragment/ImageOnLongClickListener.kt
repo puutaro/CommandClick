@@ -41,7 +41,7 @@ object ImageOnLongClickListener {
                             UsePath.longPressImageAnchorJsName,
                         ).readText()
                             .replace(
-                                CommandClickShellScript.CMDCLICK_LONG_PRESS_LINK_URL,
+                                CommandClickShellScript.CMDCLICK_LONG_PRESS_IMAGE_URL,
                                 longPressImageUrl
                             )
                             .replace(
