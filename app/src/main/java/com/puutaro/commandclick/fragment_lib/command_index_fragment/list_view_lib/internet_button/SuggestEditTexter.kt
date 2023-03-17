@@ -102,28 +102,3 @@ class SuggestEditTexter(
     }
 
 }
-//
-//private fun makeUrlHistoryList(
-//    historySourceRow: String,
-//    usedTitle: MutableSet<String>,
-//    usedUrl: MutableSet<String>,
-//): Boolean {
-//    val historySourceRowList = historySourceRow
-//        .split("\t")
-//    val duliEntryTitle = historySourceRowList
-//        .firstOrNull()
-//        ?: return false
-//    val duliEntryUrl = historySourceRowList
-//        .getOrNull(1)
-//        ?: return false
-//    return if(
-//        usedTitle.contains(duliEntryTitle)
-//        || usedUrl.contains(duliEntryUrl)
-//    ) {
-//        false
-//    } else {
-//        usedTitle.add(duliEntryTitle)
-//        usedUrl.add(duliEntryUrl)
-//        true
-//    }
-//}

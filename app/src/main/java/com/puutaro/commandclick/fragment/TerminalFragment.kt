@@ -192,7 +192,7 @@ class TerminalFragment: Fragment() {
         )
     }
 
-    interface OnSearchTextChangeListener {
+        interface OnSearchTextChangeListener {
         fun onSearchTextChange(
             text: String
         )

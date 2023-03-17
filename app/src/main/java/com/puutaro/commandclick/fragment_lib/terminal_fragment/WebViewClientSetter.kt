@@ -66,14 +66,14 @@ class WebViewClientSetter {
                     if(
                         previousUrl?.length == url?.length
                     ) return
+                    val listener =
+                        context as? TerminalFragment.OnPageLoadPageSearchDisableListener
+                    listener?.onPageLoadPageSearchDisable()
                     SearchViewAndAutoCompUpdater.update(
                         terminalFragment,
                         webView,
                         url,
                     )
-                    val listener =
-                        context as? TerminalFragment.OnPageLoadPageSearchDisableListener
-                    listener?.onPageLoadPageSearchDisable()
                     UrlTermLongProcess.trigger(
                         terminalFragment,
                         terminalViewModel,

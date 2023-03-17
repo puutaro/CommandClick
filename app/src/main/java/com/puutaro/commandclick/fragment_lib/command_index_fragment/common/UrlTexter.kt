@@ -12,14 +12,17 @@ class UrlTexter {
             cmdSearchEditText: AutoCompleteTextView,
             inputUrl: String?
         ){
+            if(inputUrl.isNullOrEmpty()) return
             val queryUrl = WebUrlVariables.queryUrl
+            val enableStartHttp = inputUrl.startsWith("http") == true
             val searchUrl = if(
-                inputUrl?.startsWith("http") == true
+                enableStartHttp
             ) inputUrl
-            else {
-                queryUrl + inputUrl
-            }
-            cmdSearchEditText.setText(searchUrl)
+            else queryUrl + inputUrl
+            if(
+                enableStartHttp
+            ) cmdSearchEditText.setText(inputUrl)
+            else cmdSearchEditText.setText(inputUrl)
             val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
             listener?.onLaunchUrlByWebView(
                 searchUrl,
