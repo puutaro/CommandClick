@@ -20,9 +20,13 @@ class JsDialog(
 
     @JavascriptInterface
     fun listDialog(
+        title: String,
+        message: String,
         listSource: String
     ): String {
         return listJsDialog.create(
+            title,
+            message,
             listSource
         )
     }

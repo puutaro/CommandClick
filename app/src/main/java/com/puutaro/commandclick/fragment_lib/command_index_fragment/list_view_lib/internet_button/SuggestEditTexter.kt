@@ -14,7 +14,7 @@ import com.puutaro.commandclick.util.ReadText
 import java.net.URLDecoder
 
 
-class AutoCompleteEditTexter(
+class SuggestEditTexter(
     private val cmdIndexFragment: CommandIndexFragment,
 ) {
 
@@ -26,64 +26,30 @@ class AutoCompleteEditTexter(
     private val queryLimitStrLength = 50
 
 
-    companion object {
-        fun setAdapter(
-            context: Context?,
-            cmdSearchEditText: AutoCompleteTextView,
-            currentAppDirPath: String? = null,
-        ) {
-            if(context == null) return
-            cmdSearchEditText.setAdapter(
-                makeUrlComAdapter(
-                    context,
-                    currentAppDirPath,
-                )
-            )
-            cmdSearchEditText.threshold = 0
-        }
-
-        private fun makeUrlComAdapter(
-            context: Context,
-            currentAppDirPath: String?,
-        ): ArrayAdapter<String> {
-            return ArrayAdapter(
+    fun setAdapter(
+        context: Context?,
+        cmdSearchEditText: AutoCompleteTextView,
+        suggestList: List<String>
+    ) {
+        if(context == null) return
+        cmdSearchEditText.setAdapter(
+            makeUrlComAdapter(
                 context,
-                R.layout.simple_list_item_1,
-                makeCompleteListSource(
-                    currentAppDirPath,
-                )
+                suggestList,
             )
-        }
+        )
+        cmdSearchEditText.threshold = 0
+    }
 
-        private fun makeCompleteListSource(
-            currentAppDirPath: String?,
-            takeListNum: Int = 500,
-        ):List<String> {
-            if(
-                currentAppDirPath.isNullOrEmpty()
-            ) return emptyList()
-            val usedTitle = mutableSetOf<String>()
-            val usedUrl = mutableSetOf<String>()
-            val appUrlSystemPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-            return ReadText(
-                appUrlSystemPath,
-                UsePath.cmdclickUrlHistoryFileName
-            ).textToList()
-                .filter {
-                    EnableUrlPrefix.check(
-                        it.split("\t").lastOrNull()
-                    )
-                }
-                .distinct()
-                .take(takeListNum)
-                .filter {
-                    makeUrlHistoryList(
-                        it,
-                        usedTitle,
-                        usedUrl,
-                    )
-                }
-        }
+    private fun makeUrlComAdapter(
+        context: Context,
+        suggestList: List<String>
+    ): ArrayAdapter<String> {
+        return ArrayAdapter(
+            context,
+            R.layout.simple_list_item_1,
+            suggestList
+        )
     }
 
 
@@ -136,28 +102,28 @@ class AutoCompleteEditTexter(
     }
 
 }
-
-internal fun makeUrlHistoryList(
-    historySourceRow: String,
-    usedTitle: MutableSet<String>,
-    usedUrl: MutableSet<String>,
-): Boolean {
-    val historySourceRowList = historySourceRow
-        .split("\t")
-    val duliEntryTitle = historySourceRowList
-        .firstOrNull()
-        ?: return false
-    val duliEntryUrl = historySourceRowList
-        .getOrNull(1)
-        ?: return false
-    return if(
-        usedTitle.contains(duliEntryTitle)
-        || usedUrl.contains(duliEntryUrl)
-    ) {
-        false
-    } else {
-        usedTitle.add(duliEntryTitle)
-        usedUrl.add(duliEntryUrl)
-        true
-    }
-}
+//
+//private fun makeUrlHistoryList(
+//    historySourceRow: String,
+//    usedTitle: MutableSet<String>,
+//    usedUrl: MutableSet<String>,
+//): Boolean {
+//    val historySourceRowList = historySourceRow
+//        .split("\t")
+//    val duliEntryTitle = historySourceRowList
+//        .firstOrNull()
+//        ?: return false
+//    val duliEntryUrl = historySourceRowList
+//        .getOrNull(1)
+//        ?: return false
+//    return if(
+//        usedTitle.contains(duliEntryTitle)
+//        || usedUrl.contains(duliEntryUrl)
+//    ) {
+//        false
+//    } else {
+//        usedTitle.add(duliEntryTitle)
+//        usedUrl.add(duliEntryUrl)
+//        true
+//    }
+//}

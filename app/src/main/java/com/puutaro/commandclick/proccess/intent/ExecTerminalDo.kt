@@ -65,7 +65,6 @@ class ExecTerminalDo {
 
             execSetTermSizeForIntent(
                 currentFragment,
-                recentAppDirPath,
                 substituteSettingVariableList,
             )
 

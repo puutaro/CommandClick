@@ -54,7 +54,6 @@ class MainActivity:
     TerminalFragment.OnSearchTextChangeListener,
     TerminalFragment.onBackstackWhenTermLongInRestartListener,
     TerminalFragment.OnToolBarVisibleChangeListener,
-    TerminalFragment.OnAutoCompUpdateListener,
     TerminalFragment.OnTermLongChangeListenerForTerminalFragment,
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
@@ -344,15 +343,6 @@ class MainActivity:
             this,
             activeMatchOrdinal,
             numberOfMatches
-        )
-    }
-
-    override fun onAutoCompUpdate(
-        currentAppDirPath: String
-    ){
-        ExecAutoCompUpdate.update(
-            this,
-            currentAppDirPath
         )
     }
 

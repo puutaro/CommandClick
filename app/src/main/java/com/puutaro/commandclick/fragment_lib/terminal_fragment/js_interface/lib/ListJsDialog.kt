@@ -14,30 +14,23 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
+import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.util.DpHeightCalculator
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
 class ListJsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
 
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private val searchSwitchThreshold = 5
-    private val linearLayoutForTotal = LinearLayoutForTotal.make(
-        context
-    )
-    private val linearLayoutForListView = NestLinearLayout.make(
-        context,
-        0.9F
-    )
-    private val linearLayoutForSearch = NestLinearLayout.make(
-        context,
-        0.1F
-    )
 
     fun create(
+        title: String,
+        message: String,
         listSource: String,
     ): String {
         terminalViewModel.onDialog = true
@@ -45,6 +38,8 @@ class ListJsDialog(
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    title,
+                    message,
                     listSource
                 )
             }
@@ -60,6 +55,8 @@ class ListJsDialog(
 
 
     private fun execCreate(
+        title: String,
+        message: String,
         listSource: String,
     ) {
         val context = context ?: return
@@ -83,6 +80,24 @@ class ListJsDialog(
             searchText,
             listSource,
         )
+
+        val linearLayoutForTotal = LinearLayoutForTotal.make(
+            context
+        )
+        val dpHeight = DpHeightCalculator.calculate(
+            terminalFragment
+        )
+        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
+        val listWeight = 1F - searchTextWeight
+        val linearLayoutForListView = NestLinearLayout.make(
+            context,
+            listWeight
+        )
+        val linearLayoutForSearch = NestLinearLayout.make(
+            context,
+            searchTextWeight
+        )
+
         val addView = if(
             dialogList.size > searchSwitchThreshold
         ) {
@@ -93,13 +108,27 @@ class ListJsDialog(
             linearLayoutForTotal
         } else dialogListView
 
-
-        val alertDialog = AlertDialog.Builder(
-            context
-        )
-            .setTitle("Select bellow list")
-            .setView(addView)
-            .create()
+        val titleString = if(title.isNotEmpty()){
+            title
+        } else "Select bellow list"
+        val alertDialog = if(
+            message.isNotEmpty()
+        ) {
+            AlertDialog.Builder(
+                context
+            )
+                .setTitle(titleString)
+                .setMessage(message)
+                .setView(addView)
+                .create()
+        } else {
+            AlertDialog.Builder(
+                context
+            )
+                .setTitle(titleString)
+                .setView(addView)
+                .create()
+        }
         alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
         alertDialog.show()
 

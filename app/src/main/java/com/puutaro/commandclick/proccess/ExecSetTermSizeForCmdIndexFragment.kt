@@ -5,7 +5,6 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -15,7 +14,6 @@ class ExecSetTermSizeForCmdIndexFragment {
     companion object {
         fun execSetTermSizeForCmdIndexFragment(
             cmdIndexFragment: CommandIndexFragment,
-            recentAppDirPath: String? = null,
         ){
             val context = cmdIndexFragment.context
             val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
@@ -33,10 +31,6 @@ class ExecSetTermSizeForCmdIndexFragment {
                     cmdindexInternetButton.imageTintList =
                         it.getColorStateList(R.color.black)
                     cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.gray_out)
-                    AutoCompleteEditTexter.setAdapter(
-                        context,
-                        binding.cmdSearchEditText,
-                    )
                 }
             } else {
                 cmdListSwipeToRefresh.isVisible = false

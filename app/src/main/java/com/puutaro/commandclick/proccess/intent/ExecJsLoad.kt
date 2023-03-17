@@ -75,7 +75,6 @@ object ExecJsLoad {
 
         ExecSetTermSizeForIntent.execSetTermSizeForIntent(
             currentFragment,
-            recentAppDirPath,
             substituteSettingVariableList,
         )
 

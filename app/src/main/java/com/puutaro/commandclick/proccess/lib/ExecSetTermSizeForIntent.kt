@@ -17,7 +17,6 @@ class ExecSetTermSizeForIntent {
     companion object {
         fun execSetTermSizeForIntent(
             currentFragment: Fragment,
-            recentAppDirPath: String,
             substituteSettingVariableList: List<String>?,
             ) {
 
@@ -44,7 +43,6 @@ class ExecSetTermSizeForIntent {
                 is CommandIndexFragment -> {
                     execSetTermSizeForCmdIndexFragment(
                         currentFragment,
-                        recentAppDirPath,
                     )
                 }
                 is EditFragment -> {

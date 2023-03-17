@@ -11,7 +11,6 @@ import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -53,17 +52,6 @@ class ExecUrlLoadFragmentProccess {
                 )
             }
             cmdIndexFragment.WebSearchSwitch = true
-            val sharePref =  activity.getPreferences(Context.MODE_PRIVATE)
-            val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            )
-            AutoCompleteEditTexter.setAdapter(
-                context,
-                binding.cmdSearchEditText,
-                currentAppDirPath,
-            )
-
         }
 
 

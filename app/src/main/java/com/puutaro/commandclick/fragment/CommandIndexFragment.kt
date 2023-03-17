@@ -12,7 +12,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.AutoCompleteEditTexter
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.SuggestEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -36,6 +36,7 @@ class CommandIndexFragment: Fragment() {
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
+    var suggestJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -102,11 +103,10 @@ class CommandIndexFragment: Fragment() {
             readSharePreffernceMap
         )
 
-
-        val autoCompleteEditTexter = AutoCompleteEditTexter(
-            this,
+        val suggestEditTexter = SuggestEditTexter(
+            this
         )
-        autoCompleteEditTexter.setItemClickListner()
+        suggestEditTexter.setItemClickListner()
         val cmdListView = binding.cmdList
         val makeListView = MakeListView(
             binding,

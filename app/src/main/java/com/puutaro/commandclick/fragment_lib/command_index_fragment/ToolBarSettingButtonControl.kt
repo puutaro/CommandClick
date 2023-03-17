@@ -64,7 +64,6 @@ class ToolBarSettingButtonControl(
             )
             ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
                 cmdIndexFragment,
-                currentAppDirPath,
             )
         }
     }
