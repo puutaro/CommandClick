@@ -465,6 +465,8 @@ ex) am broadcast \
 
  - JsIntent
  	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+ 	- jsIntent.launchUrl(urlString: String)  
+
  - JsDialog
  	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
  	- jsDialog.formJsDialog(formSource: String(tab sepalate))
