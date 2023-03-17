@@ -21,6 +21,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Comma
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppHistoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
+import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
@@ -36,17 +38,26 @@ class CmdClickHistoryButtonEvent (
     private val sharedPref: SharedPreferences?,
     )
 {
+
+    private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
+    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val context = fragment.context
     private val currentViewContext = historyButtonInnerView.context
     private val historyListView = ListView(currentViewContext)
-    private val linearLayoutForTotal = LinearLayout(currentViewContext)
-    private val linearLayoutForListView = LinearLayout(currentViewContext)
-    private val linearLayoutForSearch = LinearLayout(currentViewContext)
     private val searchText = EditText(currentViewContext)
-    private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-    private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
+    private val linearLayoutForTotal = LinearLayoutForTotal.make(
+        currentViewContext
+    )
+    private val linearLayoutForListView = NestLinearLayout.make(
+        currentViewContext,
+        listLinearWeight
+    )
+    private val linearLayoutForSearch = NestLinearLayout.make(
+        currentViewContext,
+        searchTextLinearWeight
+    )
 
     fun invoke() {
         deleteOverHistory(
@@ -67,36 +78,15 @@ class CmdClickHistoryButtonEvent (
             historyList
         )
         historyListView.adapter = historyListAdapter
-        historyListView.setSelection(historyListAdapter.count)
-
-        linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
-        linearLayoutForTotal.weightSum = 1F
-        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+        historyListView.setSelection(
+            historyListAdapter.count
         )
-        linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
 
-        linearLayoutForListView.orientation =  LinearLayout.VERTICAL
-        val linearLayoutParamForListView = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-        linearLayoutParamForListView.weight = listLinearWeight
-        linearLayoutForListView.layoutParams = linearLayoutParamForListView
         linearLayoutForListView.addView(historyListView)
 
         makeSearchEditText(historyListAdapter)
 
-        linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
-        val linearLayoutParamForSearch = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-        linearLayoutParamForSearch.weight = searchTextLinearWeight
-        linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
         linearLayoutForSearch.addView(searchText)
-
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
 
@@ -167,7 +157,9 @@ class CmdClickHistoryButtonEvent (
                     historyListAdapter,
                     historyListView
                 )
-                historyListView.setSelection(historyListAdapter.count)
+                historyListView.setSelection(
+                    historyListAdapter.count
+                )
             }
         })
     }

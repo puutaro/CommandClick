@@ -23,6 +23,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
+import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -55,33 +57,20 @@ class UrlHistoryButtonEvent(
         )
 
         val urlHistoryList = mekeUrlHistoryList()
-        val linearLayoutForTotal = LinearLayout(historyButtonInnerViewContext)
-        linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
-        linearLayoutForTotal.weightSum = 1F
-        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+        val linearLayoutForTotal = LinearLayoutForTotal.make(
+            historyButtonInnerViewContext
         )
-        linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
 
-        val linearLayoutForListView = LinearLayout(historyButtonInnerViewContext)
-        linearLayoutForListView.orientation =  LinearLayout.VERTICAL
-        val linearLayoutParamForListView = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+        val linearLayoutForListView = NestLinearLayout.make(
+            historyButtonInnerViewContext,
+            listLinearWeight
         )
-        linearLayoutParamForListView.weight = listLinearWeight
-        linearLayoutForListView.layoutParams = linearLayoutParamForListView
         linearLayoutForListView.addView(urlHistoryListView)
 
-        val linearLayoutForSearch = LinearLayout(historyButtonInnerViewContext)
-        linearLayoutForSearch.orientation =  LinearLayout.VERTICAL
-        val linearLayoutParamForSearch = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
+        val linearLayoutForSearch = NestLinearLayout.make(
+            historyButtonInnerViewContext,
+            searchTextLinearWeight
         )
-        linearLayoutParamForSearch.weight = searchTextLinearWeight
-        linearLayoutForSearch.layoutParams = linearLayoutParamForSearch
 
 
         val searchText = EditText(historyButtonInnerViewContext)
@@ -104,7 +93,9 @@ class UrlHistoryButtonEvent(
             urlDisplayHistoryList
         )
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter
-        urlHistoryListView.setSelection(urlHistoryDisplayListAdapter.count)
+        urlHistoryListView.setSelection(
+            urlHistoryDisplayListAdapter.count
+        )
 
         makeSearchEditText(
             urlHistoryListView,
@@ -187,7 +178,9 @@ class UrlHistoryButtonEvent(
                     urlHistoryListAdapter,
                     urlHistoryListView
                 )
-                urlHistoryListView.setSelection(urlHistoryListAdapter.count)
+                urlHistoryListView.setSelection(
+                    urlHistoryListAdapter.count
+                )
             }
         })
     }

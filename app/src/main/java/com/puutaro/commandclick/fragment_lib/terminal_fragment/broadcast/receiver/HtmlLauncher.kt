@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.util.FileSystems
+import java.io.File
 import java.io.InputStream
 
 object HtmlLauncher{
@@ -27,6 +28,15 @@ object HtmlLauncher{
         val htmlFileName = title
             .replace(" ", "_")
             .replace("　", "_") + ".html"
+        val htmlFilePath = "${currentAppDirPath}/${htmlFileName}"
+        if(
+            File(
+                htmlFilePath
+            ).isFile
+        ) {
+            binding.terminalWebView.loadUrl(htmlFilePath)
+            return
+        }
         val srcFilePath = intent.getStringExtra(
             BroadCastIntentExtraForHtml.SCR_PATH.scheme
         ) ?: String()
@@ -68,13 +78,12 @@ object HtmlLauncher{
         }catch(e: Exception) {
             return
         }
-
         FileSystems.writeFile(
             currentAppDirPath,
             htmlFileName,
             htmlContents
         )
-        binding.terminalWebView.loadUrl("${currentAppDirPath}/${htmlFileName}")
+        binding.terminalWebView.loadUrl(htmlFilePath)
     }
 
 }
