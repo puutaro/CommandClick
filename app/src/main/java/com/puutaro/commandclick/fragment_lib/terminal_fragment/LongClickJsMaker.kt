@@ -32,26 +32,38 @@ object LongClickJsMaker {
         fileName: String
     ){
         val context = terminalFragment.context
-        val defaultHitSystemDirPath =
-            "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
-        val defaultSrcImageAnchorLongPressJsPath =
-            "${defaultHitSystemDirPath}/${UsePath.longPressSrcImageAnchorJsName}"
         val assetRelativePath = "${UsePath.cmdclickHitSystemDirRelativePath}/${fileName}"
-        FileSystems.createDirs(defaultHitSystemDirPath)
-        FileSystems.copyFromAssets(
+
+        val longPressJsContents = FileSystems.readFromAssets(
             context,
             assetRelativePath,
-            defaultSrcImageAnchorLongPressJsPath
         )
+
+        writeLongPressJs(
+            UsePath.cmdclickDefaultAppDirPath,
+            fileName,
+            longPressJsContents,
+        )
+
+        writeLongPressJs(
+            terminalFragment.currentAppDirPath ,
+            fileName,
+            longPressJsContents,
+        )
+    }
+
+    private fun writeLongPressJs(
+        useAppDirPath : String,
+        fileName: String,
+        longPressContents: String,
+    ){
         val currentHitSystemDirPath =
-            "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
-        val currentSrcImageAnchorLongPressJsPathPath =
-            "${currentHitSystemDirPath}/${fileName}"
+            "${useAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
         FileSystems.createDirs(currentHitSystemDirPath)
-        FileSystems.copyFromAssets(
-            context,
-            assetRelativePath,
-            currentSrcImageAnchorLongPressJsPathPath
+        FileSystems.writeFile(
+            currentHitSystemDirPath,
+            fileName,
+            longPressContents
         )
     }
 }

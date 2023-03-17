@@ -91,10 +91,10 @@ class WebViewClientSetter {
                     if(
                         terminalFragment.onAdBlock != SettingVariableSelects.Companion.OnAdblockSelects.ON.name
                     ) return super.shouldInterceptRequest(view, request)
-                    val EMPTY3 = ByteArrayInputStream("".toByteArray())
+                    val empty3 = ByteArrayInputStream("".toByteArray())
                     val blocklist = terminalViewModel.blocklist
                     if (blocklist.contains(":::::" + request?.url?.host)) {
-                        return WebResourceResponse("text/plain", "utf-8", EMPTY3)
+                        return WebResourceResponse("text/plain", "utf-8", empty3)
                     }
                     return super.shouldInterceptRequest(view, request)
                 }

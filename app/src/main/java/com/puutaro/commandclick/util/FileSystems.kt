@@ -233,33 +233,24 @@ class FileSystems {
             }
         }
 
-        fun copyFromAssets(
+        fun readFromAssets(
             context: Context?,
             assetRelativePath: String,
-            destiScriptFilePath: String
-        ){
-            val scriptFileObj = File(destiScriptFilePath)
-            val parentDir = scriptFileObj.parent
-                ?: return
-            if(
-                scriptFileObj.isFile
-            ) return
+        ): String {
             val fis2: InputStream =
                 context?.assets?.open(
                     assetRelativePath
-                ) ?: return
+                ) ?: return String()
             val contents = try {
                 fis2.bufferedReader().use {
                     it.readText()
                 }
             } catch(e: Exception) {
-                return
+                fis2.close()
+                return String()
             }
-            writeFile(
-                parentDir,
-                scriptFileObj.name,
-                contents
-            )
+            fis2.close()
+            return contents
         }
 
         fun moveFile(

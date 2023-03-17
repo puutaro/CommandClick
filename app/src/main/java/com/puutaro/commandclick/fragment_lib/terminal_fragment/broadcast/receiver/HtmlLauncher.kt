@@ -50,34 +50,35 @@ object HtmlLauncher{
             context.assets?.open(
                 "html/edit_urls_template.html"
             ) ?: return
-        val htmlContents = try {
-            fis2.bufferedReader().use {
-                it
-                    .readText()
-                    .replace(
-                        Regex("const CommandClickSiteTitle =.*"),
-                        "const CommandClickSiteTitle = \"${title}\""
-                    )
-                    .replace(
-                        Regex("const editTargetUrlsFilePath =.*"),
-                        "const editTargetUrlsFilePath = \"${editFilePath}\""
-                    )
-                    .replace(
-                        Regex("const addUrlsSourceFilePath =.*"),
-                        "const addUrlsSourceFilePath = \"${srcFilePath}\""
-                    )
-                    .replace(
-                        Regex("const clickSortTop =.*"),
-                        "const clickSortTop = ${onClickSort}"
-                    )
-                    .replace(
-                        Regex("CommandClickFilterBoolean"),
-                        filterCode
-                    )
-            }
-        }catch(e: Exception) {
-            return
-        }
+        val htmlContentsSource = FileSystems.readFromAssets(
+            context,
+            "html/edit_urls_template.html"
+        )
+        if (
+            htmlContentsSource.isEmpty()
+        ) return
+        val htmlContents =
+            htmlContentsSource
+                .replace(
+                    Regex("const CommandClickSiteTitle =.*"),
+                    "const CommandClickSiteTitle = \"${title}\""
+                )
+                .replace(
+                    Regex("const editTargetUrlsFilePath =.*"),
+                    "const editTargetUrlsFilePath = \"${editFilePath}\""
+                )
+                .replace(
+                    Regex("const addUrlsSourceFilePath =.*"),
+                    "const addUrlsSourceFilePath = \"${srcFilePath}\""
+                )
+                .replace(
+                    Regex("const clickSortTop =.*"),
+                    "const clickSortTop = ${onClickSort}"
+                )
+                .replace(
+                    Regex("CommandClickFilterBoolean"),
+                    filterCode
+                )
         FileSystems.writeFile(
             currentAppDirPath,
             htmlFileName,

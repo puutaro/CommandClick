@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -33,15 +34,12 @@ object AdBlocker {
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
     ) {
-        val fis2: InputStream =
-            terminalFragment.context?.assets?.open(
-                AD_HOSTS_FILE
-            ) ?: return
         try {
             terminalViewModel.blocklist =
-                fis2.bufferedReader().use {
-                    it.readText()
-                }.split("\n").toHashSet()
+                FileSystems.readFromAssets(
+                    terminalFragment.context,
+                    AD_HOSTS_FILE
+                ).split("\n").toHashSet()
         } catch (e: IOException) {
             e.printStackTrace()
         }
