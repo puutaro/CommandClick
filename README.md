@@ -453,8 +453,14 @@ ex) am broadcast \
 		- write local file
 	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)  
 		- write local monitor file  
-	- jsFileStystem.jsEcho(terminalOutPutOption: String, contents: String)   
-		- write local monitor file  
+	- jsFileStystem.removeFile(path: String)  
+		- remove local file  
+	- jsFileStystem.createDir(path: String)  
+		- creaate local dirctory 
+	- jsFileStystem.removeDir(path: String)  
+		- remove local direcotry   
+	- jsFileStystem.copyDir(sourcePath: String, destiDirPath: String)  
+		- copy local directory 
 
 
  - JsArgs 
