@@ -37,7 +37,7 @@ function makePtagSummaryTotal(summaryPList, summaryEntry, prefix="-"){
         if(!summaryEntryPreTagText.trim()) continue;
         summaryEntryPTagTextTotal = summaryEntryPTagTextTotal.concat(
             "\n\t\t\t\t", 
-            prefix, 
+            prefix + " ", 
             summaryEntryPreTagText
         );
         if(
@@ -115,7 +115,8 @@ function makeSummary(tocArr, doc){
 var getHtml = jsCurl.get(
 			targetUrl,
 			"",
-			""
+			"",
+            2000
 		);
 var doc = document.createElement( 'html' );
 doc.innerHTML = getHtml;

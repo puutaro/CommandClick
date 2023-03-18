@@ -26,6 +26,7 @@ class JsCurl(
         mainUrl: String,
         queryParameter: String = String(),
         header: String = String(),
+        timeout: Int
     ): String {
         val errPrefix = "err: "
         if(
@@ -41,9 +42,9 @@ class JsCurl(
 
         val url = URL(urlString)
         val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        connection.connectTimeout = 100000
+        connection.connectTimeout = timeout
         //レスポンスデータ読み取りタイムアウトを設定する。
-        connection.readTimeout = 100000
+        connection.readTimeout = timeout
         connection.requestMethod = "GET"
         connection.useCaches = false;// キャッシュ利用
         connection.doOutput = false;// リクエストのボディの送信を許可(GETのときはfalse,POSTのときはtrueにする)

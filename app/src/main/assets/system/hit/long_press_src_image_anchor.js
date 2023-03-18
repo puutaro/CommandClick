@@ -1,10 +1,5 @@
 
 
-let currentFilePathList = "${0}".replace(/^file:\/\//, '').split('/');
-const parentDirPath = currentFilePathList.slice(0, currentFilePathList.length - 1).join('/');
-const cmdclickCurrentUrl = "CMDCLICK_CURRENT_PAGE_URL";
-const targetUrl = "CMDCLICK_LONG_PRESS_LINK_URL";
-
 
 const LEAST_STRING_NUM = 300;
 
@@ -37,7 +32,7 @@ function makePtagSummaryTotal(summaryPList, summaryEntry, prefix="-"){
         if(!summaryEntryPreTagText.trim()) continue;
         summaryEntryPTagTextTotal = summaryEntryPTagTextTotal.concat(
             "\n\t\t\t\t", 
-            prefix, 
+            prefix + " ", 
             summaryEntryPreTagText
         );
         if(
@@ -112,10 +107,15 @@ function makeSummary(tocArr, doc){
 };
 
 
+const cmdclickCurrentUrl = "CMDCLICK_CURRENT_PAGE_URL";
+const targetUrl = "CMDCLICK_LONG_PRESS_LINK_URL";
+
+
 var getHtml = jsCurl.get(
 			targetUrl,
 			"",
-			""
+			"",
+            2000
 		);
 var doc = document.createElement( 'html' );
 doc.innerHTML = getHtml;
