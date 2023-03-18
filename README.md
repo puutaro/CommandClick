@@ -67,7 +67,7 @@ App installation
 -----  
 
 Reffer to [here relase page](https://github.com/puutaro/CommandClick/releases), and apk downalod to your smartphone.  
-Futuristicly, upload google play and f-droid (F-droid [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
+Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
 
 
 Usage
