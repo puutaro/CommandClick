@@ -487,7 +487,8 @@ ex) am broadcast \
 				
 
 ### javascript pre order word
-	- `${0}` -> current file path
+	- `${0}` -> current file path  
+	- `${01}` -> parent directory path
 
 ### Html tag output
 
