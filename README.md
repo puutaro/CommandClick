@@ -481,7 +481,7 @@ ex) am broadcast \
  	- jsToast.short(contents: string)   
 	- jsToast.long(contents: string)   
  - JsCurl
- 	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..))   
+ 	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..), Timeout: Int (miliSeconds))   
  - JsUtil
  	- jsUtil.sleep(sleepMiriTime: Int)   
 				
