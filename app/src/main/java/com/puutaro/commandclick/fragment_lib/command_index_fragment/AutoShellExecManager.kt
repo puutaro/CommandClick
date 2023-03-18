@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects

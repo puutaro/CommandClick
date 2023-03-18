@@ -150,7 +150,7 @@ class CommandClickShellScript {
         val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
         val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
-        val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.OFF.name
+        val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.ON.name
         val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
 
 
@@ -486,7 +486,7 @@ class CommandClickShellScript {
             |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
             |${ON_ADBLOCK}="${onAdBlockInherit}"
-            |${ON_URL_LAUNCH_MACRO}="${ON_URL_LAUNCH_MACRO_DEFAULT_VALUE}"
+            |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
             |${EXEC_JS_OR_HTML_PATH}=""
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
             |${TERMINAL_FONT_COLOR}=""

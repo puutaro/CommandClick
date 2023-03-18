@@ -19,14 +19,11 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
 import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
 import com.puutaro.commandclick.common.variable.WebUrlVariables
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 class InitManager(
     private val activity: MainActivity,
 ) {
-    val terminalViewModel: TerminalViewModel =
-        ViewModelProvider(activity).get(TerminalViewModel::class.java)
 
     fun invoke(){
         storageAccessProcess()
@@ -68,7 +65,6 @@ class InitManager(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
             if (isGranted) {
-                terminalViewModel.launchUrl = WebUrlVariables.commandClickGitUrl
                 FragmentStartHandler.handle(activity)
                 return@registerForActivityResult
             }
@@ -141,7 +137,6 @@ class InitManager(
             if (
                 Environment.isExternalStorageManager()
             ) {
-                terminalViewModel.launchUrl = WebUrlVariables.commandClickGitUrl
                 FragmentStartHandler.handle(activity)
                 return@ActivityResultCallback
             }
