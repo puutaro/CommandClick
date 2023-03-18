@@ -7,7 +7,7 @@ So called `Script browser`, It's a enforced browser by javascript and shellscrip
 
 Pros
 ----
-- Javascript enforce web brawser.  
+- Web brawser powerd by Javascript.  
 - Javascript engine.  
 - Easily turn javascript and shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
