@@ -7,8 +7,8 @@ So called `Script browser`, It's a enforced browser by javascript and shellscrip
 
 Pros
 ----
-- Javascript engine.
-- Javascript enforce web brawser
+- Web brawser powerd by Javascript.  
+- Javascript engine.  
 - Easily turn javascript and shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only web browser but also termux gui client.
@@ -19,7 +19,7 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Pre Setting(Mandatory)](#pre-setting)
+* [App installation](#app-installation)
 * [Usage](#usage)
   * [History](#history)
   * [Change term size](#change-term-size)
@@ -61,6 +61,13 @@ Table of Contents
   * [Troubleshooting](#troubleshooting)
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
+
+
+App installation
+-----  
+
+Reffer to [here relase page](https://github.com/puutaro/CommandClick/releases), and apk downalod to your smartphone.  
+Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
 
 
 Usage
