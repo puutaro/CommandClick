@@ -4,7 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
@@ -12,9 +11,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -136,6 +132,41 @@ class JsFileSystem(
             parentDir,
             fileObj.name,
             "${echoContents}${wrapChar}"
+        )
+    }
+
+    @JavascriptInterface
+    fun removeFile(path: String){
+        val fileObj = File(path)
+        val parentDir = fileObj.parent ?: return
+        FileSystems.removeFiles(
+            parentDir,
+            fileObj.name
+        )
+    }
+
+    @JavascriptInterface
+        fun createDir(path: String){
+        FileSystems.createDirs(
+            path
+        )
+    }
+
+    @JavascriptInterface
+    fun removeDir(path: String){
+        FileSystems.removeDir(
+            path
+        )
+    }
+
+    @JavascriptInterface
+    fun copyDir(
+        sourcePath: String,
+        destiDirPath: String
+    ){
+        FileSystems.copyDirectory(
+            sourcePath,
+            destiDirPath
         )
     }
 
