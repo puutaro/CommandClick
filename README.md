@@ -9,7 +9,7 @@ Pros
 ----
 - Javascript engine.
 - Javascript enforce web brawser
-- Easily turn shellscript into a GUI application in android.
+- Easily turn javascript and shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only web browser but also termux gui client.
 - Offer ritch edit dialog to termux.
