@@ -518,6 +518,9 @@ ex) am broadcast \
 - When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
 
+- Ocationaly In first start proccess crush, try, don't worry, just reboot.  
+    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it's instant problem. Rarely happens after the second time.
+
 
 
 ### Ubuntu debian or widnows version
