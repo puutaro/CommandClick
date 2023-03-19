@@ -76,7 +76,7 @@ Usage
 
 ### Index mode
 This mode is main mode. Top is `web terminal view`, down is `script name list`, bottom is toolbar.
-Main usage is executoin script by list item clicking, other usage is maintenance script or app by longpress or toolbar.
+Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
