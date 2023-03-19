@@ -84,13 +84,13 @@ Main usage is executoin script by list item clicking, other usage is maintenance
 #### History
 
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
-Torigger by left botom history button clicked.
+Torigger by left bottom history button clicked.
 And more you look in url history by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 * history item display mechanism {current_app_dir}__({current_script}) (when exist current script, edit execute is `Always`)
 
 #### Change term size
 
-Click toolbar left setting button, and terminal size change.
+Click toolbar right setting button, and terminal size change.
 
 
 #### Add
