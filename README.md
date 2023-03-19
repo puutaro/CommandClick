@@ -531,7 +531,7 @@ ex) am broadcast \
 
 Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
 
-    - `The Roop crush` is occur by memory leak.
+- The `Roop crush` is occur by memory leak.
 
 
 ### Generally TroubleShooting  
