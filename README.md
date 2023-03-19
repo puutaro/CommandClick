@@ -520,17 +520,6 @@ ex) am broadcast \
 - When your javascript's file cannot execute, you confirm how script step semicolon(`;`) exist except for function argument.  
 	- Becuase javaxcript file convert one linear script string, as it, javascript:(function() { `${js contents}` })(); and webvoew.loadUrl().  
 
-
-```
-	if(
-		jsStop.how().includes("true")
-	) throw new Error('exit');
-```
-
-	Optinaly may replace delay function with `jsUtil.sleep($milisecond)`;  
-	- `The Roop crush` is occur by memory leak.
-
-
 - Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
 
 ```
@@ -538,6 +527,7 @@ ex) am broadcast \
 		jsStop.how().includes("true")
 	) throw new Error('exit');
 ```
+
 
 Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
 
