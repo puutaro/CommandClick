@@ -4,13 +4,10 @@ import android.R
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.UrlTexter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.ReadText
 import java.net.URLDecoder
 
 
@@ -53,7 +50,7 @@ class SuggestEditTexter(
     }
 
 
-    fun setItemClickListner(){
+    fun setItemClickListener(){
         cmdSearchEditText.setOnItemClickListener { parent, _, position, _ ->
             val selectedUrlSource = parent.getItemAtPosition(position) as String
             val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()

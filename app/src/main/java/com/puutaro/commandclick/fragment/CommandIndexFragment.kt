@@ -106,7 +106,7 @@ class CommandIndexFragment: Fragment() {
         val suggestEditTexter = SuggestEditTexter(
             this
         )
-        suggestEditTexter.setItemClickListner()
+        suggestEditTexter.setItemClickListener()
         val cmdListView = binding.cmdList
         val makeListView = MakeListView(
             binding,

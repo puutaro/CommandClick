@@ -59,6 +59,7 @@ class GoogleSuggest(
         cmdIndexFragment.suggestJob?.cancel()
         cmdIndexFragment.suggestJob = CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
+                    delay(200)
                     try {
                         connection.connect()
                     } catch (e: Exception) {
