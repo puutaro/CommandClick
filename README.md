@@ -58,7 +58,8 @@ Table of Contents
   * [File api](#file-api)
   * [JavaScript interface](#javascript-interface)
   * [Html tag output](#html-tag-output)
-  * [Troubleshooting](#troubleshooting)
+  * [Javascript TroubleShooting](#javascript-troubleshooting)
+  * [Generally TroubleShooting](#generally-troubleshooting)  
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 
@@ -66,7 +67,7 @@ Table of Contents
 App installation
 -----  
 - Anadroid 8+  
-Reffer to [here relase page](https://github.com/puutaro/CommandClick/releases), and apk downalod to your smartphone.  
+Reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
 Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
 
 
@@ -75,7 +76,7 @@ Usage
 
 ### Index mode
 This mode is main mode. Top is `web terminal view`, down is `script name list`, bottom is toolbar.
-Main usage is executoin script by list item clicking, other usage is maintenance script or app by longpress or toolbar.
+Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
@@ -83,13 +84,13 @@ Main usage is executoin script by list item clicking, other usage is maintenance
 #### History
 
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
-Torigger by left botom history button clicked.
+Torigger by left bottom history button clicked.
 And more you look in url history by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
 * history item display mechanism {current_app_dir}__({current_script}) (when exist current script, edit execute is `Always`)
 
 #### Change term size
 
-Click toolbar left setting button, and terminal size change.
+Click toolbar right setting button, and terminal size change.
 
 
 #### Add
@@ -513,10 +514,36 @@ ex) am broadcast \
    - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
 
 
-### Troubleshooting
+### Javascript TroubleShooting  
 
-- When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
+
+- When your javascript's file cannot execute, you confirm how script step semicolon(`;`) exist except for function argument.  
+	- Becuase javaxcript file convert one linear script string, as it, javascript:(function() { `${js contents}` })(); and webvoew.loadUrl().  
+
+- Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
+
+```
+	if(
+		jsStop.how().includes("true")
+	) throw new Error('exit');
+```  
+
+
+- Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
+	- The `Roop crush` is occur by memory leak.
+
+
+### Generally TroubleShooting  
+
+- When url load slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
+
+
+- Ocationaly first start proccess crush, try, don't worry, just reboot.  
+    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it' s instant problem. Rarely happens after the second time.
+
+- When `websearch suggest` is not working, press space. if suggest  exist, fly.  
+    - Prabably due to `AutovompleteTextView`'s specification.  　　
 
 
 
