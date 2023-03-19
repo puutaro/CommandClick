@@ -193,7 +193,7 @@ class CommandClickShellScript {
             val backstackMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
             val termOutMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
             return """
-                # * ${TERMINAL_DO} is terminal screen select option
+                # * ${TERMINAL_DO} is terminal screen select option (only shellScript)
                 |#  - ${terminalOn}: cmdclick terminal (default)
                 |#  - ${terminalTermux}: termux terminal,
                 |#  - ${terminalOff}: no terminal(backend exec)
