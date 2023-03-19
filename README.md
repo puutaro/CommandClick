@@ -551,7 +551,11 @@ Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
 
 
 - Ocationaly first start proccess crush, try, don't worry, just reboot.  
-    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it's instant problem. Rarely happens after the second time.
+    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it' s instant problem. Rarely happens after the second time.
+
+- When `websearch suggest` is not working, press space. if suggest  exist, fly.  
+    - Prabably due to `AutovompleteTextView`'s specification, occur.  　　
+
 
 
 ### Ubuntu debian or widnows version
