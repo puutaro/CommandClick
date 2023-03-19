@@ -58,7 +58,8 @@ Table of Contents
   * [File api](#file-api)
   * [JavaScript interface](#javascript-interface)
   * [Html tag output](#html-tag-output)
-  * [Troubleshooting](#troubleshooting)
+  * [Javascript TroubleShooting](#javascript-troubleshooting)
+  * [Generally TroubleShooting](#generally-troubleshooting)  
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 
@@ -513,14 +514,44 @@ ex) am broadcast \
    - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
 
 
-### Troubleshooting
+### Javascript TroubleShooting  
+
+
+- When your javascript's file cannot execute, you confirm how script step semicolon(`;`) exist except for function argument.  
+	- Becuase javaxcript file convert one linear script string, as it, javascript:(function() { `${js contents}` })(); and webvoew.loadUrl().  
+
+
+```
+	if(
+		jsStop.how().includes("true")
+	) throw new Error('exit');
+```
+
+	- Optinaly may replace delay function with `jsUtil.sleep($milisecond)`;  
+		- `The Roop crush` is occur by memory leak.
+
+
+- Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
+
+```
+	if(
+		jsStop.how().includes("true")
+	) throw new Error('exit');
+```
+
+Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
+
+    - `The Roop crush` is occur by memory leak.
+
+
+### Generally TroubleShooting  
 
 - When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
 
-- Ocationaly In first start proccess crush, try, don't worry, just reboot.  
-    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it's instant problem. Rarely happens after the second time.
 
+- Ocationaly first start proccess crush, try, don't worry, just reboot.  
+    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it's instant problem. Rarely happens after the second time.
 
 
 ### Ubuntu debian or widnows version
