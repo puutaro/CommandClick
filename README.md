@@ -546,7 +546,7 @@ Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
 
 ### Generally TroubleShooting  
 
-- When url laod slow in different than before, probably due to cache, so click it's url from `url history`.
+- When url load slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
 
 
@@ -554,7 +554,7 @@ Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
     - Becuase app resoruce prefetch is busy, it's occur. Therefore, it' s instant problem. Rarely happens after the second time.
 
 - When `websearch suggest` is not working, press space. if suggest  exist, fly.  
-    - Prabably due to `AutovompleteTextView`'s specification, occur.  　　
+    - Prabably due to `AutovompleteTextView`'s specification.  　　
 
 
 
