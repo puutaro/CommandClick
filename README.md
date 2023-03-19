@@ -526,12 +526,11 @@ ex) am broadcast \
 	if(
 		jsStop.how().includes("true")
 	) throw new Error('exit');
-```
+```  
 
 
-Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
-
-- The `Roop crush` is occur by memory leak.
+- Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
+	- The `Roop crush` is occur by memory leak.
 
 
 ### Generally TroubleShooting  
