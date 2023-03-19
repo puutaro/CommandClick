@@ -527,8 +527,8 @@ ex) am broadcast \
 	) throw new Error('exit');
 ```
 
-	- Optinaly may replace delay function with `jsUtil.sleep($milisecond)`;  
-		- `The Roop crush` is occur by memory leak.
+	Optinaly may replace delay function with `jsUtil.sleep($milisecond)`;  
+	- `The Roop crush` is occur by memory leak.
 
 
 - Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
