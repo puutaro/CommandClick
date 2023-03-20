@@ -61,6 +61,7 @@ class EditFragment: Fragment() {
     var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
     var jsExecuteJob: Job? = null
+    var popBackStackToIndexImmediateJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,

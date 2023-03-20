@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -10,6 +11,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
+import kotlinx.coroutines.*
 
 
 class EditModeHandler(
@@ -187,13 +189,26 @@ class EditModeHandler(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()
         ) {
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                ToolbarButtonBariantForEdit.CANCEL,
-                readSharePreffernceMap,
-                enableCmdEdit,
-            )
+            editFragment.popBackStackToIndexImmediateJob?.cancel()
+            editFragment.popBackStackToIndexImmediateJob = CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.IO){
+                    delay(200)
+                }
+                withContext(Dispatchers.Main){
+                    Toast.makeText(
+                        context,
+                        "No editable variable therefore, go back",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    val listener = context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    listener?.onToolBarButtonClickForEditFragment(
+                        editFragment.tag,
+                        ToolbarButtonBariantForEdit.CANCEL,
+                        readSharePreffernceMap,
+                        enableCmdEdit,
+                    )
+                }
+            }
             return
         }
         buttonCreate(
