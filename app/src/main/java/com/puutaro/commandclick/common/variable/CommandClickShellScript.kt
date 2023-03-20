@@ -205,7 +205,7 @@ class CommandClickShellScript {
                 |#  - ${terminalSizeTypeOff}: no adjust (default)
                 |#  - ${terminalSizeTypeLong}: LongSize
                 |#  - ${terminalSizeTypeShort}: ShortSize
-                |# * ${TERMINAL_OUTPUT_MODE} decide output mode in cmdclick terminal
+                |# * ${TERMINAL_OUTPUT_MODE} decide output mode in cmdclick terminal (basically, only shellScript)
                 |#  - ${terminalOutPutModeNormal}: normal terminal output (default)
                 |#  - ${terminalOutPutModeReflash}: Before terminal output, screen resflesh
                 |#  - ${terminalOutPutModeReflashAndFirstRow}: Before terminal output, screen resflesh and focus first row
