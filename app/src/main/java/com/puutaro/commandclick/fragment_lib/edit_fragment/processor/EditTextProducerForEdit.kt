@@ -16,7 +16,7 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ButtonViewHowActive
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
-import com.puutaro.commandclick.proccess.ShellFileDescription
+import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -507,7 +507,7 @@ internal fun makeDescriptionButton(
     }
     descriptionButton.setOnClickListener {
             innerButtonView ->
-        ShellFileDescription.show(
+        ScriptFileDescription.show(
             innerButtonView.context,
             currentShellContentsList,
             SharePreffrenceMethod.getReadSharePreffernceMap(

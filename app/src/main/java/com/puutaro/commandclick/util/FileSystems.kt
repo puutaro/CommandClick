@@ -197,7 +197,7 @@ class FileSystems {
         ){
             val from = File(sourceDirPath)
             val to = File(destiDirPath)
-
+            if(!from.isDirectory) return
             try {
                 from.copyRecursively(to, true)
             } catch (ex: IOException) {
@@ -211,7 +211,7 @@ class FileSystems {
         ){
             val from = File(sourceDirPath)
             val to = File(destiDirPath)
-
+            if(!from.isDirectory) return
             try {
                 Files.move(from.toPath(), to.toPath())
             } catch (ex: IOException) {
@@ -223,6 +223,9 @@ class FileSystems {
             sourceShellFilePath: String,
             destiShellFilePath: String
         ){
+            if(
+                !File(sourceShellFilePath).isFile
+            ) return
             try {
                 Files.copy(
                     File(sourceShellFilePath).toPath(),
@@ -257,6 +260,9 @@ class FileSystems {
             sourceShellFilePath: String,
             destiShellFilePath: String
         ){
+            if(
+                !File(sourceShellFilePath).isFile
+            ) return
             try {
                 Files.move(
                     File(sourceShellFilePath).toPath(),

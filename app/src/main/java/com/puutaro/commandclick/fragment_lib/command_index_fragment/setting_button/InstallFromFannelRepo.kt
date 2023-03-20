@@ -29,7 +29,7 @@ import kotlinx.coroutines.*
 import org.eclipse.jgit.lib.TextProgressMonitor
 import java.io.File
 
-class InstallFromDownloadDir(
+class InstallFromFannelRepo(
     private val cmdIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
     private val cmdListAdapter: ArrayAdapter<String>,
@@ -43,7 +43,7 @@ class InstallFromDownloadDir(
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
     var onDisplayProgress = false
-    val blankListMark = "let's sync"
+    val blankListMark = "let's sync by long click"
     val fannelDirSuffix = "Dir"
 
     fun install(){
@@ -154,13 +154,18 @@ class InstallFromDownloadDir(
             val fannelDir = selectedFannelName + fannelDirSuffix
             FileSystems.copyDirectory(
                 "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
-                currentAppDirPath
+                "${currentAppDirPath}/${fannelDir}"
             )
             CommandListManager.execListUpdate(
                 currentAppDirPath,
                 cmdListAdapter,
                 cmdListView,
             )
+            Toast.makeText(
+                cmdIndexFragment.context,
+                "install ok: ${selectedFannelName}",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -168,12 +173,12 @@ class InstallFromDownloadDir(
         fannelListView: ListView,
         fannelListAdapter: ArrayAdapter<String>,
     ) {
-        fannelListView.setOnItemClickListener {
+        fannelListView.setOnItemLongClickListener {
                 parent, listSelectedView, pos, id
             ->
             if(
                 onDisplayProgress
-            ) return@setOnItemClickListener
+            ) return@setOnItemLongClickListener false
             val popup = PopupMenu(context, listSelectedView)
             val inflater = popup.menuInflater
             inflater.inflate(
@@ -196,6 +201,7 @@ class InstallFromDownloadDir(
                 true
             }
             popup.show()
+            true
         }
     }
 
@@ -297,9 +303,6 @@ class InstallFromDownloadDir(
         cmdIndexFragment.repoCloneProgressJob?.cancel()
         cmdIndexFragment.repoCloneProgressJob = CoroutineScope(Dispatchers.IO).launch {
             while(true) {
-                withContext(Dispatchers.IO) {
-                    delay(1000)
-                }
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         cmdIndexFragment.context,
@@ -309,6 +312,9 @@ class InstallFromDownloadDir(
                     progressBar += "#"
                 }
                 if(!onDisplayProgress) break
+                withContext(Dispatchers.IO) {
+                    delay(3000)
+                }
             }
         }
 
@@ -319,19 +325,7 @@ class InstallFromDownloadDir(
                 val repoFileObj = File(cmdclickFannelAppsDirPath)
                 FileSystems.removeDir(cmdclickFannelAppsDirPath)
                 FileSystems.createDirs(cmdclickFannelAppsDirPath)
-                var git: KGit? = null
-                try {
-                    git = KGit.cloneRepository {
-                        setURI(WebUrlVariables.commandClickRepositoryUrl)
-                        setDirectory(repoFileObj)
-                        setTimeout(60)
-                        setProgressMonitor(TextProgressMonitor())
-                    }
-                    git.close()
-                } catch (e: Exception) {
-                    git?.close()
-                    return@withContext
-                }
+                execGitClone(repoFileObj)
             }
             withContext(Dispatchers.IO){
                 delay(100)
@@ -385,6 +379,24 @@ class InstallFromDownloadDir(
     }
 }
 
+private fun execGitClone(
+    repoFileObj: File
+){
+    var git: KGit? = null
+    try {
+        git = KGit.cloneRepository {
+            setURI(WebUrlVariables.commandClickRepositoryUrl)
+            setDirectory(repoFileObj)
+            setTimeout(60)
+            setProgressMonitor(TextProgressMonitor())
+        }
+        git.close()
+    } catch (e: Exception) {
+        git?.close()
+        return
+    }
+}
+
 
 private val mainMenuGroupId = 100000
 
@@ -396,3 +408,4 @@ private enum class FannelMenuEnums(
 ) {
     SYNC(mainMenuGroupId, 100100, 1, "sync"),
 }
+

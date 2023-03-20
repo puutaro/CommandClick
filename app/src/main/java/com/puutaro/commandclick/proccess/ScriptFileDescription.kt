@@ -5,12 +5,13 @@ import android.content.Context
 import android.content.DialogInterface
 import android.view.Gravity
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
-class ShellFileDescription {
+class ScriptFileDescription {
     companion object {
         fun show(
             context: Context?,
@@ -39,16 +40,16 @@ class ShellFileDescription {
             alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
                 context.getColor(android.R.color.black) as Int
             )
-            alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+            alertDialog.window?.setGravity(Gravity.BOTTOM)
         }
 
 
         fun makeDescriptionContents(
-            currentShellContentsList: List<String>,
-            shellFileName: String
+            currentScriptContentsList: List<String>,
+            scriptFileName: String
         ): String {
             val languageType =
-                JsOrShellFromSuffix.judge(shellFileName)
+                JsOrShellFromSuffix.judge(scriptFileName)
 
             val languageTypeToSectionHolderMap =
                 CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -58,10 +59,13 @@ class ShellFileDescription {
             val labelingSectionEnd = languageTypeToSectionHolderMap.get(
                 CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
             ) as String
+            val removePrefix = if(languageType == LanguageTypeSelects.SHELL_SCRIPT){
+                "#"
+            } else "//"
 
             val descripitionContentsList =
                 CommandClickVariables.substituteVariableListFromHolder(
-                    currentShellContentsList,
+                    currentScriptContentsList,
                     labelingSectionStart,
                     labelingSectionEnd,
                 )?.filter {
@@ -76,7 +80,7 @@ class ShellFileDescription {
                 }?.map {
                     it
                         .trim(' ')
-                        .removePrefix("#")
+                        .removePrefix(removePrefix)
                 } ?: return String()
             return descripitionContentsList.joinToString("\n")
         }

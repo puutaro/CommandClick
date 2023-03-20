@@ -37,6 +37,8 @@ class CommandIndexFragment: Fragment() {
     var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
+    var repoCloneJob: Job? = null
+    var repoCloneProgressJob: Job? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -210,6 +212,12 @@ class CommandIndexFragment: Fragment() {
         super.onDestroyView()
         jsExecuteJob?.cancel()
         _binding = null
+    }
+
+    override fun onPause() {
+        repoCloneProgressJob?.cancel()
+        repoCloneJob?.cancel()
+        super.onPause()
     }
 
     override fun onResume() {

@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.ShellFileDescription
+import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
@@ -157,7 +157,7 @@ class ExecOnLongClickDo {
                     return contextItemSelected
                 }
                 R.id.shell_script_menu_description -> {
-                    ShellFileDescription.show(
+                    ScriptFileDescription.show(
                         cmdIndexFragment.context,
                         ReadText(
                             currentAppDirPath,

@@ -12,7 +12,7 @@ import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromDownloadDir
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
@@ -42,7 +42,7 @@ class ToolBarSettingButtonControl(
 
     private val settingButtonView = binding.cmdindexSettingButton
     private val popup = PopupMenu(context, settingButtonView)
-    private val installFromDownloadDir = InstallFromDownloadDir(
+    private val installFromFannelRepo = InstallFromFannelRepo(
         cmdIndexFragment,
         currentAppDirPath,
         cmdListAdapter,
@@ -159,8 +159,8 @@ class ToolBarSettingButtonControl(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
                     )
                 }
-                MenuEnums.INSTALL.itemId -> {
-                    installFromDownloadDir.install()
+                MenuEnums.INSTALL_FANNEL.itemId -> {
+                    installFromFannelRepo.install()
                 }
                 MenuEnums.SELECTTERM.itemId  -> {
                     println("pass")
@@ -260,7 +260,7 @@ internal enum class MenuEnums(
     SETTING(mainMenuGroupId, 60300, 3, "setting"),
     CHDIR(submenuSettingGroupId, 60301, 1, "change_app_dir"),
     SHORTCUT(submenuSettingGroupId, 60302, 2, "create_short_cut"),
-    INSTALL(submenuSettingGroupId, 60303, 3, "install"),
+    INSTALL_FANNEL(submenuSettingGroupId, 60303, 3, "install_fannel"),
     TERMUX_SETUP(submenuSettingGroupId, 60304, 4, "termux_setup"),
     CONFIG(submenuSettingGroupId, 60305, 5, "config"),
     SELECTTERM(mainMenuGroupId, 60400, 4, "select_term"),

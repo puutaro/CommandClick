@@ -13,6 +13,7 @@ class WebUrlVariables {
         val slashPrefix = "/"
         val jsPrefix = "javascript:"
         val commandClickGitUrl = "https://github.com/puutaro/CommandClick#readme"
+        val commandClickRepositoryUrl = "https://github.com/puutaro/commandclick-repository.git"
 
         fun makeUrlHistoryFile(
             dirPath: String,
