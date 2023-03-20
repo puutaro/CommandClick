@@ -61,6 +61,7 @@ Table of Contents
   * [Javascript TroubleShooting](#javascript-troubleshooting)
   * [Generally TroubleShooting](#generally-troubleshooting)  
   * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
+  * [CommandClick repository](#commandclick-repository)
 
 
 
@@ -554,5 +555,15 @@ ex) am broadcast \
 ### Ubuntu debian or widnows version
 
 Reference to [url](https://github.com/puutaro/cmdclick)
+
+
+### Commandclick-repository
+
+CommandClick's fannel repository
+
+fannel is ComamndClick using script (javascript, and shellscript)
+For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
+  
+[link](https://github.com/puutaro/commandclick-repository)  
 
 
