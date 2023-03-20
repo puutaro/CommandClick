@@ -35,7 +35,7 @@ Table of Contents
   * [Add](#add)
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
-  * [Install](#install)
+  * [Install fannel](#install-fannel)
   * [Config](#config)
   * [Termux setting](#termux-setting)
   * [Select term](#select-term)
@@ -221,9 +221,13 @@ Start `App directory` Manager by `setting` -> `change_app_dir` when long click s
  
 You can create shortcut for current `App directory` or `script` in only `index mode` or `edit execute Always`
 
-#### Install
+#### Install fannel
 
-You can move script from download directory.
+You can install `fannel` by clicking. and [git repository](https://github.com/puutaro/commandclick-repository) sync by long press.   
+	- `fannel` [detail](https://github.com/puutaro/commandclick-repository#desire)  
+	  
+![image](https://user-images.githubusercontent.com/55217593/226406483-b1744f1e-13c5-497b-af26-7457d87c90ca.png)   
+
 
 #### Config
 
