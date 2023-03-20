@@ -14,13 +14,13 @@ class ShellFileDescription {
     companion object {
         fun show(
             context: Context?,
-            currentShellContentsList: List<String>,
-            shellFileName: String
+            currentScriptContentsList: List<String>,
+            scriptFileName: String
         ){
             if(context == null) return
             val descripitionContents = makeDescriptionContents(
-                currentShellContentsList,
-                shellFileName
+                currentScriptContentsList,
+                scriptFileName
             )
 
             val linearLayout = LinearLayoutAdderForDialog.add(
@@ -43,7 +43,7 @@ class ShellFileDescription {
         }
 
 
-        private fun makeDescriptionContents(
+        fun makeDescriptionContents(
             currentShellContentsList: List<String>,
             shellFileName: String
         ): String {
