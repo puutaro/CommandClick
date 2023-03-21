@@ -188,4 +188,13 @@ class JsFileSystem(
             dirPath,
         ).joinToString("\t")
     }
+
+    @JavascriptInterface
+    fun showDirList(
+        dirPath: String
+    ): String {
+        return FileSystems.showDirList(
+            dirPath
+        ).joinToString("\t")
+    }
 }

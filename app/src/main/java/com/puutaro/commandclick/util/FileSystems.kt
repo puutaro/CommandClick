@@ -142,6 +142,16 @@ class FileSystems {
             }
         }
 
+        fun showDirList(
+            dirPath: String
+        ): List<String> {
+            val directories =  File(dirPath).list {
+                    dir, name ->
+                File(dir, name).isDirectory
+            } ?: return emptyList()
+            return directories.toList()
+        }
+
         fun filterSuffixJsFiles(
             dirPath: String,
             reverse: String = String()
