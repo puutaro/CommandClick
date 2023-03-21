@@ -224,10 +224,11 @@ You can create shortcut for current `App directory` or `script` in only `index m
 
 #### Install fannel
 
-You can install `fannel` by clicking. and [git repository](https://github.com/puutaro/commandclick-repository) sync by long press.   
+You can install `fannel` by clicking.   
+When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by long press and "sync ok" and wait until "sync ok" toast.   
 	- `fannel` [detail](https://github.com/puutaro/commandclick-repository#desire)  
 	  
-![image](https://user-images.githubusercontent.com/55217593/226406483-b1744f1e-13c5-497b-af26-7457d87c90ca.png)   
+![image](https://user-images.githubusercontent.com/55217593/226502372-ab8ad71e-bddb-4b72-8e9e-9bda2e9aff09.png)   
 
 
 #### Config
