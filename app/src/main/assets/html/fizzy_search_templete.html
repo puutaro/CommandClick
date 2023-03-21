@@ -168,22 +168,16 @@
       });
       var onLongPress = false;
       el.addEventListener('click', function(e) {
-         if(onLongPress) return
          el.classList.add("li-click");
          setTimeout(function(){
             el.classList.remove("li-click");
-            finder.value = "";
-            list.innerHTML = '';
          },300);
          addClickProcess(el.textContent);
       }); 
       el.addEventListener('long-press', function(e) {
-            onLongPress = true;
             el.classList.add("li-long-click");
             setTimeout(function(){
                   el.classList.remove("li-long-click");
-                  finder.value = "";
-                  list.innerHTML = '';
                },500);
             addLongClickProcess(el.textContent);
          });

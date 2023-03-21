@@ -28,11 +28,7 @@ object FzHtmlLauncher {
         val promptMessage = intent.getStringExtra(
             BroadCastIntentExtraForFzHtml.TEMPLATE_PROMPT_MESSAGE.scheme
         ) ?: return
-        Toast.makeText(
-            context,
-            "fz ${promptMessage}",
-            Toast.LENGTH_LONG
-        ).show()
+
         val itemClickJs = intent.getStringExtra(
             BroadCastIntentExtraForFzHtml.ITEM_CLICK_JAVASCRIPT.scheme
         ) ?: return
