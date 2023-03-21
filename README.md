@@ -175,11 +175,13 @@ Edit script by editor when long click list item in index mode
 
 #### Delete
 
-Delete script by `utility` -> `delete`  when long click list item in index mode 
+Delete script by `utility` -> `delete`  when long click list item in index mode   
+At the same time, remove `fannel` direcotry (raw filename + `Dir`)  
+
 
 #### Kill
 
-Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
+(Shell only) Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
 
 
 #### Init
@@ -194,8 +196,8 @@ Display description for script by `utility` -> `description`  when long click li
 
 #### Copy file
 
-Copy file for script by `copy` -> `copy file`  when long click list item in index mode
-
+Copy file for script by `copy` -> `copy file`  when long click list item in index mode  
+At the same time, copy `fannel` direcotry (raw filename + `Dir`)  
 
 #### Copy file path
 
