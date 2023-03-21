@@ -465,6 +465,8 @@ ex) am broadcast \
  - jsFileStystem  
  	- jsFileStystem.showFileList(dirPath: String)   
 		- return filelist tab sepalated   
+	- jsFileStystem.showDirList(dirPath: String)  
+		-return filelist tab sepalated   
  	- jsFileStystem.readLocalFile(path: String) -> String  
 		- read local file and return file contents string  
 	- jsFileStystem.writeLocalFile(path: String, contents: String)  
