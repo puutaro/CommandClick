@@ -6,14 +6,15 @@ import android.content.DialogInterface
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.github.syari.kgit.KGit
-import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -43,8 +44,11 @@ class InstallFromFannelRepo(
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
     var onDisplayProgress = false
-    val blankListMark = "let's sync by long click"
-    val fannelDirSuffix = "Dir"
+    private val blankListMark = "let's sync by long click"
+    private val fannelDirSuffix = "Dir"
+    private val descriptionFirstLineLimit = 50
+    private val monitorRoopLimit = 50
+    private val monitoringDuration = 3000L
 
     fun install(){
         if(context == null) return
@@ -67,14 +71,12 @@ class InstallFromFannelRepo(
         val fannelListAdapter = ArrayAdapter(
             context,
             R.layout.simple_list_item_1,
-            makeFannleListForListView()
+            makeFannelListForListView()
         )
         fannelListView.adapter = fannelListAdapter
         fannelListView.setSelection(
             fannelListAdapter.count
         )
-
-        linearLayoutForListView.addView(fannelListView)
 
         makeSearchEditText(
             fannelListView,
@@ -82,6 +84,7 @@ class InstallFromFannelRepo(
             searchText
         )
 
+        linearLayoutForListView.addView(fannelListView)
         linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
@@ -128,7 +131,7 @@ class InstallFromFannelRepo(
             cmdIndexFragment.repoCloneJob?.cancel()
             cmdIndexFragment.repoCloneProgressJob?.cancel()
             terminalViewModel.onDialog = false
-            val updateFannelsList = makeFannleListForListView()
+            val updateFannelsList = makeFannelListForListView()
             val selectedFannel = updateFannelsList.filter {
                 Regex(
                     searchText.text
@@ -205,26 +208,6 @@ class InstallFromFannelRepo(
         }
     }
 
-
-    fun fannelListSwipeToRefresh(
-        fannelListView: ListView,
-        swipyRefreshLayout: SwipyRefreshLayout,
-        fannelListAdapter: ArrayAdapter<String>,
-    ){
-        swipyRefreshLayout.setOnRefreshListener(SwipyRefreshLayout.OnRefreshListener {
-                direction ->
-            if(onDisplayProgress) {
-                swipyRefreshLayout.isRefreshing = false
-                return@OnRefreshListener
-            }
-            gitCloneAndMakeFannelList(
-                fannelListView,
-                fannelListAdapter
-            )
-            swipyRefreshLayout.isRefreshing = false
-        })
-    }
-
     private fun makeFannelListMemoryContents(): List<String> {
         val cmdclickFannelItselfDirPath = UsePath.cmdclickFannelItselfDirPath
         if(
@@ -234,13 +217,18 @@ class InstallFromFannelRepo(
             cmdclickFannelItselfDirPath,
         )
         return fannelsListSource.map {
-            val descFirstLine = ScriptFileDescription.makeDescriptionContents(
+            val descFirstLineSource = ScriptFileDescription.makeDescriptionContents(
                 ReadText(
                     cmdclickFannelItselfDirPath,
                     it
                 ).textToList(),
                 it
             ).split('\n').firstOrNull()
+            val descFirstLine = if(
+                !descFirstLineSource.isNullOrEmpty()
+                && descFirstLineSource.length > descriptionFirstLineLimit
+            ) descFirstLineSource.substring(0, descriptionFirstLineLimit)
+            else descFirstLineSource
             return@map if(descFirstLine.isNullOrEmpty()) it
             else {
                 "$it\n\t\t- $descFirstLine"
@@ -270,7 +258,7 @@ class InstallFromFannelRepo(
 
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
-                val updateFannelList = makeFannleListForListView()
+                val updateFannelList = makeFannelListForListView()
 
                 val filteredFannelList = updateFannelList.filter {
                     Regex(
@@ -302,7 +290,7 @@ class InstallFromFannelRepo(
         var progressBar = "sync.. #"
         cmdIndexFragment.repoCloneProgressJob?.cancel()
         cmdIndexFragment.repoCloneProgressJob = CoroutineScope(Dispatchers.IO).launch {
-            while(true) {
+            for (cnt in 1..monitorRoopLimit)  {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
                         cmdIndexFragment.context,
@@ -313,7 +301,7 @@ class InstallFromFannelRepo(
                 }
                 if(!onDisplayProgress) break
                 withContext(Dispatchers.IO) {
-                    delay(3000)
+                    delay(monitoringDuration)
                 }
             }
         }
@@ -338,20 +326,11 @@ class InstallFromFannelRepo(
             withContext(Dispatchers.Main) {
                 onDisplayProgress = false
                 cmdIndexFragment.repoCloneProgressJob?.cancel()
-                val updatedFanenlList = makeFannleListForListView()
-                if(
-                    !fannelListView.isVisible
-                ) return@withContext
-                CommandListManager.execListUpdateByEditText(
-                    updatedFanenlList,
-                    fannelListAdapter,
-                    fannelListView
-                )
-                if(
-                    !fannelListView.isVisible
-                ) return@withContext
-                fannelListView.setSelection(
-                    fannelListAdapter.count
+                val updatedFannelList = makeFannelListForListView()
+                updateFannelListView(
+                    fannelListView,
+                    updatedFannelList,
+                    fannelListAdapter
                 )
                 Toast.makeText(
                     cmdIndexFragment.context,
@@ -362,7 +341,32 @@ class InstallFromFannelRepo(
         }
     }
 
-    private fun makeFannleListForListView(): List<String> {
+    private fun updateFannelListView(
+        fannelListView: ListView,
+        updatedFannelList: List<String>,
+        fannelListAdapter: ArrayAdapter<String>
+    ){
+        try {
+            if (
+                !fannelListView.isVisible
+            ) return
+            CommandListManager.execListUpdateByEditText(
+                updatedFannelList,
+                fannelListAdapter,
+                fannelListView
+            )
+            if (
+                !fannelListView.isVisible
+            ) return
+            fannelListView.setSelection(
+                fannelListAdapter.count
+            )
+        } catch (e: Exception){
+            Log.e(LoggerTag.fannnelListUpdateErr,"cannot update fannel list view")
+        }
+    }
+
+    private fun makeFannelListForListView(): List<String> {
         val fannelListSource =  ReadText(
             UsePath.cmdclickFannelListDirPath,
             UsePath.fannelListMemoryName,
