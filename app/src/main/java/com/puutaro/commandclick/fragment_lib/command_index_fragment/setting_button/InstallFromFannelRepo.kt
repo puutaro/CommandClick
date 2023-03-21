@@ -43,7 +43,7 @@ class InstallFromFannelRepo(
     private val listLinearWeight = 1F - searchTextLinearWeight
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
-    var onDisplayProgress = false
+    private var onDisplayProgress = false
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = "Dir"
     private val descriptionFirstLineLimit = 50
