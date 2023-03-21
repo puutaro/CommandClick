@@ -66,7 +66,10 @@ object FzHtmlLauncher {
         val htmlFilePath = "${currentAppDirPath}/${htmlFileName}"
         if(
             File(htmlFilePath).isFile
-        ) return
+        ) {
+            binding.terminalWebView.loadUrl(htmlFilePath)
+            return
+        }
         FileSystems.writeFile(
             currentAppDirPath,
             htmlFileName,
