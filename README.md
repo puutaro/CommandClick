@@ -491,6 +491,7 @@ ex) am broadcast \
 
  - JsIntent
  	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+ 	- jsIntent.launchFzSite(editPath: String, promptMessage: String, itemClickJs: jsScript, itemLongClickJs: jsScript, realTimeListSetJs: jsScript)  
  	- jsIntent.launchUrl(urlString: String)  
 
  - JsDialog
