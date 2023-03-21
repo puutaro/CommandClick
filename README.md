@@ -462,7 +462,9 @@ ex) am broadcast \
       - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.
 
 ### JavaScript interface
- - jsFileStystem
+ - jsFileStystem  
+ 	- jsFileStystem.showFileList(dirPath: String)   
+		- return filelist tab sepalated   
  	- jsFileStystem.readLocalFile(path: String) -> String  
 		- read local file and return file contents string  
 	- jsFileStystem.writeLocalFile(path: String, contents: String)  
