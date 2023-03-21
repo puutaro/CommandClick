@@ -46,10 +46,6 @@ object HtmlLauncher{
         val filterCode = intent.getStringExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme
         ) ?: "true"
-        val fis2: InputStream =
-            context.assets?.open(
-                "html/edit_urls_template.html"
-            ) ?: return
         val htmlContentsSource = FileSystems.readFromAssets(
             context,
             "html/edit_urls_template.html"

@@ -5,6 +5,7 @@ import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -43,6 +44,40 @@ class JsIntent(
         )
         terminalFragment.activity?.sendBroadcast(jsIntent)
     }
+
+    @JavascriptInterface
+    fun launchFzSite(
+        editPath: String,
+        promptMessage: String,
+        itemClickJs: String,
+        itemLongClickJs: String,
+        realTimeListSetJs: String
+    ) {
+        val jsIntent = Intent()
+        jsIntent.action = BroadCastIntentScheme.FZHTML_LAUNCH.action
+        jsIntent.putExtra(
+            BroadCastIntentScheme.FZHTML_LAUNCH.scheme,
+            editPath
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForFzHtml.TEMPLATE_PROMPT_MESSAGE.scheme,
+            promptMessage
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForFzHtml.ITEM_CLICK_JAVASCRIPT.scheme,
+            itemClickJs
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForFzHtml.ITEM_LONG_CLICK_JAVASCRIPT.scheme,
+            itemLongClickJs
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForFzHtml.REAL_TIME_LIST_SET_JAVASCRIPT.scheme,
+            realTimeListSetJs
+        )
+        terminalFragment.activity?.sendBroadcast(jsIntent)
+    }
+
 
 
     @JavascriptInterface

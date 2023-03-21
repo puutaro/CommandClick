@@ -178,4 +178,14 @@ class JsFileSystem(
         val clip = ClipData.newPlainText("demo", text)
         clipboard?.setPrimaryClip(clip)
     }
+
+
+    @JavascriptInterface
+    fun showFileList(
+        dirPath: String
+    ): String {
+        return FileSystems.sortedFiles(
+            dirPath,
+        ).joinToString("\t")
+    }
 }

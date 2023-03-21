@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<title>edit urls template</title>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+   <!-- link the CSS file here -->
+</head>
+<header>
+   <h1 id="header">edit urls template</h1>
+</header>
+<body>
+   <div class="container">
+      <ul id="list"></ul>
+      <div class="input-box">
+         <input id="finder" type="text" placeholder="search term">
+      </div>
+   </div>
+
+
+   <!-- link the JavaScript file here -->
+<style>
+
+   h1 {
+      display: none;
+   }
+
+   .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      width: 100vw;
+      height: 100vh;
+   }
+
+   .input-box {
+            position: fixed;
+      bottom: 0px;
+      left:0;
+      right: 0;
+      width: 90%;
+      margin: 0px auto;
+      padding-bottom: 5px;
+      background-color: #fff;
+   }
+   input {
+      box-sizing: border-box;
+      width: 100%;
+      border: none;
+      border-bottom:3px solid #cef0f5;
+      font-size: 1.2rem;
+      display: block;
+      margin: 0rem auto;
+      margin-bottom: auto;
+      height: 40px;
+      color:  #525252;
+      border-radius: 10px;
+      margin-bottom : 10px;
+      background-color: #fff;
+      padding-left: 20px;
+      padding-right: 20px;
+      padding-bottom: 10px;
+      margin-bottom: 10px;
+
+   }
+
+   input:focus {
+      outline: 10px #525252 ;
+   }
+
+   input::placeholder {
+        color: #a6a6a6;
+      }
+
+   ul {
+      flex: 1;
+      display: flex;
+      width: 85%;
+      flex-direction: column-reverse; 
+      list-style: none;
+      text-align: center;
+      margin: 0 auto;
+      padding: 0;
+      padding-bottom: 60px;
+   }
+
+   li {
+      font-size: 1.3em;
+      color: #666;
+      padding:5px;
+      background-color: #cef0f5;
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      border-radius: 7px;
+      transition: 0.2s;
+      -moz-user-select: -moz-none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      cursor: default;
+   }
+
+   li:focus  {
+     background: red;
+     outline: 0;
+   }
+ .li-click {
+      background-color: #e3f7fa;
+      color: #7a7a7a;
+   }
+
+  .li-long-click {
+      background-color: #74cedb;
+      color: #696969;
+   }
+
+   li strong {
+       color: #23727d;
+   }
+   </style>
+   <script src="https://cdn.rawgit.com/jakealbaugh/fuzzy-search/master/dist/fuzzy-search.min.js"></script>
+   <script src="./bookmark/js/event/long-press-event.min.js"></script>
+   <script>
+   const promptMessage = "TEMPLATE_PROMPT_MESSAGE";
+   
+   function addClickProcess(itemName) {
+      console.log("addClickProcess: " + itemName);
+      ITEM_CLICK_JAVASCRIPT;
+   };
+
+   function addLongClickProcess(itemName) {
+      console.log("addLongClickProcess " + itemName);
+      ITEM_LONG_CLICK_JAVASCRIPT;
+   };
+
+   function realTimeSetList() {
+      REAL_TIME_LIST_SET_JAVASCRIPT;
+   };
+
+   var CountLabelTimes = 0;
+   // handling search results
+   function outputSearchResults(results) {
+      // clear list
+      list.innerHTML = '';
+
+      // you deleted the last letter, do nothing more
+      if(results.count === lib.length) return;
+      outputMatches(results.exact);
+
+      if(!results.fuzzy.length) return;
+      outputMatches(results.fuzzy);
+   }
+
+   // outputting matches
+   function outputMatches(matchesArray) {
+      matchesArray.forEach((match) => {
+      var el = document.createElement('li');
+      match._substrings.forEach((str) => {
+         if(str.match) {
+            el.innerHTML += `<strong>${str.str}</strong>`;
+         } else {
+            el.innerHTML += str.str;
+         }
+      });
+      var onLongPress = false;
+      el.addEventListener('click', function(e) {
+         if(onLongPress) return
+         el.classList.add("li-click");
+         setTimeout(function(){
+            el.classList.remove("li-click");
+            finder.value = "";
+            list.innerHTML = '';
+         },300);
+         addClickProcess(el.textContent);
+      }); 
+      el.addEventListener('long-press', function(e) {
+            onLongPress = true;
+            el.classList.add("li-long-click");
+            setTimeout(function(){
+                  el.classList.remove("li-long-click");
+                  finder.value = "";
+                  list.innerHTML = '';
+               },500);
+            addLongClickProcess(el.textContent);
+         });
+         list.appendChild(el);
+      });
+   }
+
+   var finder = document.querySelector("#finder"),
+       list   = document.querySelector("#list"),
+       lib    = realTimeSetList(),
+       timeoutId = 1,
+       results = ""
+   finder.placeholder = promptMessage
+
+
+   finder.addEventListener("keyup", onKeydown);
+
+   function launch(thisItem){
+      alert(thisItem.toString())
+
+   }
+
+
+   function updateScroll(){
+     var element = (document.scrollingElement || document.body);
+     element.scrollTop = element.scrollHeight;
+   }
+
+   function addClick(){
+      var trigger = document.querySelectorAll(".label");
+      trigger.forEach(function(target) {
+         target.addEventListener('click', function(e) {
+            console.log("aaa")
+         }); 
+      });
+   }
+
+
+   function onKeydown(e) {
+      clearTimeout(timeoutId);
+      if(!e.target.value) { list.innerHTML = ''; return; }
+      timeoutId = window.setTimeout(
+         function(){
+            lib = realTimeSetList();
+            results = FS.search(e.target.value, lib);
+            if(results.success) { 
+               outputSearchResults(results);
+               setTimeout(updateScroll,100);
+            } else {
+               console.error(results);
+            }
+         }, 
+         200);
+   }
+
+</script>
+</body>
+</html>
