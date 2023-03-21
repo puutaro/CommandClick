@@ -490,7 +490,8 @@ ex) am broadcast \
 			-> `fristargment`\t`secondargument 2`  
 
  - JsIntent
- 	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)
+ 	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)  
+ 			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
  	- jsIntent.launchFzSite(editPath: String, promptMessage: String, itemClickJs: jsScript, itemLongClickJs: jsScript, realTimeListSetJs: jsScript)  
  	- jsIntent.launchUrl(urlString: String)  
 
