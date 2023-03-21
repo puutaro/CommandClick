@@ -69,6 +69,7 @@ class UsePath {
         const val longPressImageAnchorJsName = "long_press_image_anchor.js"
         const val cmdclickFirstHistoryTitle = "firstHistoryTitle"
         val urlLoadFinished = "urlLoadFinished"
+        val fannelDirSuffix = "Dir"
 
 
         fun makeOmitPath(

@@ -82,20 +82,29 @@ class CopyFileEvent(
 
     private fun execInvokeItemSetClickListnerForCopyFile(
         sourceAppDirPath: String,
-        sourceShellFileName: String,
+        sourceScriptFileName: String,
         selectedShellFileName: String,
     ) {
 
-        val sourceShellFilePath = "${sourceAppDirPath}/${sourceShellFileName}"
+        val sourceScriptFilePath = "${sourceAppDirPath}/${sourceScriptFileName}"
         val selectedShellFilePath = makeSelectedShellFilePath(
             sourceAppDirPath,
-            sourceShellFileName,
+            sourceScriptFileName,
             selectedShellFileName
         )
 
         FileSystems.copyFile(
-            sourceShellFilePath,
+            sourceScriptFilePath,
             selectedShellFilePath
+        )
+        val selectedFannelName =
+            sourceScriptFileName
+                .removeSuffix(CommandClickShellScript.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickShellScript.SHELL_FILE_SUFFIX)
+        val fannelDir = selectedFannelName + UsePath.fannelDirSuffix
+        FileSystems.copyDirectory(
+            "${sourceAppDirPath}/${fannelDir}",
+            "${File(selectedShellFilePath).parent}/${fannelDir}"
         )
         copyResultToast(
             context,

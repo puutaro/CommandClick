@@ -20,7 +20,7 @@ class ConfirmDialogForDelete {
         fun show(
             cmdIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
-            shellScriptName: String,
+            scriptFileName: String,
             cmdListAdapter: ArrayAdapter<String>,
             cmdListView: ListView
         ){
@@ -29,9 +29,9 @@ class ConfirmDialogForDelete {
             val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
             val shellContents = ReadText(
                 currentAppDirPath,
-                shellScriptName
+                scriptFileName
             ).readText()
-            val displayContents = "\tpath: ${currentAppDirPathTermux}/${shellScriptName}" +
+            val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
                     "\n---\n${shellContents}"
             val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
                 context,
@@ -45,7 +45,17 @@ class ConfirmDialogForDelete {
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                     FileSystems.removeFiles(
                         currentAppDirPath,
-                        shellScriptName,
+                        scriptFileName,
+                    )
+                    val fannelDirName = scriptFileName
+                        .removeSuffix(
+                            CommandClickShellScript.SHELL_FILE_SUFFIX
+                        )
+                        .removeSuffix(
+                            CommandClickShellScript.JS_FILE_SUFFIX
+                        ) + UsePath.fannelDirSuffix
+                    FileSystems.removeDir(
+                        "${currentAppDirPath}/${fannelDirName}"
                     )
                     CommandListManager.execListUpdate(
                         currentAppDirPath,
@@ -53,7 +63,7 @@ class ConfirmDialogForDelete {
                         cmdListView,
                     )
                     if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
-                        val deleteAppDirName = shellScriptName.removeSuffix(
+                        val deleteAppDirName = scriptFileName.removeSuffix(
                             CommandClickShellScript.JS_FILE_SUFFIX
                         )
                         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath

@@ -45,9 +45,9 @@ class InstallFromFannelRepo(
     private val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
     private var onDisplayProgress = false
     private val blankListMark = "let's sync by long click"
-    private val fannelDirSuffix = "Dir"
+    private val fannelDirSuffix = UsePath.fannelDirSuffix
     private val descriptionFirstLineLimit = 50
-    private val monitorRoopLimit = 500
+    private val monitorRoopLimit = 100
     private val monitoringDuration = 3000L
 
     fun install(){
@@ -89,14 +89,9 @@ class InstallFromFannelRepo(
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
 
-        val alertDialogBuilder = AlertDialog.Builder(
-            context
-        )
-            .setTitle("Select from bellow fannels")
-            .setView(linearLayoutForTotal)
-        val alertDialog =
-            alertDialogBuilder
-                .create()
+        val alertDialog = cmdIndexFragment.fannelInstallDialog
+            ?: return
+        alertDialog.setView(linearLayoutForTotal)
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
@@ -115,6 +110,7 @@ class InstallFromFannelRepo(
         invokeItemSetLongClickListenerForFannel(
             fannelListView,
             fannelListAdapter,
+            alertDialog
         )
     }
 
@@ -175,6 +171,7 @@ class InstallFromFannelRepo(
     private fun invokeItemSetLongClickListenerForFannel(
         fannelListView: ListView,
         fannelListAdapter: ArrayAdapter<String>,
+        alertDialog: AlertDialog
     ) {
         fannelListView.setOnItemLongClickListener {
                 parent, listSelectedView, pos, id
@@ -199,7 +196,8 @@ class InstallFromFannelRepo(
                     menuItem ->
                 gitCloneAndMakeFannelList(
                     fannelListView,
-                    fannelListAdapter
+                    fannelListAdapter,
+                    alertDialog
                 )
                 true
             }
@@ -283,7 +281,8 @@ class InstallFromFannelRepo(
 
     private fun gitCloneAndMakeFannelList(
         fannelListView: ListView,
-        fannelListAdapter: ArrayAdapter<String>
+        fannelListAdapter: ArrayAdapter<String>,
+        alertDialog: AlertDialog
     ){
         if(context == null) return
         onDisplayProgress = true
@@ -298,6 +297,9 @@ class InstallFromFannelRepo(
                         Toast.LENGTH_SHORT
                     ).show()
                     progressBar += "#"
+                    if(
+                        terminalViewModel.isStop
+                    ) alertDialog.dismiss()
                 }
                 if(!onDisplayProgress) break
                 if(terminalViewModel.isStop) break
@@ -338,6 +340,7 @@ class InstallFromFannelRepo(
                     "sync ok",
                     Toast.LENGTH_SHORT
                 ).show()
+                cmdIndexFragment.repoCloneJob?.cancel()
             }
         }
     }
@@ -395,15 +398,16 @@ private fun execGitClone(
             setTimeout(60)
             setProgressMonitor(TextProgressMonitor())
         }
-        git.close()
     } catch (e: Exception) {
-        git?.close()
+        Log.e(LoggerTag.fannnelListUpdateErr, "close git")
         return
+    } finally {
+        git?.close()
     }
 }
 
 
-private val mainMenuGroupId = 100000
+private const val mainMenuGroupId = 100000
 
 private enum class FannelMenuEnums(
     val groupId: Int,

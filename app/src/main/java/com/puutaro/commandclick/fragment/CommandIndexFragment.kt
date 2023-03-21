@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.graphics.Color
 import android.media.AudioManager
@@ -39,6 +40,7 @@ class CommandIndexFragment: Fragment() {
     var suggestJob: Job? = null
     var repoCloneJob: Job? = null
     var repoCloneProgressJob: Job? = null
+    var fannelInstallDialog: AlertDialog? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -181,6 +183,8 @@ class CommandIndexFragment: Fragment() {
             )
         }
 
+        fannelInstallDialog = FannelInstallDialog.create(this)
+
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
             this,
@@ -215,6 +219,7 @@ class CommandIndexFragment: Fragment() {
     }
 
     override fun onPause() {
+        fannelInstallDialog?.dismiss()
 //        repoCloneProgressJob?.cancel()
 //        repoCloneJob?.cancel()
         super.onPause()
@@ -222,8 +227,10 @@ class CommandIndexFragment: Fragment() {
 
     override fun onResume() {
         super.onResume()
+        fannelInstallDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
     }
+
 
     override fun onStart() {
         super.onStart()
