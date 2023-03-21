@@ -215,8 +215,8 @@ class CommandIndexFragment: Fragment() {
     }
 
     override fun onPause() {
-        repoCloneProgressJob?.cancel()
-        repoCloneJob?.cancel()
+//        repoCloneProgressJob?.cancel()
+//        repoCloneJob?.cancel()
         super.onPause()
     }
 

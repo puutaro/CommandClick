@@ -47,7 +47,7 @@ class InstallFromFannelRepo(
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = "Dir"
     private val descriptionFirstLineLimit = 50
-    private val monitorRoopLimit = 50
+    private val monitorRoopLimit = 500
     private val monitoringDuration = 3000L
 
     fun install(){
@@ -100,8 +100,8 @@ class InstallFromFannelRepo(
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
-                cmdIndexFragment.repoCloneJob?.cancel()
-                cmdIndexFragment.repoCloneProgressJob?.cancel()
+//                cmdIndexFragment.repoCloneJob?.cancel()
+//                cmdIndexFragment.repoCloneProgressJob?.cancel()
             }
         })
         alertDialog.window?.setGravity(Gravity.BOTTOM);
@@ -300,6 +300,7 @@ class InstallFromFannelRepo(
                     progressBar += "#"
                 }
                 if(!onDisplayProgress) break
+                if(terminalViewModel.isStop) break
                 withContext(Dispatchers.IO) {
                     delay(monitoringDuration)
                 }
@@ -333,7 +334,7 @@ class InstallFromFannelRepo(
                     fannelListAdapter
                 )
                 Toast.makeText(
-                    cmdIndexFragment.context,
+                    context,
                     "sync ok",
                     Toast.LENGTH_SHORT
                 ).show()
