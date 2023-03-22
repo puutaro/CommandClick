@@ -54,7 +54,6 @@ Table of Contents
   * [Edit execute always](#edit-execute-always)
   * [Edit api](#edit-api)
   * [Url command](#url-command)
-  * [Fizzy Search Html automaticaly creation command](#fizzy-search-html-automaticaly-creation-command)
   * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
   * [File api](#file-api)
   * [JavaScript interface](#javascript-interface)
@@ -411,34 +410,6 @@ ex) am broadcast \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
 ```
 
-### Fizzy Search Html automaticaly creation command
-
-Exec bellow command in `CommandClick` shellscript, so that you can make automaticaly make html, css and javascript.
-(This command is only active when command click focus)
-
-```
-am broadcast \
-		-a "com.puutaro.commandclick.fzhtml.launch" \
-		--es prompt "{prompt messge}" \
-		--es item_click_js "{jsString (SystemVariable: itemName)}" \
-		--es item_lclick_js "jsString (SystemVariable: itemName)" (optional) \
-		--es ls_set_js "{jsString (return [~];)}"
-``` 
-  
-```
-ex) am broadcast \
-		-a "com.puutaro.commandclick.html.launch" \
-		--es prompt "select from above list" \
-		--es item_click_js 'alert("your click " + itemName)' \
-		--es item_lclick_js 'alert("your long click " + itemName)' \
-		--es ls_set_js "return ['aa', 'bb', 'cc', 'dd']"
-```
-
-- fizzy search html esxample
-
-![image](https://user-images.githubusercontent.com/55217593/226618727-f28163ac-39a3-4b61-b7d9-3aa45ba8f970.png)
-
-
 ### Html automaticaly creation command to edit target edit file 
 
 Exec bellow command in `CommandClick` shellscript, so that you can make automaticaly make html, css and javascript.
@@ -521,7 +492,6 @@ ex) am broadcast \
  - JsIntent
  	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)  
  			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
- 	- jsIntent.launchFzSite(editPath: String, promptMessage: String, itemClickJs: jsScript, itemLongClickJs: jsScript, realTimeListSetJs: jsScript(return [~];))  
  	- jsIntent.launchUrl(urlString: String)  
 
  - JsDialog
