@@ -24,7 +24,6 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 class EditTextProducerForEdit(
     editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
@@ -53,6 +52,8 @@ class EditTextProducerForEdit(
         recordNumToMapNameValueInCommandHolder
     )
 
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -60,7 +61,6 @@ class EditTextProducerForEdit(
 
     private val withEditTextWithButton = WithEditTextWithButton(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
@@ -72,7 +72,6 @@ class EditTextProducerForEdit(
 
     private val withSpinnerWithButtonView = WithSpinnerWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
@@ -83,14 +82,12 @@ class EditTextProducerForEdit(
 
     private val withEditableSpinnerWithButtonView = WithEditableSpinnerWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
 
     private val withEditableFileSelectSpinnerWithButtonView = WithEditableFileSelectSpinnerWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         currentAppDirPath,
         recordNumToMapNameValueInCommandHolder,
@@ -107,7 +104,6 @@ class EditTextProducerForEdit(
 
     private val withDirOrFileChooseViewWithButtonView = WithDirOrFileChooseViewWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
@@ -118,7 +114,6 @@ class EditTextProducerForEdit(
 
     private val withInDeCremenViewWithButtonView = WithInDeCremenViewWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
@@ -129,7 +124,6 @@ class EditTextProducerForEdit(
 
     private val withButtonView = WithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )
@@ -140,7 +134,6 @@ class EditTextProducerForEdit(
 
     private val withColorPickerWithButtonView = WithColorPickerWithButtonView(
         editFragment,
-        readSharePreffernceMap,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder
     )

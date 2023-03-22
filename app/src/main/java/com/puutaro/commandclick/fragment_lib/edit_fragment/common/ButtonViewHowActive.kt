@@ -10,16 +10,16 @@ class ButtonViewHowActive(
     private val editFragment: EditFragment,
 
 ) {
-        fun buttonViewHowActive(
-            buttonTag: String,
-            howActive: Boolean = false,
-        ){
-            val buttonView =
-                binding.editToolbarLinearLayout.findViewWithTag<ImageButton>(
-                    buttonTag
-                ) ?: return
-            val colorId = if(howActive) R.color.black else R.color.gray_out
-            buttonView.imageTintList = editFragment.context?.getColorStateList(colorId)
-            buttonView.isEnabled = howActive
-        }
+    fun buttonViewHowActive(
+        buttonTag: String,
+        howActive: Boolean = false,
+    ){
+        val buttonView =
+            binding.editToolbarLinearLayout.findViewWithTag<ImageButton>(
+                buttonTag
+            ) ?: return
+        val colorId = if(howActive) R.color.black else R.color.gray_out
+        buttonView.imageTintList = editFragment.context?.getColorStateList(colorId)
+        buttonView.isEnabled = howActive
+    }
 }

@@ -17,7 +17,6 @@ import kotlinx.coroutines.*
 class EditModeHandler(
     private val editFragment: EditFragment,
     binding: EditFragmentBinding,
-    private val readSharePreffernceMap: Map<String, String>
 ) {
 
     private val context = editFragment.context
@@ -35,6 +34,7 @@ class EditModeHandler(
         R.string.api_cmd_variable_edit_api_fragment
     )
     private val enableCmdEdit = currentEditFragmentTag == cmdVariableEditTagFName
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -67,7 +67,6 @@ class EditModeHandler(
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,
-        readSharePreffernceMap,
         enableCmdEdit,
     )
     private val buttonViewHowActive = ButtonViewHowActive(
@@ -146,7 +145,6 @@ class EditModeHandler(
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            readSharePreffernceMap,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -224,7 +222,6 @@ class EditModeHandler(
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            readSharePreffernceMap,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,

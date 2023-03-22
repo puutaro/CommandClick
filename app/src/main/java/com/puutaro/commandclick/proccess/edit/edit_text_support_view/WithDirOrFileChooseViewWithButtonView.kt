@@ -11,11 +11,11 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFi
 
 class WithDirOrFileChooseViewWithButtonView(
     private val editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
     private val context = editFragment.context
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
 
     fun create(
         currentId: Int,

@@ -179,7 +179,6 @@ class EditFragment: Fragment() {
             )
             ConfigFromShellFileSetter.set(
                 this,
-                readSharePreffernceMap
             )
         }
 
@@ -198,7 +197,6 @@ class EditFragment: Fragment() {
         val editModeHandler = EditModeHandler(
             this,
             binding,
-            readSharePreffernceMap
         )
         editModeHandler.execByHowFullEdit()
         val terminalViewModel: TerminalViewModel by activityViewModels()

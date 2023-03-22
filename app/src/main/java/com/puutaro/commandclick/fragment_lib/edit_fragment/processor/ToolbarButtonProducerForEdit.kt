@@ -24,7 +24,6 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val enableCmdEdit: Boolean,
 ) {
 
@@ -33,6 +32,7 @@ class ToolbarButtonProducerForEdit(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
     )
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val sharedPref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(

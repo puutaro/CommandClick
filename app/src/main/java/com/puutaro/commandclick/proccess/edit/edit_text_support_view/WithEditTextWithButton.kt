@@ -12,11 +12,11 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class WithEditTextWithButton(
     private val editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
     private val context = editFragment.context
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
     fun create(

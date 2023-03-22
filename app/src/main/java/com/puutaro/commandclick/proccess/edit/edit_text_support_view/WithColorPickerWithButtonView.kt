@@ -11,10 +11,11 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ColorPi
 
 class WithColorPickerWithButtonView(
     private val editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+
     fun create(
         currentId: Int,
         currentVariableValue: String?,

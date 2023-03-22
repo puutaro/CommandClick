@@ -10,8 +10,8 @@ class ConfigFromShellFileSetter {
     companion object {
         fun set(
             editFragment: EditFragment,
-            readSharePreffernceMap: Map<String, String>,
         ){
+            val readSharePreffernceMap = editFragment.readSharePreffernceMap
             val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.on_shortcut
