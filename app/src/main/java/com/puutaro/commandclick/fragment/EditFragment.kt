@@ -18,6 +18,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdatelastModi
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
@@ -62,6 +64,7 @@ class EditFragment: Fragment() {
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
+    var readSharePreffernceMap: Map<String, String> = mapOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,10 +96,11 @@ class EditFragment: Fragment() {
         val apiEditFragmentTag = getString(
             R.string.api_cmd_variable_edit_api_fragment
         )
+        val cmdConfigVariableEditFragment = getString(
+            R.string.cmd_config_variable_edit_fragment
+        )
         val howConfigEdit = (
-                tag == getString(
-                        R.string.cmd_config_variable_edit_fragment
-                    )
+                tag == cmdConfigVariableEditFragment
                 )
         val howEditApi = (
                 tag == apiEditFragmentTag
@@ -124,7 +128,7 @@ class EditFragment: Fragment() {
             if(!checkOkForShellName) return
         }
 
-        val readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
+        readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
             getIntent,
             howConfigEdit,
             howEditApi,
@@ -205,6 +209,7 @@ class EditFragment: Fragment() {
             if(terminalViewModel.onDialog) return@setEventListener
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
+                && tag != cmdConfigVariableEditFragment
             ) {
                 binding.editTextScroll.isVisible = !isOpen
                 binding.editToolBar.isVisible = !isOpen
@@ -216,6 +221,28 @@ class EditFragment: Fragment() {
                 this.isVisible
             )
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val shellScriptContentsList = ReadText(
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
+            ),
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_script_file_name
+            )
+        ).textToList()
+        TerminalShowByTerminalDoWhenReuse.show(
+            this,
+            shellScriptContentsList
+        )
+    }
+
+    override fun onPause() {
+        super.onPause()
     }
 
     override fun onDestroyView() {

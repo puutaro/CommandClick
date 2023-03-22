@@ -39,7 +39,7 @@ class IndexInitHandler {
                 return
             }
 
-            terminalShowInit(
+            TerminalShower.show(
                 cmdIndexFragment
             )
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
@@ -119,15 +119,4 @@ class IndexInitHandler {
 
         }
     }
-}
-
-private fun terminalShowInit(
-    cmdIndexFragment: CommandIndexFragment
-){
-    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
-    listener?.onKeyBoardVisibleChange(
-        false,
-        true,
-        cmdIndexFragment.WebSearchSwitch
-    )
 }

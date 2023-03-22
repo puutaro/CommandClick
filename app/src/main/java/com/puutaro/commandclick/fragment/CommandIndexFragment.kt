@@ -17,7 +17,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 
 
@@ -40,7 +40,10 @@ class CommandIndexFragment: Fragment() {
     var suggestJob: Job? = null
     var repoCloneJob: Job? = null
     var repoCloneProgressJob: Job? = null
+    var showTerminalJobWhenReuse: Job? = null
     var fannelInstallDialog: AlertDialog? = null
+    var onFocusSearchText = false
+    var savedEditTextContents = String()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -219,14 +222,20 @@ class CommandIndexFragment: Fragment() {
     }
 
     override fun onPause() {
+        savedEditTextContents = binding.cmdSearchEditText.text.toString()
+        onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         fannelInstallDialog?.dismiss()
+        showTerminalJobWhenReuse?.cancel()
 //        repoCloneProgressJob?.cancel()
 //        repoCloneJob?.cancel()
+
         super.onPause()
     }
 
     override fun onResume() {
         super.onResume()
+        TerminalShower.show(this)
+        EditTextWhenReuse.focus(this)
         fannelInstallDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
     }

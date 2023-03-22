@@ -96,6 +96,7 @@ class GoogleSuggest(
                     } else String()
                 }
                 withContext(Dispatchers.Main){
+                    cmdIndexFragment.binding.cmdSearchEditText.threshold = 0
                     suggestEditTexter.setAdapter(
                         context,
                         cmdIndexFragment.binding.cmdSearchEditText,

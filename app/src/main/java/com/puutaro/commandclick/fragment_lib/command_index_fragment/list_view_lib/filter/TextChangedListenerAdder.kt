@@ -38,7 +38,10 @@ class TextChangedListenerAdder {
                     if(!cmdSearchEditText.hasFocus()) return
                     if(
                         terminalViewModel.readlinesNum == ReadLines.SHORTH
-                    ) return
+                    ) {
+                        cmdSearchEditText.threshold = 100000;
+                        return
+                    }
                     if(!cmdIndexFragment.WebSearchSwitch) return
                     googleSuggest.set(cmdSearchEditText.text)
                 }

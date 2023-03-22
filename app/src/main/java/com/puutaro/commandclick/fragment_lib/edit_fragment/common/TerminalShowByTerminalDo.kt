@@ -23,9 +23,12 @@ class TerminalShowByTerminalDo {
                 variablesSettingHolderList,
                 CommandClickShellScript.TERMINAL_DO
             )
+            val onTerminalDoOffAndTermux = (
+                    terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+                            || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                    )
             if(
-                terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                onTerminalDoOffAndTermux
             ) return
             val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
             listener?.onKeyBoardVisibleChangeForEditFragment(

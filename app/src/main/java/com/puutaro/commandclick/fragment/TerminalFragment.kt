@@ -19,7 +19,6 @@ import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager.BroadcastManager
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.FzHtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
@@ -76,17 +75,6 @@ class TerminalFragment: Fragment() {
             )
         }
     }
-    var broadcastReceiverForFzHtml: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            FzHtmlLauncher.launch(
-                intent,
-                context,
-                binding,
-                currentAppDirPath
-            )
-        }
-    }
-
     
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -161,10 +149,6 @@ class TerminalFragment: Fragment() {
             this,
             broadcastReceiverForHtml
         )
-        BroadcastManager.unregisterBroadcastReceiver(
-            this,
-            broadcastReceiverForFzHtml
-        )
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
@@ -188,11 +172,6 @@ class TerminalFragment: Fragment() {
             this,
             broadcastReceiverForHtml,
             BroadCastIntentScheme.HTML_LAUNCH.action
-        )
-        BroadcastManager.registerBroadcastReceiver(
-            this,
-            broadcastReceiverForFzHtml,
-            BroadCastIntentScheme.FZHTML_LAUNCH.action
         )
     }
 
