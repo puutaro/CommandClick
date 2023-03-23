@@ -216,6 +216,7 @@ class GitCloneService: Service() {
                 override fun update(completed: Int) {
                     if(isProgressCancel) return
                     val percentComplete = (completed.toFloat() / lastWorked * 100).toInt()
+                    notificationBuilder.setContentTitle("$cloneDisplayStr $percentComplete%")
                     notificationBuilder.setContentText("$cloneDisplayStr $percentComplete%")
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
@@ -226,13 +227,15 @@ class GitCloneService: Service() {
 
                 override fun endTask() {
                     if(isProgressCancel) return
-                    notificationBuilder.setContentText("$cloneDisplayStr 100%")
+                    notificationBuilder.setContentTitle("Cloned 100%")
+                    notificationBuilder.setContentText("cloned 100%")
                     notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                     notificationBuilder.setProgress(100, 100, false)
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.clearActions()
                     notificationManager.notify(0, notificationBuilder.build())
+                    isProgressCancel = true
                 }
                 override fun isCancelled(): Boolean {
                     return false
