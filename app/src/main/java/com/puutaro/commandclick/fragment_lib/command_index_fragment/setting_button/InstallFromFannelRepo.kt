@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 
 import android.R
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.text.Editable
@@ -42,14 +43,17 @@ class InstallFromFannelRepo(
     private val listLinearWeight = 1F - searchTextLinearWeight
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-    private var onDisplayProgress = false
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = UsePath.fannelDirSuffix
     private var fannelListUpdateJob: Job? = null
+    private val fannelListAdapter = ArrayAdapter(
+        (context as Context),
+        R.layout.simple_list_item_1,
+        makeFannelListForListView()
+    )
 
     fun install(){
         if(context == null) return
-        onDisplayProgress = false
         FileSystems.createDirs(UsePath.cmdclickFannelListDirPath)
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
@@ -65,16 +69,18 @@ class InstallFromFannelRepo(
 
         val fannelListView = ListView(context)
         val searchText = EditText(context)
-        val fannelListAdapter = ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            makeFannelListForListView()
-        )
+//        val fannelListAdapter = ArrayAdapter(
+//            context,
+//            R.layout.simple_list_item_1,
+//            makeFannelListForListView()
+//        )
+        fannelListAdapter.clear()
+        fannelListAdapter.addAll(makeFannelListForListView().toMutableList())
+        fannelListAdapter.notifyDataSetChanged()
         fannelListView.adapter = fannelListAdapter
         fannelListView.setSelection(
             fannelListAdapter.count
         )
-
         makeSearchEditText(
             fannelListView,
             fannelListAdapter,
@@ -107,6 +113,13 @@ class InstallFromFannelRepo(
             fannelListView,
         )
 
+        updateRealTimeFannelList(fannelListView)
+    }
+
+
+    private fun updateRealTimeFannelList(
+        fannelListView: ListView
+    ){
         var firstFannelListSource =  ReadText(
             UsePath.cmdclickFannelListDirPath,
             UsePath.fannelListMemoryName,
@@ -197,9 +210,6 @@ class InstallFromFannelRepo(
         fannelListView.setOnItemLongClickListener {
                 parent, listSelectedView, pos, id
             ->
-            if(
-                onDisplayProgress
-            ) return@setOnItemLongClickListener false
             val popup = PopupMenu(context, listSelectedView)
             val inflater = popup.menuInflater
             inflater.inflate(
@@ -270,7 +280,6 @@ class InstallFromFannelRepo(
 
     private fun gitCloneAndMakeFannelList(){
         if(context == null) return
-        onDisplayProgress = true
         val intent = Intent(cmdIndexFragment.activity, GitCloneService::class.java)
         context.startService(intent)
     }

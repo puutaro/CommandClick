@@ -52,6 +52,10 @@ class GitCloneService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        isProgressCancel = true
+        notificationManager?.cancelAll()
+        gitCloneJob?.cancel()
+
         val gitCloneStopIntent = Intent()
         gitCloneStopIntent.action = BroadCastIntentScheme.STOP_GIT_CLONE.action
 
@@ -86,8 +90,6 @@ class GitCloneService: Service() {
         val repoFileObj = File(cmdclickFannelAppsDirPath)
         FileSystems.removeDir(cmdclickFannelAppsDirPath)
         FileSystems.createDirs(cmdclickFannelAppsDirPath)
-        notificationManager?.cancelAll()
-        gitCloneJob?.cancel()
         gitCloneJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 isProgressCancel = false
