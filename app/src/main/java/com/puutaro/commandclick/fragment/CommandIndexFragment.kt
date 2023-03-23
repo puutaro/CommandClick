@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.media.AudioManager
@@ -226,9 +228,6 @@ class CommandIndexFragment: Fragment() {
         onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         fannelInstallDialog?.dismiss()
         showTerminalJobWhenReuse?.cancel()
-//        repoCloneProgressJob?.cancel()
-//        repoCloneJob?.cancel()
-
         super.onPause()
     }
 

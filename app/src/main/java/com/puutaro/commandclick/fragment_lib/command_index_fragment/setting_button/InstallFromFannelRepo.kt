@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.content.Intent
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -12,23 +13,21 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.FannelListVariable
 import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
-import org.eclipse.jgit.lib.TextProgressMonitor
-import java.io.File
+
 
 class InstallFromFannelRepo(
     private val cmdIndexFragment: CommandIndexFragment,
@@ -42,13 +41,11 @@ class InstallFromFannelRepo(
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexFragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-    private val cmdclickFannelListSeparator = "CMDCLICK_FANNEL_LIST_SEPARATOR"
+    private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private var onDisplayProgress = false
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = UsePath.fannelDirSuffix
-    private val descriptionFirstLineLimit = 50
-    private val monitorRoopLimit = 100
-    private val monitoringDuration = 3000L
+    private var fannelListUpdateJob: Job? = null
 
     fun install(){
         if(context == null) return
@@ -95,8 +92,7 @@ class InstallFromFannelRepo(
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
-//                cmdIndexFragment.repoCloneJob?.cancel()
-//                cmdIndexFragment.repoCloneProgressJob?.cancel()
+                fannelListUpdateJob?.cancel()
             }
         })
         alertDialog.window?.setGravity(Gravity.BOTTOM);
@@ -109,9 +105,36 @@ class InstallFromFannelRepo(
 
         invokeItemSetLongClickListenerForFannel(
             fannelListView,
-            fannelListAdapter,
-            alertDialog
         )
+
+        var firstFannelListSource =  ReadText(
+            UsePath.cmdclickFannelListDirPath,
+            UsePath.fannelListMemoryName,
+        ).readText()
+        var secondFannelListSource: String
+        fannelListUpdateJob?.cancel()
+        fannelListUpdateJob = CoroutineScope(Dispatchers.IO).launch {
+            while(true) {
+                secondFannelListSource = withContext(Dispatchers.IO) {
+                    delay(100)
+                    ReadText(
+                        UsePath.cmdclickFannelListDirPath,
+                        UsePath.fannelListMemoryName,
+                    ).readText()
+                }
+                if (
+                    firstFannelListSource == secondFannelListSource
+                ) continue
+                firstFannelListSource = secondFannelListSource
+                withContext(Dispatchers.Main) {
+                    updateFannelListView(
+                        fannelListView,
+                        makeFannelListForListView(),
+                        fannelListAdapter
+                    )
+                }
+            }
+        }
     }
 
     private fun invokeItemSetClickListenerForFannel(
@@ -122,11 +145,11 @@ class InstallFromFannelRepo(
         fannelListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-
             alertDialog.dismiss()
             cmdIndexFragment.repoCloneJob?.cancel()
             cmdIndexFragment.repoCloneProgressJob?.cancel()
             terminalViewModel.onDialog = false
+            fannelListUpdateJob?.cancel()
             val updateFannelsList = makeFannelListForListView()
             val selectedFannel = updateFannelsList.filter {
                 Regex(
@@ -170,8 +193,6 @@ class InstallFromFannelRepo(
 
     private fun invokeItemSetLongClickListenerForFannel(
         fannelListView: ListView,
-        fannelListAdapter: ArrayAdapter<String>,
-        alertDialog: AlertDialog
     ) {
         fannelListView.setOnItemLongClickListener {
                 parent, listSelectedView, pos, id
@@ -194,43 +215,11 @@ class InstallFromFannelRepo(
                 )
             popup.setOnMenuItemClickListener {
                     menuItem ->
-                gitCloneAndMakeFannelList(
-                    fannelListView,
-                    fannelListAdapter,
-                    alertDialog
-                )
+                gitCloneAndMakeFannelList()
                 true
             }
             popup.show()
             true
-        }
-    }
-
-    private fun makeFannelListMemoryContents(): List<String> {
-        val cmdclickFannelItselfDirPath = UsePath.cmdclickFannelItselfDirPath
-        if(
-            !File(cmdclickFannelItselfDirPath).isDirectory
-        ) return emptyList()
-        val fannelsListSource = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-            cmdclickFannelItselfDirPath,
-        )
-        return fannelsListSource.map {
-            val descFirstLineSource = ScriptFileDescription.makeDescriptionContents(
-                ReadText(
-                    cmdclickFannelItselfDirPath,
-                    it
-                ).textToList(),
-                it
-            ).split('\n').firstOrNull()
-            val descFirstLine = if(
-                !descFirstLineSource.isNullOrEmpty()
-                && descFirstLineSource.length > descriptionFirstLineLimit
-            ) descFirstLineSource.substring(0, descriptionFirstLineLimit)
-            else descFirstLineSource
-            return@map if(descFirstLine.isNullOrEmpty()) it
-            else {
-                "$it\n\t\t- $descFirstLine"
-            }
         }
     }
 
@@ -279,70 +268,11 @@ class InstallFromFannelRepo(
         })
     }
 
-    private fun gitCloneAndMakeFannelList(
-        fannelListView: ListView,
-        fannelListAdapter: ArrayAdapter<String>,
-        alertDialog: AlertDialog
-    ){
+    private fun gitCloneAndMakeFannelList(){
         if(context == null) return
         onDisplayProgress = true
-        var progressBar = "sync.. #"
-        cmdIndexFragment.repoCloneProgressJob?.cancel()
-        cmdIndexFragment.repoCloneProgressJob = CoroutineScope(Dispatchers.IO).launch {
-            for (cnt in 1..monitorRoopLimit)  {
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        cmdIndexFragment.context,
-                        progressBar,
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    progressBar += "#"
-                    if(
-                        terminalViewModel.isStop
-                    ) alertDialog.dismiss()
-                }
-                if(!onDisplayProgress) break
-                if(terminalViewModel.isStop) break
-                withContext(Dispatchers.IO) {
-                    delay(monitoringDuration)
-                }
-            }
-        }
-
-        cmdIndexFragment.repoCloneJob?.cancel()
-        cmdIndexFragment.repoCloneJob = CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                val cmdclickFannelAppsDirPath = UsePath.cmdclickFannelAppsDirPath
-                val repoFileObj = File(cmdclickFannelAppsDirPath)
-                FileSystems.removeDir(cmdclickFannelAppsDirPath)
-                FileSystems.createDirs(cmdclickFannelAppsDirPath)
-                execGitClone(repoFileObj)
-            }
-            withContext(Dispatchers.IO){
-                delay(100)
-                FileSystems.writeFile(
-                    UsePath.cmdclickFannelListDirPath,
-                    UsePath.fannelListMemoryName,
-                    makeFannelListMemoryContents().joinToString(cmdclickFannelListSeparator)
-                )
-            }
-            withContext(Dispatchers.Main) {
-                onDisplayProgress = false
-                cmdIndexFragment.repoCloneProgressJob?.cancel()
-                val updatedFannelList = makeFannelListForListView()
-                updateFannelListView(
-                    fannelListView,
-                    updatedFannelList,
-                    fannelListAdapter
-                )
-                Toast.makeText(
-                    context,
-                    "sync ok",
-                    Toast.LENGTH_SHORT
-                ).show()
-                cmdIndexFragment.repoCloneJob?.cancel()
-            }
-        }
+        val intent = Intent(cmdIndexFragment.activity, GitCloneService::class.java)
+        context.startService(intent)
     }
 
     private fun updateFannelListView(
@@ -387,26 +317,6 @@ class InstallFromFannelRepo(
     }
 }
 
-private fun execGitClone(
-    repoFileObj: File
-){
-    var git: KGit? = null
-    try {
-        git = KGit.cloneRepository {
-            setURI(WebUrlVariables.commandClickRepositoryUrl)
-            setDirectory(repoFileObj)
-            setTimeout(60)
-            setProgressMonitor(TextProgressMonitor())
-        }
-    } catch (e: Exception) {
-        Log.e(LoggerTag.fannnelListUpdateErr, "close git")
-        return
-    } finally {
-        git?.close()
-    }
-}
-
-
 private const val mainMenuGroupId = 100000
 
 private enum class FannelMenuEnums(
@@ -417,4 +327,3 @@ private enum class FannelMenuEnums(
 ) {
     SYNC(mainMenuGroupId, 100100, 1, "sync"),
 }
-

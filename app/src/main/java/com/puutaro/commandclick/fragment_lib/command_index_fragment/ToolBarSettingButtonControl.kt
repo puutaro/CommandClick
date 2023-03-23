@@ -58,10 +58,6 @@ class ToolBarSettingButtonControl(
 
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
-            val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
-            )
             ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
                 cmdIndexFragment,
             )
@@ -160,6 +156,7 @@ class ToolBarSettingButtonControl(
                     )
                 }
                 MenuEnums.INSTALL_FANNEL.itemId -> {
+
                     installFromFannelRepo.install()
                 }
                 MenuEnums.SELECTTERM.itemId  -> {

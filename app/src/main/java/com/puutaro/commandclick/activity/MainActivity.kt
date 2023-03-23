@@ -6,7 +6,6 @@ import android.content.*
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -14,7 +13,6 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
@@ -44,6 +42,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import com.termux.shared.termux.TermuxConstants
@@ -117,6 +116,12 @@ class MainActivity:
     override fun onResume() {
         super.onResume()
         volumeControlStream = AudioManager.STREAM_MUSIC
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val intent = Intent(this, GitCloneService::class.java)
+        this.stopService(intent)
     }
 
 
@@ -392,4 +397,5 @@ class MainActivity:
             insertEditText.setText(absolutePath)
         }
     }
+
 }

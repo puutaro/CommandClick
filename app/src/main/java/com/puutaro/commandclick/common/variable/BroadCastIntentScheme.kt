@@ -15,5 +15,9 @@ enum class BroadCastIntentScheme(
     FZHTML_LAUNCH(
         "com.puutaro.commandclick.fzhtml.launch",
         "edit_path",
-    )
+    ),
+    STOP_GIT_CLONE(
+    "com.puutaro.commandclick.git_clone_stop.launch",
+    "stop",
+    ),
 }

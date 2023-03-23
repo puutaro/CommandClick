@@ -112,7 +112,7 @@ class ExecTerminalDo {
 
             terminalViewModel.onDisplayUpdate = true
 
-            ExecBashScriptIntent.ToTermux(
+                ExecBashScriptIntent.ToTermux(
                 runShell,
                 context,
                 execCmd,
