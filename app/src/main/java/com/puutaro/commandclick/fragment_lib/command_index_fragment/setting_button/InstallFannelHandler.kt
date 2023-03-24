@@ -19,13 +19,13 @@ object InstallFannelHandler {
             activity,
             cmdIndexFragment
         )
+        val permissionMonitorSecond = 6000
         cmdIndexFragment.fannelInstallJob?.cancel()
         cmdIndexFragment.fannelInstallJob = CoroutineScope(Dispatchers.Main).launch {
             if (Build.VERSION.SDK_INT >= 33) {
-                var checkNotificationPermission = PackageManager.PERMISSION_DENIED
                 withContext(Dispatchers.IO) {
-                    for (i in 0..600) {
-                        checkNotificationPermission =
+                    for (i in 0..permissionMonitorSecond) {
+                        val checkNotificationPermission =
                             ContextCompat.checkSelfPermission(
                                 activity,
                                 Manifest.permission.POST_NOTIFICATIONS
@@ -37,6 +37,11 @@ object InstallFannelHandler {
                     }
                 }
                 withContext(Dispatchers.Main) {
+                    val checkNotificationPermission =
+                        ContextCompat.checkSelfPermission(
+                            activity,
+                            Manifest.permission.POST_NOTIFICATIONS
+                        )
                     if (
                         checkNotificationPermission ==
                         PackageManager.PERMISSION_GRANTED
