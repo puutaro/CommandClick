@@ -37,6 +37,7 @@ object InstallFannelHandler {
                     }
                 }
                 withContext(Dispatchers.Main) {
+                    delay(100)
                     val checkNotificationPermission =
                         ContextCompat.checkSelfPermission(
                             activity,
