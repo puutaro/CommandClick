@@ -1,8 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import android.Manifest
+import android.app.Activity
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
@@ -12,6 +19,7 @@ import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -21,17 +29,18 @@ import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.*
 
 private val mainMenuGroupId = 1
 private val submenuTermSlectGroupId = 2
 private val submenuSettingGroupId = 3
 
 class ToolBarSettingButtonControl(
-    private val binding: CommandIndexFragmentBinding,
+    binding: CommandIndexFragmentBinding,
     private val cmdIndexFragment: CommandIndexFragment,
     private val cmdListAdapter: ArrayAdapter<String>,
     private val sharedPref: SharedPreferences?,
-    private val readSharePreffernceMap: Map<String, String>,
+    readSharePreffernceMap: Map<String, String>,
 ){
     private val context = cmdIndexFragment.context
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -156,8 +165,10 @@ class ToolBarSettingButtonControl(
                     )
                 }
                 MenuEnums.INSTALL_FANNEL.itemId -> {
-
-                    installFromFannelRepo.install()
+                    InstallFannelHandler.handle(
+                        cmdIndexFragment,
+                        installFromFannelRepo
+                    )
                 }
                 MenuEnums.SELECTTERM.itemId  -> {
                     println("pass")

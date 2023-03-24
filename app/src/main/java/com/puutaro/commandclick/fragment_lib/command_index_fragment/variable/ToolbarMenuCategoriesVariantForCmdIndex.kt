@@ -14,5 +14,5 @@ enum class ToolbarMenuCategoriesVariantForCmdIndex(
     TERMMAX_KEYBOARD_CLOSE,
     CONFIG,
     FORWARD,
-    KILL
+    INSTALL_FANNEL
 }

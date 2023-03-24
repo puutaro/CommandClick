@@ -17,6 +17,7 @@ import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
+import com.puutaro.commandclick.activity_lib.NotifierSetter
 import com.puutaro.commandclick.activity_lib.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
@@ -91,6 +92,9 @@ class MainActivity:
 
     val getRunCommandPermissionAndStartFragmentLauncher =
         RunCommandSetter.set(this)
+
+    val getNotifierSetterLaunch =
+        NotifierSetter.set(this)
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

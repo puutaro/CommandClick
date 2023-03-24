@@ -43,6 +43,7 @@ class CommandIndexFragment: Fragment() {
     var repoCloneJob: Job? = null
     var repoCloneProgressJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
+    var fannelInstallJob: Job? = null
     var fannelInstallDialog: AlertDialog? = null
     var onFocusSearchText = false
     var savedEditTextContents = String()
@@ -220,6 +221,7 @@ class CommandIndexFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         jsExecuteJob?.cancel()
+        fannelInstallJob?.cancel()
         _binding = null
     }
 

@@ -77,7 +77,7 @@ class InitManager(
         ){
             return ContextCompat.checkSelfPermission(
                 activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
         }
         return checkedManagedFullStorageGranted()

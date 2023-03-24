@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event
 import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
+import android.os.Build
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.activity_lib.NotifierSetter
 import com.puutaro.commandclick.activity_lib.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.event.lib.app_some_admin.ExecSomeAdmin
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCmdListAjustForKeyboard
@@ -68,6 +70,12 @@ object ExecToolbarMenuCategoriesForCmdIndex {
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
                 RunCommandSetter.getPermissionAndSet(
+                    activity
+                )
+            }
+            ToolbarMenuCategoriesVariantForCmdIndex.INSTALL_FANNEL -> {
+                if(Build.VERSION.SDK_INT < 33) return
+                NotifierSetter.getPermissionAndSet(
                     activity
                 )
             }
