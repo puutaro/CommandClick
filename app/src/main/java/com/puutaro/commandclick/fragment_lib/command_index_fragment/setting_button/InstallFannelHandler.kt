@@ -19,7 +19,7 @@ object InstallFannelHandler {
             activity,
             cmdIndexFragment
         )
-        val permissionMonitorSecond = 6000
+        val permissionMonitorSecond = 600
         cmdIndexFragment.fannelInstallJob?.cancel()
         cmdIndexFragment.fannelInstallJob = CoroutineScope(Dispatchers.Main).launch {
             if (Build.VERSION.SDK_INT >= 33) {
