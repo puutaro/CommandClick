@@ -33,20 +33,26 @@ object FileSelectSpinnerViewProducer {
             context as Context,
             R.layout.sppinner_layout,
         )
-        val filterPrefix = currentRecordNumToSetVariableMap.get(
+        val prefixSuffixList = currentRecordNumToSetVariableMap.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )
-            ?.split('|')
-            ?.firstOrNull()?.let {
-            BothEdgeQuote.trim(it)
+        )?.split('|')?.firstOrNull()?.split('&') ?: emptyList()
+        val filterPrefix = prefixSuffixList
+            .firstOrNull()?.let {
+            BothEdgeQuote
+                .trim(it)
         } ?: String()
+        val filterSuffix = prefixSuffixList
+            .getOrNull(1)?.let {
+                BothEdgeQuote
+                    .trim(it)
+            } ?: String()
         val editableSpinnerList = FileSystems.sortedFiles(
             currentAppDirPath,
             "on"
         ).filter {
             it.startsWith(filterPrefix)
+                    && judgeBySuffix(it, filterSuffix)
         }
-
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
         insertSpinner.adapter = adapter
@@ -63,5 +69,16 @@ object FileSelectSpinnerViewProducer {
         }
         insertSpinner.layoutParams = linearParamsForSpinner
         return insertSpinner
+    }
+
+    private fun judgeBySuffix(
+        targetStr: String,
+        filterSuffix: String,
+    ): Boolean{
+        val noExtend = "NoExtend"
+        if(filterSuffix != noExtend) {
+            return targetStr.endsWith(filterSuffix)
+        }
+        return !Regex("\\..*$").containsMatchIn(targetStr)
     }
 }
