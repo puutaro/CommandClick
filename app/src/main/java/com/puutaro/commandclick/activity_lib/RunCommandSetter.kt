@@ -86,9 +86,7 @@ object RunCommandSetter {
     private fun termuxSetupAndStorageAccessPermissionProcessLauncher(
         activity: MainActivity
     ){
-        val termuxSetUpCommand = "echo \"# The main termux repository: \n" +
-                "deb https://packages-cf.termux.org/apt/termux-main stable main\n\" " +
-                "> /data/data/com.termux/files/usr/etc/apt/sources.list \\\n" +
+        val termuxSetUpCommand = "termux-change-repo \\\n" +
                 "&& pkg update -y && pkg upgrade -y \\\n" +
                 "&& yes | termux-setup-storage \\\n" +
                 "&& pkg install -y termux-api \\\n" +
