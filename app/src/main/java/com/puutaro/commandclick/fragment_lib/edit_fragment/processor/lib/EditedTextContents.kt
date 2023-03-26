@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -66,22 +67,24 @@ class EditedTextContents(
     ){
         if(lastShellContentsList.isEmpty()) return
 
-        val submitShellContentsList = CommentOutLabelingSection.commentOut(
+        val submitScriptContentsList = CommentOutLabelingSection.commentOut(
             lastShellContentsList,
             currentShellFileName
         )
 
         val updateShellFileName = makeUpdateShellFileName(
-            submitShellContentsList,
+            submitScriptContentsList,
             currentShellFileName
         )
 
         FileSystems.writeFile(
             curentAppDirPath,
             updateShellFileName,
-            submitShellContentsList.joinToString("\n")
+            submitScriptContentsList.joinToString("\n")
         )
-        if(updateShellFileName == currentShellFileName) return
+        if(
+            updateShellFileName.lowercase() == currentShellFileName.lowercase()
+        ) return
         val sharePref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
