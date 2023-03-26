@@ -21,15 +21,7 @@ android {
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    applicationVariants.all { variant ->
-        if (variant.buildType.name != "release") {
-            return
-        }
-        variant.outputs.all {
-            outputFileName = "${applicationName}-${versionName}.apk"
-        }
+        base.archivesName.set("${applicationName}-${versionName}")
     }
 
     buildTypes {
