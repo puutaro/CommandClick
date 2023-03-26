@@ -132,6 +132,10 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withTimePickerView = WithTimePickerView(
+        editFragment
+    )
+
     private val withColorPickerWithButtonView = WithColorPickerWithButtonView(
         editFragment,
         currentShellContentsList,
@@ -354,6 +358,13 @@ class EditTextProducerForEdit(
                 }
                 EditTextSupportViewName.DATE.str -> {
                     val insertingEditText = withDatePickerView.create(
+                        insertEditText,
+                        currentVariableValue,
+                    )
+                    binding.editLinearLayout.addView(insertingEditText)
+                }
+                EditTextSupportViewName.TIME.str -> {
+                    val insertingEditText = withTimePickerView.create(
                         insertEditText,
                         currentVariableValue,
                     )

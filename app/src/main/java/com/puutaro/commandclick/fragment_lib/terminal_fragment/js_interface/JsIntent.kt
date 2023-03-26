@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.CalendarContract
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
@@ -10,6 +11,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+
 
 class JsIntent(
     private val terminalFragment: TerminalFragment
@@ -89,5 +91,50 @@ class JsIntent(
             Uri.parse(currentPageUrl)
         )
         terminalFragment.startActivity(openUrlIntent)
+    }
+
+    @JavascriptInterface
+    fun launchApp(
+        action: String,
+        uriString: String,
+        extraString: String,
+        extraInt: String,
+        extraLong: String,
+    ){
+
+        val intent = Intent()
+        if(
+            action.isNotEmpty()
+        ) intent.action = Intent.ACTION_INSERT
+
+        val eventUri = Uri.parse(uriString)
+        if(
+            uriString.isNotEmpty()
+        ) intent.data = eventUri
+        val extraStringList = extraString.split("\t")
+        extraStringList.forEach {
+            if(!extraString.contains("\t")) return@forEach
+            val currentKeyValue = it.split("=")
+            val key = currentKeyValue.firstOrNull() ?: return@forEach
+            val value = currentKeyValue.lastOrNull() ?: return@forEach
+            intent.putExtra(key, value)
+        }
+        val extraIntList = extraInt.split("\t")
+        extraIntList.forEach {
+            if(!extraInt.contains("\t")) return@forEach
+            val currentKeyValue = it.split("=")
+            val key = currentKeyValue.firstOrNull() ?: return@forEach
+            val value = currentKeyValue.lastOrNull()?.toInt() ?: return@forEach
+            intent.putExtra(key, value)
+        }
+        val extraLongList = extraLong.split("\t")
+        extraLongList.forEach {
+            if(!extraLong.contains("\t")) return@forEach
+            val currentKeyValue = it.split("=")
+            val key = currentKeyValue.firstOrNull() ?: return@forEach
+            val value = currentKeyValue.lastOrNull()?.toLong() ?: return@forEach
+            intent.putExtra(key, value)
+        }
+        terminalFragment.activity?.startActivity(intent)
     }
 }

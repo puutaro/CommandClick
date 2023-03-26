@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.R
-import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.DialogInterface
 import android.text.InputType
 import android.view.Gravity
@@ -12,17 +12,15 @@ import android.widget.LinearLayout
 import com.puutaro.commandclick.fragment.EditFragment
 import java.util.*
 
-
-class WithDatePickerView(
-    private val editFragment: EditFragment,
+class WithTimePickerView(
+    private val editFragment: EditFragment
 ) {
 
-    fun create(
-        insertEditText: EditText,
-        currentVariableValue: String?,
+    fun create(insertEditText: EditText,
+               currentVariableValue: String?,
     ): LinearLayout {
         val context = editFragment.context
-        val chooseButtonStr = "date"
+        val chooseButtonStr = "time"
         val innerLayout = LinearLayout(context)
         innerLayout.orientation = LinearLayout.HORIZONTAL
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
@@ -61,21 +59,25 @@ private fun setOnButtonClickListener(
 ){
 
     val calender = Calendar.getInstance()
-    val year = calender.get(Calendar.YEAR)
-    val month = calender.get(Calendar.MONTH)
-    val day = calender.get(Calendar.DAY_OF_MONTH)
+    val hour = calender.get(Calendar.HOUR)
+    val minites = calender.get(Calendar.MINUTE)
 
     insertButtonView.setOnClickListener {
             innerView ->
         val innerContext = innerView.context
-        val dateDialog = DatePickerDialog(
+        val dateDialog = TimePickerDialog(
             innerContext, {
-                    view, y, m, d ->
-                val dateText =
-                    listOf(y, m + 1, d)
-                        .joinToString("-")
-                insertEditText.setText(dateText)
-            }, year, month, day
+                    _, getHour, getMinutes ->
+                insertEditText.setText(
+                    String.format(
+                        "%02d:%02d",
+                        getHour,
+                        getMinutes)
+                )
+            },
+            hour,
+            minites,
+            true
         )
         dateDialog.show()
         dateDialog.getButton(

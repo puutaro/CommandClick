@@ -130,39 +130,10 @@ class ValidationSharePreferenceForEdit(
             editFragment.activity?.finish()
             return false
         }
+        val listener = editFragment.context
+                as? EditFragment.OnInitEditFragmentListener
+        listener?.onInitEditFragment()
         return false
-        val recentShellFileName = FileSystems.filterSuffixJsFiles(
-            checkCurrentAppDirPath,
-            "on"
-        ).firstOrNull().toString()
-        if(
-            !File("${checkCurrentAppDirPath}/${recentShellFileName}").isFile
-        ){
-            Toast.makeText(
-                editFragment.context,
-                shellFileNameCheckErrMessage.format(recentShellFileName),
-                Toast.LENGTH_LONG
-            ).show()
-            val listener = editFragment.context
-                    as? EditFragment.OnInitEditFragmentListener
-            listener?.onInitEditFragment()
-            return false
-        }
-        val checkOk = editExecuteCheck(
-            onShortcut,
-            checkCurrentAppDirPath,
-            checkCurrentShellName
-        )
-        if(!checkOk) return false
-        SharePreffrenceMethod.putSharePreffrence(
-            sharePref,
-            mapOf(
-                SharePrefferenceSetting.current_script_file_name.name
-                        to recentShellFileName,
-
-            )
-        )
-        return true
     }
 
     private fun editExecuteCheck(

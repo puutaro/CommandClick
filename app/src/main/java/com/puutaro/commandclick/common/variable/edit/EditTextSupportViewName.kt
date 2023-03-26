@@ -23,6 +23,7 @@ enum class EditTextSupportViewName(
     BUTTON("BTN"),
     FBUTTON("FBTN"),
     DATE("DT"),
+    TIME("TM"),
     COLOR("CLR"),
     COLOR_BUTTON("CLRB"),
 
