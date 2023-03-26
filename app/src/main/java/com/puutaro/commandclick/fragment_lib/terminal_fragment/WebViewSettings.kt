@@ -59,7 +59,7 @@ class WebViewSettings {
                 JsInterfaceVariant.jsStop.name
             )
             terminalWebView.addJavascriptInterface(
-                JsUtil(),
+                JsUtil(terminalFragment),
                 JsInterfaceVariant.jsUtil.name
             )
         }

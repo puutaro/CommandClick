@@ -172,15 +172,6 @@ class JsFileSystem(
 
 
     @JavascriptInterface
-    fun copyToClipboard(text: String?) {
-        val clipboard: ClipboardManager? =
-            terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        val clip = ClipData.newPlainText("demo", text)
-        clipboard?.setPrimaryClip(clip)
-    }
-
-
-    @JavascriptInterface
     fun showFileList(
         dirPath: String
     ): String {
