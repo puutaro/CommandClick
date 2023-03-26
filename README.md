@@ -513,6 +513,7 @@ ex) am broadcast \
  	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..), Timeout: Int (miliSeconds))   
  - JsUtil
  	- jsUtil.sleep(sleepMiriTime: Int)   
+	- jsUtil.copyToClipboard(copyString: String)  
 				
 
 ### javascript pre order word
