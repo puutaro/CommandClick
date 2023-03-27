@@ -525,6 +525,8 @@ ex) am broadcast \
  	- jsUtil.sleep(sleepMiriTime: Int)   
 	- jsUtil.copyToClipboard(copyString: String)  
 	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
+ - JsUrl
+ 	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
 				
 
 ### javascript pre order word
