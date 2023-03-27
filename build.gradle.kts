@@ -4,3 +4,9 @@ plugins {
     id("com.android.library") version "7.3.1" apply false
     id("org.jetbrains.kotlin.android") version "1.8.10" apply false
 }
+
+subprojects {
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions.jvmTarget = "11"
+    }
+}

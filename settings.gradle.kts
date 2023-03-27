@@ -10,10 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url = uri("https://jitpack.io")
-            url = uri("https://oss.sonatype.org/content/repositories/snapshots")
-        }
+        maven(url = "https://jitpack.io")
+        maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
     }
 }
 rootProject.name = "CommandClick"

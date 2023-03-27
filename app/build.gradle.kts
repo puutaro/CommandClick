@@ -4,10 +4,10 @@ plugins {
     id("kotlin-kapt")
 }
 
-def applicationName = "CommandClick"
-def versionMajor = 0
-def versionMinor = 0
-def versionPatch = 15
+val applicationName = "CommandClick"
+val versionMajor = 0
+val versionMinor = 0
+val versionPatch = 16
 
 android {
     namespace = "com.puutaro.commandclick"
@@ -17,7 +17,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 15
+        versionCode = versionPatch
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -26,7 +26,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -39,7 +39,7 @@ android {
     }
 
     dataBinding {
-        enabled = true
+        enable = true
     }
 }
 
@@ -53,14 +53,14 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    implementation("androidx.fragment:fragment-ktx:1.5.5")
+    implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("com.termux.termux-app:termux-shared:0.117")
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
     implementation("com.github.Yumenokanata:KeyboardVisibilityEvent:1.1")
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
     implementation("android.arch.lifecycle:extensions:1.1.1")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
     implementation("commons-io:commons-io:2.11.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation("androidx.core:core-ktx:1.9.0")
