@@ -6,6 +6,7 @@ import android.content.Context
 import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
 class JsUtil(
     private val terminalFragment: TerminalFragment

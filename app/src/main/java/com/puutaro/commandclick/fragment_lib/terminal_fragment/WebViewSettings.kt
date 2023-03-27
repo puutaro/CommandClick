@@ -62,6 +62,10 @@ class WebViewSettings {
                 JsUtil(terminalFragment),
                 JsInterfaceVariant.jsUtil.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsUrl(terminalFragment),
+                JsInterfaceVariant.jsUrl.name
+            )
         }
     }
 }
@@ -77,4 +81,5 @@ private enum class JsInterfaceVariant {
     jsToast,
     jsStop,
     jsUtil,
+    jsUrl,
 }
