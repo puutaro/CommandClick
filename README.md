@@ -495,14 +495,15 @@ ex) am broadcast \
  	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)  
  			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
  	- jsIntent.launchUrl(urlString: String)  
-	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: abSepalatedString, extraLong: abSepalatedString)
+	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: tabSepalatedString, extraLong: tabSepalatedString, extraFloat: tabSepalatedString)
 			ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
 				"content://com.android.calendar/events",
 				"title=title\tdescription=description\teventLocation=eventLocation\tandroid.intent.extra.EMAIL=email",
 				"",
-				beginTime=167889547868058\tendTime=165678973498789"
+				beginTime=167889547868058\tendTime=165678973498789",
+				""
 			);  
 
  - JsDialog
@@ -524,6 +525,8 @@ ex) am broadcast \
  	- jsUtil.sleep(sleepMiriTime: Int)   
 	- jsUtil.copyToClipboard(copyString: String)  
 	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
+ - JsUrl
+ 	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
 				
 
 ### javascript pre order word
