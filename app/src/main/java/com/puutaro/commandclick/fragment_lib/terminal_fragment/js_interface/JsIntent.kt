@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -100,6 +101,7 @@ class JsIntent(
         extraString: String,
         extraInt: String,
         extraLong: String,
+        extraFloat: String,
     ){
 
         val intent = Intent()
@@ -111,30 +113,26 @@ class JsIntent(
         if(
             uriString.isNotEmpty()
         ) intent.data = eventUri
-        val extraStringList = extraString.split("\t")
-        extraStringList.forEach {
-            if(!extraString.contains("\t")) return@forEach
-            val currentKeyValue = it.split("=")
-            val key = currentKeyValue.firstOrNull() ?: return@forEach
-            val value = currentKeyValue.lastOrNull() ?: return@forEach
-            intent.putExtra(key, value)
-        }
-        val extraIntList = extraInt.split("\t")
-        extraIntList.forEach {
-            if(!extraInt.contains("\t")) return@forEach
-            val currentKeyValue = it.split("=")
-            val key = currentKeyValue.firstOrNull() ?: return@forEach
-            val value = currentKeyValue.lastOrNull()?.toInt() ?: return@forEach
-            intent.putExtra(key, value)
-        }
-        val extraLongList = extraLong.split("\t")
-        extraLongList.forEach {
-            if(!extraLong.contains("\t")) return@forEach
-            val currentKeyValue = it.split("=")
-            val key = currentKeyValue.firstOrNull() ?: return@forEach
-            val value = currentKeyValue.lastOrNull()?.toLong() ?: return@forEach
-            intent.putExtra(key, value)
-        }
+        IntentExtra.add(
+            intent,
+            extraString,
+            IntentExtra.ConvertNumberType.String
+        )
+        IntentExtra.add(
+            intent,
+            extraInt,
+            IntentExtra.ConvertNumberType.Int
+        )
+        IntentExtra.add(
+            intent,
+            extraLong,
+            IntentExtra.ConvertNumberType.Long
+        )
+        IntentExtra.add(
+            intent,
+            extraFloat,
+            IntentExtra.ConvertNumberType.Float
+        )
         terminalFragment.activity?.startActivity(intent)
     }
 }
