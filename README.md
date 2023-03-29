@@ -523,7 +523,7 @@ ex) am broadcast \
  	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..), Timeout: Int (miliSeconds))   
  - JsUtil
  	- jsUtil.sleep(sleepMiriTime: Int)   
-	- jsUtil.copyToClipboard(copyString: String)  
+	- jsUtil.copyToClipboard(copyString: String, fontSize: Int)  
 	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
  - JsUrl
  	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
