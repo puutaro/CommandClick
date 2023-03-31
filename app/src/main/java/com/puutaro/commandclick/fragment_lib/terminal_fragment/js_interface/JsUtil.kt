@@ -5,6 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
+import android.widget.TextView
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
@@ -18,10 +19,14 @@ class JsUtil(
     }
 
     @JavascriptInterface
-    fun copyToClipboard(text: String?) {
+    fun copyToClipboard(text: String?, fontSize: Int) {
         val clipboard: ClipboardManager? =
             terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        val clip = ClipData.newPlainText("cmdclick", text)
+        val textView = TextView(terminalFragment.context)
+        textView.setText(text)
+        textView.textSize = fontSize.toFloat()
+        val clipText = textView.text
+        val clip = ClipData.newPlainText("cmdclick", clipText)
         clipboard?.setPrimaryClip(clip)
     }
 

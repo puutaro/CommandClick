@@ -115,11 +115,8 @@ class InitFragmentManager(
 
     private fun execUrlIntent() {
         val execIntent = Intent(activity, activity::class.java)
-        execIntent.setAction(Intent.ACTION_VIEW)
-            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        execIntent.setData(
-            Uri.parse(intent?.dataString)
-        )
+        execIntent.setAction(Intent.ACTION_VIEW).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        execIntent.data = Uri.parse(intent?.dataString)
         SharePreffrenceMethod.putSharePreffrence(
             startUpPref,
             mapOf(

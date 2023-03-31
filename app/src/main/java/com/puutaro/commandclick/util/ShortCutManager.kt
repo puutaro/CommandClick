@@ -68,8 +68,9 @@ class ShortCutManager(
         )
 
         val execIntent = Intent(activity, activity::class.java)
-        execIntent.setAction(Intent.ACTION_MAIN)
-            .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        execIntent
+            .setAction(Intent.ACTION_MAIN)
+            .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         execIntent.putExtra(
             SharePrefferenceSetting.current_app_dir.name,
