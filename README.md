@@ -153,7 +153,7 @@ At the same time, if you installed code editor, edit new file.
     
       - button option usage  
       		 ex) jsf '${0}' (`jsf` execute javascript file path  
-		 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir   
+		 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
 		 ex) ::NoJsTermOut:: jsf '${0}' (`::NoJsTermOut::` disable terminal output when only javascript  
                  ex) echo ${0}   (`${0}` is current script path  
                  ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
@@ -527,11 +527,20 @@ ex) am broadcast \
 	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
  - JsUrl
  	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
+	- jsUrl.loadUrl(urlString: String)  
+
+ - JsScript  
+ 	- jsScript.subLabelingVars(jsContents: String) -> Labeling Section Contents  
+	- jsScript.subSettingVars(jsContents: String) -> Setting Section Contents  
+	- jsScript.subCmdVars(jsContents: String) -> Comamnd Section Contents  
+	- jsScript.subValOnlyValue(targetVariableName: String, VariableValueStringContents: String)  ->  Variable value String Contents  
+	- jsScript.bothQuoteTrim(VariableValueString: String) -> VariableValueString removed both edge quote  
 				
 
 ### javascript pre order word
 	- `${0}` -> current file path  
 	- `${01}` -> parent directory path
+	- `${02}` -> current script name
 
 ### Html tag output
 
