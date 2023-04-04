@@ -243,8 +243,8 @@ class CommandClickShellScript {
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFrequency}: most use url launch
                 |# * ${ON_URL_HISTORY_REGISTER}: url history update signal
-                |#  - ${onUrlHistoryRegisterOn}: register
-                |#  - ${onUrlHistoryRegisterOff}: unregister
+                |#  - ${onUrlHistoryRegisterOn}: update
+                |#  - ${onUrlHistoryRegisterOff}: no update
                 |# * ${EXEC_JS_OR_HTML_PATH}: execute javascript or html file path
                 |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
