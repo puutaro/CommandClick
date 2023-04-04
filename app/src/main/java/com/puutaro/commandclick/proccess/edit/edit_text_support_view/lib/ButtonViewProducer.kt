@@ -99,7 +99,8 @@ object ButtonViewProducer {
                 .trim(';')
                 .replace(Regex("  *"), " ")
                 .replace("\${0}", currentScriptPath)
-                .replace("\${01}", currentScriptName)
+                .replace("\${01}", currentAppDirPath)
+                .replace("\${02}", currentScriptName)
             val doubleColon = "::"
             val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + doubleColon
             val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermOut.name + doubleColon

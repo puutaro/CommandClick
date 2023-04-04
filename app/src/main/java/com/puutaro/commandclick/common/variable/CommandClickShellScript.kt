@@ -66,6 +66,7 @@ class CommandClickShellScript {
         val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
         val CMDCLICK_HISTORY_SWITCH = "historySwitch"
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
+        val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
         val ON_ADBLOCK = "onAdBlock"
         val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
         val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
@@ -98,6 +99,7 @@ class CommandClickShellScript {
             CMDCLICK_SHIBAN,
             ON_URL_LAUNCH_MACRO,
             EXEC_JS_OR_HTML_PATH,
+            ON_URL_HISTORY_REGISTER,
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SCRIPT_FILE_NAME,
@@ -137,6 +139,8 @@ class CommandClickShellScript {
         private val onAdBlockInherit = SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name
         private val onAdBlockOn = SettingVariableSelects.Companion.OnAdblockSelects.ON.name
         private val onAdBlockOff = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
+        private val onUrlHistoryRegisterOff = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
+        private val onUrlHistoryRegisterOn = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name
         val TERMINAL_DO_DEFAULT_VALUE = terminalOn
         val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
         val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
@@ -147,6 +151,7 @@ class CommandClickShellScript {
         val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
         val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
         val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
+        val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
         val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
         val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
@@ -167,6 +172,7 @@ class CommandClickShellScript {
             "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
             "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
             "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
+            "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
             "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=1..1000!1",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
@@ -236,6 +242,9 @@ class CommandClickShellScript {
                 |#  - ${onUrlLaunchMacroOff}: no launch
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFrequency}: most use url launch
+                |# * ${ON_URL_HISTORY_REGISTER}: url history update signal
+                |#  - ${onUrlHistoryRegisterOn}: register
+                |#  - ${onUrlHistoryRegisterOff}: unregister
                 |# * ${EXEC_JS_OR_HTML_PATH}: execute javascript or html file path
                 |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
@@ -293,8 +302,9 @@ class CommandClickShellScript {
             |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
             |${ON_ADBLOCK}="${onAdBlockInherit}"
+            |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
             |${EXEC_JS_OR_HTML_PATH}=""
-            |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
+            |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
             |${TERMINAL_COLOR}=""
             |${TERMINAL_FONT_COLOR}=""
             |${SET_VARIABLE_TYPE}=""

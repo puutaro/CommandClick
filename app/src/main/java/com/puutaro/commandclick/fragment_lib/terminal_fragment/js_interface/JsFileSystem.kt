@@ -1,8 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.content.ClipData
-import android.content.ClipboardManager
-import android.content.Context
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -17,7 +14,7 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 class JsFileSystem(
-    private val terminalFragment: TerminalFragment
+    terminalFragment: TerminalFragment
 ) {
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
@@ -146,7 +143,7 @@ class JsFileSystem(
     }
 
     @JavascriptInterface
-        fun createDir(path: String){
+    fun createDir(path: String){
         FileSystems.createDirs(
             path
         )

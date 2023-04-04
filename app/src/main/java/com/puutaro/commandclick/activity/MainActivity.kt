@@ -355,7 +355,7 @@ class MainActivity:
         )
     }
 
-    override fun onFileCooose(
+    override fun onFileCoose(
         filePathCallback: ValueCallback<Array<Uri>>?,
         fileChooserParams: WebChromeClient.FileChooserParams?
     ) {

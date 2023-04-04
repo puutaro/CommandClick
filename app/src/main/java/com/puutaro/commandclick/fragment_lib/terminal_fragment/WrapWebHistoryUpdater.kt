@@ -29,9 +29,15 @@ class WrapWebHistoryUpdater {
         ){
             if(
                 (previousUrl?.length == webViewUrl?.length
-                        && webViewUrl?.contains("/maps/") == true) && webViewUrl.contains("google")
+                        && webViewUrl?.contains("/maps/") == true
+                        )
+                && webViewUrl.contains("google")
             ) return
             if(webView == null) return
+            if(
+                terminalFragment.onUrlHistoryRegister
+                != CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
+            ) return
             terminalFragment.onWebHistoryUpdaterJob?.cancel()
             var urlTitleString: String? = null
             terminalFragment.onWebHistoryUpdaterJob = CoroutineScope(Dispatchers.IO).launch {

@@ -42,7 +42,7 @@ class WebChromeClientSetter {
                     if(!terminalFragment.isVisible) return false
                     val listener =
                         terminalFragment.context as? TerminalFragment.OnFileChooseListener
-                    listener?.onFileCooose(
+                    listener?.onFileCoose(
                         filePathCallback,
                         fileChooserParams
                     )

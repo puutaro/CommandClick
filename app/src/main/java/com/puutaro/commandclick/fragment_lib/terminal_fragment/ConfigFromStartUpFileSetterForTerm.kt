@@ -115,6 +115,18 @@ class ConfigFromStartUpFileSetterForTerm {
                 ),
             )
 
+            terminalFragment.onUrlHistoryRegister = MakeVariableCbValue.make(
+                settingVariableList,
+                CommandClickShellScript.ON_URL_HISTORY_REGISTER,
+                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                listOf(
+                    SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name,
+                    SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name,
+                ),
+            )
+
             terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
                 settingVariableList,
                 CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM,

@@ -51,6 +51,7 @@ class TerminalFragment: Fragment() {
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
     var runShell = "bash"
+    var onUrlHistoryRegister = CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
@@ -221,7 +222,7 @@ class TerminalFragment: Fragment() {
     }
 
     interface OnFileChooseListener {
-        fun onFileCooose(
+        fun onFileCoose(
             filePathCallback: ValueCallback<Array<Uri>>?,
             fileChooserParams: WebChromeClient.FileChooserParams?
         )

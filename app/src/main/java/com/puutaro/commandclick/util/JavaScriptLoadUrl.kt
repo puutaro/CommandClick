@@ -32,12 +32,13 @@ object JavaScriptLoadUrl {
         var countSettingSectionEnd = 0
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
+        val scriptFileName = jsFileObj.name
         val jsList = if(
             jsListSource.isNullOrEmpty()
         ) {
             ReadText(
                 recentAppDirPath,
-                jsFileObj.name
+                scriptFileName
             ).textToList()
         } else jsListSource
         val loadJsUrl = jsList.map {
@@ -79,6 +80,7 @@ object JavaScriptLoadUrl {
         }.joinToString(" ")
             .replace("\${0}", "${execJsPath}")
             .replace("\${01}", "${recentAppDirPath}")
+            .replace("\${02}", "${scriptFileName}")
         if(
             loadJsUrl.isEmpty()
             || loadJsUrl.isBlank()

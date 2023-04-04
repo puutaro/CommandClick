@@ -78,6 +78,11 @@ class SettingVariableSelects {
             ON,
             OFF,
         }
+
+        enum class OnUrlHistoryRegisterSelects {
+            OFF,
+            ON,
+        }
     }
 
 }
