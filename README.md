@@ -495,7 +495,7 @@ ex) am broadcast \
  - JsIntent
  	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)  
  			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
- 	- jsIntent.launchUrl(urlString: String)  
+ 	- jsIntent.launchUrl(urlString: String)  -> launch uri(not url but uri)
 	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: tabSepalatedString, extraLong: tabSepalatedString, extraFloat: tabSepalatedString)
 			ex) bellow, launch google calendar  
 			jsIntent.launchApp(
