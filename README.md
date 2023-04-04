@@ -549,7 +549,7 @@ ex) am broadcast \
 
 ### Include Javascript Library  
 
-First, I respect bellow package author.  
+First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
 - Sortable.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/Sortable.js"></script>`  
@@ -559,6 +559,9 @@ Bellow respectable package is inclided assets. you can import like bellow.
 
 
 ### Include css Library  
+
+First, I respect bellow css package author.  
+Bellow respectable package is inclided assets. you can import like bellow.
 
 - jquery-ui.css -> Add html with `<link rel="stylesheet" href="file:///android_asset/css/jquery-ui.css">`  
 
