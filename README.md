@@ -57,6 +57,9 @@ Table of Contents
   * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
   * [File api](#file-api)
   * [JavaScript interface](#javascript-interface)
+  * [Javascript pre order word](#javascript-pre-order-word)
+  * [Include Javascript Library](#include-javascript-library)
+  * [Include css Library](#include-css-library)
   * [Html tag output](#html-tag-output)
   * [Javascript TroubleShooting](#javascript-troubleshooting)
   * [Generally TroubleShooting](#generally-troubleshooting)  
@@ -538,10 +541,30 @@ ex) am broadcast \
 	- jsScript.bothQuoteTrim(VariableValueString: String) -> VariableValueString removed both edge quote  
 				
 
-### javascript pre order word
-	- `${0}` -> current file path  
-	- `${01}` -> parent directory path
-	- `${02}` -> current script name
+### Javascript pre order word
+- `${0}` -> current file path  
+- `${01}` -> parent directory path
+- `${02}` -> current script name
+
+
+### Include Javascript Library  
+
+First, I respect bellow javascript package author.  
+Bellow respectable package is inclided assets. you can import like bellow.
+
+- Sortable.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/Sortable.js"></script>`  
+- jquery-ui -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-ui.min.js"></script>`  
+- jquery-3.6.3.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-3.6.3.min.js"></script>`  
+- long-press-event.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/long-press-event.min.js"></script>`  
+
+
+### Include css Library  
+
+First, I respect bellow css package author.  
+Bellow respectable package is inclided assets. you can import like bellow.
+
+- jquery-ui.css -> Add html with `<link rel="stylesheet" href="file:///android_asset/css/jquery-ui.css">`  
+
 
 ### Html tag output
 
