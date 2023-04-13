@@ -496,7 +496,7 @@ ex) am broadcast \
 			-> `fristargment`\t`secondargument 2`  
 
  - JsIntent
- 	- jsIntent.launchEditSite(editPath: String, srcPath: String? = null, onClickSort: String = "true", filterCode: String? = null)  
+ 	- jsIntent.launchEditSite(editPath: String, srcPath: String, onClickSort: String(true/false), onSortableJs: String(true/false), onClickUrl: String(true/false), filterCode: String)  
  			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
  	- jsIntent.launchUrl(urlString: String)  -> launch uri(not url but uri)
 	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: tabSepalatedString, extraLong: tabSepalatedString, extraFloat: tabSepalatedString)
