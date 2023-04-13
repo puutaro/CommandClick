@@ -2,9 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.net.Uri
-import android.provider.CalendarContract
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
@@ -25,6 +23,8 @@ class JsIntent(
         editPath: String,
         srcPath: String? = null,
         onClickSort: String = "true",
+        onSortableJs: String = "true",
+        onClickUrl: String = "true",
         filterCode: String? = null
     ) {
         val jsIntent = Intent()
@@ -40,6 +40,14 @@ class JsIntent(
         jsIntent.putExtra(
             BroadCastIntentExtraForHtml.ON_CLICK_SORT.scheme,
             onClickSort
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForHtml.ON_SORTABLE_JS.scheme,
+            onSortableJs
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForHtml.ON_CLICK_URL.scheme,
+            onClickUrl
         )
         jsIntent.putExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme,

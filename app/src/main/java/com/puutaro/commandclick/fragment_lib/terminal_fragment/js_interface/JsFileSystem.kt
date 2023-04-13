@@ -185,4 +185,18 @@ class JsFileSystem(
             dirPath
         ).joinToString("\t")
     }
+
+    @JavascriptInterface
+    fun isFile(
+        path: String
+    ): String {
+        return File(path).isFile.toString()
+    }
+
+    @JavascriptInterface
+    fun isDir(
+        path: String
+    ): String {
+        return File(path).isDirectory.toString()
+    }
 }

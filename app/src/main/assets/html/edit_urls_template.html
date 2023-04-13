@@ -225,7 +225,9 @@
    const CommandClickSiteTitle = "Cmd List Template"
    const editTargetUrlsFilePath = "require path";
    const addUrlsSourceFilePath = "";
-   const clickSortTop = true
+   const clickSortTop = true;
+   const onSortableJs = true;
+   const onClickUrl = true;
    let url = document.querySelector("[name='url']");
    let view_bookmarksSection = document.querySelector(".view_bookmarks");
 
@@ -260,7 +262,11 @@
       if(!addUrl.includes("http")){
          addUrl = "//" + addUrl;
       }
-      let item = '<li class="btn_bookmark"><a class="url-launch" href="' + addUrl + '" target="_blank" data-link=' + dataLink + '>' + addName + "</a></li>"
+      if(onClickUrl){
+         var item = '<li class="btn_bookmark"><a class="url-launch" href="' + addUrl + '" target="_blank" data-link=' + dataLink + '>' + addName + "</a></li>"
+      } else {
+         var item = '<li class="btn_bookmark"><a class="url-launch" href="#" data-link=' + dataLink + '>' + addName + "</a></li>"
+      }
       view_bookmarksSection.innerHTML += item;
    }
 
@@ -330,6 +336,7 @@
 
 
    function sortableJsWrapper(){
+      if(!onSortableJs) return
       var el = document.getElementById('view_bookmarks');
       var sortable = new Sortable(el, {
          delay: 100,

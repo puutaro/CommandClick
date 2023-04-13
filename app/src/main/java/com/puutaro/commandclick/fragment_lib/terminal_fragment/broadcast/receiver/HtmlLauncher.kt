@@ -7,7 +7,6 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
-import java.io.InputStream
 
 object HtmlLauncher{
 
@@ -43,6 +42,12 @@ object HtmlLauncher{
         val onClickSort = intent.getStringExtra(
             BroadCastIntentExtraForHtml.ON_CLICK_SORT.scheme
         ) ?: "false"
+        val onSotableJs = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.ON_SORTABLE_JS.scheme
+        ) ?: "true"
+        val onClickUrl = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.ON_CLICK_URL.scheme
+        ) ?: "true"
         val filterCode = intent.getStringExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme
         ) ?: "true"
@@ -70,6 +75,14 @@ object HtmlLauncher{
                 .replace(
                     Regex("const clickSortTop =.*"),
                     "const clickSortTop = ${onClickSort}"
+                )
+                .replace(
+                    Regex("const onSortableJs =.*"),
+                    "const onSortableJs = ${onSotableJs}"
+                )
+                .replace(
+                    Regex("const onClickUrl =.*"),
+                    "const onClickUrl = ${onClickUrl}"
                 )
                 .replace(
                     Regex("CommandClickFilterBoolean"),
