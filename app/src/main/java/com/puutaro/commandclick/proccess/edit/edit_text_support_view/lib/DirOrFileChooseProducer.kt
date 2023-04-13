@@ -7,11 +7,16 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.fragment.EditFragment
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.io.File
+import java.net.URLDecoder
 
 
 class DirOrFileChooseProducer {
     companion object {
+
         fun make(
             editFragment: EditFragment,
             onDirectoryPick: Boolean,
@@ -35,9 +40,16 @@ class DirOrFileChooseProducer {
                     uri == null
                     || uri.toString() == String()
                 ) return@registerForActivityResult
-                val pathSource = File(
-                    uri.toString().replace(prefixRegex, "/storage")
-                )
+
+                val pathSource = runBlocking {
+                    File(
+                        withContext(Dispatchers.IO) {
+                            URLDecoder.decode(
+                                uri.toString(), Charsets.UTF_8.name()
+                            )
+                        }.replace(prefixRegex, "/storage")
+                    )
+                }
                 val setPath = if(onDirectoryPick) {
                     pathSource.parent
                 } else {
