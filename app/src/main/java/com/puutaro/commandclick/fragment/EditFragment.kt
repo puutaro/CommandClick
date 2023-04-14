@@ -239,9 +239,6 @@ class EditFragment: Fragment() {
         )
     }
 
-    override fun onPause() {
-        super.onPause()
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -291,6 +288,12 @@ class EditFragment: Fragment() {
         fun onFileChooserListenerForEdit(
             onDirectoryPick: Boolean,
             insertEditText: EditText
+        )
+    }
+
+    interface OnTermSizeLongListenerForEdit {
+        fun onTermSizeLongForEdit(
+
         )
     }
 

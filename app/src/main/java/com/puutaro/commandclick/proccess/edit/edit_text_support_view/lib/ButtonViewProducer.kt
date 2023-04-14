@@ -105,6 +105,7 @@ object ButtonViewProducer {
             val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + doubleColon
             val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermOut.name + doubleColon
             val noJsTermOut = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.NoJsTermOut.name + doubleColon
+            val termLong = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermLong.name + doubleColon
 
             val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
             val onTermOutMacro = innerExecCmd.contains(termOutMacro)
@@ -112,11 +113,19 @@ object ButtonViewProducer {
                 terminalViewModel.onDisplayUpdate = true
             }
             terminalViewModel.onDisplayUpdate = !innerExecCmd.contains(noJsTermOut)
+            if(
+                innerExecCmd.contains(termLong)
+            ){
+                val listener =
+                    context as? EditFragment.OnTermSizeLongListenerForEdit
+                listener?.onTermSizeLongForEdit()
+            }
             val execCmdAfterTrimButtonEditExecVariant =
                 innerExecCmd
                     .replace(backStackMacro, "")
                     .replace(termOutMacro, "")
                     .replace(noJsTermOut, "")
+                    .replace(termLong, "")
                     .trim(' ')
                     .replace(Regex("\t\t*"), " ")
                     .replace("\t", " ")

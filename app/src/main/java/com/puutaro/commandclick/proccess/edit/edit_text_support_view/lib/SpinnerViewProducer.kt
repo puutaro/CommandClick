@@ -8,6 +8,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 
+
 class SpinnerViewProducer {
     companion object {
         fun make(
@@ -51,10 +52,24 @@ class SpinnerViewProducer {
             adapter.addAll(updatedSppinerList)
             insertSpinner.adapter = adapter
             insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                    Log.e("onItemSelected", "parent: $parent, view: $view, pos: $pos, id: $id")
-                    val selectedItem = updatedSppinerList[pos]
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    pos: Int,
+                    id: Long
+                ) {
+                    val selectedItem = adapter.getItem(pos)
+                    val currentSpinnerList = (0 until adapter.count).map {
+                        adapter.getItem(it)
+                    }
                     insertEditText.setText(selectedItem)
+                    val selectUpdatedSpinnerList = listOf(
+                        selectedItem,
+                    ) + currentSpinnerList.filter { it != selectedItem }
+                    adapter.clear()
+                    adapter.addAll(selectUpdatedSpinnerList)
+                    adapter.notifyDataSetChanged()
+                    insertSpinner.setSelection(0)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>?) {

@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity
 
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -28,11 +27,9 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisible
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
 import com.puutaro.commandclick.activity_lib.init.MonitorFiles
-import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -44,9 +41,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import com.termux.shared.termux.TermuxConstants
 
 
 class MainActivity:
@@ -72,7 +66,8 @@ class MainActivity:
     EditFragment.OnInitEditFragmentListener,
     EditFragment.OnTerminalWebViewInitListenerForEdit,
     EditFragment.OnLaunchUrlByWebViewForEditListener,
-    EditFragment.OnFileChooserListenerForEdit {
+    EditFragment.OnFileChooserListenerForEdit,
+    EditFragment.OnTermSizeLongListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     var filePath: ValueCallback<Array<Uri>>? = null
@@ -264,6 +259,13 @@ class MainActivity:
         ExecTermLongChangeHandlerForTerm.handle(
             this,
             changeTargetFragment,
+        )
+    }
+
+    override fun onTermSizeLongForEdit() {
+        ExecTermLongChangeHandlerForTerm.handle(
+            this,
+            ChangeTargetFragment.CMD_VARIABLES_EDIT_FRAGMENT,
         )
     }
 

@@ -71,6 +71,7 @@ class SettingVariableSelects {
             BackStack,
             TermOut,
             NoJsTermOut,
+            TermLong,
         }
 
         enum class OnAdblockSelects {
