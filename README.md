@@ -135,8 +135,8 @@ At the same time, if you installed code editor, edit new file.
     | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;{command string} |..   |
     | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
     | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;{command string} |..   |
-    | `EFCB` | editable file checkbox | {variableName}:EFCB={grep prefix}(&{grep suffix}) |..   |
-    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={grep prefix}(&{grep suffix})&#124;{command string} |..   |
+    | `EFCB` | editable file checkbox | {variableName}:EFCB={target direcotry path}&{grep prefix}(&{grep suffix}) |..   |
+    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path}&{grep prefix}(&{grep suffix})&#124;{command string} |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
@@ -423,11 +423,12 @@ Exec bellow command in `CommandClick` shellscript, so that you can make automati
 
 ```
 am broadcast \
-		-a "com.puutaro.commandclick.fzhtml.launch" \
-		--es edit_path "{html title}" \
+		-a "com.puutaro.commandclick.html.launch" \
 		--es edit_path "{target edit file path}" \
 		--es src_path "{source file path}" \
 		--es on_click_sort "boolean(sortable when link click)" \
+		--es on_sortable_js "boolean(sortable link list)" \
+		--es on_click_url "boolean(launch url when link click)" \
 		--es filter_code "{javascript filter code}"
 ``` 
 
@@ -451,6 +452,8 @@ ex) am broadcast \
 		--es edit_path "${PARENT_DIR_PATH}/tubePlayList" \
 		--es src_path "${PARENT_DIR_PATH}/cmdclickUrlHistory" \
 		--es on_click_sort "false" \
+		--es on_sortable_js "true" \
+		--es on_click_url "true" \
 		--es filter_code "urlString.startsWith('http') && urlString.includes(\"youtube\");"
 ```
 
