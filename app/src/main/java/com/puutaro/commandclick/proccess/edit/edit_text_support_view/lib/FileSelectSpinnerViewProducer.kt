@@ -35,19 +35,28 @@ object FileSelectSpinnerViewProducer {
         )
         val prefixSuffixList = currentRecordNumToSetVariableMap.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')?.firstOrNull()?.split('&') ?: emptyList()
-        val filterPrefix = prefixSuffixList
+        )?.split('|')
+            ?.firstOrNull()
+            ?.replace("\${01}", currentAppDirPath)
+            ?.split('&')
+            ?: emptyList()
+        val filterDir = prefixSuffixList
             .firstOrNull()?.let {
+                BothEdgeQuote
+                    .trim(it)
+            } ?: String()
+        val filterPrefix = prefixSuffixList
+            .getOrNull(1)?.let {
             BothEdgeQuote
                 .trim(it)
         } ?: String()
         val filterSuffix = prefixSuffixList
-            .getOrNull(1)?.let {
+            .getOrNull(2)?.let {
                 BothEdgeQuote
                     .trim(it)
             } ?: String()
         val editableSpinnerList = FileSystems.sortedFiles(
-            currentAppDirPath,
+            filterDir,
             "on"
         ).filter {
             it.startsWith(filterPrefix)

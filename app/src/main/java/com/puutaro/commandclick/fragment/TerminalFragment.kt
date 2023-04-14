@@ -72,7 +72,6 @@ class TerminalFragment: Fragment() {
                 intent,
                 context,
                 binding,
-                currentAppDirPath
             )
         }
     }

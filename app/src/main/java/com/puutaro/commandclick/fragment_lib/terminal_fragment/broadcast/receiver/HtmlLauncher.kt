@@ -14,7 +14,6 @@ object HtmlLauncher{
         intent: Intent,
         context: Context,
         binding: TerminalFragmentBinding,
-        currentAppDirPath: String,
     ) {
         val editFilePath = intent.getStringExtra(
             BroadCastIntentScheme.HTML_LAUNCH.scheme
@@ -24,18 +23,13 @@ object HtmlLauncher{
                 .split('/')
                 .lastOrNull()
                 ?: return
+        val parentDir = File(editFilePath).parent
+            ?: return
+        FileSystems.createDirs(parentDir)
         val htmlFileName = title
             .replace(" ", "_")
             .replace("　", "_") + ".html"
-        val htmlFilePath = "${currentAppDirPath}/${htmlFileName}"
-        if(
-            File(
-                htmlFilePath
-            ).isFile
-        ) {
-            binding.terminalWebView.loadUrl(htmlFilePath)
-            return
-        }
+        val htmlFilePath = "${parentDir}/${htmlFileName}"
         val srcFilePath = intent.getStringExtra(
             BroadCastIntentExtraForHtml.SCR_PATH.scheme
         ) ?: String()
@@ -89,7 +83,7 @@ object HtmlLauncher{
                     filterCode
                 )
         FileSystems.writeFile(
-            currentAppDirPath,
+            parentDir,
             htmlFileName,
             htmlContents
         )

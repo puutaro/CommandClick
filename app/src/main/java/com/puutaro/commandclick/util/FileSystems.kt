@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 
 
 class FileSystems {
@@ -207,7 +208,6 @@ class FileSystems {
         ){
             val from = File(sourceDirPath)
             val to = File(destiDirPath)
-            if(!from.isDirectory) return
             try {
                 from.copyRecursively(to, true)
             } catch (ex: IOException) {
@@ -221,9 +221,12 @@ class FileSystems {
         ){
             val from = File(sourceDirPath)
             val to = File(destiDirPath)
-            if(!from.isDirectory) return
             try {
-                Files.move(from.toPath(), to.toPath())
+                Files.move(
+                    from.toPath(),
+                    to.toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
+                )
             } catch (ex: IOException) {
                 ex.printStackTrace()
             }
@@ -239,7 +242,8 @@ class FileSystems {
             try {
                 Files.copy(
                     File(sourceShellFilePath).toPath(),
-                    File(destiShellFilePath).toPath()
+                    File(destiShellFilePath).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
                 )
             } catch (e: Exception) {
                 return
@@ -276,7 +280,8 @@ class FileSystems {
             try {
                 Files.move(
                     File(sourceShellFilePath).toPath(),
-                    File(destiShellFilePath).toPath()
+                    File(destiShellFilePath).toPath(),
+                    StandardCopyOption.REPLACE_EXISTING
                 )
             } catch (e: Exception) {
                 return
