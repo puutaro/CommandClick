@@ -159,6 +159,7 @@ At the same time, if you installed code editor, edit new file.
       		 ex) jsf '${0}' (`jsf` execute javascript file path  
 		 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
 		 ex) ::NoJsTermOut:: jsf '${0}' (`::NoJsTermOut::` disable terminal output when only javascript  
+		 ex) ::TermLong:: jsf '${0}' (`::TermLong::` terminal size to long  
                  ex) echo ${0}   (`${0}` is current script path  
                  ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
                  ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
