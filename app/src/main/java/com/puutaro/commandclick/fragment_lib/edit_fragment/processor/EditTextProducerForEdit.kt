@@ -86,7 +86,15 @@ class EditTextProducerForEdit(
         recordNumToMapNameValueInCommandHolder
     )
 
+
     private val withEditableFileSelectSpinnerWithButtonView = WithEditableFileSelectSpinnerWithButtonView(
+        editFragment,
+        currentShellContentsList,
+        currentAppDirPath,
+        recordNumToMapNameValueInCommandHolder,
+    )
+
+    private val withListContentsSelectSpinnerWithButton = WithListContentsSelectSpinnerWithButton(
         editFragment,
         currentShellContentsList,
         currentAppDirPath,
@@ -99,6 +107,10 @@ class EditTextProducerForEdit(
     )
 
     private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView(
+        editFragment.context
+    )
+
+    private val withListContentsSelectSpinnerView = WithListContentsSelectSpinnerView(
         editFragment.context
     )
 
@@ -286,6 +298,26 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withListContentsSelectSpinnerWithButton.create(
+                        currentId,
+                        currentVariableValue,
+                        insertTextView,
+                        insertEditText,
+                        setVariableMap,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX.str -> {
+                    val innerLinearLayout = withListContentsSelectSpinnerView.create(
+                        currentId,
+                        currentVariableValue,
+                        insertEditText,
+                        setVariableMap,
+                        currentAppDirPath,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }

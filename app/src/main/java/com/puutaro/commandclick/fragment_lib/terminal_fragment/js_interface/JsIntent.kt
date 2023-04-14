@@ -4,9 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -142,5 +144,26 @@ class JsIntent(
             IntentExtra.ConvertNumberType.Float
         )
         terminalFragment.activity?.startActivity(intent)
+    }
+
+    @JavascriptInterface
+    fun launchShortcut(
+        currentAppDirPath: String,
+        currentShellFileName: String
+    ){
+        val execIntent = Intent(terminalFragment.activity, MainActivity::class.java)
+        execIntent
+            .setAction(Intent.ACTION_MAIN)
+            .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        execIntent.putExtra(
+            SharePrefferenceSetting.current_app_dir.name,
+            currentAppDirPath
+        )
+        execIntent.putExtra(
+            SharePrefferenceSetting.current_script_file_name.name,
+            currentShellFileName
+        )
+        terminalFragment.activity?.startActivity(execIntent)
     }
 }
