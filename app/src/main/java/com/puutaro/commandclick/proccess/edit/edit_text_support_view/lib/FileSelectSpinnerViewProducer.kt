@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
@@ -9,6 +8,7 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
+
 
 object FileSelectSpinnerViewProducer {
 
@@ -55,26 +55,50 @@ object FileSelectSpinnerViewProducer {
                 BothEdgeQuote
                     .trim(it)
             } ?: String()
-        val editableSpinnerList = FileSystems.sortedFiles(
+        val editableSpinnerList = makeSpinnerList(
             filterDir,
-            "on"
-        ).filter {
-            it.startsWith(filterPrefix)
-                    && judgeBySuffix(it, filterSuffix)
-        }
+            filterPrefix,
+            filterSuffix,
+        )
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
         insertSpinner.adapter = adapter
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
-                Log.e("onItemSelected", "parent: $parent, view: $view, pos: $pos, id: $id")
-                val selectedItem = updatedEditableSpinnerList[pos]
-                if(selectedItem == throughMark) return
+                val selectedItem = adapter.getItem(pos)
+                    ?: return
+                if(selectedItem != throughMark) {
+                    FileSystems.updateLastModified(
+                        currentAppDirPath,
+                        selectedItem
+                    )
+                }
+                val currentSpinnerList = makeSpinnerList(
+                    filterDir,
+                    filterPrefix,
+                    filterSuffix,
+                )
+                val selectUpdatedSpinnerList = if(
+                    selectedItem == throughMark
+                ){
+                    listOf(throughMark) + currentSpinnerList
+                } else listOf(
+                        throughMark,
+                        selectedItem,
+                    ) + currentSpinnerList.filter {
+                        it != selectedItem
+                    }
+                adapter.clear()
+                adapter.addAll(selectUpdatedSpinnerList)
+                adapter.notifyDataSetChanged()
+                insertSpinner.setSelection(0)
+                if(
+                    selectedItem == throughMark
+                ) return
                 insertEditText.setText(selectedItem)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
         insertSpinner.layoutParams = linearParamsForSpinner
         return insertSpinner
@@ -89,5 +113,19 @@ object FileSelectSpinnerViewProducer {
             return targetStr.endsWith(filterSuffix)
         }
         return !Regex("\\..*$").containsMatchIn(targetStr)
+    }
+
+    private fun makeSpinnerList(
+        filterDir: String,
+        filterPrefix: String,
+        filterSuffix: String,
+    ): List<String> {
+        return FileSystems.sortedFiles(
+            filterDir,
+            "on"
+        ).filter {
+            it.startsWith(filterPrefix)
+                    && judgeBySuffix(it, filterSuffix)
+        }
     }
 }

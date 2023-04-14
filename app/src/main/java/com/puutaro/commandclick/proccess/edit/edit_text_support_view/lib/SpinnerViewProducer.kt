@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.content.Context
-import android.util.Log
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
