@@ -9,7 +9,9 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.StringLength
 import java.io.File
+
 
 object ListContentsSelectSpinnerViewProducer {
 
@@ -27,13 +29,7 @@ object ListContentsSelectSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-        val insertSpinner = Spinner(context)
-        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
-        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
-        val adapter = ArrayAdapter<String>(
-            context as Context,
-            R.layout.sppinner_layout,
-        )
+
         val listContentsFilePath = currentRecordNumToSetVariableMap.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
@@ -53,6 +49,19 @@ object ListContentsSelectSpinnerViewProducer {
         ).textToList().filter {
             it.trim().isNotEmpty()
         }
+
+        val spinnerMaxStringNum = StringLength.maxCountFromList(editableSpinnerList)
+        val insertSpinner = SpinnerInstance.make(
+            spinnerMaxStringNum,
+            context
+        )
+        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
+        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
+        val adapter = ArrayAdapter<String>(
+            context as Context,
+            R.layout.sppinner_layout,
+        )
+
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
         insertSpinner.adapter = adapter
@@ -107,3 +116,4 @@ object ListContentsSelectSpinnerViewProducer {
         return insertSpinner
     }
 }
+
