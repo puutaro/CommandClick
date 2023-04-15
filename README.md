@@ -513,6 +513,8 @@ ex) am broadcast \
 				beginTime=167889547868058\tendTime=165678973498789",
 				""
 			);  
+	- jsIntent.launchShortcut(currentAppDirPath: String,　currentShellFileName: String) -> launch index and fannel  
+
 
  - JsDialog
  	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
