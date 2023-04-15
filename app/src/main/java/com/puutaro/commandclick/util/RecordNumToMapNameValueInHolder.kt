@@ -37,10 +37,12 @@ class RecordNumToMapNameValueInHolder {
             val hitedList = mutableSetOf<String>()
             val filteredSubstituteCmdStartEndContentList = if(onForSetting) {
                 substituteCmdStartEndContentList.filter {
-                    val isSetVariables = it.startsWith("${CommandClickShellScript.SET_VARIABLE_TYPE}=")
-                    val isNotContainhitedList = !hitedList.contains(it)
-                    if (isNotContainhitedList && !isSetVariables) hitedList.add(it)
-                    isNotContainhitedList || isSetVariables
+                    val isSetVariables =
+                        it.startsWith("${CommandClickShellScript.SET_VARIABLE_TYPE}=")
+                                || it.startsWith("${CommandClickShellScript.SET_REPLACE_VARIABLE}=")
+                    val isNotContainHitedList = !hitedList.contains(it)
+                    if (isNotContainHitedList && !isSetVariables) hitedList.add(it)
+                    isNotContainHitedList || isSetVariables
                 }
             } else {
                 substituteCmdStartEndContentList

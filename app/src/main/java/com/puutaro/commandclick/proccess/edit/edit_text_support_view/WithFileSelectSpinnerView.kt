@@ -5,6 +5,7 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.Toast
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 
 
@@ -16,6 +17,7 @@ class WithFileSelectEditableSpinnerView(
         currentVariableValue: String?,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?,
         currentAppDirPath: String,
     ): LinearLayout {
         val horizontalLinearLayout = LinearLayout(context)
@@ -34,6 +36,7 @@ class WithFileSelectEditableSpinnerView(
             currentId,
             insertEditText,
             currentRecordNumToSetVariableMap,
+            setReplaceVariableMap,
             currentAppDirPath,
             0.4F,
         )

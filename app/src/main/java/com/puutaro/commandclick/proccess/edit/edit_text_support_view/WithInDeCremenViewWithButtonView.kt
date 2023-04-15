@@ -27,7 +27,8 @@ class WithInDeCremenViewWithButtonView(
         insertTextView: TextView,
         currentVariableValueSource: String?,
         insertEditText: EditText,
-        setVariableMap: Map<String, String>
+        setVariableMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?
     ): LinearLayout {
 
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -90,6 +91,7 @@ class WithInDeCremenViewWithButtonView(
             0.2F,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
+            setReplaceVariableMap,
         true
         )
         horizontalLinearLayout.addView(insertButton)

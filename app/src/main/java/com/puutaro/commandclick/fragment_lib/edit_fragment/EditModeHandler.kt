@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import kotlinx.coroutines.*
 

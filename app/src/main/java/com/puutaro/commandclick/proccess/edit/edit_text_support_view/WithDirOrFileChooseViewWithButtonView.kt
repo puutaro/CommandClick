@@ -23,6 +23,7 @@ class WithDirOrFileChooseViewWithButtonView(
         insertTextView: TextView,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?,
         onDirectoryPick: Boolean = true
     ): LinearLayout {
         val horizontalLinearLayout = LinearLayout(context)
@@ -54,6 +55,7 @@ class WithDirOrFileChooseViewWithButtonView(
             0.2F,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
+            setReplaceVariableMap,
             true
         )
         horizontalLinearLayout.addView(insertButton)

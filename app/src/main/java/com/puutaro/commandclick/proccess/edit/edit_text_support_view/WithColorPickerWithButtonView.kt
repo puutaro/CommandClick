@@ -22,6 +22,7 @@ class WithColorPickerWithButtonView(
         insertTextView: TextView,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?
     ): LinearLayout {
         val context = editFragment.context
         val horizontalLinearLayout = LinearLayout(context)
@@ -54,6 +55,7 @@ class WithColorPickerWithButtonView(
             0.2F,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
+            setReplaceVariableMap,
             true
         )
         horizontalLinearLayout.addView(insertButton)

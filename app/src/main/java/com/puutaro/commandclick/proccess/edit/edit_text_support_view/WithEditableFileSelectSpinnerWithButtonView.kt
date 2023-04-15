@@ -27,6 +27,7 @@ class WithEditableFileSelectSpinnerWithButtonView(
         insertTextView: TextView,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?
     ): LinearLayout {
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
@@ -44,6 +45,7 @@ class WithEditableFileSelectSpinnerWithButtonView(
             currentId,
             insertEditText,
             currentRecordNumToSetVariableMap,
+            setReplaceVariableMap,
             currentAppDirPath,
             0.3F,
         )
@@ -58,6 +60,7 @@ class WithEditableFileSelectSpinnerWithButtonView(
             0.2F,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
+            setReplaceVariableMap,
             true
         )
         horizontalLinearLayout.addView(insertButton)

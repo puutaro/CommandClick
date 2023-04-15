@@ -31,6 +31,7 @@ class MakeSettingVariableNameOrValue {
                                 && variableNameFirstElement == substituteCmdStartEndContentStr
                         )
                 || substituteCmdStartEndContentStr.startsWith("${CommandClickShellScript.SET_VARIABLE_TYPE}=")
+                || substituteCmdStartEndContentStr.startsWith("${CommandClickShellScript.SET_REPLACE_VARIABLE}=")
             ) {
                 variableNameChecked
             } else {

@@ -5,6 +5,7 @@ import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
@@ -17,6 +18,7 @@ object FileSelectSpinnerViewProducer {
         currentId: Int,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?,
         currentAppDirPath: String,
         weight: Float,
     ): Spinner {
@@ -33,24 +35,40 @@ object FileSelectSpinnerViewProducer {
             context as Context,
             R.layout.sppinner_layout,
         )
-        val prefixSuffixList = currentRecordNumToSetVariableMap.get(
+        val dirPrefixSuffixList = currentRecordNumToSetVariableMap.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
             ?.firstOrNull()
             ?.replace("\${01}", currentAppDirPath)
-            ?.split('&')
+            .let {
+                var innerExecCmd = it
+                setReplaceVariableMap?.forEach {
+                    val replaceVariable = "\${${it.key}}"
+                    val replaceString = it.value
+                        .replace("\${01}", currentAppDirPath)
+                    innerExecCmd = innerExecCmd?.replace(
+                        replaceVariable,
+                        replaceString
+                    )
+                }
+                innerExecCmd
+            }?.split('&')
             ?: emptyList()
-        val filterDir = prefixSuffixList
+        val filterDirSource = dirPrefixSuffixList
             .firstOrNull()?.let {
                 BothEdgeQuote
                     .trim(it)
             } ?: String()
-        val filterPrefix = prefixSuffixList
+        val filterDir = if(
+            filterDirSource.isEmpty()
+        ) currentAppDirPath
+        else filterDirSource
+        val filterPrefix = dirPrefixSuffixList
             .getOrNull(1)?.let {
             BothEdgeQuote
                 .trim(it)
         } ?: String()
-        val filterSuffix = prefixSuffixList
+        val filterSuffix = dirPrefixSuffixList
             .getOrNull(2)?.let {
                 BothEdgeQuote
                     .trim(it)

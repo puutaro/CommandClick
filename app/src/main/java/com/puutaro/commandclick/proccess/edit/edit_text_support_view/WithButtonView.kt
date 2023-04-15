@@ -25,6 +25,7 @@ class WithButtonView(
         insertTextView: TextView,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?,
     ): LinearLayout {
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
@@ -47,6 +48,7 @@ class WithButtonView(
             2F,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
+            setReplaceVariableMap,
             false
         )
         horizontalLinearLayout.addView(insertButton)

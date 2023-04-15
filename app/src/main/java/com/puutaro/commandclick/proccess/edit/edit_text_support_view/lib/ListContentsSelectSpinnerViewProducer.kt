@@ -20,6 +20,7 @@ object ListContentsSelectSpinnerViewProducer {
         currentId: Int,
         insertEditText: EditText,
         currentRecordNumToSetVariableMap: Map<String,String>,
+        setReplaceVariableMap: Map<String, String>?,
         currentAppDirPath: String,
         weight: Float,
     ): Spinner {
@@ -38,6 +39,18 @@ object ListContentsSelectSpinnerViewProducer {
             .let {
                 BothEdgeQuote
                     .trim(it)
+            }.let {
+                var innerExecCmd = it
+                setReplaceVariableMap?.forEach {
+                    val replaceVariable = "\${${it.key}}"
+                    val replaceString = it.value
+                        .replace("\${01}", currentAppDirPath)
+                    innerExecCmd = innerExecCmd.replace(
+                        replaceVariable,
+                        replaceString
+                    )
+                }
+                innerExecCmd
             }
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()

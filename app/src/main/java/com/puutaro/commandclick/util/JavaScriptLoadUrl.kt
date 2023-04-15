@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import java.io.File
 
 object JavaScriptLoadUrl {
@@ -28,10 +29,6 @@ object JavaScriptLoadUrl {
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
         ) as String
-        var countSettingSectionStart = 0
-        var countSettingSectionEnd = 0
-        var countCmdSectionStart = 0
-        var countCmdSectionEnd = 0
         val scriptFileName = jsFileObj.name
         val jsList = if(
             jsListSource.isNullOrEmpty()
@@ -41,6 +38,20 @@ object JavaScriptLoadUrl {
                 scriptFileName
             ).textToList()
         } else jsListSource
+        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+            jsList,
+            settingSectionStart,
+            settingSectionEnd,
+            true
+        )
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMap(
+                recordNumToMapNameValueInSettingHolder
+            )
+        var countSettingSectionStart = 0
+        var countSettingSectionEnd = 0
+        var countCmdSectionStart = 0
+        var countCmdSectionEnd = 0
         val loadJsUrl = jsList.map {
             if(
                 it.startsWith(settingSectionStart)
@@ -78,9 +89,23 @@ object JavaScriptLoadUrl {
             ) return@map String()
             trimJsRow
         }.joinToString(" ")
-            .replace("\${0}", "${execJsPath}")
-            .replace("\${01}", "${recentAppDirPath}")
-            .replace("\${02}", "${scriptFileName}")
+            .replace("\${0}", execJsPath)
+            .replace("\${01}", recentAppDirPath)
+            .replace("\${02}", scriptFileName).let {
+                var loadJsUrlSource = it
+                setReplaceVariableMap?.forEach {
+                    val replaceVariable = "\${${it.key}}"
+                    val replaceString = it.value
+                        .replace("\${0}", execJsPath)
+                        .replace("\${01}", recentAppDirPath)
+                        .replace("\${02}", scriptFileName)
+                    loadJsUrlSource = loadJsUrlSource.replace(
+                        replaceVariable,
+                        replaceString
+                    )
+                }
+                loadJsUrlSource
+            }
         if(
             loadJsUrl.isEmpty()
             || loadJsUrl.isBlank()

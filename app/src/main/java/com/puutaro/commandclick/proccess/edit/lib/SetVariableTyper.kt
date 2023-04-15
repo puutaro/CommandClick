@@ -61,7 +61,7 @@ object SetVariableTyper {
     }
 
 
-    internal fun makeSetVariableTypeList(
+    fun makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
     ): List<String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {

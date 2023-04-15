@@ -55,6 +55,7 @@ class CommandClickShellScript {
         val TERMINAL_SIZE_TYPE = "terminalSizeType"
         val TERMINAL_OUTPUT_MODE = "terminalOutputMode"
         val SET_VARIABLE_TYPE = "setVariableType"
+        val SET_REPLACE_VARIABLE = "setReplaceVariable"
         val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
         val ON_URL_LAUNCH_MACRO = "onUrlLaunchMacro"
         val EXEC_JS_OR_HTML_PATH = "execJsOrHtmlPath"
@@ -85,6 +86,7 @@ class CommandClickShellScript {
             TERMINAL_SIZE_TYPE,
             TERMINAL_OUTPUT_MODE,
             SET_VARIABLE_TYPE,
+            SET_REPLACE_VARIABLE,
             CMDCLICK_HISTORY_SWITCH,
             CMDCLICK_ON_AUTO_EXEC,
             ON_UPDATE_LAST_MODIFY,
@@ -272,6 +274,11 @@ class CommandClickShellScript {
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar1}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF"
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar2}:${EditTextSupportViewName.FILE_PICKER.str}="
                 |#  ${SET_VARIABLE_TYPE}="..."
+                |# * ${SET_REPLACE_VARIABLE} is string replaced with certain string
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle3}={repalce string3}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="..."
                 |# * ${BEFORE_COMMAND} is before shell script execute, run command
                 |# * ${AFTER_COMMAND} is after shell script execute, run command
                 |# * ${SCRIPT_FILE_NAME} is your shell file name
@@ -308,6 +315,7 @@ class CommandClickShellScript {
             |${TERMINAL_COLOR}=""
             |${TERMINAL_FONT_COLOR}=""
             |${SET_VARIABLE_TYPE}=""
+            |${SET_REPLACE_VARIABLE}=""
             |${BEFORE_COMMAND}=""
             |${AFTER_COMMAND}=""
             |${SCRIPT_FILE_NAME}="${shellScriptName}"
@@ -502,6 +510,7 @@ class CommandClickShellScript {
             |${TERMINAL_FONT_COLOR}=""
             |${TERMINAL_COLOR}=""
             |${SET_VARIABLE_TYPE}=""
+            |${SET_REPLACE_VARIABLE}=""
             |${SCRIPT_FILE_NAME}="${jsScriptName}"
             |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |

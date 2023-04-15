@@ -18,12 +18,13 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ButtonViewHowA
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 class EditTextProducerForEdit(
-    editFragment: EditFragment,
+    private val editFragment: EditFragment,
     private val currentShellContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
@@ -50,6 +51,9 @@ class EditTextProducerForEdit(
     private val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
         setVariableTypeList,
         recordNumToMapNameValueInCommandHolder
+    )
+    private val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+        recordNumToMapNameValueInSettingHolder
     )
 
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
@@ -240,6 +244,7 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -258,7 +263,8 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertTextView,
                         insertEditText,
-                        setVariableMap
+                        setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -277,7 +283,8 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertTextView,
                         insertEditText,
-                        setVariableMap
+                        setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -287,6 +294,7 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                         currentAppDirPath,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
@@ -298,6 +306,7 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -308,6 +317,7 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -317,6 +327,7 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                         currentAppDirPath,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
@@ -336,6 +347,7 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
@@ -355,6 +367,7 @@ class EditTextProducerForEdit(
                         insertTextView,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                         false
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
@@ -373,7 +386,8 @@ class EditTextProducerForEdit(
                         insertTextView,
                         currentVariableValue,
                         insertEditText,
-                        setVariableMap
+                        setVariableMap,
+                        setReplaceVariableMap,
                     )
                     binding.editLinearLayout.addView(innerLayout)
                 }
@@ -384,7 +398,8 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertTextView,
                         insertEditText,
-                        setVariableMap
+                        setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(innerLayout)
                 }
@@ -415,7 +430,8 @@ class EditTextProducerForEdit(
                         currentVariableValue,
                         insertTextView,
                         insertEditText,
-                        setVariableMap
+                        setVariableMap,
+                        setReplaceVariableMap
                     )
                     binding.editLinearLayout.addView(insertingEditText)
                 }

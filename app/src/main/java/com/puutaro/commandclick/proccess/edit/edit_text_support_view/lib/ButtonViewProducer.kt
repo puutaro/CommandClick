@@ -36,6 +36,7 @@ object ButtonViewProducer {
         weight: Float,
         currentShellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
+        setReplaceVariableMap: Map<String, String>?,
         isInsertTextViewVisible: Boolean = false
     ): Button {
 
@@ -90,17 +91,12 @@ object ButtonViewProducer {
                 && cmdPrefix.isEmpty()
             ) return@setOnClickListener
             val currentScriptPath = "${currentAppDirPath}/${currentScriptName}"
-            val innerExecCmd = (
-                    "$cmdPrefix " +
-                            BothEdgeQuote.trim(
-                                execCmdEditable.toString()
-                            )
-                    )
-                .trim(';')
-                .replace(Regex("  *"), " ")
-                .replace("\${0}", currentScriptPath)
-                .replace("\${01}", currentAppDirPath)
-                .replace("\${02}", currentScriptName)
+            val innerExecCmd =  makeInnerExecCmd(
+                cmdPrefix,
+                execCmdEditable.toString(),
+                currentScriptPath,
+                setReplaceVariableMap,
+            )
             val doubleColon = "::"
             val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + doubleColon
             val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermOut.name + doubleColon
@@ -193,6 +189,43 @@ object ButtonViewProducer {
                 BothEdgeQuote.trim(cmdPrefixEntry)
             }
         return BothEdgeQuote.trim(cmdPrefixEntrySource)
+    }
+
+    private fun makeInnerExecCmd(
+        cmdPrefix: String,
+        execCmdEditableString: String,
+        currentScriptPath: String,
+        setReplaceVariableMap: Map<String, String>?
+    ): String {
+        val scriptFileObj = File(currentScriptPath)
+        val currentAppDirPath = scriptFileObj.parent
+            ?: return String()
+        val currentScriptName = scriptFileObj.name
+            ?: return String()
+        val innerExecCmdSourceBeforeReplace =
+            "$cmdPrefix " +
+                BothEdgeQuote.trim(
+                    execCmdEditableString
+                )
+        return innerExecCmdSourceBeforeReplace.trim(';')
+            .replace(Regex("  *"), " ")
+            .replace("\${0}", currentScriptPath)
+            .replace("\${01}", currentAppDirPath)
+            .replace("\${02}", currentScriptName).let {
+            var innerExecCmd = it
+            setReplaceVariableMap?.forEach {
+                val replaceVariable = "\${${it.key}}"
+                val replaceString = it.value
+                    .replace("\${0}", currentScriptPath)
+                    .replace("\${01}", currentAppDirPath)
+                    .replace("\${02}", currentScriptName)
+                innerExecCmd = innerExecCmd.replace(
+                    replaceVariable,
+                    replaceString
+                )
+            }
+            innerExecCmd
+        }
     }
 
     private fun surroundBlankReplace(

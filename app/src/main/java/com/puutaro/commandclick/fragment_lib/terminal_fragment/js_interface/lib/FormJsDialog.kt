@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditabl
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithInDeCremenView
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithSpinnerView
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithFileSelectEditableSpinnerView
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -121,6 +122,10 @@ class FormJsDialog(
             recordNumToMapNameValueInCommandHolder
         )
 
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+            recordNumToMapNameValueInSettingHolder
+        )
+
         val scrollView = ScrollView(context)
         val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -142,6 +147,7 @@ class FormJsDialog(
         execFormPartsAdd(
             recordNumToMapNameValueInCommandHolder,
             recordNumToSetVariableMaps,
+            setReplaceVariableMap,
             exitTextStartId,
             linearLayout
         )
@@ -244,6 +250,7 @@ class FormJsDialog(
     private fun execFormPartsAdd(
         recordNumToMapNameValueInHolder: Map<Int, Map<String,String>?>?,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
+        setReplaceVariableMap: Map<String, String>?,
         editTextStartId: Int,
         linearLayout: LinearLayout
     ){
@@ -309,6 +316,7 @@ class FormJsDialog(
                         currentVariableValue,
                         insertEditText,
                         setVariableMap,
+                        setReplaceVariableMap,
                         terminalFragment.currentAppDirPath
                     )
                     linearLayout.addView(innerLinearLayout)
