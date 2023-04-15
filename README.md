@@ -135,8 +135,8 @@ At the same time, if you installed code editor, edit new file.
     | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;{command string} |..   |
     | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
     | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;{command string} |..   |
-    | `EFCB` | editable file checkbox | {variableName}:EFCB={target direcotry path}&{grep prefix}(&{grep suffix}) |..   |
-    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path}&{grep prefix}(&{grep suffix})&#124;{command string} |..   |
+    | `EFCB` | editable file checkbox | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix}) |..   |
+    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix})&#124;{command string} |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
