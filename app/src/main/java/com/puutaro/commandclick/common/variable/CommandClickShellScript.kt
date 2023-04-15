@@ -252,6 +252,11 @@ class CommandClickShellScript {
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
+                |# * ${SET_REPLACE_VARIABLE} is string replaced with certain string
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle3}={repalce string3}"
+                |#  - ex) ${SET_REPLACE_VARIABLE}="..."
                 |# * ${SET_VARIABLE_TYPE} is cmdsection gui edit mini program, reference to github for detail (like gtk yad)
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
@@ -274,11 +279,6 @@ class CommandClickShellScript {
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar1}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF"
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar2}:${EditTextSupportViewName.FILE_PICKER.str}="
                 |#  ${SET_VARIABLE_TYPE}="..."
-                |# * ${SET_REPLACE_VARIABLE} is string replaced with certain string
-                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
-                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
-                |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle3}={repalce string3}"
-                |#  - ex) ${SET_REPLACE_VARIABLE}="..."
                 |# * ${BEFORE_COMMAND} is before shell script execute, run command
                 |# * ${AFTER_COMMAND} is after shell script execute, run command
                 |# * ${SCRIPT_FILE_NAME} is your shell file name
@@ -314,8 +314,8 @@ class CommandClickShellScript {
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
             |${TERMINAL_COLOR}=""
             |${TERMINAL_FONT_COLOR}=""
-            |${SET_VARIABLE_TYPE}=""
             |${SET_REPLACE_VARIABLE}=""
+            |${SET_VARIABLE_TYPE}=""
             |${BEFORE_COMMAND}=""
             |${AFTER_COMMAND}=""
             |${SCRIPT_FILE_NAME}="${shellScriptName}"
@@ -509,8 +509,8 @@ class CommandClickShellScript {
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
             |${TERMINAL_FONT_COLOR}=""
             |${TERMINAL_COLOR}=""
-            |${SET_VARIABLE_TYPE}=""
             |${SET_REPLACE_VARIABLE}=""
+            |${SET_VARIABLE_TYPE}=""
             |${SCRIPT_FILE_NAME}="${jsScriptName}"
             |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
