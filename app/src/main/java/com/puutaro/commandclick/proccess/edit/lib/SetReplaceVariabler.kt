@@ -9,25 +9,30 @@ object SetReplaceVariabler {
     fun makeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
     ): Map<String, String>? {
-        val firstSetVariableMap = execMakeSetReplaceVariableMap(
+        val firstSetVariableMapStringList = execMakeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder
-        )
-        return firstSetVariableMap?.map {
-            val replaceVariableName = it.key
-            val replaceString = it.value.let {
-                var innerExecCmd = it
-                firstSetVariableMap.forEach {
-                    val replaceVariable = "\${${it.key}}"
-                    val replaceString = it.value
-                    innerExecCmd = innerExecCmd.replace(
-                        replaceVariable,
-                        replaceString
-                    )
-                }
-                innerExecCmd
+        )?.map { "${it.key}\t${it.value}"} ?: return null
+
+        val firstSetVariableMapStringListSize = firstSetVariableMapStringList.size
+        var lastSetVariableMapStringList = firstSetVariableMapStringList
+        (0 until firstSetVariableMapStringListSize).forEach {
+            val valRepList = lastSetVariableMapStringList.get(it).split("\t")
+            if(valRepList.size != 2) return null
+
+            val replaceVariable = "\${${valRepList.first()}}"
+            val replaceString = valRepList.last()
+            lastSetVariableMapStringList = lastSetVariableMapStringList.map {
+                it.replace(
+                    replaceVariable,
+                    replaceString
+                )
             }
-            replaceVariableName to replaceString
-        }?.toMap()
+        }
+        return lastSetVariableMapStringList.map {
+            val valRepList = it.split("\t")
+            if(valRepList.size != 2) return null
+            valRepList.first() to valRepList.last()
+        }.toMap()
     }
 
     private fun execMakeSetReplaceVariableMap(
