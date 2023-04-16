@@ -613,6 +613,10 @@ Bellow respectable package is inclided assets. you can import like bellow.
 
 - When `websearch suggest` is not working, press space. if suggest  exist, fly.  
     - Prabably due to `AutovompleteTextView`'s specification.  　　
+    
+- When frequently crush, your smartphone reboot, or `onAdBlock` setting variable set `OFF`  
+    - Becuase of low memory, as a side note when `onAdBlock` is `ON`, `CommandClick` make block list on activiry reboot. Therefore 
+Crashes easily when memory is low    
 
 
 
