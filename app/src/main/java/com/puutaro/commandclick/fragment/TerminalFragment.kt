@@ -92,7 +92,6 @@ class TerminalFragment: Fragment() {
             container,
         false
         )
-        AdBlocker.init(this)
 
         if(savedInstanceState!=null) {
             binding.terminalWebView.restoreState(savedInstanceState)
@@ -106,6 +105,7 @@ class TerminalFragment: Fragment() {
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
+        AdBlocker.init(this)
 
         WebChromeClientSetter.set(this)
         FindListenerSetter.set(this)
