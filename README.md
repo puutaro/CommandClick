@@ -119,6 +119,7 @@ At the same time, if you installed code editor, edit new file.
     | `onUrlHistoryRegister`  | `ON`/`OFF` | url history update signal; `ON`: update, `OFF`: no update
     | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
+    | `setReplaceVariable`  | `string` | string replaced with certain string ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"  
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
