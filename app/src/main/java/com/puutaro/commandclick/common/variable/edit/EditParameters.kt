@@ -9,6 +9,7 @@ data class EditParameters(
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
     val readSharePreffernceMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
+    val onFixNormalSpinner: Boolean
 ) {
     var currentId: Int = 0
     var currentVariableValue: String? = null

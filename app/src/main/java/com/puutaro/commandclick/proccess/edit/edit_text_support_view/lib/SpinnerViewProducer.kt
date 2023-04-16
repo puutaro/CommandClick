@@ -8,6 +8,8 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
+import com.puutaro.commandclick.util.BothEdgeQuote
 
 
 class SpinnerViewProducer {
@@ -25,9 +27,6 @@ class SpinnerViewProducer {
                 LinearLayout.LayoutParams.MATCH_PARENT,
             )
             linearParamsForSpinner.weight = weight
-            val insertSpinner = Spinner(context)
-            insertSpinner.id = currentId + EditTextSupportViewId.SPINNER.id
-            insertSpinner.tag = "spinner${currentId + EditTextSupportViewId.SPINNER.id}"
             val adapter = ArrayAdapter<String>(
                 context as Context,
                 R.layout.sppinner_layout,
@@ -39,7 +38,7 @@ class SpinnerViewProducer {
                 ?.firstOrNull()
                 .let {
                     ReplaceVariableMapReflecter.reflect(
-                        it,
+                        BothEdgeQuote.trim(it),
                         editParameters
                     )
                 }?.split('!')
@@ -57,6 +56,14 @@ class SpinnerViewProducer {
                 sppinerList
             }
             adapter.addAll(updatedSppinerList)
+
+            val insertSpinner = SpinnerInstance.make(
+                context,
+                updatedSppinerList,
+                editParameters.onFixNormalSpinner
+            )
+            insertSpinner.id = currentId + EditTextSupportViewId.SPINNER.id
+            insertSpinner.tag = "spinner${currentId + EditTextSupportViewId.SPINNER.id}"
             insertSpinner.adapter = adapter
             insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(

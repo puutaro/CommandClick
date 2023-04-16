@@ -8,6 +8,8 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
+import com.puutaro.commandclick.util.BothEdgeQuote
 
 object EditableSpinnerViewProducer {
     fun make (
@@ -24,9 +26,6 @@ object EditableSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-        val insertSpinner = Spinner(context)
-        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
-        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
         val adapter = ArrayAdapter<String>(
             context as Context,
             R.layout.sppinner_layout,
@@ -38,13 +37,23 @@ object EditableSpinnerViewProducer {
             ?.firstOrNull()
             .let {
                 ReplaceVariableMapReflecter.reflect(
-                    it,
+                    BothEdgeQuote.trim(it),
                     editParameters
                 )
             }?.split('!')
             ?: listOf()
+
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
+
+        val insertSpinner = SpinnerInstance.make(
+            context,
+            updatedEditableSpinnerList,
+            editParameters.onFixNormalSpinner
+        )
+
+        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
+        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
         insertSpinner.adapter = adapter
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {

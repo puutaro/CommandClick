@@ -9,6 +9,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -34,9 +35,6 @@ object FileSelectSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-        val insertSpinner = Spinner(context)
-        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
-        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
         val adapter = ArrayAdapter<String>(
             context as Context,
             R.layout.sppinner_layout,
@@ -48,16 +46,14 @@ object FileSelectSpinnerViewProducer {
             ?.replace("\${01}", currentAppDirPath)
             .let {
                 ReplaceVariableMapReflecter.reflect(
-                    it,
+                    BothEdgeQuote.trim(it),
                     editParameters
                 )
             }?.split('&')
             ?: emptyList()
         val filterDirSource = dirPrefixSuffixList
-            .firstOrNull()?.let {
-                BothEdgeQuote
-                    .trim(it)
-            } ?: String()
+            .firstOrNull()
+            ?: String()
         val filterDir = if(
             filterDirSource.isEmpty()
         ) currentAppDirPath
@@ -79,6 +75,14 @@ object FileSelectSpinnerViewProducer {
         )
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
+
+        val insertSpinner = SpinnerInstance.make(
+            context,
+            updatedEditableSpinnerList,
+            editParameters.onFixNormalSpinner
+        )
+        insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
+        insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
         insertSpinner.adapter = adapter
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {

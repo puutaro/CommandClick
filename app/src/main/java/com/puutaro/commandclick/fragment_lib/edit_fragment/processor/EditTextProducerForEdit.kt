@@ -61,6 +61,7 @@ class EditTextProducerForEdit(
         recordNumToMapNameValueInCommandHolder,
         readSharePreffernceMap,
         setReplaceVariableMap,
+        false,
     )
 
     private val withEditTextWithButton = WithEditTextWithButton(
@@ -85,6 +86,10 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withEditableListContentsSelectSpinnerWithButton = WithEditableListContentsSelectSpinnerWithButton(
+        editFragment,
+    )
+
     private val withListContentsSelectSpinnerWithButton = WithListContentsSelectSpinnerWithButton(
         editFragment,
     )
@@ -95,6 +100,8 @@ class EditTextProducerForEdit(
     )
 
     private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView()
+
+    private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
 
     private val withListContentsSelectSpinnerView = WithListContentsSelectSpinnerView()
 
@@ -268,6 +275,21 @@ class EditTextProducerForEdit(
                 }
                 EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX.str -> {
                     val innerLinearLayout = withListContentsSelectSpinnerView.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withEditableListContentsSelectSpinnerWithButton.create(
+                        insertTextView,
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
                         insertEditText,
                         editParameters,
                     )

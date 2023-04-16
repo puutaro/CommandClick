@@ -12,16 +12,12 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditableSpinnerView
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithInDeCremenView
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithSpinnerView
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithFileSelectEditableSpinnerView
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
@@ -40,6 +36,8 @@ class FormJsDialog(
     private val withEditableSpinnerView = WithEditableSpinnerView()
 
     private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView()
+
+    private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
 
     private val withInDeCremenView = WithInDeCremenView()
 
@@ -146,6 +144,7 @@ class FormJsDialog(
             recordNumToMapNameValueInCommandHolder,
             virtualReadPreffrenceMap,
             setReplaceVariableMap,
+            true
         )
 
         execFormPartsAdd(
@@ -313,7 +312,14 @@ class FormJsDialog(
                 EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX.str -> {
                     val innerLinearLayout = withFileSelectEditableSpinnerView.create(
                         insertEditText,
-                       editParameters
+                        editParameters
+                    )
+                    linearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
+                        insertEditText,
+                        editParameters
                     )
                     linearLayout.addView(innerLinearLayout)
                 }

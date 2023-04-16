@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
-import android.graphics.Color
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
@@ -10,11 +9,11 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-class WithListContentsSelectSpinnerWithButton(
+class WithEditableListContentsSelectSpinnerWithButton(
     private val editFragment: EditFragment,
 ) {
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
@@ -22,7 +21,7 @@ class WithListContentsSelectSpinnerWithButton(
     fun create(
         insertTextView: TextView,
         insertEditText: EditText,
-        editParameters: EditParameters,
+        editParameters: EditParameters
     ): LinearLayout {
         val context = editParameters.context
         val currentVariableValue = editParameters.currentVariableValue
@@ -34,14 +33,13 @@ class WithListContentsSelectSpinnerWithButton(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
-        linearParamsForEditTextTest.weight = 0.001F
+        linearParamsForEditTextTest.weight = 0.5F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertSpinner =  ListContentsSelectSpinnerViewProducer.make(
+        val insertSpinner = EditableListContentsSelectSpinnerViewProducer.make(
             insertEditText,
             editParameters,
-            0.8F,
+            0.3F,
         )
         horizontalLinearLayout.addView(insertSpinner)
         val insertButton = ButtonViewProducer.make(

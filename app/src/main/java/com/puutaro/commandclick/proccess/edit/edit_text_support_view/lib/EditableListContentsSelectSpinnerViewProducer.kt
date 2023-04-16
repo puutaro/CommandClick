@@ -10,13 +10,12 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.util.BothEdgeQuote
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.*
 import java.io.File
 
-object ListContentsSelectSpinnerViewProducer {
+
+object EditableListContentsSelectSpinnerViewProducer {
+
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
@@ -29,6 +28,7 @@ object ListContentsSelectSpinnerViewProducer {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
+        val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -56,10 +56,11 @@ object ListContentsSelectSpinnerViewProducer {
         ).textToList().filter {
             it.trim().isNotEmpty()
         }
+        val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
 
         val insertSpinner = SpinnerInstance.make(
             context,
-            editableSpinnerList,
+            updatedEditableSpinnerList,
             editParameters.onFixNormalSpinner
         )
         insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
@@ -69,7 +70,7 @@ object ListContentsSelectSpinnerViewProducer {
             R.layout.sppinner_layout,
         )
 
-        adapter.addAll(editableSpinnerList)
+        adapter.addAll(updatedEditableSpinnerList)
         insertSpinner.adapter = adapter
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
@@ -80,16 +81,28 @@ object ListContentsSelectSpinnerViewProducer {
                     listFileName
                 ).textToList().filter {
                     it.trim().isNotEmpty()
-                }
-                val updateListContents = listOf(selectedItem) + currentSpinnerList.filter {
+                   }
+                val updateListContents = if(selectedItem == throughMark) {
+                    currentSpinnerList.filter {
                         it != selectedItem
                     }
+                } else {
+                    listOf(selectedItem) + currentSpinnerList.filter {
+                        it != selectedItem
+                                && it != throughMark
+                    }
+                }
                 FileSystems.writeFile(
                     parentDir,
                     listFileName,
                     updateListContents.joinToString("\n")
                 )
-                val selectUpdatedSpinnerList = listOf(
+                val selectUpdatedSpinnerList = if(
+                    selectedItem == throughMark
+                ){
+                    listOf(throughMark) + currentSpinnerList
+                } else listOf(
+                    throughMark,
                     selectedItem,
                 ) + currentSpinnerList.filter {
                     it != selectedItem
@@ -98,6 +111,9 @@ object ListContentsSelectSpinnerViewProducer {
                 adapter.addAll(selectUpdatedSpinnerList)
                 adapter.notifyDataSetChanged()
                 insertSpinner.setSelection(0)
+                if(
+                    selectedItem == throughMark
+                ) return
                 insertEditText.setText(selectedItem)
             }
 
