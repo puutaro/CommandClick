@@ -5,27 +5,23 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
 
 class WithDirOrFileChooseViewWithButtonView(
     private val editFragment: EditFragment,
-    private val currentShellContentsList: List<String>,
-    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
-    private val context = editFragment.context
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
 
     fun create(
-        currentId: Int,
-        currentVariableValue: String?,
         insertTextView: TextView,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
-        setReplaceVariableMap: Map<String, String>?,
+        editParameters: EditParameters,
         onDirectoryPick: Boolean = true
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
@@ -47,15 +43,10 @@ class WithDirOrFileChooseViewWithButtonView(
         horizontalLinearLayout.addView(insertChooseButtonView)
         val insertButton = ButtonViewProducer.make(
             editFragment,
-            readSharePreffernceMap,
-            currentId,
             insertTextView,
             insertEditText,
-            currentRecordNumToSetVariableMap,
+            editParameters,
             0.2F,
-            currentShellContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            setReplaceVariableMap,
             true
         )
         horizontalLinearLayout.addView(insertButton)

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
+package com.puutaro.commandclick.proccess.edit.lib
 
 import android.content.Context
 import android.widget.Spinner

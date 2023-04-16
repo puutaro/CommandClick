@@ -7,6 +7,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ShellScriptSaver
@@ -28,19 +29,20 @@ object ButtonViewProducer {
     private val blankString = "cmdclickBlank"
     fun make (
         editFragment: EditFragment,
-        readSharePreffernceMap: Map<String, String>,
-        currentId: Int,
         insertTextView: TextView,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
+        editParameters: EditParameters,
         weight: Float,
-        currentShellContentsList: List<String>,
-        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
-        setReplaceVariableMap: Map<String, String>?,
         isInsertTextViewVisible: Boolean = false
     ): Button {
+        val context = editParameters.context
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentId = editParameters.currentId
+        val currentSetVariableMap = editParameters.setVariableMap
+        val currentShellContentsList = editParameters.currentShellContentsList
+        val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
+        val setReplaceVariableMap = editParameters.setReplaceVariableMap
 
-        val context = editFragment.context
         val binding = editFragment.binding
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -82,7 +84,7 @@ object ButtonViewProducer {
             )
             val execCmdEditable = insertEditText.text
 
-            val cmdPrefixEntrySource = currentRecordNumToSetVariableMap.get(
+            val cmdPrefixEntrySource = currentSetVariableMap?.get(
                 SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
             )
             val cmdPrefix = makeCmdPrefix(cmdPrefixEntrySource)

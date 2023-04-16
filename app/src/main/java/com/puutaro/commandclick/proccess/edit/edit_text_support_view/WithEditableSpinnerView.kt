@@ -4,17 +4,17 @@ import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
 
 class WithEditableSpinnerView(
-    private val context: Context?,
 ) {
     fun create(
-        currentId: Int,
-        currentVariableValue: String?,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>
+        editParameters: EditParameters
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -27,11 +27,9 @@ class WithEditableSpinnerView(
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
         val insertSpinner = EditableSpinnerViewProducer.make(
-            context,
-            currentId,
             insertEditText,
-            currentRecordNumToSetVariableMap,
-        0.4F,
+            editParameters,
+            0.4F,
         )
         horizontalLinearLayout.addView(insertSpinner)
         return horizontalLinearLayout

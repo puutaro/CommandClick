@@ -9,17 +9,18 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import java.util.*
 
-class WithTimePickerView(
-    private val editFragment: EditFragment
-) {
+class WithTimePickerView {
 
-    fun create(insertEditText: EditText,
-               currentVariableValue: String?,
+    fun create(
+        insertEditText: EditText,
+        editParameters: EditParameters
     ): LinearLayout {
-        val context = editFragment.context
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val chooseButtonStr = "time"
         val innerLayout = LinearLayout(context)
         innerLayout.orientation = LinearLayout.HORIZONTAL

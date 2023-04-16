@@ -5,17 +5,16 @@ import android.graphics.Color
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 
-class WithSpinnerView(
-    private val context: Context?,
-) {
+class WithSpinnerView {
     fun create(
-        currentId: Int,
-        currentVariableValue: String?,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>
+        editParameters: EditParameters,
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -29,10 +28,8 @@ class WithSpinnerView(
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
         val insertSpinner = SpinnerViewProducer.make(
-            context,
-            currentId,
             insertEditText,
-            currentRecordNumToSetVariableMap,
+            editParameters,
             2F,
         )
         horizontalLinearLayout.addView(insertSpinner)

@@ -9,19 +9,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import java.util.*
 
 
-class WithDatePickerView(
-    private val editFragment: EditFragment,
-) {
+class WithDatePickerView {
 
     fun create(
         insertEditText: EditText,
-        currentVariableValue: String?,
+        editParameters: EditParameters
     ): LinearLayout {
-        val context = editFragment.context
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val chooseButtonStr = "date"
         val innerLayout = LinearLayout(context)
         innerLayout.orientation = LinearLayout.HORIZONTAL

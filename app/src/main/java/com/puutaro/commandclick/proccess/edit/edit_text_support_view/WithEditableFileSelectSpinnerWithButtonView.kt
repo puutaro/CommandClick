@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
@@ -13,22 +14,16 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class WithEditableFileSelectSpinnerWithButtonView(
     private val editFragment: EditFragment,
-    private val currentShellContentsList: List<String>,
-    private val currentAppDirPath: String,
-    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
-    private val context = editFragment.context
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
     fun create(
-        currentId: Int,
-        currentVariableValue: String?,
         insertTextView: TextView,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
-        setReplaceVariableMap: Map<String, String>?
+        editParameters: EditParameters
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -41,26 +36,17 @@ class WithEditableFileSelectSpinnerWithButtonView(
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
         val insertSpinner = FileSelectSpinnerViewProducer.make(
-            context,
-            currentId,
             insertEditText,
-            currentRecordNumToSetVariableMap,
-            setReplaceVariableMap,
-            currentAppDirPath,
+            editParameters,
             0.3F,
         )
         horizontalLinearLayout.addView(insertSpinner)
         val insertButton = ButtonViewProducer.make(
             editFragment,
-            readSharePreffernceMap,
-            currentId,
             insertTextView,
             insertEditText,
-            currentRecordNumToSetVariableMap,
+            editParameters,
             0.2F,
-            currentShellContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            setReplaceVariableMap,
             true
         )
         horizontalLinearLayout.addView(insertButton)

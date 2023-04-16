@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.*
 import java.lang.Runnable
@@ -15,13 +16,13 @@ import java.lang.Runnable
 class InDeCrementerViewProducer {
     companion object {
         fun make(
-            context: Context?,
             insertEditText: EditText,
+            editParameters: EditParameters,
             numEntityMap: Map<String, String?>,
             weight: Float,
             onIncrement: Boolean = true,
         ): Button {
-
+            val context = editParameters.context
             val initMinNum = -1000000
             val initMaxNum =  1000000
             val initStepNum = 1

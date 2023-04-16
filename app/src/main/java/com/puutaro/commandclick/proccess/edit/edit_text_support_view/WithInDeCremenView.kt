@@ -5,19 +5,20 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.InDeCrementerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.numEntityMapColumn
 
-class WithInDeCremenView(
-    private val context: Context?
-) {
+class WithInDeCremenView {
 
     fun create(
-        currentVariableValueSource: String?,
         insertEditText: EditText,
-        setVariableMap: Map<String, String>
+        editParameters: EditParameters,
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValueSource = editParameters.currentVariableValue
+        val setVariableMap = editParameters.setVariableMap
 
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
             0,
@@ -27,7 +28,7 @@ class WithInDeCremenView(
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
 
-        val variableTypeValue = setVariableMap.get(
+        val variableTypeValue = setVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
         val numEntityMap = InDeCrementerViewProducer.makeNumEntityMap(
@@ -54,16 +55,16 @@ class WithInDeCremenView(
         horizontalLinearLayout.addView(insertEditText)
 
         val incButton = InDeCrementerViewProducer.make(
-            context,
             insertEditText,
+            editParameters,
             numEntityMap,
             0.2F,
             true,
         )
         horizontalLinearLayout.addView(incButton)
         val decButton = InDeCrementerViewProducer.make(
-            context,
             insertEditText,
+            editParameters,
             numEntityMap,
             0.2F,
             false

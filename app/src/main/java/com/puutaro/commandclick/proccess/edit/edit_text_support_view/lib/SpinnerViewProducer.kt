@@ -4,19 +4,22 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 
 
 class SpinnerViewProducer {
     companion object {
         fun make(
-            context: Context?,
-            currentId: Int,
             insertEditText: EditText,
-            currentRecordNumToSetVariableMap: Map<String,String>,
+            editParameters: EditParameters,
             weight: Float,
         ): Spinner {
+            val context = editParameters.context
+            val currentId = editParameters.currentId
+            val currentSetVariableMap = editParameters.setVariableMap
             val linearParamsForSpinner = LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -29,12 +32,17 @@ class SpinnerViewProducer {
                 context as Context,
                 R.layout.sppinner_layout,
             )
-            val sppinerList = currentRecordNumToSetVariableMap.get(
+            val sppinerList = currentSetVariableMap?.get(
                 SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
             )
                 ?.split('|')
                 ?.firstOrNull()
-                ?.split('!')
+                .let {
+                    ReplaceVariableMapReflecter.reflect(
+                        it,
+                        editParameters
+                    )
+                }?.split('!')
                 ?: listOf()
             val currentExistItem = insertEditText.text.toString()
             val updatedSppinerList = if(

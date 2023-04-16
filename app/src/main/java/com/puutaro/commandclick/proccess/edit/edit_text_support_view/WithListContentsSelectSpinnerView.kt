@@ -5,21 +5,18 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 
-class WithListContentsSelectSpinnerView(
-    private val context: Context?
-) {
+class WithListContentsSelectSpinnerView {
     fun create(
-        currentId: Int,
-        currentVariableValue: String?,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
-        setReplaceVariableMap: Map<String, String>?,
-        currentAppDirPath: String,
+        editParameters: EditParameters
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -32,12 +29,8 @@ class WithListContentsSelectSpinnerView(
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
         val insertSpinner = ListContentsSelectSpinnerViewProducer.make(
-            context,
-            currentId,
             insertEditText,
-            currentRecordNumToSetVariableMap,
-            setReplaceVariableMap,
-            currentAppDirPath,
+            editParameters,
             0.4F,
         )
         horizontalLinearLayout.addView(insertSpinner)

@@ -4,17 +4,20 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 
 object EditableSpinnerViewProducer {
     fun make (
-        context: Context?,
-        currentId: Int,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
+        editParameters: EditParameters,
         weight: Float,
     ): Spinner {
+        val context = editParameters.context
+        val currentId = editParameters.currentId
+        val currentSetVariableMap = editParameters.setVariableMap
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -28,12 +31,17 @@ object EditableSpinnerViewProducer {
             context as Context,
             R.layout.sppinner_layout,
         )
-        val editableSpinnerList = currentRecordNumToSetVariableMap.get(
+        val editableSpinnerList = currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
             ?.split('|')
             ?.firstOrNull()
-            ?.split('!')
+            .let {
+                ReplaceVariableMapReflecter.reflect(
+                    it,
+                    editParameters
+                )
+            }?.split('!')
             ?: listOf()
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)

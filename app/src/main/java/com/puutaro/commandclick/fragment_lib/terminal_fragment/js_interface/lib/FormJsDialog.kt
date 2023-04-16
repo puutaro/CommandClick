@@ -8,11 +8,9 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
-import com.puutaro.commandclick.common.variable.edit.EditTextType
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
-import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithEditableSpinnerView
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithInDeCremenView
@@ -23,6 +21,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
@@ -37,20 +36,12 @@ class FormJsDialog(
 
     private val exitTextStartId = 90000
 
-    private val withSpinnerView = WithSpinnerView(
-        context
-    )
-    private val withEditableSpinnerView = WithEditableSpinnerView(
-        context
-    )
+    private val withSpinnerView = WithSpinnerView()
+    private val withEditableSpinnerView = WithEditableSpinnerView()
 
-    private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView(
-        context
-    )
+    private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView()
 
-    private val withInDeCremenView = WithInDeCremenView(
-        context
-    )
+    private val withInDeCremenView = WithInDeCremenView()
 
 
     private val languageType =
@@ -71,6 +62,7 @@ class FormJsDialog(
     private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
     ) as String
+
 
     fun create(
         formSource: String,
@@ -144,10 +136,21 @@ class FormJsDialog(
         linearLayoutParam.marginEnd = 20
         linearLayout.layoutParams = linearLayoutParam
 
-        execFormPartsAdd(
+        val virtualReadPreffrenceMap = mapOf(
+            SharePrefferenceSetting.current_app_dir.name
+                to terminalFragment.currentAppDirPath
+        )
+        val editParameters = EditParameters(
+            context,
+            virtualJsContentsList,
             recordNumToMapNameValueInCommandHolder,
-            recordNumToSetVariableMaps,
+            virtualReadPreffrenceMap,
             setReplaceVariableMap,
+        )
+
+        execFormPartsAdd(
+            editParameters,
+            recordNumToSetVariableMaps,
             exitTextStartId,
             linearLayout
         )
@@ -248,20 +251,19 @@ class FormJsDialog(
     }
 
     private fun execFormPartsAdd(
-        recordNumToMapNameValueInHolder: Map<Int, Map<String,String>?>?,
+        editParameters: EditParameters,
         recordNumToSetVariableMaps: Map<Int, Map<String,String>?>?,
-        setReplaceVariableMap: Map<String, String>?,
         editTextStartId: Int,
         linearLayout: LinearLayout
     ){
-        val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
+        val recordNumToNameToValueInHolderSize = editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
             val linearParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )
             val currentOrder = seedNum - 1
-            val currentRecordNumToMapNameValueInHolder = recordNumToMapNameValueInHolder.entries.elementAt(
+            val currentRecordNumToMapNameValueInHolder = editParameters.recordNumToMapNameValueInCommandHolder.entries.elementAt(
                 currentOrder
             )
             val currentRecordNumToNameToValueInHolder =
@@ -284,48 +286,41 @@ class FormJsDialog(
             insertEditText.setSelectAllOnFocus(true)
             val currentRecordNum =
                 currentRecordNumToMapNameValueInHolder.key
-            val setVariableMap = recordNumToSetVariableMaps?.get(
+            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
                 currentRecordNum
             )
+            editParameters.currentId = currentId
+            editParameters.currentVariableValue = currentVariableValue
             when(
-                setVariableMap?.get(
+                editParameters.setVariableMap?.get(
                     SetVariableTypeColumn.VARIABLE_TYPE.name
                 )
             ) {
                 EditTextSupportViewName.CHECK_BOX.str -> {
                     val innerLinearLayout = withSpinnerView.create(
-                        currentId,
-                        currentVariableValue,
                         insertEditText,
-                        setVariableMap
+                        editParameters
                     )
                     linearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
                     val innerLinearLayout = withEditableSpinnerView.create(
-                        currentId,
-                        currentVariableValue,
                         insertEditText,
-                        setVariableMap
+                        editParameters
                     )
                     linearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX.str -> {
                     val innerLinearLayout = withFileSelectEditableSpinnerView.create(
-                        currentId,
-                        currentVariableValue,
                         insertEditText,
-                        setVariableMap,
-                        setReplaceVariableMap,
-                        terminalFragment.currentAppDirPath
+                       editParameters
                     )
                     linearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
                     val innerLinearLayout = withInDeCremenView.create(
-                        currentVariableValue,
                         insertEditText,
-                        setVariableMap
+                        editParameters
                     )
                     linearLayout.addView(innerLinearLayout)
                 }

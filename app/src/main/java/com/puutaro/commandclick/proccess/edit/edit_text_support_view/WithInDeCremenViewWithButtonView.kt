@@ -6,6 +6,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
@@ -15,21 +16,17 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class WithInDeCremenViewWithButtonView(
     private val editFragment: EditFragment,
-    private val currentShellContentsList: List<String>,
-    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
 ) {
-    private val context = editFragment.context
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
     fun create(
-        currentId: Int,
         insertTextView: TextView,
-        currentVariableValueSource: String?,
         insertEditText: EditText,
-        setVariableMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?
+        editParameters: EditParameters
     ): LinearLayout {
+        val context = editParameters.context
+        val currentVariableValueSource = editParameters.currentVariableValue
+        val setVariableMap = editParameters.setVariableMap
 
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
             0,
@@ -39,7 +36,7 @@ class WithInDeCremenViewWithButtonView(
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
 
-        val variableTypeValue = setVariableMap.get(
+        val variableTypeValue = setVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
         val numEntityMap = InDeCrementerViewProducer.makeNumEntityMap(
@@ -66,16 +63,16 @@ class WithInDeCremenViewWithButtonView(
         horizontalLinearLayout.addView(insertEditText)
 
         val incButton = InDeCrementerViewProducer.make(
-            editFragment.context,
             insertEditText,
+            editParameters,
             numEntityMap,
             0.2F,
             true,
         )
         horizontalLinearLayout.addView(incButton)
         val decButton = InDeCrementerViewProducer.make(
-            editFragment.context,
             insertEditText,
+            editParameters,
             numEntityMap,
             0.2F,
             false
@@ -83,15 +80,10 @@ class WithInDeCremenViewWithButtonView(
         horizontalLinearLayout.addView(decButton)
         val insertButton = ButtonViewProducer.make(
             editFragment,
-            readSharePreffernceMap,
-            currentId,
             insertTextView,
             insertEditText,
-            setVariableMap,
+            editParameters,
             0.2F,
-            currentShellContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            setReplaceVariableMap,
         true
         )
         horizontalLinearLayout.addView(insertButton)

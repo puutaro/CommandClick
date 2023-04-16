@@ -4,24 +4,30 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 object FileSelectSpinnerViewProducer {
 
     fun make (
-        context: Context?,
-        currentId: Int,
         insertEditText: EditText,
-        currentRecordNumToSetVariableMap: Map<String,String>,
-        setReplaceVariableMap: Map<String, String>?,
-        currentAppDirPath: String,
+        editParameters: EditParameters,
         weight: Float,
     ): Spinner {
+        val context = editParameters.context
+        val currentId = editParameters.currentId
+        val currentSetVariableMap = editParameters.setVariableMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -35,23 +41,16 @@ object FileSelectSpinnerViewProducer {
             context as Context,
             R.layout.sppinner_layout,
         )
-        val dirPrefixSuffixList = currentRecordNumToSetVariableMap.get(
+        val dirPrefixSuffixList = currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
             ?.firstOrNull()
             ?.replace("\${01}", currentAppDirPath)
             .let {
-                var innerExecCmd = it
-                setReplaceVariableMap?.forEach {
-                    val replaceVariable = "\${${it.key}}"
-                    val replaceString = it.value
-                        .replace("\${01}", currentAppDirPath)
-                    innerExecCmd = innerExecCmd?.replace(
-                        replaceVariable,
-                        replaceString
-                    )
-                }
-                innerExecCmd
+                ReplaceVariableMapReflecter.reflect(
+                    it,
+                    editParameters
+                )
             }?.split('&')
             ?: emptyList()
         val filterDirSource = dirPrefixSuffixList
