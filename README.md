@@ -539,6 +539,7 @@ ex) am broadcast \
  - JsUtil
  	- jsUtil.sleep(sleepMiriTime: Int)   
 	- jsUtil.copyToClipboard(copyString: String, fontSize: Int)  
+	- jsUtil.echoFromClipboard() -> primary clipboard string  
 	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
  - JsUrl
  	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
