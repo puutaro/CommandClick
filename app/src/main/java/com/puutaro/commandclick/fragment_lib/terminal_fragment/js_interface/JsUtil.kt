@@ -7,7 +7,6 @@ import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
 import android.widget.TextView
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
 class JsUtil(
     private val terminalFragment: TerminalFragment
@@ -28,6 +27,13 @@ class JsUtil(
         val clipText = textView.text
         val clip = ClipData.newPlainText("cmdclick", clipText)
         clipboard?.setPrimaryClip(clip)
+    }
+
+    @JavascriptInterface
+    fun echoFromClipboard():String {
+        val clipboard: ClipboardManager? =
+            terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        return clipboard?.primaryClip?.getItemAt(0)?.text.toString()
     }
 
     @JavascriptInterface
