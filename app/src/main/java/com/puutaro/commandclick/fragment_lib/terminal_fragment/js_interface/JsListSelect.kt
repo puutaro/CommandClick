@@ -15,15 +15,15 @@ class JsListSelect(
     private val escapeCharHyphen = "-"
     @JavascriptInterface
     fun updateListFileCon(
-        searchListFilePath: String,
-        searchText: String
+        targetListFilePath: String,
+        itemText: String
     ) {
-        val trimSearchText = searchText.trim()
+        val trimSearchText = itemText.trim()
         if(
             trimSearchText == escapeCharHyphen
             || trimSearchText.isEmpty()
         ) return
-        val listFileObj = File(searchListFilePath)
+        val listFileObj = File(targetListFilePath)
         val searchListDirPath = listFileObj.parent
             ?: return
         val searchListFileName = listFileObj.name
@@ -54,15 +54,15 @@ class JsListSelect(
 
     @JavascriptInterface
     fun removeItemInListFileCon(
-        searchListFilePath: String,
-        searchText: String
+        targetListFilePath: String,
+        itemText: String
     ){
-        val trimSearchText = searchText.trim()
+        val trimSearchText = itemText.trim()
         if(
             trimSearchText == escapeCharHyphen
-            || searchText.isEmpty()
+            || itemText.isEmpty()
         ) return
-        val listFileObj = File(searchListFilePath)
+        val listFileObj = File(targetListFilePath)
         val searchListDirPath = listFileObj.parent
             ?: return
         val searchListFileName = listFileObj.name
@@ -79,7 +79,7 @@ class JsListSelect(
         ) {
             Toast.makeText(
                 context,
-                "no exist: $searchText",
+                "no exist: $itemText",
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -91,7 +91,7 @@ class JsListSelect(
             val trimItem = it.trim()
             trimItem.isNotEmpty()
                     && trimItem != escapeCharHyphen
-                    && trimItem != searchText
+                    && trimItem != itemText
         }.joinToString("\n")
         FileSystems.writeFile(
             searchListDirPath,
