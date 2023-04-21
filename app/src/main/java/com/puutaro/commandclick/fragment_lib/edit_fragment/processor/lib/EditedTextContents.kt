@@ -1,15 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
-import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
+import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
@@ -25,104 +25,130 @@ class EditedTextContents(
     private val curentAppDirPath = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
-    private val currentShellFileName = readSharePreffernceMap.get(
+    private val currentScriptFileName = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_script_file_name.name
     ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
-    private val shellContentsLister = ShellContentsLister(
+    private val scriptContentsLister = ScriptContentsLister(
         binding.editLinearLayout
     )
 
     fun updateByCommandVariables(
-        shellContentsList: List<String>,
+        scriptContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
     ): List<String> {
         return if(recordNumToMapNameValueInCommandHolder.isNullOrEmpty()) {
-            shellContentsList
+            scriptContentsList
         } else {
-            this.shellContentsLister.update(
+            this.scriptContentsLister.update(
                 recordNumToMapNameValueInCommandHolder,
-                shellContentsList,
+                scriptContentsList,
                 EditTextIdForEdit.COMMAND_VARIABLE.id
             )
         }
     }
 
     fun updateBySettingVariables(
-        editedShellContentsList: List<String>,
+        editedScriptContentsList: List<String>,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
     ): List<String> {
         return if (recordNumToMapNameValueInSettingHolder == null) {
-            editedShellContentsList
+            editedScriptContentsList
         } else {
-            shellContentsLister.update(
+            scriptContentsLister.update(
                 recordNumToMapNameValueInSettingHolder,
-                editedShellContentsList,
+                editedScriptContentsList,
                 EditTextIdForEdit.SETTING_VARIABLE.id
             )
         }
     }
 
     fun save(
-        lastShellContentsList: List<String>,
+        lastScriptContentsList: List<String>,
     ){
-        if(lastShellContentsList.isEmpty()) return
+        if(lastScriptContentsList.isEmpty()) return
 
         val submitScriptContentsList = CommentOutLabelingSection.commentOut(
-            lastShellContentsList,
-            currentShellFileName
+            lastScriptContentsList,
+            currentScriptFileName
         )
 
-        val updateShellFileName = makeUpdateShellFileName(
+        val updateScriptFileName = makeUpdateScriptFileName(
             submitScriptContentsList,
-            currentShellFileName
+            currentScriptFileName
         )
 
         FileSystems.writeFile(
             curentAppDirPath,
-            updateShellFileName,
+            updateScriptFileName,
             submitScriptContentsList.joinToString("\n")
         )
         if(
-            updateShellFileName.lowercase() == currentShellFileName.lowercase()
+            updateScriptFileName.lowercase() == currentScriptFileName.lowercase()
         ) return
         val sharePref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
             mapOf(
                 SharePrefferenceSetting.current_script_file_name.name
-                        to updateShellFileName
+                        to updateScriptFileName
             )
+        )
+        val currentFannelDir = makeFunnelDirPath(
+            curentAppDirPath,
+            currentScriptFileName
+        )
+        val updateFannelDir = makeFunnelDirPath(
+            curentAppDirPath,
+            updateScriptFileName
+        )
+        FileSystems.copyDirectory(
+            currentFannelDir,
+            updateFannelDir
+        )
+        FileSystems.removeDir(
+            currentFannelDir
         )
         FileSystems.removeFiles(
             curentAppDirPath,
-            currentShellFileName,
+            currentScriptFileName,
         )
     }
 
-    private fun makeUpdateShellFileName(
-        lastShellContentsList: List<String>,
-        currentShellFileName: String
+    private fun makeUpdateScriptFileName(
+        lastScriptContentsList: List<String>,
+        currentScriptFileName: String
     ): String {
         val substituteSettingVariableList = substituteVariableListFromHolder(
-            lastShellContentsList,
+            lastScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
         )
-        val updateShellFileNameSource = substituteCmdClickVariable(
+        val updateScriptFileNameSource = substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickShellScript.SCRIPT_FILE_NAME
-        ) ?: currentShellFileName
+        ) ?: currentScriptFileName
         val scriptFileSuffix = when(editFragment.languageType){
             LanguageTypeSelects.SHELL_SCRIPT -> CommandClickShellScript.SHELL_FILE_SUFFIX
             else -> CommandClickShellScript.JS_FILE_SUFFIX
         }
         return if(
-            updateShellFileNameSource.endsWith(scriptFileSuffix)
+            updateScriptFileNameSource.endsWith(scriptFileSuffix)
         ) {
-            updateShellFileNameSource
+            updateScriptFileNameSource
         } else {
-            updateShellFileNameSource + scriptFileSuffix
+            updateScriptFileNameSource + scriptFileSuffix
         }
+    }
+
+    private fun makeFunnelDirPath(
+        curentAppDirPath: String,
+        scriptFileName: String,
+    ): String {
+        val selectedFannelName =
+            scriptFileName
+                .removeSuffix(CommandClickShellScript.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickShellScript.SHELL_FILE_SUFFIX)
+        return curentAppDirPath + "/" + selectedFannelName + UsePath.fannelDirSuffix
     }
 
 }

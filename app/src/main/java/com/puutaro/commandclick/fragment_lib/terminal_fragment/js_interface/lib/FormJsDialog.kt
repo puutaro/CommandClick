@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.proccess.edit.lib.ShellContentsLister
+import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -169,7 +169,7 @@ class FormJsDialog(
                     recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
                 ) virtualJsContentsList
                 else {
-                    ShellContentsLister(
+                    ScriptContentsLister(
                         linearLayout
                     ).update(
                         recordNumToMapNameValueInCommandHolder,

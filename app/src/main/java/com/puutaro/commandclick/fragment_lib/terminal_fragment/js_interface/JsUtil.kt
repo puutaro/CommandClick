@@ -6,6 +6,7 @@ import android.content.Context
 import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
 import android.widget.TextView
+import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 class JsUtil(
@@ -30,10 +31,15 @@ class JsUtil(
     }
 
     @JavascriptInterface
-    fun echoFromClipboard():String {
+    fun echoFromClipboard(): String {
         val clipboard: ClipboardManager? =
             terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        return clipboard?.primaryClip?.getItemAt(0)?.text.toString()
+        val clipText = clipboard
+            ?.primaryClip
+            ?.getItemAt(0)
+            ?.coerceToStyledText(terminalFragment.context)
+            ?: return String()
+        return clipText.toString()
     }
 
     @JavascriptInterface
