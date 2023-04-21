@@ -21,6 +21,7 @@ object EditableListContentsSelectSpinnerViewProducer {
         editParameters: EditParameters,
         weight: Float,
     ): Spinner {
+        val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
         val currentSetVariableMap = editParameters.setVariableMap
@@ -35,17 +36,27 @@ object EditableListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val listContentsFilePath = currentSetVariableMap?.get(
+        val elcbList = currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')
-            ?.firstOrNull()
+        )
             ?.replace("\${01}", currentAppDirPath)
             .let {
                 ReplaceVariableMapReflecter.reflect(
                     BothEdgeQuote.trim(it),
                     editParameters
                 )
-            } ?: String()
+            }?.split('|')
+            ?.firstOrNull()
+            ?.split('&')
+            ?: emptyList()
+
+        val listContentsFilePath = elcbList.firstOrNull()
+            ?: String()
+        val listLimit = try {
+            elcbList.getOrNull(1)?.toInt()
+        } catch (e: Exception){
+            defaultListLimit
+        } ?: defaultListLimit
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name
@@ -95,7 +106,9 @@ object EditableListContentsSelectSpinnerViewProducer {
                 FileSystems.writeFile(
                     parentDir,
                     listFileName,
-                    updateListContents.joinToString("\n")
+                    updateListContents
+                        .take(listLimit)
+                        .joinToString("\n")
                 )
                 val selectUpdatedSpinnerList = if(
                     selectedItem == throughMark
