@@ -631,6 +631,9 @@ Bellow respectable package is inclided assets. you can import like bellow.
     - Becuase of low memory, as a side note when `onAdBlock` is `ON`, `CommandClick` make block list on activiry reboot. Therefore 
 Crashes easily when memory is low    
 
+- When `fannel` suddenly not working, update latest `CommandClick` and `fannel`.
+    - `CommandClick` and `fannel` is new baby. Therefre, these is frequetly updated without backwards compatible.　I continuly enforce usability and fanctionality. Before long, if these grow up adult, I weight stability. But, please feel at ease, most often even now, latest version works fine.  
+
 
 
 ### Ubuntu debian or widnows version
