@@ -8,11 +8,11 @@ So called `Script browser`, It's a enforced browser by javascript and shellscrip
 Pros
 ----
 - Web browser powerd by javascript and shellscript(termux)
-- Javascript engine.  
+- Javascript engine and framework.    
+- Row code tool for android application development.  
 - Easily turn javascript and shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only web browser but also termux gui client.
-- Offer ritch edit dialog to termux.
 
 
 Table of Contents
@@ -477,6 +477,9 @@ ex) am broadcast \
       - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.
 
 ### JavaScript interface
+`CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
+This, so colled, android app row code library.
+
  - jsFileStystem  
  	- jsFileStystem.showFileList(dirPath: String)   
 		- return filelist tab sepalated   
