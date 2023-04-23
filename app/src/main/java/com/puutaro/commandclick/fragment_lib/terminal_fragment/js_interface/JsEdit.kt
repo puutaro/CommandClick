@@ -13,14 +13,14 @@ class JsEdit(
 
     @JavascriptInterface
     fun updateEditText(
-        variableName: String,
-        variableValue: String
+        updateVariableName: String,
+        updateVariableValue: String
     ){
         val listener = context as? TerminalFragment.OnEditTextUpdateListenerForTermFragment
-        val editTextId = editViewModel.variableNameToEditTextIdMap.get(variableName)
+        val editTextId = editViewModel.variableNameToEditTextIdMap.get(updateVariableName)
         listener?.onEditTextUpdateForTermFragment(
             editTextId,
-            variableValue
+            updateVariableValue
         )
     }
 }
