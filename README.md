@@ -8,11 +8,11 @@ So called `Script browser`, It's a enforced browser by javascript and shellscrip
 Pros
 ----
 - Web browser powerd by javascript and shellscript(termux)
-- Javascript engine.  
+- Javascript engine and framework.    
+- Row code tool for android application development.  
 - Easily turn javascript and shellscript into a GUI application in android.
 - Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only web browser but also termux gui client.
-- Offer ritch edit dialog to termux.
 
 
 Table of Contents
@@ -477,6 +477,9 @@ ex) am broadcast \
       - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.
 
 ### JavaScript interface
+`CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
+This, so colled, android app row code library.
+
  - jsFileStystem  
  	- jsFileStystem.showFileList(dirPath: String)   
 		- return filelist tab sepalated   
@@ -627,6 +630,9 @@ Bellow respectable package is inclided assets. you can import like bellow.
 - When frequently crush, your smartphone reboot, or `onAdBlock` setting variable set `OFF`  
     - Becuase of low memory, as a side note when `onAdBlock` is `ON`, `CommandClick` make block list on activiry reboot. Therefore 
 Crashes easily when memory is low    
+
+- When `fannel` suddenly not working, update latest `CommandClick` and `fannel`.
+    - `CommandClick` and `fannel` is new baby. Therefre, these is frequetly updated without backwards compatible.　I continuly enforce usability and fanctionality. Before long, if these grow up adult, I weight stability. But, please feel at ease, most often even now, latest version works fine.  
 
 
 
