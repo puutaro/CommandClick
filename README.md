@@ -142,6 +142,10 @@ At the same time, if you installed code editor, edit new file.
     | `LCBB` | list file checkbox with exec button | {variableName}:LCB={target list file path}&#124;{command string} |..   |
     | `ELCB` | editable list file checkbox | {variableName}:ELCB={target list file path}(&listLimitNum) |..   |
     | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string} |..   |
+    | `EMCB` | multi checkbox | {variableName}:EMCB=value1!value2!.. |..   |
+    | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;{command string} |..   |
+    | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB={target list file path}(&listLimitNum) |..   |
+    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string} |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
@@ -559,7 +563,11 @@ This, so colled, android app row code library.
  	update or remove method for editable list file checkbox 
  	- jsListSelect.updateListFileCon(targetListFilePath: String, itemText: String)  
 	- jsListSelect.removeItemInListFileCon(targetListFilePath: String, itemText: String)
-				
+
+ - JsEdit  
+ 	`edit component` edit tool   
+ 	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)  
+
 
 ### Javascript pre order word
 - `${0}` -> current file path  
