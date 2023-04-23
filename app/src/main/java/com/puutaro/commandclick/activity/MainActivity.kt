@@ -5,6 +5,7 @@ import android.content.*
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -12,6 +13,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.abdeveloper.library.MultiSelectDialog
+import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
@@ -24,6 +27,8 @@ import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle.Companion.execBackstackHandle
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.EditTextUpdaterForTerminalFragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
 import com.puutaro.commandclick.activity_lib.init.MonitorFiles
@@ -41,6 +46,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.util.TargetFragmentInstance
 
 
 class MainActivity:
@@ -52,6 +58,7 @@ class MainActivity:
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
+    TerminalFragment.OnEditTextUpdateListenerForTermFragment,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -67,7 +74,8 @@ class MainActivity:
     EditFragment.OnTerminalWebViewInitListenerForEdit,
     EditFragment.OnLaunchUrlByWebViewForEditListener,
     EditFragment.OnFileChooserListenerForEdit,
-    EditFragment.OnTermSizeLongListenerForEdit {
+    EditFragment.OnTermSizeLongListenerForEdit,
+    EditFragment.OnMultiSelectListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     var filePath: ValueCallback<Array<Uri>>? = null
@@ -402,6 +410,32 @@ class MainActivity:
             val absolutePath = file.getOrNull(0)?.getAbsolutePath(this)
             insertEditText.setText(absolutePath)
         }
+    }
+
+    override fun onEditTextUpdateForTermFragment(
+        editTextId: Int?,
+        variableValue: String
+    ) {
+        EditTextUpdaterForTerminalFragment.update(
+            this,
+            editTextId,
+            variableValue
+        )
+    }
+
+    override fun onMultiSelectForEdit(
+        variableName: String,
+        editTextId: Int,
+        updatedMultiModelArray: ArrayList<MultiSelectModel>,
+        preSelectedMultiModelArray: ArrayList<Int>
+    ) {
+        MultiSelectDialogForEdit.show(
+            this@MainActivity,
+            variableName,
+            editTextId,
+            updatedMultiModelArray,
+            preSelectedMultiModelArray
+        )
     }
 
 }

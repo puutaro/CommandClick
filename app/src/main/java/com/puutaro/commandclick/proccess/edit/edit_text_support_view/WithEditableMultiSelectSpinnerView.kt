@@ -2,13 +2,15 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSelectSpinnerViewProducer
 
-class WithEditableSpinnerView(
-) {
+class WithEditableMultiSelectSpinnerView {
     fun create(
+        insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters
     ): LinearLayout {
@@ -25,14 +27,13 @@ class WithEditableSpinnerView(
         linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertSpinner = EditableSpinnerViewProducer.make(
+        val insertMultiSpinner = MultiSelectSpinnerViewProducer.make(
+            insertTextView,
             insertEditText,
             editParameters,
             0.4F,
         )
-        horizontalLinearLayout.addView(insertSpinner)
+        horizontalLinearLayout.addView(insertMultiSpinner)
         return horizontalLinearLayout
     }
-
-
 }

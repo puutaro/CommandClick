@@ -12,13 +12,13 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdatelastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
@@ -294,6 +294,15 @@ class EditFragment: Fragment() {
     interface OnTermSizeLongListenerForEdit {
         fun onTermSizeLongForEdit(
 
+        )
+    }
+
+    interface OnMultiSelectListenerForEdit {
+        fun onMultiSelectForEdit(
+            variableName: String,
+            editTextId: Int,
+            updatedMultiModelArray: ArrayList<MultiSelectModel>,
+            preSelectedMultiModelArray: ArrayList<Int>
         )
     }
 

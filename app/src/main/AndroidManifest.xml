@@ -13,7 +13,7 @@
 
 
     <application
-        android:allowBackup="false"
+        android:allowBackup="true"
         android:stopWithTask="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"

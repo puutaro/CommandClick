@@ -7,6 +7,7 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickShellScript
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
@@ -18,6 +19,9 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.view_model.activity.EditViewModel
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import org.eclipse.jgit.diff.Edit
 
 
 class EditTextProducerForEdit(
@@ -33,6 +37,7 @@ class EditTextProducerForEdit(
         ViewGroup.LayoutParams.MATCH_PARENT,
         ViewGroup.LayoutParams.WRAP_CONTENT,
     )
+    val editViewModel: EditViewModel by editFragment.activityViewModels()
 
 
     private val buttonViewHowActive = ButtonViewHowActive(
@@ -81,6 +86,17 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withEditableMultiSelectSpinnerView = WithEditableMultiSelectSpinnerView()
+
+    private val withEditableMultiSelectSpinnerWithButtonView = WithEditableMultiSelectSpinnerWithButtonView(
+        editFragment
+    )
+
+    private val withEditableListContentsMultiSelectSpinnerView = WithEditableListContentsMultiSelectSpinnerView()
+
+    private val withEditableListContentsMultiSelectSpinnerWithButton = WithEditableListContentsMultiSelectSpinnerWithButton(
+        editFragment
+    )
 
     private val withEditableFileSelectSpinnerWithButtonView = WithEditableFileSelectSpinnerWithButtonView(
         editFragment,
@@ -191,6 +207,7 @@ class EditTextProducerForEdit(
             val currentVariableValue = currentRecordNumToNameToValueInHolder?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
             )
+            if(currentVariableName.isNullOrEmpty()) return
             val currentId = editTextStartId + currentOrder
             insertTextView.text = currentVariableName
             linearParams.weight = 1F
@@ -199,6 +216,10 @@ class EditTextProducerForEdit(
             val insertEditText = EditText(context)
             insertEditText.tag = currentVariableName
             insertEditText.id = currentId
+            editViewModel.variableNameToEditTextIdMap.put(
+                currentVariableName,
+                currentId
+            )
             insertEditText.setSelectAllOnFocus(true)
             val currentRecordNum =
                 currentRecordNumToMapNameValueInHolder.key
@@ -292,6 +313,38 @@ class EditTextProducerForEdit(
                     val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
                         insertEditText,
                         editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_MULTI_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableMultiSelectSpinnerView.create(
+                        insertTextView,
+                        insertEditText,
+                        editParameters
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_MULTI_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withEditableMultiSelectSpinnerWithButtonView.create(
+                        insertTextView,
+                        insertEditText,
+                        editParameters
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_MULTI_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableListContentsMultiSelectSpinnerView.create(
+                        insertTextView,
+                        insertEditText,
+                        editParameters
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_MULTI_CHECK_BOX_BUTTON.str -> {
+                    val innerLinearLayout = withEditableListContentsMultiSelectSpinnerWithButton.create(
+                        insertTextView,
+                        insertEditText,
+                        editParameters
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }

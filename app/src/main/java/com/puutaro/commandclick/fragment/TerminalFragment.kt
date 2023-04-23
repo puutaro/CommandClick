@@ -227,6 +227,13 @@ class TerminalFragment: Fragment() {
         )
     }
 
+    interface OnEditTextUpdateListenerForTermFragment {
+        fun onEditTextUpdateForTermFragment(
+            editTextId: Int?,
+            variableValue: String
+        )
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -74,6 +74,10 @@ class WebViewSettings {
                 JsListSelect(terminalFragment),
                 JsInterfaceVariant.jsListSelect.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsEdit(terminalFragment),
+                JsInterfaceVariant.jsEdit.name
+            )
         }
     }
 }
@@ -92,4 +96,5 @@ private enum class JsInterfaceVariant {
     jsUrl,
     jsScript,
     jsListSelect,
+    jsEdit
 }
