@@ -45,7 +45,7 @@ class ToolbarButtonProducerForEdit(
         SharePrefferenceSetting.current_script_file_name
     )
 
-    private val shellScriptSaver = ShellScriptSaver(
+    private val scriptFileSaver = ScriptFileSaver(
         binding,
         editFragment,
         readSharePreffernceMap,
@@ -230,7 +230,7 @@ class ToolbarButtonProducerForEdit(
             context?.getString(R.string.cmd_variable_edit_fragment)
             || onShortcut != ShortcutOnValueStr.ON.name
         ) return
-        shellScriptSaver.save(
+        scriptFileSaver.save(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -263,7 +263,7 @@ class ToolbarButtonProducerForEdit(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-        shellScriptSaver.save(
+        scriptFileSaver.save(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -390,11 +390,11 @@ class ToolbarButtonProducerForEdit(
             val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
             val beforeMoveDirPath = cmdclickAppDirPath + '/' +
                     beforeUpdateShellFileName.removeSuffix(
-                        CommandClickShellScript.JS_FILE_SUFFIX
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
                     )
             val afterMoveDirPath = cmdclickAppDirPath + '/' +
                     afterUpdateShellFileName.removeSuffix(
-                        CommandClickShellScript.JS_FILE_SUFFIX
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
                     )
             FileSystems.moveDirectory(
                 beforeMoveDirPath,
@@ -529,7 +529,7 @@ internal fun popupMenuItemSelectedForEdit(
             MenuEnumsForEdit.CONFIG.itemId -> {
                 val configDirPath = UsePath.cmdclickConfigDirPath
                 val configShellName = UsePath.cmdclickConfigFileName
-                CommandClickShellScript.makeConfigJsFile(
+                CommandClickScriptVariable.makeConfigJsFile(
                     configDirPath,
                     configShellName
                 )

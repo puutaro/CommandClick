@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -23,14 +23,14 @@ object JavascriptExecuter {
         ) return
         val execJsOrHtmlPath = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
-            CommandClickShellScript.EXEC_JS_OR_HTML_PATH
+            CommandClickScriptVariable.EXEC_JS_OR_HTML_PATH
         ) ?: return
         if(
             execJsOrHtmlPath.endsWith(
-                CommandClickShellScript.JS_FILE_SUFFIX
+                CommandClickScriptVariable.JS_FILE_SUFFIX
             )
             || execJsOrHtmlPath.endsWith(
-                CommandClickShellScript.JSX_FILE_SUFFIX
+                CommandClickScriptVariable.JSX_FILE_SUFFIX
             )
         ) {
             terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
@@ -39,10 +39,10 @@ object JavascriptExecuter {
             return
         }
         val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.HTML_FILE_SUFFIX
+            CommandClickScriptVariable.HTML_FILE_SUFFIX
         )
                 || execJsOrHtmlPath.endsWith(
-            CommandClickShellScript.HTM_FILE_SUFFIX
+            CommandClickScriptVariable.HTM_FILE_SUFFIX
         )
         val enableHtml =
             execJsOrHtmlPath.startsWith(

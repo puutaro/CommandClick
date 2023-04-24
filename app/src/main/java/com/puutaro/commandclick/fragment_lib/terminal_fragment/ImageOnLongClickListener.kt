@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -41,11 +41,11 @@ object ImageOnLongClickListener {
                             UsePath.longPressImageAnchorJsName,
                         ).readText()
                             .replace(
-                                CommandClickShellScript.CMDCLICK_LONG_PRESS_IMAGE_URL,
+                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL,
                                 longPressImageUrl
                             )
                             .replace(
-                                CommandClickShellScript.CMDCLICK_CURRENT_PAGE_URL,
+                                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
                                 currentUrl
                             )
                             .split("\n")
@@ -75,15 +75,15 @@ object ImageOnLongClickListener {
                             UsePath.longPressSrcImageAnchorJsName,
                         ).readText()
                             .replace(
-                                CommandClickShellScript.CMDCLICK_LONG_PRESS_LINK_URL,
+                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL,
                                 longPressLinkUrl
                             )
                             .replace(
-                                CommandClickShellScript.CMDCLICK_LONG_PRESS_IMAGE_URL,
+                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL,
                                 longPressImageUrl
                             )
                             .replace(
-                                CommandClickShellScript.CMDCLICK_CURRENT_PAGE_URL,
+                                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
                                 currentUrl
                             )
                             .split("\n")
@@ -108,11 +108,11 @@ object ImageOnLongClickListener {
                             UsePath.longPressSrcAnchorJsName,
                         ).readText()
                             .replace(
-                                CommandClickShellScript.CMDCLICK_LONG_PRESS_LINK_URL,
+                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL,
                                 url
                             )
                             .replace(
-                                CommandClickShellScript.CMDCLICK_CURRENT_PAGE_URL,
+                                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
                                 currentUrl
                             )
                             .split("\n")

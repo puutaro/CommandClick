@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 
@@ -68,7 +68,7 @@ object SetVariableTyper {
                 entry ->
             entry.value?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) == CommandClickShellScript.SET_VARIABLE_TYPE
+            ) == CommandClickScriptVariable.SET_VARIABLE_TYPE
         }?.map {
                 entry ->
             val entryValue = entry.value

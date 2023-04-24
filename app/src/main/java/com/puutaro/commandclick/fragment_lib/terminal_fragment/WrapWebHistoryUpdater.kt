@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -36,7 +36,7 @@ class WrapWebHistoryUpdater {
             if(webView == null) return
             if(
                 terminalFragment.onUrlHistoryRegister
-                != CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
+                != CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
             ) return
             terminalFragment.onWebHistoryUpdaterJob?.cancel()
             var urlTitleString: String? = null
@@ -141,15 +141,15 @@ class WrapWebHistoryUpdater {
             if(ulrTitle.isNullOrEmpty()) return
             val registerUrlTitle = if(
                 terminalFragment.onHistoryUrlTitle !=
-                CommandClickShellScript.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
+                CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
             ) ulrTitle
             else String()
             if(
                 registerUrlTitle.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )
                 || registerUrlTitle.endsWith(
-                    CommandClickShellScript.JSX_FILE_SUFFIX
+                    CommandClickScriptVariable.JSX_FILE_SUFFIX
                 )
             ) return
             FirstUrlHistoryFile.update(

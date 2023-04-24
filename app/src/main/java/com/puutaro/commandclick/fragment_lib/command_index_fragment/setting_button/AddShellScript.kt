@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
 import android.content.SharedPreferences
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -29,7 +29,7 @@ class AddShellScript {
             )
 
             val cmdClickShibanStr = cmdIndexFragment.shiban
-            CommandClickShellScript.makeShellOrJsFile(
+            CommandClickScriptVariable.makeShellOrJsFile(
                 cmdClickShibanStr,
                 currentAppDirPath,
                 shellScriptName,

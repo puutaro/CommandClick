@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
@@ -21,25 +21,25 @@ class ValidateShell() {
                 JsOrShellFromSuffix.judge(shellFileName)
 
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
             ) as String
             val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
             ) as String
             val settingSectionStart = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val commandSectionStart = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
             ) as String
             val commandSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
             ) as String
 
 
@@ -95,25 +95,25 @@ private class CheckVariableValue(
         JsOrShellFromSuffix.judge(shellFileName)
 
     val languageTypeToSectionHolderMap =
-        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
     ) as String
     val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
     ) as String
     val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
     ) as String
     val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
     ) as String
 
     val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
     ) as String
     val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     ) as String
 
 
@@ -184,25 +184,25 @@ private class HolderCheck(
         JsOrShellFromSuffix.judge(shellFileName)
 
     val languageTypeToSectionHolderMap =
-        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
     ) as String
     val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
     ) as String
     val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
     ) as String
     val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
     ) as String
 
     val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
     ) as String
     val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     ) as String
 
 

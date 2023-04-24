@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
@@ -16,15 +16,15 @@ class ConfigFromStartUpFileSetter {
         ){
             val languageType = LanguageTypeSelects.JAVA_SCRIPT
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                     languageType
                 )
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
 
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
@@ -38,7 +38,7 @@ class ConfigFromStartUpFileSetter {
 
             cmdIndexFragment.historySwitch = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_HISTORY_SWITCH,
+                CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
                 cmdIndexFragment.historySwitch,
                 SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
                 cmdIndexFragment.historySwitch,
@@ -50,7 +50,7 @@ class ConfigFromStartUpFileSetter {
 
             cmdIndexFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
+                CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
                 cmdIndexFragment.urlHistoryOrButtonExec,
                 SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
                 cmdIndexFragment.urlHistoryOrButtonExec,
@@ -62,7 +62,7 @@ class ConfigFromStartUpFileSetter {
 
             cmdIndexFragment.statusBarIconColorMode = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE,
+                CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
                 cmdIndexFragment.statusBarIconColorMode,
                 SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
                 cmdIndexFragment.urlHistoryOrButtonExec,
@@ -73,19 +73,19 @@ class ConfigFromStartUpFileSetter {
 
                 cmdIndexFragment.runShell = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL,
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 cmdIndexFragment.runShell
             )
 
             cmdIndexFragment.shiban = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_SHIBAN,
+                CommandClickScriptVariable.CMDCLICK_SHIBAN,
                 cmdIndexFragment.shiban
             )
 
             cmdIndexFragment.terminalColor = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.TERMINAL_COLOR,
+                CommandClickScriptVariable.TERMINAL_COLOR,
                 cmdIndexFragment.terminalColor
             )
         }

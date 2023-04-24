@@ -34,7 +34,7 @@ class ExecTerminalDo {
             val runShell = when(currentFragment){
                 is CommandIndexFragment -> currentFragment.runShell
                 is EditFragment -> currentFragment.runShell
-                else -> CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+                else -> CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             }
             val context = currentFragment.context
             val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
@@ -42,12 +42,12 @@ class ExecTerminalDo {
                 JsOrShellFromSuffix.judge(selectedShellFileName)
 
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val shellContentsList = if(shellContentsListSource.isNullOrEmpty()) {
@@ -70,22 +70,22 @@ class ExecTerminalDo {
 
             val terminalDo = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.TERMINAL_DO
+                CommandClickScriptVariable.TERMINAL_DO
             ) ?: String()
             val backgroundExec =
                 terminalDo != SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
 
             val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.ON_UPDATE_LAST_MODIFY
-            ) ?: CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
+                CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+            ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
 
 
             val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.ON_URL_LAUNCH_MACRO
-            ) ?: CommandClickShellScript.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
+                CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
+            ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
 
             UrlLaunchMacro.launch(
                 terminalViewModel,
@@ -112,7 +112,7 @@ class ExecTerminalDo {
 
             terminalViewModel.onDisplayUpdate = true
 
-                ExecBashScriptIntent.ToTermux(
+            ExecBashScriptIntent.ToTermux(
                 runShell,
                 context,
                 execCmd,

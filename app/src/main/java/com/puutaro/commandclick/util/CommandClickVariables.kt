@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 
@@ -54,23 +54,23 @@ class CommandClickVariables {
             languageTypeSelects: LanguageTypeSelects
         ): String {
             val languageTypeHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                     languageTypeSelects
                 )
             val variablesSettingHolderList =
                 substituteVariableListFromHolder(
                     shellContentsList,
                     languageTypeHolderMap?.get(
-                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
                     ),
                     languageTypeHolderMap?.get(
-                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
                     )
                 )
 
             return substituteCmdClickVariable(
                 variablesSettingHolderList,
-                CommandClickShellScript.EDIT_EXECUTE
+                CommandClickScriptVariable.EDIT_EXECUTE
             ) ?: SettingVariableSelects.Companion.EditExecuteSelects.NO.name
         }
     }

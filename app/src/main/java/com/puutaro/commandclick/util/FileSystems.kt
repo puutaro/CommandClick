@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util
 
 import android.content.Context
 import android.util.Log
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
@@ -107,10 +107,10 @@ class FileSystems {
         ){
             if(
                 fileName ==
-                CommandClickShellScript.EMPTY_STRING
+                CommandClickScriptVariable.EMPTY_STRING
                 || fileName ==
-                        CommandClickShellScript.EMPTY_STRING +
-                CommandClickShellScript.SHELL_FILE_SUFFIX
+                        CommandClickScriptVariable.EMPTY_STRING +
+                CommandClickScriptVariable.SHELL_FILE_SUFFIX
             ) return
             val monitor1File = File(
                 dirPath,
@@ -162,7 +162,7 @@ class FileSystems {
                 reverse
             ).filter {
                 it.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )
             }
         }
@@ -176,9 +176,9 @@ class FileSystems {
                 reverse
             ).filter {
                 it.endsWith(
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickScriptVariable.SHELL_FILE_SUFFIX
                 ) || it.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )
             }
         }
@@ -192,11 +192,11 @@ class FileSystems {
                 reverse
             ).filter {
                 it.endsWith(
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickScriptVariable.SHELL_FILE_SUFFIX
                 ) || it.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 ) || it.endsWith(
-                    CommandClickShellScript.HTML_FILE_SUFFIX
+                    CommandClickScriptVariable.HTML_FILE_SUFFIX
                 )
             }
         }

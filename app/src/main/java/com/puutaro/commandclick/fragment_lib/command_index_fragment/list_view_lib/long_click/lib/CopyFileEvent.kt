@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -99,8 +99,8 @@ class CopyFileEvent(
         )
         val selectedFannelName =
             sourceScriptFileName
-                .removeSuffix(CommandClickShellScript.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickShellScript.SHELL_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
         val fannelDir = selectedFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(
             "${sourceAppDirPath}/${fannelDir}",
@@ -127,18 +127,18 @@ internal fun makeSelectedShellFilePath(
 ): String {
     val selectedAppDirPath = UsePath.cmdclickAppDirPath + '/' +
             selectedShellFileName.removeSuffix(
-                CommandClickShellScript.JS_FILE_SUFFIX
+                CommandClickScriptVariable.JS_FILE_SUFFIX
             )
     val selectedShellFilePathSource = if(sourceAppDirPath == selectedAppDirPath) {
         sourceAppDirPath +
-                "/${CommandClickShellScript.makeCopyPrefix()}" +
+                "/${CommandClickScriptVariable.makeCopyPrefix()}" +
                 "_${sourceShellFileName}"
     } else {
         "${selectedAppDirPath}/${sourceShellFileName}"
     }
     return if(File(selectedShellFilePathSource).isFile){
         selectedAppDirPath +
-                "/${CommandClickShellScript.makeCopyPrefix()}" +
+                "/${CommandClickScriptVariable.makeCopyPrefix()}" +
                 "_${sourceShellFileName}"
     } else {
         selectedShellFilePathSource

@@ -8,7 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.common.variable.UsePath
@@ -82,7 +82,7 @@ class InitFragmentManager(
             SharePrefferenceSetting.on_shortcut
         )
 
-        val emptyShellFileName = CommandClickShellScript.EMPTY_STRING
+        val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
 
         if (
             startUpShellFileName == emptyShellFileName

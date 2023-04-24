@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BothEdgeQuote
@@ -13,26 +12,26 @@ class JsScript(
 ) {
     private val context = terminalFragment.context
     private val languageTypeHolderMap =
-        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP[
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP[
                 LanguageTypeSelects.JAVA_SCRIPT
         ]
     private val labelingStartHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
     )
     private val labelingEndHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
     )
     private val settingStartHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
     )
     private val settingEndHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
     )
     private val commandStartHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
     )
     private val commandEndHolder = languageTypeHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     )
 
     @JavascriptInterface

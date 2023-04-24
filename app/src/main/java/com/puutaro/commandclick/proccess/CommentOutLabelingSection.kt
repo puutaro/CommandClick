@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
@@ -14,12 +14,12 @@ class CommentOutLabelingSection {
                 JsOrShellFromSuffix.judge(shellScriptName)
 
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
             ) as String
             val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.LABELING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
             ) as String
             val commentOutMark = when(languageType) {
                 LanguageTypeSelects.SHELL_SCRIPT -> "#"

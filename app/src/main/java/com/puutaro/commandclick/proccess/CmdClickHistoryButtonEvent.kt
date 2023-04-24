@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -288,7 +288,7 @@ class CmdClickHistoryButtonEvent (
             .getShellFileNameFromAppHistoryFileName(
                 historyRow
             )
-        if(selectedAppShellFileName != CommandClickShellScript.EMPTY_STRING) {
+        if(selectedAppShellFileName != CommandClickScriptVariable.EMPTY_STRING) {
             return historyRow
         }
         val appDirName =

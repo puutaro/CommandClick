@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -12,6 +13,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
@@ -29,6 +31,14 @@ object FileSelectSpinnerViewProducer {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -43,8 +53,15 @@ object FileSelectSpinnerViewProducer {
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
             ?.firstOrNull()
-            ?.replace("\${01}", currentAppDirPath)
-            .let {
+            ?.let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    "${currentAppDirPath}/${currentScriptName}",
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptName
+                )
+            }.let {
                 ReplaceVariableMapReflecter.reflect(
                     BothEdgeQuote.trim(it),
                     editParameters

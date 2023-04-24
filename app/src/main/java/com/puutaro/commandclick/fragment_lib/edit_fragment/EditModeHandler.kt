@@ -10,7 +10,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import kotlinx.coroutines.*
 
@@ -96,26 +95,26 @@ class EditModeHandler(
     private fun editCommandVariable(
     ) {
         val languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
                 .get(editFragment.languageType)
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
                 languageTypeToSectionHolderMap?.get(
-                    CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+                    CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
                 ) as String,
                 languageTypeToSectionHolderMap[
-                        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+                        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
                 ] as String,
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
                 languageTypeToSectionHolderMap.get(
-                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
                 ) as String,
                 languageTypeToSectionHolderMap[
-                        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
                 ] as String,
                 true,
                 currentShellFileName

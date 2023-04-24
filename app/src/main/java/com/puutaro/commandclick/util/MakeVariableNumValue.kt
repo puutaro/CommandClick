@@ -1,7 +1,5 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
-
 class MakeVariableNumValue {
     companion object {
         fun make(

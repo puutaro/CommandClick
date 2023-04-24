@@ -8,7 +8,7 @@ import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.EditFragment
@@ -20,8 +20,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import org.eclipse.jgit.diff.Edit
 
 
 class EditTextProducerForEdit(
@@ -153,7 +151,7 @@ class EditTextProducerForEdit(
     ) {
         if(onSettingEdit){
             val setVariableListForSettingHolder =
-                CommandClickShellScript.setVariableForSettingHolder
+                CommandClickScriptVariable.setVariableForSettingHolder
             val recordNumToSetVariableMapsForSettingHolder = SetVariableTyper.makeRecordNumToSetVariableMaps(
                 setVariableListForSettingHolder,
                 recordNumToMapNameValueInSettingHolder

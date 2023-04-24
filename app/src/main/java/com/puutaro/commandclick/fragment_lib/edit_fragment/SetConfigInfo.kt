@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
@@ -9,7 +8,6 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.MakeVariableCbValue
 import com.puutaro.commandclick.util.MakeVariableStringValue
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class SetConfigInfo {
     companion object {
@@ -29,10 +27,10 @@ class SetConfigInfo {
 
             editFragment.historySwitch =  MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_HISTORY_SWITCH,
-                CommandClickShellScript.HISTORY_SWITCH_DEFAULT_VALUE,
+                CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
+                CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
                 SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
-                CommandClickShellScript.HISTORY_SWITCH_DEFAULT_VALUE,
+                CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
                 listOf(
                     SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
                     SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
@@ -41,10 +39,10 @@ class SetConfigInfo {
 
             editFragment.statusBarIconColorMode = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE,
-                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
+                CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
+                CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
                 SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
-                CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
+                CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
                 listOf(
                     SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
                 ),
@@ -52,10 +50,10 @@ class SetConfigInfo {
 
             editFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-                CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
+                CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
+                CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
                 SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
-                CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
+                CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
                 listOf(
                     SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                     SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
@@ -65,20 +63,20 @@ class SetConfigInfo {
 
             editFragment.runShell =  MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
             editFragment.shiban = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_SHIBAN,
-                CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE
+                CommandClickScriptVariable.CMDCLICK_SHIBAN,
+                CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
             )
 
             editFragment.terminalColor = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.TERMINAL_COLOR,
-                CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
+                CommandClickScriptVariable.TERMINAL_COLOR,
+                CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
             )
 
         }

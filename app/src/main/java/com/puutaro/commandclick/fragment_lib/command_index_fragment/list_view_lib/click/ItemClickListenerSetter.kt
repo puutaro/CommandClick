@@ -3,9 +3,8 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -57,7 +56,7 @@ class ItemClickListenerSetter {
                 )
                 if(
                     selectedShellFileName.endsWith(
-                        CommandClickShellScript.HTML_FILE_SUFFIX
+                        CommandClickScriptVariable.HTML_FILE_SUFFIX
                     )
                 ) {
                     BroadCastIntent.send(
@@ -74,7 +73,7 @@ class ItemClickListenerSetter {
                 }
                 if (
                     selectedShellFileName.contains(
-                        CommandClickShellScript.EMPTY_STRING
+                        CommandClickScriptVariable.EMPTY_STRING
                     )
                 ) return@setOnItemClickListener
                 val currentFragmentTag =
@@ -106,12 +105,12 @@ class ItemClickListenerSetter {
                     JsOrShellFromSuffix.judge(selectedShellFileName)
 
                 val languageTypeToSectionHolderMap =
-                    CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                    CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
                 val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
                 ) as String
                 val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
                 ) as String
 
                 val settingSectionVariableList =
@@ -124,7 +123,7 @@ class ItemClickListenerSetter {
                 val editExecuteValue =
                     CommandClickVariables.substituteCmdClickVariable(
                         settingSectionVariableList,
-                        CommandClickShellScript.EDIT_EXECUTE,
+                        CommandClickScriptVariable.EDIT_EXECUTE,
                     ) ?: SettingVariableSelects.Companion.EditExecuteSelects.NO.name
                 when (editExecuteValue) {
                     SettingVariableSelects.Companion.EditExecuteSelects.ONCE.name -> {

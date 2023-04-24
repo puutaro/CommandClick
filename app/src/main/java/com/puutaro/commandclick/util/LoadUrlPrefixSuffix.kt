@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 
 class LoadUrlPrefixSuffix {
@@ -12,10 +12,10 @@ class LoadUrlPrefixSuffix {
                 urlStr.isNullOrEmpty()
             ) return false
             val enableHtmlSuffix = urlStr.endsWith(
-                CommandClickShellScript.HTML_FILE_SUFFIX
+                CommandClickScriptVariable.HTML_FILE_SUFFIX
             )
                     || urlStr.endsWith(
-                CommandClickShellScript.HTM_FILE_SUFFIX
+                CommandClickScriptVariable.HTM_FILE_SUFFIX
             )
             val enableHtml =
                     urlStr.startsWith(

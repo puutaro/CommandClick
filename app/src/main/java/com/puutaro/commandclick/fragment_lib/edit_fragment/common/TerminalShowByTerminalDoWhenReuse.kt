@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
@@ -33,7 +33,7 @@ object TerminalShowByTerminalDoWhenReuse {
         )
         val terminalDo = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,
-            CommandClickShellScript.TERMINAL_DO
+            CommandClickScriptVariable.TERMINAL_DO
         )
         val onTerminalDoOffAndTermux = (
                 terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name

@@ -1,14 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
-class ShellScriptSaver(
+class ScriptFileSaver(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
     private val readSharePreffernceMap: Map<String, String>,
@@ -67,7 +67,7 @@ class ShellScriptSaver(
     private fun updateShellScriptNameForEditCmdVriable(
         shellContentsListUpdatedCmdVariable: List<String>
     ): List<String> {
-        val shellScriptNameVariableName = CommandClickShellScript.SCRIPT_FILE_NAME
+        val shellScriptNameVariableName = CommandClickScriptVariable.SCRIPT_FILE_NAME
         var countSettingHolderStart = 0
         var countSettingHolderEnd = 0
         return shellContentsListUpdatedCmdVariable.map {

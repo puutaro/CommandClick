@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
@@ -18,18 +18,18 @@ class DecideEditTag(
             JsOrShellFromSuffix.judge(selectedShellFileName)
 
         val languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
         ) as String
         val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
         ) as String
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
         ) as String
         val enableCommandHolderVariablesEdit = howEnableVariableHolder(
             commandSectionStart,

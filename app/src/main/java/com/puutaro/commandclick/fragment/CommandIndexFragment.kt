@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
-import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.content.Context
 import android.graphics.Color
 import android.media.AudioManager
@@ -29,14 +27,14 @@ class CommandIndexFragment: Fragment() {
     private var _binding: CommandIndexFragmentBinding? = null
     val binding get() = _binding!!
     var mParentContextMenuListIndex: Int = 0
-    var runShell = CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+    var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
-    var urlHistoryOrButtonExec = CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var shiban = CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE
+    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
+    var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
-    var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
-    var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
+    var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
+    var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
@@ -82,13 +80,13 @@ class CommandIndexFragment: Fragment() {
             )
         )
 
-        CommandClickShellScript.makeAppDirAdminFile(
+        CommandClickScriptVariable.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
         )
 
-        CommandClickShellScript.makeConfigJsFile(
+        CommandClickScriptVariable.makeConfigJsFile(
             UsePath.cmdclickConfigDirPath,
             UsePath.cmdclickConfigFileName
         )

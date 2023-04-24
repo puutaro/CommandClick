@@ -43,15 +43,15 @@ class TerminalFragment: Fragment() {
     var lastDisplayUpdateRunner: Runnable? = null
     private var outputFileLength: Int = 0
     var firstDisplayUpdate = true
-    var onHistoryUrlTitle = CommandClickShellScript.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
-    var onAdBlock = CommandClickShellScript.ON_ADBLOCK_DEFAULT_VALUE
-    var fontZoomPercent = CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
-    var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
-    var terminalFontColor = CommandClickShellScript.TERMINAL_FONT_COLOR_DEFAULT_VALUE
+    var onHistoryUrlTitle = CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
+    var onAdBlock = CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE
+    var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
+    var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
+    var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
     var runShell = "bash"
-    var onUrlHistoryRegister = CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
+    var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {

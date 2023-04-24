@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -34,7 +34,7 @@ class AddConfirmDialog {
                 .setView(editText)
                 .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                     val inputShellFileName = editText.text.toString()
-                    val jsFileSuffix = CommandClickShellScript.JS_FILE_SUFFIX
+                    val jsFileSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
                     val isShellSuffix = inputShellFileName.endsWith(jsFileSuffix)
                     val shellFileName = if (isShellSuffix) {
                         inputShellFileName
@@ -42,7 +42,7 @@ class AddConfirmDialog {
                         inputShellFileName + jsFileSuffix
                     }
 
-                    CommandClickShellScript.makeAppDirAdminFile(
+                    CommandClickScriptVariable.makeAppDirAdminFile(
                         UsePath.cmdclickAppDirAdminPath,
                         shellFileName
                     )

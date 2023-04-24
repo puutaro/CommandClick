@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.intent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -52,12 +52,12 @@ object ExecJsLoad {
         val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val jsContentsList = if (jsContentsListSource.isNullOrEmpty()) {
@@ -81,14 +81,14 @@ object ExecJsLoad {
 
         val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
-            CommandClickShellScript.ON_UPDATE_LAST_MODIFY
-        ) ?: CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
+            CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+        ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
 
         val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
-            CommandClickShellScript.ON_URL_LAUNCH_MACRO
-        ) ?: CommandClickShellScript.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
+            CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
+        ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
 
         UrlLaunchMacro.launch(
             terminalViewModel,
@@ -123,8 +123,8 @@ object ExecJsLoad {
 
         val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
-            CommandClickShellScript.TERMINAL_OUTPUT_MODE,
-        )?.trim(' ') ?: CommandClickShellScript.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+            CommandClickScriptVariable.TERMINAL_OUTPUT_MODE,
+        )?.trim(' ') ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
         terminalViewModel.onBottomScrollbyJs = !(
                 terminalOutputMode ==
                         SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name

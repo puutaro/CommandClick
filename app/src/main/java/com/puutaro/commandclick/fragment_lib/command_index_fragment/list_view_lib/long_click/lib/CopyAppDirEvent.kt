@@ -8,7 +8,7 @@ import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -57,7 +57,7 @@ class CopyAppDirEvent(
         val destiDirNameEditable = editText.text
         if(destiDirNameEditable.isNullOrEmpty()) return
         val destiDirNameSource = destiDirNameEditable.toString()
-        val jsFileSuffix = CommandClickShellScript.JS_FILE_SUFFIX
+        val jsFileSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
         val destiDirName = if(
             destiDirNameSource.endsWith(jsFileSuffix)
         ){
@@ -66,7 +66,7 @@ class CopyAppDirEvent(
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val sourceAppDirPath = cmdclickAppDirPath +
                 "/${shellScriptName.removeSuffix(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )}"
         val destiAppDirPath = "${cmdclickAppDirPath}/${destiDirName}"
         val destiAppFileName = destiDirName + jsFileSuffix

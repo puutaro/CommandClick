@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.lib
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -25,8 +25,8 @@ class MakeExecCmdForTermux {
             val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
             val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.TERMINAL_OUTPUT_MODE,
-            )?.trim(' ') ?: CommandClickShellScript.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+                CommandClickScriptVariable.TERMINAL_OUTPUT_MODE,
+            )?.trim(' ') ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
             val normalOutputMark = OutputMark.NORMAL_OUTPUT_MARK.str
             val refleshOutputMark = OutputMark.REFLESH_OUTPUT_MARK.str
             val monitorFileReDirectMark = when(terminalOutputMode) {
@@ -46,14 +46,14 @@ class MakeExecCmdForTermux {
 
             val beforeCommandSource = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.BEFORE_COMMAND,
+                CommandClickScriptVariable.BEFORE_COMMAND,
             )?.let{
                 trimBothEdgeQuote(it)
             }?.trim(' ') ?: String()
 
             val afterCommandSource = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.AFTER_COMMAND,
+                CommandClickScriptVariable.AFTER_COMMAND,
             )?.let{
                 trimBothEdgeQuote(it)
             }?.trim(' ') ?: String()

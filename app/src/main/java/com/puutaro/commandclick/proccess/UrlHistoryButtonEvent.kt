@@ -15,7 +15,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -224,13 +224,13 @@ class UrlHistoryButtonEvent(
 
             if(
                 selectedUrl.endsWith(
-                    CommandClickShellScript.SHELL_FILE_SUFFIX
+                    CommandClickScriptVariable.SHELL_FILE_SUFFIX
                 )
                 || selectedUrl.endsWith(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )
                 || selectedUrl.endsWith(
-                    CommandClickShellScript.JSX_FILE_SUFFIX,
+                    CommandClickScriptVariable.JSX_FILE_SUFFIX,
                 )
             ) {
                 execShellFile(selectedUrl)

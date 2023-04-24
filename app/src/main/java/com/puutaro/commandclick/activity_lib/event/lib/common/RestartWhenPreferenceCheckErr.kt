@@ -3,7 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -20,7 +20,7 @@ class RestartWhenPreferenceCheckErr {
                     SharePrefferenceSetting.current_app_dir.name
                             to SharePrefferenceSetting.current_app_dir.defalutStr,
                     SharePrefferenceSetting.current_script_file_name.name
-                            to CommandClickShellScript.EMPTY_STRING,
+                            to CommandClickScriptVariable.EMPTY_STRING,
                     SharePrefferenceSetting.on_shortcut.name
                             to SharePrefferenceSetting.on_shortcut.defalutStr
                 )

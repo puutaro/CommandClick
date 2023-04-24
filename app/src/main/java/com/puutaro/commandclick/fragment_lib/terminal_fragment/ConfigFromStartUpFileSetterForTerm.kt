@@ -24,15 +24,15 @@ class ConfigFromStartUpFileSetterForTerm {
 
             val languageType = LanguageTypeSelects.JAVA_SCRIPT
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                     languageType
                 )
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
 
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
@@ -46,10 +46,10 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.onAdBlock = MakeVariableCbValue.make(
                 settingVariableListFromConfig,
-                CommandClickShellScript.ON_ADBLOCK,
-                CommandClickShellScript.ON_ADBLOCK_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_ADBLOCK,
+                CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
                 SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
-                CommandClickShellScript.ON_ADBLOCK_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
                 listOf(
                     SettingVariableSelects.Companion.OnAdblockSelects.ON.name,
                     SettingVariableSelects.Companion.OnAdblockSelects.OFF.name,
@@ -58,26 +58,26 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
                 settingVariableListFromConfig,
-                CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM,
-                CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
+                CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
+                CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
                 "1"
             )
 
             terminalFragment.runShell =  MakeVariableStringValue.make(
                 settingVariableListFromConfig,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
             terminalFragment.terminalColor = MakeVariableStringValue.make(
                 settingVariableListFromConfig,
-                CommandClickShellScript.TERMINAL_COLOR,
-                CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
+                CommandClickScriptVariable.TERMINAL_COLOR,
+                CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
             )
             terminalFragment.terminalFontColor = MakeVariableStringValue.make(
                 settingVariableListFromConfig,
-                CommandClickShellScript.TERMINAL_FONT_COLOR,
-                CommandClickShellScript.TERMINAL_FONT_COLOR_DEFAULT_VALUE
+                CommandClickScriptVariable.TERMINAL_FONT_COLOR,
+                CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
             )
 
             val currentShellFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
@@ -105,7 +105,7 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.onAdBlock = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.ON_ADBLOCK,
+                CommandClickScriptVariable.ON_ADBLOCK,
                 terminalFragment.onAdBlock,
                 SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
                 terminalFragment.onAdBlock,
@@ -117,10 +117,10 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.onUrlHistoryRegister = MakeVariableCbValue.make(
                 settingVariableList,
-                CommandClickShellScript.ON_URL_HISTORY_REGISTER,
-                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
-                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
-                CommandClickShellScript.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
+                CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
                 listOf(
                     SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name,
                     SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name,
@@ -129,14 +129,14 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM,
+                CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
                 terminalFragment.fontZoomPercent,
                 "1"
             )
 
             terminalFragment.runShell =  MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_RUN_SHELL,
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 terminalFragment.runShell
             )
 
@@ -145,7 +145,7 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.onHistoryUrlTitle = CommandClickVariables.substituteCmdClickVariable(
                 settingVariableList,
-                CommandClickShellScript.CMDCLICK_ON_HISTORY_URL_TITLE
+                CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE
             ) ?: terminalFragment.onHistoryUrlTitle
             FirstUrlHistoryFile.delete(
                 terminalFragment,
@@ -154,13 +154,13 @@ class ConfigFromStartUpFileSetterForTerm {
 
             terminalFragment.terminalColor = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.TERMINAL_COLOR,
+                CommandClickScriptVariable.TERMINAL_COLOR,
                 terminalFragment.terminalColor
             )
 
             terminalFragment.terminalFontColor = MakeVariableStringValue.make(
                 settingVariableList,
-                CommandClickShellScript.TERMINAL_FONT_COLOR,
+                CommandClickScriptVariable.TERMINAL_FONT_COLOR,
                 terminalFragment.terminalFontColor
             )
         }

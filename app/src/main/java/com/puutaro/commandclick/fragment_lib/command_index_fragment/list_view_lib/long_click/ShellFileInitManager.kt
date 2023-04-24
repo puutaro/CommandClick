@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -62,25 +62,25 @@ class ShellFileInitManager {
             val languageType =
                 JsOrShellFromSuffix.judge(shellScriptName)
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val shellContentsList = if(
                 shellScriptName == UsePath.cmdclickStartupJsName
             ) {
-                CommandClickShellScript.makeAutoJsContents(
+                CommandClickScriptVariable.makeAutoJsContents(
                     shellScriptName
                 ).split("\n")
             } else {
-                CommandClickShellScript.makeShellContents(
+                CommandClickScriptVariable.makeShellContents(
                     cmdIndexFragment.shiban,
                     shellScriptName,
-                    CommandClickShellScript.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
+                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
                     languageType
                 ).split("\n")
             }
@@ -117,9 +117,9 @@ class ShellFileInitManager {
                 )
                 variableName to variableValueStr
             }.toMap().filterKeys {
-                it != CommandClickShellScript.SET_VARIABLE_TYPE
-                        && it != CommandClickShellScript.AFTER_COMMAND
-                        && it != CommandClickShellScript.BEFORE_COMMAND
+                it != CommandClickScriptVariable.SET_VARIABLE_TYPE
+                        && it != CommandClickScriptVariable.AFTER_COMMAND
+                        && it != CommandClickScriptVariable.BEFORE_COMMAND
             }
 
             var count_setting_section_start = 0
@@ -167,7 +167,7 @@ internal fun makeValueStrForMap(
     if(equalIndex <= 0) return rowStr
     if(rowStr.length == equalIndex) return rowStr
     return if(
-        variableName != CommandClickShellScript.SET_VARIABLE_TYPE
+        variableName != CommandClickScriptVariable.SET_VARIABLE_TYPE
     ) {
         rowStr.substring(
             equalIndex + 1, rowStr.length
@@ -195,7 +195,7 @@ internal fun makeSettingVariableRow(
     )
 
     if(
-        !CommandClickShellScript.SETTING_VARIABLE_NAMES_LIST
+        !CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST
             .contains(variableName)
     ) return rowStr
 

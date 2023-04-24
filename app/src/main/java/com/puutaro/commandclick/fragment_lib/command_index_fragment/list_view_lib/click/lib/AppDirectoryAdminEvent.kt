@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
 import android.content.SharedPreferences
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.FileSystems
@@ -20,7 +20,7 @@ class AppDirectoryAdminEvent {
             )
             val updateAppDirPath = UsePath.cmdclickAppDirPath + '/' +
                     selectedShellFileName.removeSuffix(
-                        CommandClickShellScript.JS_FILE_SUFFIX
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
                     )
             FileSystems.createDirs(updateAppDirPath)
             SharePreffrenceMethod.putSharePreffrence(

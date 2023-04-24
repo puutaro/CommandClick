@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.FannelListVariable
 import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
@@ -184,8 +184,8 @@ class InstallFromFannelRepo(
             )
             val selectedFannelName =
                 selectedFannel
-                    .removeSuffix(CommandClickShellScript.JS_FILE_SUFFIX)
-                    .removeSuffix(CommandClickShellScript.SHELL_FILE_SUFFIX)
+                    .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                    .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
             val fannelDir = selectedFannelName + fannelDirSuffix
             FileSystems.copyDirectory(
                 "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",

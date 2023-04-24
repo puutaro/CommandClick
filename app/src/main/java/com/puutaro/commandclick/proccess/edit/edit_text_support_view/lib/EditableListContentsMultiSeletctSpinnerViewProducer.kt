@@ -3,16 +3,14 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.*
 import androidx.core.view.isVisible
 import com.abdeveloper.library.MultiSelectModel
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
-import com.puutaro.commandclick.util.BothEdgeQuote
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.*
 import java.io.File
 
 object EditableListContentsMultiSeletctSpinnerViewProducer {
@@ -32,6 +30,10 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         val throughMark = "-"
 
         val linearParamsForSpinner = LinearLayout.LayoutParams(
@@ -39,12 +41,22 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
         val elcbList = currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
-            ?.replace("\${01}", currentAppDirPath)
-            .let {
+            ?.let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    "${currentAppDirPath}/${currentScriptName}",
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptName
+                )
+            }.let {
                 ReplaceVariableMapReflecter.reflect(
                     BothEdgeQuote.trim(it),
                     editParameters

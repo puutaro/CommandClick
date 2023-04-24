@@ -4,13 +4,14 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ShellScriptSaver
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
@@ -55,7 +56,7 @@ object ButtonViewProducer {
             SharePrefferenceSetting.current_script_file_name
         )
 
-        val shellScriptSaver = ShellScriptSaver(
+        val scriptFileSaver = ScriptFileSaver(
             binding,
             editFragment,
             readSharePreffernceMap,
@@ -78,7 +79,7 @@ object ButtonViewProducer {
 
         insertButton.setOnClickListener {
                 innerButtonView ->
-            shellScriptSaver.save(
+            scriptFileSaver.save(
                 currentShellContentsList,
                 recordNumToMapNameValueInCommandHolder,
             )
@@ -204,6 +205,10 @@ object ButtonViewProducer {
             ?: return String()
         val currentScriptName = scriptFileObj.name
             ?: return String()
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
                 BothEdgeQuote.trim(
@@ -211,16 +216,28 @@ object ButtonViewProducer {
                 )
         return innerExecCmdSourceBeforeReplace.trim(';')
             .replace(Regex("  *"), " ")
-            .replace("\${0}", currentScriptPath)
-            .replace("\${01}", currentAppDirPath)
-            .replace("\${02}", currentScriptName).let {
+            .let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    currentScriptPath,
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptName
+                )
+            }.let {
             var innerExecCmd = it
             setReplaceVariableMap?.forEach {
                 val replaceVariable = "\${${it.key}}"
                 val replaceString = it.value
-                    .replace("\${0}", currentScriptPath)
-                    .replace("\${01}", currentAppDirPath)
-                    .replace("\${02}", currentScriptName)
+                    .let {
+                        ScriptPreWordReplacer.replace(
+                            it,
+                            currentScriptPath,
+                            currentAppDirPath,
+                            fannelDirName,
+                            currentScriptName
+                        )
+                    }
                 innerExecCmd = innerExecCmd.replace(
                     replaceVariable,
                     replaceString

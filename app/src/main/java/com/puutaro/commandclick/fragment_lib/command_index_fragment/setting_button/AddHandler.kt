@@ -7,8 +7,7 @@ import android.content.SharedPreferences
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 
@@ -78,7 +77,7 @@ class AddScriptHandler(
                 else -> LanguageTypeSelects.JAVA_SCRIPT
             }
             val shellScriptName =
-                CommandClickShellScript.makeShellScriptName(
+                CommandClickScriptVariable.makeShellScriptName(
                     languageTypeSelects
                 )
 

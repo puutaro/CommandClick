@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.content.SharedPreferences
 import android.widget.Toast
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -59,7 +59,7 @@ class ValidationSharePreferenceForEdit(
             cmdclickAppDirPath,
             "on"
         ).firstOrNull()?.removeSuffix(
-            CommandClickShellScript.JS_FILE_SUFFIX
+            CommandClickScriptVariable.JS_FILE_SUFFIX
         ).toString()
         val updateAppDirPath = "${UsePath.cmdclickAppDirPath}/${updateDirName}"
         if(
@@ -155,19 +155,19 @@ class ValidationSharePreferenceForEdit(
             JsOrShellFromSuffix.judge(recentShellFileName)
 
         val languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
         ) as String
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
         ) as String
 
         val variablesCommandHolderListSize = CommandClickVariables.substituteVariableListFromHolder(
@@ -193,7 +193,7 @@ class ValidationSharePreferenceForEdit(
         )
         val editExecuteValue = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,
-            CommandClickShellScript.EDIT_EXECUTE
+            CommandClickScriptVariable.EDIT_EXECUTE
         )
         if(
             editExecuteValue != SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name

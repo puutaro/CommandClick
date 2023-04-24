@@ -33,7 +33,7 @@ class AppHistoryAdminEvent {
             }
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                selectedAppDirName + CommandClickShellScript.JS_FILE_SUFFIX
+                selectedAppDirName + CommandClickScriptVariable.JS_FILE_SUFFIX
             )
 
             val selectedAppShellFileName = AppHistoryManager
@@ -82,10 +82,10 @@ class AppHistoryAdminEvent {
             )
             val onShortCut = if(
                 selectedAppShellFileName ==
-                CommandClickShellScript.EMPTY_STRING
+                CommandClickScriptVariable.EMPTY_STRING
                 || selectedAppShellFileName ==
-                CommandClickShellScript.EMPTY_STRING +
-                CommandClickShellScript.JS_FILE_SUFFIX
+                CommandClickScriptVariable.EMPTY_STRING +
+                CommandClickScriptVariable.JS_FILE_SUFFIX
             ) {
                 SharePrefferenceSetting.on_shortcut.defalutStr
             } else {

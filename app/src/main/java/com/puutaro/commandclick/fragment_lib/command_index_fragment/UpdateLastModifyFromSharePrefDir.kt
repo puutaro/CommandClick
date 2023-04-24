@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.SharedPreferences
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.NoUpdatelastModifyForCmdIndex
@@ -29,7 +29,7 @@ class UpdateLastModifyFromSharePrefDir {
                     cmdclickAppDirAdminPath,
                     "on"
                 ).first().removeSuffix(
-                    CommandClickShellScript.JS_FILE_SUFFIX
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
                 )
                 "${cmdclickAppDirPath}/${currentDirName}"
             } else {
@@ -42,7 +42,7 @@ class UpdateLastModifyFromSharePrefDir {
             val currentDirName = currenDirObj.name
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
-                currentDirName + CommandClickShellScript.JS_FILE_SUFFIX
+                currentDirName + CommandClickScriptVariable.JS_FILE_SUFFIX
             )
         }
     }

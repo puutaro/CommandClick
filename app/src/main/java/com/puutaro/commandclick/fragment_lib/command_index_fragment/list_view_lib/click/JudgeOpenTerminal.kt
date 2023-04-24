@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.util.CommandClickVariables
 
@@ -18,7 +18,7 @@ class JudgeOpenTerminal {
             ) return false
             val terminalDo = CommandClickVariables.substituteCmdClickVariable(
                 settingSectionVariableList,
-                CommandClickShellScript.TERMINAL_DO
+                CommandClickScriptVariable.TERMINAL_DO
             ) ?: SettingVariableSelects.Companion.TerminalDoSelects.ON.name
             if(terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.ON.name){
                 return true

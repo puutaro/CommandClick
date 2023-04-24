@@ -8,7 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
@@ -46,7 +46,7 @@ class ExecOnLongClickDo {
             }
             val listPosition = info?.position ?: cmdIndexFragment.mParentContextMenuListIndex
             val shellScriptName = cmdListView.adapter.getItem(listPosition).toString()
-            if(shellScriptName == CommandClickShellScript.EMPTY_STRING) return true
+            if(shellScriptName == CommandClickScriptVariable.EMPTY_STRING) return true
             when (item.itemId) {
                 R.id.shell_script_menu_delete -> {
                     ConfirmDialogForDelete.show(

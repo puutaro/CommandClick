@@ -5,10 +5,9 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -40,7 +39,7 @@ class KillConfirmDialogForEdit {
                             "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
                             ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
                     ExecBashScriptIntent.ToTermux(
-                        CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
+                        CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
                         context,
                         execCmd
                     )

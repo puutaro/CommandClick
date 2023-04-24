@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 
 
@@ -38,8 +38,8 @@ class RecordNumToMapNameValueInHolder {
             val filteredSubstituteCmdStartEndContentList = if(onForSetting) {
                 substituteCmdStartEndContentList.filter {
                     val isSetVariables =
-                        it.startsWith("${CommandClickShellScript.SET_VARIABLE_TYPE}=")
-                                || it.startsWith("${CommandClickShellScript.SET_REPLACE_VARIABLE}=")
+                        it.startsWith("${CommandClickScriptVariable.SET_VARIABLE_TYPE}=")
+                                || it.startsWith("${CommandClickScriptVariable.SET_REPLACE_VARIABLE}=")
                     val isNotContainHitedList = !hitedList.contains(it)
                     if (isNotContainHitedList && !isSetVariables) hitedList.add(it)
                     isNotContainHitedList || isSetVariables
@@ -130,7 +130,7 @@ private fun returnUpdateShellFileName(
         variableName: String?,
         currentShellFileName: String?
     ): String {
-        return if (variableName == CommandClickShellScript.SCRIPT_FILE_NAME) {
+        return if (variableName == CommandClickScriptVariable.SCRIPT_FILE_NAME) {
             currentShellFileName ?: substituteCmdStartEndContentStr.substring(
                 equalIndex + 1, substituteCmdStartEndContentStr.length
             )

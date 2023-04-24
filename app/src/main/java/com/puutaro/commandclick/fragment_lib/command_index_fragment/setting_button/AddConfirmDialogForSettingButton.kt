@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.widget.ArrayAdapter
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
@@ -26,7 +26,7 @@ class AddConfirmDialogForSettingButton {
             val context = cmdIndexFragment.context
             val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
                     .get(languageTypeSelects)
             val alertDialog = AlertDialog.Builder(context)
                 .setTitle(
@@ -110,25 +110,25 @@ internal fun makeNewShellName(
     shellContentsList: List<String>,
     shellScriptName: String,
     languageTypeSelects: LanguageTypeSelects,
-    languageTypeToSectionHolderMap: Map<CommandClickShellScript.Companion.HolderTypeName, String>?
+    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.Companion.HolderTypeName, String>?
 
 ): String {
     if(languageTypeToSectionHolderMap.isNullOrEmpty()) return shellScriptName
     val substituteSettingVariableList =
         CommandClickVariables.substituteVariableListFromHolder(
             shellContentsList,
-            languageTypeToSectionHolderMap[CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START],
-            languageTypeToSectionHolderMap[CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END],
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START],
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END],
         )
     val newShellScriptNameSource = CommandClickVariables.substituteCmdClickVariable(
         substituteSettingVariableList,
-        CommandClickShellScript.SCRIPT_FILE_NAME
+        CommandClickScriptVariable.SCRIPT_FILE_NAME
     )?.trim('"')?.trim('\'')
     val languageSuffix = when(
         languageTypeSelects
     ){
-        LanguageTypeSelects.SHELL_SCRIPT -> CommandClickShellScript.SHELL_FILE_SUFFIX
-        else -> CommandClickShellScript.JS_FILE_SUFFIX
+        LanguageTypeSelects.SHELL_SCRIPT -> CommandClickScriptVariable.SHELL_FILE_SUFFIX
+        else -> CommandClickScriptVariable.JS_FILE_SUFFIX
     }
     return if(
         newShellScriptNameSource == null
@@ -149,23 +149,23 @@ internal fun makeNewShellName(
 internal fun makeShellScriptContentsQuoteComp(
     shellContentsList: List<String>,
     newShellScriptName: String,
-    languageTypeToSectionHolderMap: Map<CommandClickShellScript.Companion.HolderTypeName, String>?
+    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.Companion.HolderTypeName, String>?
 ): String {
     val recordNumToMapNameValueInCommandHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
             languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
             ) as String,
             languageTypeToSectionHolderMap[
-                    CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+                    CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
             ] as String,
         )
     val recordNumToMapNameValueInSettingHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
-            languageTypeToSectionHolderMap.get(CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START) as String,
-            languageTypeToSectionHolderMap[CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END] as String,
+            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START) as String,
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END] as String,
             true,
             newShellScriptName
         )

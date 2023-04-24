@@ -1,18 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.Manifest
-import android.app.Activity
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
-import android.os.Build
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
@@ -29,7 +22,6 @@ import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.*
 
 private val mainMenuGroupId = 1
 private val submenuTermSlectGroupId = 2
@@ -223,7 +215,7 @@ class ToolBarSettingButtonControl(
     private fun configEdit(){
         val configDirPath = UsePath.cmdclickConfigDirPath
         val configShellName = UsePath.cmdclickConfigFileName
-        CommandClickShellScript.makeConfigJsFile(
+        CommandClickScriptVariable.makeConfigJsFile(
             configDirPath,
             configShellName
         )

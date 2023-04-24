@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -42,15 +42,15 @@ class AutoShellExecManager {
             ).textToList()
             val languageType = LanguageTypeSelects.JAVA_SCRIPT
             val languageTypeToSectionHolderMap =
-                CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                     languageType
                 )
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
             ) as String
 
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val substituteSettingVariableList =
@@ -61,7 +61,7 @@ class AutoShellExecManager {
                 )
             val onAutoShell = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
-                CommandClickShellScript.CMDCLICK_ON_AUTO_EXEC
+                CommandClickScriptVariable.CMDCLICK_ON_AUTO_EXEC
             )
             if(
                 onAutoShell !=

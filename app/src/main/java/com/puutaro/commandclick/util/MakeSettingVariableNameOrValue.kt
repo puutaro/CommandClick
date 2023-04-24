@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 
 
 class MakeSettingVariableNameOrValue {
@@ -16,7 +16,7 @@ class MakeSettingVariableNameOrValue {
             )
             val variableNameChecked =
                 if (
-                    CommandClickShellScript.SETTING_VARIABLE_NAMES_LIST.contains(variableNameSource)
+                    CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST.contains(variableNameSource)
                 ) {
                     variableNameSource
                 } else {
@@ -30,8 +30,8 @@ class MakeSettingVariableNameOrValue {
                         variableNameFirstElement != null
                                 && variableNameFirstElement == substituteCmdStartEndContentStr
                         )
-                || substituteCmdStartEndContentStr.startsWith("${CommandClickShellScript.SET_VARIABLE_TYPE}=")
-                || substituteCmdStartEndContentStr.startsWith("${CommandClickShellScript.SET_REPLACE_VARIABLE}=")
+                || substituteCmdStartEndContentStr.startsWith("${CommandClickScriptVariable.SET_VARIABLE_TYPE}=")
+                || substituteCmdStartEndContentStr.startsWith("${CommandClickScriptVariable.SET_REPLACE_VARIABLE}=")
             ) {
                 variableNameChecked
             } else {

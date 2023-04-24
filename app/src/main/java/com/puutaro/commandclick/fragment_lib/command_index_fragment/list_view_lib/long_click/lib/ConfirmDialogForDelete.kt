@@ -6,7 +6,7 @@ import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -49,10 +49,10 @@ class ConfirmDialogForDelete {
                     )
                     val fannelDirName = scriptFileName
                         .removeSuffix(
-                            CommandClickShellScript.SHELL_FILE_SUFFIX
+                            CommandClickScriptVariable.SHELL_FILE_SUFFIX
                         )
                         .removeSuffix(
-                            CommandClickShellScript.JS_FILE_SUFFIX
+                            CommandClickScriptVariable.JS_FILE_SUFFIX
                         ) + UsePath.fannelDirSuffix
                     FileSystems.removeDir(
                         "${currentAppDirPath}/${fannelDirName}"
@@ -64,7 +64,7 @@ class ConfirmDialogForDelete {
                     )
                     if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
                         val deleteAppDirName = scriptFileName.removeSuffix(
-                            CommandClickShellScript.JS_FILE_SUFFIX
+                            CommandClickScriptVariable.JS_FILE_SUFFIX
                         )
                         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
                         val displayDeleteAppDirPath =

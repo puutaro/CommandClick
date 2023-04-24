@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.util.BothEdgeQuote
 
@@ -42,7 +42,7 @@ object SetReplaceVariabler {
                 entry ->
             entry.value?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) == CommandClickShellScript.SET_REPLACE_VARIABLE
+            ) == CommandClickScriptVariable.SET_REPLACE_VARIABLE
         }?.map {
                 entry ->
             val entryValue = entry.value

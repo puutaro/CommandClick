@@ -5,7 +5,7 @@ import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
 
-class CommandClickShellScript {
+class CommandClickScriptVariable {
     companion object {
         enum class HolderTypeName {
             LABELING_SEC_START,

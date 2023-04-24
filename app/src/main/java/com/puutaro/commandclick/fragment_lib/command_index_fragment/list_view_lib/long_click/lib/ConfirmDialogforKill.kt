@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -45,7 +45,7 @@ class ConfirmDialogforKill {
                             "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
                             ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
                     ExecBashScriptIntent.ToTermux(
-                        CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
+                        CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
                         context,
                         execCmd
                     )

@@ -7,7 +7,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
@@ -46,19 +46,19 @@ class FormJsDialog(
         LanguageTypeSelects.JAVA_SCRIPT
 
     private val languageTypeToSectionHolderMap =
-        CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
     ) as String
     private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
     ) as String
 
     private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
     ) as String
     private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     ) as String
 
 
@@ -223,7 +223,7 @@ class FormJsDialog(
             formSource
                 .split("\t")
                 .map{
-                    "${CommandClickShellScript.SET_VARIABLE_TYPE}=\"${it}\""
+                    "${CommandClickScriptVariable.SET_VARIABLE_TYPE}=\"${it}\""
                 }.joinToString("\n")
         val settingSectionContents =
             "${settingSectionStart}\n${setVariableTypeSource}\n${settingSectionEnd}"

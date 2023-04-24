@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.CommandClickShellScript
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -125,11 +125,11 @@ class EditedTextContents(
         )
         val updateScriptFileNameSource = substituteCmdClickVariable(
             substituteSettingVariableList,
-            CommandClickShellScript.SCRIPT_FILE_NAME
+            CommandClickScriptVariable.SCRIPT_FILE_NAME
         ) ?: currentScriptFileName
         val scriptFileSuffix = when(editFragment.languageType){
-            LanguageTypeSelects.SHELL_SCRIPT -> CommandClickShellScript.SHELL_FILE_SUFFIX
-            else -> CommandClickShellScript.JS_FILE_SUFFIX
+            LanguageTypeSelects.SHELL_SCRIPT -> CommandClickScriptVariable.SHELL_FILE_SUFFIX
+            else -> CommandClickScriptVariable.JS_FILE_SUFFIX
         }
         return if(
             updateScriptFileNameSource.endsWith(scriptFileSuffix)
@@ -146,8 +146,8 @@ class EditedTextContents(
     ): String {
         val selectedFannelName =
             scriptFileName
-                .removeSuffix(CommandClickShellScript.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickShellScript.SHELL_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
         return curentAppDirPath + "/" + selectedFannelName + UsePath.fannelDirSuffix
     }
 

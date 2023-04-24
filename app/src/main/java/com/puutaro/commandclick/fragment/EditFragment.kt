@@ -36,31 +36,31 @@ class EditFragment: Fragment() {
     val binding get() = _binding!!
     var languageType = LanguageTypeSelects.JAVA_SCRIPT
     var languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                 languageType
             )
     var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
     ) as String
 
     var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-    CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
     ) as String
 
     var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
     ) as String
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     ) as String
-    var runShell = CommandClickShellScript.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
+    var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var historySwitch =  SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
-    var urlHistoryOrButtonExec = CommandClickShellScript.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var shiban = CommandClickShellScript.CMDCLICK_SHIBAN_DEFAULT_VALUE
-    var fontZoomPercent = CommandClickShellScript.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
-    var terminalOn = CommandClickShellScript.TERMINAL_DO_DEFAULT_VALUE
-    var terminalColor = CommandClickShellScript.TERMINAL_COLOR_DEFAULT_VALUE
-    var statusBarIconColorMode = CommandClickShellScript.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
+    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
+    var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
+    var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
+    var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+    var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
+    var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
@@ -150,19 +150,19 @@ class EditFragment: Fragment() {
             JsOrShellFromSuffix.judge(currentShellFileName)
 
         val languageTypeToSectionHolderMap =
-            CommandClickShellScript.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
         ) as String
         settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
         ) as String
 
         commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
         ) as String
         commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickShellScript.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
         ) as String
 
         if(
@@ -171,13 +171,13 @@ class EditFragment: Fragment() {
         ) {
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                File(currentAppDirPath).name + CommandClickShellScript.JS_FILE_SUFFIX
+                File(currentAppDirPath).name + CommandClickScriptVariable.JS_FILE_SUFFIX
             )
             FileSystems.updateLastModified(
                 currentAppDirPath,
                 currentShellFileName
             )
-            ConfigFromShellFileSetter.set(
+            ConfigFromScriptFileSetter.set(
                 this,
             )
         }
