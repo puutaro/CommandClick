@@ -97,14 +97,19 @@ class CopyFileEvent(
             sourceScriptFilePath,
             selectedShellFilePath
         )
-        val selectedFannelName =
+        val sourceFannelName =
             sourceScriptFileName
                 .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
                 .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
-        val fannelDir = selectedFannelName + UsePath.fannelDirSuffix
+        val selectedFannelName =
+            File(selectedShellFilePath).name
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
+        val selectedFannelDir = selectedFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(
-            "${sourceAppDirPath}/${fannelDir}",
-            "${File(selectedShellFilePath).parent}/${fannelDir}"
+            "${sourceAppDirPath}/${sourceFannelDir}",
+            "${File(selectedShellFilePath).parent}/${selectedFannelDir}"
         )
         copyResultToast(
             context,
@@ -120,7 +125,7 @@ class CopyFileEvent(
     }
 }
 
-internal fun makeSelectedShellFilePath(
+private fun makeSelectedShellFilePath(
     sourceAppDirPath: String,
     sourceShellFileName: String,
     selectedShellFileName: String
