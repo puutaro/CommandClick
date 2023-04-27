@@ -6,6 +6,7 @@ import android.widget.*
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -105,7 +106,11 @@ object FileSelectSpinnerViewProducer {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val selectedItem = adapter.getItem(pos)
                     ?: return
-                if(selectedItem != throughMark) {
+                if(
+                    selectedItem != throughMark
+                    && currentAppDirPath != UsePath.cmdclickConfigDirPath
+                    && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
+                ) {
                     FileSystems.updateLastModified(
                         currentAppDirPath,
                         selectedItem
