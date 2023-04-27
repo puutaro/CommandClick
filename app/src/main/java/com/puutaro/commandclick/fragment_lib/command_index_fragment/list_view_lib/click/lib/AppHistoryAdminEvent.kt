@@ -37,7 +37,7 @@ class AppHistoryAdminEvent {
             )
 
             val selectedAppShellFileName = AppHistoryManager
-                .getShellFileNameFromAppHistoryFileName(
+                .getScriptFileNameFromAppHistoryFileName(
                     selectedShellFileName
                 )
 

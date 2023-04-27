@@ -45,6 +45,7 @@ class CommandIndexFragment: Fragment() {
     var fannelInstallDialog: AlertDialog? = null
     var onFocusSearchText = false
     var savedEditTextContents = String()
+    var homeFannelHistoryName = String()
 
     override fun onCreateView(
         inflater: LayoutInflater,

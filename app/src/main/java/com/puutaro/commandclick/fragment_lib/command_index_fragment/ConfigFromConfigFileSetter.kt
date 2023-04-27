@@ -69,6 +69,12 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
+            cmdIndexFragment.homeFannelHistoryName =  MakeVariableStringValue.make(
+                settingVariableList,
+                CommandClickScriptVariable.CMDCLICK_HOME_FANNEL,
+                String()
+            )
+
             cmdIndexFragment.runShell = MakeVariableStringValue.make(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,

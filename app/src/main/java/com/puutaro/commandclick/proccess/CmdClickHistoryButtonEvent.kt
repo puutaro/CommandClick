@@ -285,7 +285,7 @@ class CmdClickHistoryButtonEvent (
         historyRow: String
     ): String {
         val selectedAppShellFileName = AppHistoryManager
-            .getShellFileNameFromAppHistoryFileName(
+            .getScriptFileNameFromAppHistoryFileName(
                 historyRow
             )
         if(selectedAppShellFileName != CommandClickScriptVariable.EMPTY_STRING) {

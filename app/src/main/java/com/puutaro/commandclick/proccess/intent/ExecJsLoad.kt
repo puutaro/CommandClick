@@ -6,6 +6,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment

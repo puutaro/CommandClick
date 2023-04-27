@@ -79,6 +79,7 @@ class CommandClickScriptVariable {
         val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
         val CMDCLICK_LONG_PRESS_IMAGE_URL = "CMDCLICK_LONG_PRESS_IMAGE_URL"
         val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"
+        val CMDCLICK_HOME_FANNEL = "HOME_FANNEL"
 
         val SETTING_VARIABLE_NAMES_LIST = listOf(
             TERMINAL_DO,
@@ -102,6 +103,7 @@ class CommandClickScriptVariable {
             ON_URL_LAUNCH_MACRO,
             EXEC_JS_OR_HTML_PATH,
             ON_URL_HISTORY_REGISTER,
+            CMDCLICK_HOME_FANNEL,
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SCRIPT_FILE_NAME,
@@ -179,6 +181,7 @@ class CommandClickScriptVariable {
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
             "${EXEC_JS_OR_HTML_PATH}:FL=",
+            "${CMDCLICK_HOME_FANNEL}:EFCB=${UsePath.cmdclickAppHistoryDirAdminPath}&&${JS_FILE_SUFFIX}"
         )
 
         fun makeShellScriptName(
@@ -452,6 +455,7 @@ class CommandClickScriptVariable {
             |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}"
             |${ON_ADBLOCK}="${onAdBlockOff}"
+            |${CMDCLICK_HOME_FANNEL}=""
             |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
             |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
             |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"

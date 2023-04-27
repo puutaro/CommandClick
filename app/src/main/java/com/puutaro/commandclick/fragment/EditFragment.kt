@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -65,6 +66,7 @@ class EditFragment: Fragment() {
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
+    var homeFannelHistoryName = String()
 
     override fun onCreateView(
         inflater: LayoutInflater,

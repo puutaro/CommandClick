@@ -132,6 +132,16 @@ class JsFileSystem(
         )
     }
 
+    fun outputSwitch(
+        switch: String
+    ){
+        if(switch == "on") {
+            terminalViewModel.onDisplayUpdate = true
+            return
+        }
+        terminalViewModel.onDisplayUpdate = false
+    }
+
     @JavascriptInterface
     fun removeFile(path: String){
         val fileObj = File(path)

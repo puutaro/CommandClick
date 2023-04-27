@@ -60,6 +60,12 @@ class SetConfigInfo {
                 ),
             )
 
+            editFragment.homeFannelHistoryName =  MakeVariableStringValue.make(
+                settingVariableList,
+                CommandClickScriptVariable.CMDCLICK_HOME_FANNEL,
+                String()
+            )
+
 
             editFragment.runShell =  MakeVariableStringValue.make(
                 settingVariableList,
