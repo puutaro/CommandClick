@@ -70,10 +70,10 @@ class ToolBarSettingButtonControl(
             _ ->
             popup.menu.clear()
             popup.menu.add(
-                MenuEnums.TERM_REFRESH.groupId,
-                MenuEnums.TERM_REFRESH.itemId,
-                MenuEnums.TERM_REFRESH.order,
-                MenuEnums.TERM_REFRESH.itemName
+                MenuEnums.INSTALL_FANNEL.groupId,
+                MenuEnums.INSTALL_FANNEL.itemId,
+                MenuEnums.INSTALL_FANNEL.order,
+                MenuEnums.INSTALL_FANNEL.itemName
             )
             popup.menu.add(
                 MenuEnums.FORWARD.groupId,
@@ -260,7 +260,7 @@ internal enum class MenuEnums(
     SETTING(mainMenuGroupId, 60300, 3, "setting"),
     CHDIR(submenuSettingGroupId, 60301, 1, "change_app_dir"),
     SHORTCUT(submenuSettingGroupId, 60302, 2, "create_short_cut"),
-    INSTALL_FANNEL(submenuSettingGroupId, 60303, 3, "install_fannel"),
+    TERM_REFRESH(submenuSettingGroupId, 60303, 3, "term_refresh"),
     TERMUX_SETUP(submenuSettingGroupId, 60304, 4, "termux_setup"),
     CONFIG(submenuSettingGroupId, 60305, 5, "config"),
     SELECTTERM(mainMenuGroupId, 60400, 4, "select_term"),
@@ -268,8 +268,8 @@ internal enum class MenuEnums(
     TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),
     TERM3(submenuTermSlectGroupId, 60403, 3, "term_3"),
     TERM4(submenuTermSlectGroupId, 60404, 4, "term_4"),
-    TERM_REFRESH(mainMenuGroupId, 60500, 5, "term_refresh"),
-    FORWARD(mainMenuGroupId, 60600, 6, "forward")
+    INSTALL_FANNEL(mainMenuGroupId, 60600, 6, "install_fannel"),
+    FORWARD(mainMenuGroupId, 60670, 7, "forward")
 }
 
 
