@@ -118,6 +118,7 @@ At the same time, if you installed code editor, edit new file.
     | `onAdBlock`  | `INHERIT`/`ON`/`OFF` | sadblock switch; `INHERIT`: inherit config setting, `ON`: on, `OFF`: off
     | `onUrlHistoryRegister`  | `ON`/`OFF` | url history update signal; `ON`: update, `OFF`: no update
     | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
+    | `HOME_FANNEL` | `string` | specified `fannel` put always bottom in app history |
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
     | `setReplaceVariable`  | `string` | string replaced with certain string ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"  
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
@@ -126,7 +127,7 @@ At the same time, if you installed code editor, edit new file.
     | `terminalColor` | `string` | adjust terminal background color |
     | `beforeCommand` | `shell command string` | before run shellscript, run command |
     | `afterCommand` | `shell command string` | after run shellscript, run command |
-    | `FileName`  | `string` | shellscript file name  |
+    | `scriptFileName`  | `string` | shellscript file name  |
 
  
   - setVariableType option
