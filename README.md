@@ -576,11 +576,12 @@ This, so colled, android app row code library.
         	targetVariable: rename target command variable string,  
         	renameVariable: rename destination command variable String,  
         	taergetDirPath: file select direcoty path,  
-        	settingVariables: setting variable with tab sepalator,  
-        	commandVariables: command variable with tab sepalator,,
-        	prefix: file select direcotry grep prefix string,
-        	scriptFilePath: fannel path string
-    	)
+        	settingVariables: setting variable with tab sepalator,   
+        	commandVariables: command variable with tab sepalator, 
+        	prefix: file select direcotry grep prefix string,  
+		suffix: file select direcotry grep suffix string,  
+        	scriptFilePath: fannel path string  
+    	)  
 
  - JsEdit  
  	`edit component` edit tool   
