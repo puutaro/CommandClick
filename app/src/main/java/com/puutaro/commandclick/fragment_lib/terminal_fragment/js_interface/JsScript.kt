@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -169,11 +168,6 @@ class JsScript(
                 .joinToString("=")
             key to value
         }.toMap()
-        Toast.makeText(
-            context,
-            replaceMap.toString(),
-            Toast.LENGTH_LONG
-        ).show()
         return scriptContents.split('\n').map {
             if(
                 it.startsWith(startHolder)

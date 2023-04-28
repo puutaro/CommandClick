@@ -177,6 +177,17 @@ class JsFileSystem(
         )
     }
 
+    @JavascriptInterface
+    fun copyFile(
+        sourceFilePath: String,
+        destiFilePath: String
+    ){
+        FileSystems.copyFile(
+            sourceFilePath,
+            destiFilePath
+        )
+    }
+
 
     @JavascriptInterface
     fun showFileList(
