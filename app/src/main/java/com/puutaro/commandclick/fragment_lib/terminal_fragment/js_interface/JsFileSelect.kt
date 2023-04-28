@@ -19,6 +19,7 @@ class JsFileSelect(
     private val jsScript = JsScript(terminalFragment)
     private val jsIntent = JsIntent(terminalFragment)
     private val context = terminalFragment.context
+    private val suffixMacroWord = "NoExtend"
 
     @JavascriptInterface
     fun execEditTargetFileName(
@@ -28,6 +29,7 @@ class JsFileSelect(
         settingVariables: String,
         commandVariables: String,
         prefix: String,
+        suffix: String,
         scriptFilePath: String
     ){
         val replaceContents = JsDialog(terminalFragment).formDialog(
@@ -63,6 +65,8 @@ class JsFileSelect(
                     taergetDirPath,
                     editFileNameForDialog,
                     targetVariable,
+                    prefix,
+                    suffix,
                 )
             }
             else -> {
@@ -73,7 +77,8 @@ class JsFileSelect(
                     editFileNameForDialog,
                     targetVariable,
                     renameFileNameForDialog,
-                    prefix
+                    prefix,
+                    suffix
                 )
             }
         }
@@ -85,6 +90,8 @@ class JsFileSelect(
         taergetDirPath: String,
         editFileNameForDialog: String,
         targetVariable: String,
+        prefix: String,
+        suffix: String
     ){
         val context = terminalFragment.context
         val alertDialog = AlertDialog.Builder(context)
@@ -113,7 +120,13 @@ class JsFileSelect(
                 val recentLogFile = FileSystems.sortedFiles(
                     taergetDirPath
                 ).filter {
-                    !Regex("\\.[a-zA-Z0-9]*$").containsMatchIn(it)
+                    val onPrefix = it.startsWith(prefix)
+                    val onSuffix = if(
+                        suffix == suffixMacroWord
+                    ){
+                        !Regex("\\.[a-zA-Z0-9]*$").containsMatchIn(it)
+                    } else it.endsWith(suffix)
+                    onPrefix && onSuffix
                 }.firstOrNull() ?: return@OnClickListener
                 updateScriptFile(
                     parentDirPath,
@@ -139,12 +152,17 @@ class JsFileSelect(
         editFileNameForDialog: String,
         targetVariable: String,
         renameFileNameForDialog: String,
-        prefix: String
+        prefix: String,
+        suffix: String
     ){
-        val renameFileNameOkForDialog = if(
+        val renameFileNameOkForDialogSource = if(
             renameFileNameForDialog.startsWith(prefix)
         ) renameFileNameForDialog
         else "${prefix}${renameFileNameForDialog}"
+        val renameFileNameOkForDialog = if(
+            suffix == suffixMacroWord
+        ) renameFileNameForDialog
+        else renameFileNameOkForDialogSource
         if(
             editFileNameForDialog == renameFileNameOkForDialog
         ){
