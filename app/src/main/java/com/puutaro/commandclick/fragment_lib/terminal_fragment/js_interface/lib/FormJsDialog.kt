@@ -63,13 +63,15 @@ class FormJsDialog(
 
 
     fun create(
-        formSource: String,
+        formSettingVariables: String,
+        formCommandVariables: String
     ): String {
         terminalViewModel.onDialog = true
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
-                    formSource
+                    formSettingVariables,
+                    formCommandVariables
                 )
             }
             withContext(Dispatchers.IO) {
@@ -84,10 +86,12 @@ class FormJsDialog(
 
 
     private fun execCreate(
-        formSource: String,
+        formSettingVariables: String,
+        formCommandVariables: String
     ) {
         val virtualJsContentsList =  makeVirtualJsContentsList(
-            formSource,
+            formSettingVariables,
+            formCommandVariables
         ) ?: return
 
         val recordNumToMapNameValueInCommandHolder =
@@ -217,34 +221,19 @@ class FormJsDialog(
 
 
     private fun makeVirtualJsContentsList(
-        formSource: String,
+        formSettingVariables: String,
+        formCommandVariables: String
     ): List<String>? {
         val setVariableTypeSource =
-            formSource
+            formSettingVariables
                 .split("\t")
                 .map{
                     "${CommandClickScriptVariable.SET_VARIABLE_TYPE}=\"${it}\""
                 }.joinToString("\n")
         val settingSectionContents =
             "${settingSectionStart}\n${setVariableTypeSource}\n${settingSectionEnd}"
-        val formSourceToCmdSource =
-            formSource
-                .split("\t")
-                .map {
-                    val variableNameField = it.split("=")
-                        .firstOrNull()
-                        ?: return null
-                    if(
-                        variableNameField.contains(":")
-                    ){
-                        val variableNameFieldSource = variableNameField.split(':')
-                            .firstOrNull()
-                            ?: return null
-                        "${variableNameFieldSource}="
-                    } else "${variableNameField}="
-                }.joinToString("\t")
         val commandSectionContents =
-            "${commandSectionStart}\t${formSourceToCmdSource}\t${commandSectionEnd}"
+            "${commandSectionStart}\t${formCommandVariables}\t${commandSectionEnd}"
                 .replace("\t", "\n")
         return "\n\n${settingSectionContents}\n\n\n${commandSectionContents}\n".split("\n")
     }

@@ -33,8 +33,12 @@ class JsDialog(
 
     @JavascriptInterface
     fun formDialog(
-        formSource: String
+        formSettingVariables: String,
+        formCommandVariables: String
     ): String{
-        return formJsDialog.create(formSource)
+        return formJsDialog.create(
+            formSettingVariables,
+            formCommandVariables
+        )
     }
 }
