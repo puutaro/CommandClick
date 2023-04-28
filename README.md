@@ -532,11 +532,14 @@ This, so colled, android app row code library.
 
  - JsDialog
  	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
- 	- jsDialog.formJsDialog(formSource: String(tab sepalate))
- 		 - formSource tabsepalete string  return {key}={value} contents
+ 	- jsDialog.formJsDialog(formSettingVariables: String(tab sepalate), formCommandVariables: String(tab sepalate))
+ 		 - formSettingVariables tabsepalete string  return {key}={value} contents
  		 - setting reference [Add](#add)
  		 - ex) 
- 				jsDialog.formJsDialog("efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt")      
+ 				jsDialog.formJsDialog(
+					"efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt",  
+					`efcb=\tefcb=tubeCrara\tnumber=\tpassword=\ttxt=cb2=tt\tdb3=gg`  
+				)      
  			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
  - JsStop
  	- jsStop.how() (measure for `while roop` crush when application focus out)
@@ -560,6 +563,8 @@ This, so colled, android app row code library.
 	- jsScript.subCmdVars(jsContents: String) -> Comamnd Section Contents  
 	- jsScript.subValOnlyValue(targetVariableName: String, VariableValueStringContents: String)  ->  Variable value String Contents  
 	- jsScript.bothQuoteTrim(VariableValueString: String) -> VariableValueString removed both edge quote  
+	- jsScript.replaceSettingVariable(scriptContents: String, replaceTabList: String) -> File contents String  
+	- jsScript.replaceVariableInHolder(scriptContents: String, replaceTabList: String) -> File contents String  
 
  - JsListSelect  
  	update or remove method for editable list file checkbox 
