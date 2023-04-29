@@ -63,6 +63,7 @@ class FormJsDialog(
 
 
     fun create(
+        title: String,
         formSettingVariables: String,
         formCommandVariables: String
     ): String {
@@ -70,6 +71,7 @@ class FormJsDialog(
         runBlocking {
             withContext(Dispatchers.Main) {
                 execCreate(
+                    title,
                     formSettingVariables,
                     formCommandVariables
                 )
@@ -86,6 +88,7 @@ class FormJsDialog(
 
 
     private fun execCreate(
+        title: String,
         formSettingVariables: String,
         formCommandVariables: String
     ) {
@@ -166,7 +169,7 @@ class FormJsDialog(
         val alertDialog = AlertDialog.Builder(
             context
         )
-            .setTitle("Edit bellow form")
+            .setTitle(title)
             .setView(scrollView)
             .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
                 val updateVirtualJsContentsList = if(

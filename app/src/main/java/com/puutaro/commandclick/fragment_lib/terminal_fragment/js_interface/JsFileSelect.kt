@@ -30,9 +30,11 @@ class JsFileSelect(
         commandVariables: String,
         prefix: String,
         suffix: String,
-        scriptFilePath: String
+        scriptFilePath: String,
+        title: String,
     ){
         val replaceContents = JsDialog(terminalFragment).formDialog(
+            title,
             settingVariables,
             commandVariables,
         )
