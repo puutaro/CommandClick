@@ -569,7 +569,15 @@ This, so colled, android app row code library.
  - JsListSelect  
  	update or remove method for editable list file checkbox 
  	- jsListSelect.updateListFileCon(targetListFilePath: String, itemText: String)  
-	- jsListSelect.removeItemInListFileCon(targetListFilePath: String, itemText: String)	
+	- jsListSelect.removeItemInListFileCon(targetListFilePath: String, itemText: String)
+	- jsListSelect.wrapRemoveItemInListFileCon(
+                targetListFilePath: String,  
+                removeTargetItem: String,  
+                currentScriptPath: String,  
+                replaceTargetVariable: String = String(),  
+                defaultVariable: String = String()  
+          )  
+
  - JsFileSelect  
  	edit selected file  
 	- execEditTargetFileName(  
