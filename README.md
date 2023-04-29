@@ -575,7 +575,7 @@ This, so colled, android app row code library.
 	- execEditTargetFileName(  
         	targetVariable: rename target command variable string,  
         	renameVariable: rename destination command variable String,  
-        	taergetDirPath: file select direcoty path,  
+        	targetDirPath: file select direcoty path,  
         	settingVariables: setting variable with tab sepalator,   
         	commandVariables: command variable with tab sepalator, 
         	prefix: file select direcotry grep prefix string,  
