@@ -149,7 +149,7 @@ class JsIntent(
     @JavascriptInterface
     fun launchShortcut(
         currentAppDirPath: String,
-        currentShellFileName: String
+        currentScriptFileName: String
     ){
         val execIntent = Intent(terminalFragment.activity, MainActivity::class.java)
         execIntent
@@ -162,7 +162,7 @@ class JsIntent(
         )
         execIntent.putExtra(
             SharePrefferenceSetting.current_script_file_name.name,
-            currentShellFileName
+            currentScriptFileName
         )
         terminalFragment.activity?.startActivity(execIntent)
     }

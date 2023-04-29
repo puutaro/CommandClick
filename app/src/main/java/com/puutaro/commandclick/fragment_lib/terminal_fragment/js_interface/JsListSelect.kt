@@ -11,6 +11,8 @@ class JsListSelect(
     terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
+    val jsIntent = JsIntent(terminalFragment)
+    val jsScript = JsScript(terminalFragment)
 
     private val escapeCharHyphen = "-"
     @JavascriptInterface
@@ -97,6 +99,94 @@ class JsListSelect(
             searchListDirPath,
             searchListFileName,
             updateListContents
+        )
+    }
+
+    @JavascriptInterface
+    fun wrapRemoveItemInListFileCon(
+        targetListFilePath: String,
+        removeTargetItem: String,
+        currentScriptPath: String,
+        replaceTargetVariable: String = String(),
+        defaultVariable: String = String()
+    ){
+        val searchListFileObj = File(
+            targetListFilePath
+        )
+        if(
+            !searchListFileObj.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "no exist ${targetListFilePath}",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+        if(
+            removeTargetItem.isEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                "blank removeTargetItem",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val currentScriptObj = File(
+            currentScriptPath
+        )
+        if(
+            !currentScriptObj.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "no exist $currentScriptPath",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+        removeItemInListFileCon(
+            targetListFilePath,
+            removeTargetItem
+        )
+        val searchListDirPath = searchListFileObj.parent
+            ?: return
+        val searchListFileName = searchListFileObj.name
+        val recentItem =  ReadText(
+            searchListDirPath,
+            searchListFileName
+        ).textToList().firstOrNull() ?: String()
+
+        val currentAppDirPath = currentScriptObj.parent
+            ?: return
+        val scriptName = currentScriptObj.name
+        val scriptContents = ReadText(
+            currentAppDirPath,
+            scriptName
+        ).readText()
+        val replacedScriptContentsTargetVariable = if(
+            replaceTargetVariable.isEmpty()
+        ) scriptContents
+        else jsScript.replaceComamndVariable(
+                scriptContents,
+                "${replaceTargetVariable}=\"${recentItem}\"",
+            )
+        val replacedScriptContents = if(
+            defaultVariable.isEmpty()
+        ) replacedScriptContentsTargetVariable
+        else jsScript.replaceComamndVariable(
+            replacedScriptContentsTargetVariable,
+                "${defaultVariable}=",
+            )
+        FileSystems.writeFile(
+            currentAppDirPath,
+            scriptName,
+            replacedScriptContents
+        )
+        jsIntent.launchShortcut(
+            currentAppDirPath,
+            scriptName
         )
     }
 }
