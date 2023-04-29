@@ -20,6 +20,8 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object FileSelectSpinnerViewProducer {
 
+    val noExtend = "NoExtend"
+
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
@@ -151,7 +153,6 @@ object FileSelectSpinnerViewProducer {
         targetStr: String,
         filterSuffix: String,
     ): Boolean{
-        val noExtend = "NoExtend"
         if(filterSuffix != noExtend) {
             return targetStr.endsWith(filterSuffix)
         }

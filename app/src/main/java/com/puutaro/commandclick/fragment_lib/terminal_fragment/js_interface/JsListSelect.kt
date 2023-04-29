@@ -10,9 +10,9 @@ import java.io.File
 class JsListSelect(
     terminalFragment: TerminalFragment
 ) {
-    val context = terminalFragment.context
-    val jsIntent = JsIntent(terminalFragment)
-    val jsScript = JsScript(terminalFragment)
+    private val context = terminalFragment.context
+    private val jsIntent = JsIntent(terminalFragment)
+    private val jsScript = JsScript(terminalFragment)
 
     private val escapeCharHyphen = "-"
     @JavascriptInterface

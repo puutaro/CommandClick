@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -19,7 +20,7 @@ class JsFileSelect(
     private val jsScript = JsScript(terminalFragment)
     private val jsIntent = JsIntent(terminalFragment)
     private val context = terminalFragment.context
-    private val suffixMacroWord = "NoExtend"
+    private val suffixMacroWord = FileSelectSpinnerViewProducer.noExtend
 
     @JavascriptInterface
     fun execEditTargetFileName(
