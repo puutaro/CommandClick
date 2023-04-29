@@ -98,7 +98,7 @@ class JsFileSelect(
             .setTitle(
                 "delete ok?"
             )
-            .setMessage(" : ${editFileNameForDialog}")
+            .setMessage(" ${editFileNameForDialog}")
             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                 if(
                     !File(
