@@ -624,7 +624,6 @@ This, so colled, android app row code library.
 	
 	- jsCsv.toHeaderRow(
 		tag: String,
-		colNum: Int,
 		startColNumSource: Int,
 		endColNumSource: Int,
 	) -> headerList sepalated by tab   
