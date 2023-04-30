@@ -10,7 +10,7 @@ class JsText(
     @JavascriptInterface
     fun trans(
         tsvStr: String
-    ):String{
+    ): String {
         val tsvMatrix = tsvStr
             .split("\n")
             .map {
