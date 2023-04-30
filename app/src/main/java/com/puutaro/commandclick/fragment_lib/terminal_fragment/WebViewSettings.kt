@@ -4,6 +4,7 @@ import android.view.View
 import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.*
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
 
 class WebViewSettings {
     companion object {
@@ -82,6 +83,14 @@ class WebViewSettings {
                 JsFileSelect(terminalFragment),
                 JsInterfaceVariant.jsFileSelect.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsCsv(terminalFragment),
+                JsInterfaceVariant.jsCsv.name
+            )
+            terminalWebView.addJavascriptInterface(
+                JsText(terminalFragment),
+                JsInterfaceVariant.jsText.name
+            )
         }
     }
 }
@@ -101,5 +110,7 @@ private enum class JsInterfaceVariant {
     jsScript,
     jsListSelect,
     jsEdit,
-    jsFileSelect
+    jsFileSelect,
+    jsCsv,
+    jsText,
 }

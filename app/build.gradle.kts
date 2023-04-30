@@ -68,4 +68,5 @@ dependencies {
     implementation("com.anggrayudi:storage:1.5.4")
     implementation("com.github.sya-ri:kgit:1.0.5")
     implementation("com.github.abumoallim:Android-Multi-Select-Dialog:v1.9")
+    implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
 }
