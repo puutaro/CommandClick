@@ -130,7 +130,6 @@ class JsCsv(
     @JavascriptInterface
     fun toHeaderRow(
         tag: String,
-        colNum: Int,
         startColNumSource: Int,
         endColNumSource: Int,
     ): String {
@@ -148,11 +147,12 @@ class JsCsv(
         val headerList =  headerMap[tag]
             ?: return String()
         val colSize = headerList.size
-        if(
-            colNum >= colSize
-        ) return String()
+        val lastColEndNum = if(
+            endColNum >= colSize
+        ) colSize - 1
+        else endColNum
         return headerList
-            .slice(startCol..endColNum)
+            .slice(startCol..lastColEndNum)
             .joinToString("\t")
     }
 
