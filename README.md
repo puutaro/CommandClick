@@ -595,6 +595,72 @@ This, so colled, android app row code library.
  	`edit component` edit tool   
  	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)  
 
+- JsCsv  
+ 	csv edit tool   
+	- jsCsv.read(
+		tag: String,
+		csvPath: String,
+		isHeader: String,
+		csvOrTsv: String,
+		limitRowNumSource: Int
+	  ) -> save csv or tsv instance with tag  
+	 
+	 jsCsv.readM(
+		tag: String,
+		csvString: String,
+		csvOrTsv: String,
+	 ) -> save csv or tsv instance with tag  
+	 
+ 	- jsCsv.takeRowSize(tag: String) -> rowSize about csv(tsv) with tag  
+	- jsCsv.takeColSize(tag: String) -> colSize about csv(tsv) with tag  
+	- jsCsv.isRead(tag: String) 
+		(comfirm read completed  about csv(tsv) with tag)
+		-> blank or String  
+	
+	- jsCsv.toHeader(  
+        	tag: String,  
+        	colNum: Int,  
+    	) -> schema name  
+	
+	- jsCsv.toHeaderRow(
+		tag: String,
+		colNum: Int,
+		startColNumSource: Int,
+		endColNumSource: Int,
+	) -> headerList sepalated by tab   
+	
+	- jsCsv.toRow(
+		tag: String,
+		rowNum: Int,
+		startColNumSource: Int,
+		endColNumSource: Int,
+	    ) -> rowList sepalated by tab    
+	
+	- jsCsv.toCol(
+		tag: String,
+		colNum: Int,
+		startRowNumSource: Int,
+		endRowNumSource: Int,
+	    ) -> colList sepalated by tab    
+	
+	- jsCsv.toHtml(tsvString: String)  
+		convert tsv to html string  
+		-> html string   
+	
+	- jsCsv.outPutTsvForDRow(tab: String) 
+		convert row direction tsv to Tsv  
+		-> tsv string  
+	- jsCsv.outPutTsvForDCol(tab: String) 
+		convert col direction tsv to Tsv  
+		-> tsv string  
+	- jsCsv.filter(
+		srcTag: String,
+		destTag: String,
+		tabSepaFormura: String ({schema1},>,1500\t{schema2},in,Monday,\t{schema3},=,super man\t..)  
+	    ) -> save tsv instance with tag  
+- JsText  
+	- jsText.trans(tsvString) -> String transposed row and col  
+
 
 ### Javascript pre order word
 - `${0}` -> current file path  
