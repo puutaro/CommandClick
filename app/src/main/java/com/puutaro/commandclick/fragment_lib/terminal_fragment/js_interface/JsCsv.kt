@@ -44,10 +44,24 @@ class JsCsv(
         tag: String,
         csvPath: String,
         isHeader: String,
+        csvOrTsv: String,
         limitRowNumSource: Int
     ) {
         val file = File(csvPath)
-        val rowsSource = csvReader().readAll(file)
+        val rowsSource = if(
+            csvOrTsv.isEmpty()
+            || csvOrTsv == FileType.CSV.name
+        ) {
+            csvReader().readAll(file)
+        } else {
+            val tsvReader = csvReader {
+                charset = "ISO_8859_1"
+                quoteChar = '"'
+                delimiter = '\t'
+                escapeChar = '\\'
+            }
+            tsvReader.readAll(file)
+        }
         headerMap[tag] = rowsSource[0]
         val limitRowNum = if(
             limitRowNumSource == 0
