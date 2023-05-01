@@ -657,6 +657,14 @@ This, so colled, android app row code library.
 		destTag: String,
 		tabSepaFormura: String ({schema1},>,1500\t{schema2},in,Monday,\t{schema3},=,super man\t..)  
 	    ) -> save tsv instance with tag  
+	- jsCsv.sliceHeader(
+		tag: String,
+		startColNumSource: Int,
+		endColNumSource: Int,
+		headerRow: String,
+	    )　-> header string sliced with tab delimiter   
+	    
+	    
 - JsText  
 	- jsText.trans(tsvString) -> String transposed row and col  
 
