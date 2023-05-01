@@ -14,6 +14,8 @@ class JsCsv(
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     val jsText = JsText(terminalFragment)
+    val tableHeaderClassName = "tableHeader"
+    val rowFirstClassName = "rowFirst"
 
     @JavascriptInterface
     fun takeRowSize(
@@ -225,15 +227,50 @@ class JsCsv(
     }
 
     @JavascriptInterface
+    fun sliceHeader(
+        tag: String,
+        startColNumSource: Int,
+        endColNumSource: Int,
+        headerRow: String,
+    ): String {
+        val startCol = makeStartNum(
+            tag,
+            startColNumSource,
+        )
+        val endColNum = makeEndNum(
+            tag,
+            endColNumSource,
+        )
+        if(
+            startCol > endColNum
+        ) return String()
+        val headers = headerRow.split("\t")
+        val colsSize = headers.size
+        return (0 until colsSize).filter {
+            startCol <= it
+                    && it <= endColNum
+        }.map {
+            headers[it]
+        }.joinToString("\t")
+    }
+
+    @JavascriptInterface
     fun toHtml(
-        tsvString: String
+        tsvString: String,
+        onTh: String,
     ): String {
         val sourceRows = tsvString.split("\n")
         return sourceRows.map {
             line ->
-            val rows = line.split("\t").map {
-                cell ->
-                "<td>${cell}</td>"
+            val lineList = line.split("\t")
+            val lineListSize = lineList.size
+            val rows = (0 until lineListSize).map {
+                val cell = lineList[it]
+                execToHtml(
+                    onTh,
+                    cell,
+                    it,
+                )
             }.joinToString("")
             listOf("<tr>", rows,"</tr>").joinToString("")
         }.joinToString("\n")
@@ -384,6 +421,20 @@ class JsCsv(
             endRowNumSource >= rowSize
         ) return rowSize - 1
         return endRowNumSource - 1
+    }
+
+    private fun execToHtml(
+        onTh: String,
+        cell: String,
+        index: Int,
+    ): String {
+        if(
+            onTh.isNotEmpty()
+        ) return "<th class=\"${tableHeaderClassName}\">${cell}</th>"
+        if(
+            index == 0
+        ) return "<td class=\"${rowFirstClassName}\">${cell}</td>"
+        return "<td>${cell}</td>"
     }
 
 }
