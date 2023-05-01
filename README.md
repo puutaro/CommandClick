@@ -595,7 +595,7 @@ This, so colled, android app row code library.
  	`edit component` edit tool   
  	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)  
 
-- JsCsv  
+ - JsCsv  
  	csv edit tool   
 	- jsCsv.read(
 		tag: String,
@@ -605,7 +605,7 @@ This, so colled, android app row code library.
 		limitRowNumSource: Int
 	  ) -> save csv or tsv instance with tag  
 	 
-	 jsCsv.readM(
+	- jsCsv.readM(
 		tag: String,
 		csvString: String,
 		csvOrTsv: String,
