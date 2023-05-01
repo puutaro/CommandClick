@@ -642,7 +642,7 @@ This, so colled, android app row code library.
 		endRowNumSource: Int,
 	    ) -> colList sepalated by tab    
 	
-	- jsCsv.toHtml(tsvString: String)  
+	- jsCsv.toHtml(tsvString: String, onTh: String (empty -> ordinaly `td tag` html, some string -> `th tag` html))  
 		convert tsv to html string  
 		-> html string   
 	
