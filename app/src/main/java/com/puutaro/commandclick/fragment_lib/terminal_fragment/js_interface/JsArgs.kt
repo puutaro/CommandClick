@@ -12,6 +12,13 @@ class JsArgs(
 
     @JavascriptInterface
     fun get(): String {
-        return terminalViewModel.jsArguments + "\t"
+        val jsArguments = terminalViewModel.jsArguments + "\t"
+        terminalViewModel.jsArguments = String()
+        return jsArguments
+    }
+
+    @JavascriptInterface
+    fun set(args: String) {
+        terminalViewModel.jsArguments = args
     }
 }

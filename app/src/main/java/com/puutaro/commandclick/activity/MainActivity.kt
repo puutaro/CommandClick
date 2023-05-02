@@ -31,6 +31,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogFor
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.EditTextUpdaterForTerminalFragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.SpinnerUpdaterForTerminalFragment
 import com.puutaro.commandclick.activity_lib.init.MonitorFiles
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
@@ -59,6 +60,7 @@ class MainActivity:
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
     TerminalFragment.OnEditTextUpdateListenerForTermFragment,
+    TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -419,6 +421,14 @@ class MainActivity:
         EditTextUpdaterForTerminalFragment.update(
             this,
             editTextId,
+            variableValue
+        )
+    }
+
+    override fun onSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
+        SpinnerUpdaterForTerminalFragment.update(
+            this,
+            spinnerId,
             variableValue
         )
     }

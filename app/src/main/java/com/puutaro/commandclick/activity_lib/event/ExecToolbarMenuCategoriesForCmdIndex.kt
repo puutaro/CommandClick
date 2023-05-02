@@ -4,6 +4,8 @@ import android.app.AlertDialog
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -21,6 +23,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOr
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
 import com.puutaro.commandclick.activity_lib.manager.InitFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
+import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
