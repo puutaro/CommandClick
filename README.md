@@ -513,6 +513,8 @@ This, so colled, android app row code library.
 		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
 			-> `fristargment`\t`secondargument 2`  
 
+	- jsArgs.set(tabsepalete string) -> argment set (ex "{arg1}\t{arg2}\t..")  
+
  - JsIntent
  	- jsIntent.launchEditSite(editPath: String, srcPath: String, onClickSort: String(true/false), onSortableJs: String(true/false), onClickUrl: String(true/false), filterCode: String)  
  			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
@@ -593,7 +595,9 @@ This, so colled, android app row code library.
 
  - JsEdit  
  	`edit component` edit tool   
- 	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)  
+ 	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)   
+	
+	- jsEdit.onSpinnerUpdateForTermFragment(spinnerId: Int, variableValue: String)   
 
  - JsCsv  
  	csv edit tool   
