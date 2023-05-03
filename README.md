@@ -607,7 +607,7 @@ This, so colled, android app row code library.
 		isHeader: String,
 		csvOrTsv: String,
 		limitRowNumSource: Int
-	  ) -> save csv or tsv instance with tag  
+	  ) -> save csv or tsv instance with tag, also header   
 	 
 	- jsCsv.readM(
 		tag: String,
@@ -660,7 +660,12 @@ This, so colled, android app row code library.
 		srcTag: String,
 		destTag: String,
 		tabSepaFormura: String ({schema1},>,1500\t{schema2},in,Monday,\t{schema3},=,super man\t..)  
-	    ) -> save tsv instance with tag  
+	    ) -> save filterd tsv instance with tag, also header     
+	- jsCsv.selectColumn(
+		srcTag: String,
+		destTag: String,
+		comaSepaColumns: String ({column1}\t{column2}\t{column3}\t..)  
+	    ) -> save culumn selected tsv instance with tag, also header     
 	- jsCsv.sliceHeader(
 		tag: String,
 		startColNumSource: Int,
