@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
+import android.text.Editable
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -63,6 +64,11 @@ object ButtonViewProducer {
             true ,
         )
 
+        val cmdPrefixEntrySource = currentSetVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )
+        val buttonVariables = makeButtonVariables(cmdPrefixEntrySource)
+
         val linearParamsForButton = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -71,10 +77,12 @@ object ButtonViewProducer {
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
-        val buttonLabel = if(isInsertTextViewVisible){
-           "EXEC"
-        } else insertTextView.text
-        insertButton.setText(buttonLabel)
+
+        insertButton.text = makeButtonLabel(
+            buttonVariables,
+            isInsertTextViewVisible,
+            insertTextView.text.toString(),
+        )
         insertTextView.isVisible = isInsertTextViewVisible
 
         insertButton.setOnClickListener {
@@ -85,10 +93,10 @@ object ButtonViewProducer {
             )
             val execCmdEditable = insertEditText.text
 
-            val cmdPrefixEntrySource = currentSetVariableMap?.get(
-                SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-            )
-            val cmdPrefix = makeCmdPrefix(cmdPrefixEntrySource)
+            val cmdPrefix = buttonVariables
+                .split("!")
+                .firstOrNull()
+                ?: String()
             if(
                 execCmdEditable.isNullOrEmpty()
                 && cmdPrefix.isEmpty()
@@ -175,7 +183,7 @@ object ButtonViewProducer {
         return insertButton
     }
 
-    private fun makeCmdPrefix(
+    private fun makeButtonVariables(
         cmdPrefixEntrySource: String?
     ): String {
         if(
@@ -329,5 +337,20 @@ object ButtonViewProducer {
                 )
             }
         }
+    }
+
+    private fun makeButtonLabel(
+        buttonVariables: String,
+        isInsertTextViewVisible: Boolean,
+        textViewLabel: String,
+    ): String {
+        val buttonLabelSource = buttonVariables.split("!")
+            .getOrNull(1)
+        return if(
+            !buttonLabelSource.isNullOrEmpty()
+        ) buttonLabelSource
+        else if(isInsertTextViewVisible){
+            "EXEC"
+        } else textViewLabel
     }
 }

@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -42,7 +43,6 @@ class WithInDeCremenViewWithButtonView(
         val numEntityMap = InDeCrementerViewProducer.makeNumEntityMap(
             variableTypeValue,
         )
-
         val initNumString = numEntityMap.get(
             numEntityMapColumn.INIT_NUM.name
         )
@@ -58,7 +58,7 @@ class WithInDeCremenViewWithButtonView(
         insertEditText.inputType = InputType.TYPE_CLASS_NUMBER
         insertEditText.layoutParams = linearParamsForEditTextTest
         insertEditText.setFocusableInTouchMode(true);
-        linearParamsForEditTextTest.weight = 0.4F
+        linearParamsForEditTextTest.weight = 0.49F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
 
@@ -66,7 +66,7 @@ class WithInDeCremenViewWithButtonView(
             insertEditText,
             editParameters,
             numEntityMap,
-            0.2F,
+            0.17F,
             true,
         )
         horizontalLinearLayout.addView(incButton)
@@ -74,7 +74,7 @@ class WithInDeCremenViewWithButtonView(
             insertEditText,
             editParameters,
             numEntityMap,
-            0.2F,
+            0.17F,
             false
         )
         horizontalLinearLayout.addView(decButton)
@@ -83,7 +83,7 @@ class WithInDeCremenViewWithButtonView(
             insertTextView,
             insertEditText,
             editParameters,
-            0.2F,
+            0.17F,
         true
         )
         horizontalLinearLayout.addView(insertButton)
