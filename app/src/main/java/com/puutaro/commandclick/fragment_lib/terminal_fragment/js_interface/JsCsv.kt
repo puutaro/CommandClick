@@ -5,6 +5,7 @@ import android.widget.Toast
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
+import kotlinx.coroutines.*
 import java.io.File
 
 class JsCsv(
@@ -43,6 +44,46 @@ class JsCsv(
 
     @JavascriptInterface
     fun read(
+        tag: String,
+        csvPath: String,
+        isHeader: String,
+        csvOrTsv: String,
+        limitRowNumSource: Int
+    ) {
+        var readCompSignal = false
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                execRead(
+                    tag,
+                    csvPath,
+                    isHeader,
+                    csvOrTsv,
+                    limitRowNumSource
+                )
+            }
+            withContext(Dispatchers.IO){
+                readCompSignal = true
+            }
+        }
+        runBlocking {
+            for (i in 1..60){
+                if(readCompSignal) break
+                val readingMark = "csv reading" +
+                        ".".repeat(i)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        readingMark,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                delay(2000)
+            }
+        }
+    }
+
+
+    private fun execRead(
         tag: String,
         csvPath: String,
         isHeader: String,
@@ -298,7 +339,120 @@ class JsCsv(
     }
 
     @JavascriptInterface
+    fun selectColumn(
+        srcTag: String,
+        destTag: String,
+        comaSepaColumns: String
+    ){
+        var selectCompSignal = false
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                execSelectColumn(
+                    srcTag,
+                    destTag,
+                    comaSepaColumns
+                )
+            }
+            withContext(Dispatchers.IO){
+                selectCompSignal = true
+            }
+        }
+        runBlocking {
+            for (i in 1..60){
+                if(selectCompSignal) break
+                val selectingMark = "column selecting" +
+                        ".".repeat(i)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        selectingMark,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                delay(2000)
+            }
+        }
+    }
+
+    private fun execSelectColumn(
+        srcTag: String,
+        destTag: String,
+        comaSepaColumns: String
+    ){
+
+        val rows = rowsMap[srcTag]
+        if(
+            rows.isNullOrEmpty()
+        ){
+            rowsMap[destTag] = emptyList()
+            return
+        }
+        val srcHeaderList = headerMap[srcTag]
+        if(srcHeaderList.isNullOrEmpty()){
+            rowsMap[destTag] = emptyList()
+            return
+        }
+        if(
+            comaSepaColumns.trim().trim(',').isEmpty()
+        ){
+            rowsMap[destTag] = rows
+            headerMap[destTag] = srcHeaderList
+            return
+        }
+        val inputHeaderList = comaSepaColumns.split(',')
+        headerMap[destTag] = inputHeaderList.filter {
+            srcHeaderList.contains(it) == true
+        }
+        val selectColumnIndexList = inputHeaderList.map {
+            srcHeaderList.indexOf(it.trim())
+        }.filter { it >= 0 }
+        rowsMap[destTag] = rows.map {
+            line ->
+            (line.indices).filter {
+                selectColumnIndexList.contains(it)
+            }.map {
+                line[it]
+            }
+        }
+    }
+    @JavascriptInterface
     fun filter(
+        srcTag: String,
+        destTag: String,
+        tabSepaFormura: String
+    ){
+        var filterCompSignal = false
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                execFilter(
+                    srcTag,
+                    destTag,
+                    tabSepaFormura
+                )
+            }
+            withContext(Dispatchers.IO){
+                filterCompSignal = true
+            }
+        }
+        runBlocking {
+            for (i in 1..60){
+                if(filterCompSignal) break
+                val filteringMark = "filtering" +
+                        ".".repeat(i)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        filteringMark,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                delay(2000)
+            }
+        }
+    }
+
+
+    private fun execFilter(
         srcTag: String,
         destTag: String,
         tabSepaFormura: String
@@ -310,6 +464,16 @@ class JsCsv(
             rowsMap[destTag] = emptyList()
             return
         }
+        headerMap[srcTag]?.let {
+            headerMap[destTag] = it
+        }
+        if(
+            tabSepaFormura.trim().isEmpty()
+        ){
+            rowsMap[destTag] = rows
+            return
+        }
+
         val filterNestMap = makeFilterMap(
             tabSepaFormura
         )
@@ -327,18 +491,20 @@ class JsCsv(
         return tabSepaFormura.split("\t").map {
             val filterLineList = it.trim().split(",")
             if(filterLineList.size != 3) return@map String() to mapOf()
-            val schema = filterLineList.firstOrNull()
+            val schema = filterLineList.firstOrNull()?.trim()
                 ?: String()
-            val simble = filterLineList.getOrNull(1)
+            val symbol = filterLineList.getOrNull(1)
+                ?.trim()
                 ?: String()
             val value = filterLineList.getOrNull(2)
+                ?.trim()
                 ?: String()
             schema to mapOf(
-                FilterMapKey.Simbol.name to simble,
+                FilterMapKey.Simbol.name to symbol,
                 FilterMapKey.Gain.name to value,
             )
         }.toMap().filterValues { it.isNotEmpty() }
-}
+    }
 
     private fun execRowsBuFilter(
         srcTag: String,
@@ -347,9 +513,10 @@ class JsCsv(
     ): List<List<String>>{
         val rowSize = rows.size
         return (0 until rowSize).filter {
-            val rowList = rows.get(it)
-            val rowLineSize = rowList.size ?: 0
-            val headerList = headerMap[srcTag] ?: emptyList()
+            val rowList = rows[it]
+            val rowLineSize = rowList.size
+            val headerList = headerMap[srcTag]
+                ?: emptyList()
             (0 until rowLineSize).all {
                 val schema = headerList.get(it)
                 val filterMap = filterNestMap.get(schema)
@@ -475,22 +642,6 @@ private fun judgeFloat(
         true
     } catch (e: Exception){
         false
-    }
-}
-
-
-
-private fun outType(
-    stringGain: String
-): String {
-    return try {
-        stringGain.toFloat()
-        TypeString.Float.name
-    } catch(e: Exception){
-        if(
-            judgeInt(stringGain)
-        ) TypeString.Int.name
-        else TypeString.Str.name
     }
 }
 

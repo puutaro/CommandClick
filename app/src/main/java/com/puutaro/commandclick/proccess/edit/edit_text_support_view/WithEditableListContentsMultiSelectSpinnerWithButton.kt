@@ -8,7 +8,7 @@ import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSeletctSpinnerViewProducer
 
 class WithEditableListContentsMultiSelectSpinnerWithButton(
     private val editFragment: EditFragment
@@ -29,14 +29,14 @@ class WithEditableListContentsMultiSelectSpinnerWithButton(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.5F
+        linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertMultiSpinner = MultiSelectSpinnerViewProducer.make(
+        val insertMultiSpinner = EditableListContentsMultiSeletctSpinnerViewProducer.make(
             insertTextView,
             insertEditText,
             editParameters,
-            0.3F,
+            0.2F,
         )
         horizontalLinearLayout.addView(insertMultiSpinner)
         val insertButton = ButtonViewProducer.make(

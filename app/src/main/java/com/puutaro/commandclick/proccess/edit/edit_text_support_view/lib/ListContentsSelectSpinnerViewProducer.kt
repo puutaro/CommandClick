@@ -23,44 +23,15 @@ object ListContentsSelectSpinnerViewProducer {
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentSetVariableMap = editParameters.setVariableMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-        val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
-                "Dir"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbList = currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                "${currentAppDirPath}/${currentScriptName}",
-                currentAppDirPath,
-                fannelDirName,
-                currentScriptName
-            )
-        }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
-                    editParameters
-                )
-            }?.split('|')
-            ?.firstOrNull()
-            ?.split('&')
-            ?: emptyList()
+        val elcbList = getElcbList(
+            editParameters
+        )
         val listContentsFilePath = elcbList.firstOrNull()
             ?: String()
         val listLimit = try {
@@ -129,6 +100,43 @@ object ListContentsSelectSpinnerViewProducer {
         }
         insertSpinner.layoutParams = linearParamsForSpinner
         return insertSpinner
+    }
+
+    fun getElcbList(
+        editParameters: EditParameters
+    ): List<String> {
+        val currentSetVariableMap = editParameters.setVariableMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return currentSetVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                "${currentAppDirPath}/${currentScriptName}",
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptName
+            )
+        }.let {
+            ReplaceVariableMapReflecter.reflect(
+                BothEdgeQuote.trim(it),
+                editParameters
+            )
+        }?.split('|')
+            ?.firstOrNull()
+            ?.split('&')
+            ?: emptyList()
     }
 }
 

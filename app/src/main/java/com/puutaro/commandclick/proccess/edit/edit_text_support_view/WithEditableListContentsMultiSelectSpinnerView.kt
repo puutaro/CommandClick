@@ -6,7 +6,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSeletctSpinnerViewProducer
 
 
 class WithEditableListContentsMultiSelectSpinnerView {
@@ -28,7 +28,7 @@ class WithEditableListContentsMultiSelectSpinnerView {
         linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertMultiSpinner = MultiSelectSpinnerViewProducer.make(
+        val insertMultiSpinner = EditableListContentsMultiSeletctSpinnerViewProducer.make(
             insertTextView,
             insertEditText,
             editParameters,

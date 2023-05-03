@@ -86,11 +86,13 @@ class EditTextProducerForEdit(
 
     private val withEditableMultiSelectSpinnerView = WithEditableMultiSelectSpinnerView()
 
-    private val withEditableMultiSelectSpinnerWithButtonView = WithEditableMultiSelectSpinnerWithButtonView(
+    private val withEditableMultiSelectSpinnerWithButtonView =
+        WithEditableMultiSelectSpinnerWithButtonView(
         editFragment
     )
 
-    private val withEditableListContentsMultiSelectSpinnerView = WithEditableListContentsMultiSelectSpinnerView()
+    private val withEditableListContentsMultiSelectSpinnerView =
+        WithEditableListContentsMultiSelectSpinnerView()
 
     private val withEditableListContentsMultiSelectSpinnerWithButton = WithEditableListContentsMultiSelectSpinnerWithButton(
         editFragment
@@ -330,7 +332,7 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
-                EditTextSupportViewName.EDITABLE_LIST_MULTI_CHECK_BOX.str -> {
+                EditTextSupportViewName.EDITABLE_LIST_CONTENT_MULTI_CHECK_BOX.str -> {
                     val innerLinearLayout = withEditableListContentsMultiSelectSpinnerView.create(
                         insertTextView,
                         insertEditText,
@@ -338,7 +340,7 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
-                EditTextSupportViewName.EDITABLE_LIST_MULTI_CHECK_BOX_BUTTON.str -> {
+                EditTextSupportViewName.EDITABLE_LIST_CONTENT_MULTI_CHECK_BOX_BUTTON.str -> {
                     val innerLinearLayout = withEditableListContentsMultiSelectSpinnerWithButton.create(
                         insertTextView,
                         insertEditText,

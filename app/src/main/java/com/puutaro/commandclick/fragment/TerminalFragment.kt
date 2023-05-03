@@ -14,6 +14,7 @@ import android.webkit.WebChromeClient
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
@@ -250,6 +251,15 @@ class TerminalFragment: Fragment() {
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
+    }
+
+    interface OnMultiSelectListenerForTerm {
+        fun onMultiSelectForTerm(
+            updatedMultiModelArray: ArrayList<MultiSelectModel>,
+            preSelectedMultiModelArray: ArrayList<Int>
+        ){
+
+        }
     }
 
 

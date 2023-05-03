@@ -4,12 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import java.io.File
@@ -25,19 +21,6 @@ object EditableListContentsSelectSpinnerViewProducer {
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentSetVariableMap = editParameters.setVariableMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-        val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
-                "Dir"
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -45,25 +28,9 @@ object EditableListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbList = currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                "${currentAppDirPath}/${currentScriptName}",
-                currentAppDirPath,
-                fannelDirName,
-                currentScriptName
-            )
-        }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
-                    editParameters
-                )
-            }?.split('|')
-            ?.firstOrNull()
-            ?.split('&')
-            ?: emptyList()
+        val elcbList = ListContentsSelectSpinnerViewProducer.getElcbList(
+            editParameters
+        )
 
         val listContentsFilePath = elcbList.firstOrNull()
             ?: String()

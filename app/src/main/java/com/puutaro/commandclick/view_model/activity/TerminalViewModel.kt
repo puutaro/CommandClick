@@ -25,6 +25,7 @@ class TerminalViewModel: ViewModel() {
     var jsArguments = String()
     var blocklist = hashSetOf<String>()
     var isStop = false
+    var multiSelectTabString = String()
 }
 
 
