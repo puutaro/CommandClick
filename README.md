@@ -134,34 +134,34 @@ At the same time, if you installed code editor, edit new file.
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `CB` | checkbox | {variableName}:CB=value1!value2!|..   |
-    | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;{command string} |..   |
+    | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;{command string}(!{button label}) |..   |
     | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
-    | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;{command string} |..   |
+    | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;{command string}(!{button label}) |..   |
     | `EFCB` | editable file checkbox | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix}) |..   |
-    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix})&#124;{command string} |..   |
+    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix})&#124;{command string}(!{button label}) |..   |
     | `LCB` | list file checkbox | {variableName}:LCB={target list file path} |..   |
-    | `LCBB` | list file checkbox with exec button | {variableName}:LCB={target list file path}&#124;{command string} |..   |
+    | `LCBB` | list file checkbox with exec button | {variableName}:LCB={target list file path}&#124;{command string}(!{button label}) |..   |
     | `ELCB` | editable list file checkbox | {variableName}:ELCB={target list file path}(&listLimitNum) |..   |
-    | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string} |..   |
+    | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string}(!{button label}) |..   |
     | `EMCB` | multi checkbox | {variableName}:EMCB=value1!value2!.. |..   |
-    | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;{command string} |..   |
+    | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;{command string}(!{button label}) |..   |
     | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB={target list file path}(&listLimitNum) |..   |
-    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string} |..   |
+    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string}(!{button label}) |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
-    | `NUMB` | increment or decrement number with exec button | {variableName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;{command string} |
+    | `NUMB` | increment or decrement number with exec button | {variableName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;{command string}(!{button label}) |
     | `FL` | file select button | {variableName}:FL=  |
-    | `FLB` | file select button with exec button | {variableName}:FLB={command string}  |
+    | `FLB` | file select button with exec button | {variableName}:FLB={command string}(!{button label})  |
     | `MFL` | file select button | {variableName}:MFL=  |
     | `DIR`  | directory select button | {variableName}:DIR= |
-    | `DIRB`  | directory select button | {variableName}:DIRB={command string} |
+    | `DIRB`  | directory select button | {variableName}:DIRB={command string}(!{button label}) |
     | `MDIR`  | directory select button | {variableName}:MDIR= |
     | `DT`  | create file button | {variableName}:DT=  |
     | `CLR` | select color  | {variableName}:CLR= |
-    | `CLRB` | select color with exec button | {variableName}:CLRB={command string} |
-    | `BTN` | botton  | {variableName}:BTN={{command string}}    |
-    | `FBTN` | botton  | {variableName}:FBTN={{command string}}    |
+    | `CLRB` | select color with exec button | {variableName}:CLRB={command string}(!{button label}) |
+    | `BTN` | botton  | {variableName}:BTN={command string}(!{button label})    |
+    | `FBTN` | botton  | {variableName}:FBTN={command string}(!{button label})    |
     
       - In `EFCB`, `EFCBB`, {grep suffix} have `NoExtend` macro, It display no extend file list
     
