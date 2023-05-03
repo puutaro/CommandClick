@@ -105,6 +105,7 @@ class TerminalFragment: Fragment() {
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
+        UrlHistoryBackUp.backup(this)
         AdBlocker.init(this)
 
         WebChromeClientSetter.set(this)

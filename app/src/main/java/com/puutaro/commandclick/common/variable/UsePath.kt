@@ -63,6 +63,7 @@ class UsePath {
         private const val cmdclickHitSystemDirName = "hit"
         const val cmdclickHitSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickHitSystemDirName}"
         const val cmdclickUrlHistoryFileName = "cmdclickUrlHistory"
+        const val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory"
         const val cmdclickStartupJsName = "cmdclick_startup.js"
         const val longPressSrcImageAnchorJsName = "long_press_src_image_anchor.js"
         const val longPressSrcAnchorJsName = "long_press_src_anchor.js"
