@@ -543,6 +543,21 @@ This, so colled, android app row code library.
 					`efcb=\tefcb=tubeCrara\tnumber=\tpassword=\ttxt=cb2=tt\tdb3=gg`  
 				)      
  			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
+				
+				
+	- jsDialog.multiListDialog(
+		title: String,  
+		currentItemListStr: String(tab sepalate),  
+		preSelectedItemListStr: String(tab sepalate),  
+	    ) -> tab sepalated items
+ 		 - ex) 
+ 				jsDialog.multiListDialog(
+					"{item1}\t{item2}",  
+					`{item1}\t{item2}\t{item3}\t{item4}`  
+				)      
+ 			        -> {item1}\t{item2}\t{item4}  
+				
+				
  - JsStop
  	- jsStop.how() (measure for `while roop` crush when application focus out)
  - JsToast
@@ -595,9 +610,18 @@ This, so colled, android app row code library.
 
  - JsEdit  
  	`edit component` edit tool   
+	- jsEdit.getFromEditText(
+		targetVariableName: String,
+	    ) -> target variable value stirng  
+	    
  	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)   
 	
 	- jsEdit.onSpinnerUpdateForTermFragment(spinnerId: Int, variableValue: String)   
+	- jsEdit.updateByVariable(
+		fannelScriptPath: String,
+		targetVariableName: String,
+		updateVariableValue: String,
+	    ) -> update target variable value  
 
  - JsCsv  
  	csv edit tool   
