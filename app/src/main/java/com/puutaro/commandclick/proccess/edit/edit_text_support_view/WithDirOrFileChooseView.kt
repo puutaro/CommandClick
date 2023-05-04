@@ -16,8 +16,8 @@ class WithDirOrFileChooseView(
     fun create(
         insertEditText: EditText,
         editParameters: EditParameters,
-        onDirectoryPick: Boolean = true
     ): LinearLayout {
+        val onDirectoryPick = editParameters.onDirectoryPick
         val context = editParameters.context
         val currentVariableValue = editParameters.currentVariableValue
         val horizontalLinearLayout = LinearLayout(context)

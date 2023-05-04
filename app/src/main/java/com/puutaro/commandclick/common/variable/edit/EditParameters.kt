@@ -14,4 +14,5 @@ data class EditParameters(
     var currentId: Int = 0
     var currentVariableValue: String? = null
     var setVariableMap:  Map<String, String>? = null
+    var onDirectoryPick: Boolean = false
 }

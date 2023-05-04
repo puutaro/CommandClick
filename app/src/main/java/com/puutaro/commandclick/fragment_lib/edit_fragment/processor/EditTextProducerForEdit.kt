@@ -110,6 +110,11 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withEditableListContentsSelectSpinnerWithFileChooser = WithEditableListContentsSelectSpinnerWithFileChooser(
+        editFragment,
+    )
+
+
 
     private val withDirOrFileChooseView = WithDirOrFileChooseView(
         editFragment
@@ -294,6 +299,22 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_DIRECTORY_PICKER.str -> {
+                    editParameters.onDirectoryPick = true
+                    val innerLinearLayout = withEditableListContentsSelectSpinnerWithFileChooser.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_FILE_PICKER.str -> {
+                    editParameters.onDirectoryPick = false
+                    val innerLinearLayout = withEditableListContentsSelectSpinnerWithFileChooser.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX.str -> {
                     val innerLinearLayout = withListContentsSelectSpinnerView.create(
                         insertEditText,
@@ -350,6 +371,7 @@ class EditTextProducerForEdit(
                 }
                 EditTextSupportViewName.MDIRECTORY_PICKER.str,
                 EditTextSupportViewName.DIRECTORY_PICKER.str -> {
+                    editParameters.onDirectoryPick = true
                     val innerLinearLayout = withDirOrFileChooseView.create(
                         insertEditText,
                         editParameters,
@@ -357,6 +379,7 @@ class EditTextProducerForEdit(
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.DIRECTORY_PICKER_BUTTON.str -> {
+                    editParameters.onDirectoryPick = true
                     val innerLinearLayout = withDirOrFileChooseViewWithButtonView.create(
                         insertTextView,
                         insertEditText,
@@ -366,19 +389,19 @@ class EditTextProducerForEdit(
                 }
                 EditTextSupportViewName.FILE_PICKER.str,
                 EditTextSupportViewName.MFILE_PICKER.str -> {
+                    editParameters.onDirectoryPick = false
                     val innerLinearLayout = withDirOrFileChooseView.create(
                         insertEditText,
                         editParameters,
-                        false
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.FILE_PICKER_BUTTON.str -> {
+                    editParameters.onDirectoryPick = false
                     val innerLinearLayout = withDirOrFileChooseViewWithButtonView.create(
                         insertTextView,
                         insertEditText,
                         editParameters,
-                        false
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }

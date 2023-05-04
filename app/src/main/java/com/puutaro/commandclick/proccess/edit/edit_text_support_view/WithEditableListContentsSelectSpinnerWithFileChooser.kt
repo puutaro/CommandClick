@@ -5,49 +5,48 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class WithDirOrFileChooseViewWithButtonView(
+class WithEditableListContentsSelectSpinnerWithFileChooser(
     private val editFragment: EditFragment,
 ) {
+    val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
     fun create(
-        insertTextView: TextView,
         insertEditText: EditText,
-        editParameters: EditParameters,
+        editParameters: EditParameters
     ): LinearLayout {
-        val onDirectoryPick = editParameters.onDirectoryPick
         val context = editParameters.context
         val currentVariableValue = editParameters.currentVariableValue
+        val onDirectoryPick = editParameters.onDirectoryPick
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
-        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        insertEditText.setText(currentVariableValue)
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
             0,
             ViewGroup.LayoutParams.WRAP_CONTENT,
         )
-        linearParamsForEditTextTest.weight = 0.6F
+        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
+        insertEditText.setText(currentVariableValue)
+        linearParamsForEditTextTest.weight = 0.5F
         insertEditText.layoutParams = linearParamsForEditTextTest
-        insertEditText.isFocusableInTouchMode = true;
         horizontalLinearLayout.addView(insertEditText)
-        val insertChooseButtonView = DirOrFileChooseProducer.make(
+        val insertSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+            insertEditText,
+            editParameters,
+            0.3F,
+        )
+        horizontalLinearLayout.addView(insertSpinner)
+        val insertButton = DirOrFileChooseProducer.make(
             editFragment,
             onDirectoryPick,
             insertEditText,
             0.2F,
-        )
-        horizontalLinearLayout.addView(insertChooseButtonView)
-        val insertButton = ButtonViewProducer.make(
-            editFragment,
-            insertTextView,
-            insertEditText,
-            editParameters,
-            0.2F,
-            true
         )
         horizontalLinearLayout.addView(insertButton)
         return horizontalLinearLayout
