@@ -177,7 +177,7 @@ class CommandClickScriptVariable {
             "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
             "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
             "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
-            "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=1..1000!1",
+            "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=0..1000!1",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
             "${EXEC_JS_OR_HTML_PATH}:FL=",

@@ -9,11 +9,9 @@ import kotlinx.coroutines.*
 import java.io.File
 
 class JsCsv(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
-    var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
-    var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     val jsText = JsText(terminalFragment)
     val tableHeaderClassName = "tableHeader"
     val rowFirstClassName = "rowFirst"
@@ -22,21 +20,21 @@ class JsCsv(
     fun takeRowSize(
         tag: String
     ): Int {
-        return rowsMap[tag]?.size ?: 0
+        return terminalFragment.rowsMap[tag]?.size ?: 0
     }
 
     @JavascriptInterface
     fun takeColSize(
         tag: String
     ): Int {
-        return rowsMap[tag]?.firstOrNull()?.size ?: 0
+        return terminalFragment.rowsMap[tag]?.firstOrNull()?.size ?: 0
     }
 
     @JavascriptInterface
     fun isRead(
         tag: String
     ): String {
-        return rowsMap
+        return terminalFragment.rowsMap
             .get(tag)
             ?.joinToString("")
             ?: String()
@@ -105,7 +103,7 @@ class JsCsv(
             }
             tsvReader.readAll(file)
         }
-        headerMap[tag] = rowsSource[0]
+        terminalFragment.headerMap[tag] = rowsSource[0]
         val limitRowNum = if(
             limitRowNumSource == 0
             || !judgeInt(limitRowNumSource.toString())
@@ -115,7 +113,7 @@ class JsCsv(
             isHeader.isEmpty()
         ){
             val rowsSourceSize = rowsSource.size
-            rowsMap[tag] = if(
+            terminalFragment.rowsMap[tag] = if(
                 rowsSourceSize > 1
             ) rowsSource.slice(
                 1 until rowsSource.size
@@ -123,7 +121,7 @@ class JsCsv(
             else emptyList()
             return
         }
-        else rowsMap[tag] = rowsSource.take(limitRowNum)
+        else terminalFragment.rowsMap[tag] = rowsSource.take(limitRowNum)
     }
 
     @JavascriptInterface
@@ -137,7 +135,7 @@ class JsCsv(
                 csvOrTsv.isEmpty()
                 || csvOrTsv == FileType.CSV.name
             ){
-                rowsMap[tag] = csvReader().readAll(csvString)
+                terminalFragment.rowsMap[tag] = csvReader().readAll(csvString)
                 return
             }
             val tsvReader = csvReader {
@@ -146,7 +144,7 @@ class JsCsv(
                 delimiter = '\t'
                 escapeChar = '\\'
             }
-            rowsMap[tag] = tsvReader.readAll(csvString)
+            terminalFragment.rowsMap[tag] = tsvReader.readAll(csvString)
         } catch(e: Exception) {
             Toast.makeText(
                 context,
@@ -161,7 +159,7 @@ class JsCsv(
         tag: String,
         colNum: Int,
     ): String {
-        val headerList =  headerMap[tag]
+        val headerList =  terminalFragment.headerMap[tag]
             ?: return String()
         val colSize = headerList.size
         if(
@@ -187,7 +185,7 @@ class JsCsv(
         if(
             startCol > endColNum
         ) return String()
-        val headerList =  headerMap[tag]
+        val headerList =  terminalFragment.headerMap[tag]
             ?: return String()
         val colSize = headerList.size
         val lastColEndNum = if(
@@ -217,7 +215,7 @@ class JsCsv(
         if(
             startCol > endColNum
         ) return String()
-        val rows = rowsMap[tag]
+        val rows = terminalFragment.rowsMap[tag]
             ?: return String()
         val cols = rows[rowNum]
         val colsSize = cols.size
@@ -247,7 +245,7 @@ class JsCsv(
         if(startRow > endRowNum) return String()
         try {
             return (startRow..endRowNum).map {
-                val row = rowsMap[tag]
+                val row = terminalFragment.rowsMap[tag]
                     ?.get(it)
                     ?: return@map String()
                 val colSize = row.size
@@ -321,7 +319,7 @@ class JsCsv(
     fun outPutTsvForDRow(
         tag: String
     ): String {
-        return rowsMap[tag]?.map {
+        return terminalFragment.rowsMap[tag]?.map {
             it.joinToString("\t")
         }?.joinToString("\n")
             ?: String()
@@ -331,7 +329,7 @@ class JsCsv(
     fun outPutTsvForDCol(
         tag: String
     ): String {
-        val rows = rowsMap[tag]
+        val rows = terminalFragment.rowsMap[tag]
             ?: return String()
         return jsText.transpose(rows).map {
             it.joinToString("\t")
@@ -380,33 +378,33 @@ class JsCsv(
         comaSepaColumns: String
     ){
 
-        val rows = rowsMap[srcTag]
+        val rows = terminalFragment.rowsMap[srcTag]
         if(
             rows.isNullOrEmpty()
         ){
-            rowsMap[destTag] = emptyList()
+            terminalFragment.rowsMap[destTag] = emptyList()
             return
         }
-        val srcHeaderList = headerMap[srcTag]
+        val srcHeaderList = terminalFragment.headerMap[srcTag]
         if(srcHeaderList.isNullOrEmpty()){
-            rowsMap[destTag] = emptyList()
+            terminalFragment.rowsMap[destTag] = emptyList()
             return
         }
         if(
             comaSepaColumns.trim().trim(',').isEmpty()
         ){
-            rowsMap[destTag] = rows
-            headerMap[destTag] = srcHeaderList
+            terminalFragment.rowsMap[destTag] = rows
+            terminalFragment.headerMap[destTag] = srcHeaderList
             return
         }
         val inputHeaderList = comaSepaColumns.split(',')
-        headerMap[destTag] = inputHeaderList.filter {
+        terminalFragment.headerMap[destTag] = inputHeaderList.filter {
             srcHeaderList.contains(it) == true
         }
         val selectColumnIndexList = inputHeaderList.map {
             srcHeaderList.indexOf(it.trim())
         }.filter { it >= 0 }
-        rowsMap[destTag] = rows.map {
+        terminalFragment.rowsMap[destTag] = rows.map {
             line ->
             (line.indices).filter {
                 selectColumnIndexList.contains(it)
@@ -457,20 +455,20 @@ class JsCsv(
         destTag: String,
         tabSepaFormura: String
     ){
-        val rows = rowsMap[srcTag]
+        val rows = terminalFragment.rowsMap[srcTag]
         if(
             rows.isNullOrEmpty()
         ){
-            rowsMap[destTag] = emptyList()
+            terminalFragment.rowsMap[destTag] = emptyList()
             return
         }
-        headerMap[srcTag]?.let {
-            headerMap[destTag] = it
+        terminalFragment.headerMap[srcTag]?.let {
+            terminalFragment.headerMap[destTag] = it
         }
         if(
             tabSepaFormura.trim().isEmpty()
         ){
-            rowsMap[destTag] = rows
+            terminalFragment.rowsMap[destTag] = rows
             return
         }
 
@@ -482,7 +480,7 @@ class JsCsv(
             filterNestMap,
             rows
         )
-        rowsMap.put(destTag, filteredRows)
+        terminalFragment.rowsMap.put(destTag, filteredRows)
     }
 
     private fun makeFilterMap(
@@ -515,7 +513,7 @@ class JsCsv(
         return (0 until rowSize).filter {
             val rowList = rows[it]
             val rowLineSize = rowList.size
-            val headerList = headerMap[srcTag]
+            val headerList = terminalFragment.headerMap[srcTag]
                 ?: emptyList()
             (0 until rowLineSize).all {
                 val schema = headerList.get(it)
@@ -566,7 +564,7 @@ class JsCsv(
         if(
             startRowNumSource <= 0
         ) return 0
-        val rowSize = rowsMap[tag]?.size
+        val rowSize = terminalFragment.rowsMap[tag]?.size
             ?: return 0
         if(
             startRowNumSource >= rowSize
@@ -579,7 +577,7 @@ class JsCsv(
         tag: String,
         endRowNumSource: Int,
     ): Int {
-        val rowSize = rowsMap[tag]?.size
+        val rowSize = terminalFragment.rowsMap[tag]?.size
             ?: return 0
         if(
             endRowNumSource <= 0
@@ -643,12 +641,6 @@ private fun judgeFloat(
     } catch (e: Exception){
         false
     }
-}
-
-private enum class TypeString{
-    Str,
-    Int,
-    Float,
 }
 
 private enum class FileType {

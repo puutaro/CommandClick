@@ -54,6 +54,8 @@ class TerminalFragment: Fragment() {
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     val trimLastLine = 500
+    var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
+    var headerMap: MutableMap<String, List<String>> = mutableMapOf()
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
