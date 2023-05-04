@@ -256,11 +256,10 @@ class TerminalFragment: Fragment() {
 
     interface OnMultiSelectListenerForTerm {
         fun onMultiSelectForTerm(
+            title: String,
             updatedMultiModelArray: ArrayList<MultiSelectModel>,
             preSelectedMultiModelArray: ArrayList<Int>
-        ){
-
-        }
+        )
     }
 
 

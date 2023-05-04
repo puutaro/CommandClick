@@ -8,13 +8,12 @@ import com.puutaro.commandclick.util.ReadText
 import java.io.File
 
 class JsListSelect(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val jsIntent = JsIntent(terminalFragment)
-    private val jsScript = JsScript(terminalFragment)
-
     private val escapeCharHyphen = "-"
+
+
     @JavascriptInterface
     fun updateListFileCon(
         targetListFilePath: String,
@@ -158,6 +157,7 @@ class JsListSelect(
             searchListFileName
         ).textToList().firstOrNull() ?: String()
 
+        val jsScript = JsScript(terminalFragment)
         val currentAppDirPath = currentScriptObj.parent
             ?: return
         val scriptName = currentScriptObj.name
@@ -184,6 +184,7 @@ class JsListSelect(
             scriptName,
             replacedScriptContents
         )
+        val jsIntent = JsIntent(terminalFragment)
         jsIntent.launchShortcut(
             currentAppDirPath,
             scriptName

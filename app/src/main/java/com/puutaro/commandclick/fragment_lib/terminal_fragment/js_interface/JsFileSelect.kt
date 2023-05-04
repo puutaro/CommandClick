@@ -16,9 +16,6 @@ import java.io.File
 class JsFileSelect(
     private val terminalFragment: TerminalFragment
 ) {
-
-    private val jsScript = JsScript(terminalFragment)
-    private val jsIntent = JsIntent(terminalFragment)
     private val context = terminalFragment.context
     private val suffixMacroWord = FileSelectSpinnerViewProducer.noExtend
 
@@ -206,6 +203,7 @@ class JsFileSelect(
             ).show()
             return
         }
+        val jsScript = JsScript(terminalFragment)
         val scriptContents = ReadText(
             parentDirPath,
             scriptFileName
@@ -219,6 +217,7 @@ class JsFileSelect(
             scriptFileName,
             replaceContents
         )
+        val jsIntent = JsIntent(terminalFragment)
         jsIntent.launchShortcut(
             parentDirPath,
             scriptFileName

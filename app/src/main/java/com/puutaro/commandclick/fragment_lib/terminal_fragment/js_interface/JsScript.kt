@@ -33,7 +33,6 @@ class JsScript(
     private val commandEndHolder = languageTypeHolderMap?.get(
         CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     )
-    private val jsEdit = JsEdit(terminalFragment)
 
     @JavascriptInterface
     fun subLabelingVars(

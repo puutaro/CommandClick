@@ -28,6 +28,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandl
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.EditTextUpdaterForTerminalFragment
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
@@ -61,6 +62,7 @@ class MainActivity:
     TerminalFragment.OnFileChooseListener,
     TerminalFragment.OnEditTextUpdateListenerForTermFragment,
     TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
+    TerminalFragment.OnMultiSelectListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -443,6 +445,19 @@ class MainActivity:
             this@MainActivity,
             variableName,
             editTextId,
+            updatedMultiModelArray,
+            preSelectedMultiModelArray
+        )
+    }
+
+    override fun onMultiSelectForTerm(
+        title: String,
+        updatedMultiModelArray: ArrayList<MultiSelectModel>,
+        preSelectedMultiModelArray: ArrayList<Int>
+    ) {
+        MultiSelectListContentsDialogForEdit.show(
+            this,
+            title,
             updatedMultiModelArray,
             preSelectedMultiModelArray
         )
