@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
@@ -12,9 +13,10 @@ object UrlHistoryBackUp {
     fun backup(
         terminalFragment: TerminalFragment
     ){
+        val trimLastLineForBackup = terminalFragment.trimLastLine
         val currentAppDirPath =
             terminalFragment.currentAppDirPath
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(Dispatchers.Main).launch {
             val appUrlSystemDirPath =
                 "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val cmdclickUrlHistoryFileName =
@@ -29,12 +31,9 @@ object UrlHistoryBackUp {
             val urlHistoryBackupConList = ReadText(
                 appUrlSystemDirPath,
                 cmdclickUrlHistoryBackupFileName
-            ).textToList()
+            ).textToList().take(trimLastLineForBackup)
             val urlHistoryBuckupConListSize =
                 urlHistoryBackupConList.size
-            if(
-                urlHistoryConListSize == urlHistoryBuckupConListSize
-            ) return@launch
             if(
                 urlHistoryConListSize < urlHistoryBuckupConListSize
             ) {

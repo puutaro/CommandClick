@@ -53,6 +53,7 @@ class TerminalFragment: Fragment() {
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
+    val trimLastLine = 500
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {

@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import kotlinx.coroutines.*
 import java.lang.Runnable
@@ -37,11 +36,6 @@ object InDeCrementerViewProducer {
             numEntityMap.get(numEntityMapColumn.STEP_NUM.name),
             initStepNum
         )
-//        Toast.makeText(
-//            context,
-//            numEntityMap.toString(),
-//            Toast.LENGTH_SHORT
-//        ).show()
 
         var incrementNum = incrementStepNum
 

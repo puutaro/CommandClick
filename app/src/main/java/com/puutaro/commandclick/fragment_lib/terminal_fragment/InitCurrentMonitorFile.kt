@@ -13,8 +13,8 @@ class InitCurrentMonitorFile {
             fun trim(
                 terminalFragment: TerminalFragment
             ) {
+                val trimLastLine = terminalFragment.trimLastLine
                 val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-                val trimLastLine = 500
                 val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
                 val currentMonitorFileName = terminalViewModel.currentMonitorFileName
                 val trimedMonitorContents = ReadText(
