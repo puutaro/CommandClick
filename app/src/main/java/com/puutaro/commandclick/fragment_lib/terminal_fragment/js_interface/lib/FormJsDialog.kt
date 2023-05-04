@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
@@ -331,6 +332,15 @@ class FormJsDialog(
                     )
                     linearLayout.addView(insertingEditText)
                 }
+                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
+                    val insertingEditText = execInsertEditText(
+                        insertEditText,
+                        linearParams,
+                        currentVariableValue,
+                        EditTextType.READ_ONLY
+                    )
+                    linearLayout.addView(insertingEditText)
+                }
                 else -> {
                     val insertingEditText = execInsertEditText(
                         insertEditText,
@@ -352,7 +362,10 @@ class FormJsDialog(
         insertEditText.setText(currentVariableValue)
         insertEditText.layoutParams = linearParams
         when(textType){
-            EditTextType.READ_ONLY -> insertEditText.setEnabled(false)
+            EditTextType.READ_ONLY -> {
+                insertEditText.setEnabled(false)
+                insertEditText.focusable = View.NOT_FOCUSABLE
+            }
             EditTextType.PASSWORD -> insertEditText.inputType = (
                     InputType.TYPE_CLASS_TEXT or
                             InputType.TYPE_TEXT_VARIATION_PASSWORD
