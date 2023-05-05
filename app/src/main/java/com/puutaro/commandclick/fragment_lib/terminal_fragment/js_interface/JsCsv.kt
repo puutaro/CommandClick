@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
+import android.util.Log
+import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
@@ -49,15 +51,21 @@ class JsCsv(
         limitRowNumSource: Int
     ) {
         var readCompSignal = false
+        var errMessage = String()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                execRead(
-                    tag,
-                    csvPath,
-                    isHeader,
-                    csvOrTsv,
-                    limitRowNumSource
-                )
+                try {
+                    execRead(
+                        tag,
+                        csvPath,
+                        isHeader,
+                        csvOrTsv,
+                        limitRowNumSource
+                    )
+                } catch (e: Exception){
+                    errMessage = e.toString()
+                    Log.e("csv", errMessage)
+                }
             }
             withContext(Dispatchers.IO){
                 readCompSignal = true
@@ -65,6 +73,7 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
+                toastErrMessage(errMessage)
                 if(readCompSignal) break
                 val readingMark = "csv reading" +
                         ".".repeat(i)
@@ -420,13 +429,19 @@ class JsCsv(
         tabSepaFormura: String
     ){
         var filterCompSignal = false
+        var errMessage = String()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                execFilter(
-                    srcTag,
-                    destTag,
-                    tabSepaFormura
-                )
+                try {
+                    execFilter(
+                        srcTag,
+                        destTag,
+                        tabSepaFormura
+                    )
+                } catch(e: Exception){
+                    errMessage = e.toString()
+                    Log.e("csv", errMessage)
+                }
             }
             withContext(Dispatchers.IO){
                 filterCompSignal = true
@@ -434,6 +449,7 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
+                toastErrMessage(errMessage)
                 if(filterCompSignal) break
                 val filteringMark = "filtering" +
                         ".".repeat(i)
@@ -600,6 +616,21 @@ class JsCsv(
             index == 0
         ) return "<td class=\"${rowFirstClassName}\">${cell}</td>"
         return "<td>${cell}</td>"
+    }
+
+    private fun toastErrMessage(
+        errMessage: String
+    ){
+        if(
+            errMessage.isEmpty()
+        ) return
+        val ts = Toast.makeText(
+            context,
+            errMessage,
+            Toast.LENGTH_LONG
+        )
+        ts.setGravity(Gravity.CENTER, 0, 0)
+        ts.show()
     }
 
 }
