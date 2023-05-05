@@ -504,7 +504,11 @@ This, so colled, android app row code library.
 		- remove local direcotry   
 	- jsFileStystem.copyDir(sourcePath: String, destiDirPath: String)  
 		- copy local directory 
-	- jsFileSystem.outputSwitch(switch: String) -> switch == on, then enable terminal output. other default.(althogh being webmode, terminal mode off, this inmterface switch on)   
+	- jsFileSystem.outputSwitch(
+		switch: String
+	) -> switch == on, then enable terminal output. other default.(althogh being webmode, terminal mode off, this inmterface switch on)   
+	- jsFileSystem.isFile(filePath: String) -> boolean on)   
+	- jsFileSystem.isDir(DirectoryPath: String) -> boolean on)   
 
 
  - JsArgs 
