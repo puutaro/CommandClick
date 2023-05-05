@@ -210,14 +210,14 @@ class JsFileSystem(
     @JavascriptInterface
     fun isFile(
         path: String
-    ): String {
-        return File(path).isFile.toString()
+    ): Boolean {
+        return File(path).isFile
     }
 
     @JavascriptInterface
     fun isDir(
         path: String
-    ): String {
-        return File(path).isDirectory.toString()
+    ): Boolean {
+        return File(path).isDirectory
     }
 }
