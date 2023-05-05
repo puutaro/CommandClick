@@ -5,6 +5,7 @@ import android.os.Environment
 
 class UsePath {
     companion object {
+        private val tsvExtend = ".tsv"
         private val rootPath = Environment.getExternalStorageDirectory().absolutePath +
                 "/" + Environment.DIRECTORY_DOCUMENTS
         private const val cmdclickDirName = "cmdclick"
@@ -62,13 +63,13 @@ class UsePath {
         const val cmdclickUrlSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickUrlSystemDirName}"
         private const val cmdclickHitSystemDirName = "hit"
         const val cmdclickHitSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickHitSystemDirName}"
-        const val cmdclickUrlHistoryFileName = "cmdclickUrlHistory"
-        const val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory"
+        val cmdclickUrlHistoryFileName = "cmdclickUrlHistory${tsvExtend}"
+        val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory${tsvExtend}"
         const val cmdclickStartupJsName = "cmdclick_startup.js"
         const val longPressSrcImageAnchorJsName = "long_press_src_image_anchor.js"
         const val longPressSrcAnchorJsName = "long_press_src_anchor.js"
         const val longPressImageAnchorJsName = "long_press_image_anchor.js"
-        const val cmdclickFirstHistoryTitle = "firstHistoryTitle"
+        val cmdclickFirstHistoryTitle = "firstHistoryTitle${tsvExtend}"
         val urlLoadFinished = "urlLoadFinished"
         val fannelDirSuffix = "Dir"
 
@@ -89,6 +90,26 @@ class UsePath {
                 rootPath,
                 RootDirPathByTermux
             )
+        }
+
+        fun compExtend(
+            path: String,
+            extend: String
+        ): String {
+            if(
+                path.endsWith(extend)
+            ) return path
+            return path + extend
+        }
+
+        fun compPrefix(
+            path: String,
+            prefix: String
+        ): String {
+            if(
+                path.startsWith(prefix)
+            ) return path
+            return prefix + path
         }
     }
 }

@@ -91,6 +91,10 @@ class WebViewSettings {
                 JsText(terminalFragment),
                 JsInterfaceVariant.jsText.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsPath(terminalFragment),
+                JsInterfaceVariant.jsPath.name
+            )
         }
     }
 }
@@ -113,4 +117,5 @@ private enum class JsInterfaceVariant {
     jsFileSelect,
     jsCsv,
     jsText,
+    jsPath,
 }

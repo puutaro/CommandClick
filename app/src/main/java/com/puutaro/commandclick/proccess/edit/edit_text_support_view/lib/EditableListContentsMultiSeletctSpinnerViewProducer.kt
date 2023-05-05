@@ -20,7 +20,6 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
     ): Button {
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val throughMark = "-"
 
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,

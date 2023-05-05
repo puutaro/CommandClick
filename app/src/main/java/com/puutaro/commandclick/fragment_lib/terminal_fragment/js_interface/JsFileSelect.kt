@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.BothEdgeQuote
@@ -17,7 +18,8 @@ class JsFileSelect(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val suffixMacroWord = FileSelectSpinnerViewProducer.noExtend
+    private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
+    private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
 
     @JavascriptInterface
     fun execEditTargetFileName(
@@ -122,9 +124,9 @@ class JsFileSelect(
                 ).filter {
                     val onPrefix = it.startsWith(prefix)
                     val onSuffix = if(
-                        suffix == suffixMacroWord
+                        suffix == noSuffixMacroWord
                     ){
-                        !Regex("\\.[a-zA-Z0-9]*$").containsMatchIn(it)
+                        !totalExtendRegex.containsMatchIn(it)
                     } else it.endsWith(suffix)
                     onPrefix && onSuffix
                 }.lastOrNull() ?: return@OnClickListener
@@ -160,6 +162,11 @@ class JsFileSelect(
             prefix,
             suffix
         )
+        Toast.makeText(
+            context,
+            renameFileNameOkForDialog,
+            Toast.LENGTH_LONG
+        ).show()
         if(
             editFileNameForDialog == renameFileNameOkForDialog
         ){
@@ -229,17 +236,18 @@ class JsFileSelect(
         prefix: String,
         suffix: String
     ): String {
-        val renameFileNameOkForDialogSource = if(
-            renameFileNameForDialog.startsWith(prefix)
-        ) renameFileNameForDialog
-        else "${prefix}${renameFileNameForDialog}"
-        return if(
-            suffix == suffixMacroWord
-        ) renameFileNameOkForDialogSource
-        else if(
-            renameFileNameOkForDialogSource.endsWith(suffix)
-        ) renameFileNameOkForDialogSource
-        else "${renameFileNameOkForDialogSource}${suffix}"
+        val renameFileNameOkForDialogSource = UsePath.compPrefix(
+            renameFileNameForDialog,
+            prefix
+        )
+        if(
+            suffix == noSuffixMacroWord
+        ) return renameFileNameOkForDialogSource
+            .replace(totalExtendRegex, "")
+        return UsePath.compExtend(
+            renameFileNameOkForDialogSource,
+            suffix
+        )
     }
 
 }

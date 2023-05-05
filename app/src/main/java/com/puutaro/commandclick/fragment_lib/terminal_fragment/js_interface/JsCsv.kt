@@ -51,9 +51,8 @@ class JsCsv(
     @JavascriptInterface
     fun read(
         tag: String,
-        csvPath: String,
+        filePath: String,
         withNoHeader: String,
-        csvOrTsv: String,
         limitRowNumSource: Int
     ) {
         var readCompSignal = false
@@ -63,14 +62,11 @@ class JsCsv(
                 try {
                     execRead(
                         tag,
-                        csvPath,
+                        filePath,
                         withNoHeader,
-                        csvOrTsv,
                         limitRowNumSource
                     )
                 } catch (e: Exception){
-                    terminalFragment.rowsMap[tag] = emptyList()
-                    terminalFragment.headerMap[tag] = emptyList()
                     errMessage = e.toString()
                     Log.e("csv", errMessage)
                 }
@@ -83,7 +79,7 @@ class JsCsv(
             for (i in 1..60){
                 toastErrMessage(errMessage)
                 if(readCompSignal) break
-                val readingMark = "csv reading" +
+                val readingMark = "reading" +
                         ".".repeat(i)
                 withContext(Dispatchers.Main) {
                     Toast.makeText(
@@ -100,25 +96,34 @@ class JsCsv(
 
     private fun execRead(
         tag: String,
-        csvPath: String,
+        filePath: String,
         withNoHeader: String,
-        csvOrTsv: String,
         limitRowNumSource: Int
     ) {
-        val file = File(csvPath)
-        val rowsSource = if(
-            csvOrTsv.isEmpty()
-            || csvOrTsv == FileType.CSV.name
-        ) {
-            csvReader().readAll(file)
-        } else {
-            val tsvReader = csvReader {
-                charset = "ISO_8859_1"
-                quoteChar = '"'
-                delimiter = '\t'
-                escapeChar = '\\'
+        terminalFragment.rowsMap[tag] = emptyList()
+        terminalFragment.headerMap[tag] = emptyList()
+        val file = File(filePath)
+        val fileType = judgeFileType(filePath)
+        val rowsSource = when(fileType){
+            FileType.CSV -> csvReader().readAll(file)
+            FileType.TSV -> {
+                val tsvReader = csvReader {
+                    quoteChar = '"'
+                    delimiter = '\t'
+                    escapeChar = '\\'
+                }
+                tsvReader.readAll(file)
             }
-            tsvReader.readAll(file)
+            else -> {
+                terminalFragment.rowsMap[tag] = emptyList()
+                terminalFragment.headerMap[tag] = emptyList()
+                Toast.makeText(
+                    context,
+                    "Extend must be csv or tsv",
+                    Toast.LENGTH_LONG
+                ).show()
+                return
+            }
         }
         val headerList = rowsSource[0]
         terminalFragment.headerMap[tag] = headerList
@@ -465,8 +470,6 @@ class JsCsv(
                         tabSepaFormura
                     )
                 } catch(e: Exception){
-                    terminalFragment.rowsMap[destTag] = emptyList()
-                    terminalFragment.headerMap[destTag] = emptyList()
                     errMessage = e.toString()
                     Log.e("csv", errMessage)
                 }
@@ -499,6 +502,8 @@ class JsCsv(
         destTag: String,
         tabSepaFormura: String
     ){
+        terminalFragment.rowsMap[destTag] = emptyList()
+        terminalFragment.headerMap[destTag] = emptyList()
         val rows = terminalFragment.rowsMap[srcTag]
         if(
             rows.isNullOrEmpty()
@@ -691,6 +696,18 @@ private fun judgeInt(
   }
 }
 
+private fun judgeFileType(
+    filePath: String
+): FileType {
+    if(
+        filePath.endsWith(FileType.CSV.str)
+    ) return FileType.CSV
+    if(
+        filePath.endsWith(FileType.TSV.str)
+    ) return FileType.TSV
+    return FileType.OTHER
+}
+
 private fun judgeFloat(
     floatString: String
 ): Boolean {
@@ -702,7 +719,10 @@ private fun judgeFloat(
     }
 }
 
-private enum class FileType {
-    CSV,
-    TSV
+private enum class FileType(
+    val str: String
+) {
+    CSV("csv"),
+    TSV("tsv"),
+    OTHER("other"),
 }

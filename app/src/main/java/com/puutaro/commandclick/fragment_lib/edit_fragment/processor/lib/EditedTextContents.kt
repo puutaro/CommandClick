@@ -131,13 +131,10 @@ class EditedTextContents(
             LanguageTypeSelects.SHELL_SCRIPT -> CommandClickScriptVariable.SHELL_FILE_SUFFIX
             else -> CommandClickScriptVariable.JS_FILE_SUFFIX
         }
-        return if(
-            updateScriptFileNameSource.endsWith(scriptFileSuffix)
-        ) {
-            updateScriptFileNameSource
-        } else {
-            updateScriptFileNameSource + scriptFileSuffix
-        }
+        return UsePath.compExtend(
+            updateScriptFileNameSource,
+            scriptFileSuffix
+        )
     }
 
     private fun makeFunnelDirPath(

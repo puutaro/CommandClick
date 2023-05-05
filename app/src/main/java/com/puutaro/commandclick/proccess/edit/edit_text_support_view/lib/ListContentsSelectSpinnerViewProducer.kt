@@ -135,7 +135,7 @@ object ListContentsSelectSpinnerViewProducer {
             )
         }?.split('|')
             ?.firstOrNull()
-            ?.split('&')
+            ?.split('!')
             ?: emptyList()
     }
 }

@@ -69,7 +69,7 @@ object FileSelectSpinnerViewProducer {
                     BothEdgeQuote.trim(it),
                     editParameters
                 )
-            }?.split('&')
+            }?.split('!')
             ?: emptyList()
         val filterDirSource = dirPrefixSuffixList
             .firstOrNull()

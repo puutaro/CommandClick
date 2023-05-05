@@ -20,6 +20,7 @@ object HtmlLauncher{
         ) ?: return
         val title =
             editFilePath
+                .replace(Regex("\\.[a-zA-Z0-9]*$"), "")
                 .split('/')
                 .lastOrNull()
                 ?: return
