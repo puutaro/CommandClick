@@ -17,6 +17,7 @@ class JsCsv(
     val jsText = JsText(terminalFragment)
     val tableHeaderClassName = "tableHeader"
     val rowFirstClassName = "rowFirst"
+    val existSign = "exist"
 
     @JavascriptInterface
     fun takeRowSize(
@@ -36,17 +37,22 @@ class JsCsv(
     fun isRead(
         tag: String
     ): String {
-        return terminalFragment.rowsMap
-            .get(tag)
+        val rowsString = terminalFragment.rowsMap[tag]
             ?.joinToString("")
             ?: String()
+        val headerSize = terminalFragment.headerMap[tag]?.joinToString("\t")
+        if(
+            rowsString.isNotEmpty()
+            && !headerSize.isNullOrEmpty()
+        ) return existSign
+        return String()
     }
 
     @JavascriptInterface
     fun read(
         tag: String,
         csvPath: String,
-        isHeader: String,
+        withNoHeader: String,
         csvOrTsv: String,
         limitRowNumSource: Int
     ) {
@@ -58,11 +64,13 @@ class JsCsv(
                     execRead(
                         tag,
                         csvPath,
-                        isHeader,
+                        withNoHeader,
                         csvOrTsv,
                         limitRowNumSource
                     )
                 } catch (e: Exception){
+                    terminalFragment.rowsMap[tag] = emptyList()
+                    terminalFragment.headerMap[tag] = emptyList()
                     errMessage = e.toString()
                     Log.e("csv", errMessage)
                 }
@@ -93,7 +101,7 @@ class JsCsv(
     private fun execRead(
         tag: String,
         csvPath: String,
-        isHeader: String,
+        withNoHeader: String,
         csvOrTsv: String,
         limitRowNumSource: Int
     ) {
@@ -112,25 +120,32 @@ class JsCsv(
             }
             tsvReader.readAll(file)
         }
-        terminalFragment.headerMap[tag] = rowsSource[0]
+        val headerList = rowsSource[0]
+        terminalFragment.headerMap[tag] = headerList
+        if(
+            headerList.isEmpty()
+        ) {
+            terminalFragment.rowsMap[tag] = emptyList()
+            return
+        }
         val limitRowNum = if(
             limitRowNumSource == 0
             || !judgeInt(limitRowNumSource.toString())
         ) rowsSource.size
         else limitRowNumSource
         if(
-            isHeader.isEmpty()
+            withNoHeader.isNotEmpty()
         ){
-            val rowsSourceSize = rowsSource.size
-            terminalFragment.rowsMap[tag] = if(
-                rowsSourceSize > 1
-            ) rowsSource.slice(
-                1 until rowsSource.size
-            ).take(limitRowNum)
-            else emptyList()
+            terminalFragment.rowsMap[tag] = rowsSource.take(limitRowNum)
             return
         }
-        else terminalFragment.rowsMap[tag] = rowsSource.take(limitRowNum)
+        val rowsSourceSize = rowsSource.size
+        terminalFragment.rowsMap[tag] = if(
+            rowsSourceSize > 1
+        ) rowsSource.slice(
+            1 until rowsSource.size
+        ).take(limitRowNum)
+        else emptyList()
     }
 
     @JavascriptInterface
@@ -155,6 +170,8 @@ class JsCsv(
             }
             terminalFragment.rowsMap[tag] = tsvReader.readAll(csvString)
         } catch(e: Exception) {
+            terminalFragment.rowsMap[tag] = emptyList()
+            terminalFragment.headerMap[tag] = emptyList()
             Toast.makeText(
                 context,
                 e.toString(),
@@ -352,13 +369,21 @@ class JsCsv(
         comaSepaColumns: String
     ){
         var selectCompSignal = false
+        var errMessage = String()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                execSelectColumn(
-                    srcTag,
-                    destTag,
-                    comaSepaColumns
-                )
+                try {
+                    execSelectColumn(
+                        srcTag,
+                        destTag,
+                        comaSepaColumns
+                    )
+                } catch(e: Exception){
+                    terminalFragment.rowsMap[destTag] = emptyList()
+                    terminalFragment.headerMap[destTag] = emptyList()
+                    errMessage = e.toString()
+                    Log.e("csv", errMessage)
+                }
             }
             withContext(Dispatchers.IO){
                 selectCompSignal = true
@@ -366,6 +391,7 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
+                toastErrMessage(errMessage)
                 if(selectCompSignal) break
                 val selectingMark = "column selecting" +
                         ".".repeat(i)
@@ -439,6 +465,8 @@ class JsCsv(
                         tabSepaFormura
                     )
                 } catch(e: Exception){
+                    terminalFragment.rowsMap[destTag] = emptyList()
+                    terminalFragment.headerMap[destTag] = emptyList()
                     errMessage = e.toString()
                     Log.e("csv", errMessage)
                 }
