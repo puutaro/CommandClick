@@ -36,6 +36,7 @@ Table of Contents
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
   * [Install fannel](#install-fannel)
+  * [Import library](#import-library)
   * [Config](#config)
   * [Termux setting](#termux-setting)
   * [Select term](#select-term)
@@ -248,6 +249,38 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 	- `fannel` [detail](https://github.com/puutaro/commandclick-repository#desire)  
 	  
 ![image](https://user-images.githubusercontent.com/55217593/226502372-ab8ad71e-bddb-4b72-8e9e-9bda2e9aff09.png)   
+
+
+### Import library  
+
+`CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
+`CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
+Bellow is how to import. You can enjoy this all range import application!  
+
+- Local path import
+
+```
+ccimport {path}   
+* current directory -> `./`  
+* move parent direcoty -> ../  
+* ${00} -> cmdcclik root dirctory path macro  
+* ${01} -> current directory path  
+```
+
+- Assets import
+
+```
+ccimport /android_asset/{relative path}  
+(current directory -> `./`, move parent direcoty -> ../)
+```
+
+- WEB import
+
+```
+ccimport {URL}  
+* It is possible to download by curl {URL}
+```
+
 
 
 #### Config
