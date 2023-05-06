@@ -32,6 +32,7 @@ object ExecJsLoad {
                 selectedJsFileName
             ).isFile
         ) return
+        val context = currentFragment.context
         when (currentFragment) {
             is CommandIndexFragment -> {
                 val listener = currentFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
@@ -98,6 +99,7 @@ object ExecJsLoad {
         )
 
         JavascriptExecuter.exec(
+            context,
             terminalViewModel,
             substituteSettingVariableList,
             onUrlLaunchMacro,
@@ -106,6 +108,7 @@ object ExecJsLoad {
 
         terminalViewModel.onDisplayUpdate = true
         val launchUrlString = JavaScriptLoadUrl.make(
+            context,
             "${recentAppDirPath}/${selectedJsFileName}",
             jsContentsList
         ).toString()

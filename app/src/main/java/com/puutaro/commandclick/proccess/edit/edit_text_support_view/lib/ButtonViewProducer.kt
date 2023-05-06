@@ -295,6 +295,7 @@ object ButtonViewProducer {
         execCmdReplaceBlankList: List<String>,
     ){
         terminalViewModel.jsArguments = String()
+        val context = editFragment.context
         val jsFilePathIndex = 1
         val jsFilePath = BothEdgeQuote.trim(
             execCmdReplaceBlankList.get(
@@ -332,6 +333,7 @@ object ButtonViewProducer {
                 val listenerForWebLaunch = editFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
                 listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
                     JavaScriptLoadUrl.make(
+                        context,
                         jsFilePath,
                     ).toString()
                 )

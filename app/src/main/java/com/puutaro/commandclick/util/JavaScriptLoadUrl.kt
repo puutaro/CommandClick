@@ -1,15 +1,19 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.import.CcImportManager
 import java.io.File
 
 object JavaScriptLoadUrl {
     fun make (
+        context: Context?,
         execJsPath: String,
         jsListSource: List<String>? = null
     ):String? {
+        val commentOutMark = "//"
         val jsFileObj = File(execJsPath)
         if(!jsFileObj.isFile) return null
         val recentAppDirPath = jsFileObj.parent
@@ -57,6 +61,12 @@ object JavaScriptLoadUrl {
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
         val loadJsUrl = jsList.map {
+            CcImportManager.replace(
+                context,
+                it,
+                recentAppDirPath
+            )
+        }.map {
             if(
                 it.startsWith(settingSectionStart)
                 && it.endsWith(settingSectionStart)
@@ -89,9 +99,23 @@ object JavaScriptLoadUrl {
                 .trim(' ')
                 .trim('\t')
             if(
-                trimJsRow.startsWith("//")
+                trimJsRow.startsWith(commentOutMark)
             ) return@map String()
-            trimJsRow
+            if(
+                !trimJsRow.contains(commentOutMark)
+            ) return@map trimJsRow
+            val trimJsRowList = trimJsRow.split(";")
+            val includeCommentOut =  trimJsRowList
+                .lastOrNull()
+                ?.contains(commentOutMark)
+            if(
+                includeCommentOut != true
+            ) return@map trimJsRow
+            val trimJsRowListSize = trimJsRowList.size
+            val sliceTrimJsRowList = trimJsRowList.slice(
+                0..trimJsRowListSize - 2
+            ).joinToString(";") + ";"
+            sliceTrimJsRowList
         }.joinToString(" ")
             .let {
                 ScriptPreWordReplacer.replace(

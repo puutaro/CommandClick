@@ -94,11 +94,11 @@ class ExecTerminalDo {
             )
 
             JavascriptExecuter.exec(
+                context,
                 terminalViewModel,
                 substituteSettingVariableList,
                 onUrlLaunchMacro,
             )
-
 
 
             val execCmd = MakeExecCmdForTermux.make(

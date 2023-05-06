@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.WebUrlVariables
@@ -10,6 +11,7 @@ import java.io.File
 
 object JavascriptExecuter {
     fun exec(
+        context: Context?,
         terminalViewModel: TerminalViewModel,
         substituteSettingVariableList: List<String>?,
         onUrlLaunchMacro: String,
@@ -34,6 +36,7 @@ object JavascriptExecuter {
             )
         ) {
             terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
+                context,
                 execJsOrHtmlPath,
             )
             return

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
+import android.content.Context
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -14,8 +15,10 @@ class JsUrl(
     fun makeJsUrl(
         jsPath: String
     ): String {
-        return JavaScriptLoadUrl.make(jsPath)
-            ?: String()
+        return JavaScriptLoadUrl.make(
+            terminalFragment.context,
+            jsPath
+        ) ?: String()
     }
 
     @JavascriptInterface
