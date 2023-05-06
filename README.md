@@ -261,6 +261,7 @@ Bellow is how to import. You can enjoy this all range import application!
 
 ```
 ccimport {path}   
+  
 * current directory -> `./`  
 * move parent direcoty -> ../  
 * ${00} -> cmdcclik root dirctory path macro  
@@ -271,13 +272,13 @@ ccimport {path}
 
 ```
 ccimport /android_asset/{relative path}  
-(current directory -> `./`, move parent direcoty -> ../)
 ```
 
 - WEB import
 
 ```
 ccimport {URL}  
+  
 * It is possible to download by curl {URL}
 ```
 
