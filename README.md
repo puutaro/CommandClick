@@ -742,6 +742,7 @@ This, so colled, android app row code library.
 
 ### Javascript pre order word
 - `${0}` -> current file path  
+- `${00}` -> cmdcclik root dirctory path macro  
 - `${01}` -> parent directory path  
 - `${001}` -> `fannel` direcotry name (ex `cmdYoutuber` -> `cmdYoutubeDir`)  
 - `${02}` -> current script name  
