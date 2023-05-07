@@ -29,16 +29,16 @@ object ListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbList = getElcbList(
+        val elcbMap = getElcbMap(
             editParameters
         )
-        val listContentsFilePath = elcbList.firstOrNull()
-            ?: String()
-        val listLimit = try {
-            elcbList.getOrNull(1)?.toInt()
-        } catch (e: Exception){
-            defaultListLimit
-        } ?: defaultListLimit
+        val listContentsFilePath = getListPath(
+            elcbMap,
+        )
+        val listLimit = getLimitNum(
+            elcbMap,
+            defaultListLimit,
+        )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name
@@ -102,9 +102,34 @@ object ListContentsSelectSpinnerViewProducer {
         return insertSpinner
     }
 
-    fun getElcbList(
+    fun getListPath(
+        elcbMap: Map<String, String>?,
+    ): String {
+        return elcbMap?.get(ListContentsEditKey.listPath.name)
+            ?.let {
+                if(
+                    it.isEmpty()
+                ) return@let String()
+                it
+            } ?: String()
+    }
+
+    fun getLimitNum(
+        elcbMap: Map<String, String>?,
+        defaultListLimit: Int,
+    ): Int {
+        return try {
+            elcbMap
+                ?.get(ListContentsEditKey.limitNum.name)
+                ?.toInt()
+        } catch (e: Exception){
+            defaultListLimit
+        } ?: defaultListLimit
+    }
+
+    fun getElcbMap(
         editParameters: EditParameters
-    ): List<String> {
+    ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
@@ -135,8 +160,18 @@ object ListContentsSelectSpinnerViewProducer {
             )
         }?.split('|')
             ?.firstOrNull()
-            ?.split('!')
-            ?: emptyList()
+            ?.split('!')?.map {
+                CcScript.makeKeyValuePairFromSeparatedString(
+                    it,
+                "="
+                )
+            }?.toMap()
+    }
+
+    enum class ListContentsEditKey {
+        listPath,
+        limitNum,
+        selectJs,
     }
 }
 

@@ -2,12 +2,14 @@ package com.puutaro.commandclick.proccess.import
 
 import android.content.Context
 import android.util.Log
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -19,8 +21,17 @@ object CcImportManager {
     fun replace(
         context: Context?,
         row: String,
-        currentDirPath: String
+        scriptPath: String,
     ): String {
+        val jsFileObj = File(scriptPath)
+        if(!jsFileObj.isFile) return String()
+        val recentAppDirPath = jsFileObj.parent
+            ?: return String()
+        val scriptFileName = jsFileObj.name
+        val fannelDirName = scriptFileName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
         val trimRow = row
             .trim()
             .trim(';')
@@ -31,8 +42,17 @@ object CcImportManager {
         val trimImportPathSource = trimRow
             .replace(importPreWord, "")
             .trim()
+            .let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    scriptPath,
+                    recentAppDirPath,
+                    fannelDirName,
+                    scriptFileName
+                )
+            }
             .replace("\${00}", cmdclickDirPath)
-            .replace("\${01}", currentDirPath)
+            .replace("\${01}", recentAppDirPath)
             .let {
                 BothEdgeQuote.trim(it)
             }
@@ -60,7 +80,7 @@ object CcImportManager {
         if (
             trimImportPathSource.startsWith("./")
         ) {
-            val readPath = trimImportPathSource.replace("./", "${currentDirPath}/")
+            val readPath = trimImportPathSource.replace("./", "${recentAppDirPath}/")
             return catImportContents(
                 readPath,
             )
@@ -79,7 +99,7 @@ object CcImportManager {
             pathSuffix,
             ""
         ).replace("../", "1").count()
-        val currentDirPathList = currentDirPath.split("/")
+        val currentDirPathList = recentAppDirPath.split("/")
         val currentDirPathListSize = currentDirPathList.size
         if(
             currentDirPathListSize <= cdTimes

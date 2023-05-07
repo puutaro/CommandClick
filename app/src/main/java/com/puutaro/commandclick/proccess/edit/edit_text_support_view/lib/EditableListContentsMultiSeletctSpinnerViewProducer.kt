@@ -26,34 +26,17 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-        val elcbList = ListContentsSelectSpinnerViewProducer.getElcbList(
+        val elcbMap = ListContentsSelectSpinnerViewProducer.getElcbMap(
             editParameters
         )
-
-        val listContentsFilePath = elcbList.firstOrNull()
-            ?: String()
+        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
+            elcbMap,
+        )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
-        val updatedEditableSpinnerList = ReadText(
-            parentDir,
-            listFileName
-        ).textToList().filter {
-            it.trim().isNotEmpty()
-        }
-        val updatedMultiModelArray = ArrayList(
-            (updatedEditableSpinnerList.indices).map {
-                MultiSelectModel(it, updatedEditableSpinnerList[it])
-            }
-        )
-        val currentSelectList = insertEditText.text.toString().split(',')
-        val preSelectedMultiModelIdArray = ArrayList(
-            (updatedEditableSpinnerList.indices).filter {
-                val currentItem = updatedEditableSpinnerList[it]
-                currentSelectList.contains(currentItem)
-            }
-        )
+
 
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
@@ -64,6 +47,24 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
 
         insertButton.setOnClickListener {
                 innerButtonView ->
+            val updatedEditableSpinnerList = ReadText(
+                parentDir,
+                listFileName
+            ).textToList().filter {
+                it.trim().isNotEmpty()
+            }
+            val updatedMultiModelArray = ArrayList(
+                (updatedEditableSpinnerList.indices).map {
+                    MultiSelectModel(it, updatedEditableSpinnerList[it])
+                }
+            )
+            val currentSelectList = insertEditText.text.toString().split(',')
+            val preSelectedMultiModelIdArray = ArrayList(
+                (updatedEditableSpinnerList.indices).filter {
+                    val currentItem = updatedEditableSpinnerList[it]
+                    currentSelectList.contains(currentItem)
+                }
+            )
             val listener = context as? EditFragment.OnMultiSelectListenerForEdit
             listener?.onMultiSelectForEdit(
                 insertTextView.text.toString(),

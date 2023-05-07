@@ -12,10 +12,8 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.util.BothEdgeQuote
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.*
+import java.io.File
 
 
 object FileSelectSpinnerViewProducer {
@@ -29,19 +27,10 @@ object FileSelectSpinnerViewProducer {
     ): Spinner {
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentSetVariableMap = editParameters.setVariableMap
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-        val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
-                "Dir"
         val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -52,46 +41,27 @@ object FileSelectSpinnerViewProducer {
             context as Context,
             R.layout.sppinner_layout,
         )
-        val dirPrefixSuffixList = currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')
-            ?.firstOrNull()
-            ?.let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    "${currentAppDirPath}/${currentScriptName}",
-                    currentAppDirPath,
-                    fannelDirName,
-                    currentScriptName
-                )
-            }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
-                    editParameters
-                )
-            }?.split('!')
-            ?: emptyList()
-        val filterDirSource = dirPrefixSuffixList
-            .firstOrNull()
-            ?: String()
-        val filterDir = if(
-            filterDirSource.isEmpty()
-        ) currentAppDirPath
-        else filterDirSource
-        val filterPrefix = dirPrefixSuffixList
-            .getOrNull(1)?.let {
-            BothEdgeQuote
-                .trim(it)
-        } ?: String()
-        val filterSuffix = dirPrefixSuffixList
-            .getOrNull(2)?.let {
-                BothEdgeQuote
-                    .trim(it)
-            } ?: String()
+        val fcbMap = getFcbMap(
+            editParameters
+        )
+        val filterDir = getSelectDirPath(
+            fcbMap,
+            editParameters,
+        )
+        val filterPrefix = getFilterPrefix(
+            fcbMap,
+        )
+        val filterSuffix = getFilterSuffix(
+            fcbMap,
+        )
+        val filterType = getFilterType(
+            fcbMap,
+        )
         val editableSpinnerList = makeSpinnerList(
             filterDir,
             filterPrefix,
             filterSuffix,
+            filterType
         )
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList
         adapter.addAll(updatedEditableSpinnerList)
@@ -122,6 +92,7 @@ object FileSelectSpinnerViewProducer {
                     filterDir,
                     filterPrefix,
                     filterSuffix,
+                    filterType
                 )
                 val selectUpdatedSpinnerList = if(
                     selectedItem == throughMark
@@ -154,7 +125,9 @@ object FileSelectSpinnerViewProducer {
         filterSuffix: String,
     ): Boolean{
         if(filterSuffix != noExtend) {
-            return targetStr.endsWith(filterSuffix)
+            return filterSuffix.split("&").any {
+                targetStr.endsWith(it)
+            }
         }
         return !Regex("\\..*$").containsMatchIn(targetStr)
     }
@@ -163,13 +136,123 @@ object FileSelectSpinnerViewProducer {
         filterDir: String,
         filterPrefix: String,
         filterSuffix: String,
+        filterType: String,
     ): List<String> {
-        return FileSystems.sortedFiles(
+        val sortedList = FileSystems.sortedFiles(
             filterDir,
             "on"
-        ).filter {
+        )
+        if (
+            filterType != FilterFileType.dir.name
+        ) return sortedList.filter {
             it.startsWith(filterPrefix)
                     && judgeBySuffix(it, filterSuffix)
+                    && File("$filterDir/$it").isFile
         }
+        return sortedList.filter {
+            it.startsWith(filterPrefix)
+                    && judgeBySuffix(it, filterSuffix)
+                    && File("$filterDir/$it").isDirectory
+        }
+    }
+
+    fun getSelectDirPath(
+        fcbMap: Map<String, String>?,
+        editParameters: EditParameters,
+    ): String {
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        return fcbMap?.get(
+            FileSelectEditKey.dirPath.name
+        )?.let {
+                if (
+                    it.isEmpty()
+                ) return@let currentAppDirPath
+                it
+            } ?: currentAppDirPath
+    }
+
+    fun getFilterPrefix(
+        fcbMap: Map<String, String>?,
+    ): String {
+        return fcbMap?.get(FileSelectEditKey.prefix.name)?.let {
+                BothEdgeQuote.trim(it)
+            } ?: String()
+    }
+
+    fun getFilterSuffix(
+        fcbMap: Map<String, String>?,
+    ): String {
+        return fcbMap?.get(FileSelectEditKey.suffix.name)?.let {
+            BothEdgeQuote.trim(it)
+        } ?: String()
+    }
+
+    fun getFilterType(
+        fcbMap: Map<String, String>?,
+    ): String {
+        return fcbMap?.get(FileSelectEditKey.type.name)?.let {
+            val trimType = BothEdgeQuote.trim(it)
+            if(
+                trimType.isEmpty()
+            ) return@let FilterFileType.file.name
+            trimType
+        } ?: FilterFileType.file.name
+    }
+
+
+    fun getFcbMap(
+        editParameters: EditParameters
+    ): Map<String, String>? {
+        val currentSetVariableMap = editParameters.setVariableMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return currentSetVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )?.split('|')
+            ?.firstOrNull()
+            ?.let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    "${currentAppDirPath}/${currentScriptName}",
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptName
+                )
+            }.let {
+                ReplaceVariableMapReflecter.reflect(
+                    BothEdgeQuote.trim(it),
+                    editParameters
+                )
+            }?.split('!')?.map {
+                CcScript.makeKeyValuePairFromSeparatedString(
+                    it,
+                    "="
+                )
+            }?.toMap()
+    }
+
+    private enum class FileSelectEditKey {
+        dirPath,
+        prefix,
+        suffix,
+        type
+    }
+
+    private enum class FilterFileType {
+        file,
+        dir,
     }
 }

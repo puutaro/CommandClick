@@ -61,38 +61,37 @@ object JavaScriptLoadUrl {
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
         val loadJsUrl = jsList.map {
-            CcImportManager.replace(
+            val afterCcImport = CcImportManager.replace(
                 context,
                 it,
-                recentAppDirPath
+                execJsPath
             )
-        }.map {
             if(
-                it.startsWith(settingSectionStart)
-                && it.endsWith(settingSectionStart)
+                afterCcImport.startsWith(settingSectionStart)
+                && afterCcImport.endsWith(settingSectionStart)
             ) countSettingSectionStart++
             if(
-                it.startsWith(settingSectionEnd)
-                && it.endsWith(settingSectionEnd)
+                afterCcImport.startsWith(settingSectionEnd)
+                && afterCcImport.endsWith(settingSectionEnd)
             ) countSettingSectionEnd++
             if(
-                it.startsWith(commandSectionStart)
-                && it.endsWith(commandSectionStart)
+                afterCcImport.startsWith(commandSectionStart)
+                && afterCcImport.endsWith(commandSectionStart)
             ) countCmdSectionStart++
             if(
-                it.startsWith(commandSectionEnd)
-                && it.endsWith(commandSectionEnd)
+                afterCcImport.startsWith(commandSectionEnd)
+                && afterCcImport.endsWith(commandSectionEnd)
             ) countCmdSectionEnd++
             if(
                 countSettingSectionStart > 0
                 && countSettingSectionEnd == 0
-            ) "$it;"
+            ) "$afterCcImport;"
             else if(
                 countCmdSectionStart > 0
                 && countCmdSectionEnd == 0
-            ) "$it;"
-            else it
-        }.map {
+            ) "$afterCcImport;"
+            else afterCcImport
+        }.joinToString("\n").split("\n").map {
             val trimJsRow = it
                 .trim(' ')
                 .trim('\t')
@@ -103,6 +102,9 @@ object JavaScriptLoadUrl {
             ) return@map String()
             if(
                 !trimJsRow.contains(commentOutMark)
+            ) return@map trimJsRow
+            if(
+                !trimJsRow.endsWith(";")
             ) return@map trimJsRow
             val trimJsRowList = trimJsRow.split(";")
             val includeCommentOut =  trimJsRowList

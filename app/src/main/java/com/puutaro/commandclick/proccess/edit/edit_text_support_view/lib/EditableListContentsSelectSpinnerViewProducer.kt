@@ -28,17 +28,16 @@ object EditableListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbList = ListContentsSelectSpinnerViewProducer.getElcbList(
+        val elcbMap = ListContentsSelectSpinnerViewProducer.getElcbMap(
             editParameters
         )
-
-        val listContentsFilePath = elcbList.firstOrNull()
-            ?: String()
-        val listLimit = try {
-            elcbList.getOrNull(1)?.toInt()
-        } catch (e: Exception){
+        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
+            elcbMap,
+        )
+        val listLimit = ListContentsSelectSpinnerViewProducer.getLimitNum(
+            elcbMap,
             defaultListLimit
-        } ?: defaultListLimit
+        )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name

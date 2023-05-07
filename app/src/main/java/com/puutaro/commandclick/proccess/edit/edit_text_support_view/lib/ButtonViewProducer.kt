@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
-import android.text.Editable
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -15,6 +14,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -40,7 +40,6 @@ object ButtonViewProducer {
         val context = editParameters.context
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
         val currentId = editParameters.currentId
-        val currentSetVariableMap = editParameters.setVariableMap
         val currentShellContentsList = editParameters.currentShellContentsList
         val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
@@ -64,10 +63,9 @@ object ButtonViewProducer {
             true ,
         )
 
-        val cmdPrefixEntrySource = currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        val buttonMap = getButtonMap(
+            editParameters,
         )
-        val buttonVariables = makeButtonVariables(cmdPrefixEntrySource)
 
         val linearParamsForButton = LinearLayout.LayoutParams(
             0,
@@ -79,7 +77,7 @@ object ButtonViewProducer {
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
 
         insertButton.text = makeButtonLabel(
-            buttonVariables,
+            getButtonLabel(buttonMap),
             isInsertTextViewVisible,
             insertTextView.text.toString(),
         )
@@ -93,7 +91,9 @@ object ButtonViewProducer {
             )
             val execCmdEditable = insertEditText.text
 
-            val cmdPrefix = buttonVariables
+            val cmdPrefix = getCmdPrefix(
+                buttonMap
+            )
                 .split("!")
                 .firstOrNull()
                 ?: String()
@@ -181,25 +181,6 @@ object ButtonViewProducer {
 
         insertButton.layoutParams = linearParamsForButton
         return insertButton
-    }
-
-    private fun makeButtonVariables(
-        cmdPrefixEntrySource: String?
-    ): String {
-        if(
-            cmdPrefixEntrySource.isNullOrEmpty()
-        ) return String()
-        if(
-            cmdPrefixEntrySource.contains(
-                setVariableSetSeparator
-            )
-        ) return cmdPrefixEntrySource.split(setVariableSetSeparator).let {
-                val cmdPrefixEntry = it
-                    .slice(1 until it.size)
-                    .joinToString(setVariableSetSeparator)
-                BothEdgeQuote.trim(cmdPrefixEntry)
-            }
-        return BothEdgeQuote.trim(cmdPrefixEntrySource)
     }
 
     private fun makeInnerExecCmd(
@@ -342,17 +323,92 @@ object ButtonViewProducer {
     }
 
     private fun makeButtonLabel(
-        buttonVariables: String,
+        buttonLabelSource: String?,
         isInsertTextViewVisible: Boolean,
         textViewLabel: String,
     ): String {
-        val buttonLabelSource = buttonVariables.split("!")
-            .getOrNull(1)
         return if(
             !buttonLabelSource.isNullOrEmpty()
         ) buttonLabelSource
         else if(isInsertTextViewVisible){
             "EXEC"
         } else textViewLabel
+    }
+
+    private fun getCmdPrefix(
+        buttonMap: Map<String, String>?
+    ): String {
+        return buttonMap?.get(
+            ButtonEditKey.cmd.name
+        ) ?: String()
+    }
+
+    private fun getButtonLabel(
+        buttonMap: Map<String, String>?
+    ): String {
+        return buttonMap?.get(
+            ButtonEditKey.label.name
+        ) ?: String()
+    }
+
+    fun getButtonMap(
+        editParameters: EditParameters
+    ): Map<String, String>? {
+        val currentSetVariableMap = editParameters.setVariableMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            editParameters.readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = currentScriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return currentSetVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                "${currentAppDirPath}/${currentScriptName}",
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptName
+            )
+        }.let {
+            ReplaceVariableMapReflecter.reflect(
+                BothEdgeQuote.trim(it),
+                editParameters
+            )
+        }?.let {
+            if(
+                it.contains(
+                    setVariableSetSeparator
+                )
+            ) return@let it.split(
+                setVariableSetSeparator
+            ).let {
+                val cmdPrefixEntry = it
+                    .slice(1 until it.size)
+                    .joinToString(setVariableSetSeparator)
+                BothEdgeQuote.trim(cmdPrefixEntry)
+            }
+            BothEdgeQuote.trim(it)
+        }?.split('!')
+            ?.map {
+                CcScript.makeKeyValuePairFromSeparatedString(
+                    it,
+                    "="
+                )
+            }?.toMap()
+    }
+
+
+
+    private enum class ButtonEditKey {
+        cmd,
+        label,
     }
 }
