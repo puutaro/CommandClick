@@ -257,30 +257,28 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 `CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!  
 
-- Local path import
+#### Local path import
 
 ```
 ccimport {path}   
-  
+ 
+```   
 * current directory -> `./`  
 * move parent direcoty -> ../  
-* ${00} -> cmdcclik root dirctory path macro  
-* ${01} -> current directory path  
-```
+* other check [Javascript pre order word](#javascript-pre-order-word)   
 
-- Assets import
+#### Assets import
 
 ```
 ccimport /android_asset/{relative path}  
 ```
 
-- WEB import
+#### WEB import
 
 ```
 ccimport {URL}  
-  
+```  
 * It is possible to download by curl {URL}
-```
 
 
 
