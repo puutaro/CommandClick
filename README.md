@@ -142,12 +142,12 @@ At the same time, if you installed code editor, edit new file.
     | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB={target direcotry path(default: current directory)}&{grep prefix}(&{grep suffix})&#124;{command string}(!{button label}) |..   |
     | `LCB` | list file checkbox | {variableName}:LCB={target list file path} |..   |
     | `LCBB` | list file checkbox with exec button | {variableName}:LCB={target list file path}&#124;{command string}(!{button label}) |..   |
-    | `ELCB` | editable list file checkbox | {variableName}:ELCB={target list file path}(&listLimitNum) |..   |
-    | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string}(!{button label}) |..   |
+    | `ELCB` | editable list file checkbox | {variableName}:ELCB={target list file path}(!listLimitNum) |..   |
+    | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB={target list file path}(!listLimitNum)&#124;{command string}(!{button label}) |..   |
     | `EMCB` | multi checkbox | {variableName}:EMCB=value1!value2!.. |..   |
     | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;{command string}(!{button label}) |..   |
-    | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB={target list file path}(&listLimitNum) |..   |
-    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB={target list file path}(&listLimitNum)&#124;{command string}(!{button label}) |..   |
+    | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB={target list file path}(!listLimitNum) |..   |
+    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB={target list file path}(!listLimitNum)!#124;{command string}(!{button label}) |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
@@ -257,30 +257,28 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 `CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!  
 
-- Local path import
+#### Local path import
 
 ```
 ccimport {path}   
-  
+ 
+```   
 * current directory -> `./`  
 * move parent direcoty -> ../  
-* ${00} -> cmdcclik root dirctory path macro  
-* ${01} -> current directory path  
-```
+* other check [Javascript pre order word](#javascript-pre-order-word)   
 
-- Assets import
+#### Assets import
 
 ```
 ccimport /android_asset/{relative path}  
 ```
 
-- WEB import
+#### WEB import
 
 ```
 ccimport {URL}  
-  
+```  
 * It is possible to download by curl {URL}
-```
 
 
 
