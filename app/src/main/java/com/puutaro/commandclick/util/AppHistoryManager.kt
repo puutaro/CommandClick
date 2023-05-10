@@ -83,7 +83,7 @@ object AppHistoryManager {
         currentScriptFileName: String = String()
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            delay(700)
+            delay(1000)
             val updateAppHisotryFileName = makeAppHistoryFileNameForInit(
                 currentAppDirPath,
                 currentScriptFileName
