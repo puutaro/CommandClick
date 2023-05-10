@@ -120,6 +120,7 @@ At the same time, if you installed code editor, edit new file.
     | `onUrlHistoryRegister`  | `ON`/`OFF` | url history update signal; `ON`: update, `OFF`: no update
     | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
     | `homeFannel` | `string` | specified `fannel` put always bottom in app history |
+    | `homeScriptUrl${[0-10]}`  | specified `script`, url and html put always bottom in url history |
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
     | `setReplaceVariable`  | `string` | string replaced with certain string ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"  
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
@@ -738,6 +739,37 @@ This, so colled, android app row code library.
 	    
 - JsText  
 	- jsText.trans(tsvString) -> String transposed row and col  
+
+
+ - JsPath  
+ 	csv edit tool   
+	- jsPath.compPrefix(
+		path: String,
+		prefix: String,
+	  ) -> complete prefix    
+	 
+	- jsPath.compExtend(
+		path: String,
+		extend: String
+	    ) -> complete suffix    
+	 
+ 	- jsPath.checkExtend(
+ 	 	tag: String,
+		extendTabSeparateStr: tab separated String
+	  ) -> boolean (true when including tab separated extend String)  
+	- jsPath.checkPrefix(
+		name: String,
+		prefixTabSeparateStr: String
+	    ) -> boolean (true when including tab separated prefix String)    
+	- jsPath.removeExtend(
+	 	path: String,
+	 	extend: String
+	) -> remove extend 
+	
+	- jsPath.removePrefix(
+		path: String,
+		prefix: String
+	    ) -> remove prefix      
 
 
 ### Javascript pre order word
