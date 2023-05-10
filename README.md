@@ -742,7 +742,7 @@ This, so colled, android app row code library.
 
 
  - JsPath  
- 	csv edit tool   
+ 	path edit tool   
 	- jsPath.compPrefix(  
 		path: String,  
 		prefix: String,  
