@@ -228,7 +228,6 @@ class UrlHistoryButtonEvent(
                 } ?: return@setOnItemClickListener
             terminalViewModel.onDialog = false
             alertDialog.dismiss()
-
             if(
                 selectedUrl.endsWith(
                     CommandClickScriptVariable.SHELL_FILE_SUFFIX
@@ -354,12 +353,20 @@ class UrlHistoryButtonEvent(
         ){
             is CommandIndexFragment -> {
                 fragment.bottomScriptUrlList.map {
-                    "${it}\t${it}"
+                        url ->
+                    val title = url.split("/")
+                        .lastOrNull()
+                        ?: String()
+                    "${title}\t${url}"
                 }
             }
             is EditFragment -> {
                 fragment.bottomScriptUrlList.map {
-                    "${it}\t${it}"
+                    url ->
+                    val title = url.split("/")
+                        .lastOrNull()
+                        ?: String()
+                    "${title}\t${url}"
                 }
             }
             else -> emptyList()
