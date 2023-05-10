@@ -41,7 +41,7 @@ class ConfigFromScriptFileSetter {
                 editFragment.settingSectionEnd
             )
 
-            editFragment.historySwitch = MakeVariableCbValue.make(
+            editFragment.historySwitch = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
                 editFragment.historySwitch,
@@ -53,7 +53,7 @@ class ConfigFromScriptFileSetter {
                 ),
             )
 
-            editFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
+            editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
                 editFragment.urlHistoryOrButtonExec,
@@ -65,7 +65,7 @@ class ConfigFromScriptFileSetter {
                 ),
             )
 
-            editFragment.statusBarIconColorMode = MakeVariableCbValue.make(
+            editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
                 editFragment.statusBarIconColorMode,
@@ -76,25 +76,25 @@ class ConfigFromScriptFileSetter {
                 ),
             )
 
-            editFragment.runShell = MakeVariableStringValue.make(
+            editFragment.runShell = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 editFragment.runShell
             )
 
-            editFragment.shiban = MakeVariableStringValue.make(
+            editFragment.shiban = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN,
                 editFragment.shiban
             )
 
-            editFragment.terminalColor = MakeVariableStringValue.make(
+            editFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 editFragment.terminalColor
             )
 
-            editFragment.fontZoomPercent = MakeVariableNumValue.make(
+            editFragment.fontZoomPercent = SettingVariableReader.getNumValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
                 editFragment.fontZoomPercent,
@@ -102,7 +102,7 @@ class ConfigFromScriptFileSetter {
             )
 
             editFragment.bottomScriptUrlList = CommandClickScriptVariable.BOTTOM_SCRIPT_URL_LIST.map {
-                MakeVariableStringValue.make(
+                SettingVariableReader.getStrValue(
                     settingVariableList,
                     it,
                     String()

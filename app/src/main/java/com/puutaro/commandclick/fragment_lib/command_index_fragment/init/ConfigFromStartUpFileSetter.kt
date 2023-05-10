@@ -35,7 +35,7 @@ object ConfigFromStartUpFileSetter {
             settingSectionEnd
         )
 
-        cmdIndexFragment.historySwitch = MakeVariableCbValue.make(
+        cmdIndexFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
             cmdIndexFragment.historySwitch,
@@ -47,7 +47,7 @@ object ConfigFromStartUpFileSetter {
             ),
         )
 
-        cmdIndexFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
+        cmdIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
             cmdIndexFragment.urlHistoryOrButtonExec,
@@ -59,7 +59,7 @@ object ConfigFromStartUpFileSetter {
             ),
         )
 
-        cmdIndexFragment.statusBarIconColorMode = MakeVariableCbValue.make(
+        cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
             cmdIndexFragment.statusBarIconColorMode,
@@ -70,26 +70,26 @@ object ConfigFromStartUpFileSetter {
             ),
         )
 
-            cmdIndexFragment.runShell = MakeVariableStringValue.make(
+            cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
             cmdIndexFragment.runShell
         )
 
-        cmdIndexFragment.shiban = MakeVariableStringValue.make(
+        cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_SHIBAN,
             cmdIndexFragment.shiban
         )
 
-        cmdIndexFragment.terminalColor = MakeVariableStringValue.make(
+        cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,
             cmdIndexFragment.terminalColor
         )
 
         cmdIndexFragment.bottomScriptUrlList = CommandClickScriptVariable.BOTTOM_SCRIPT_URL_LIST.map {
-            MakeVariableStringValue.make(
+            SettingVariableReader.getStrValue(
                 settingVariableList,
                 it,
                 String()

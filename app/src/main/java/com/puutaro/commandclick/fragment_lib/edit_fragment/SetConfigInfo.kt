@@ -5,9 +5,8 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.MakeVariableCbValue
-import com.puutaro.commandclick.util.MakeVariableStringValue
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.SettingVariableReader
 
 class SetConfigInfo {
     companion object {
@@ -25,7 +24,7 @@ class SetConfigInfo {
             )
 
 
-            editFragment.historySwitch =  MakeVariableCbValue.make(
+            editFragment.historySwitch =  SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
                 CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
@@ -37,7 +36,7 @@ class SetConfigInfo {
                 ),
             )
 
-            editFragment.statusBarIconColorMode = MakeVariableCbValue.make(
+            editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
@@ -48,7 +47,7 @@ class SetConfigInfo {
                 ),
             )
 
-            editFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
+            editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
@@ -60,26 +59,26 @@ class SetConfigInfo {
                 ),
             )
 
-            editFragment.homeFannelHistoryName =  MakeVariableStringValue.make(
+            editFragment.homeFannelHistoryName =  SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HOME_FANNEL,
                 String()
             )
 
 
-            editFragment.runShell =  MakeVariableStringValue.make(
+            editFragment.runShell =  SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
-            editFragment.shiban = MakeVariableStringValue.make(
+            editFragment.shiban = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
             )
 
-            editFragment.terminalColor = MakeVariableStringValue.make(
+            editFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE

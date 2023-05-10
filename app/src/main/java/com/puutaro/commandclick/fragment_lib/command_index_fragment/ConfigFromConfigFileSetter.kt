@@ -34,7 +34,7 @@ class ConfigFromConfigFileSetter {
                 settingSectionEnd
             )
 
-            cmdIndexFragment.historySwitch = MakeVariableCbValue.make(
+            cmdIndexFragment.historySwitch =  SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
                 CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
@@ -46,7 +46,7 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexFragment.urlHistoryOrButtonExec = MakeVariableCbValue.make(
+            cmdIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
@@ -58,7 +58,7 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexFragment.statusBarIconColorMode = MakeVariableCbValue.make(
+            cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
@@ -69,25 +69,25 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexFragment.homeFannelHistoryName =  MakeVariableStringValue.make(
+            cmdIndexFragment.homeFannelHistoryName =  SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HOME_FANNEL,
                 String()
             )
 
-            cmdIndexFragment.runShell = MakeVariableStringValue.make(
+            cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
-            cmdIndexFragment.shiban = MakeVariableStringValue.make(
+            cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
             )
 
-            cmdIndexFragment.terminalColor = MakeVariableStringValue.make(
+            cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE

@@ -44,7 +44,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 settingSectionEnd
             )
 
-            terminalFragment.onAdBlock = MakeVariableCbValue.make(
+            terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
                 settingVariableListFromConfig,
                 CommandClickScriptVariable.ON_ADBLOCK,
                 CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
@@ -56,25 +56,25 @@ class ConfigFromStartUpFileSetterForTerm {
                 ),
             )
 
-            terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
+            terminalFragment.fontZoomPercent =  SettingVariableReader.getNumValue(
                 settingVariableListFromConfig,
                 CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
                 CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
                 "1"
             )
 
-            terminalFragment.runShell =  MakeVariableStringValue.make(
+            terminalFragment.runShell =  SettingVariableReader.getStrValue(
                 settingVariableListFromConfig,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
-            terminalFragment.terminalColor = MakeVariableStringValue.make(
+            terminalFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableListFromConfig,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
             )
-            terminalFragment.terminalFontColor = MakeVariableStringValue.make(
+            terminalFragment.terminalFontColor = SettingVariableReader.getStrValue(
                 settingVariableListFromConfig,
                 CommandClickScriptVariable.TERMINAL_FONT_COLOR,
                 CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
@@ -103,7 +103,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 settingSectionEnd
             )
 
-            terminalFragment.onAdBlock = MakeVariableCbValue.make(
+            terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.ON_ADBLOCK,
                 terminalFragment.onAdBlock,
@@ -115,7 +115,7 @@ class ConfigFromStartUpFileSetterForTerm {
                 ),
             )
 
-            terminalFragment.onUrlHistoryRegister = MakeVariableCbValue.make(
+            terminalFragment.onUrlHistoryRegister = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.ON_URL_HISTORY_REGISTER,
                 CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
@@ -127,14 +127,14 @@ class ConfigFromStartUpFileSetterForTerm {
                 ),
             )
 
-            terminalFragment.fontZoomPercent =  MakeVariableNumValue.make(
+            terminalFragment.fontZoomPercent =  SettingVariableReader.getNumValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
                 terminalFragment.fontZoomPercent,
                 "1"
             )
 
-            terminalFragment.runShell =  MakeVariableStringValue.make(
+            terminalFragment.runShell =  SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 terminalFragment.runShell
@@ -152,13 +152,13 @@ class ConfigFromStartUpFileSetterForTerm {
                 terminalFragment.currentAppDirPath
             )
 
-            terminalFragment.terminalColor = MakeVariableStringValue.make(
+            terminalFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 terminalFragment.terminalColor
             )
 
-            terminalFragment.terminalFontColor = MakeVariableStringValue.make(
+            terminalFragment.terminalFontColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_FONT_COLOR,
                 terminalFragment.terminalFontColor
