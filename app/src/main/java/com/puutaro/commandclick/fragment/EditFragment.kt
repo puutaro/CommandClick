@@ -67,6 +67,7 @@ class EditFragment: Fragment() {
     var popBackStackToIndexImmediateJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var homeFannelHistoryName = String()
+    var bottomScriptUrlList = emptyList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -47,6 +47,7 @@ class CommandIndexFragment: Fragment() {
     var onFocusSearchText = false
     var savedEditTextContents = String()
     var homeFannelHistoryName = String()
+    var bottomScriptUrlList = emptyList<String>()
 
     override fun onCreateView(
         inflater: LayoutInflater,

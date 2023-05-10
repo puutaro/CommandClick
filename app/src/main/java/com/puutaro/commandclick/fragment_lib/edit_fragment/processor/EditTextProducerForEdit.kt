@@ -59,7 +59,7 @@ class EditTextProducerForEdit(
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
 
     private val editParameters = EditParameters(
-        editFragment.context,
+        editFragment,
         currentShellContentsList,
         recordNumToMapNameValueInCommandHolder,
         readSharePreffernceMap,

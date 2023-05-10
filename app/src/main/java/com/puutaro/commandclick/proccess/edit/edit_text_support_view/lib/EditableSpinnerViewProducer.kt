@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn

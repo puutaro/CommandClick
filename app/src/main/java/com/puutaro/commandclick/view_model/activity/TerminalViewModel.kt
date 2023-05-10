@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.FileSystems
+import kotlinx.coroutines.Job
 import java.io.File
 
 
@@ -26,6 +27,7 @@ class TerminalViewModel: ViewModel() {
     var blocklist = hashSetOf<String>()
     var isStop = false
     var multiSelectTabString = String()
+    var jsExecuteJob: Job? = null
 }
 
 

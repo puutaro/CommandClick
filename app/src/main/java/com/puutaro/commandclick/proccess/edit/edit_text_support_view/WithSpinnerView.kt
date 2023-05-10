@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 

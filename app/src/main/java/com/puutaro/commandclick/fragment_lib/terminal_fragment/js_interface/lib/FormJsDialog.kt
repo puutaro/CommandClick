@@ -147,7 +147,7 @@ class FormJsDialog(
                 to terminalFragment.currentAppDirPath
         )
         val editParameters = EditParameters(
-            context,
+            terminalFragment,
             virtualJsContentsList,
             recordNumToMapNameValueInCommandHolder,
             virtualReadPreffrenceMap,

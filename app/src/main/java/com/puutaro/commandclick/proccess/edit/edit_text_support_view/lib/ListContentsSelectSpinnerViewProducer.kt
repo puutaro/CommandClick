@@ -3,12 +3,14 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
@@ -20,6 +22,7 @@ object ListContentsSelectSpinnerViewProducer {
         editParameters: EditParameters,
         weight: Float,
     ): Spinner {
+        val currentFragment = editParameters.currentFragment
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
@@ -39,6 +42,11 @@ object ListContentsSelectSpinnerViewProducer {
             elcbMap,
             defaultListLimit,
         )
+
+        val selectJsPath = getSelectJsPath(
+            elcbMap
+        )
+
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name
@@ -94,6 +102,11 @@ object ListContentsSelectSpinnerViewProducer {
                 adapter.notifyDataSetChanged()
                 insertSpinner.setSelection(0)
                 insertEditText.setText(selectedItem)
+                SelectJsExecutor.exec(
+                    currentFragment,
+                    selectJsPath,
+                    selectedItem
+                )
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -125,6 +138,18 @@ object ListContentsSelectSpinnerViewProducer {
         } catch (e: Exception){
             defaultListLimit
         } ?: defaultListLimit
+    }
+
+    fun getSelectJsPath(
+        elcbMap: Map<String, String>?,
+    ): String {
+        return elcbMap?.get(ListContentsEditKey.selectJs.name)
+            ?.let {
+                if(
+                    it.isEmpty()
+                ) return@let String()
+                it
+            } ?: String()
     }
 
     fun getElcbMap(

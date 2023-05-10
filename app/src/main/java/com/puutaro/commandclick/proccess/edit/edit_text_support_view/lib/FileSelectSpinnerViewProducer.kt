@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
@@ -25,6 +26,7 @@ object FileSelectSpinnerViewProducer {
         editParameters: EditParameters,
         weight: Float,
     ): Spinner {
+        val currentFragment = editParameters.currentFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -56,6 +58,9 @@ object FileSelectSpinnerViewProducer {
         )
         val filterType = getFilterType(
             fcbMap,
+        )
+        val selectJsPath = getSelectJsPath(
+            fcbMap
         )
         val editableSpinnerList = makeSpinnerList(
             filterDir,
@@ -112,6 +117,11 @@ object FileSelectSpinnerViewProducer {
                     selectedItem == throughMark
                 ) return
                 insertEditText.setText(selectedItem)
+                SelectJsExecutor.exec(
+                    currentFragment,
+                    selectJsPath,
+                    selectedItem,
+                )
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -202,6 +212,18 @@ object FileSelectSpinnerViewProducer {
         } ?: FilterFileType.file.name
     }
 
+    fun getSelectJsPath(
+        fcbMap: Map<String, String>?,
+    ): String {
+        return fcbMap?.get(FileSelectEditKey.selectJs.name)?.let {
+            val trimType = BothEdgeQuote.trim(it)
+            if(
+                trimType.isEmpty()
+            ) return@let FilterFileType.file.name
+            trimType
+        } ?: FilterFileType.file.name
+    }
+
 
     fun getFcbMap(
         editParameters: EditParameters
@@ -248,7 +270,8 @@ object FileSelectSpinnerViewProducer {
         dirPath,
         prefix,
         suffix,
-        type
+        type,
+        selectJs
     }
 
     private enum class FilterFileType {

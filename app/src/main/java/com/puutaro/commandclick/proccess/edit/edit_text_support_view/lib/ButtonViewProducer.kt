@@ -22,6 +22,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.eclipse.jgit.diff.Edit
 import java.io.File
 
 
@@ -301,6 +302,20 @@ object ButtonViewProducer {
                     )
                 }.joinToString("\t")
         } else String()
+        execJsScriptInEdit (
+            editFragment,
+            jsFilePath,
+        )
+    }
+
+    private fun execJsScriptInEdit (
+        editFragment: EditFragment,
+        jsFilePath: String,
+    ){
+        if(
+            jsFilePath.isEmpty()
+        ) return
+        val context = editFragment.context
         editFragment.jsExecuteJob?.cancel()
         editFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
             val onLaunchUrl = EnableTerminalWebView.check(
