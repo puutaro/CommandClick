@@ -21,7 +21,6 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.makeUrlHistoryList
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -81,7 +80,8 @@ class UrlHistoryButtonEvent(
         val urlDisplayHistoryList = urlHistoryList.map {
             val urlTitleSource =
                 it.split(tabReplaceStr)
-                    .firstOrNull() ?:String()
+                    .firstOrNull()
+                    ?:String()
             UrlTitleTrimmer.trim(
                 urlTitleSource
             )
@@ -217,8 +217,15 @@ class UrlHistoryButtonEvent(
                     it.startsWith(filteredUrlHistoryTitle)
                 }.firstOrNull()
                     ?: return@setOnItemClickListener
-            val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
-                ?: return@setOnItemClickListener
+            val selectedUrl = selectedUrlSource.split(
+                tabReplaceStr
+            ).lastOrNull()
+                ?.let {
+                    ScriptPreWordReplacer.settingValreplace(
+                        it,
+                        currentAppDirPath
+                    )
+                } ?: return@setOnItemClickListener
             terminalViewModel.onDialog = false
             alertDialog.dismiss()
 
@@ -276,7 +283,7 @@ class UrlHistoryButtonEvent(
         val usedTitle = mutableSetOf<String>()
         val usedUrl = mutableSetOf<String>()
         val takeListNum = 200
-        return ReadText(
+        return makeBottomScriptUrlList() + ReadText(
             "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
             UsePath.cmdclickUrlHistoryFileName
         ).textToList()
@@ -336,6 +343,50 @@ class UrlHistoryButtonEvent(
                 true
             }
             popup.show()
+            true
+        }
+    }
+
+    private fun makeBottomScriptUrlList(
+    ): List<String> {
+        return when(
+            fragment
+        ){
+            is CommandIndexFragment -> {
+                fragment.bottomScriptUrlList.map {
+                    "${it}\t${it}"
+                }
+            }
+            is EditFragment -> {
+                fragment.bottomScriptUrlList.map {
+                    "${it}\t${it}"
+                }
+            }
+            else -> emptyList()
+        }
+    }
+
+    private fun makeUrlHistoryList(
+        historySourceRow: String,
+        usedTitle: MutableSet<String>,
+        usedUrl: MutableSet<String>,
+    ): Boolean {
+        val historySourceRowList = historySourceRow
+            .split("\t")
+        val duliEntryTitle = historySourceRowList
+            .firstOrNull()
+            ?: return false
+        val duliEntryUrl = historySourceRowList
+            .getOrNull(1)
+            ?: return false
+        return if(
+            usedTitle.contains(duliEntryTitle)
+            || usedUrl.contains(duliEntryUrl)
+        ) {
+            false
+        } else {
+            usedTitle.add(duliEntryTitle)
+            usedUrl.add(duliEntryUrl)
             true
         }
     }

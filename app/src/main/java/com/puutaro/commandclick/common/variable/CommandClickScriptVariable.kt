@@ -74,6 +74,28 @@ class CommandClickScriptVariable {
         val TERMINAL_COLOR = "terminalColor"
         val TERMINAL_FONT_COLOR = "terminalFontColor"
         val STATUS_BAR_ICON_COLOR_MODE = "statusBarIconColorMode"
+        val BOTTOM_SCRIPT_URL1 = "homeScriptUrl1"
+        val BOTTOM_SCRIPT_URL2 = "homeScriptUrl2"
+        val BOTTOM_SCRIPT_URL3 = "homeScriptUrl3"
+        val BOTTOM_SCRIPT_URL4 = "homeScriptUrl4"
+        val BOTTOM_SCRIPT_URL5 = "homeScriptUrl5"
+        val BOTTOM_SCRIPT_URL6 = "homeScriptUrl6"
+        val BOTTOM_SCRIPT_URL7 = "homeScriptUrl7"
+        val BOTTOM_SCRIPT_URL8 = "homeScriptUrl8"
+        val BOTTOM_SCRIPT_URL9 = "homeScriptUrl9"
+        val BOTTOM_SCRIPT_URL10 = "homeScriptUrl10"
+        val BOTTOM_SCRIPT_URL_LIST = listOf(
+            BOTTOM_SCRIPT_URL1,
+            BOTTOM_SCRIPT_URL2,
+            BOTTOM_SCRIPT_URL3,
+            BOTTOM_SCRIPT_URL4,
+            BOTTOM_SCRIPT_URL5,
+            BOTTOM_SCRIPT_URL6,
+            BOTTOM_SCRIPT_URL7,
+            BOTTOM_SCRIPT_URL8,
+            BOTTOM_SCRIPT_URL9,
+            BOTTOM_SCRIPT_URL10,
+        )
         val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
         val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
         val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
@@ -107,7 +129,7 @@ class CommandClickScriptVariable {
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SCRIPT_FILE_NAME,
-        )
+        ) + BOTTOM_SCRIPT_URL_LIST
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
         private val terminalOff = SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
@@ -181,7 +203,17 @@ class CommandClickScriptVariable {
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
             "${EXEC_JS_OR_HTML_PATH}:FL=",
-            "${CMDCLICK_HOME_FANNEL}:EFCB=${UsePath.cmdclickAppHistoryDirAdminPath}&&${JS_FILE_SUFFIX}"
+            "${CMDCLICK_HOME_FANNEL}:EFCB=dirPath=${UsePath.cmdclickAppHistoryDirAdminPath}!suffix=${JS_FILE_SUFFIX}",
+            "${BOTTOM_SCRIPT_URL1}:FL=",
+            "${BOTTOM_SCRIPT_URL2}:FL=",
+            "${BOTTOM_SCRIPT_URL3}:FL=",
+            "${BOTTOM_SCRIPT_URL4}:FL=",
+            "${BOTTOM_SCRIPT_URL5}:FL=",
+            "${BOTTOM_SCRIPT_URL6}:FL=",
+            "${BOTTOM_SCRIPT_URL7}:FL=",
+            "${BOTTOM_SCRIPT_URL8}:FL=",
+            "${BOTTOM_SCRIPT_URL9}:FL=",
+            "${BOTTOM_SCRIPT_URL10}:FL=",
         )
 
         fun makeShellScriptName(

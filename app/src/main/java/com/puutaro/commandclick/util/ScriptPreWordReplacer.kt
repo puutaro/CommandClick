@@ -3,6 +3,13 @@ package com.puutaro.commandclick.util
 import com.puutaro.commandclick.common.variable.UsePath
 
 object ScriptPreWordReplacer {
+
+    private val currentScriptPathMark = "\${0}"
+    private val cmdclickDirPathMark = "\${00}"
+    private val currentAppDirPathMark = "\${01}"
+    private val fannelDirNameMark = "\${001}"
+    private val currentScriptNameMark = "\${002}"
+
     fun replace(
         tergetString: String,
         currentScriptPath: String,
@@ -11,10 +18,19 @@ object ScriptPreWordReplacer {
         currentScriptName: String
     ): String {
         return tergetString
-            .replace("\${0}", currentScriptPath)
-            .replace("\${00}", UsePath.cmdclickDirPath)
-            .replace("\${01}", currentAppDirPath)
-            .replace("\${001}", fannelDirName)
-            .replace("\${02}", currentScriptName)
+            .replace(currentScriptPathMark, currentScriptPath)
+            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+            .replace(currentAppDirPathMark, currentAppDirPath)
+            .replace(fannelDirNameMark, fannelDirName)
+            .replace(currentScriptNameMark, currentScriptName)
+    }
+
+    fun settingValreplace(
+        tergetString: String,
+        currentAppDirPath: String,
+    ): String {
+        return tergetString
+            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+            .replace(currentAppDirPathMark, currentAppDirPath)
     }
 }
