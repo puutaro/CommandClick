@@ -543,6 +543,8 @@ class CommandClickScriptVariable {
             |${ON_ADBLOCK}="${onAdBlockInherit}"
             |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
             |${EXEC_JS_OR_HTML_PATH}=""
+            |${BOTTOM_SCRIPT_URL1}=""
+            |${BOTTOM_SCRIPT_URL2}=""
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
             |${TERMINAL_FONT_COLOR}=""
             |${TERMINAL_COLOR}=""

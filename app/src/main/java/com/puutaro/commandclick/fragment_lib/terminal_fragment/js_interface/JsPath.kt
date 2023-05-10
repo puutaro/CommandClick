@@ -43,12 +43,12 @@ class JsPath(
 
     @JavascriptInterface
     fun checkPrefix(
-        path: String,
+        name: String,
         prefixTabSeparateStr: String
     ): Boolean {
         val prefixList = prefixTabSeparateStr.split("\t")
         return prefixList.any {
-            path.startsWith(it)
+            name.startsWith(it)
         }
     }
 
@@ -58,5 +58,13 @@ class JsPath(
         extend: String
     ): String {
         return path.removeSuffix(extend)
+    }
+
+    @JavascriptInterface
+    fun removePrefix(
+        path: String,
+        prefix: String
+    ): String {
+        return path.removePrefix(prefix)
     }
 }
