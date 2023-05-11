@@ -8,7 +8,7 @@ object ScriptPreWordReplacer {
     private val cmdclickDirPathMark = "\${00}"
     private val currentAppDirPathMark = "\${01}"
     private val fannelDirNameMark = "\${001}"
-    private val currentScriptNameMark = "\${002}"
+    private val currentScriptNameMark = "\${02}"
 
     fun replace(
         tergetString: String,
