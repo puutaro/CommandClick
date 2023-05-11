@@ -16,6 +16,7 @@ import java.time.format.DateTimeFormatter
 class JsFileSystem(
     terminalFragment: TerminalFragment
 ) {
+    private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
     @JavascriptInterface
@@ -59,8 +60,14 @@ class JsFileSystem(
             DateTimeFormatter.ISO_LOCAL_DATE_TIME
         ).replace(Regex("[.].*$"), "")
         val addContents = "\n### $currentTime ${fileName}\n"
+        terminalViewModel.onBottomScrollbyJs = !(
+                outPutOption ==
+                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                )
         if(
             SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH.name
+            == outPutOption
+            || SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
             == outPutOption
         ) {
             FileSystems.writeFile(
@@ -107,8 +114,14 @@ class JsFileSystem(
         val fileObj = File(currentMonitorPath)
         val parentDir = fileObj.parent
             ?: return
+        terminalViewModel.onBottomScrollbyJs = !(
+                outPutOption ==
+                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                )
         if (
             SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH.name
+            == outPutOption
+            || SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
             == outPutOption
         ) {
             FileSystems.writeFile(

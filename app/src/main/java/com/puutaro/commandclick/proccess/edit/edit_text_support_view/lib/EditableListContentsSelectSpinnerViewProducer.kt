@@ -41,7 +41,7 @@ object EditableListContentsSelectSpinnerViewProducer {
             elcbMap,
             defaultListLimit
         )
-        val selectJsPath = ListContentsSelectSpinnerViewProducer.getListPath(
+        val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
             elcbMap
         )
         val fileObj = File(listContentsFilePath)
