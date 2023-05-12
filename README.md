@@ -299,9 +299,11 @@ You can set by onley this menu press.
 
 * Below is a supplement.
 
-1. Long press on termux
-2. Click paste popup on termux  
-3. Continue pressing `Enter` on termux
+1. long press right bottom button  
+2. `setting` -> `termux setup`   
+3. Long press on termux
+4. Click paste popup on termux  
+5. Continue pressing `Enter` on termux
 - clipboard contents:
    ```
    pkg update -y && pkg upgrade -y \
