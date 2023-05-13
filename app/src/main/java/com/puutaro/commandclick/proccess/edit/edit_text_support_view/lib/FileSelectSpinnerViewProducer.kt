@@ -20,6 +20,7 @@ import java.io.File
 object FileSelectSpinnerViewProducer {
 
     val noExtend = "NoExtend"
+    private val throughMark = "-"
 
     fun make (
         insertEditText: EditText,
@@ -33,7 +34,6 @@ object FileSelectSpinnerViewProducer {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val throughMark = "-"
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -79,6 +79,23 @@ object FileSelectSpinnerViewProducer {
         insertSpinner.id = currentId + EditTextSupportViewId.EDITABLE_SPINNER.id
         insertSpinner.tag = "spinnerEdit${currentId + EditTextSupportViewId.EDITABLE_SPINNER.id}"
         insertSpinner.adapter = adapter
+        insertSpinner.setOnTouchListener(View.OnTouchListener {
+                v, event ->
+            val currentSpinnerList = makeSpinnerList(
+                filterDir,
+                filterPrefix,
+                filterSuffix,
+                filterType
+            )
+            val selectUpdatedSpinnerList =
+                listOf(throughMark) + currentSpinnerList
+            adapter.clear()
+            adapter.addAll(selectUpdatedSpinnerList)
+            adapter.notifyDataSetChanged()
+            insertSpinner.setSelection(0)
+            v.performClick()
+            true
+        })
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val selectedItem = adapter.getItem(pos)

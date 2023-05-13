@@ -1,14 +1,11 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
-import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 class WithFileSelectEditableSpinnerView {

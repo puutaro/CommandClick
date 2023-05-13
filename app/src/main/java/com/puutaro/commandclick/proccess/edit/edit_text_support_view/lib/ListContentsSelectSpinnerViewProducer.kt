@@ -72,6 +72,22 @@ object ListContentsSelectSpinnerViewProducer {
 
         adapter.addAll(editableSpinnerList)
         insertSpinner.adapter = adapter
+        insertSpinner.setOnTouchListener(View.OnTouchListener {
+                v, event ->
+            val currentEditableSpinnerList = ReadText(
+                parentDir,
+                listFileName
+            ).textToList().filter {
+                it.trim().isNotEmpty()
+            }
+            val arrayAdapter = insertSpinner.adapter as ArrayAdapter<String>
+            arrayAdapter.clear()
+            arrayAdapter.addAll(currentEditableSpinnerList)
+            adapter.notifyDataSetChanged()
+            insertSpinner.setSelection(0)
+            v.performClick()
+            true
+        })
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
                 val selectedItem = adapter.getItem(pos)

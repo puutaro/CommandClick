@@ -80,7 +80,7 @@ class JsListSelect(
         ) {
             Toast.makeText(
                 context,
-                "no exist: $itemText",
+                "no exist itemText: $itemText",
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -117,7 +117,7 @@ class JsListSelect(
         ) {
             Toast.makeText(
                 context,
-                "no exist ${targetListFilePath}",
+                "no exist targetListFilePath ${targetListFilePath}",
                 Toast.LENGTH_LONG
             ).show()
             return
@@ -140,7 +140,7 @@ class JsListSelect(
         ) {
             Toast.makeText(
                 context,
-                "no exist $currentScriptPath",
+                "no exist currentScriptPath $currentScriptPath",
                 Toast.LENGTH_LONG
             ).show()
             return
@@ -184,10 +184,18 @@ class JsListSelect(
             scriptName,
             replacedScriptContents
         )
-        val jsIntent = JsIntent(terminalFragment)
-        jsIntent.launchShortcut(
-            currentAppDirPath,
-            scriptName
+        val jsEdit = JsEdit(terminalFragment)
+        if(
+            defaultVariable.isNotEmpty()
+        ) jsEdit.updateEditText(
+            defaultVariable,
+            String(),
+        )
+        if(
+            replaceTargetVariable.isNotEmpty()
+        ) jsEdit.updateEditText(
+            replaceTargetVariable,
+            recentItem,
         )
     }
 }

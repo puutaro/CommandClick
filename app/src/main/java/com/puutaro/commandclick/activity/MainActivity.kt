@@ -29,10 +29,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPrefere
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.EditTextUpdaterForTerminalFragment
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecFilterWebView
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecPageSearchResult
-import com.puutaro.commandclick.activity_lib.event.lib.terminal.SpinnerUpdaterForTerminalFragment
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
 import com.puutaro.commandclick.activity_lib.init.MonitorFiles
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
@@ -62,6 +59,7 @@ class MainActivity:
     TerminalFragment.OnFileChooseListener,
     TerminalFragment.OnEditTextUpdateListenerForTermFragment,
     TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
+    TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
@@ -423,6 +421,14 @@ class MainActivity:
         EditTextUpdaterForTerminalFragment.update(
             this,
             editTextId,
+            variableValue
+        )
+    }
+
+    override fun onEditableSpinnerUpdateForTermFragment(spinnerId: Int?, variableValue: String) {
+        EditableSpinnerUpdaterForTerminalFragment.update(
+            this,
+            spinnerId,
             variableValue
         )
     }

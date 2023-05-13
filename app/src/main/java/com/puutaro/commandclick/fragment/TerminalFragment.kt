@@ -246,6 +246,13 @@ class TerminalFragment: Fragment() {
         )
     }
 
+    interface OnEditableSpinnerUpdateListenerForTermFragment {
+        fun onEditableSpinnerUpdateForTermFragment(
+            spinnerId: Int?,
+            variableValue: String
+        )
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -89,7 +89,7 @@ class JsFileSelect(
     private fun execDeleteFilePath(
         parentDirPath: String,
         scriptFileName: String,
-        taergetDirPath: String,
+        targetDirPath: String,
         editFileNameForDialog: String,
         targetVariable: String,
         prefix: String,
@@ -104,23 +104,23 @@ class JsFileSelect(
             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                 if(
                     !File(
-                        taergetDirPath,
+                        targetDirPath,
                         editFileNameForDialog
                     ).isFile
                 ){
                     Toast.makeText(
                         context,
-                        "not exist ${editFileNameForDialog}",
+                        "not exist editFileNameForDialog ${editFileNameForDialog}",
                         Toast.LENGTH_LONG
                     ).show()
                     return@OnClickListener
                 }
                 FileSystems.removeFiles(
-                    taergetDirPath,
+                    targetDirPath,
                     editFileNameForDialog
                 )
                 val recentLogFile = FileSystems.sortedFiles(
-                    taergetDirPath
+                    targetDirPath
                 ).filter {
                     val onPrefix = it.startsWith(prefix)
                     val onSuffix = if(
@@ -134,6 +134,10 @@ class JsFileSelect(
                     parentDirPath,
                     scriptFileName,
                     "${targetVariable}=\"${recentLogFile}\""
+                )
+                JsEdit(terminalFragment).updateEditText(
+                    targetVariable,
+                    recentLogFile
                 )
             })
             .setNegativeButton("NO", null)
@@ -150,7 +154,7 @@ class JsFileSelect(
     private fun renameFilePath(
         parentDirPath: String,
         scriptFileName: String,
-        taergetDirPath: String,
+        targetDirPath: String,
         editFileNameForDialog: String,
         targetVariable: String,
         renameFileNameForDialog: String,
@@ -162,11 +166,6 @@ class JsFileSelect(
             prefix,
             suffix
         )
-        Toast.makeText(
-            context,
-            renameFileNameOkForDialog,
-            Toast.LENGTH_LONG
-        ).show()
         if(
             editFileNameForDialog == renameFileNameOkForDialog
         ){
@@ -178,17 +177,21 @@ class JsFileSelect(
             return
         }
         FileSystems.copyFile(
-            "${taergetDirPath}/${editFileNameForDialog}",
-            "${taergetDirPath}/${renameFileNameOkForDialog}",
+            "${targetDirPath}/${editFileNameForDialog}",
+            "${targetDirPath}/${renameFileNameOkForDialog}",
         )
         FileSystems.removeFiles(
-            taergetDirPath,
+            targetDirPath,
             editFileNameForDialog
         )
         updateScriptFile(
             parentDirPath,
             scriptFileName,
             "${targetVariable}=\"${renameFileNameOkForDialog}\""
+        )
+        JsEdit(terminalFragment).updateEditText(
+            targetVariable,
+            renameFileNameOkForDialog
         )
     }
 
@@ -223,11 +226,6 @@ class JsFileSelect(
             parentDirPath,
             scriptFileName,
             replaceContents
-        )
-        val jsIntent = JsIntent(terminalFragment)
-        jsIntent.launchShortcut(
-            parentDirPath,
-            scriptFileName
         )
     }
 
