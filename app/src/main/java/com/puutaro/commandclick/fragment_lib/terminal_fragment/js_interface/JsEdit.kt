@@ -48,7 +48,7 @@ class JsEdit(
             parentDirPath,
             scriptName,
             updateJsContents
-        );
+        )
     }
 
     @JavascriptInterface

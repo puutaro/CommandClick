@@ -208,7 +208,9 @@ class JsFileSystem(
     ): String {
         return FileSystems.sortedFiles(
             dirPath,
-        ).joinToString("\t")
+        ).filter {
+            File("$dirPath/$it").isFile
+        }.joinToString("\t")
     }
 
     @JavascriptInterface

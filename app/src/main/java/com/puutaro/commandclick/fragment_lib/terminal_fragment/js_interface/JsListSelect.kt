@@ -94,6 +94,11 @@ class JsListSelect(
                     && trimItem != escapeCharHyphen
                     && trimItem != itemText
         }.joinToString("\n")
+        Toast.makeText(
+            context,
+            itemText + "\n-----\n" + updateListContents,
+            Toast.LENGTH_LONG
+        ).show()
         FileSystems.writeFile(
             searchListDirPath,
             searchListFileName,
