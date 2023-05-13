@@ -114,6 +114,10 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withEditableListContentsSelectSpinnerWithFileChooserWithButton = WithEditableListContentsSelectSpinnerWithFileChooserWithButton(
+        editFragment
+    )
+
 
 
     private val withDirOrFileChooseView = WithDirOrFileChooseView(
@@ -159,10 +163,11 @@ class EditTextProducerForEdit(
         if(onSettingEdit){
             val setVariableListForSettingHolder =
                 CommandClickScriptVariable.setVariableForSettingHolder
-            val recordNumToSetVariableMapsForSettingHolder = SetVariableTyper.makeRecordNumToSetVariableMaps(
-                setVariableListForSettingHolder,
-                recordNumToMapNameValueInSettingHolder
-            )
+            val recordNumToSetVariableMapsForSettingHolder =
+                SetVariableTyper.makeRecordNumToSetVariableMaps(
+                    setVariableListForSettingHolder,
+                    recordNumToMapNameValueInSettingHolder
+                )
 
             execAdd(
                 recordNumToMapNameValueInSettingHolder,
@@ -200,9 +205,10 @@ class EditTextProducerForEdit(
         val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
             val currentOrder = seedNum - 1
-            val currentRecordNumToMapNameValueInHolder = recordNumToMapNameValueInHolder.entries.elementAt(
-                currentOrder
-            )
+            val currentRecordNumToMapNameValueInHolder =
+                recordNumToMapNameValueInHolder.entries.elementAt(
+                    currentOrder
+                )
             val currentRecordNumToNameToValueInHolder =
                 currentRecordNumToMapNameValueInHolder.value
             val insertTextView = TextView(context)
@@ -313,6 +319,26 @@ class EditTextProducerForEdit(
                         insertEditText,
                         editParameters,
                     )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_DIRECTORY_PICKER_BUTTON.str -> {
+                    editParameters.onDirectoryPick = true
+                    val innerLinearLayout =
+                        withEditableListContentsSelectSpinnerWithFileChooserWithButton.create(
+                            insertTextView,
+                            insertEditText,
+                            editParameters,
+                        )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_FILE_PICKER_BUTTON.str -> {
+                    editParameters.onDirectoryPick = false
+                    val innerLinearLayout =
+                        withEditableListContentsSelectSpinnerWithFileChooserWithButton.create(
+                            insertTextView,
+                            insertEditText,
+                            editParameters,
+                        )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX.str -> {

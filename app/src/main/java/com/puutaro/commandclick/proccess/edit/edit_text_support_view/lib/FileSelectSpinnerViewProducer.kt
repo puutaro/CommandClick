@@ -183,7 +183,7 @@ object FileSelectSpinnerViewProducer {
         }
     }
 
-    fun getSelectDirPath(
+    private fun getSelectDirPath(
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
@@ -201,7 +201,7 @@ object FileSelectSpinnerViewProducer {
             } ?: currentAppDirPath
     }
 
-    fun getFilterPrefix(
+    private fun getFilterPrefix(
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.prefix.name)?.let {
@@ -209,7 +209,7 @@ object FileSelectSpinnerViewProducer {
             } ?: String()
     }
 
-    fun getFilterSuffix(
+    private fun getFilterSuffix(
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.suffix.name)?.let {
@@ -229,7 +229,7 @@ object FileSelectSpinnerViewProducer {
         } ?: FilterFileType.file.name
     }
 
-    fun getSelectJsPath(
+    private fun getSelectJsPath(
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.selectJs.name)?.let {
