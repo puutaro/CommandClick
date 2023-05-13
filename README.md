@@ -247,7 +247,10 @@ You can create shortcut for current `App directory` or `script` in only `index m
 
 #### Install fannel
 
-You can install `fannel` by clicking.   
+1. long press right bottom setting button  
+2. click `install_fannel`   
+3. You can install `fannel` by clicking.   
+
 When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by long press and "sync ok" and wait until "sync ok" toast.   
 	- `fannel` [detail](https://github.com/puutaro/commandclick-repository#desire)  
 	  
@@ -299,9 +302,11 @@ You can set by onley this menu press.
 
 * Below is a supplement.
 
-1. Long press on termux
-2. Click paste popup on termux  
-3. Continue pressing `Enter` on termux
+1. long press right bottom setting button  
+2. `setting` -> `termux setup`   
+3. Long press on termux
+4. Click paste popup on termux  
+5. Continue pressing `Enter` on termux
 - clipboard contents:
    ```
    pkg update -y && pkg upgrade -y \
