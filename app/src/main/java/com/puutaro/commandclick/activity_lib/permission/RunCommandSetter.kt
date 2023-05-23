@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.activity_lib
+package com.puutaro.commandclick.activity_lib.permission
 
 import android.app.AlertDialog
 import android.content.ClipData
@@ -11,12 +11,8 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.activity_lib.manager.FragmentStartHandler
-import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import com.termux.shared.termux.TermuxConstants
 
 object RunCommandSetter {

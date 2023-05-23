@@ -7,7 +7,6 @@ import android.os.Build
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import kotlinx.coroutines.*
 
 object InstallFannelHandler {
     fun handle(
@@ -19,40 +18,7 @@ object InstallFannelHandler {
             activity,
             cmdIndexFragment
         )
-        val permissionMonitorSecond = 600
-        cmdIndexFragment.fannelInstallJob?.cancel()
-        cmdIndexFragment.fannelInstallJob = CoroutineScope(Dispatchers.Main).launch {
-            if (Build.VERSION.SDK_INT >= 33) {
-                withContext(Dispatchers.IO) {
-                    for (i in 0..permissionMonitorSecond) {
-                        val checkNotificationPermission =
-                            ContextCompat.checkSelfPermission(
-                                activity,
-                                Manifest.permission.POST_NOTIFICATIONS
-                            )
-                        if (checkNotificationPermission ==
-                            PackageManager.PERMISSION_GRANTED
-                        ) break
-                        delay(100)
-                    }
-                }
-                withContext(Dispatchers.Main) {
-                    delay(100)
-                    val checkNotificationPermission =
-                        ContextCompat.checkSelfPermission(
-                            activity,
-                            Manifest.permission.POST_NOTIFICATIONS
-                        )
-                    if (
-                        checkNotificationPermission ==
-                        PackageManager.PERMISSION_GRANTED
-                        && cmdIndexFragment.isVisible
-                    ) installFromFannelRepo.install()
-                }
-            } else {
-                installFromFannelRepo.install()
-            }
-        }
+        installFromFannelRepo.install()
     }
 
     private fun getNotificationPermissionLauncher(

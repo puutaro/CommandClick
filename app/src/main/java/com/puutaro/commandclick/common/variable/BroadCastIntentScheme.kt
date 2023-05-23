@@ -20,4 +20,28 @@ enum class BroadCastIntentScheme(
     "com.puutaro.commandclick.git_clone_stop.launch",
     "stop",
     ),
+    STOP_TEXT_TO_MP3(
+        "com.puutaro.commandclick.text_to_mp3.launch",
+        "stop",
+    ),
+    STOP_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.stop",
+        "stop",
+    ),
+    PREVIOUS_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.previous",
+        "previous",
+    ),
+    PAUSE_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.pause",
+        "pause",
+    ),
+    NEXT_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.next",
+        "next",
+    ),
+    TO_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.to",
+        "to",
+    ),
 }

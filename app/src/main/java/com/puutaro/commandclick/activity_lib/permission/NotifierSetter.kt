@@ -1,23 +1,25 @@
-package com.puutaro.commandclick.activity_lib
+package com.puutaro.commandclick.activity_lib.permission
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.activity.MainActivity
-
+import com.puutaro.commandclick.activity_lib.InitManager
+import kotlinx.coroutines.*
 
 object NotifierSetter {
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private var onPermissionResponse = false
     fun getPermissionAndSet(
         activity: MainActivity
     ){
+        if(
+            Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+        ) return
         val postNotifications = Manifest.permission.POST_NOTIFICATIONS
-
         val checkingRunCommandPermission =
             ContextCompat.checkSelfPermission(
                 activity,
@@ -26,15 +28,20 @@ object NotifierSetter {
         if(
             checkingRunCommandPermission ==
             PackageManager.PERMISSION_GRANTED
-        ) {
-            return
-        }
-        try {
-            activity.getNotifierSetterLaunch.launch(
-                postNotifications
-            )
-        } catch (e: Exception){
-            return
+        ) return
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main){
+                onPermissionResponse = false
+                activity.getNotifierSetterLaunch.launch(
+                    postNotifications
+                )
+            }
+            withContext(Dispatchers.Main){
+                while (true) {
+                    if (onPermissionResponse) break
+                    delay(200)
+                }
+            }
         }
     }
 
@@ -44,10 +51,8 @@ object NotifierSetter {
         return activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
-            if (isGranted) {
-                return@registerForActivityResult
-            }
-            return@registerForActivityResult
+            onPermissionResponse = true
+            InitManager.onNotificationPermissionResponse = true
         }
     }
 }

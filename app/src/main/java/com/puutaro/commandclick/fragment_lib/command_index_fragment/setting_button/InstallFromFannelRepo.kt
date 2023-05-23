@@ -69,11 +69,6 @@ class InstallFromFannelRepo(
 
         val fannelListView = ListView(context)
         val searchText = EditText(context)
-//        val fannelListAdapter = ArrayAdapter(
-//            context,
-//            R.layout.simple_list_item_1,
-//            makeFannelListForListView()
-//        )
         fannelListAdapter.clear()
         fannelListAdapter.addAll(makeFannelListForListView().toMutableList())
         fannelListAdapter.notifyDataSetChanged()
@@ -281,7 +276,7 @@ class InstallFromFannelRepo(
     private fun gitCloneAndMakeFannelList(){
         if(context == null) return
         val intent = Intent(cmdIndexFragment.activity, GitCloneService::class.java)
-        context.startService(intent)
+        context.startForegroundService(intent)
     }
 
     private fun updateFannelListView(

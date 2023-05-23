@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import android.widget.Toast
+import androidx.core.content.contentValuesOf
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.FormJsDialog
@@ -11,6 +13,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class JsDialog(
     terminalFragment: TerminalFragment
 ) {
+    val context = terminalFragment.context
 
     val listJsDialog = ListJsDialog(
         terminalFragment,
@@ -42,11 +45,20 @@ class JsDialog(
         formSettingVariables: String,
         formCommandVariables: String
     ): String{
-        return formJsDialog.create(
-            title,
-            formSettingVariables,
-            formCommandVariables
-        )
+        return try {
+            formJsDialog.create(
+                title,
+                formSettingVariables,
+                formCommandVariables
+            )
+        } catch(e: Exception){
+            Toast.makeText(
+                context,
+                e.toString(),
+                Toast.LENGTH_LONG
+            ).show()
+            return String()
+        }
     }
 
     @JavascriptInterface

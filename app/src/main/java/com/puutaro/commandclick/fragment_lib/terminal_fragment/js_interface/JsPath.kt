@@ -1,12 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import java.io.File
 
 class JsPath(
     terminalFragment: TerminalFragment
 ) {
+
+    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun compPrefix(
@@ -66,5 +70,29 @@ class JsPath(
         prefix: String
     ): String {
         return path.removePrefix(prefix)
+    }
+
+    @JavascriptInterface
+    fun trimAllExtend(
+        path: String
+    ): String {
+        return path.replace(
+            Regex("\\.[a-zA-Z0-9]*$"),
+            ""
+        )
+    }
+
+    @JavascriptInterface
+    fun dirname(
+        path: String,
+    ): String {
+        return File(path).parent ?: String()
+    }
+
+    @JavascriptInterface
+    fun basename(
+        path: String,
+    ): String {
+        return File(path).name
     }
 }

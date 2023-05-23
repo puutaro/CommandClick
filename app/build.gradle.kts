@@ -44,9 +44,9 @@ android {
 
 dependencies {
 
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.8.0")
+    implementation("androidx.compose.material:material:1.4.3")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("androidx.test:core-ktx:1.5.0")
     testImplementation("junit:junit:4.13.2")
@@ -57,16 +57,18 @@ dependencies {
     implementation("com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava")
     implementation("com.github.Yumenokanata:KeyboardVisibilityEvent:1.1")
     implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
-    implementation("android.arch.lifecycle:extensions:1.1.1")
+    implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.media:media:1.6.0")
     implementation("commons-io:commons-io:2.11.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.5.3")
-    implementation("androidx.core:core-ktx:1.10.0")
+    implementation("androidx.core:core-ktx:1.10.1")
     implementation("com.github.omadahealth:swipy:1.2.3@aar")
     implementation("com.github.skydoves:colorpickerview:2.2.4")
     implementation("com.anggrayudi:storage:1.5.4")
     implementation("com.github.sya-ri:kgit:1.0.5")
     implementation("com.github.abumoallim:Android-Multi-Select-Dialog:v1.9")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
+    implementation("org.jsoup:jsoup:1.7.3")
 }

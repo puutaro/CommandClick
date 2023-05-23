@@ -95,6 +95,10 @@ class WebViewSettings {
                 JsPath(terminalFragment),
                 JsInterfaceVariant.jsPath.name
             )
+            terminalWebView.addJavascriptInterface(
+                JsTextToSpeech(terminalFragment),
+                JsInterfaceVariant.jsTextToSpeech.name
+            )
         }
     }
 }
@@ -118,4 +122,5 @@ private enum class JsInterfaceVariant {
     jsCsv,
     jsText,
     jsPath,
+    jsTextToSpeech,
 }

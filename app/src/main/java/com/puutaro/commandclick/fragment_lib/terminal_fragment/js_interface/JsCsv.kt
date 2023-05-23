@@ -665,7 +665,6 @@ class JsCsv(
         ts.setGravity(Gravity.CENTER, 0, 0)
         ts.show()
     }
-
 }
 
 private enum class FilterType(

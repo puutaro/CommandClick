@@ -124,7 +124,7 @@ class EditTextProducerForEdit(
         editFragment
     )
 
-    private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView()
+    private val withEditableFileSelectSpinnerView = WithEditableFileSelectSpinnerView()
 
     private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
 
@@ -282,8 +282,8 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
-                EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX.str -> {
-                    val innerLinearLayout = withFileSelectEditableSpinnerView.create(
+                EditTextSupportViewName.EDITABLE_FILE_SELECT_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableFileSelectSpinnerView.create(
                         insertEditText,
                         editParameters,
                     )

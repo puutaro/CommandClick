@@ -8,7 +8,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 
 
-class WithFileSelectEditableSpinnerView {
+class WithEditableFileSelectSpinnerView {
     fun create(
         insertEditText: EditText,
         editParameters: EditParameters

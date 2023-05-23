@@ -11,12 +11,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.*
@@ -26,6 +28,7 @@ import java.io.File
 
 class GitCloneService: Service() {
 
+    private val notificationId = ServiceNotificationId.gitClone
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private val descriptionFirstLineLimit = FannelListVariable.descriptionFirstLineLimit
     private var notificationManager: NotificationManagerCompat? = null
@@ -37,7 +40,8 @@ class GitCloneService: Service() {
         override fun onReceive(context: Context, intent: Intent) {
             gitCloneJob?.cancel()
             isProgressCancel = true
-            notificationManager?.cancelAll()
+            notificationManager?.cancel(notificationId)
+            stopForeground(Service.STOP_FOREGROUND_DETACH)
         }
     }
 
@@ -53,7 +57,7 @@ class GitCloneService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         isProgressCancel = true
-        notificationManager?.cancelAll()
+        notificationManager?.cancel(notificationId)
         gitCloneJob?.cancel()
 
         val gitCloneStopIntent = Intent()
@@ -85,6 +89,7 @@ class GitCloneService: Service() {
             "cancel",
             pendingIntent
         )
+        startForeground(notificationId, notificationBuilder.build())
 
         val cmdclickFannelAppsDirPath = UsePath.cmdclickFannelAppsDirPath
         val repoFileObj = File(cmdclickFannelAppsDirPath)
@@ -123,8 +128,9 @@ class GitCloneService: Service() {
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancelAll()
+        notificationManager?.cancel(notificationId)
         gitCloneJob?.cancel()
+        stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -134,8 +140,9 @@ class GitCloneService: Service() {
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancelAll()
+        notificationManager?.cancel(notificationId)
         gitCloneJob?.cancel()
+        stopForeground(Service.STOP_FOREGROUND_DETACH)
         stopSelf()
     }
 
@@ -209,7 +216,8 @@ class GitCloneService: Service() {
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                     notificationBuilder.setProgress(100, 0, true)
-                    notificationManager.notify(0, notificationBuilder.build())
+                    val notification = notificationBuilder.build()
+                    notificationManager.notify(notificationId, notification)
                     lastWorked = 0
                 }
 
@@ -221,7 +229,8 @@ class GitCloneService: Service() {
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                     notificationBuilder.setProgress(100, percentComplete, false)
-                    notificationManager.notify(0, notificationBuilder.build())
+                    val notification = notificationBuilder.build()
+                    notificationManager.notify(notificationId, notification)
                     lastWorked = completed
                 }
 
@@ -234,7 +243,8 @@ class GitCloneService: Service() {
                     notificationBuilder.setProgress(100, 100, false)
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.clearActions()
-                    notificationManager.notify(0, notificationBuilder.build())
+                    val notification = notificationBuilder.build()
+                    notificationManager.notify(notificationId, notification)
                     isProgressCancel = true
                 }
                 override fun isCancelled(): Boolean {

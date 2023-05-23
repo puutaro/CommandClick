@@ -36,12 +36,11 @@ class FormJsDialog(
     private val withSpinnerView = WithSpinnerView()
     private val withEditableSpinnerView = WithEditableSpinnerView()
 
-    private val withFileSelectEditableSpinnerView = WithFileSelectEditableSpinnerView()
+    private val withEditableFileSelectSpinnerView = WithEditableFileSelectSpinnerView()
 
     private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
 
     private val withInDeCremenView = WithInDeCremenView()
-
 
     private val languageType =
         LanguageTypeSelects.JAVA_SCRIPT
@@ -248,16 +247,18 @@ class FormJsDialog(
         editTextStartId: Int,
         linearLayout: LinearLayout
     ){
-        val recordNumToNameToValueInHolderSize = editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
+        val recordNumToNameToValueInHolderSize =
+            editParameters.recordNumToMapNameValueInCommandHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach { seedNum ->
             val linearParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )
             val currentOrder = seedNum - 1
-            val currentRecordNumToMapNameValueInHolder = editParameters.recordNumToMapNameValueInCommandHolder.entries.elementAt(
-                currentOrder
-            )
+            val currentRecordNumToMapNameValueInHolder =
+                editParameters.recordNumToMapNameValueInCommandHolder.entries.elementAt(
+                    currentOrder
+                )
             val currentRecordNumToNameToValueInHolder =
                 currentRecordNumToMapNameValueInHolder.value
             val insertTextView = TextView(context)
@@ -302,8 +303,8 @@ class FormJsDialog(
                     )
                     linearLayout.addView(innerLinearLayout)
                 }
-                EditTextSupportViewName.EDITABLE_FILE_CHECK_BOX.str -> {
-                    val innerLinearLayout = withFileSelectEditableSpinnerView.create(
+                EditTextSupportViewName.EDITABLE_FILE_SELECT_CHECK_BOX.str -> {
+                    val innerLinearLayout = withEditableFileSelectSpinnerView.create(
                         insertEditText,
                         editParameters
                     )

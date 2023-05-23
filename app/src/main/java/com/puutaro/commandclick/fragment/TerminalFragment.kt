@@ -101,7 +101,6 @@ class TerminalFragment: Fragment() {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
 
-
         ExecDownLoadManager.set(this)
         ToolbarHideShowWhenTermLong.invoke(
             this,
@@ -127,7 +126,7 @@ class TerminalFragment: Fragment() {
             urlString?.let {
                 firstDisplayUpdate = false
                 val webView = this.binding.terminalWebView
-                webView.loadUrl(it);
+                webView.loadUrl(it)
             }
         }
         DisplaySwich.update(
@@ -270,6 +269,4 @@ class TerminalFragment: Fragment() {
             preSelectedMultiModelArray: ArrayList<Int>
         )
     }
-
-
 }

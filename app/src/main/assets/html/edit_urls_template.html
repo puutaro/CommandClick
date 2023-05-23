@@ -296,7 +296,9 @@
 
    function saveSortedBookmark(){
       const sortedContents = [...document.querySelectorAll(".url-launch")].map((item) => {
-        return item.textContent + "\t" + item.dataset.link
+         return item.textContent + "\t" + decodeURI(
+            item.href.replace(/^file:\/\//, '')
+         );
       }).join("\n")
       jsFileSystem.writeLocalFile(
          editTargetUrlsFilePath,
@@ -310,7 +312,11 @@
       let arrayItems = [],
       index,
       item = thisItem.parentNode,
-      itemURL = item.querySelector(".url-launch").dataset.link;
+      itemURL = decodeURI(
+            item.querySelector(
+               ".url-launch"
+            ).href.replace(/^file:\/\//, '')
+         );
       itemTitle = item.querySelector(".url-launch").textContent
 
       var result = window.confirm("delete ok?\n\t" + itemTitle);
@@ -348,9 +354,11 @@
                   return false
             }
             var draggingItem = evt.from.parentNode
-            var draggedItemURL = draggingItem.querySelector(".url-launch").dataset.link;
+            var draggingItemURL = draggingItem.querySelector(".url-launch").dataset.link;
             var draggedItem = evt.to.parentNode,
-            draggedItemURL = draggedItem.querySelector(".url-launch").dataset.link;
+            draggedItemURL = draggedItem.querySelector(
+               ".url-launch"
+            ).dataset.link;
             if(evt.oldIndex === evt.newIndex) return
                saveSortedBookmark()
           },

@@ -5,7 +5,6 @@ import android.content.*
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.KeyEvent
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -13,14 +12,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import com.abdeveloper.library.MultiSelectDialog
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.InitManager
-import com.puutaro.commandclick.activity_lib.NotifierSetter
-import com.puutaro.commandclick.activity_lib.RunCommandSetter
+import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
+import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
+import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
@@ -45,7 +44,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import java.util.*
 
 
 class MainActivity:
@@ -95,6 +94,10 @@ class MainActivity:
         }
     private val storageHelper = SimpleStorageHelper(this)
 
+    val storageAccessPermissionLauncher =
+        StorageAccessSetter.set(this)
+    val manageFullStoragePermissionResultLauncher =
+        StorageAccessSetter.setForFullStorageAccess(this)
     val getRunCommandPermissionAndStartFragmentLauncher =
         RunCommandSetter.set(this)
 
@@ -106,7 +109,7 @@ class MainActivity:
         super.onCreate(savedInstanceState)
         savedInstanceStateVal = savedInstanceState
         val actionBar = supportActionBar
-        actionBar?.hide();
+        actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
 
 
@@ -468,5 +471,4 @@ class MainActivity:
             preSelectedMultiModelArray
         )
     }
-
-}
+    }
