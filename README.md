@@ -787,6 +787,8 @@ This, so colled, android app row code library.
 		speed: String(int string)  
 		pitch: String(int string)
 	)
+	  
+	- jsTextToSpeech.stop()  
 
 ### Javascript pre order word
 - `${0}` -> current file path  
