@@ -776,6 +776,17 @@ This, so colled, android app row code library.
 		prefix: String  
 	    ) -> remove prefix      
 
+- JsTextToSpeech  
+	- jsTextToSpeech.speech(
+		playListFilePath: String,  
+		playMode: String(ordinaly|shuffle|reverse|number),  
+		onRoop: String(empty or notEmply(roop on)),  
+		playNumber: String (int string(valid in number mode),  
+		englishMode: String(empty or notEmply(roop on)),  
+		onTrack: String(empty or notEmply(on Track)),  
+		speed: String(int string)  
+		pitch: String(int string)
+	)
 
 ### Javascript pre order word
 - `${0}` -> current file path  
