@@ -28,7 +28,11 @@ object NotifierSetter {
         if(
             checkingRunCommandPermission ==
             PackageManager.PERMISSION_GRANTED
-        ) return
+        ) {
+            onPermissionResponse = true
+            InitManager.onNotificationPermissionResponse = true
+            return
+        }
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main){
                 onPermissionResponse = false

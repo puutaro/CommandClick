@@ -5,6 +5,7 @@ import android.app.ActivityManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.os.Build
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
