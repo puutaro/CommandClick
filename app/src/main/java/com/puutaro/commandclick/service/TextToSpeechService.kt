@@ -631,7 +631,7 @@ class TextToSpeechService:
                     val displayTitle = makeDisplayTitle(splitTextContent)
                     val displayTimes =
                         if(totalTimes != 0) {
-                            "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes} ${currentBlockNum} / ${totalTimes} ${onPressToButton}"
+                            "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
                         } else "${currentBlockNum + 1} (${displayRoopTimes}"
                     makeProgressNotification(
                         notificationBuilder,

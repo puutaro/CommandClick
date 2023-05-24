@@ -4,7 +4,6 @@ import android.webkit.JavascriptInterface
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.anggrayudi.storage.extension.trimFileName
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -102,7 +101,7 @@ class JsEdit(
     @JavascriptInterface
     fun removeFromEditHtml(
         editPath: String,
-        removeLine: String
+        removeUri: String
     ){
         val editPathObj = File(editPath)
         if(
@@ -123,7 +122,7 @@ class JsEdit(
             editFileName
         ).textToList().filter {
             val path = it.split("\t").lastOrNull()
-            path != removeLine
+            path != removeUri
         }.joinToString("\n")
         FileSystems.writeFile(
             parentDir,
