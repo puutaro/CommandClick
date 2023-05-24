@@ -32,9 +32,9 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.text_to_speech.previous",
         "previous",
     ),
-    PAUSE_TEXT_TO_SPEECH(
-        "com.puutaro.commandclick.text_to_speech.pause",
-        "pause",
+    FROM_TEXT_TO_SPEECH(
+        "com.puutaro.commandclick.text_to_speech.from",
+        "from",
     ),
     NEXT_TEXT_TO_SPEECH(
         "com.puutaro.commandclick.text_to_speech.next",

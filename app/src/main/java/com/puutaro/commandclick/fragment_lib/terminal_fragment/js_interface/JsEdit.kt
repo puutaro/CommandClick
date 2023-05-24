@@ -2,7 +2,9 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import android.widget.EditText
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.anggrayudi.storage.extension.trimFileName
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -95,5 +97,39 @@ class JsEdit(
             currentSpinnerId,
             updateVariableValue
         )
+    }
+
+    @JavascriptInterface
+    fun removeFromEditHtml(
+        editPath: String,
+        removeLine: String
+    ){
+        val editPathObj = File(editPath)
+        if(
+            !editPathObj.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "no exsit\n ${editPath}",
+                Toast.LENGTH_LONG
+            ).show()
+            return
+        }
+        val parentDir = editPathObj.parent
+            ?: return
+        val editFileName = editPathObj.name
+        val removedUrlList = ReadText(
+            parentDir,
+            editFileName
+        ).textToList().filter {
+            val path = it.split("\t").lastOrNull()
+            path != removeLine
+        }.joinToString("\n")
+        FileSystems.writeFile(
+            parentDir,
+            editFileName,
+            removedUrlList
+        )
+
     }
 }

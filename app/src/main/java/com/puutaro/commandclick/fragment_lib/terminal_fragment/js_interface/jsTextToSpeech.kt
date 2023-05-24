@@ -8,11 +8,6 @@ import com.puutaro.commandclick.common.variable.TextToSpeechIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.TextToMp3Service
 import com.puutaro.commandclick.service.TextToSpeechService
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.InputStream
-import java.io.SequenceInputStream
-import java.util.*
 
 class JsTextToSpeech(
     private val terminalFragment: TerminalFragment,
@@ -41,11 +36,6 @@ class JsTextToSpeech(
             intent.putExtra(TextToSpeechIntentExtra.speed.scheme, speed)
             intent.putExtra(TextToSpeechIntentExtra.pitch.scheme, pitch)
             context?.startService(intent)
-            Toast.makeText(
-                context,
-                "playto",
-                Toast.LENGTH_LONG
-            ).show()
         } catch (e: Exception) {
             Toast.makeText(
                 terminalFragment.context,
@@ -53,6 +43,13 @@ class JsTextToSpeech(
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    @JavascriptInterface
+    fun stop(){
+        context?.stopService(
+            Intent(terminalFragment.activity, TextToSpeechService::class.java)
+        )
     }
 
     @JavascriptInterface

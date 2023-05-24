@@ -9,7 +9,6 @@ import android.os.IBinder
 import android.speech.tts.TextToSpeech
 import android.speech.tts.UtteranceProgressListener
 import android.util.Log
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.anggrayudi.storage.file.isEmpty
@@ -45,7 +44,6 @@ class TextToSpeechService:
     private var onCurrentRoopBreak = false
     private var currentOrder: Int = 0
     private var currentBlockNum: Int = 0
-    private var onPause = false
 
     private var broadcastReceiverForTextToSpeechPrevious: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -61,13 +59,14 @@ class TextToSpeechService:
             currentBlockNum = -1
         }
     }
-    private var broadcastReceiverForTextToSpeechPause: BroadcastReceiver = object : BroadcastReceiver() {
+    private var broadcastReceiverForTextToSpeechFrom: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.PAUSE_TEXT_TO_SPEECH.action
+                != BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action
             ) return
-            onPause = !onPause
+            done = true
+            currentBlockNum -= 2
         }
     }
     private var broadcastReceiverForTextToSpeechTo: BroadcastReceiver = object : BroadcastReceiver() {
@@ -119,8 +118,8 @@ class TextToSpeechService:
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
-            broadcastReceiverForTextToSpeechPause,
-            BroadCastIntentScheme.PAUSE_TEXT_TO_SPEECH.action
+            broadcastReceiverForTextToSpeechFrom,
+            BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
@@ -146,7 +145,7 @@ class TextToSpeechService:
         )
         BroadcastManagerForService.unregisterBroadcastReceiver(
             this,
-            broadcastReceiverForTextToSpeechPause,
+            broadcastReceiverForTextToSpeechFrom,
         )
         BroadcastManagerForService.unregisterBroadcastReceiver(
             this,
@@ -203,9 +202,9 @@ class TextToSpeechService:
             applicationContext,
             BroadCastIntentScheme.PREVIOUS_TEXT_TO_SPEECH.action,
         )
-        val pausePendingIntent = PendingIntentCreator.create(
+        val fromPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.PAUSE_TEXT_TO_SPEECH.action,
+            BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action,
         )
         val toPendingIntent = PendingIntentCreator.create(
             applicationContext,
@@ -243,9 +242,9 @@ class TextToSpeechService:
                 previousPendingIntent
             )
             .addAction(
-                R.drawable.ic_media_pause,
-                "Pause",
-                pausePendingIntent
+                R.drawable.ic_media_rew,
+                "From",
+                fromPendingIntent
             )
             .addAction(
                 R.drawable.ic_media_ff,
@@ -258,7 +257,7 @@ class TextToSpeechService:
                 nextPendingIntent
             )
             .setStyle(MediaNotificationCompat.MediaStyle()
-                .setShowActionsInCompactView(1, 2, 4)
+                .setShowActionsInCompactView(0, 1, 4)
             )
             .setOngoing(false)
             .setAutoCancel(true)
@@ -388,7 +387,7 @@ class TextToSpeechService:
                     currentOrder < 0
                 ) currentOrder = 0
                 if(
-                    currentOrder > fileListSize
+                    currentOrder > fileListSize - 1
                 ) {
                     textToSpeech?.stop()
                     notificationManager?.notify(notificationId, notificationBuilder.build())
@@ -398,9 +397,15 @@ class TextToSpeechService:
                 }
 
                 val playFile = fileList[currentOrder]
-
+                if(factListSize == 0) {
+                    notificationBuilder.setContentTitle(
+                        "play list size must be more zero"
+                    )
+                    notificationManager?.notify(notificationId, notificationBuilder.build())
+                    return@launch
+                }
                 val displayRoopTimes = "${currentOrder % factListSize + 1}"
-//                (${fileListSize}
+//                  (${fileListSize}
                 withContext(Dispatchers.IO) {
                     try {
                         execPlay(
@@ -538,7 +543,7 @@ class TextToSpeechService:
             playPath,
         )
         if(
-            text.isEmpty()
+            text.isNullOrEmpty()
         ){
             downNotification(
                 notificationBuilder,
@@ -557,9 +562,15 @@ class TextToSpeechService:
                 for (i in 0 .. 10000) {
                     if(currentBlockNum >= totalTimes) {
                         currentBlockNum = 0
-                        break
                     }
-                    if(currentBlockNum < 0) currentBlockNum = 0
+                    val currentBlockNumEntry = totalTimes - 1
+                    val currentBlockNumSource = if(
+                        currentBlockNumEntry >= 0
+                    ) currentBlockNumEntry
+                    else 0
+                    if(currentBlockNum < 0) {
+                        currentBlockNum = currentBlockNumSource
+                    }
                     if(
                         currentBlockNum * lengthLimit >= stringLength
                     ) break
@@ -582,14 +593,13 @@ class TextToSpeechService:
                         lengthLimit,
                     )
 
-                    FileSystems.writeFile(
-                        debugTemp,
-                        "write${i}",
-                        splitTextContent
-                    )
+//                    FileSystems.writeFile(
+//                        debugTemp,
+//                        "write${i}",
+//                        splitTextContent
+//                    )
                     val utterId = i.toString()
                     delay(200)
-
                     withContext(Dispatchers.IO) {
                         if(!onCurrentRoopBreak) {
                             textToSpeech?.speak(
@@ -610,31 +620,19 @@ class TextToSpeechService:
                     done = false
                     val displayTitle = makeDisplayTitle(splitTextContent)
                     val displayTimes =
-                        "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
-
+                        if(totalTimes != 0) {
+                            "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
+                        } else "${currentBlockNum + 1} (${displayRoopTimes}"
                     makeProgressNotification(
                         notificationBuilder,
                         displayTitle,
                         displayTimes,
-                        cancelPendingIntent,
                     )
                     withContext(Dispatchers.IO) {
-                        var pastOnPause = onPause
                         while (true) {
                             monitorUtterLanceProgressListener()
-                            if(pastOnPause && !onPause){
-                                textToSpeech?.speak(
-                                    splitTextContent,
-                                    TextToSpeech.QUEUE_ADD,
-                                    null,
-                                    utterId
-                                )
-                            } else if(onPause){
-                                textToSpeech?.stop()
-                            }
                             if (done) break
                             if(onCurrentRoopBreak) break
-                            pastOnPause = onPause
                             delay(500)
                         }
                     }
@@ -670,12 +668,17 @@ class TextToSpeechService:
         splitTextContent: String
     ): String {
         val displayFileConLimit = 100
+        val splitTextContentSize = splitTextContent.length - 1
+        val endStrNum = if(
+            splitTextContentSize <= displayFileConLimit
+        ) splitTextContentSize
+        else displayFileConLimit
         val prefixSource =
             splitTextContent
                 .replace(
                     "\n",
                     ""
-                ).substring(0..displayFileConLimit)
+                ).substring(0..endStrNum)
         val prefixSourceLength = StringLength.count(prefixSource)
         if(
             prefixSourceLength <= displayFileConLimit
@@ -688,51 +691,37 @@ class TextToSpeechService:
         notificationBuilder: NotificationCompat.Builder,
         displayTitle: String,
         displayTimes: String,
-        pendingIntent: PendingIntent,
     ){
-//        notificationBuilder.setSmallIcon(R.drawable.progress_horizontal)
-//        notificationBuilder.setContentTitle(speechingStr)
-//        notificationBuilder.setAutoCancel(true)
-//        notificationBuilder.setDeleteIntent(
-//            pendingIntent
-//        )
         val notificationInstance = notificationBuilder
             .setContentTitle(displayTitle)
             .setContentText(displayTimes)
             .setOngoing(false)
             .build()
-//        val currentProgress = 70
-//        notificationBuilder.setProgress(
-//            100,
-//            currentProgress,
-//            true
-//        )
-//        notificationBuilder.clearActions()
-//        notificationBuilder.addAction(
-//            R.drawable.ic_menu_close_clear_cancel,
-//            "cancel",
-//            pendingIntent
-//        )
-        notificationManager?.notify(notificationId, notificationInstance)
-//        stopForeground(Service.STOP_FOREGROUND_DETACH)
-
+        notificationManager?.notify(
+            notificationId,
+            notificationInstance
+        )
     }
 
     private fun getText(
         playPath: String,
-    ): String {
+    ): String? {
         if (
             playPath.startsWith(WebUrlVariables.httpsPrefix)
             || playPath.startsWith(WebUrlVariables.httpPrefix)
         ) {
-            val doc = Jsoup.connect(playPath)
-                .timeout(2000)
-                .get()
-            return doc.body()
-                .text()
-                .let {
-                    chunkText(it)
-                }
+            try {
+                val doc = Jsoup.connect(playPath)
+                    .timeout(2000)
+                    .get()
+                return doc.body()
+                    .text()
+                    .let {
+                        chunkText(it)
+                    }
+            } catch (e: Exception){
+                return null
+            }
         }
         val playModeObj = File(playPath)
         val parentDir = playModeObj.parent
