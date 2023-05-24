@@ -666,6 +666,11 @@ This, so colled, android app row code library.
 		targetVariableName: String,
 		updateVariableValue: String,
 	    ) -> update target variable value  
+	- jsEdit.removeFromEditHtml(
+		editPath: String(edit site source path),
+		removeUri: String(remove uri)
+	)  ->    remoev uri from edit site source  
+
 
  - JsCsv  
  	csv edit tool   
