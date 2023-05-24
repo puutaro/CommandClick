@@ -41,6 +41,7 @@ class TextToSpeechService:
     private var notificationManager: NotificationManagerCompat? = null
     private var done = true
     private var nextRoop = false
+    private var onPressToButton = false
     private var onCurrentRoopBreak = false
     private var currentOrder: Int = 0
     private var currentBlockNum: Int = 0
@@ -76,6 +77,7 @@ class TextToSpeechService:
                 != BroadCastIntentScheme.TO_TEXT_TO_SPEECH.action
             ) return
             done = true
+            onPressToButton = true
         }
     }
     private var broadcastReceiverForTextToSpeechNext: BroadcastReceiver = object : BroadcastReceiver() {
@@ -537,8 +539,6 @@ class TextToSpeechService:
         displayRoopTimes: String,
         cancelPendingIntent: PendingIntent
     ){
-        done = true
-        val lengthLimit = 500
         val text = getText(
             playPath,
         )
@@ -551,18 +551,28 @@ class TextToSpeechService:
             )
             return
         }
+        done = true
+        val lengthLimit = 500
         execTextToSpeechJob = CoroutineScope(Dispatchers.IO).launch {
             val stringLength = text.length
             val totalTimesSource = stringLength / lengthLimit
             val totalTimes = if(
                 stringLength % lengthLimit > 0
-            ) totalTimesSource
-            else totalTimesSource - 1
+            ) totalTimesSource + 1
+            else totalTimesSource
             withContext(Dispatchers.IO) {
                 for (i in 0 .. 10000) {
-                    if(currentBlockNum >= totalTimes) {
+                    if (currentBlockNum >= totalTimes
+                        && onPressToButton
+                    ) currentBlockNum = 0
+                    else if (
+                        currentBlockNum >= totalTimes
+                    ){
                         currentBlockNum = 0
+                        break
                     }
+                    onPressToButton = false
+
                     val currentBlockNumEntry = totalTimes - 1
                     val currentBlockNumSource = if(
                         currentBlockNumEntry >= 0
@@ -621,7 +631,7 @@ class TextToSpeechService:
                     val displayTitle = makeDisplayTitle(splitTextContent)
                     val displayTimes =
                         if(totalTimes != 0) {
-                            "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
+                            "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes} ${currentBlockNum} / ${totalTimes} ${onPressToButton}"
                         } else "${currentBlockNum + 1} (${displayRoopTimes}"
                     makeProgressNotification(
                         notificationBuilder,
