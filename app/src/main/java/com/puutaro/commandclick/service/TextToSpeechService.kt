@@ -387,7 +387,7 @@ class TextToSpeechService:
                     currentOrder < 0
                 ) currentOrder = 0
                 if(
-                    currentOrder > fileListSize - 1
+                    currentOrder > fileListSize
                 ) {
                     textToSpeech?.stop()
                     notificationManager?.notify(notificationId, notificationBuilder.build())
