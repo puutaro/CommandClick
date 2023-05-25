@@ -22,6 +22,7 @@ import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.*
+import kotlinx.coroutines.selects.select
 import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
 
@@ -111,6 +112,11 @@ class GitCloneService: Service() {
                     makeFannelListMemoryContents().joinToString(cmdclickFannelListSeparator)
                 )
                 isProgressCancel = true
+            }
+            withContext(Dispatchers.IO){
+                notificationManager?.cancel(notificationId)
+                stopForeground(Service.STOP_FOREGROUND_DETACH)
+                stopSelf()
             }
         }
         return START_NOT_STICKY
