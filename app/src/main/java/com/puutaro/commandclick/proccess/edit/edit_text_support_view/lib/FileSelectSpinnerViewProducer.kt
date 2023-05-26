@@ -94,7 +94,7 @@ object FileSelectSpinnerViewProducer {
             adapter.notifyDataSetChanged()
             insertSpinner.setSelection(0)
             v.performClick()
-            true
+            false
         })
         insertSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
@@ -106,7 +106,7 @@ object FileSelectSpinnerViewProducer {
                     && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
                 ) {
                     FileSystems.updateLastModified(
-                        currentAppDirPath,
+                        filterDir,
                         selectedItem
                     )
                 }
