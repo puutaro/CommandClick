@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
 import android.webkit.ValueCallback
@@ -11,6 +12,7 @@ import android.webkit.WebChromeClient
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
@@ -96,8 +98,11 @@ class MainActivity:
 
     val storageAccessPermissionLauncher =
         StorageAccessSetter.set(this)
+
+    @RequiresApi(Build.VERSION_CODES.R)
     val manageFullStoragePermissionResultLauncher =
-        StorageAccessSetter.setForFullStorageAccess(this)
+            StorageAccessSetter.setForFullStorageAccess(this)
+
     val getRunCommandPermissionAndStartFragmentLauncher =
         RunCommandSetter.set(this)
 
@@ -111,7 +116,6 @@ class MainActivity:
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
-
 
         InitManager(this).invoke()
     }

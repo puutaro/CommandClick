@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.activity_lib.permission
 
 import android.Manifest
+import android.app.ActivityManager
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
@@ -17,11 +18,10 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.activity_lib.InitManager
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
+import com.puutaro.commandclick.activity_lib.init.ActivityFinisher
 
 object StorageAccessSetter {
-
-    private var onPermissionResponse = false
 
     fun storageAccessProcess(
         activity: MainActivity
@@ -30,15 +30,15 @@ object StorageAccessSetter {
             checkPermissionGranted(activity)
         ) {
             PackageManager.PERMISSION_GRANTED -> {
-                onPermissionResponse = true
-                InitManager.onStorageAccessPermissionResponse = true
+                NotifierSetter.getPermissionAndSet(
+                    activity
+                )
             }
             else -> {
                 if(
                     activity.supportFragmentManager.fragments.size > 0
                 ){
-                    onPermissionResponse = true
-                    InitManager.onStorageAccessPermissionResponse = true
+                    ExecRestartIntent.execRestartIntent(activity)
                     return
                 }
                 getStoragePermissionHandler(activity)
@@ -67,13 +67,18 @@ object StorageAccessSetter {
         return activity.registerForActivityResult(
             ActivityResultContracts.RequestPermission()
         ) { isGranted: Boolean ->
-            onPermissionResponse = true
-            InitManager.onStorageAccessPermissionResponse = true
+            if(isGranted){
+                NotifierSetter.getPermissionAndSet(
+                    activity
+                )
+                return@registerForActivityResult
+            }
+            ActivityFinisher.finish(activity)
         }
     }
 
 
-    fun checkPermissionGranted(
+    private fun checkPermissionGranted(
         activity: MainActivity
     ): Int {
         if(
@@ -120,11 +125,11 @@ object StorageAccessSetter {
             })
             .setNegativeButton("NO", DialogInterface.OnClickListener {
                     dialog, which ->
-                activity.finish()
+                ActivityFinisher.finish(activity)
             })
             .setOnCancelListener(object : DialogInterface.OnCancelListener {
                 override fun onCancel(dialog: DialogInterface?) {
-                    activity.finish()
+                    ActivityFinisher.finish(activity)
                 }
             })
             .show()
@@ -137,21 +142,22 @@ object StorageAccessSetter {
     }
 
 
+    @RequiresApi(Build.VERSION_CODES.R)
     fun setForFullStorageAccess(
         activity: MainActivity
     ): ActivityResultLauncher<Intent> {
         return activity.registerForActivityResult(
             ActivityResultContracts.StartActivityForResult(),
             ActivityResultCallback<ActivityResult?> {
-                onPermissionResponse = true
-                InitManager.onStorageAccessPermissionResponse = true
-            })
+                if (
+                    Environment.isExternalStorageManager()
+                ) {
+                    NotifierSetter.getPermissionAndSet(
+                        activity
+                    )
+                    return@ActivityResultCallback
+                }
+                ActivityFinisher.finish(activity)
+        })
     }
-
-//    @RequiresApi(Build.VERSION_CODES.R)
-//    val manageFullStoragePermissionResultLauncher = activity.registerForActivityResult(
-//        ActivityResultContracts.StartActivityForResult(),
-//        ActivityResultCallback<ActivityResult?> {
-//            onPermissionResponse = true
-//        })
 }
