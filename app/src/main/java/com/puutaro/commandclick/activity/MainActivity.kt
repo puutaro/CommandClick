@@ -31,10 +31,8 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisible
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
-import com.puutaro.commandclick.activity_lib.init.MonitorFiles
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -118,15 +116,6 @@ class MainActivity:
         volumeControlStream = AudioManager.STREAM_MUSIC
 
         InitManager(this).invoke()
-    }
-
-
-    override fun onStart() {
-        super.onStart()
-        MonitorFiles.trim(
-            UsePath.cmdClickMonitorFileName_1
-        )
-        super.onStart()
     }
 
     override fun onResume() {
@@ -475,4 +464,4 @@ class MainActivity:
             preSelectedMultiModelArray
         )
     }
-    }
+ }
