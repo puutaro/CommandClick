@@ -355,21 +355,27 @@ class TextToSpeechService:
             UsePath.cmdclickTempTextToSpeechDirPath,
             UsePath.cmdclickTextToSpeechTrackFileName,
         ).textToList()
-        val length = getValue(
+        val readLength = getIntValue(
             pastTrackKeyValueList,
             PlayTrackFileKey.length.name
+        )
+        val readPlayMode = getStrValue(
+            pastTrackKeyValueList,
+            PlayTrackFileKey.playMode.name,
+            "ordinaly"
         )
         currentOrder = 0
         currentBlockNum = 0
         if(
-            fileList.joinToString("").length == length
+            fileList.joinToString("").length == readLength
+            && readPlayMode == playMode
             && !onTrack.isNullOrEmpty()
         ){
-            currentOrder =  getValue(
+            currentOrder =  getIntValue(
                 pastTrackKeyValueList,
                 PlayTrackFileKey.order.name
             )
-            currentBlockNum =  getValue(
+            currentBlockNum =  getIntValue(
                 pastTrackKeyValueList,
                 PlayTrackFileKey.blockNum.name
             )
@@ -412,6 +418,7 @@ class TextToSpeechService:
                     try {
                         execPlay(
                             playFile,
+                            playMode,
                             fileList,
                             notificationBuilder,
                             displayRoopTimes,
@@ -534,6 +541,7 @@ class TextToSpeechService:
 
     private fun execPlay(
         playPath: String,
+        playMode: String?,
         fileList: List<String>,
         notificationBuilder: NotificationCompat.Builder,
         displayRoopTimes: String,
@@ -586,6 +594,7 @@ class TextToSpeechService:
                     ) break
                     val trackFileCon = """
                         |${PlayTrackFileKey.length.name}=${fileList.joinToString("").length}
+                        |${PlayTrackFileKey.playMode.name}=${playMode}
                         |${PlayTrackFileKey.order.name}=${currentOrder}
                         |${PlayTrackFileKey.blockNum.name}=${currentBlockNum}
                     """.trimMargin()
@@ -823,21 +832,33 @@ private fun chunkText(
 //            val nChunks = docText / size
 }
 
-private fun getValue(
+private fun getIntValue(
     pastTrackKeyValueList: List<String>,
     keyName: String,
 ): Int {
-    val currentOrderSource = pastTrackKeyValueList.filter{
-        it.contains(keyName)
-    }.firstOrNull()
-        ?.replace("${keyName}=", "")
-        ?.trim()
-        ?: "0"
+    val currentOrderSource = getStrValue(
+        pastTrackKeyValueList,
+        keyName,
+        "0"
+    )
     return try {
         currentOrderSource.toInt()
     } catch(e: Exception){
         0
     }
+}
+
+private fun getStrValue(
+    pastTrackKeyValueList: List<String>,
+    keyName: String,
+    defaultValue: String
+): String {
+    return pastTrackKeyValueList.filter{
+        it.contains(keyName)
+    }.firstOrNull()
+        ?.replace("${keyName}=", "")
+        ?.trim()
+        ?: defaultValue
 }
 
 private fun convertFloat(
@@ -859,6 +880,7 @@ private enum class PlayModeType {
 
 private enum class PlayTrackFileKey {
     length,
+    playMode,
     order,
     blockNum,
 }
