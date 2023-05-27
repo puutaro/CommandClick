@@ -20,7 +20,8 @@ class ExecPageSearchResult {
             }
             if (!cmdIndexFragment.isVisible) return
             val binding = cmdIndexFragment.binding
-            val cmdindexSearchTotal = binding.cmdindexSearchTotal
+            val pageSearch = binding.pageSearch
+            val cmdindexSearchTotal = pageSearch.cmdindexSearchTotal
             val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
             cmdindexSearchTotal.setText(displayActivePerTotal)
             if (numberOfMatches == 0) {

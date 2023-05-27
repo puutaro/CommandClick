@@ -74,6 +74,7 @@ class EditFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.edit_fragment,

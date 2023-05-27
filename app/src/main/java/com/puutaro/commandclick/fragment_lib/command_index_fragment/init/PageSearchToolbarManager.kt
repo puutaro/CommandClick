@@ -16,10 +16,11 @@ class PageSearchToolbarManager(
 
     private val context = cmdindexFragment.context
     private val binding = cmdindexFragment.binding
-    private val cmdindexSearchCancel = binding.cmdindexSearchCancel
-    private val cmdPageSearchEditText = binding.cmdPageSearchEditText
-    private val cmdindexSearchTopAllow = binding.cmdindexSearchTopAllow
-    private val cmdindexSearchDownAllow = binding.cmdindexSearchDownAllow
+    private val pageSearch = binding.pageSearch
+    private val cmdindexSearchCancel = pageSearch.cmdindexSearchCancel
+    private val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
+    private val cmdindexSearchTopAllow = pageSearch.cmdindexSearchTopAllow
+    private val cmdindexSearchDownAllow = pageSearch.cmdindexSearchDownAllow
     private val listener = context as? CommandIndexFragment.OnPageSearchToolbarClickListener
 
     fun cancleButtonClickListner(){
@@ -48,11 +49,11 @@ class PageSearchToolbarManager(
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable?) {
                 if(s.isNullOrEmpty()) {
-                    binding.cmdindexSearchTotal.visibility = View.GONE
-                    binding.cmdPageSearchEditText.layoutParams = linearWeightParamWide
+                    pageSearch.cmdindexSearchTotal.visibility = View.GONE
+                    pageSearch.cmdPageSearchEditText.layoutParams = linearWeightParamWide
                 } else {
-                    binding.cmdindexSearchTotal.visibility = View.VISIBLE
-                    binding.cmdPageSearchEditText.layoutParams = linearWeightParamShrink
+                    pageSearch.cmdindexSearchTotal.visibility = View.VISIBLE
+                    pageSearch.cmdPageSearchEditText.layoutParams = linearWeightParamShrink
                 }
                 listener?.onPageSearchToolbarClick(
                     PageSearchToolbarButtonVariant.SEARCH_TEXT,

@@ -7,6 +7,7 @@ import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -53,6 +54,7 @@ class CommandIndexFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = DataBindingUtil.inflate(
             inflater,
             R.layout.command_index_fragment,
@@ -67,8 +69,10 @@ class CommandIndexFragment: Fragment() {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val thisFragmentTag = this.tag
+        binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
-        val defaultSystemPath = "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val defaultSystemPath =
+            "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         FileSystems.createDirs(
             defaultSystemPath
         )
@@ -265,7 +269,7 @@ class CommandIndexFragment: Fragment() {
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-
+        super.onContextItemSelected(item)
         val startUpPref =  activity?.getPreferences(Context.MODE_PRIVATE)
         val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
             startUpPref
