@@ -50,12 +50,6 @@ class JsEdit(
             scriptName,
             updateJsContents
         )
-        JsIntent(
-            terminalFragment
-        ).launchShortcut(
-            parentDirPath,
-            scriptName
-        )
     }
 
     @JavascriptInterface

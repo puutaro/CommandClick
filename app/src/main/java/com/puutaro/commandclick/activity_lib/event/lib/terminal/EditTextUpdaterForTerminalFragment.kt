@@ -1,10 +1,17 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
+import androidx.compose.foundation.text.selection.DisableSelection
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object EditTextUpdaterForTerminalFragment {
     fun update(
@@ -20,10 +27,12 @@ object EditTextUpdaterForTerminalFragment {
         val binding = editExecuteFragment?.binding ?: return
         val editLinearLayout = binding.editLinearLayout
         try {
-            val editTextInEditFragment = editLinearLayout.findViewById<EditText>(editTextId)
-            editTextInEditFragment.setText(variableValue)
+            CoroutineScope(Dispatchers.Main).launch {
+                val editTextInEditFragment = editLinearLayout.findViewById<EditText>(editTextId)
+                editTextInEditFragment.setText(variableValue)
+            }
         } catch(e: Exception){
-            println("pass")
+            Log.e("edit", e.toString())
         }
     }
 }
