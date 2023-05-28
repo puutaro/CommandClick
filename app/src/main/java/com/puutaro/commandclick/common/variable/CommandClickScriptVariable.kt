@@ -295,7 +295,7 @@ class CommandClickScriptVariable {
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
                 |# * ${EXEC_PLAY_BTN_LONG_PRESS}
-                |#  -> execute when play button long press
+                |#  -> execute when play button long press in editExecute=EditExecute
                 |#    - WEB_SEARCH: apear web search bar
                 |#    - PAGE_SEARCH: apear page search bar
                 |#    - js file path: execute js file
