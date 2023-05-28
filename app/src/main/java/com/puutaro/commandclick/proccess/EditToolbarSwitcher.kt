@@ -38,11 +38,8 @@ object EditToolbarSwitcher {
         if(
             cmdEditFragmentConfirm.tag != cmdEditFragmentTag
         ) return
-//        val terminalViewModel: TerminalViewModel by cmdEditFragment.activityViewModels()
-//        if(
-//            terminalViewModel.readlinesNum == ReadLines.SHORTH
-//        ) return
         val binding = cmdEditFragment.binding
+        val editTextScroll = binding.editTextScroll
         val pageSearch = binding.pageSearch
         val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
 
@@ -79,6 +76,7 @@ object EditToolbarSwitcher {
                 webSearchToolbar.isVisible = true
                 cmdclickPageSearchToolBar.isVisible = false
                 cmdclickToolBar.isVisible = false
+                editTextScroll.isVisible = false
                 linearLayoutParamPageWebSearchToolBar.weight = 1F
                 linearLayoutParamPageSearchToolBar.weight = 0F
                 linearLayoutParamToolbar.weight = 0F
@@ -90,6 +88,7 @@ object EditToolbarSwitcher {
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = true
                 cmdclickToolBar.isVisible = false
+                editTextScroll.isVisible = false
                 linearLayoutParamPageWebSearchToolBar.weight = 0F
                 linearLayoutParamPageSearchToolBar.weight = 1F
                 linearLayoutParamToolbar.weight = 0F
@@ -100,6 +99,7 @@ object EditToolbarSwitcher {
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = false
                 cmdclickToolBar.isVisible = true
+                editTextScroll.isVisible = true
                 linearLayoutParamPageWebSearchToolBar.weight = 0F
                 linearLayoutParamPageSearchToolBar.weight = 0F
                 linearLayoutParamToolbar.weight = 1F
