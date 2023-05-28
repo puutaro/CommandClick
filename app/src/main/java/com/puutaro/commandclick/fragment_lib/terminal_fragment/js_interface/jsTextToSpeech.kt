@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
+import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.TextToMp3IntentExtra
@@ -8,6 +9,7 @@ import com.puutaro.commandclick.common.variable.TextToSpeechIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.TextToMp3Service
 import com.puutaro.commandclick.service.TextToSpeechService
+import java.util.Locale
 
 class JsTextToSpeech(
     private val terminalFragment: TerminalFragment,
@@ -46,11 +48,21 @@ class JsTextToSpeech(
     }
 
     @JavascriptInterface
-    fun stop(){
+    fun stopService(){
         context?.stopService(
             Intent(terminalFragment.activity, TextToSpeechService::class.java)
         )
     }
+
+
+    @JavascriptInterface
+    fun stop(){
+        val textToSpeech = TextToSpeech(context, null)
+        textToSpeech.stop()
+        textToSpeech.shutdown()
+
+    }
+
 
     @JavascriptInterface
     fun save(

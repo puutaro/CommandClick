@@ -494,48 +494,51 @@ class TextToSpeechService:
         onRoop: String?,
         playNumber: String?,
     ): List<String>? {
-        val fileListBeforePlayNumber = ReadText(
+        val fileListBeforePlayMode = ReadText(
             listFilePathParentDir,
             listFileName
         ).textToList()
-        val fileListBeforePlayMode = if(
-            playMode != PlayModeType.number.name
-        ) fileListBeforePlayNumber
-        else try {
-            val numberModeNum = playNumber?.toInt()
-                ?: -1
-            listOf(fileListBeforePlayNumber[numberModeNum-1])
-        } catch(e: Exception){
-            return null
-        }
-        val fileListSource = if(
-            onRoop.isNullOrEmpty()
-        ) fileListBeforePlayMode
-        else {
-            (1..100).map {
-                fileListBeforePlayMode
-            }.flatten()
-        }
+        val repeatTimes = 100
         return when(
             playMode
         ){
-            PlayModeType.shuffle.name -> {
-                fileListSource.shuffled()
-            }
             PlayModeType.reverse.name -> {
-                fileListSource.reversed()
+                val fileListBeforePlayModeReversed =
+                    fileListBeforePlayMode.reversed()
+                if(
+                    onRoop.isNullOrEmpty()
+                ) return fileListBeforePlayModeReversed
+                (1..repeatTimes).map {
+                    fileListBeforePlayModeReversed
+                }.flatten()
+            }
+            PlayModeType.shuffle.name -> {
+                if(
+                    onRoop.isNullOrEmpty()
+                ) return fileListBeforePlayMode.shuffled()
+                (1..repeatTimes).map {
+                    fileListBeforePlayMode.shuffled()
+                }.flatten()
             }
             PlayModeType.number.name -> {
-                if(
-                    playNumber.isNullOrEmpty()
-                ) return null
                 try {
-                    fileListSource
+                    val numberModeNum = playNumber?.toInt()
+                        ?: -1
+                    val fileListBeforePlayModeNumber =
+                        listOf(fileListBeforePlayMode[numberModeNum-1])
+                    if(
+                        onRoop.isNullOrEmpty()
+                    ) return fileListBeforePlayModeNumber
+                    (1..repeatTimes * 10).map {
+                        fileListBeforePlayModeNumber
+                    }.flatten()
                 } catch(e: Exception){
                     return null
                 }
             }
-            else -> fileListSource
+            else -> (0..repeatTimes).map {
+                fileListBeforePlayMode
+            }.flatten()
         }
     }
 
@@ -799,7 +802,6 @@ class TextToSpeechService:
     ){
         notificationBuilder.setSmallIcon(R.drawable.progress_indeterminate_horizontal)
         notificationBuilder.setContentText("text to speech blank")
-        notificationBuilder.setProgress(100, 100, false)
         notificationBuilder.setDeleteIntent(
             pendingIntent
         )
@@ -823,13 +825,6 @@ private fun chunkText(
             "(https|http)://[^ \n]*"),
         ""
     ).replace(" ", "\n")
-//        .split("\n")
-//        .joinToString(" \n")
-//    .map {
-//        it.chunked(lineLimitCharNum)
-//            .joinToString(" \n")
-//    }
-//            val nChunks = docText / size
 }
 
 private fun getIntValue(
