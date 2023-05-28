@@ -38,6 +38,11 @@ object EditToolbarSwitcher {
         if(
             cmdEditFragmentConfirm.tag != cmdEditFragmentTag
         ) return
+        val onExec = execJsFile(
+            cmdEditFragment,
+            editLongPressType,
+        )
+        if(onExec) return
         val binding = cmdEditFragment.binding
         val editTextScroll = binding.editTextScroll
         val pageSearch = binding.pageSearch
@@ -142,6 +147,51 @@ object EditToolbarSwitcher {
     }
 }
 
+
+private fun execJsFile(
+    cmdEditFragment: EditFragment?,
+    editLongPressType: String,
+): Boolean {
+    when(editLongPressType){
+        EditLongPressType.WEB_SEARCH.name,
+        EditLongPressType.PAGE_SEARCH.name,
+        EditLongPressType.NORMAL.name -> {
+            return false
+        }
+    }
+    if(
+        !File(editLongPressType).isFile
+    ) return false
+    val isJsSuffix = editLongPressType.endsWith(
+        CommandClickScriptVariable.JSX_FILE_SUFFIX
+    )
+            || editLongPressType.endsWith(
+        CommandClickScriptVariable.JS_FILE_SUFFIX
+    )
+    if(!isJsSuffix) return false
+    if(cmdEditFragment == null) return false
+    val context = cmdEditFragment.context ?: return false
+    cmdEditFragment.jsExecuteJob?.cancel()
+    cmdEditFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
+        val onLaunchUrl = EnableTerminalWebView.check(
+            cmdEditFragment,
+            context.getString(
+                R.string.edit_execute_terminal_fragment
+            )
+        )
+        if(!onLaunchUrl) return@launch
+        withContext(Dispatchers.Main) {
+            val listenerForWebLaunch = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+            listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
+                JavaScriptLoadUrl.make(
+                    context,
+                    editLongPressType,
+                ).toString()
+            )
+        }
+    }
+    return true
+}
 
 enum class EditLongPressType {
     WEB_SEARCH,
