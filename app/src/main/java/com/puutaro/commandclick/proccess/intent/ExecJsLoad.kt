@@ -6,7 +6,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -21,7 +20,7 @@ import java.io.File
 
 object ExecJsLoad {
     fun execJsLoad(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
@@ -34,7 +33,7 @@ object ExecJsLoad {
         ) return
         val context = currentFragment.context
         when (currentFragment) {
-            is CommandIndexFragment -> {
+            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                 val listener = currentFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
                 listener?.onKeyBoardVisibleChange(
                     false,
@@ -145,11 +144,11 @@ object ExecJsLoad {
     }
 
     private fun jsUrlLaunchHandler(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         launchUrlString: String,
     ){
         when (currentFragment) {
-            is CommandIndexFragment -> {
+            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                 currentFragment.jsExecuteJob?.cancel()
                 currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
                     val onLaunchUrl = EnableTerminalWebView.check(
@@ -188,7 +187,7 @@ object ExecJsLoad {
     }
 
     private suspend fun launchUrlByWebView(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         onLaunchUrl: Boolean,
         launchUrlString: String
     ){

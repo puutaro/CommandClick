@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -15,7 +14,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.SuggestEditTexter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -117,10 +115,6 @@ class CommandIndexFragment: Fragment() {
             readSharePreffernceMap
         )
 
-        val suggestEditTexter = SuggestEditTexter(
-            this
-        )
-        suggestEditTexter.setItemClickListener()
         val cmdListView = binding.cmdList
         val makeListView = MakeListView(
             binding,
@@ -341,6 +335,7 @@ class CommandIndexFragment: Fragment() {
     interface OnPageSearchToolbarClickListener {
         fun onPageSearchToolbarClick(
             pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant,
+            tag: String?,
             searchText: String = String(),
         )
     }

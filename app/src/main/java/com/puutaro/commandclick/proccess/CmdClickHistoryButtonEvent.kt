@@ -34,7 +34,7 @@ import java.io.File
 
 class CmdClickHistoryButtonEvent (
     historyButtonInnerView: View,
-    private val fragment: Fragment,
+    private val fragment: androidx.fragment.app.Fragment,
     private val sharedPref: SharedPreferences?,
     )
 {

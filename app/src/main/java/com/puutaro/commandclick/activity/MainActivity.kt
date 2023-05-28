@@ -27,6 +27,8 @@ import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle.Companion.execBackstackHandle
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
+import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
+import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
@@ -38,11 +40,12 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
 import java.util.*
 
@@ -76,7 +79,9 @@ class MainActivity:
     EditFragment.OnLaunchUrlByWebViewForEditListener,
     EditFragment.OnFileChooserListenerForEdit,
     EditFragment.OnTermSizeLongListenerForEdit,
-    EditFragment.OnMultiSelectListenerForEdit {
+    EditFragment.OnMultiSelectListenerForEdit,
+    EditFragment.OnLongPressPlayOrEditButtonListener,
+    EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     var filePath: ValueCallback<Array<Uri>>? = null
@@ -318,6 +323,7 @@ class MainActivity:
         )
     }
 
+
     override fun onLaunchUrlByWebViewForEdit(
         searchUrl: String
     ) {
@@ -334,13 +340,14 @@ class MainActivity:
 
     override fun onPageSearchToolbarClick(
         pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant,
-        searchText: String
+        tag: String?,
+        searchText: String,
     ) {
         PageSearchToolbarHandler.handle(
             this,
             pageSearchToolbarButtonVariant,
-            searchText
-
+            tag,
+            searchText,
         )
     }
 
@@ -462,6 +469,30 @@ class MainActivity:
             title,
             updatedMultiModelArray,
             preSelectedMultiModelArray
+        )
+    }
+
+    override fun onLongPressPlayOrEditButton(
+        editLongPressType: EditLongPressType,
+        tag: String?,
+        searchText: String,
+        pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant?
+    ) {
+        ExecOnLongPressPlayOrEditButton.handle(
+            this,
+            editLongPressType,
+            tag,
+            searchText,
+            pageSearchToolbarButtonVariant
+        )
+    }
+
+    override fun onLongTermKeyBoardOpenAjustForEdit(
+        weight: Float
+    ) {
+        ExecOnLongTermKeyBoardOpenAdjustForEdit.adjust(
+            this,
+            weight
         )
     }
  }

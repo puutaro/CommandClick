@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity_lib.manager
 
 import android.os.Bundle
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity

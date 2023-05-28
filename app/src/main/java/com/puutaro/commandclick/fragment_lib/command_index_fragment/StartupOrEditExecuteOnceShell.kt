@@ -16,22 +16,22 @@ class StartupOrEditExecuteOnceShell {
 
     companion object {
         fun invoke(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             readSharePreffernceMap: Map<String, String>
         ) {
 
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             val appDirAdminTag = context?.getString(R.string.app_dir_admin)
             if(
-                cmdIndexFragment.tag == appDirAdminTag
+                cmdIndexCommandIndexFragment.tag == appDirAdminTag
             ) return
 
-            val activity = cmdIndexFragment.activity
+            val activity = cmdIndexCommandIndexFragment.activity
             val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             )
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
 
             val editExecuteOnceCurrentShellFileName =
                 terminalViewModel.editExecuteOnceCurrentShellFileName
@@ -42,7 +42,7 @@ class StartupOrEditExecuteOnceShell {
                     "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                 )
                 AutoShellExecManager.fire(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     UsePath.cmdclickStartupJsName,
                 )
             } else {
@@ -52,7 +52,7 @@ class StartupOrEditExecuteOnceShell {
                         activity?.getString(R.string.index_terminal_fragment)
                     ) ?: return
                 ExecJsOrSellHandler.handle(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     editExecuteOnceCurrentShellFileName,
                 )

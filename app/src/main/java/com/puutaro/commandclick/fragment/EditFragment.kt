@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -21,9 +20,13 @@ import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
@@ -55,7 +58,7 @@ class EditFragment: Fragment() {
         CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
     ) as String
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-    var historySwitch =  SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
+    var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
@@ -65,9 +68,12 @@ class EditFragment: Fragment() {
     var editTerminalInitType = EditInitType.TERMINAL_SHRINK
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
+    var suggestJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var homeFannelHistoryName = String()
     var bottomScriptUrlList = emptyList<String>()
+    var execPlayBtnLongPress = String()
+    var execEditBtnLongPress = String()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,6 +92,8 @@ class EditFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
+        binding.webSearch.webSearchToolbar.isVisible = false
         val getIntent = activity?.intent
         Keyboard.hiddenKeyboardForFragment(
             this
@@ -184,6 +192,19 @@ class EditFragment: Fragment() {
             ConfigFromScriptFileSetter.set(
                 this,
             )
+            val pageSearchToolbarManagerForEdit =
+                PageSearchToolbarManagerForEdit(this)
+            pageSearchToolbarManagerForEdit.cancleButtonClickListener()
+            pageSearchToolbarManagerForEdit.onKeyListner()
+            pageSearchToolbarManagerForEdit.pageSearchTextChangeListner()
+            pageSearchToolbarManagerForEdit.searchTopClickLisnter()
+            pageSearchToolbarManagerForEdit.searchDownClickLisnter()
+            val webSearchToolbarManagerForEdit =
+                WebSearchToolbarManagerForEdit(this)
+            webSearchToolbarManagerForEdit.setKeyListener()
+            webSearchToolbarManagerForEdit.setCancelListener()
+            webSearchToolbarManagerForEdit.setGoogleSuggest()
+
         }
 
         val backstackOrder =
@@ -213,9 +234,10 @@ class EditFragment: Fragment() {
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
                 && tag != cmdConfigVariableEditFragment
             ) {
-                binding.editTextScroll.isVisible = !isOpen
-                binding.editToolBar.isVisible = !isOpen
-                if(!isOpen) activity?.currentFocus?.clearFocus()
+                KeyboardWhenTermLongForEdit.handle(
+                    this,
+                    isOpen
+                )
                 return@setEventListener
             }
             listener?.onKeyBoardVisibleChangeForEditFragment(
@@ -296,9 +318,7 @@ class EditFragment: Fragment() {
     }
 
     interface OnTermSizeLongListenerForEdit {
-        fun onTermSizeLongForEdit(
-
-        )
+        fun onTermSizeLongForEdit()
     }
 
     interface OnMultiSelectListenerForEdit {
@@ -310,4 +330,18 @@ class EditFragment: Fragment() {
         )
     }
 
+    interface OnLongPressPlayOrEditButtonListener {
+        fun onLongPressPlayOrEditButton(
+            editLongPressType: EditLongPressType,
+            tag: String?,
+            searchText: String,
+            pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant? = null,
+        )
+    }
+
+    interface OnLongTermKeyBoardOpenAjustListenerForEdit {
+        fun onLongTermKeyBoardOpenAjustForEdit(
+            weight: Float
+        )
+    }
 }

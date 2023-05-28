@@ -27,7 +27,7 @@
             android:descendantFocusability="blocksDescendants"
             android:scrollbarThumbVertical="@android:color/darker_gray"
             tools:context="com.puutaro.commandclick.fragment.TerminalFragment"
-            android:layout_above="@+id/edit_tool_bar"
+            android:layout_above="@+id/edit_tool_bar_linear_layout"
             android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
             >
             <LinearLayout
@@ -51,22 +51,46 @@
                 <requestFocus/>
             </LinearLayout>
         </ScrollView>
-        <android.widget.Toolbar
-            android:id="@+id/edit_tool_bar"
+        <LinearLayout
+            android:id="@+id/edit_tool_bar_linear_layout"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:contentInsetEnd="0dp"
-            android:contentInsetStart="0dp"
-            android:focusableInTouchMode="true"
+            android:layout_height="45dp"
+            android:orientation="vertical"
             android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:weightSum="1"
             >
-            <LinearLayout
-                android:id="@+id/edit_toolbar_linear_layout"
+            <include
+                layout="@layout/page_search"
+                android:id="@+id/page_search"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-            </LinearLayout>
-        </android.widget.Toolbar>
+                android:layout_height="0dp"
+                android:layout_weight="0"
+                />
+            <include
+                layout="@layout/web_search"
+                android:id="@+id/web_search"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0"
+                />
+            <android.widget.Toolbar
+                android:id="@+id/edit_tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentInsetEnd="0dp"
+                android:contentInsetStart="0dp"
+                android:focusableInTouchMode="true"
+                android:layout_weight="1"
+                >
+                <LinearLayout
+                    android:id="@+id/edit_toolbar_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                </LinearLayout>
+            </android.widget.Toolbar>
+        </LinearLayout>
 
     </RelativeLayout>
 </layout>

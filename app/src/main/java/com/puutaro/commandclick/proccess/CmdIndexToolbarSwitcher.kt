@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -13,22 +12,22 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object CmdIndexToolbarSwitcher {
     fun switch(
-        cmdIndexFragment: CommandIndexFragment?,
+        cmdIndexCommandIndexFragment: CommandIndexFragment?,
         onPageSearch: Boolean
     ) {
-        if(cmdIndexFragment == null) return
-        if(!cmdIndexFragment.isVisible) return
-        val context = cmdIndexFragment.context
-        if(cmdIndexFragment.tag != context?.getString(
+        if(cmdIndexCommandIndexFragment == null) return
+        if(!cmdIndexCommandIndexFragment.isVisible) return
+        val context = cmdIndexCommandIndexFragment.context
+        if(cmdIndexCommandIndexFragment.tag != context?.getString(
                 R.string.command_index_fragment
             )
         ) return
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
         if(
-            cmdIndexFragment.WebSearchSwitch
+            cmdIndexCommandIndexFragment.WebSearchSwitch
             && terminalViewModel.readlinesNum == ReadLines.SHORTH
         ) return
-        val binding = cmdIndexFragment.binding
+        val binding = cmdIndexCommandIndexFragment.binding
         val pageSearch = binding.pageSearch
         val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
         if(cmdclickPageSearchToolBar.isVisible == onPageSearch) return

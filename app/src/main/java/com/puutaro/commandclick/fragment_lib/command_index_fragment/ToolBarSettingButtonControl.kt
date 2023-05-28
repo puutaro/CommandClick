@@ -29,22 +29,22 @@ private val submenuSettingGroupId = 3
 
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,
-    private val cmdIndexFragment: CommandIndexFragment,
+    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
     private val cmdListAdapter: ArrayAdapter<String>,
     private val sharedPref: SharedPreferences?,
     readSharePreffernceMap: Map<String, String>,
 ){
-    private val context = cmdIndexFragment.context
+    private val context = cmdIndexCommandIndexFragment.context
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+    private val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
 
     private val settingButtonView = binding.cmdindexSettingButton
     private val popup = PopupMenu(context, settingButtonView)
     private val installFromFannelRepo = InstallFromFannelRepo(
-        cmdIndexFragment,
+        cmdIndexCommandIndexFragment,
         currentAppDirPath,
         cmdListAdapter,
     )
@@ -60,7 +60,7 @@ class ToolBarSettingButtonControl(
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
             ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-                cmdIndexFragment,
+                cmdIndexCommandIndexFragment,
             )
         }
     }
@@ -81,7 +81,7 @@ class ToolBarSettingButtonControl(
                 MenuEnums.FORWARD.order,
                 MenuEnums.FORWARD.itemName
             ).setEnabled(
-                EnableGoForwardForWebVeiw.check(cmdIndexFragment)
+                EnableGoForwardForWebVeiw.check(cmdIndexCommandIndexFragment)
             )
             val sub = popup.menu.addSubMenu(
                 MenuEnums.SELECTTERM.groupId,
@@ -120,13 +120,13 @@ class ToolBarSettingButtonControl(
 
 
     fun popupMenuItemSelected(
-        cmdIndexFragment: CommandIndexFragment
+        cmdIndexCommandIndexFragment: CommandIndexFragment
     ){
         popup.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 MenuEnums.ADD.itemId -> {
                     AddScriptHandler(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         sharedPref,
                         currentAppDirPath,
                         cmdListAdapter,
@@ -136,7 +136,7 @@ class ToolBarSettingButtonControl(
                     print("pass")
                 }
                 MenuEnums.CHDIR.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.CHDIR
                     )
@@ -145,20 +145,20 @@ class ToolBarSettingButtonControl(
                     configEdit()
                 }
                 MenuEnums.TERMUX_SETUP.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
                     )
                 }
                 MenuEnums.SHORTCUT.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
                     )
                 }
                 MenuEnums.INSTALL_FANNEL.itemId -> {
                     InstallFannelHandler.handle(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         installFromFannelRepo
                     )
                 }
@@ -199,7 +199,7 @@ class ToolBarSettingButtonControl(
                     )
                 }
                 MenuEnums.FORWARD.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.FORWARD
                     )
@@ -224,20 +224,20 @@ class ToolBarSettingButtonControl(
             configShellName
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
-            cmdIndexFragment,
+            cmdIndexCommandIndexFragment,
             shellContentsList,
             configShellName
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${configDirPath}/${configShellName}"
             VaridateionErrDialog.show(
-                cmdIndexFragment,
+                cmdIndexCommandIndexFragment,
                 shellScriptPath,
                 validateErrMessage
             )
             return
         }
-        val listener = cmdIndexFragment.context
+        val listener = cmdIndexCommandIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,

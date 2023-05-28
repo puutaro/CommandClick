@@ -12,14 +12,14 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 class AddShellScript {
     companion object {
         fun addShellOrJavaScript (
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             sharedPref: SharedPreferences?,
             currentAppDirPath: String,
             shellScriptName: String,
             languageTypeSelects: LanguageTypeSelects
         ){
 
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             SharePreffrenceMethod.putSharePreffrence(
                 sharedPref,
                 mapOf(
@@ -28,7 +28,7 @@ class AddShellScript {
                 )
             )
 
-            val cmdClickShibanStr = cmdIndexFragment.shiban
+            val cmdClickShibanStr = cmdIndexCommandIndexFragment.shiban
             CommandClickScriptVariable.makeShellOrJsFile(
                 cmdClickShibanStr,
                 currentAppDirPath,

@@ -18,13 +18,13 @@ import com.puutaro.commandclick.util.FileSystems
 class AddConfirmDialog {
     companion object {
         fun show(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             cmdListAdapter: ArrayAdapter<String>,
             currentAppDirPath: String,
             cmdListView: ListView,
         ) {
 
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             val editText = EditText(context)
             editText.inputType = InputType.TYPE_CLASS_TEXT
             val alertDialog = AlertDialog.Builder(context)

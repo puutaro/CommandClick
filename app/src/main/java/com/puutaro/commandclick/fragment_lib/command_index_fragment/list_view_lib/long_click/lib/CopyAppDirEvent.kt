@@ -17,14 +17,14 @@ import java.io.File
 
 
 class CopyAppDirEvent(
-    cmdIndexFragment: CommandIndexFragment,
+    cmdIndexCommandIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
     private val shellScriptName: String,
     private val cmdListAdapter: ArrayAdapter<String>,
 ) {
 
-    private val context = cmdIndexFragment.context
-    private val binding = cmdIndexFragment.binding
+    private val context = cmdIndexCommandIndexFragment.context
+    private val binding = cmdIndexCommandIndexFragment.binding
     private val cmdListView = binding.cmdList
 
     fun invoke(){

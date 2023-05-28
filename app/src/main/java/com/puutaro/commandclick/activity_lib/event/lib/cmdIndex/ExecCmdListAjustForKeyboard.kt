@@ -12,7 +12,7 @@ class ExecCmdListAjustForKeyboard {
             supportFragmentManager: FragmentManager,
             weight: Float
         ){
-            val targetFragment = try {
+            val targetCommandIndexFragment = try {
                 supportFragmentManager.findFragmentByTag(cmdIndexfragmentTag) as CommandIndexFragment
             } catch(e: java.lang.Exception){
                 Log.d(this.toString(), "not exist ${cmdIndexfragmentTag}")
@@ -23,7 +23,7 @@ class ExecCmdListAjustForKeyboard {
                 0
             )
             param.weight = weight
-            targetFragment.view?.layoutParams = param
+            targetCommandIndexFragment.view?.layoutParams = param
         }
     }
 }

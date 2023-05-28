@@ -59,6 +59,8 @@ class CommandClickScriptVariable {
         val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
         val ON_URL_LAUNCH_MACRO = "onUrlLaunchMacro"
         val EXEC_JS_OR_HTML_PATH = "execJsOrHtmlPath"
+        val EXEC_PLAY_BTN_LONG_PRESS = "execPlayBtnLongPress"
+        val EXEC_EDIT_BTN_LONG_PRESS = "execEditBtnLongPress"
         val BEFORE_COMMAND = "beforeCommand"
         val AFTER_COMMAND = "afterCommand"
         val SCRIPT_FILE_NAME = "scriptFileName"
@@ -130,6 +132,8 @@ class CommandClickScriptVariable {
             BEFORE_COMMAND,
             AFTER_COMMAND,
             SCRIPT_FILE_NAME,
+            EXEC_PLAY_BTN_LONG_PRESS,
+            EXEC_EDIT_BTN_LONG_PRESS,
         ) + BOTTOM_SCRIPT_URL_LIST
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
@@ -215,6 +219,8 @@ class CommandClickScriptVariable {
             "${BOTTOM_SCRIPT_URL8}:FL=",
             "${BOTTOM_SCRIPT_URL9}:FL=",
             "${BOTTOM_SCRIPT_URL10}:FL=",
+            "${EXEC_PLAY_BTN_LONG_PRESS}:FL=",
+            "${EXEC_EDIT_BTN_LONG_PRESS}:FL=",
         )
 
         fun makeShellScriptName(
@@ -288,6 +294,16 @@ class CommandClickScriptVariable {
                 |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
                 |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
                 |# * ${TERMINAL_COLOR} adjust terminal background color
+                |# * ${EXEC_PLAY_BTN_LONG_PRESS}
+                |#  -> execute when play button long press
+                |#    - WEB_SEARCH: apear web search bar
+                |#    - PAGE_SEARCH: apear page search bar
+                |#    - js file path: execute js file
+                |# * ${EXEC_EDIT_BTN_LONG_PRESS}
+                |#  -> execute when edit button long press
+                |#    - WEB_SEARCH: apear web search bar
+                |#    - PAGE_SEARCH: apear page search bar
+                |#    - js file path: execute js file
                 |# * ${SET_REPLACE_VARIABLE} is string replaced with certain string
                 |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
                 |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
@@ -350,6 +366,8 @@ class CommandClickScriptVariable {
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
             |${TERMINAL_COLOR}=""
             |${TERMINAL_FONT_COLOR}=""
+            |${EXEC_PLAY_BTN_LONG_PRESS}=""
+            |${EXEC_EDIT_BTN_LONG_PRESS}=""
             |${SET_REPLACE_VARIABLE}=""
             |${SET_VARIABLE_TYPE}=""
             |${BEFORE_COMMAND}=""

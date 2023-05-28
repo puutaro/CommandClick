@@ -22,14 +22,14 @@
         android:layout_height="match_parent"
         tools:context="com.puutaro.commandclick.activity.MainActivity"
         >
-    <LinearLayout
-        android:id="@+id/main_container"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        <LinearLayout
+            android:id="@+id/main_container"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
 
-    </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 </layout>

@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.proccess.intent
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.*
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
@@ -19,7 +17,7 @@ class ExecTerminalDo {
 
     companion object {
         fun execTerminalDo(
-            currentFragment: Fragment,
+            currentFragment: androidx.fragment.app.Fragment,
             recentAppDirPath: String,
             selectedShellFileName: String,
             shellContentsListSource: List<String>? = null
@@ -32,7 +30,7 @@ class ExecTerminalDo {
             ) return
 
             val runShell = when(currentFragment){
-                is CommandIndexFragment -> currentFragment.runShell
+                is com.puutaro.commandclick.fragment.CommandIndexFragment -> currentFragment.runShell
                 is EditFragment -> currentFragment.runShell
                 else -> CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             }

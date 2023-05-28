@@ -206,7 +206,13 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.OK -> {
                 execForOkLongClick(
                     shellContentsList,
-                    toolbarButtonBariantForEdit,
+                    recordNumToMapNameValueInCommandHolder,
+                    recordNumToMapNameValueInSettingHolder,
+                )
+            }
+            ToolbarButtonBariantForEdit.EDIT -> {
+                execForEditLongClick(
+                    shellContentsList,
                     recordNumToMapNameValueInCommandHolder,
                     recordNumToMapNameValueInSettingHolder,
                 )
@@ -217,10 +223,40 @@ class ToolbarButtonProducerForEdit(
 
     private fun execForOkLongClick(
         shellContentsList: List<String>,
-        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ) {
+        execScriptSave(
+            shellContentsList,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
+        )
+        EditToolbarSwitcher.switch(
+            editFragment,
+            editFragment.execPlayBtnLongPress
+        )
+    }
+
+    private fun execForEditLongClick(
+        shellContentsList: List<String>,
+        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+    ) {
+        execScriptSave(
+            shellContentsList,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
+        )
+        EditToolbarSwitcher.switch(
+            editFragment,
+            editFragment.execEditBtnLongPress
+        )
+    }
+    private fun execScriptSave(
+        shellContentsList: List<String>,
+        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+    ){
         val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.on_shortcut
@@ -235,18 +271,7 @@ class ToolbarButtonProducerForEdit(
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
-
-        val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-        listener?.onToolBarButtonClickForEditFragment(
-            editFragment.tag,
-            toolbarButtonBariantForEdit,
-            readSharePreffernceMap,
-            enableCmdEdit,
-            isLongPress = true
-        )
-
     }
-
 
     private fun execForOk(
         shellContentsList: List<String>,

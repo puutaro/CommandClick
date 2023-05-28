@@ -5,9 +5,9 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 object FannelInstallDialog {
     fun create(
-        cmdIndexFragment: CommandIndexFragment
+        cmdIndexCommandIndexFragment: CommandIndexFragment
     ):AlertDialog {
-        val context = cmdIndexFragment.context
+        val context = cmdIndexCommandIndexFragment.context
         val alertDialogBuilder = AlertDialog.Builder(
             context
         )

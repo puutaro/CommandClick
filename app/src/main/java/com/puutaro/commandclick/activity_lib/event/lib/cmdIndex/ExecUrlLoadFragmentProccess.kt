@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
-import android.content.Context
 import android.util.Log
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -8,11 +7,9 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
 import com.puutaro.commandclick.common.variable.ReadLines
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ExecUrlLoadFragmentProccess {
@@ -25,15 +22,15 @@ class ExecUrlLoadFragmentProccess {
                 ViewModelProvider(activity).get(TerminalViewModel::class.java)
             val cmdIndexFragmentTag = activity.getString(R.string.command_index_fragment)
             val supportFragmentManager = activity.supportFragmentManager
-            val cmdIndexFragment = try {
+            val cmdIndexCommandIndexFragment = try {
                 supportFragmentManager.findFragmentByTag(cmdIndexFragmentTag) as CommandIndexFragment
             } catch(e: java.lang.Exception){
                 Log.d(this.toString(), "not exist ${cmdIndexFragmentTag}")
                 return
             }
-            if(!cmdIndexFragment.isVisible) return
-            val context = cmdIndexFragment.context
-            val binding = cmdIndexFragment.binding
+            if(!cmdIndexCommandIndexFragment.isVisible) return
+            val context = cmdIndexCommandIndexFragment.context
+            val binding = cmdIndexCommandIndexFragment.binding
             val cmdindexInternetButton = binding.cmdindexInternetButton
             binding.cmdListSwipeToRefresh.isVisible = false
             context?.let {
@@ -51,7 +48,7 @@ class ExecUrlLoadFragmentProccess {
                     terminalViewModel
                 )
             }
-            cmdIndexFragment.WebSearchSwitch = true
+            cmdIndexCommandIndexFragment.WebSearchSwitch = true
         }
 
 

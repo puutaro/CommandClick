@@ -1,11 +1,9 @@
 package com.puutaro.commandclick.proccess.lib
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment.Companion.execSetTermSizeForCmdIndexFragment
@@ -16,7 +14,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ExecSetTermSizeForIntent {
     companion object {
         fun execSetTermSizeForIntent(
-            currentFragment: Fragment,
+            currentFragment: androidx.fragment.app.Fragment,
             substituteSettingVariableList: List<String>?,
             ) {
 
@@ -40,7 +38,7 @@ class ExecSetTermSizeForIntent {
                 !onSetTerminalSize || context == null
             ) return
             when(currentFragment){
-                is CommandIndexFragment -> {
+                is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                     execSetTermSizeForCmdIndexFragment(
                         currentFragment,
                     )

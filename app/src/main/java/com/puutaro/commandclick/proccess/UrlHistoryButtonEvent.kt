@@ -31,7 +31,7 @@ import java.io.File
 
 
 class UrlHistoryButtonEvent(
-    private val fragment: Fragment,
+    private val fragment: androidx.fragment.app.Fragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -351,7 +351,7 @@ class UrlHistoryButtonEvent(
         return when(
             fragment
         ){
-            is CommandIndexFragment -> {
+            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                 fragment.bottomScriptUrlList.map {
                         url ->
                     val title = url.split("/")

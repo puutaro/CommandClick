@@ -1,10 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button
 
+import android.R
+import android.content.Context
 import android.os.Build
 import android.text.Editable
-import android.widget.Toast
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.UrlTexter
+import com.puutaro.commandclick.util.Keyboard
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -12,21 +19,27 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLDecoder
 import java.net.URLEncoder
 import java.util.*
 import java.util.zip.GZIPInputStream
 
 
 class GoogleSuggest(
-    private val cmdIndexFragment: CommandIndexFragment,
+    private val fragment: Fragment,
+    private val cmdSearchEditText: AutoCompleteTextView
 ){
-    private val context = cmdIndexFragment.context
-    private val suggestEditTexter = SuggestEditTexter(cmdIndexFragment)
+    private val context = fragment.context
+    private val suggestEditTexter = SuggestEditTexter(
+        fragment,
+        cmdSearchEditText
+    )
     private var mDispText = String()
 
     fun set (
         searchEditable: Editable?
     ) {
+        suggestEditTexter.setItemClickListener()
         mDispText = String()
         if(searchEditable.isNullOrEmpty()) return
         val localLanguage = Locale.getDefault().toString()
@@ -56,56 +69,71 @@ class GoogleSuggest(
             Locale.getDefault().toString()
         )
 
-        cmdIndexFragment.suggestJob?.cancel()
-        cmdIndexFragment.suggestJob = CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.IO) {
-                    delay(200)
-                    try {
-                        connection.connect()
-                    } catch (e: Exception) {
-                        connection.disconnect()
-                    }
-                }
-                withContext(Dispatchers.IO){
-                    val statusCode = connection.responseCode
-                    if (statusCode != HttpURLConnection.HTTP_OK) {
-                        connection.disconnect()
-                    }
-                    val contentEncoding: String = connection.contentEncoding
-                    val inputStream = if (contentEncoding.contains("gzip")) {
-                        GZIPInputStream(connection.getInputStream())
-                    } else {
-                        connection.inputStream
-                    }
-                    val bufferedReader =
-                        BufferedReader(InputStreamReader(inputStream))
-                    val responseBody = bufferedReader.use { it.readText() }
-                    bufferedReader.close()
+        when(fragment) {
+            is CommandIndexFragment -> {
+                fragment.suggestJob?.cancel()
+                    fragment . suggestJob = launchSuggestCoroutine (connection)
+            }
+            is EditFragment -> {
+                fragment.suggestJob?.cancel()
+                fragment.suggestJob = launchSuggestCoroutine (connection)
+            }
+        }
+
+    }
+
+    private fun launchSuggestCoroutine(
+        connection:  HttpURLConnection
+    ):Job {
+        return CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                delay(200)
+                try {
+                    connection.connect()
+                } catch (e: Exception) {
                     connection.disconnect()
-                    val rootObject = JSONObject(responseBody)
-                    var results: JSONArray? = null
-                    val `as`: JSONObject? = rootObject.optJSONObject("AS")
-                    if (`as` != null) {
-                        results = `as`.optJSONArray("Results")
-                    }
-                    if (results != null) {
-                        expandJSONArray(
-                            results
-                                .optJSONObject(0)
-                                .optJSONArray("Suggests"))
-                    } else String()
-                }
-                withContext(Dispatchers.Main){
-                    cmdIndexFragment.binding.cmdSearchEditText.threshold = 0
-                    suggestEditTexter.setAdapter(
-                        context,
-                        cmdIndexFragment.binding.cmdSearchEditText,
-                        mDispText.split("\n").filter {
-                            it.isNotEmpty()
-                        }
-                    )
                 }
             }
+            withContext(Dispatchers.IO){
+                val statusCode = connection.responseCode
+                if (statusCode != HttpURLConnection.HTTP_OK) {
+                    connection.disconnect()
+                }
+                val contentEncoding: String = connection.contentEncoding
+                val inputStream = if (contentEncoding.contains("gzip")) {
+                    GZIPInputStream(connection.getInputStream())
+                } else {
+                    connection.inputStream
+                }
+                val bufferedReader =
+                    BufferedReader(InputStreamReader(inputStream))
+                val responseBody = bufferedReader.use { it.readText() }
+                bufferedReader.close()
+                connection.disconnect()
+                val rootObject = JSONObject(responseBody)
+                var results: JSONArray? = null
+                val `as`: JSONObject? = rootObject.optJSONObject("AS")
+                if (`as` != null) {
+                    results = `as`.optJSONArray("Results")
+                }
+                if (results != null) {
+                    expandJSONArray(
+                        results
+                            .optJSONObject(0)
+                            .optJSONArray("Suggests"))
+                } else String()
+            }
+            withContext(Dispatchers.Main){
+                cmdSearchEditText.threshold = 0
+                suggestEditTexter.setAdapter(
+                    context,
+                    cmdSearchEditText,
+                    mDispText.split("\n").filter {
+                        it.isNotEmpty()
+                    }
+                )
+            }
+        }
     }
 
     private fun expandJSONArray(array: JSONArray?) {
@@ -124,4 +152,91 @@ class GoogleSuggest(
             i++
         }
     }
+}
+
+
+private class SuggestEditTexter(
+    private val fragment: Fragment,
+    private val cmdSearchEditText: AutoCompleteTextView
+) {
+
+    private val tabReplaceStr = "\t"
+    private val queryLimitStrLength = 50
+
+
+    fun setAdapter(
+        context: Context?,
+        cmdSearchEditText: AutoCompleteTextView,
+        suggestList: List<String>
+    ) {
+        if(context == null) return
+        cmdSearchEditText.setAdapter(
+            makeUrlComAdapter(
+                context,
+                suggestList,
+            )
+        )
+        cmdSearchEditText.threshold = 0
+    }
+
+    private fun makeUrlComAdapter(
+        context: Context,
+        suggestList: List<String>
+    ): ArrayAdapter<String> {
+        return ArrayAdapter(
+            context,
+            R.layout.simple_list_item_1,
+            suggestList
+        )
+    }
+
+
+    fun setItemClickListener(){
+        cmdSearchEditText.setOnItemClickListener { parent, _, position, _ ->
+            val selectedUrlSource = parent.getItemAtPosition(position) as String
+            val selectedUrl = selectedUrlSource.split(tabReplaceStr).lastOrNull()
+            val queryUrl = WebUrlVariables.queryUrl
+
+            if (
+                selectedUrl?.startsWith(queryUrl) != true
+            ) {
+                execUrlLaunch(selectedUrl)
+                return@setOnItemClickListener
+            }
+            val decodedSelectedUrl =
+                URLDecoder.decode(
+                    selectedUrl.removePrefix(queryUrl),
+                    "utf-8"
+                )
+            if(
+                decodedSelectedUrl.length < queryLimitStrLength
+            ) {
+                cmdSearchEditText.setText(
+                    decodedSelectedUrl
+                )
+                return@setOnItemClickListener
+            }
+
+            cmdSearchEditText.clearFocus()
+            Keyboard.hiddenKeyboardForFragment(
+                fragment
+            )
+            execUrlLaunch(selectedUrl)
+        }
+    }
+
+    private fun execUrlLaunch(
+        selectedUrl: String?
+    ){
+        cmdSearchEditText.clearFocus()
+        Keyboard.hiddenKeyboardForFragment(
+            fragment
+        )
+        UrlTexter.launch(
+            fragment,
+            cmdSearchEditText,
+            selectedUrl
+        )
+    }
+
 }

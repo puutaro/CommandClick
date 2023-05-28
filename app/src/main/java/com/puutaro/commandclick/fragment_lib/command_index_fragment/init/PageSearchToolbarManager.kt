@@ -6,28 +6,29 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 
 class PageSearchToolbarManager(
-    private val cmdindexFragment: CommandIndexFragment,
+    private val cmdindexCommandIndexFragment: CommandIndexFragment,
 ) {
 
-    private val context = cmdindexFragment.context
-    private val binding = cmdindexFragment.binding
+    private val context = cmdindexCommandIndexFragment.context
+    private val binding = cmdindexCommandIndexFragment.binding
     private val pageSearch = binding.pageSearch
     private val cmdindexSearchCancel = pageSearch.cmdindexSearchCancel
     private val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
     private val cmdindexSearchTopAllow = pageSearch.cmdindexSearchTopAllow
     private val cmdindexSearchDownAllow = pageSearch.cmdindexSearchDownAllow
     private val listener = context as? CommandIndexFragment.OnPageSearchToolbarClickListener
-
+    private val indexTerminalTag = context?.getString(R.string.index_terminal_fragment)
     fun cancleButtonClickListner(){
         cmdindexSearchCancel.setOnClickListener {
                 cancelView ->
             CmdIndexToolbarSwitcher.switch(
-                cmdindexFragment,
+                cmdindexCommandIndexFragment,
                 false
             )
         }
@@ -57,6 +58,7 @@ class PageSearchToolbarManager(
                 }
                 listener?.onPageSearchToolbarClick(
                     PageSearchToolbarButtonVariant.SEARCH_TEXT,
+                    indexTerminalTag,
                     s.toString()
                 )
             }
@@ -71,6 +73,7 @@ class PageSearchToolbarManager(
                 ) return false
                 listener?.onPageSearchToolbarClick(
                     PageSearchToolbarButtonVariant.DOWN,
+                    indexTerminalTag
                 )
                 return false
             }
@@ -80,9 +83,11 @@ class PageSearchToolbarManager(
     fun searchTopClickLisnter(){
         cmdindexSearchTopAllow.setOnClickListener {
                 TopAllowButtonView ->
-            if(!cmdindexFragment.isVisible) return@setOnClickListener
+            if(!cmdindexCommandIndexFragment.isVisible) return@setOnClickListener
             listener?.onPageSearchToolbarClick(
                 PageSearchToolbarButtonVariant.TOP,
+                indexTerminalTag
+
             )
             return@setOnClickListener
         }
@@ -91,9 +96,10 @@ class PageSearchToolbarManager(
     fun searchDownClickLisnter(){
         cmdindexSearchDownAllow.setOnClickListener {
                 DownAllowButtonView ->
-            if(!cmdindexFragment.isVisible) return@setOnClickListener
+            if(!cmdindexCommandIndexFragment.isVisible) return@setOnClickListener
             listener?.onPageSearchToolbarClick(
                 PageSearchToolbarButtonVariant.DOWN,
+                indexTerminalTag
             )
         }
     }

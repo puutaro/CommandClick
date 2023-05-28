@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.os.Build
-import android.util.DisplayMetrics
 import android.view.MotionEvent
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment

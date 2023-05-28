@@ -6,23 +6,23 @@ import kotlinx.coroutines.*
 
 object EditTextWhenReuse {
     fun focus(
-        cmdIndexFragment: CommandIndexFragment
+        cmdIndexCommandIndexFragment: CommandIndexFragment
     ){
-        val binding = cmdIndexFragment.binding
-        cmdIndexFragment.showTerminalJobWhenReuse =
+        val binding = cmdIndexCommandIndexFragment.binding
+        cmdIndexCommandIndexFragment.showTerminalJobWhenReuse =
             CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 delay(100)
             }
             withContext(Dispatchers.Main) {
-                if (!cmdIndexFragment.onFocusSearchText) return@withContext
+                if (!cmdIndexCommandIndexFragment.onFocusSearchText) return@withContext
                 val cmdSearchEditText = binding.cmdSearchEditText
                 cmdSearchEditText.requestFocus()
                 Keyboard.showKeyboardForFragment(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     cmdSearchEditText
                 )
-                cmdSearchEditText.setText(cmdIndexFragment.savedEditTextContents)
+                cmdSearchEditText.setText(cmdIndexCommandIndexFragment.savedEditTextContents)
                 cmdSearchEditText.setSelection(cmdSearchEditText.length())
             }
         }

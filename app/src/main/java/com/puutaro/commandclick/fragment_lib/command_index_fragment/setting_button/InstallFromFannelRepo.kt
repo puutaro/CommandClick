@@ -31,17 +31,17 @@ import kotlinx.coroutines.*
 
 
 class InstallFromFannelRepo(
-    private val cmdIndexFragment: CommandIndexFragment,
+    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
     private val cmdListAdapter: ArrayAdapter<String>,
 ) {
 
-    private val context = cmdIndexFragment.context
-    private val binding = cmdIndexFragment.binding
+    private val context = cmdIndexCommandIndexFragment.context
+    private val binding = cmdIndexCommandIndexFragment.binding
     private val cmdListView = binding.cmdList
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexFragment)
+    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexCommandIndexFragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
-    private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+    private val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = UsePath.fannelDirSuffix
@@ -87,7 +87,7 @@ class InstallFromFannelRepo(
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
 
-        val alertDialog = cmdIndexFragment.fannelInstallDialog
+        val alertDialog = cmdIndexCommandIndexFragment.fannelInstallDialog
             ?: return
         alertDialog.setView(linearLayoutForTotal)
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
@@ -154,8 +154,8 @@ class InstallFromFannelRepo(
                 parent, View, pos, id
             ->
             alertDialog.dismiss()
-            cmdIndexFragment.repoCloneJob?.cancel()
-            cmdIndexFragment.repoCloneProgressJob?.cancel()
+            cmdIndexCommandIndexFragment.repoCloneJob?.cancel()
+            cmdIndexCommandIndexFragment.repoCloneProgressJob?.cancel()
             terminalViewModel.onDialog = false
             fannelListUpdateJob?.cancel()
             val updateFannelsList = makeFannelListForListView()
@@ -192,7 +192,7 @@ class InstallFromFannelRepo(
                 cmdListView,
             )
             Toast.makeText(
-                cmdIndexFragment.context,
+                cmdIndexCommandIndexFragment.context,
                 "install ok: ${selectedFannelName}",
                 Toast.LENGTH_LONG
             ).show()
@@ -275,7 +275,7 @@ class InstallFromFannelRepo(
 
     private fun gitCloneAndMakeFannelList(){
         if(context == null) return
-        val intent = Intent(cmdIndexFragment.activity, GitCloneService::class.java)
+        val intent = Intent(cmdIndexCommandIndexFragment.activity, GitCloneService::class.java)
         context.startForegroundService(intent)
     }
 

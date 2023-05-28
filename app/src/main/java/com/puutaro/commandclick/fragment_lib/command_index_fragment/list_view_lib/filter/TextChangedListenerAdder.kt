@@ -15,16 +15,19 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class TextChangedListenerAdder {
     companion object {
         fun add (
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             filteringCmdStrList: List<String>,
             cmdListAdapter: ArrayAdapter<String>
         ){
-            val context = cmdIndexFragment.context
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-            val binding = cmdIndexFragment.binding
+            val context = cmdIndexCommandIndexFragment.context
+            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+            val binding = cmdIndexCommandIndexFragment.binding
             val cmdSearchEditText = binding.cmdSearchEditText
             val cmdListView = binding.cmdList
-            val googleSuggest = GoogleSuggest(cmdIndexFragment)
+            val googleSuggest = GoogleSuggest(
+                cmdIndexCommandIndexFragment,
+                cmdSearchEditText
+            )
 
             val filter = InputFilter { source, _, _, _, _, _ ->
                 if (source.contains("　")) " " else source
@@ -42,14 +45,14 @@ class TextChangedListenerAdder {
                         cmdSearchEditText.threshold = 100000;
                         return
                     }
-                    if(!cmdIndexFragment.WebSearchSwitch) return
+                    if(!cmdIndexCommandIndexFragment.WebSearchSwitch) return
                     googleSuggest.set(cmdSearchEditText.text)
                 }
 
                 override fun afterTextChanged(s: Editable?) {
                     if(!cmdSearchEditText.hasFocus()) return
                     if(
-                        !cmdIndexFragment.WebSearchSwitch
+                        !cmdIndexCommandIndexFragment.WebSearchSwitch
                     ) {
                         val listener = context as? CommandIndexFragment.OnFilterWebViewListener
                         listener?.onFilterWebView(

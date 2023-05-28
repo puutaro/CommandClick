@@ -8,16 +8,16 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 class ListViewUpdaterOnStart {
     companion object {
         fun update(
-            cmdIndexFragment: CommandIndexFragment
+            cmdIndexCommandIndexFragment: CommandIndexFragment
         ){
-            val binding = cmdIndexFragment.binding
-            val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
+            val binding = cmdIndexCommandIndexFragment.binding
+            val readSharePreffernceMap = cmdIndexCommandIndexFragment.readSharePreffernceMap
             val makeListView = MakeListView(
                 binding,
-                cmdIndexFragment,
+                cmdIndexCommandIndexFragment,
                 readSharePreffernceMap
             )
-            val cmdListAdapter = cmdIndexFragment.context?.let {
+            val cmdListAdapter = cmdIndexCommandIndexFragment.context?.let {
                 makeListView.makeList(
                     it
                 )

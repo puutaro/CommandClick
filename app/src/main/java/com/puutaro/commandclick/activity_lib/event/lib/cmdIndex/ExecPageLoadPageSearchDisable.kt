@@ -11,14 +11,14 @@ class ExecPageLoadPageSearchDisable {
         fun change(
             activity: MainActivity,
         ){
-            val cmdIndexFragment =
+            val cmdIndexCommandIndexFragment =
                 TargetFragmentInstance()
                     .getFromFragment<CommandIndexFragment>(
                         activity,
                         activity.getString(R.string.command_index_fragment)
                     )
             CmdIndexToolbarSwitcher.switch(
-                cmdIndexFragment,
+                cmdIndexCommandIndexFragment,
                 false
             )
         }

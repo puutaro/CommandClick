@@ -17,14 +17,14 @@ class ShellFileInitManager {
     companion object {
 
         fun initDialog(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             shellScriptName: String,
             cmdListAdapter: ArrayAdapter<String>,
             cmdListView: ListView
         ){
 
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
 
             val alertDialog = AlertDialog.Builder(context)
                 .setTitle("init ok?")
@@ -32,7 +32,7 @@ class ShellFileInitManager {
                 .setPositiveButton("OK", DialogInterface.OnClickListener {
                         dialog, which ->
                     excInit(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -52,7 +52,7 @@ class ShellFileInitManager {
 
 
         private fun excInit(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             shellScriptName: String,
             cmdListAdapter: ArrayAdapter<String>,
@@ -78,7 +78,7 @@ class ShellFileInitManager {
                 ).split("\n")
             } else {
                 CommandClickScriptVariable.makeShellContents(
-                    cmdIndexFragment.shiban,
+                    cmdIndexCommandIndexFragment.shiban,
                     shellScriptName,
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
                     languageType

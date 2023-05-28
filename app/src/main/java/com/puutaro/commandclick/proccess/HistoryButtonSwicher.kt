@@ -2,11 +2,9 @@ package com.puutaro.commandclick.proccess
 
 import android.content.SharedPreferences
 import android.view.View
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button.CmdClickHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
@@ -18,7 +16,7 @@ class HistoryBottunSwitcher {
     companion object {
 
         fun switch(
-            fragment: Fragment,
+            fragment: androidx.fragment.app.Fragment,
             innerView: View,
             terminalFragmentTag: String?,
             readSharePreffernceMap: Map<String, String>,
@@ -63,7 +61,7 @@ class HistoryBottunSwitcher {
 
 
 private fun urlHistoryButtonHandler(
-    fragment: Fragment,
+    fragment: androidx.fragment.app.Fragment,
     innerView: View,
     readSharePreffernceMap: Map<String, String>,
     urlHistoryButtonEvent:UrlHistoryButtonEvent,
@@ -71,7 +69,7 @@ private fun urlHistoryButtonHandler(
 
     val urlHistoryOrButtonExecUrlHistory = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val urlHistoryOrButtonExec = when(fragment){
-        is CommandIndexFragment -> fragment.urlHistoryOrButtonExec
+        is com.puutaro.commandclick.fragment.CommandIndexFragment -> fragment.urlHistoryOrButtonExec
         is EditFragment -> fragment.urlHistoryOrButtonExec
         else -> SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     }

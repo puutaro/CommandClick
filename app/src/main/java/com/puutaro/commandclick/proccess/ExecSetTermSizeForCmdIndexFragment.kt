@@ -13,12 +13,12 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ExecSetTermSizeForCmdIndexFragment {
     companion object {
         fun execSetTermSizeForCmdIndexFragment(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
         ){
-            val context = cmdIndexFragment.context
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+            val context = cmdIndexCommandIndexFragment.context
+            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
 
-            val binding = cmdIndexFragment.binding
+            val binding = cmdIndexCommandIndexFragment.binding
             val cmdindexInternetButton = binding.cmdindexInternetButton
             val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
             if(terminalViewModel.readlinesNum != ReadLines.SHORTH) {
@@ -43,7 +43,7 @@ class ExecSetTermSizeForCmdIndexFragment {
                     (it.getColor(R.color.white))
                 }
             }
-            cmdIndexFragment.WebSearchSwitch = true
+            cmdIndexCommandIndexFragment.WebSearchSwitch = true
             val listener =
                 context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(

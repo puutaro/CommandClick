@@ -1,0 +1,150 @@
+package com.puutaro.commandclick.proccess
+
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import androidx.core.view.isVisible
+import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.EnableTerminalWebView
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+
+object EditToolbarSwitcher {
+    fun switch(
+        cmdEditFragment: EditFragment?,
+        editLongPressType: String,
+    ) {
+        if(
+            editLongPressType.isEmpty()
+        ) return
+        val context = cmdEditFragment?.context
+        if(cmdEditFragment == null) return
+        val cmdEditFragmentTag = context?.getString(
+            R.string.cmd_variable_edit_fragment
+        )
+        val cmdEditFragmentConfirm = TargetFragmentInstance().getFromFragment<EditFragment>(
+            cmdEditFragment.activity,
+            cmdEditFragmentTag
+        ) ?: return
+        if(
+            !cmdEditFragmentConfirm.isVisible
+        ) return
+        if(
+            cmdEditFragmentConfirm.tag != cmdEditFragmentTag
+        ) return
+//        val terminalViewModel: TerminalViewModel by cmdEditFragment.activityViewModels()
+//        if(
+//            terminalViewModel.readlinesNum == ReadLines.SHORTH
+//        ) return
+        val binding = cmdEditFragment.binding
+        val pageSearch = binding.pageSearch
+        val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
+
+        val cmdclickToolBar = binding.editToolBar
+        val webSearch = binding.webSearch
+        val webSearchToolbar = webSearch.webSearchToolbar
+        val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
+        val cmdWebSearchEditText = webSearch.cmdWebSearchEditText
+
+        val linearLayoutParamPageSearchToolBar = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            0,
+        )
+        cmdclickPageSearchToolBar.layoutParams = linearLayoutParamPageSearchToolBar
+        val linearLayoutParamPageWebSearchToolBar = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            0,
+        )
+        webSearchToolbar.layoutParams = linearLayoutParamPageWebSearchToolBar
+        val linearLayoutParamToolbar = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            0,
+        )
+
+        cmdclickToolBar.layoutParams = linearLayoutParamToolbar
+        cmdPageSearchEditText.setText(String())
+        cmdWebSearchEditText.setText(String())
+        val onTermSizeLongListenerForEdit =
+            context as? EditFragment.OnTermSizeLongListenerForEdit
+                ?: return
+        when(editLongPressType){
+            EditLongPressType.WEB_SEARCH.name -> {
+                onTermSizeLongListenerForEdit.onTermSizeLongForEdit()
+                webSearchToolbar.isVisible = true
+                cmdclickPageSearchToolBar.isVisible = false
+                cmdclickToolBar.isVisible = false
+                linearLayoutParamPageWebSearchToolBar.weight = 1F
+                linearLayoutParamPageSearchToolBar.weight = 0F
+                linearLayoutParamToolbar.weight = 0F
+                cmdWebSearchEditText.requestFocus()
+                cmdPageSearchEditText.clearFocus()
+            }
+            EditLongPressType.PAGE_SEARCH.name -> {
+                onTermSizeLongListenerForEdit.onTermSizeLongForEdit()
+                webSearchToolbar.isVisible = false
+                cmdclickPageSearchToolBar.isVisible = true
+                cmdclickToolBar.isVisible = false
+                linearLayoutParamPageWebSearchToolBar.weight = 0F
+                linearLayoutParamPageSearchToolBar.weight = 1F
+                linearLayoutParamToolbar.weight = 0F
+                cmdWebSearchEditText.clearFocus()
+                cmdPageSearchEditText.requestFocus()
+            }
+            EditLongPressType.NORMAL.name -> {
+                webSearchToolbar.isVisible = false
+                cmdclickPageSearchToolBar.isVisible = false
+                cmdclickToolBar.isVisible = true
+                linearLayoutParamPageWebSearchToolBar.weight = 0F
+                linearLayoutParamPageSearchToolBar.weight = 0F
+                linearLayoutParamToolbar.weight = 1F
+                cmdWebSearchEditText.clearFocus()
+                cmdPageSearchEditText.requestFocus()
+            }
+            else -> {
+                if(
+                    !File(editLongPressType).isFile
+                ) return
+                if(
+                    !editLongPressType.endsWith(
+                        CommandClickScriptVariable.JSX_FILE_SUFFIX
+                    )
+                    || !editLongPressType.endsWith(
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                    )
+                ) return
+                cmdEditFragment.jsExecuteJob?.cancel()
+                cmdEditFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
+                    val onLaunchUrl = EnableTerminalWebView.check(
+                        cmdEditFragment,
+                        context.getString(
+                            R.string.edit_execute_terminal_fragment
+                        )
+                    )
+                    if(!onLaunchUrl) return@launch
+                    withContext(Dispatchers.Main) {
+                        val listenerForWebLaunch = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                        listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
+                            JavaScriptLoadUrl.make(
+                                context,
+                                editLongPressType,
+                            ).toString()
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+enum class EditLongPressType {
+    WEB_SEARCH,
+    PAGE_SEARCH,
+    NORMAL,
+}

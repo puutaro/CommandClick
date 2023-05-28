@@ -16,14 +16,14 @@ import java.io.File
 
 
 class CopyFileEvent(
-    cmdIndexFragment: CommandIndexFragment,
+    cmdIndexCommandIndexFragment: CommandIndexFragment,
     private val sourceAppDirPath: String,
     private val sourceShellFileName:String,
     private val cmdListAdaptar: ArrayAdapter<String>,
 ) {
 
-    private val context = cmdIndexFragment.context
-    private val binding = cmdIndexFragment.binding
+    private val context = cmdIndexCommandIndexFragment.context
+    private val binding = cmdIndexCommandIndexFragment.binding
     private val cmdListView = binding.cmdList
     val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
 

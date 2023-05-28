@@ -37,14 +37,14 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 ExecCmdListAjustForKeyboard.ajust(
                     fragmentTag,
                     activity.supportFragmentManager,
-                    0.07F
+                    indexListSize.OPEN.size
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE -> {
                 ExecCmdListAjustForKeyboard.ajust(
                     fragmentTag,
                     activity.supportFragmentManager,
-                    0.04F
+                    indexListSize.SHRINK.size
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT -> {
@@ -92,4 +92,12 @@ object ExecToolbarMenuCategoriesForCmdIndex {
             }
         }
     }
+}
+
+
+private enum class indexListSize(
+    val size: Float
+){
+    OPEN(0.07F),
+    SHRINK(0.04F)
 }

@@ -26,17 +26,17 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ExecOnLongClickDo {
     companion object {
         fun invoke(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             item: MenuItem,
             contextItemSelected: Boolean,
             cmdListAdapter: ArrayAdapter<String>,
         ): Boolean {
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-            val activity = cmdIndexFragment.activity
+            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+            val activity = cmdIndexCommandIndexFragment.activity
             val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-            val context = cmdIndexFragment.context
-            val binding = cmdIndexFragment.binding
+            val context = cmdIndexCommandIndexFragment.context
+            val binding = cmdIndexCommandIndexFragment.binding
             val cmdListView = binding.cmdList
 
             val info: AdapterView.AdapterContextMenuInfo? = try {
@@ -44,13 +44,13 @@ class ExecOnLongClickDo {
             } catch (e: ClassCastException) {
                 return false
             }
-            val listPosition = info?.position ?: cmdIndexFragment.mParentContextMenuListIndex
+            val listPosition = info?.position ?: cmdIndexCommandIndexFragment.mParentContextMenuListIndex
             val shellScriptName = cmdListView.adapter.getItem(listPosition).toString()
             if(shellScriptName == CommandClickScriptVariable.EMPTY_STRING) return true
             when (item.itemId) {
                 R.id.shell_script_menu_delete -> {
                     ConfirmDialogForDelete.show(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -71,14 +71,14 @@ class ExecOnLongClickDo {
                         shellScriptName
                     ).textToList()
                     val validateErrMessage = ValidateShell.correct(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         shellContentsList,
                         shellScriptName
                     )
                     if(validateErrMessage.isNotEmpty()){
                         val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
                         VaridateionErrDialog.show(
-                            cmdIndexFragment,
+                            cmdIndexCommandIndexFragment,
                             shellScriptPath,
                             validateErrMessage
                         )
@@ -93,7 +93,7 @@ class ExecOnLongClickDo {
                             com.puutaro.commandclick.R.string.setting_variable_edit_fragment
                         )
                     )
-                    val listener = cmdIndexFragment.context
+                    val listener = cmdIndexCommandIndexFragment.context
                             as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                     listener?.onLongClickMenuItemsforCmdIndex(
                         LongClickMenuItemsforCmdIndex.EDIT,
@@ -112,7 +112,7 @@ class ExecOnLongClickDo {
                 }
                 R.id.shell_script_menu_kill  -> {
                     ConfirmDialogforKill.show(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         terminalViewModel.currentMonitorFileName,
@@ -133,7 +133,7 @@ class ExecOnLongClickDo {
                 }
                 R.id.shell_script_menu_copy_file -> {
                     CopyFileEvent(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -141,7 +141,7 @@ class ExecOnLongClickDo {
                 }
                  R.id.shell_script_menu_copy_app_dir -> {
                     CopyAppDirEvent(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -149,7 +149,7 @@ class ExecOnLongClickDo {
                 }
                 R.id.shell_script_menu_add -> {
                     AddConfirmDialog.show(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         cmdListAdapter,
                         currentAppDirPath,
                         cmdListView
@@ -158,7 +158,7 @@ class ExecOnLongClickDo {
                 }
                 R.id.shell_script_menu_description -> {
                     ScriptFileDescription.show(
-                        cmdIndexFragment.context,
+                        cmdIndexCommandIndexFragment.context,
                         ReadText(
                             currentAppDirPath,
                             shellScriptName
@@ -168,7 +168,7 @@ class ExecOnLongClickDo {
                 }
                 R.id.shell_script_menu_init -> {
                     ShellFileInitManager.initDialog(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         shellScriptName,
                         cmdListAdapter,
@@ -176,7 +176,7 @@ class ExecOnLongClickDo {
                     )
                 }
                 else -> {
-                    cmdIndexFragment.mParentContextMenuListIndex = listPosition
+                    cmdIndexCommandIndexFragment.mParentContextMenuListIndex = listPosition
                 }
             }
             return contextItemSelected

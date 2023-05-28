@@ -4,4 +4,5 @@
     <string name="setting">setting</string>
     <string name="internet">internet</string>
     <string name="page_search">page_search</string>
+    <string name="web_search">web_search</string>
 </resources>

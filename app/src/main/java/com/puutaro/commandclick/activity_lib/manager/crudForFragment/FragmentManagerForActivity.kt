@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.activity_lib.manager.curdForFragment;
 
 import android.util.Log
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -33,7 +31,7 @@ class FragmentManagerForActivity(
         terminalFragment: String,
         commandIndexFragment: String
     ) {
-        val sampleFragmentBottom = CommandIndexFragment()
+        val sampleCommandIndexFragmentBottom = com.puutaro.commandclick.fragment.CommandIndexFragment()
         val sampleFragmentTop = TerminalFragment()
         transaction.replace(
             R.id.main_container,
@@ -42,13 +40,13 @@ class FragmentManagerForActivity(
         )
         transaction.add(
             R.id.main_container,
-            sampleFragmentBottom,
+            sampleCommandIndexFragmentBottom,
             commandIndexFragment
         )
     }
 
 
-    fun <T: Fragment> showFragment(
+    fun <T: androidx.fragment.app.Fragment> showFragment(
         terminalFragmentTag: String
     ) {
         val fragmentTop = try {
@@ -61,7 +59,7 @@ class FragmentManagerForActivity(
     }
 
 
-    fun <T: Fragment> hideFragment (
+    fun <T: androidx.fragment.app.Fragment> hideFragment (
         terminalFragmentTag: String
     ) {
         val sampleFragmentTop = try {
@@ -73,7 +71,7 @@ class FragmentManagerForActivity(
         transaction.hide(sampleFragmentTop)
     }
 
-    fun <T: Fragment> removeFragment(
+    fun <T: androidx.fragment.app.Fragment> removeFragment(
         cmdIndexFragmentTag: String,
     ) {
         val cmdIndexFragment = try {
@@ -87,7 +85,7 @@ class FragmentManagerForActivity(
 
     fun replaceFragment(
         fragmentId: Int,
-        replaceFragment: Fragment,
+        replaceFragment: androidx.fragment.app.Fragment,
         replaceFragmentTag: String,
     ) {
         transaction.replace(
@@ -98,7 +96,7 @@ class FragmentManagerForActivity(
     }
 
     fun addFragment(
-        addFragment: Fragment,
+        addFragment: androidx.fragment.app.Fragment,
         addFragmentTag: String,
     ) {
         transaction.add(

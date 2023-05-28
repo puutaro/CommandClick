@@ -6,7 +6,6 @@ import android.webkit.MimeTypeMap
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import java.io.File
 
 class Editor(

@@ -1,16 +1,11 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
-import android.os.Build
-import android.util.DisplayMetrics
 import android.view.KeyEvent
-import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.ReadLines
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -135,18 +130,18 @@ internal fun execBack(
         return
     }
     val targetFragmentInstance = TargetFragmentInstance()
-    val cmdIndexFragment = targetFragmentInstance.getFromActivity<CommandIndexFragment>(
+    val cmdIndexCommandIndexFragment = targetFragmentInstance.getFromActivity<CommandIndexFragment>(
         activity,
         activity.getString(
             R.string.command_index_fragment
         )
     )
     if(
-        cmdIndexFragment != null
-        && cmdIndexFragment.isVisible
+        cmdIndexCommandIndexFragment != null
+        && cmdIndexCommandIndexFragment.isVisible
     ) {
         ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-            cmdIndexFragment
+            cmdIndexCommandIndexFragment
         )
         return
     }

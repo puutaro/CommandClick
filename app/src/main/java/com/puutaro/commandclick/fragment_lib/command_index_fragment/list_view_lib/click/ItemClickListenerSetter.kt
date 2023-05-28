@@ -22,15 +22,15 @@ import com.puutaro.commandclick.util.*
 class ItemClickListenerSetter {
     companion object {
         fun set(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             cmdListAdapter: ArrayAdapter<String>
         ){
-            val activity = cmdIndexFragment.activity
+            val activity = cmdIndexCommandIndexFragment.activity
             val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-            val binding = cmdIndexFragment.binding
+            val binding = cmdIndexCommandIndexFragment.binding
             val cmdSearchEditText = binding.cmdSearchEditText
             val cmdListView = binding.cmdList
 
@@ -51,7 +51,7 @@ class ItemClickListenerSetter {
                 )
                 cmdSearchEditText.setText(String())
                 CmdIndexToolbarSwitcher.switch(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     false
                 )
                 if(
@@ -60,7 +60,7 @@ class ItemClickListenerSetter {
                     )
                 ) {
                     BroadCastIntent.send(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         "${currentAppDirPath}/$selectedShellFileName"
                     )
                     updateLastModifiedListView(
@@ -77,7 +77,7 @@ class ItemClickListenerSetter {
                     )
                 ) return@setOnItemClickListener
                 val currentFragmentTag =
-                    cmdIndexFragment.tag ?: String()
+                    cmdIndexCommandIndexFragment.tag ?: String()
                 val appDirAdminTag = context?.getString(
                     R.string.app_dir_admin
                 )
@@ -87,7 +87,7 @@ class ItemClickListenerSetter {
                     selectedShellFileName
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     shellContentsList,
                     selectedShellFileName
                 )
@@ -95,7 +95,7 @@ class ItemClickListenerSetter {
                     val shellScriptPath =
                         "${currentAppDirPath}/${selectedShellFileName}"
                     VaridateionErrDialog.show(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         shellScriptPath,
                         validateErrMessage
                     )
@@ -132,7 +132,7 @@ class ItemClickListenerSetter {
                             selectedShellFileName
                         ).decide(context) ?: return@setOnItemClickListener
                         OnOnceEditExecuteEvent.invoke(
-                            cmdIndexFragment,
+                            cmdIndexCommandIndexFragment,
                             sharedPref,
                             selectedShellFileName,
                             editFragmentTag,
@@ -146,7 +146,7 @@ class ItemClickListenerSetter {
                         ).decide(context) ?: return@setOnItemClickListener
 
                         OnEditExecuteEvent.invoke(
-                            cmdIndexFragment,
+                            cmdIndexCommandIndexFragment,
                             editFragmentTag,
                             editExecuteValue,
                             sharedPref,
@@ -160,7 +160,7 @@ class ItemClickListenerSetter {
                     currentFragmentTag == cmdIndexFragmentTag
                 ) {
                     ExecJsOrSellHandler.handle(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         currentAppDirPath,
                         selectedShellFileName,
                     )
@@ -181,7 +181,7 @@ class ItemClickListenerSetter {
                     cmdListView,
                 )
 
-                val listener = cmdIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
+                val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
                 listener?.onListItemClicked(
                     currentFragmentTag
                 )

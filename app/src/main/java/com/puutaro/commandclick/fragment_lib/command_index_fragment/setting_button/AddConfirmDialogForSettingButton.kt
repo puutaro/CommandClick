@@ -16,14 +16,14 @@ import com.puutaro.commandclick.util.*
 class AddConfirmDialogForSettingButton {
     companion object {
         fun invoke(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             binding: CommandIndexFragmentBinding,
             currentAppDirPath: String,
             shellScriptName: String,
             cmdListAdapter: ArrayAdapter<String>,
             languageTypeSelects: LanguageTypeSelects
         ){
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP

@@ -19,7 +19,7 @@ class ConfirmDialogforKill {
 
     companion object {
         fun show(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             currentAppDirPath: String,
             shellScriptName: String,
             currentMonitorFileName: String,
@@ -28,10 +28,10 @@ class ConfirmDialogforKill {
         ){
 
 
-            val context = cmdIndexFragment.context
-            val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+            val context = cmdIndexCommandIndexFragment.context
+            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
             terminalViewModel.onDisplayUpdate = true
-            val alertDialog = AlertDialog.Builder(cmdIndexFragment.context)
+            val alertDialog = AlertDialog.Builder(cmdIndexCommandIndexFragment.context)
                 .setTitle(
                     "Kill bellow shell path process, ok?"
                 )

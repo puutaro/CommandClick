@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.variable
+package com.puutaro.commandclick.common.variable
 
 enum class PageSearchToolbarButtonVariant {
     TOP,

@@ -12,7 +12,7 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 class OnEditExecuteEvent {
     companion object {
         fun invoke(
-            cmdIndexFragment: CommandIndexFragment,
+            cmdIndexCommandIndexFragment: CommandIndexFragment,
             editFragmentTag: String,
             editExecuteValue: String,
             sharedPref: SharedPreferences?,
@@ -28,13 +28,13 @@ class OnEditExecuteEvent {
                             to ShortcutOnValueStr.ON.name
                 )
             )
-            val listener = cmdIndexFragment.context
+            val listener = cmdIndexCommandIndexFragment.context
                     as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
             listener?.onLongClickMenuItemsforCmdIndex(
                 LongClickMenuItemsforCmdIndex.EDIT,
                 editFragmentTag,
                 true,
-                cmdIndexFragment.context?.getString(R.string.edit_execute_terminal_fragment)
+                cmdIndexCommandIndexFragment.context?.getString(R.string.edit_execute_terminal_fragment)
             )
         }
     }

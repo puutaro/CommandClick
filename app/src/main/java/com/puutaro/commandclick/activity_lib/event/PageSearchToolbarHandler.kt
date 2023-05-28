@@ -4,18 +4,19 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
 
 class PageSearchToolbarHandler {
     companion object {
         fun handle(
             activity: MainActivity,
             pageSearchToolbarButtonVariant: PageSearchToolbarButtonVariant,
-            searchText: String
+            tag: String?,
+            searchText: String,
         ){
             val terminalFragment = try {
                 activity.supportFragmentManager.findFragmentByTag(
-                    activity.getString(R.string.index_terminal_fragment)
+                    tag
                 ) as TerminalFragment
             } catch (e: Exception){
                 return

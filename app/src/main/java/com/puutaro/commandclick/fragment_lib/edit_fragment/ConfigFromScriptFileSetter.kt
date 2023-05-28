@@ -101,6 +101,18 @@ class ConfigFromScriptFileSetter {
                 "1"
             )
 
+            editFragment.execPlayBtnLongPress = SettingVariableReader.getStrValue(
+                settingVariableList,
+                CommandClickScriptVariable.EXEC_PLAY_BTN_LONG_PRESS,
+                String()
+            )
+
+            editFragment.execEditBtnLongPress = SettingVariableReader.getStrValue(
+                settingVariableList,
+                CommandClickScriptVariable.EXEC_EDIT_BTN_LONG_PRESS,
+                String()
+            )
+
             editFragment.bottomScriptUrlList = CommandClickScriptVariable.BOTTOM_SCRIPT_URL_LIST.map {
                 SettingVariableReader.getStrValue(
                     settingVariableList,

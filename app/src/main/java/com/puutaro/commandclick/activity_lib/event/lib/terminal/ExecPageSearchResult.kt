@@ -3,36 +3,99 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
 
-class ExecPageSearchResult {
-    companion object {
-        fun reflect(
-            activity: MainActivity,
-            activeMatchOrdinal: Int,
-            numberOfMatches: Int
-        ) {
-            val cmdIndexFragment = try {
-                activity.supportFragmentManager.findFragmentByTag(
-                    activity.getString(R.string.command_index_fragment)
-                ) as CommandIndexFragment
-            } catch (e: Exception) {
-                return
-            }
-            if (!cmdIndexFragment.isVisible) return
-            val binding = cmdIndexFragment.binding
-            val pageSearch = binding.pageSearch
-            val cmdindexSearchTotal = pageSearch.cmdindexSearchTotal
-            val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
-            cmdindexSearchTotal.setText(displayActivePerTotal)
-            if (numberOfMatches == 0) {
-                cmdindexSearchTotal.setTextColor(
-                    activity.getColor(com.termux.shared.R.color.dark_red)
-                )
-            } else {
-                cmdindexSearchTotal.setTextColor(
-                    activity.getColor(R.color.black)
-                )
-            }
+object ExecPageSearchResult {
+    fun reflect(
+        activity: MainActivity,
+        activeMatchOrdinal: Int,
+        numberOfMatches: Int
+    ) {
+        val cmdIndexCommandIndexFragment = try {
+            activity.supportFragmentManager.findFragmentByTag(
+                activity.getString(R.string.command_index_fragment)
+            ) as CommandIndexFragment
+        } catch (e: Exception) {
+            null
         }
+        val cmdEditFragment = try {
+            activity.supportFragmentManager.findFragmentByTag(
+                activity.getString(R.string.cmd_variable_edit_fragment)
+            ) as EditFragment
+        } catch (e: Exception) {
+            null
+        }
+        val isVisibleCommandIndexFragment = cmdIndexCommandIndexFragment?.isVisible == true
+        val isVisibleCmdEditFragment = cmdEditFragment?.isVisible == true
+        if(
+            isVisibleCommandIndexFragment
+            && isVisibleCmdEditFragment
+        ) return
+        if(
+            isVisibleCommandIndexFragment
+            && cmdIndexCommandIndexFragment != null
+        ){
+            execReflectForCmdIndex(
+                activity,
+                activeMatchOrdinal,
+                numberOfMatches,
+                cmdIndexCommandIndexFragment,
+            )
+            return
+        }
+        if(
+            cmdEditFragment == null
+        ) return
+        execReflectForCmdEdit(
+            activity,
+            activeMatchOrdinal,
+            numberOfMatches,
+            cmdEditFragment,
+        )
+
+    }
+}
+
+private fun execReflectForCmdIndex(
+    activity: MainActivity,
+    activeMatchOrdinal: Int,
+    numberOfMatches: Int,
+    cmdIndexCommandIndexFragment: CommandIndexFragment,
+){
+    val binding = cmdIndexCommandIndexFragment.binding
+    val pageSearch = binding.pageSearch
+    val cmdindexSearchTotal = pageSearch.cmdindexSearchTotal
+    val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
+    cmdindexSearchTotal.setText(displayActivePerTotal)
+    if (numberOfMatches == 0) {
+        cmdindexSearchTotal.setTextColor(
+            activity.getColor(com.termux.shared.R.color.dark_red)
+        )
+    } else {
+        cmdindexSearchTotal.setTextColor(
+            activity.getColor(R.color.black)
+        )
+    }
+}
+
+private fun execReflectForCmdEdit(
+    activity: MainActivity,
+    activeMatchOrdinal: Int,
+    numberOfMatches: Int,
+    cmdEditFragment: EditFragment,
+){
+    val binding = cmdEditFragment.binding
+    val pageSearch = binding.pageSearch
+    val cmdEditSearchTotal = pageSearch.cmdindexSearchTotal
+    val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"
+    cmdEditSearchTotal.setText(displayActivePerTotal)
+    if (numberOfMatches == 0) {
+        cmdEditSearchTotal.setTextColor(
+            activity.getColor(com.termux.shared.R.color.dark_red)
+        )
+    } else {
+        cmdEditSearchTotal.setTextColor(
+            activity.getColor(R.color.black)
+        )
     }
 }
