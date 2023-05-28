@@ -1,7 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object KeyboardWhenTermLongForEdit {
     fun handle(
@@ -10,6 +13,13 @@ object KeyboardWhenTermLongForEdit {
     ){
         val context = editFragment.context
         val activity = editFragment.activity
+        val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            activity,
+            context?.getString(
+                R.string.edit_execute_terminal_fragment
+            )
+        ) ?: return
+        if(!editExecuteTerminal.isVisible) return
         val listenerForEditSizeWhenLong =
             context as? EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit
         val binding = editFragment.binding
