@@ -56,6 +56,7 @@ class TerminalFragment: Fragment() {
     val trimLastLine = 500
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
+    var ignoreHistoryPathList: List<String>? = null
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {

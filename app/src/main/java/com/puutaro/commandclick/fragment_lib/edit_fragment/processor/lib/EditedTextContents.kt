@@ -10,8 +10,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
-import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteCmdClickVariable
-import com.puutaro.commandclick.util.CommandClickVariables.Companion.substituteVariableListFromHolder
+import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
+import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 

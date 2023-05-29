@@ -70,6 +70,7 @@ class CommandClickScriptVariable {
         val CMDCLICK_HISTORY_SWITCH = "historySwitch"
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
         val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
+        val IGNORE_HISTORY_PATHS = "ignoreHistoryPaths"
         val ON_ADBLOCK = "onAdBlock"
         val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
         val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
@@ -134,6 +135,7 @@ class CommandClickScriptVariable {
             SCRIPT_FILE_NAME,
             EXEC_PLAY_BTN_LONG_PRESS,
             EXEC_EDIT_BTN_LONG_PRESS,
+            IGNORE_HISTORY_PATHS,
         ) + BOTTOM_SCRIPT_URL_LIST
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
@@ -267,6 +269,7 @@ class CommandClickScriptVariable {
                 |# * ${ON_UPDATE_LAST_MODIFY} is how updating file last modified status when executing
                 |#  - ${onUpdateLastModifyOn}: update this (default)
                 |#  - ${onUpdateLastModifyOff}: no update this
+                |# * ${IGNORE_HISTORY_PATHS} is ignore history path like grep -v
                 |# * ${CMDCLICK_HISTORY_SWITCH}: switch app history with url history
                 |#  - ${historySwitchOn}: switch
                 |#  - ${historySwitchOff}: no switch
@@ -362,6 +365,7 @@ class CommandClickScriptVariable {
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
             |${ON_ADBLOCK}="${onAdBlockInherit}"
             |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
+            |${IGNORE_HISTORY_PATHS}=""
             |${EXEC_JS_OR_HTML_PATH}=""
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
             |${TERMINAL_COLOR}=""
@@ -560,6 +564,7 @@ class CommandClickScriptVariable {
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
             |${ON_ADBLOCK}="${onAdBlockInherit}"
             |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
+            |${IGNORE_HISTORY_PATHS}=""
             |${EXEC_JS_OR_HTML_PATH}=""
             |${BOTTOM_SCRIPT_URL1}=""
             |${BOTTOM_SCRIPT_URL2}=""
