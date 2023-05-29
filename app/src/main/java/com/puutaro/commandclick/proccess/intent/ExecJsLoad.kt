@@ -187,7 +187,7 @@ object ExecJsLoad {
     }
 
     private suspend fun launchUrlByWebView(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         onLaunchUrl: Boolean,
         launchUrlString: String
     ){
