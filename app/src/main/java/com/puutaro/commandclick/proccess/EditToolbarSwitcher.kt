@@ -6,6 +6,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.TargetFragmentInstance
@@ -24,12 +25,23 @@ object EditToolbarSwitcher {
             editLongPressType.isEmpty()
         ) return
         val context = cmdEditFragment?.context
+        val activity = cmdEditFragment?.activity
         if(cmdEditFragment == null) return
+        val editExecuteTerminalTag = context?.getString(
+            R.string.edit_execute_terminal_fragment
+        )
+        val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
+            activity,
+            editExecuteTerminalTag
+        ) ?: return
+        if(
+            !editExecuteTerminal.isVisible
+        ) return
         val cmdEditFragmentTag = context?.getString(
             R.string.cmd_variable_edit_fragment
         )
         val cmdEditFragmentConfirm = TargetFragmentInstance().getFromFragment<EditFragment>(
-            cmdEditFragment.activity,
+            activity,
             cmdEditFragmentTag
         ) ?: return
         if(
