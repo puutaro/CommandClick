@@ -33,10 +33,16 @@ object CommandClickVariables {
         }.map {
             val targetSettingValue =
                 it.removePrefix("${substituteVariableName}=")
-            BothEdgeQuote.trim(
-                targetSettingValue
-            )
-        }
+            targetSettingValue.replace(",", "\n")
+        }.joinToString("\n")
+            .split("\n")
+            .map {
+                BothEdgeQuote.trim(
+                    it
+                )
+            }.filter {
+                it.isNotEmpty()
+            }
     }
 
     fun substituteVariableListFromHolder(

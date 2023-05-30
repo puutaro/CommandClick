@@ -77,29 +77,7 @@ class CommandClickScriptVariable {
         val TERMINAL_COLOR = "terminalColor"
         val TERMINAL_FONT_COLOR = "terminalFontColor"
         val STATUS_BAR_ICON_COLOR_MODE = "statusBarIconColorMode"
-        private val BOTTOM_SCRIPT_URL = "homeScriptUrl"
-        val BOTTOM_SCRIPT_URL1 = "${BOTTOM_SCRIPT_URL}1"
-        val BOTTOM_SCRIPT_URL2 = "${BOTTOM_SCRIPT_URL}2"
-        val BOTTOM_SCRIPT_URL3 = "${BOTTOM_SCRIPT_URL}3"
-        val BOTTOM_SCRIPT_URL4 = "${BOTTOM_SCRIPT_URL}4"
-        val BOTTOM_SCRIPT_URL5 = "${BOTTOM_SCRIPT_URL}5"
-        val BOTTOM_SCRIPT_URL6 = "${BOTTOM_SCRIPT_URL}6"
-        val BOTTOM_SCRIPT_URL7 = "${BOTTOM_SCRIPT_URL}7"
-        val BOTTOM_SCRIPT_URL8 = "${BOTTOM_SCRIPT_URL}8"
-        val BOTTOM_SCRIPT_URL9 = "${BOTTOM_SCRIPT_URL}9"
-        val BOTTOM_SCRIPT_URL10 = "${BOTTOM_SCRIPT_URL}10"
-        val BOTTOM_SCRIPT_URL_LIST = listOf(
-            BOTTOM_SCRIPT_URL1,
-            BOTTOM_SCRIPT_URL2,
-            BOTTOM_SCRIPT_URL3,
-            BOTTOM_SCRIPT_URL4,
-            BOTTOM_SCRIPT_URL5,
-            BOTTOM_SCRIPT_URL6,
-            BOTTOM_SCRIPT_URL7,
-            BOTTOM_SCRIPT_URL8,
-            BOTTOM_SCRIPT_URL9,
-            BOTTOM_SCRIPT_URL10,
-        )
+        val HOME_SCRIPT_URL = "homeScriptUrl"
         val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
         val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
         val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
@@ -136,7 +114,8 @@ class CommandClickScriptVariable {
             EXEC_PLAY_BTN_LONG_PRESS,
             EXEC_EDIT_BTN_LONG_PRESS,
             IGNORE_HISTORY_PATHS,
-        ) + BOTTOM_SCRIPT_URL_LIST
+            HOME_SCRIPT_URL
+        )
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
         private val terminalOff = SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
@@ -211,19 +190,11 @@ class CommandClickScriptVariable {
             "${TERMINAL_FONT_COLOR}:CLR=",
             "${EXEC_JS_OR_HTML_PATH}:FL=",
             "${CMDCLICK_HOME_FANNEL}:EFCB=dirPath=${UsePath.cmdclickAppHistoryDirAdminPath}!suffix=${JS_FILE_SUFFIX}",
-            "${BOTTOM_SCRIPT_URL1}:FL=",
-            "${BOTTOM_SCRIPT_URL2}:FL=",
-            "${BOTTOM_SCRIPT_URL3}:FL=",
-            "${BOTTOM_SCRIPT_URL4}:FL=",
-            "${BOTTOM_SCRIPT_URL5}:FL=",
-            "${BOTTOM_SCRIPT_URL6}:FL=",
-            "${BOTTOM_SCRIPT_URL7}:FL=",
-            "${BOTTOM_SCRIPT_URL8}:FL=",
-            "${BOTTOM_SCRIPT_URL9}:FL=",
-            "${BOTTOM_SCRIPT_URL10}:FL=",
             "${EXEC_PLAY_BTN_LONG_PRESS}:FL=",
             "${EXEC_EDIT_BTN_LONG_PRESS}:FL=",
-        )
+        ) + (1..20).map {
+            "${HOME_SCRIPT_URL}:FL="
+        }
 
         fun makeShellScriptName(
             shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
@@ -566,8 +537,8 @@ class CommandClickScriptVariable {
             |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
             |${IGNORE_HISTORY_PATHS}=""
             |${EXEC_JS_OR_HTML_PATH}=""
-            |${BOTTOM_SCRIPT_URL1}=""
-            |${BOTTOM_SCRIPT_URL2}=""
+            |${HOME_SCRIPT_URL}=""
+            |${HOME_SCRIPT_URL}=""
             |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
             |${TERMINAL_FONT_COLOR}=""
             |${TERMINAL_COLOR}=""

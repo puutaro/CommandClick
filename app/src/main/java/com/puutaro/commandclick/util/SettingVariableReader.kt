@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+
 object SettingVariableReader {
     fun getStrValue(
         cmdVariableList: List<String>?,
@@ -62,5 +64,28 @@ object SettingVariableReader {
         } catch (e: Exception) {
             defaultNum
         }
+    }
+
+    fun getStrListByReplace(
+        settingVariableList: List<String>?,
+        variableName: String,
+        scriptName: String,
+        currentAppDirPath: String,
+    ): List<String> {
+        val variableValueListSource = CommandClickVariables.substituteCmdClickVariableList(
+            settingVariableList,
+            variableName
+        )?.joinToString(",") ?: String()
+        val fannelDirName = scriptName
+            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return ScriptPreWordReplacer.replace(
+            variableValueListSource,
+            "${currentAppDirPath}/${scriptName}",
+            currentAppDirPath,
+            fannelDirName,
+            scriptName
+        ).split(",")
     }
 }

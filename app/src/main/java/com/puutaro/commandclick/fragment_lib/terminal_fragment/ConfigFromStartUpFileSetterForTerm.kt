@@ -101,22 +101,14 @@ object ConfigFromStartUpFileSetterForTerm {
             settingSectionEnd
         )
 
-        val ignoreHistoryPathListSource = CommandClickVariables.substituteCmdClickVariableList(
+        terminalFragment.ignoreHistoryPathList = SettingVariableReader.getStrListByReplace(
             settingVariableList,
-            CommandClickScriptVariable.IGNORE_HISTORY_PATHS
-        )?.joinToString(",") ?: String()
-        val fannelDirName = currentShellFileName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
-                "Dir"
-        terminalFragment.ignoreHistoryPathList = ScriptPreWordReplacer.replace(
-            ignoreHistoryPathListSource,
-            "${terminalFragment.currentAppDirPath}/${currentShellFileName}",
+            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
+            currentShellFileName,
             terminalFragment.currentAppDirPath,
-            fannelDirName,
-            currentShellFileName
-        ).split(",")
+        )
 
+        
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.ON_ADBLOCK,

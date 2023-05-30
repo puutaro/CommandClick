@@ -113,16 +113,23 @@ class ConfigFromScriptFileSetter {
                 String()
             )
 
-            editFragment.bottomScriptUrlList = CommandClickScriptVariable.BOTTOM_SCRIPT_URL_LIST.map {
-                SettingVariableReader.getStrValue(
-                    settingVariableList,
-                    it,
-                    String()
-                )
-            }.filter {
-                val enableSuffix = it.endsWith(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                        || it.endsWith(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
-                        || it.endsWith(CommandClickScriptVariable.HTML_FILE_SUFFIX)
+            val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
+                settingVariableList,
+                CommandClickScriptVariable.HOME_SCRIPT_URL,
+                currentShellFileName,
+                currentAppDirPath,
+            )
+
+            editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
+                val enableSuffix = it.endsWith(
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                    )
+                        || it.endsWith(
+                            CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                        )
+                        || it.endsWith(
+                            CommandClickScriptVariable.HTML_FILE_SUFFIX
+                        )
                 it.isNotEmpty()
                         && enableSuffix
             }
