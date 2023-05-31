@@ -217,58 +217,87 @@ class CommandClickScriptVariable {
             val backstackMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
             val termOutMacroSignal = colons + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + colons
             return """
-                # * ${TERMINAL_DO} is terminal screen select option (only shellScript)
-                |#  - ${terminalOn}: cmdclick terminal (default)
+                # * ${TERMINAL_DO} 
+                |#   -> terminal screen select option (only shellScript)
+                |#  - ${terminalOn}cmdclick terminal (default)
                 |#  - ${terminalTermux}: termux terminal,
                 |#  - ${terminalOff}: no terminal(backend exec)
-                |# * ${EDIT_EXECUTE} is edit mode change
+                |# * ${EDIT_EXECUTE}
+                |#   -> is edit mode change
                 |#  - ${editExecuteNo} is normal edit
                 |#  - ${editExecuteOnce} is one time edit and execute
                 |#  - ${editExecuteAlways} is always edit and execute
-                |# * ${TERMINAL_SIZE_TYPE} is cmdclick terminal size option
+                |# * ${TERMINAL_SIZE_TYPE}
+                |#   -> cmdclick terminal size option
                 |#  - ${terminalSizeTypeOff}: no adjust (default)
                 |#  - ${terminalSizeTypeLong}: LongSize
                 |#  - ${terminalSizeTypeShort}: ShortSize
-                |# * ${TERMINAL_OUTPUT_MODE} decide output mode in cmdclick terminal (basically, only shellScript)
+                |# * ${TERMINAL_OUTPUT_MODE}
+                |#   -> decide output mode in cmdclick terminal (basically, only shellScript)
                 |#  - ${terminalOutPutModeNormal}: normal terminal output (default)
                 |#  - ${terminalOutPutModeReflash}: Before terminal output, screen resflesh
                 |#  - ${terminalOutPutModeReflashAndFirstRow}: Before terminal output, screen resflesh and focus first row
                 |#  - ${terminalOutPutModeDebug}: stdr + stderr
                 |#  - ${terminalOutPutModeNo}: no output (bacground exec)
-                |# * ${CMDCLICK_ON_AUTO_EXEC} is ready for start and end script
+                |# * ${CMDCLICK_ON_AUTO_EXEC}
+                |#   -> ready for start and end script
                 |#  - ${autoExecSelectsOn}: start or end exec on
                 |#  - ${autoExecSelectsOff}: exec off (default)
-                |# * ${ON_UPDATE_LAST_MODIFY} is how updating file last modified status when executing
+                |# * ${ON_UPDATE_LAST_MODIFY}
+                |#   -> how updating file last modified status when executing
                 |#  - ${onUpdateLastModifyOn}: update this (default)
                 |#  - ${onUpdateLastModifyOff}: no update this
-                |# * ${IGNORE_HISTORY_PATHS} is ignore history path like grep -v
-                |# * ${CMDCLICK_HISTORY_SWITCH}: switch app history with url history
+                |# * ${IGNORE_HISTORY_PATHS}
+                |#   -> ignore history path like grep -v
+                |# * ${CMDCLICK_HISTORY_SWITCH}
+                |#  -> switch app history with url history
                 |#  - ${historySwitchOn}: switch
                 |#  - ${historySwitchOff}: no switch
                 |#  - ${historySwitchInherit}: inherit config setting (default)
-                |# * ${CMDCLICK_ON_HISTORY_URL_TITLE} is how adding url title to history
+                |# * ${CMDCLICK_ON_HISTORY_URL_TITLE}
+                |#   -> how adding url title to history
                 |#  - ${onHistoryUrlTitleON}: add
                 |#  - ${onHistoryUrlTitleOff}: no
-                |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC} switch url history or button script exec
+                |# * ${HOME_SCRIPT_URL}
+                |#  -> specified script, url and html put always bottom in url history 
+                      and multiple specify enable 
+                |#     ex) ${HOME_SCRIPT_URL}=..
+                |#     ex) ${HOME_SCRIPT_URL}=..
+                |#     ex) ${HOME_SCRIPT_URL}=..
+                |# * ${CMDCLICK_HOME_FANNEL}
+                |#   -> specified fannel put always bottom in app history 
+                |#     and multiple specify enable
+                |#     ex) ${CMDCLICK_HOME_FANNEL}=..
+                |#     ex) ${CMDCLICK_HOME_FANNEL}=..
+                |#     ex) ${CMDCLICK_HOME_FANNEL}=..
+                |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
+                |#   -> switch url history or button script exec
                 |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
                 |#  - ${urlHistoryOrButtonExecUrlHistory}: switch url history
                 |#  - ${urlHistoryOrButtonExecUrlButtonExec}: switch url button script exec
-                |# * ${ON_ADBLOCK}: adblock switch
+                |# * ${ON_ADBLOCK}
+                |#   -> adblock switch
                 |#  - ${onAdBlockInherit}: inherit config setting
                 |#  - ${onAdBlockOn}: on
                 |#  - ${onAdBlockOff}: off
-                |# * ${ON_URL_LAUNCH_MACRO}: url launch macro(when set, cmdclick web terminal don't output)
+                |# * ${ON_URL_LAUNCH_MACRO}
+                |#   -> url launch macro(when set, cmdclick web terminal don't output)
                 |#  - ${onUrlLaunchMacroOff}: no launch
                 |#  - ${onUrlLaunchMacroRecent}: recent use url launch
                 |#  - ${onUrlLaunchMacroFrequency}: most use url launch
-                |# * ${ON_URL_HISTORY_REGISTER}: url history update signal
+                |# * ${ON_URL_HISTORY_REGISTER}
+                |#   -> url history update signal
                 |#  - ${onUrlHistoryRegisterOn}: update
                 |#  - ${onUrlHistoryRegisterOff}: no update
-                |# * ${EXEC_JS_OR_HTML_PATH}: execute javascript or html file path
+                |# * ${EXEC_JS_OR_HTML_PATH}
+                |#   -> execute javascript or html file path
                 |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
-                |# * ${CMDCLICK_TERMINAL_FONT_ZOOM} adjust terminal font size (percentage)
-                |# * ${TERMINAL_FONT_COLOR} adjust terminal font color
-                |# * ${TERMINAL_COLOR} adjust terminal background color
+                |# * ${CMDCLICK_TERMINAL_FONT_ZOOM}
+                |#   -> adjust terminal font size (percentage)
+                |# * ${TERMINAL_FONT_COLOR}
+                |#   -> adjust terminal font color
+                |# * ${TERMINAL_COLOR}
+                |#   -> adjust terminal background color
                 |# * ${EXEC_PLAY_BTN_LONG_PRESS}
                 |#  -> execute when play button long press in editExecute=EditExecute
                 |#    - WEB_SEARCH: apear web search bar
@@ -279,12 +308,14 @@ class CommandClickScriptVariable {
                 |#    - WEB_SEARCH: apear web search bar
                 |#    - PAGE_SEARCH: apear page search bar
                 |#    - js file path: execute js file
-                |# * ${SET_REPLACE_VARIABLE} is string replaced with certain string
+                |# * ${SET_REPLACE_VARIABLE}
+                |#   -> string replaced with certain string
                 |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
                 |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
                 |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle3}={repalce string3}"
                 |#  - ex) ${SET_REPLACE_VARIABLE}="..."
-                |# * ${SET_VARIABLE_TYPE} is cmdsection gui edit mini program, reference to github for detail (like gtk yad)
+                |# * ${SET_VARIABLE_TYPE}
+                |#   -> cmdsection gui edit mini program, reference to github for detail (like gtk yad)
                 |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
                 |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
                 |#  - ex) file selector: {cmdVariable}:${EditTextSupportViewName.FILE_PICKER.str}=
@@ -306,9 +337,12 @@ class CommandClickScriptVariable {
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar1}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF"
                 |#  ${SET_VARIABLE_TYPE}="{cmdVar2}:${EditTextSupportViewName.FILE_PICKER.str}="
                 |#  ${SET_VARIABLE_TYPE}="..."
-                |# * ${BEFORE_COMMAND} is before shell script execute, run command
-                |# * ${AFTER_COMMAND} is after shell script execute, run command
-                |# * ${SCRIPT_FILE_NAME} is your shell file name
+                |# * ${BEFORE_COMMAND}
+                |#   -> before shell script execute, run command
+                |# * ${AFTER_COMMAND}
+                |#   -> after shell script execute, run command
+                |# * ${SCRIPT_FILE_NAME}
+                |#   -> your shell file name
             """.trimIndent().replace("EX_INDENT_BLANK", "        ")
         }
 
