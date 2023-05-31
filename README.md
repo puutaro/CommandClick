@@ -122,7 +122,7 @@ At the same time, if you installed code editor, edit new file.
     | `execPlayBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when play button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `execEditBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when edit button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `homeFannel` | `string` | specified `fannel` put always bottom in app history and multiple specify enable |
-    | `homeScriptUrl`  | specified `script`, url and html put always bottom in url history |
+    | `homeScriptUrl`  | `string` | specified `script`, url and html put always bottom in url history and multiple specify enable |
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
     | `setReplaceVariable`  | `string` | string replaced with certain string ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"  
     | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
