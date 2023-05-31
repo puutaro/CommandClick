@@ -104,5 +104,15 @@ object ConfigFromStartUpFileSetter {
             it.isNotEmpty()
                     && enableSuffix
         }
+
+        val homeFannelHistoryNameListSource = CommandClickVariables.substituteCmdClickVariableList(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
+        )
+        if(
+            !homeFannelHistoryNameListSource
+                ?.joinToString("")
+                .isNullOrEmpty()
+        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameListSource
     }
 }

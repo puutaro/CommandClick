@@ -189,11 +189,12 @@ class CommandClickScriptVariable {
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
             "${EXEC_JS_OR_HTML_PATH}:FL=",
-            "${CMDCLICK_HOME_FANNEL}:EFCB=dirPath=${UsePath.cmdclickAppHistoryDirAdminPath}!suffix=${JS_FILE_SUFFIX}",
             "${EXEC_PLAY_BTN_LONG_PRESS}:FL=",
             "${EXEC_EDIT_BTN_LONG_PRESS}:FL=",
         ) + (1..20).map {
             "${HOME_SCRIPT_URL}:FL="
+        } + (1..20).map {
+            "${CMDCLICK_HOME_FANNEL}:EFCB=dirPath=${UsePath.cmdclickAppHistoryDirAdminPath}!suffix=${JS_FILE_SUFFIX}"
         }
 
         fun makeShellScriptName(

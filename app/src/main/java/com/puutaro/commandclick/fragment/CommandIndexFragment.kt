@@ -44,7 +44,7 @@ class CommandIndexFragment: Fragment() {
     var fannelInstallDialog: AlertDialog? = null
     var onFocusSearchText = false
     var savedEditTextContents = String()
-    var homeFannelHistoryName = String()
+    var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
 
     override fun onCreateView(

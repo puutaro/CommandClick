@@ -10,9 +10,10 @@ import com.puutaro.commandclick.util.*
 class ConfigFromConfigFileSetter {
     companion object {
         fun set(
-            cmdIndexCommandIndexFragment: CommandIndexFragment
+            cmdIndexFragment: CommandIndexFragment
         ){
 
+            val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
             val languageType = LanguageTypeSelects.JAVA_SCRIPT
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -34,7 +35,7 @@ class ConfigFromConfigFileSetter {
                 settingSectionEnd
             )
 
-            cmdIndexCommandIndexFragment.historySwitch =  SettingVariableReader.getCbValue(
+            cmdIndexFragment.historySwitch =  SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
                 CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
@@ -46,7 +47,7 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexCommandIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
+            cmdIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
                 CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
@@ -58,7 +59,7 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexCommandIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
+            cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
                 settingVariableList,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
                 CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
@@ -69,25 +70,24 @@ class ConfigFromConfigFileSetter {
                 ),
             )
 
-            cmdIndexCommandIndexFragment.homeFannelHistoryName =  SettingVariableReader.getStrValue(
+            cmdIndexFragment.homeFannelHistoryNameList = CommandClickVariables.substituteCmdClickVariableList(
                 settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_HOME_FANNEL,
-                String()
+                CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
             )
 
-            cmdIndexCommandIndexFragment.runShell = SettingVariableReader.getStrValue(
+            cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
                 CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
             )
 
-            cmdIndexCommandIndexFragment.shiban = SettingVariableReader.getStrValue(
+            cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN,
                 CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
             )
 
-            cmdIndexCommandIndexFragment.terminalColor = SettingVariableReader.getStrValue(
+            cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
                 settingVariableList,
                 CommandClickScriptVariable.TERMINAL_COLOR,
                 CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE

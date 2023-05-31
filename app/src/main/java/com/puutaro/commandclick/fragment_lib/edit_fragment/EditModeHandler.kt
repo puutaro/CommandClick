@@ -126,7 +126,6 @@ class EditModeHandler(
         UpdateLastModifiedForAppHistory.update(
             editExecuteValue,
             readSharePreffernceMap,
-            editFragment.homeFannelHistoryName
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,

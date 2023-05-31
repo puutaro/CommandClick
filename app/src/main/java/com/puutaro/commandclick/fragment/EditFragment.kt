@@ -70,7 +70,7 @@ class EditFragment: Fragment() {
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
-    var homeFannelHistoryName = String()
+    var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
     var execEditBtnLongPress = String()

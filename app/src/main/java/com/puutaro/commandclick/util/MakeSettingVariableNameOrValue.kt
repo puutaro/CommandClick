@@ -38,6 +38,9 @@ object MakeSettingVariableNameOrValue {
             || substituteCmdStartEndContentStr.startsWith(
                 "${CommandClickScriptVariable.HOME_SCRIPT_URL}="
             )
+            || substituteCmdStartEndContentStr.startsWith(
+                "${CommandClickScriptVariable.CMDCLICK_HOME_FANNEL}="
+            )
         ) {
             variableNameChecked
         } else {

@@ -34,7 +34,7 @@ import java.io.File
 
 class CmdClickHistoryButtonEvent (
     historyButtonInnerView: View,
-    private val fragment: androidx.fragment.app.Fragment,
+    private val fragment: Fragment,
     private val sharedPref: SharedPreferences?,
     )
 {
@@ -59,6 +59,18 @@ class CmdClickHistoryButtonEvent (
         searchTextLinearWeight
     )
 
+    private val homeFannelList = when(
+        fragment
+    ) {
+        is CommandIndexFragment -> {
+            fragment.homeFannelHistoryNameList
+        }
+        is EditFragment -> {
+            fragment.homeFannelHistoryNameList
+        }
+        else -> emptyList()
+    } ?: emptyList()
+
     fun invoke() {
         deleteOverHistory(
             cmdclickAppHistoryDirAdminPath
@@ -69,9 +81,15 @@ class CmdClickHistoryButtonEvent (
                 UsePath.cmdclickDefaultAppDirName,
             )
         )
-        val historyList = FileSystems.filterSuffixShellOrJsFiles(
+        val historyListSource =  FileSystems.filterSuffixShellOrJsFiles(
             cmdclickAppHistoryDirAdminPath
-        ).map { makeHistoryListRow(it) }
+        ).filter {
+            !homeFannelList.contains(it)
+        } + homeFannelList.reversed()
+        val historyList = historyListSource.map {
+            makeHistoryListRow(it)
+        }
+
         val historyListAdapter = ArrayAdapter(
             currentViewContext,
             R.layout.simple_list_item_1,
@@ -281,9 +299,10 @@ class CmdClickHistoryButtonEvent (
 
 
 
-    internal fun makeHistoryListRow(
+    private fun makeHistoryListRow(
         historyRow: String
     ): String {
+//        homeFannelList
         val selectedAppShellFileName = AppHistoryManager
             .getScriptFileNameFromAppHistoryFileName(
                 historyRow

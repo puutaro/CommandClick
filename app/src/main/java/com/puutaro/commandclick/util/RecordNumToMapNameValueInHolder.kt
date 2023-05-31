@@ -38,6 +38,7 @@ object RecordNumToMapNameValueInHolder {
                     it.startsWith("${CommandClickScriptVariable.SET_VARIABLE_TYPE}=")
                             || it.startsWith("${CommandClickScriptVariable.SET_REPLACE_VARIABLE}=")
                             || it.startsWith("${CommandClickScriptVariable.HOME_SCRIPT_URL}=")
+                            || it.startsWith("${CommandClickScriptVariable.CMDCLICK_HOME_FANNEL}=")
                 val isNotContainHitedList = !hitedList.contains(it)
                 if (isNotContainHitedList && !isMultipleVariables) hitedList.add(it)
                 isNotContainHitedList || isMultipleVariables

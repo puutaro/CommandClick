@@ -10,8 +10,7 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 object UpdateLastModifiedForAppHistory {
     fun update (
         editExecuteValue: String,
-        readSharePreffernceMap: Map<String, String>,
-        homeFannelHistoryName: String
+        readSharePreffernceMap: Map<String, String>
     ){
         val onShortCut = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -38,10 +37,6 @@ object UpdateLastModifiedForAppHistory {
                     SharePrefferenceSetting.current_script_file_name
                 )
             )
-        )
-        AppHistoryManager.updateHomeFannelLastModify(
-            homeFannelHistoryName,
-            currentAppDirPath
         )
     }
 }

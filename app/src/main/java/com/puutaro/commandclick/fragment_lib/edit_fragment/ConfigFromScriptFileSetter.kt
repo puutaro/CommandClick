@@ -6,163 +6,172 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.util.*
 
-class ConfigFromScriptFileSetter {
-    companion object {
-        fun set(
-            editFragment: EditFragment,
-        ){
-            val readSharePreffernceMap = editFragment.readSharePreffernceMap
-            val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.on_shortcut
-            )
-            if (
-                onShortcut != ShortcutOnValueStr.ON.name
-            ) return
+object ConfigFromScriptFileSetter {
 
-            val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
-            )
-            val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_script_file_name
-            )
+    fun set(
+        editFragment: EditFragment,
+    ){
+        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.on_shortcut
+        )
+        if (
+            onShortcut != ShortcutOnValueStr.ON.name
+        ) return
 
-            val context = editFragment.context
-            val currentShellContentsList = ReadText(
-                currentAppDirPath,
-                currentShellFileName
-            ).textToList()
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
 
-            val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-                currentShellContentsList,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd
-            )
+        val context = editFragment.context
+        val currentShellContentsList = ReadText(
+            currentAppDirPath,
+            currentShellFileName
+        ).textToList()
 
-            editFragment.historySwitch = SettingVariableReader.getCbValue(
-                settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-                editFragment.historySwitch,
-                SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
-                editFragment.historySwitch,
-                listOf(
-                    SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
-                    SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
-                ),
-            )
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            currentShellContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd
+        )
 
-            editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
-                settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-                editFragment.urlHistoryOrButtonExec,
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
-                editFragment.urlHistoryOrButtonExec,
-                listOf(
-                    SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-                    SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
-                ),
-            )
+        editFragment.historySwitch = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
+            editFragment.historySwitch,
+            SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
+            editFragment.historySwitch,
+            listOf(
+                SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
+                SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+            ),
+        )
 
-            editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
-                settingVariableList,
-                CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-                editFragment.statusBarIconColorMode,
-                SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
-                editFragment.urlHistoryOrButtonExec,
-                listOf(
-                    SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
-                ),
-            )
+        editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
+            editFragment.urlHistoryOrButtonExec,
+            SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
+            editFragment.urlHistoryOrButtonExec,
+            listOf(
+                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
+                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+            ),
+        )
 
-            editFragment.runShell = SettingVariableReader.getStrValue(
-                settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-                editFragment.runShell
-            )
+        editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
+            editFragment.statusBarIconColorMode,
+            SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
+            editFragment.urlHistoryOrButtonExec,
+            listOf(
+                SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
+            ),
+        )
 
-            editFragment.shiban = SettingVariableReader.getStrValue(
-                settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_SHIBAN,
-                editFragment.shiban
-            )
+        editFragment.runShell = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
+            editFragment.runShell
+        )
 
-            editFragment.terminalColor = SettingVariableReader.getStrValue(
-                settingVariableList,
-                CommandClickScriptVariable.TERMINAL_COLOR,
-                editFragment.terminalColor
-            )
+        editFragment.shiban = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_SHIBAN,
+            editFragment.shiban
+        )
 
-            editFragment.fontZoomPercent = SettingVariableReader.getNumValue(
-                settingVariableList,
-                CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
-                editFragment.fontZoomPercent,
-                "1"
-            )
+        editFragment.terminalColor = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.TERMINAL_COLOR,
+            editFragment.terminalColor
+        )
 
-            editFragment.execPlayBtnLongPress = SettingVariableReader.getStrValue(
-                settingVariableList,
-                CommandClickScriptVariable.EXEC_PLAY_BTN_LONG_PRESS,
-                String()
-            )
+        editFragment.fontZoomPercent = SettingVariableReader.getNumValue(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
+            editFragment.fontZoomPercent,
+            "1"
+        )
 
-            editFragment.execEditBtnLongPress = SettingVariableReader.getStrValue(
-                settingVariableList,
-                CommandClickScriptVariable.EXEC_EDIT_BTN_LONG_PRESS,
-                String()
-            )
+        editFragment.execPlayBtnLongPress = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.EXEC_PLAY_BTN_LONG_PRESS,
+            String()
+        )
 
-            val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
-                settingVariableList,
-                CommandClickScriptVariable.HOME_SCRIPT_URL,
-                currentShellFileName,
-                currentAppDirPath,
-            )
+        editFragment.execEditBtnLongPress = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.EXEC_EDIT_BTN_LONG_PRESS,
+            String()
+        )
 
-            editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
-                val enableSuffix = it.endsWith(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
+        val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
+            settingVariableList,
+            CommandClickScriptVariable.HOME_SCRIPT_URL,
+            currentShellFileName,
+            currentAppDirPath,
+        )
+
+        editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
+            val enableSuffix = it.endsWith(
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
+                )
+                    || it.endsWith(
+                        CommandClickScriptVariable.SHELL_FILE_SUFFIX
                     )
-                        || it.endsWith(
-                            CommandClickScriptVariable.SHELL_FILE_SUFFIX
-                        )
-                        || it.endsWith(
-                            CommandClickScriptVariable.HTML_FILE_SUFFIX
-                        )
-                it.isNotEmpty()
-                        && enableSuffix
-            }
-
-            if(
-                editFragment.tag ==
-                editFragment.context?.getString(R.string.setting_variable_edit_fragment)
-            ) return
-            editFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
-                settingVariableList,
-                CommandClickScriptVariable.TERMINAL_DO
-            ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
-            val onTerminalShrink = editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                    || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
-            if(
-                editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
-                && onTerminalShrink
-            ) {
-                editFragment.editTerminalInitType = EditInitType.TERMINAL_SHRINK
-                val listener = context
-                        as? EditFragment.OnTerminalWebViewInitListenerForEdit
-                listener?.onTerminalWebViewInitForEdit(
-                    EditInitType.TERMINAL_SHRINK,
-                )
-            } else {
-                editFragment.editTerminalInitType = EditInitType.TERMINAL_SHOW
-                val listener = context
-                        as? EditFragment.OnTerminalWebViewInitListenerForEdit
-                listener?.onTerminalWebViewInitForEdit(
-                    EditInitType.TERMINAL_SHOW,
-                )
-            }
-
+                    || it.endsWith(
+                        CommandClickScriptVariable.HTML_FILE_SUFFIX
+                    )
+            it.isNotEmpty()
+                    && enableSuffix
         }
+
+        val homeFannelHistoryNameListSource = CommandClickVariables.substituteCmdClickVariableList(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
+        )
+        if(
+            !homeFannelHistoryNameListSource
+                ?.joinToString("")
+                .isNullOrEmpty()
+        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameListSource
+
+        if(
+            editFragment.tag ==
+            editFragment.context?.getString(R.string.setting_variable_edit_fragment)
+        ) return
+        editFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
+            settingVariableList,
+            CommandClickScriptVariable.TERMINAL_DO
+        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+        val onTerminalShrink = editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+                || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+        if(
+            editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
+            && onTerminalShrink
+        ) {
+            editFragment.editTerminalInitType = EditInitType.TERMINAL_SHRINK
+            val listener = context
+                    as? EditFragment.OnTerminalWebViewInitListenerForEdit
+            listener?.onTerminalWebViewInitForEdit(
+                EditInitType.TERMINAL_SHRINK,
+            )
+        } else {
+            editFragment.editTerminalInitType = EditInitType.TERMINAL_SHOW
+            val listener = context
+                    as? EditFragment.OnTerminalWebViewInitListenerForEdit
+            listener?.onTerminalWebViewInitForEdit(
+                EditInitType.TERMINAL_SHOW,
+            )
+        }
+
     }
 }

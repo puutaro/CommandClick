@@ -90,10 +90,6 @@ object IndexInitHandler {
                 currentAppDirPath,
             )
         )
-        AppHistoryManager.updateHomeFannelLastModify(
-            cmdIndexCommandIndexFragment.homeFannelHistoryName,
-            currentAppDirPath
-        )
         CommandClickScriptVariable.makeButtonExecJS(
             currentAppDirPath,
             UsePath.cmdclickButtonExecShellFileName
