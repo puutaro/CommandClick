@@ -551,6 +551,12 @@ internal fun popupMenuItemSelectedForEdit(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
                 )
             }
+            MenuEnumsForEdit.TERMUX_SETUP.itemId -> {
+                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+                listener?.onToolbarMenuCategoriesForEdit(
+                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
+                )
+            }
             MenuEnumsForEdit.CONFIG.itemId -> {
                 val configDirPath = UsePath.cmdclickConfigDirPath
                 val configShellName = UsePath.cmdclickConfigFileName
@@ -628,7 +634,8 @@ internal enum class MenuEnumsForEdit(
     KILL(mainMenuGroupId, 70100, 1, "kill"),
     SETTING(mainMenuGroupId, 70400, 4, "setting"),
     SHORTCUT(submenuSettingGroupId, 70401, 1, "create_short_cut"),
-    CONFIG(submenuSettingGroupId, 70402, 2, "config"),
+    TERMUX_SETUP(submenuSettingGroupId, 70402, 2, "termux_setup"),
+    CONFIG(submenuSettingGroupId, 70403, 3, "config"),
     SELECTTERM(mainMenuGroupId, 70700, 7, "select_term"),
     TERM1(submenuTermSlectGroupId, 70701, 1, "term_1"),
     TERM2(submenuTermSlectGroupId, 70702, 2, "term_2"),

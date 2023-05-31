@@ -59,7 +59,7 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {
-                RunCommandSetter.getPermissionAndSet(
+                    RunCommandSetter.getPermissionAndSet(
                     activity
                 )
             }
