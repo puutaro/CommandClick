@@ -81,15 +81,7 @@ class CmdClickHistoryButtonEvent (
                 UsePath.cmdclickDefaultAppDirName,
             )
         )
-        val historyListSource =  FileSystems.filterSuffixShellOrJsFiles(
-            cmdclickAppHistoryDirAdminPath
-        ).filter {
-            !homeFannelList.contains(it)
-        } + homeFannelList.reversed()
-        val historyList = historyListSource.map {
-            makeHistoryListRow(it)
-        }
-
+        val historyList =  makeUpdateHistoryList()
         val historyListAdapter = ArrayAdapter(
             currentViewContext,
             R.layout.simple_list_item_1,
@@ -155,11 +147,8 @@ class CmdClickHistoryButtonEvent (
 
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
-                val updateHistoryList = FileSystems.filterSuffixShellOrJsFiles(
-                    cmdclickAppHistoryDirAdminPath
-                ).map {
-                    makeHistoryListRow(it)
-                }
+
+                val updateHistoryList = makeUpdateHistoryList()
 
                 val filteredCmdStrList = updateHistoryList.filter {
                     Regex(
@@ -182,6 +171,17 @@ class CmdClickHistoryButtonEvent (
         })
     }
 
+    private fun makeUpdateHistoryList(): List<String> {
+        val historyListSource =  FileSystems.filterSuffixShellOrJsFiles(
+            cmdclickAppHistoryDirAdminPath
+        ).filter {
+            !homeFannelList.contains(it)
+        } + homeFannelList.reversed()
+        return historyListSource.map {
+            makeHistoryListRow(it)
+        }
+    }
+
     private fun invokeItemSetClickListenerForHistory(
         alertDialog: AlertDialog,
     ) {
@@ -191,9 +191,7 @@ class CmdClickHistoryButtonEvent (
 
             alertDialog.dismiss()
             terminalViewModel.onDialog = false
-            val updateHistoryList = FileSystems.filterSuffixShellOrJsFiles(
-                cmdclickAppHistoryDirAdminPath
-            ).map { makeHistoryListRow(it) }
+            val updateHistoryList = makeUpdateHistoryList()
             val selectedHistoryFile = updateHistoryList.filter {
                 Regex(
                     searchText.text
