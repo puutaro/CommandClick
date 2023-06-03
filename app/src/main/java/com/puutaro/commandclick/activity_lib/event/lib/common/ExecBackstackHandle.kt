@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
 import android.view.KeyEvent
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
@@ -9,91 +10,90 @@ import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class ExecBackstackHandle {
-    companion object {
-        fun execBackstackHandle(
-            keyCode: Int,
-            activity: MainActivity,
-        ) {
-            if(keyCode != KeyEvent.KEYCODE_BACK) return
-            DoEexecBackstack(activity)
+object ExecBackstackHandle {
+    fun execBackstackHandle(
+        keyCode: Int,
+        activity: MainActivity,
+    ) {
+        if(keyCode != KeyEvent.KEYCODE_BACK) return
+        DoEexecBackstack(activity)
+        return
+    }
+
+
+    private fun DoEexecBackstack(
+        activity: MainActivity
+    ){
+        val supportFragmentManager = activity.supportFragmentManager
+        val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
+        val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_execute_terminal_fragment)
+        val terminalViewModel: TerminalViewModel =
+            ViewModelProvider(activity).get(TerminalViewModel::class.java)
+        val readLinesNum = terminalViewModel.readlinesNum
+        if(readLinesNum == ReadLines.SHORTH) {
+            execPopBackStackImmediate(
+                activity,
+                supportFragmentManager,
+                readLinesNum
+            )
             return
         }
-
-
-        private fun DoEexecBackstack(
-            activity: MainActivity
-        ){
-            val supportFragmentManager = activity.supportFragmentManager
-            val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
-            val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_execute_terminal_fragment)
-            val terminalViewModel: TerminalViewModel =
-                ViewModelProvider(activity).get(TerminalViewModel::class.java)
-            val readLinesNum = terminalViewModel.readlinesNum
-            if(readLinesNum == ReadLines.SHORTH) {
-                execPopBackStackImmediate(
-                    activity,
-                    supportFragmentManager,
-                    readLinesNum
-                )
-                return
-            }
-            val indexTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
-                activity,
-                indexTerminalFragmentTag
-            )
-            val editExecuteTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
-                activity,
-                editExecuteTerminalFragmentTag
-            )
-            if(
-                indexTerminalFragment == null
-                && editExecuteTerminalFragment == null) {
-                execPopBackStackImmediate(
-                    activity,
-                    supportFragmentManager,
-                    readLinesNum
-                )
-            }
-            if(
-                indexTerminalFragment?.isVisible != true
-                && editExecuteTerminalFragment?.isVisible != true) {
-                execPopBackStackImmediate(
-                    activity,
-                    supportFragmentManager,
-                    readLinesNum
-                )
-            }
-            if(
-                indexTerminalFragment?.isVisible == true
-            ){
-                execBack(
-                    activity,
-                    indexTerminalFragment,
-                    readLinesNum
-                )
-                return
-            } else if(
-                editExecuteTerminalFragment?.isVisible == true
-            ){
-                execBack(
-                    activity,
-                    editExecuteTerminalFragment,
-                    readLinesNum
-                )
-                return
-            }
-
+        val indexTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
+            activity,
+            indexTerminalFragmentTag
+        )
+        val editExecuteTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
+            activity,
+            editExecuteTerminalFragmentTag
+        )
+        if(
+            indexTerminalFragment == null
+            && editExecuteTerminalFragment == null) {
             execPopBackStackImmediate(
                 activity,
                 supportFragmentManager,
                 readLinesNum
             )
         }
+        if(
+            indexTerminalFragment?.isVisible != true
+            && editExecuteTerminalFragment?.isVisible != true) {
+            execPopBackStackImmediate(
+                activity,
+                supportFragmentManager,
+                readLinesNum
+            )
+        }
+        if(
+            indexTerminalFragment?.isVisible == true
+        ){
+            execBack(
+                activity,
+                indexTerminalFragment,
+                readLinesNum
+            )
+            return
+        } else if(
+            editExecuteTerminalFragment?.isVisible == true
+        ){
+            execBack(
+                activity,
+                editExecuteTerminalFragment,
+                readLinesNum
+            )
+            return
+        }
+
+        execPopBackStackImmediate(
+            activity,
+            supportFragmentManager,
+            readLinesNum
+        )
     }
 }
 
@@ -153,20 +153,16 @@ internal fun execBack(
             R.string.cmd_variable_edit_fragment
         )
     )
-    val settingVariableEditFragment = targetFragmentInstance.getFromActivity<EditFragment>(
-        activity,
-        activity.getString(
-            R.string.setting_variable_edit_fragment
-        )
-    )
 
     if(
         cmdVariableEditFragment != null
         && cmdVariableEditFragment.isVisible
         && cmdVariableEditFragment.view?.height != 0
     ) {
-        val terminalViewModel: TerminalViewModel =
-            ViewModelProvider(activity).get(TerminalViewModel::class.java)
+        EditLayoutViewHideShow.exec(
+            cmdVariableEditFragment,
+            true
+        )
         ExecTerminalLongOrShort.open<EditFragment>(
             cmdVariableEditFragmentTag,
             activity.supportFragmentManager,
@@ -176,7 +172,7 @@ internal fun execBack(
 
 }
 
-internal fun execPopBackStackImmediate(
+private fun execPopBackStackImmediate(
     activity: MainActivity,
     supportFragmentManager: FragmentManager,
     readlinesNum: Float,

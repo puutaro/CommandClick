@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.content.Context
 import android.view.View
 import android.widget.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
@@ -11,6 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatched
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
@@ -135,6 +137,11 @@ class ToolbarButtonProducerForEdit(
                         ).show()
                         return@setOnClickListener
                     }
+                    val onShorth = terminalViewModel.readlinesNum == ReadLines.SHORTH
+                    EditLayoutViewHideShow.exec(
+                        editFragment,
+                        !onShorth
+                    )
                     val listener =
                         context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                     listener?.onToolbarMenuCategoriesForEdit(
@@ -204,17 +211,27 @@ class ToolbarButtonProducerForEdit(
                 )
             }
             ToolbarButtonBariantForEdit.OK -> {
-                execForOkLongClick(
-                    shellContentsList,
-                    recordNumToMapNameValueInCommandHolder,
-                    recordNumToMapNameValueInSettingHolder,
-                )
+                try {
+                    execForOkLongClick(
+                        shellContentsList,
+                        recordNumToMapNameValueInCommandHolder,
+                        recordNumToMapNameValueInSettingHolder,
+                        editFragment.existIndexList
+                    )
+                } catch(e: Exception){
+                    Toast.makeText(
+                        context,
+                        e.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
             ToolbarButtonBariantForEdit.EDIT -> {
                 execForEditLongClick(
                     shellContentsList,
                     recordNumToMapNameValueInCommandHolder,
                     recordNumToMapNameValueInSettingHolder,
+                    editFragment.existIndexList
                 )
             }
             else -> {}
@@ -225,12 +242,15 @@ class ToolbarButtonProducerForEdit(
         shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+        existIndexList: Boolean
     ) {
-        execScriptSave(
-            shellContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
-        )
+        if(!existIndexList) {
+            execScriptSave(
+                shellContentsList,
+                recordNumToMapNameValueInCommandHolder,
+                recordNumToMapNameValueInSettingHolder,
+            )
+        }
         EditToolbarSwitcher.switch(
             editFragment,
             editFragment.execPlayBtnLongPress
@@ -241,12 +261,15 @@ class ToolbarButtonProducerForEdit(
         shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+        existIndexList: Boolean
     ) {
-        execScriptSave(
-            shellContentsList,
-            recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
-        )
+        if(!existIndexList) {
+            execScriptSave(
+                shellContentsList,
+                recordNumToMapNameValueInCommandHolder,
+                recordNumToMapNameValueInSettingHolder,
+            )
+        }
         EditToolbarSwitcher.switch(
             editFragment,
             editFragment.execEditBtnLongPress

@@ -8,30 +8,29 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUr
 import com.puutaro.commandclick.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class UrlTermLongProcess {
-    companion object {
-        fun trigger(
-            terminalFragment: TerminalFragment,
-            terminalViewModel: TerminalViewModel,
-            webView: WebView?,
-            url: String?
-        ){
-            val urlCheckResult = EnableUrlPrefix.check(url)
-            terminalViewModel.onDisplayUpdate = !urlCheckResult
-            terminalViewModel.onExecInternetButtonShell = urlCheckResult
-            if(!urlCheckResult) return
-            val context = terminalFragment.context
-            val title = webView?.title ?: return
-            if(title.isBlank() || title.isEmpty() ) return
-            if (title.trim(' ').contains(WebUrlVariables.escapeStr)) return
-            val changeTargetFragment =
-                IndexOrEditFragment(terminalFragment).select()
-            val listener =
-                context as? TerminalFragment.OnTermLongChangeListenerForTerminalFragment
-            listener?.onTermLongChangeForTerminalFragment(
-                changeTargetFragment
-            )
-            return
-        }
+object UrlTermLongProcess {
+    fun trigger(
+        terminalFragment: TerminalFragment,
+        terminalViewModel: TerminalViewModel,
+        webView: WebView?,
+        url: String?
+    ){
+        val urlCheckResult = EnableUrlPrefix.check(url)
+        terminalViewModel.onDisplayUpdate = !urlCheckResult
+        terminalViewModel.onExecInternetButtonShell = urlCheckResult
+        if(!urlCheckResult) return
+        val context = terminalFragment.context
+        val title = webView?.title ?: return
+        if(title.isBlank() || title.isEmpty() ) return
+        if (
+            title.trim(' ').contains(WebUrlVariables.escapeStr)
+        ) return
+        val changeTargetFragment =
+            IndexOrEditFragment(terminalFragment).select()
+        val listener =
+            context as? TerminalFragment.OnTermLongChangeListenerForTerminalFragment
+        listener?.onTermLongChangeForTerminalFragment(
+            changeTargetFragment
+        )
     }
 }
