@@ -13,100 +13,98 @@ import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.util.*
 
 
-class AddConfirmDialogForSettingButton {
-    companion object {
-        fun invoke(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            binding: CommandIndexFragmentBinding,
-            currentAppDirPath: String,
-            shellScriptName: String,
-            cmdListAdapter: ArrayAdapter<String>,
-            languageTypeSelects: LanguageTypeSelects
-        ){
-            val context = cmdIndexCommandIndexFragment.context
-            val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
-            val languageTypeToSectionHolderMap =
-                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
-                    .get(languageTypeSelects)
-            val alertDialog = AlertDialog.Builder(context)
-                .setTitle(
-                    "Add bellow contents, ok?"
+object AddConfirmDialogForSettingButton {
+    fun invoke(
+        cmdIndexFragment: CommandIndexFragment,
+        binding: CommandIndexFragmentBinding,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        cmdListAdapter: ArrayAdapter<String>,
+        languageTypeSelects: LanguageTypeSelects
+    ){
+        val context = cmdIndexFragment.context
+        val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+                .get(languageTypeSelects)
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle(
+                "Add bellow contents, ok?"
+            )
+            .setMessage(
+                "\tpath: path: ${shellScriptPath}"
+            )
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
+                val shellContentsList = ReadText(
+                    currentAppDirPath,
+                    shellScriptName
+                ).textToList()
+
+
+                val newShellScriptName = makeNewShellName(
+                    shellContentsList,
+                    shellScriptName,
+                    languageTypeSelects,
+                    languageTypeToSectionHolderMap
                 )
-                .setMessage(
-                    "\tpath: path: ${shellScriptPath}"
+
+                val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
+                    shellContentsList,
+                    shellScriptName
                 )
-                .setPositiveButton("OK", DialogInterface.OnClickListener {
-                        dialog, which ->
-                    val shellContentsList = ReadText(
+                val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
+                    shellScriptContentsLabelCommentOut,
+                    newShellScriptName,
+                    languageTypeToSectionHolderMap
+                )
+                if(newShellScriptName != shellScriptName){
+                    FileSystems.writeFile(
                         currentAppDirPath,
-                        shellScriptName
-                    ).textToList()
-
-
-                    val newShellScriptName = makeNewShellName(
-                        shellContentsList,
-                        shellScriptName,
-                        languageTypeSelects,
-                        languageTypeToSectionHolderMap
-                    )
-
-                    val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
-                        shellContentsList,
-                        shellScriptName
-                    )
-                    val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
-                        shellScriptContentsLabelCommentOut,
                         newShellScriptName,
-                        languageTypeToSectionHolderMap
+                        shellScriptContentsQuoteComp
                     )
-                    if(newShellScriptName != shellScriptName){
-                        FileSystems.writeFile(
-                            currentAppDirPath,
-                            newShellScriptName,
-                            shellScriptContentsQuoteComp
-                        )
-                        FileSystems.removeFiles(
-                            currentAppDirPath,
-                            shellScriptName
-                        )
-                    } else {
-                        FileSystems.writeFile(
-                            currentAppDirPath,
-                            shellScriptName,
-                            shellScriptContentsQuoteComp
-                        )
-                    }
-                    CommandListManager.execListUpdate(
-                        currentAppDirPath,
-                        cmdListAdapter,
-                        binding.cmdList,
-                    )
-                })
-                .setNegativeButton("NO", DialogInterface.OnClickListener {
-                        dialog, which ->
                     FileSystems.removeFiles(
                         currentAppDirPath,
-                        shellScriptName,
+                        shellScriptName
                     )
-                    CommandListManager.execListUpdate(
+                } else {
+                    FileSystems.writeFile(
                         currentAppDirPath,
-                        cmdListAdapter,
-                        binding.cmdList,
+                        shellScriptName,
+                        shellScriptContentsQuoteComp
                     )
-                })
-                .show()
-            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                context?.getColor(android.R.color.black) as Int
-            );
-            alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                context.getColor(android.R.color.black)
-            );
-        }
+                }
+                CommandListManager.execListUpdate(
+                    currentAppDirPath,
+                    cmdListAdapter,
+                    binding.cmdList,
+                )
+            })
+            .setNegativeButton("NO", DialogInterface.OnClickListener {
+                    dialog, which ->
+                FileSystems.removeFiles(
+                    currentAppDirPath,
+                    shellScriptName,
+                )
+                CommandListManager.execListUpdate(
+                    currentAppDirPath,
+                    cmdListAdapter,
+                    binding.cmdList,
+                )
+            })
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(android.R.color.black) as Int
+        );
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(android.R.color.black)
+        );
     }
 }
 
 
-internal fun makeNewShellName(
+private fun makeNewShellName(
     shellContentsList: List<String>,
     shellScriptName: String,
     languageTypeSelects: LanguageTypeSelects,
@@ -146,7 +144,7 @@ internal fun makeNewShellName(
 }
 
 
-internal fun makeShellScriptContentsQuoteComp(
+private fun makeShellScriptContentsQuoteComp(
     shellContentsList: List<String>,
     newShellScriptName: String,
     languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.Companion.HolderTypeName, String>?

@@ -25,7 +25,7 @@ import com.puutaro.commandclick.activity_lib.permission.StorageAccessSetter
 import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
-import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle.Companion.execBackstackHandle
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
@@ -289,7 +289,7 @@ class MainActivity:
 
         when(event?.action) {
             KeyEvent.ACTION_DOWN -> {
-                execBackstackHandle(
+                ExecBackstackHandle.execBackstackHandle(
                     keyCode,
                     this,
                 )

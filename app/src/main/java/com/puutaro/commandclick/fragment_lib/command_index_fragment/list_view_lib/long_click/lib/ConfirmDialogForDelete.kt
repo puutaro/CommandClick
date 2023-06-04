@@ -15,97 +15,95 @@ import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.util.ReadText
 
 
-class ConfirmDialogForDelete {
-    companion object {
-        fun show(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            currentAppDirPath: String,
-            scriptFileName: String,
-            cmdListAdapter: ArrayAdapter<String>,
-            cmdListView: ListView
-        ){
-            val context = cmdIndexCommandIndexFragment.context
+object ConfirmDialogForDelete {
+    fun show(
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        currentAppDirPath: String,
+        scriptFileName: String,
+        cmdListAdapter: ArrayAdapter<String>,
+        cmdListView: ListView
+    ){
+        val context = cmdIndexCommandIndexFragment.context
 
-            val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
-            val shellContents = ReadText(
-                currentAppDirPath,
-                scriptFileName
-            ).readText()
-            val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
-                    "\n---\n${shellContents}"
-            val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
-                context,
-                displayContents
+        val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
+        val shellContents = ReadText(
+            currentAppDirPath,
+            scriptFileName
+        ).readText()
+        val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
+                "\n---\n${shellContents}"
+        val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
+            context,
+            displayContents
+        )
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle(
+                "Delete bellow contents, ok?"
             )
-            val alertDialog = AlertDialog.Builder(context)
-                .setTitle(
-                    "Delete bellow contents, ok?"
+            .setView(linearLayoutForDialog)
+            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                FileSystems.removeFiles(
+                    currentAppDirPath,
+                    scriptFileName,
                 )
-                .setView(linearLayoutForDialog)
-                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                    FileSystems.removeFiles(
-                        currentAppDirPath,
-                        scriptFileName,
+                val fannelDirName = scriptFileName
+                    .removeSuffix(
+                        CommandClickScriptVariable.SHELL_FILE_SUFFIX
                     )
-                    val fannelDirName = scriptFileName
-                        .removeSuffix(
-                            CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                    .removeSuffix(
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                    ) + UsePath.fannelDirSuffix
+                FileSystems.removeDir(
+                    "${currentAppDirPath}/${fannelDirName}"
+                )
+                CommandListManager.execListUpdate(
+                    currentAppDirPath,
+                    cmdListAdapter,
+                    cmdListView,
+                )
+                if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
+                    val deleteAppDirName = scriptFileName.removeSuffix(
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                    )
+                    val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+                    val displayDeleteAppDirPath =
+                        "${
+                            UsePath.makeTermuxPathByReplace(
+                            cmdclickAppDirPath
+                        )}/${deleteAppDirName}"
+                    val alertDialogForAppDirAdmin = AlertDialog.Builder(context)
+                        .setTitle(
+                            "Delete bellow App dir, ok?"
                         )
-                        .removeSuffix(
-                            CommandClickScriptVariable.JS_FILE_SUFFIX
-                        ) + UsePath.fannelDirSuffix
-                    FileSystems.removeDir(
-                        "${currentAppDirPath}/${fannelDirName}"
-                    )
-                    CommandListManager.execListUpdate(
-                        currentAppDirPath,
-                        cmdListAdapter,
-                        cmdListView,
-                    )
-                    if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
-                        val deleteAppDirName = scriptFileName.removeSuffix(
-                            CommandClickScriptVariable.JS_FILE_SUFFIX
+                        .setMessage(
+                            "\tpath: ${displayDeleteAppDirPath}"
                         )
-                        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                        val displayDeleteAppDirPath =
-                            "${
-                                UsePath.makeTermuxPathByReplace(
-                                cmdclickAppDirPath
-                            )}/${deleteAppDirName}"
-                        val alertDialogForAppDirAdmin = AlertDialog.Builder(context)
-                            .setTitle(
-                                "Delete bellow App dir, ok?"
+                        .setPositiveButton("OK", DialogInterface.OnClickListener {
+                                dialogForAppDirAdmin, whichForAppDirAdmin ->
+                            val deleteAppDirPath = "${cmdclickAppDirPath}/${deleteAppDirName}"
+                            FileSystems.removeDir(
+                                deleteAppDirPath
                             )
-                            .setMessage(
-                                "\tpath: ${displayDeleteAppDirPath}"
-                            )
-                            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                                    dialogForAppDirAdmin, whichForAppDirAdmin ->
-                                val deleteAppDirPath = "${cmdclickAppDirPath}/${deleteAppDirName}"
-                                FileSystems.removeDir(
-                                    deleteAppDirPath
-                                )
-                            })
-                            .setNegativeButton("NO", null)
-                            .show()
-                        alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                            context?.getColor(R.color.black) as Int
-                        )
-                        alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                            context.getColor(R.color.black) as Int
-                        )
+                        })
+                        .setNegativeButton("NO", null)
+                        .show()
+                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                        context?.getColor(R.color.black) as Int
+                    )
+                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+                        context.getColor(R.color.black) as Int
+                    )
 
-                    }
-                })
-                .setNegativeButton("NO", null)
-                .show()
-            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                context?.getColor(R.color.black) as Int
-            )
-            alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                context.getColor(R.color.black)
-            )
-            alertDialog.window?.setGravity(Gravity.BOTTOM)
-        }
+                }
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.window?.setGravity(Gravity.BOTTOM)
     }
 }

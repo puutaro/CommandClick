@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ExecUrlLoadFragmentProccess {
@@ -71,6 +72,10 @@ class ExecUrlLoadFragmentProccess {
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) return
+            EditLayoutViewHideShow.exec(
+                editFragment,
+                false
+            )
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 editFragmentTag,
                 supportFragmentManager,

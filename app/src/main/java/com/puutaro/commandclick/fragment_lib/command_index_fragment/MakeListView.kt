@@ -18,7 +18,7 @@ import com.puutaro.commandclick.util.*
 
 class MakeListView(
     private val binding: CommandIndexFragmentBinding,
-    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
+    private val cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -38,7 +38,7 @@ class MakeListView(
             currentAppDirPath
         )
         val baskstackOrder =
-            cmdIndexCommandIndexFragment.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
+            cmdIndexFragment.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
         cmdSearchEditText.hint = "(${baskstackOrder}) ${UsePath.makeOmitPath(currentAppDirPathTermux)}"
         return ArrayAdapter(
             context,
@@ -57,13 +57,13 @@ class MakeListView(
         }
 
         TextChangedListenerAdder.add(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             filteringCmdStrList,
             cmdListAdapter
         )
 
         KeyListenerSetter.set(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             currentAppDirPath,
             cmdListAdapter,
         )
@@ -73,7 +73,7 @@ class MakeListView(
         cmdListAdapter: ArrayAdapter<String>
     ){
         ItemClickListenerSetter.set(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             currentAppDirPath,
             cmdListAdapter
         )
@@ -100,7 +100,7 @@ class MakeListView(
         cmdListAdapter: ArrayAdapter<String>,
     ): Boolean {
         return ExecOnLongClickDo.invoke(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             currentAppDirPath,
             item,
             contextItemSelected,

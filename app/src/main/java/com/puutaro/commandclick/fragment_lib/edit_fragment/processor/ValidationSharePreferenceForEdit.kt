@@ -2,11 +2,13 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.content.SharedPreferences
 import android.widget.Toast
+import androidx.compose.material.contentColorFor
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.util.*
@@ -17,14 +19,17 @@ class ValidationSharePreferenceForEdit(
     private val editFragment: EditFragment,
     private val sharePref: SharedPreferences?
 ) {
-
-    private val appDirCheckErrMessage = "app dire check err in edit validation\npath: %s"
-    private val shellFileNameCheckErrMessage = "shell file check err in edit validation\n" +
+    private val context = editFragment.context
+    private val appDirCheckErrMessage =
+        "app dire check err in edit validation\npath: %s"
+    private val shellFileNameCheckErrMessage =
+        "shell file check err in edit validation\n" +
             "shellName: %s"
-    private val api_cmd_variable_edit_api_fragment = editFragment.context?.getString(
+    private val api_cmd_variable_edit_api_fragment =
+        editFragment.context?.getString(
         R.string.api_cmd_variable_edit_api_fragment
     )
-
+    private var shellContentsList: List<String> = emptyList()
     fun checkCurrentAppDirPreference(
         checkCurrentAppDirPathSource: String? = null
     ): Boolean {
@@ -40,15 +45,19 @@ class ValidationSharePreferenceForEdit(
         if(
             checkCurrentAppDirPath !=
             UsePath.cmdclickAppHistoryDirAdminPath
-            && File(checkCurrentAppDirPath).isDirectory
+            && File(
+                checkCurrentAppDirPath
+            ).isDirectory
         ) return true
         if(
             editFragment.tag ==
             api_cmd_variable_edit_api_fragment
         ) {
             Toast.makeText(
-                editFragment.context,
-                appDirCheckErrMessage.format(checkCurrentAppDirPath),
+                context,
+                appDirCheckErrMessage.format(
+                    checkCurrentAppDirPath
+                ),
                 Toast.LENGTH_LONG
             ).show()
             editFragment.activity?.finish()
@@ -61,16 +70,19 @@ class ValidationSharePreferenceForEdit(
         ).firstOrNull()?.removeSuffix(
             CommandClickScriptVariable.JS_FILE_SUFFIX
         ).toString()
-        val updateAppDirPath = "${UsePath.cmdclickAppDirPath}/${updateDirName}"
+        val updateAppDirPath =
+            "${UsePath.cmdclickAppDirPath}/${updateDirName}"
         if(
             !File(updateAppDirPath).isDirectory
         ) {
             Toast.makeText(
-                editFragment.context,
-                appDirCheckErrMessage.format(checkCurrentAppDirPath),
+                context,
+                appDirCheckErrMessage.format(
+                    checkCurrentAppDirPath
+                ),
                 Toast.LENGTH_LONG
             ).show()
-            val listener = editFragment.context
+            val listener = context
                     as? EditFragment.OnInitEditFragmentListener
             listener?.onInitEditFragment()
             return false
@@ -93,14 +105,18 @@ class ValidationSharePreferenceForEdit(
             sharePref,
             SharePrefferenceSetting.on_shortcut
         )
-        val checkCurrentAppDirPath = if(checkCurrentAppDirPathSource.isNullOrEmpty()) {
+        val checkCurrentAppDirPath = if(
+            checkCurrentAppDirPathSource.isNullOrEmpty()
+        ) {
             sharePref?.getString(
                 SharePrefferenceSetting.current_app_dir.name,
                 SharePrefferenceSetting.current_app_dir.defalutStr
             ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
         } else checkCurrentAppDirPathSource
 
-        val checkCurrentShellName = if(checkCurrentShellNameSource.isNullOrEmpty()) {
+        val checkCurrentShellName = if(
+            checkCurrentShellNameSource.isNullOrEmpty()
+        ) {
             sharePref?.getString(
                 SharePrefferenceSetting.current_script_file_name.name,
                 SharePrefferenceSetting.current_script_file_name.defalutStr
@@ -110,7 +126,9 @@ class ValidationSharePreferenceForEdit(
         if(
             checkCurrentShellName !=
             SharePrefferenceSetting.current_script_file_name.defalutStr
-            && File("${checkCurrentAppDirPath}/${checkCurrentShellName}").isFile
+            && File(
+                "${checkCurrentAppDirPath}/${checkCurrentShellName}"
+            ).isFile
         ) {
             return editExecuteCheck(
                 onShortcut,
@@ -123,14 +141,16 @@ class ValidationSharePreferenceForEdit(
             api_cmd_variable_edit_api_fragment
         ) {
             Toast.makeText(
-                editFragment.context,
-                shellFileNameCheckErrMessage.format(checkCurrentShellName),
+                context,
+                shellFileNameCheckErrMessage.format(
+                    checkCurrentShellName
+                ),
                 Toast.LENGTH_LONG
             ).show()
             editFragment.activity?.finish()
             return false
         }
-        val listener = editFragment.context
+        val listener = context
                 as? EditFragment.OnInitEditFragmentListener
         listener?.onInitEditFragment()
         return false
@@ -146,64 +166,78 @@ class ValidationSharePreferenceForEdit(
             || editFragment.tag ==
                api_cmd_variable_edit_api_fragment
         ) return true
-        val readText = ReadText(
+        shellContentsList = ReadText(
             checkCurrentAppDirPath,
             recentShellFileName
-        )
-        val shellContentsList = readText.textToList()
+        ).textToList()
         val languageType =
-            JsOrShellFromSuffix.judge(recentShellFileName)
+            JsOrShellFromSuffix.judge(
+                recentShellFileName
+            )
 
         val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
+                .get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap
+            ?.get(
+                CommandClickScriptVariable
+                    .Companion.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.Companion
+                .HolderTypeName.SETTING_SEC_END
         ) as String
 
         val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable
+                .Companion.HolderTypeName.CMD_SEC_START
         ) as String
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable
+                .Companion.HolderTypeName.CMD_SEC_END
         ) as String
 
-        val variablesCommandHolderListSize = CommandClickVariables.substituteVariableListFromHolder(
-            shellContentsList,
-            commandSectionStart,
-            commandSectionEnd
-        )?.size ?: 0
+        val variablesCommandHolderListSize =
+            CommandClickVariables.substituteVariableListFromHolder(
+                shellContentsList,
+                commandSectionStart,
+                commandSectionEnd
+            )?.size ?: 0
         if(variablesCommandHolderListSize <= 2){
             Toast.makeText(
-                editFragment.context,
-                shellFileNameCheckErrMessage.format(recentShellFileName),
+                context,
+                shellFileNameCheckErrMessage.format(
+                    recentShellFileName
+                ),
                 Toast.LENGTH_LONG
             ).show()
-            val listener = editFragment.context
+            val listener = context
                     as? EditFragment.OnInitEditFragmentListener
             listener?.onInitEditFragment()
             return false
         }
-        val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
-            shellContentsList,
-            settingSectionStart,
-            settingSectionEnd
-        )
+        val variablesSettingHolderList =
+            CommandClickVariables.substituteVariableListFromHolder(
+                shellContentsList,
+                settingSectionStart,
+                settingSectionEnd
+            )
         val editExecuteValue = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,
             CommandClickScriptVariable.EDIT_EXECUTE
         )
         if(
-            editExecuteValue != SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
+            editExecuteValue
+            != SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
         ){
             Toast.makeText(
-                editFragment.context,
-                shellFileNameCheckErrMessage.format(recentShellFileName),
+                context,
+                shellFileNameCheckErrMessage.format(
+                    recentShellFileName
+                ),
                 Toast.LENGTH_LONG
             ).show()
-            val listener = editFragment.context
+            val listener = context
                     as? EditFragment.OnInitEditFragmentListener
             listener?.onInitEditFragment()
             return false
@@ -212,6 +246,32 @@ class ValidationSharePreferenceForEdit(
             editFragment,
             variablesSettingHolderList
         )
+        return true
+    }
+
+    fun checkIndexList(): Boolean {
+        val indexSize =
+            CommandClickVariables.substituteCmdClickVariableList(
+                shellContentsList,
+                CommandClickScriptVariable.SET_VARIABLE_TYPE
+            )?.filter {
+                it.contains(
+                    ":${EditTextSupportViewName.LIST_INDEX.str}="
+                )
+            }?.size ?: 1
+        if(
+            indexSize > 1
+        ) {
+            Toast.makeText(
+                context,
+                "list index option must be one",
+                Toast.LENGTH_LONG
+            ).show()
+            val listener = context
+                    as? EditFragment.OnInitEditFragmentListener
+            listener?.onInitEditFragment()
+            return false
+        }
         return true
     }
 

@@ -23,164 +23,163 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-class ExecOnLongClickDo {
-    companion object {
-        fun invoke(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            currentAppDirPath: String,
-            item: MenuItem,
-            contextItemSelected: Boolean,
-            cmdListAdapter: ArrayAdapter<String>,
-        ): Boolean {
-            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
-            val activity = cmdIndexCommandIndexFragment.activity
-            val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-            val context = cmdIndexCommandIndexFragment.context
-            val binding = cmdIndexCommandIndexFragment.binding
-            val cmdListView = binding.cmdList
+object ExecOnLongClickDo {
 
-            val info: AdapterView.AdapterContextMenuInfo? = try {
-                item.menuInfo as AdapterView.AdapterContextMenuInfo?
-            } catch (e: ClassCastException) {
-                return false
-            }
-            val listPosition = info?.position ?: cmdIndexCommandIndexFragment.mParentContextMenuListIndex
-            val shellScriptName = cmdListView.adapter.getItem(listPosition).toString()
-            if(shellScriptName == CommandClickScriptVariable.EMPTY_STRING) return true
-            when (item.itemId) {
-                R.id.shell_script_menu_delete -> {
-                    ConfirmDialogForDelete.show(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        cmdListAdapter,
-                        cmdListView
-                    )
-                    return contextItemSelected
-                }
-                R.id.shell_script_menu_edit -> {
-                    SharePreffrenceMethod.putSharePreffrence(
-                        sharedPref,
-                        mapOf(
-                            SharePrefferenceSetting.current_script_file_name.name
-                                    to shellScriptName,
-                        )
-                    )
-                    val shellContentsList = ReadText(
-                        currentAppDirPath,
-                        shellScriptName
-                    ).textToList()
-                    val validateErrMessage = ValidateShell.correct(
-                        cmdIndexCommandIndexFragment,
-                        shellContentsList,
-                        shellScriptName
-                    )
-                    if(validateErrMessage.isNotEmpty()){
-                        val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
-                        VaridateionErrDialog.show(
-                            cmdIndexCommandIndexFragment,
-                            shellScriptPath,
-                            validateErrMessage
-                        )
-                        return contextItemSelected
-                    }
-                    val editFragmentTag = DecideEditTag(
-                        shellContentsList,
-                        shellScriptName
-                    ).decide(
-                        context,
-                        context?.getString(
-                            com.puutaro.commandclick.R.string.setting_variable_edit_fragment
-                        )
-                    )
-                    val listener = cmdIndexCommandIndexFragment.context
-                            as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                    listener?.onLongClickMenuItemsforCmdIndex(
-                        LongClickMenuItemsforCmdIndex.EDIT,
-                        editFragmentTag
-                    )
-                    return contextItemSelected
-                }
-                R.id.shell_script_menu_write, -> {
-                    val editor = Editor(
-                        currentAppDirPath,
-                        shellScriptName,
-                        context
-                    )
-                    editor.open()
-                    return contextItemSelected
-                }
-                R.id.shell_script_menu_kill  -> {
-                    ConfirmDialogforKill.show(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        terminalViewModel.currentMonitorFileName,
-                        cmdListAdapter,
-                        cmdListView
-                    )
-                    return contextItemSelected
-                }
-                R.id.shell_script_menu_copy_path  -> {
-                    val shellFilePathByTermux = "${currentAppDirPath}/${shellScriptName}"
-                    val clipboard = context?.getSystemService(
-                        Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip: ClipData = ClipData.newPlainText(
-                        "cmdclick path",
-                        shellFilePathByTermux
-                    )
-                    clipboard.setPrimaryClip(clip)
-                }
-                R.id.shell_script_menu_copy_file -> {
-                    CopyFileEvent(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        cmdListAdapter,
-                    ).invoke()
-                }
-                 R.id.shell_script_menu_copy_app_dir -> {
-                    CopyAppDirEvent(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        cmdListAdapter,
-                    ).invoke()
-                }
-                R.id.shell_script_menu_add -> {
-                    AddConfirmDialog.show(
-                        cmdIndexCommandIndexFragment,
-                        cmdListAdapter,
-                        currentAppDirPath,
-                        cmdListView
-                    )
-                    return contextItemSelected
-                }
-                R.id.shell_script_menu_description -> {
-                    ScriptFileDescription.show(
-                        cmdIndexCommandIndexFragment.context,
-                        ReadText(
-                            currentAppDirPath,
-                            shellScriptName
-                        ).textToList(),
-                        shellScriptName
-                    )
-                }
-                R.id.shell_script_menu_init -> {
-                    ShellFileInitManager.initDialog(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        cmdListAdapter,
-                        cmdListView
-                    )
-                }
-                else -> {
-                    cmdIndexCommandIndexFragment.mParentContextMenuListIndex = listPosition
-                }
-            }
-            return contextItemSelected
+    fun invoke(
+        cmdIndexFragment: CommandIndexFragment,
+        currentAppDirPath: String,
+        item: MenuItem,
+        contextItemSelected: Boolean,
+        cmdListAdapter: ArrayAdapter<String>,
+    ): Boolean {
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val activity = cmdIndexFragment.activity
+        val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
+        val context = cmdIndexFragment.context
+        val binding = cmdIndexFragment.binding
+        val cmdListView = binding.cmdList
 
+        val info: AdapterView.AdapterContextMenuInfo? = try {
+            item.menuInfo as AdapterView.AdapterContextMenuInfo?
+        } catch (e: ClassCastException) {
+            return false
         }
+        val listPosition = info?.position ?: cmdIndexFragment.mParentContextMenuListIndex
+        val shellScriptName = cmdListView.adapter.getItem(listPosition).toString()
+        if(shellScriptName == CommandClickScriptVariable.EMPTY_STRING) return true
+        when (item.itemId) {
+            R.id.shell_script_menu_delete -> {
+                ConfirmDialogForDelete.show(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    shellScriptName,
+                    cmdListAdapter,
+                    cmdListView
+                )
+                return contextItemSelected
+            }
+            R.id.shell_script_menu_edit -> {
+                SharePreffrenceMethod.putSharePreffrence(
+                    sharedPref,
+                    mapOf(
+                        SharePrefferenceSetting.current_script_file_name.name
+                                to shellScriptName,
+                    )
+                )
+                val shellContentsList = ReadText(
+                    currentAppDirPath,
+                    shellScriptName
+                ).textToList()
+                val validateErrMessage = ValidateShell.correct(
+                    cmdIndexFragment,
+                    shellContentsList,
+                    shellScriptName
+                )
+                if(validateErrMessage.isNotEmpty()){
+                    val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
+                    VaridateionErrDialog.show(
+                        cmdIndexFragment,
+                        shellScriptPath,
+                        validateErrMessage
+                    )
+                    return contextItemSelected
+                }
+                val editFragmentTag = DecideEditTag(
+                    shellContentsList,
+                    shellScriptName
+                ).decide(
+                    context,
+                    context?.getString(
+                        com.puutaro.commandclick.R.string.setting_variable_edit_fragment
+                    )
+                )
+                val listener = cmdIndexFragment.context
+                        as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
+                listener?.onLongClickMenuItemsforCmdIndex(
+                    LongClickMenuItemsforCmdIndex.EDIT,
+                    editFragmentTag
+                )
+                return contextItemSelected
+            }
+            R.id.shell_script_menu_write, -> {
+                val editor = Editor(
+                    currentAppDirPath,
+                    shellScriptName,
+                    context
+                )
+                editor.open()
+                return contextItemSelected
+            }
+            R.id.shell_script_menu_kill  -> {
+                ConfirmDialogforKill.show(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    shellScriptName,
+                    terminalViewModel.currentMonitorFileName,
+                    cmdListAdapter,
+                    cmdListView
+                )
+                return contextItemSelected
+            }
+            R.id.shell_script_menu_copy_path  -> {
+                val shellFilePathByTermux = "${currentAppDirPath}/${shellScriptName}"
+                val clipboard = context?.getSystemService(
+                    Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip: ClipData = ClipData.newPlainText(
+                    "cmdclick path",
+                    shellFilePathByTermux
+                )
+                clipboard.setPrimaryClip(clip)
+            }
+            R.id.shell_script_menu_copy_file -> {
+                CopyFileEvent(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    shellScriptName,
+                    cmdListAdapter,
+                ).invoke()
+            }
+             R.id.shell_script_menu_copy_app_dir -> {
+                CopyAppDirEvent(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    shellScriptName,
+                    cmdListAdapter,
+                ).invoke()
+            }
+            R.id.shell_script_menu_add -> {
+                AddConfirmDialog.show(
+                    cmdIndexFragment,
+                    cmdListAdapter,
+                    currentAppDirPath,
+                    cmdListView
+                )
+                return contextItemSelected
+            }
+            R.id.shell_script_menu_description -> {
+                ScriptFileDescription.show(
+                    cmdIndexFragment.context,
+                    ReadText(
+                        currentAppDirPath,
+                        shellScriptName
+                    ).textToList(),
+                    shellScriptName
+                )
+            }
+            R.id.shell_script_menu_init -> {
+                ShellFileInitManager.initDialog(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    shellScriptName,
+                    cmdListAdapter,
+                    cmdListView
+                )
+            }
+            else -> {
+                cmdIndexFragment.mParentContextMenuListIndex = listPosition
+            }
+        }
+        return contextItemSelected
+
     }
 }

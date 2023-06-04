@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -14,15 +13,11 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.eclipse.jgit.diff.Edit
 import java.io.File
 
 
@@ -301,39 +296,10 @@ object ButtonViewProducer {
                     )
                 }.joinToString("\t")
         } else String()
-        execJsScriptInEdit (
+        ExecJsScriptInEdit.exec(
             editFragment,
             jsFilePath,
         )
-    }
-
-    private fun execJsScriptInEdit (
-        editFragment: EditFragment,
-        jsFilePath: String,
-    ){
-        if(
-            jsFilePath.isEmpty()
-        ) return
-        val context = editFragment.context
-        editFragment.jsExecuteJob?.cancel()
-        editFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-            val onLaunchUrl = EnableTerminalWebView.check(
-                editFragment,
-                editFragment.context?.getString(
-                    R.string.edit_execute_terminal_fragment
-                )
-            )
-            if(!onLaunchUrl) return@launch
-            withContext(Dispatchers.Main) {
-                val listenerForWebLaunch = editFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-                listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
-                    JavaScriptLoadUrl.make(
-                        context,
-                        jsFilePath,
-                    ).toString()
-                )
-            }
-        }
     }
 
     private fun makeButtonLabel(

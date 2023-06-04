@@ -107,7 +107,7 @@ class CmdClickHistoryButtonEvent (
             .setTitle("Select app history")
             .setView(linearLayoutForTotal)
             .create()
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+        alertDialog.window?.setGravity(Gravity.BOTTOM)
         alertDialog.show()
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
@@ -250,7 +250,9 @@ class CmdClickHistoryButtonEvent (
                     com.puutaro.commandclick.R.menu.history_admin_menu,
                     popup.menu
                 )
+
                 popup.menu.add(
+
                     HistoryMenuEnums.DELETE.groupId,
                     HistoryMenuEnums.DELETE.itemId,
                     HistoryMenuEnums.DELETE.order,
@@ -336,9 +338,9 @@ class CmdClickHistoryButtonEvent (
 }
 
 
-internal val mainMenuGroupId = 30000
+private val mainMenuGroupId = 30000
 
-internal enum class HistoryMenuEnums(
+private enum class HistoryMenuEnums(
     val groupId: Int,
     val itemId: Int,
     val order: Int,

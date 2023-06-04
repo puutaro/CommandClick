@@ -15,56 +15,54 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-class ConfirmDialogforKill {
+object ConfirmDialogforKill {
 
-    companion object {
-        fun show(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            currentAppDirPath: String,
-            shellScriptName: String,
-            currentMonitorFileName: String,
-            cmdListAdapter: ArrayAdapter<String>,
-            cmdListView: ListView
-        ){
+    fun show(
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        currentMonitorFileName: String,
+        cmdListAdapter: ArrayAdapter<String>,
+        cmdListView: ListView
+    ){
 
 
-            val context = cmdIndexCommandIndexFragment.context
-            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
-            terminalViewModel.onDisplayUpdate = true
-            val alertDialog = AlertDialog.Builder(cmdIndexCommandIndexFragment.context)
-                .setTitle(
-                    "Kill bellow shell path process, ok?"
+        val context = cmdIndexCommandIndexFragment.context
+        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        terminalViewModel.onDisplayUpdate = true
+        val alertDialog = AlertDialog.Builder(cmdIndexCommandIndexFragment.context)
+            .setTitle(
+                "Kill bellow shell path process, ok?"
+            )
+            .setMessage("\tpath: ${shellScriptName}")
+            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                val factExecCmd =
+                    "ps aux | grep \"${shellScriptName}\" " +
+                            " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
+                val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
+                val execCmd = " touch \"${shellScriptName}\"; " +
+                        "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
+                        ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
+                ExecBashScriptIntent.ToTermux(
+                    CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
+                    context,
+                    execCmd
                 )
-                .setMessage("\tpath: ${shellScriptName}")
-                .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                    val factExecCmd =
-                        "ps aux | grep \"${shellScriptName}\" " +
-                                " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
-                    val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
-                    val execCmd = " touch \"${shellScriptName}\"; " +
-                            "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
-                            ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
-                    ExecBashScriptIntent.ToTermux(
-                        CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
-                        context,
-                        execCmd
-                    )
 
-                    CommandListManager.execListUpdate(
-                        currentAppDirPath,
-                        cmdListAdapter,
-                        cmdListView,
-                    )
-                })
-                .setNegativeButton("NO", null)
-                .show()
-            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                context?.getColor(R.color.black) as Int
-            )
-            alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                context.getColor(R.color.black)
-            )
-            alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        }
+                CommandListManager.execListUpdate(
+                    currentAppDirPath,
+                    cmdListAdapter,
+                    cmdListView,
+                )
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
     }
 }

@@ -6,28 +6,27 @@ import android.widget.Toast
 import com.termux.shared.termux.TermuxConstants
 
 
-class ExecBashScriptIntent {
-    companion object {
-        fun ToTermux(
-            runShell: String,
-            context: Context?,
-            execCmd: String,
-            backgroundExec: Boolean = true,
-        ) {
-            try {
-                val intent = ToTermux(
-                    runShell,
-                    execCmd,
-                    backgroundExec,
-                )
-                context?.startService(intent)
-            } catch(e: Exception) {
-                Toast.makeText(
-                    context,
-                    "failure intent to Termux \n Does add permission or start it?",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+object ExecBashScriptIntent {
+
+    fun ToTermux(
+        runShell: String,
+        context: Context?,
+        execCmd: String,
+        backgroundExec: Boolean = true,
+    ) {
+        try {
+            val intent = ToTermux(
+                runShell,
+                execCmd,
+                backgroundExec,
+            )
+            context?.startService(intent)
+        } catch(e: Exception) {
+            Toast.makeText(
+                context,
+                "failure intent to Termux \n Does add permission or start it?",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 }

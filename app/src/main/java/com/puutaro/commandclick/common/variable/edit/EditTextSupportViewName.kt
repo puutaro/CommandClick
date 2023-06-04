@@ -30,6 +30,7 @@ enum class EditTextSupportViewName(
     FILE_PICKER_BUTTON("FLB"),
     NUM_INDE_CREMENTER("NUM"),
     NUM_INDE_CREMENTER_BUTTON("NUMB"),
+    LIST_INDEX("LI"),
     READ_ONLY_EDIT_TEXT("RO"),
     PASSWORD("H"),
     BUTTON("BTN"),

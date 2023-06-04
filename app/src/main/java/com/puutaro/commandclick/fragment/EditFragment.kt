@@ -15,10 +15,12 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdatelastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchToolbarManagerForEdit
@@ -74,6 +76,7 @@ class EditFragment: Fragment() {
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
     var execEditBtnLongPress = String()
+    var existIndexList: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -105,10 +108,12 @@ class EditFragment: Fragment() {
             sharePref
         )
 
-        val apiEditFragmentTag = getString(
+        val apiEditFragmentTag =
+            getString(
             R.string.api_cmd_variable_edit_api_fragment
         )
-        val cmdConfigVariableEditFragment = getString(
+        val cmdConfigVariableEditFragment =
+            getString(
             R.string.cmd_config_variable_edit_fragment
         )
         val howConfigEdit = (
@@ -124,20 +129,32 @@ class EditFragment: Fragment() {
             val currentShellFileNameSource = getIntent?.getStringExtra(
                 SharePrefferenceSetting.current_script_file_name.name
             )
-            val checkOkForAppDirPath = validationSharePreferenceForEdit.checkCurrentAppDirPreference(
-                currentAppDirPathSource
-            )
+            val checkOkForAppDirPath =
+                validationSharePreferenceForEdit
+                    .checkCurrentAppDirPreference(
+                        currentAppDirPathSource
+                    )
             if(!checkOkForAppDirPath) return
-            val checkOkForShellName = validationSharePreferenceForEdit.checkCurrentShellNamePreference(
-                currentAppDirPathSource,
-                currentShellFileNameSource
-            )
+            val checkOkForShellName =
+                validationSharePreferenceForEdit
+                    .checkCurrentShellNamePreference(
+                        currentAppDirPathSource,
+                        currentShellFileNameSource
+                    )
             if(!checkOkForShellName) return
         } else if(!howConfigEdit) {
-            val checkOkForAppDirPath = validationSharePreferenceForEdit.checkCurrentAppDirPreference()
+            val checkOkForAppDirPath =
+                validationSharePreferenceForEdit
+                    .checkCurrentAppDirPreference()
             if(!checkOkForAppDirPath) return
-            val checkOkForShellName = validationSharePreferenceForEdit.checkCurrentShellNamePreference()
+            val checkOkForShellName =
+                validationSharePreferenceForEdit
+                    .checkCurrentShellNamePreference()
             if(!checkOkForShellName) return
+            val checkOkIndexList =
+                validationSharePreferenceForEdit
+                    .checkIndexList()
+            if(!checkOkIndexList) return
         }
 
         readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
@@ -149,14 +166,16 @@ class EditFragment: Fragment() {
             apiEditFragmentTag
         )
 
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
+        val currentAppDirPath =
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+        val currentShellFileName =
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_script_file_name
+            )
 
         languageType =
             JsOrShellFromSuffix.judge(currentShellFileName)
@@ -169,7 +188,6 @@ class EditFragment: Fragment() {
         settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
         ) as String
-
         commandSectionStart = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
         ) as String
@@ -207,11 +225,11 @@ class EditFragment: Fragment() {
 
         }
 
-        val backstackOrder =
-            this.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
-        val currentShellFilePath =
-            "(${backstackOrder}) ${UsePath.makeOmitPath(currentAppDirPath)}/${currentShellFileName}"
-        binding.editTextView.text = currentShellFilePath
+        binding.editTextView.text = EditFragmentTitle.make(
+            this,
+            currentAppDirPath,
+            currentShellFileName
+        )
 
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
@@ -219,9 +237,21 @@ class EditFragment: Fragment() {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
 
+        val currentShellContentsList = ReadText(
+            currentAppDirPath,
+            currentShellFileName
+        ).textToList()
+        existIndexList = CommandClickVariables.substituteCmdClickVariableList(
+            currentShellContentsList,
+            CommandClickScriptVariable.SET_VARIABLE_TYPE
+        )?.any {
+            it.contains(":${EditTextSupportViewName.LIST_INDEX.str}=")
+        } ?: false
+
         val editModeHandler = EditModeHandler(
             this,
             binding,
+            currentShellContentsList
         )
         editModeHandler.execByHowFullEdit()
         val terminalViewModel: TerminalViewModel by activityViewModels()
@@ -240,6 +270,10 @@ class EditFragment: Fragment() {
                 )
                 return@setEventListener
             }
+            binding.editToolBarLinearLayout.isVisible = if(
+                isOpen
+            ) !existIndexList
+            else true
             listener?.onKeyBoardVisibleChangeForEditFragment(
                 isOpen,
                 this.isVisible

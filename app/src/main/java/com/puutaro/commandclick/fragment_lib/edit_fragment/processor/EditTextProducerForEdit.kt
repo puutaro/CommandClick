@@ -156,6 +156,10 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withIndexListView = WithIndexListView(
+        editFragment,
+    )
+
 
     fun adds(
         onSettingEdit: Boolean = false
@@ -430,6 +434,12 @@ class EditTextProducerForEdit(
                         editParameters,
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.LIST_INDEX.str -> {
+                    val innerLinearLayout = withIndexListView.create(
+                        editParameters,
+                    )
+                    binding.editListLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
                     val innerLayout = withInDeCremenView.create(

@@ -17,6 +17,7 @@ import kotlinx.coroutines.*
 class EditModeHandler(
     private val editFragment: EditFragment,
     binding: EditFragmentBinding,
+    private val currentShellContentsList: List<String>
 ) {
 
     private val context = editFragment.context
@@ -43,11 +44,6 @@ class EditModeHandler(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_script_file_name
     )
-
-    private val currentShellContentsList = ReadText(
-        currentAppDirPath,
-        currentShellFileName
-    ).textToList()
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
         currentShellContentsList,

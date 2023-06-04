@@ -9,38 +9,36 @@ import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
-class AddShellScript {
-    companion object {
-        fun addShellOrJavaScript (
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            sharedPref: SharedPreferences?,
-            currentAppDirPath: String,
-            shellScriptName: String,
-            languageTypeSelects: LanguageTypeSelects
-        ){
+object AddShellScript {
+    fun addShellOrJavaScript (
+        cmdIndexFragment: CommandIndexFragment,
+        sharedPref: SharedPreferences?,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        languageTypeSelects: LanguageTypeSelects
+    ){
 
-            val context = cmdIndexCommandIndexFragment.context
-            SharePreffrenceMethod.putSharePreffrence(
-                sharedPref,
-                mapOf(
-                    SharePrefferenceSetting.current_script_file_name.name
-                            to shellScriptName,
-                )
+        val context = cmdIndexFragment.context
+        SharePreffrenceMethod.putSharePreffrence(
+            sharedPref,
+            mapOf(
+                SharePrefferenceSetting.current_script_file_name.name
+                        to shellScriptName,
             )
+        )
 
-            val cmdClickShibanStr = cmdIndexCommandIndexFragment.shiban
-            CommandClickScriptVariable.makeShellOrJsFile(
-                cmdClickShibanStr,
-                currentAppDirPath,
-                shellScriptName,
-                shellOrJs = languageTypeSelects
-            )
-            val editor = Editor(
-                currentAppDirPath,
-                shellScriptName,
-                context
-            )
-            editor.open()
-        }
+        val cmdClickShibanStr = cmdIndexFragment.shiban
+        CommandClickScriptVariable.makeShellOrJsFile(
+            cmdClickShibanStr,
+            currentAppDirPath,
+            shellScriptName,
+            shellOrJs = languageTypeSelects
+        )
+        val editor = Editor(
+            currentAppDirPath,
+            shellScriptName,
+            context
+        )
+        editor.open()
     }
 }

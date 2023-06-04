@@ -20,7 +20,7 @@ import java.io.File
 
 object ExecJsLoad {
     fun execJsLoad(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
@@ -33,7 +33,7 @@ object ExecJsLoad {
         ) return
         val context = currentFragment.context
         when (currentFragment) {
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
+            is CommandIndexFragment -> {
                 val listener = currentFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
                 listener?.onKeyBoardVisibleChange(
                     false,
@@ -144,11 +144,11 @@ object ExecJsLoad {
     }
 
     private fun jsUrlLaunchHandler(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         launchUrlString: String,
     ){
         when (currentFragment) {
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
+            is CommandIndexFragment -> {
                 currentFragment.jsExecuteJob?.cancel()
                 currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
                     val onLaunchUrl = EnableTerminalWebView.check(

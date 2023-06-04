@@ -8,7 +8,7 @@ object EditLayoutViewHideShow {
         editFragment: EditFragment,
         onShow: Boolean
     ){
-        editFragment.binding.editTextScroll.isVisible = false
-        editFragment.binding.editListLinearLayout.isVisible = false
+        editFragment.binding.editTextScroll.isVisible = onShow
+        editFragment.binding.editListLinearLayout.isVisible = onShow
     }
 }
