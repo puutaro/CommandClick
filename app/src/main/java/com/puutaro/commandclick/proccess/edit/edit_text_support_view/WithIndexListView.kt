@@ -496,11 +496,7 @@ class WithIndexListView(
                 return
             }
             preMenuType.delete.name -> {
-                execItemDelete(
-                    fileListView,
-                    fileListAdapter,
-                    selectedItem,
-                )
+                execItemDelete(selectedItem)
                 return
             }
             preMenuType.cat.name -> {
@@ -516,10 +512,7 @@ class WithIndexListView(
                 return
             }
             preMenuType.add.name -> {
-                execAddItem(
-                    fileListView,
-                    fileListAdapter,
-                )
+                execAddItem()
                 return
             }
             preMenuType.copy_path.name -> {
@@ -587,10 +580,7 @@ class WithIndexListView(
         editor.open()
     }
 
-    private fun execAddItem(
-        fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
-    ){
+    private fun execAddItem(){
         val editText = EditText(context)
         editText.inputType = InputType.TYPE_CLASS_TEXT
         val alertDialog = AlertDialog.Builder(context)
@@ -628,8 +618,6 @@ class WithIndexListView(
     }
 
     private fun execItemDelete(
-        fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
         selectedItem: String,
     ){
         val scriptContents = ReadText(
