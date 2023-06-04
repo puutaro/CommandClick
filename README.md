@@ -153,6 +153,7 @@ At the same time, if you installed code editor, edit new file.
     | `ELCBDIR` | editable list file multi checkbox with directory select button | {variableName}:ELCBDIR=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `ELCBFL` | editable list file multi checkbox with file select button | {variableName}:ELCBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
+    | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}!#124;{menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(!#124;prefix={grep prefix})(!#124;suffix={grep suffix}) |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
@@ -180,6 +181,31 @@ At the same time, if you installed code editor, edit new file.
                  ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
                  ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
                  ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
+
+      - list index component usage
+      			- this component must be one and other component is exclude by this.  
+      			- `listDir` and `click` dir is made in right under the fannel directory   
+      			- Files in listDir is list item  
+      			- Under `click` dir,there are `itemClick.js`, `menuClick.js`, and `subMenuClick.js`  
+      			- `itemClick.js` is trigger when item click  
+      			- `menuClick.js` is trigger when menu click  
+      			- `subMenuClick.js` is trigger when subMenu click  
+      			- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument: 
+      				ex) let args = jsArgs.get().split("\t"); 
+				    var PARENT_DIR = args.at(0);  
+			 	    var LIST_VIEW_DIR = args.at(1);  
+				    var ITEM_NAME = args.at(2);  
+				    var MENU_NAME = args.at(3);  
+				    
+      			- predfine menu name  
+      			`sync` -> sync list to current directory files   
+			`delete` -> delete item   
+			`add` -> add item   
+			`write` -> edit item by editor     
+			`cat` -> show time file contents   
+			`copy_path` -> copy item file path   
+			`copy_file` -> copy item file to other directory   
+			
 
 
 #### Run
