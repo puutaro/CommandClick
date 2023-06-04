@@ -36,7 +36,10 @@ class EditedTextContents(
         scriptContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
     ): List<String> {
-        return if(recordNumToMapNameValueInCommandHolder.isNullOrEmpty()) {
+        return if(
+            recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
+            || editFragment.existIndexList
+        ) {
             scriptContentsList
         } else {
             this.scriptContentsLister.update(
