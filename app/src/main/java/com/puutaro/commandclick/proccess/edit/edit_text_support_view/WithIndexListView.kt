@@ -209,14 +209,8 @@ class WithIndexListView(
             fileDisplayListAdapter
         )
 
-        val popup = PopupMenu(
-            context,
-            fileListView,
-            Gravity.BOTTOM
-        )
         invokeItemSetLongTimeClickListenerForHistory(
             fileListView,
-            popup,
             menuList
         )
 
@@ -316,7 +310,6 @@ class WithIndexListView(
 
     private fun invokeItemSetLongTimeClickListenerForHistory(
         fileListView: ListView,
-        popup: PopupMenu,
         menuList: List<String>,
     ){
         fileListView.onItemLongClickListener =
@@ -324,6 +317,11 @@ class WithIndexListView(
                     parent, listSelectedView, pos, id ->
                 val selectedItem =
                     fileListView.adapter.getItem(pos) as String
+                val popup = PopupMenu(
+                    context,
+                    listSelectedView,
+                    Gravity.BOTTOM
+                )
                 popup.menu.clear()
                 val inflater = popup.menuInflater
                 inflater.inflate(
@@ -361,13 +359,11 @@ class WithIndexListView(
                     menuList,
                     selectedItem,
                 )
-                val itemToast = Toast.makeText(
+                Toast.makeText(
                     context,
                     selectedItem,
                     Toast.LENGTH_SHORT
-                )
-                itemToast.setGravity(Gravity.TOP, 0, 0);
-                itemToast.show()
+                ).show()
                 popup.show()
                 true
             }
@@ -872,5 +868,7 @@ enum class preMenuType {
     add,
     cat,
     copy_path,
-    copy_file
+    copy_file,
+    install,
+    bookmark,
 }
