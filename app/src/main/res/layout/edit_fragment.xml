@@ -37,6 +37,7 @@
                 android:orientation="vertical"
                 android:descendantFocusability="beforeDescendants"
                 android:focusableInTouchMode="true"
+                android:background="@color/white"
                 >
                 <TextView
                     android:id="@+id/editTextView"
@@ -51,6 +52,16 @@
                 <requestFocus/>
             </LinearLayout>
         </ScrollView>
+        <LinearLayout
+            android:id="@+id/edit_list_linear_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="beforeDescendants"
+            android:focusableInTouchMode="true"
+            android:background="@color/white"
+            >
+        </LinearLayout>
         <LinearLayout
             android:id="@+id/edit_tool_bar_linear_layout"
             android:layout_width="match_parent"
