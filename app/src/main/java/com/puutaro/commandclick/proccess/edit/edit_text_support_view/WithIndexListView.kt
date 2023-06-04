@@ -209,10 +209,13 @@ class WithIndexListView(
             fileDisplayListAdapter
         )
 
-        val popup = PopupMenu(context, fileListView)
+        val popup = PopupMenu(
+            context,
+            fileListView,
+            Gravity.BOTTOM
+        )
         invokeItemSetLongTimeClickListenerForHistory(
             fileListView,
-            fileDisplayListAdapter,
             popup,
             menuList
         )
@@ -313,7 +316,6 @@ class WithIndexListView(
 
     private fun invokeItemSetLongTimeClickListenerForHistory(
         fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
         popup: PopupMenu,
         menuList: List<String>,
     ){
@@ -358,9 +360,14 @@ class WithIndexListView(
                     popup,
                     menuList,
                     selectedItem,
-                    fileListView,
-                    fileListAdapter,
                 )
+                val itemToast = Toast.makeText(
+                    context,
+                    selectedItem,
+                    Toast.LENGTH_SHORT
+                )
+                itemToast.setGravity(Gravity.TOP, 0, 0);
+                itemToast.show()
                 popup.show()
                 true
             }
@@ -370,8 +377,6 @@ class WithIndexListView(
         popup: PopupMenu,
         menuList: List<String>,
         selectedItem: String,
-        fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
     ){
         popup.setOnMenuItemClickListener { menuItem ->
             val itemId = menuItem.itemId
@@ -389,8 +394,6 @@ class WithIndexListView(
                     menuClickJsName,
                     selectedItem,
                     menuName,
-                    fileListView,
-                    fileListAdapter,
                 )
                 return@setOnMenuItemClickListener true
             }
@@ -406,8 +409,6 @@ class WithIndexListView(
                 subMenuClickJsName,
                 selectedItem,
                 subMenuName,
-                fileListView,
-                fileListAdapter,
             )
             true
         }
@@ -487,8 +488,6 @@ class WithIndexListView(
         clickJsName: String,
         selectedItem: String,
         menuName: String,
-        fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
     ){
         when(menuName){
             preMenuType.sync.name -> {
