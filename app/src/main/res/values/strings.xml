@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">CommandClick</string>
+    <string name="web_search">web_search</string>
 </resources>
