@@ -31,6 +31,7 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -46,7 +47,10 @@ import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.UrlTitleTrimmer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -74,7 +78,9 @@ class WithIndexListView(
     private val itemClickJsName = "itemClick.js"
     private val menuClickJsName = "menuClick.js"
     private val subMenuClickJsName = "subMenuClick.js"
-    private var onDirectorySelected = false
+    private val editTextForListIndex = EditTextForListIndex(
+        editFragment
+    )
     private var selectedItemForCopy = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
     private val getDirectory = editFragment.registerForActivityResult(
@@ -83,7 +89,6 @@ class WithIndexListView(
             uri == null
             || uri.toString() == String()
         ) return@registerForActivityResult
-        onDirectorySelected = false
         val pathSource = runBlocking {
             File(
                 withContext(Dispatchers.IO) {
@@ -120,7 +125,6 @@ class WithIndexListView(
             uri == null
             || uri.toString() == String()
         ) return@registerForActivityResult
-        onDirectorySelected = false
         val pathSource = runBlocking {
             File(
                 withContext(Dispatchers.IO) {
@@ -462,8 +466,6 @@ class WithIndexListView(
                 execJsFilePath,
             )
             clickUpdateFileList(
-                fileListAdapter,
-                fileListView,
                 selectedItem
             )
             return
@@ -486,8 +488,6 @@ class WithIndexListView(
                 true
             )
             clickUpdateFileList(
-                fileListAdapter,
-                fileListView,
                 selectedItem
             )
             return
@@ -504,8 +504,6 @@ class WithIndexListView(
             execJsFilePath,
         )
         clickUpdateFileList(
-            fileListAdapter,
-            fileListView,
             selectedItem
         )
     }
@@ -557,6 +555,48 @@ class WithIndexListView(
                 execGetFile()
                 return
             }
+            preMenuType.editC.name -> {
+                editTextForListIndex.create(
+                    "edit command variable",
+                    filterDir,
+                    selectedItem,
+                    String()
+                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        for (i in 0..3000) {
+                            delay(200)
+                            if(
+                                !terminalViewModel.onDialog
+                            ) break
+                        }
+                    }
+                    withContext(Dispatchers.Main){
+                        updateFileList()
+                    }
+                }
+            }
+            preMenuType.editS.name -> {
+                editTextForListIndex.create(
+                    "edit setting variable",
+                    filterDir,
+                    selectedItem,
+                    "setting"
+                )
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.IO) {
+                        for (i in 0..3000) {
+                            delay(200)
+                            if(
+                                !terminalViewModel.onDialog
+                            ) break
+                        }
+                    }
+                    withContext(Dispatchers.Main){
+                        updateFileList()
+                    }
+                }
+            }
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
         terminalViewModel.jsArguments = listOf(
@@ -569,7 +609,6 @@ class WithIndexListView(
             editFragment,
             execJsFilePath,
         )
-
     }
 
     private fun execGetFile(){
@@ -804,8 +843,6 @@ class WithIndexListView(
     }
 
     private fun clickUpdateFileList(
-        fileListAdapter: ArrayAdapter<String>?,
-        fileListView: ListView,
         selectedItem: String
     ){
         FileSystems.updateLastModified(
@@ -912,4 +949,6 @@ enum class preMenuType {
     copy_file,
     get,
     bookmark,
+    editC,
+    editS
 }
