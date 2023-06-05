@@ -76,7 +76,6 @@ class WithIndexListView(
     private val subMenuClickJsName = "subMenuClick.js"
     private var onDirectorySelected = false
     private var selectedItemForCopy = String()
-    private var copyDirectoryPath = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
     private val getDirectory = editFragment.registerForActivityResult(
         ActivityResultContracts.OpenDocument()) { uri ->
@@ -94,7 +93,7 @@ class WithIndexListView(
                 }.replace(prefixRegex, "/storage")
             )
         }
-        copyDirectoryPath =
+        val copyDirectoryPath =
             pathSource.parent ?: String()
         val sourceScriptFilePath = "${filterDir}/${selectedItemForCopy}"
         val selectedScriptFilePathSource = "${copyDirectoryPath}/${selectedItemForCopy}"
@@ -111,6 +110,38 @@ class WithIndexListView(
         Toast.makeText(
             context,
             "copy file ok",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private val getFile = editFragment.registerForActivityResult(
+        ActivityResultContracts.OpenDocument()) { uri ->
+        if (
+            uri == null
+            || uri.toString() == String()
+        ) return@registerForActivityResult
+        onDirectorySelected = false
+        val pathSource = runBlocking {
+            File(
+                withContext(Dispatchers.IO) {
+                    URLDecoder.decode(
+                        uri.toString(), Charsets.UTF_8.name()
+                    )
+                }.replace(prefixRegex, "/storage")
+            )
+        }
+        val getFilePath =
+            pathSource.absolutePath ?: String()
+        val getFileName = pathSource.name
+        val selectedScriptFilePathSource = "${filterDir}/${getFileName}"
+        FileSystems.copyFile(
+            getFilePath,
+            selectedScriptFilePathSource
+        )
+        updateFileList()
+        Toast.makeText(
+            context,
+            "get file ok",
             Toast.LENGTH_LONG
         ).show()
     }
@@ -522,6 +553,10 @@ class WithIndexListView(
                 )
                 return
             }
+            preMenuType.get.name -> {
+                execGetFile()
+                return
+            }
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
         terminalViewModel.jsArguments = listOf(
@@ -535,6 +570,12 @@ class WithIndexListView(
             execJsFilePath,
         )
 
+    }
+
+    private fun execGetFile(){
+        getFile.launch(
+            arrayOf(Intent.CATEGORY_OPENABLE)
+        )
     }
 
     private fun execCopyFile(
@@ -869,6 +910,6 @@ enum class preMenuType {
     cat,
     copy_path,
     copy_file,
-    install,
+    get,
     bookmark,
 }
