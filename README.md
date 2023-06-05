@@ -190,14 +190,15 @@ At the same time, if you installed code editor, edit new file.
       			- `itemClick.js` is trigger when item click  
       			- `menuClick.js` is trigger when menu click  
       			- `subMenuClick.js` is trigger when subMenu click  
-      			- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument: 
-      				ex) let args = jsArgs.get().split("\t"); 
-				    var PARENT_DIR = args.at(0);  
-			 	    var LIST_VIEW_DIR = args.at(1);  
-				    var ITEM_NAME = args.at(2);  
-				    var MENU_NAME = args.at(3);  
-				    
-      			- predfine menu name  
+      			- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:   
+      				        ex)   
+				             let args = jsArgs.get().split("\t");   
+				             var PARENT_DIR = args.at(0);  
+			 	             var LIST_VIEW_DIR = args.at(1);  
+				             var ITEM_NAME = args.at(2);  
+				             var MENU_NAME = args.at(3);  
+
+- predfine menu name  
       			`sync` -> sync list to current directory files   
 			`delete` -> delete item   
 			`add` -> add item   
