@@ -197,6 +197,8 @@ At the same time, if you installed code editor, edit new file.
 			 	             var LIST_VIEW_DIR = args.at(1);  
 				             var ITEM_NAME = args.at(2);  
 				             var MENU_NAME = args.at(3);  
+			- `itemclick.js` option  
+			`const override = true;` -> when click, your handling when js and shell don't execute.   
 
 - predfine menu name  
       			`sync` -> sync list to current directory files   
@@ -205,7 +207,9 @@ At the same time, if you installed code editor, edit new file.
 			`write` -> edit item by editor     
 			`cat` -> show time file contents   
 			`copy_path` -> copy item file path   
-			`copy_file` -> copy item file to other directory   
+			`copy_file` -> copy item file to other directory  
+			`editC` -> edit command variables  
+			`editS` -> edit setting variables  
 			
 
 
