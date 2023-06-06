@@ -74,6 +74,7 @@ class WithIndexListView(
     private var fannelDirName = String()
     private var fannelDirPath = String()
     private var clickDirPath = String()
+    private val overrideItemClickExec = "const override"
     private val clickDirName = "click"
     private val itemClickJsName = "itemClick.js"
     private val menuClickJsName = "menuClick.js"
@@ -266,7 +267,6 @@ class WithIndexListView(
 
         invokeItemSetClickListenerForFileList(
             fileListView,
-            fileDisplayListAdapter
         )
 
         invokeItemSetLongTimeClickListenerForHistory(
@@ -286,7 +286,6 @@ class WithIndexListView(
 
     private fun invokeItemSetClickListenerForFileList(
         fileListView: ListView,
-        fileDisplayListAdapter: ArrayAdapter<String>?
     ) {
         fileListView.setOnItemClickListener {
                 parent, View, pos, id
@@ -299,8 +298,6 @@ class WithIndexListView(
             execItemClickJs(
                 clickDirPath,
                 selectedItem,
-                fileListView,
-                fileDisplayListAdapter,
             )
             return@setOnItemClickListener
         }
@@ -473,16 +470,31 @@ class WithIndexListView(
     private fun execItemClickJs(
         parentDirPath: String,
         selectedItem: String,
-        fileListView: ListView,
-        fileListAdapter: ArrayAdapter<String>?,
     ){
+        val onOverrideItemClickExec = ReadText(
+            parentDirPath,
+            itemClickJsName
+        ).textToList().any {
+            it
+                .trim()
+                .removePrefix(
+                overrideItemClickExec
+            )
+                .trim(';')
+                .trim()
+                .removePrefix("=")
+                .trim() == "true"
+        }
+
         if(
-            selectedItem.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
-            )
-            || selectedItem.endsWith(
-                CommandClickScriptVariable.JSX_FILE_SUFFIX
-            )
+            !onOverrideItemClickExec
+            && (
+                    selectedItem.endsWith(
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
+                ) || selectedItem.endsWith(
+                        CommandClickScriptVariable.JSX_FILE_SUFFIX
+                    )
+                )
         ) {
             val execJsFilePath =
                 "${filterDir}/${selectedItem}"
@@ -496,7 +508,8 @@ class WithIndexListView(
             return
         }
         if(
-            selectedItem.endsWith(
+            !onOverrideItemClickExec
+            && selectedItem.endsWith(
                 CommandClickScriptVariable.SHELL_FILE_SUFFIX
             )
         ) {
