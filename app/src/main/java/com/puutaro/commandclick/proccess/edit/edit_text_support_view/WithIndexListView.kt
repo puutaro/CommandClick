@@ -98,18 +98,32 @@ class WithIndexListView(
                 }.replace(prefixRegex, "/storage")
             )
         }
-        val copyDirectoryPath =
+        val targetDirectoryPath =
             pathSource.parent ?: String()
         val sourceScriptFilePath = "${filterDir}/${selectedItemForCopy}"
-        val selectedScriptFilePathSource = "${copyDirectoryPath}/${selectedItemForCopy}"
-        val selectedScriptFilePath = if(
-            selectedScriptFilePathSource == sourceScriptFilePath
-        ) "${copyDirectoryPath}/" +
+        val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
+        val targetScriptFilePath = if(
+            targetScriptFilePathSource == sourceScriptFilePath
+        ) "${targetDirectoryPath}/" +
                 "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
-        else selectedScriptFilePathSource
+        else targetScriptFilePathSource
         FileSystems.copyFile(
             sourceScriptFilePath,
-            selectedScriptFilePath
+            targetScriptFilePath
+        )
+        val sourceFannelName =
+            selectedItemForCopy
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+        val targetFannelName =
+            File(targetScriptFilePath).name
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
+        val targetFannelDir = targetFannelName + UsePath.fannelDirSuffix
+        FileSystems.copyDirectory(
+            "${filterDir}/${sourceFannelDir}",
+            "${targetDirectoryPath}/${targetFannelDir}"
         )
         updateFileList()
         Toast.makeText(
@@ -134,13 +148,24 @@ class WithIndexListView(
                 }.replace(prefixRegex, "/storage")
             )
         }
-        val getFilePath =
+        val sourceFilePath =
             pathSource.absolutePath ?: String()
+        val sourceDirPath =
+            pathSource.parent ?: String()
         val getFileName = pathSource.name
-        val selectedScriptFilePathSource = "${filterDir}/${getFileName}"
+        val targetScriptFilePathSource = "${filterDir}/${getFileName}"
         FileSystems.copyFile(
-            getFilePath,
-            selectedScriptFilePathSource
+            sourceFilePath,
+            targetScriptFilePathSource
+        )
+        val sourceFannelName =
+            getFileName
+                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
+        FileSystems.copyDirectory(
+            "${sourceDirPath}/${sourceFannelDir}",
+            "${filterDir}/${sourceFannelDir}"
         )
         updateFileList()
         Toast.makeText(
@@ -714,6 +739,14 @@ class WithIndexListView(
                 FileSystems.removeFiles(
                     filterDir,
                     selectedItem
+                )
+                val deleteFannelName =
+                    selectedItem
+                        .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
+                        .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
+                FileSystems.removeDir(
+                    "${filterDir}/${deleteFannelDir}"
                 )
                 updateFileList()
             })

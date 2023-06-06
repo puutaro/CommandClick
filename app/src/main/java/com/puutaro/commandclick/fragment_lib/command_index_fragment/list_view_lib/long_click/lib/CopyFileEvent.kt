@@ -151,7 +151,7 @@ private fun makeSelectedShellFilePath(
 }
 
 
-internal fun copyResultToast(
+private fun copyResultToast(
     context: Context?,
     selectedShellFilePath: String
 ){

@@ -105,13 +105,12 @@ class EditTextForListIndex(
                 )
             }
             withContext(Dispatchers.IO) {
-                while (true) {
+                for(i in 1..6000) {
                     delay(100)
                     if (!terminalViewModel.onDialog) break
                 }
             }
         }
-//        return returnValue
     }
 
 
