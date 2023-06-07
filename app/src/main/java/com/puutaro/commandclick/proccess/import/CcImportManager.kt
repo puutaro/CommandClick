@@ -51,8 +51,6 @@ object CcImportManager {
                     scriptFileName
                 )
             }
-            .replace("\${00}", cmdclickDirPath)
-            .replace("\${01}", recentAppDirPath)
             .let {
                 BothEdgeQuote.trim(it)
             }
