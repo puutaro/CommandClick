@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -471,20 +472,9 @@ class WithIndexListView(
         parentDirPath: String,
         selectedItem: String,
     ){
-        val onOverrideItemClickExec = ReadText(
-            parentDirPath,
-            itemClickJsName
-        ).textToList().any {
-            it
-                .trim()
-                .removePrefix(
-                overrideItemClickExec
-            )
-                .trim(';')
-                .trim()
-                .removePrefix("=")
-                .trim() == "true"
-        }
+        val onOverrideItemClickExec =
+            editFragment.overrideItemClickExec !=
+                    SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
 
         if(
             !onOverrideItemClickExec

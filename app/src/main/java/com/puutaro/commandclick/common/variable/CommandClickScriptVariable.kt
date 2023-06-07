@@ -84,6 +84,7 @@ class CommandClickScriptVariable {
         val CMDCLICK_LONG_PRESS_IMAGE_URL = "CMDCLICK_LONG_PRESS_IMAGE_URL"
         val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"
         val CMDCLICK_HOME_FANNEL = "homeFannel"
+        val OVERRIDE_ITEM_CLICK_EXEC = "overrideItemClickExec"
 
         val SETTING_VARIABLE_NAMES_LIST = listOf(
             TERMINAL_DO,
@@ -114,7 +115,8 @@ class CommandClickScriptVariable {
             EXEC_PLAY_BTN_LONG_PRESS,
             EXEC_EDIT_BTN_LONG_PRESS,
             IGNORE_HISTORY_PATHS,
-            HOME_SCRIPT_URL
+            HOME_SCRIPT_URL,
+            OVERRIDE_ITEM_CLICK_EXEC
         )
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
@@ -153,6 +155,8 @@ class CommandClickScriptVariable {
         private val onAdBlockOff = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
         private val onUrlHistoryRegisterOff = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
         private val onUrlHistoryRegisterOn = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name
+        private val overrideItemClickExecSelectsOn = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name
+        private val overrideItemClickExecSelectsOff = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
         val TERMINAL_DO_DEFAULT_VALUE = terminalOn
         val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
         val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
@@ -169,6 +173,7 @@ class CommandClickScriptVariable {
         val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
         val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.ON.name
         val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
+        val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
 
 
         val setVariableForSettingHolder: List<String> = listOf(
@@ -185,6 +190,7 @@ class CommandClickScriptVariable {
             "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
             "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
             "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
+            "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
             "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=0..1000!1",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
@@ -343,6 +349,11 @@ class CommandClickScriptVariable {
                 |#   -> after shell script execute, run command
                 |# * ${SCRIPT_FILE_NAME}
                 |#   -> your shell file name
+                |# * ${OVERRIDE_ITEM_CLICK_EXEC}
+                |#   -> about whether to exc js and shell script item on click
+                |#    - ${overrideItemClickExecSelectsOff}: no exec
+                |#    - ${overrideItemClickExecSelectsOn}: exec (default)
+                |#
             """.trimIndent().replace("EX_INDENT_BLANK", "        ")
         }
 
@@ -370,6 +381,7 @@ class CommandClickScriptVariable {
             |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
             |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
             |${ON_ADBLOCK}="${onAdBlockInherit}"
+            |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
             |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
             |${IGNORE_HISTORY_PATHS}=""
             |${EXEC_JS_OR_HTML_PATH}=""

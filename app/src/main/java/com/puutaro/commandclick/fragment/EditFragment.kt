@@ -76,6 +76,7 @@ class EditFragment: Fragment() {
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
     var execEditBtnLongPress = String()
+    var overrideItemClickExec = String()
     var existIndexList: Boolean = false
 
     override fun onCreateView(
@@ -222,7 +223,6 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setKeyListener()
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
-
         }
 
         binding.editTextView.text = EditFragmentTitle.make(

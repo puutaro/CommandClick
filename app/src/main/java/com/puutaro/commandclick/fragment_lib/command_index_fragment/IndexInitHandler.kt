@@ -15,18 +15,18 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object IndexInitHandler {
     fun handle(
-        cmdIndexCommandIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
-        val context = cmdIndexCommandIndexFragment.context
-        val activity = cmdIndexCommandIndexFragment.activity
-        val startUpPref = cmdIndexCommandIndexFragment.activity?.getPreferences(
+        val context = cmdIndexFragment.context
+        val activity = cmdIndexFragment.activity
+        val startUpPref = cmdIndexFragment.activity?.getPreferences(
             Context.MODE_PRIVATE
         )
         val appDirAdminTag = context?.getString(
             R.string.app_dir_admin
         )
         if(
-            cmdIndexCommandIndexFragment.tag == appDirAdminTag
+            cmdIndexFragment.tag == appDirAdminTag
         ){
             SharePreffrenceMethod.putSharePreffrence(
                 startUpPref,
@@ -39,18 +39,18 @@ object IndexInitHandler {
         }
 
         TerminalShower.show(
-            cmdIndexCommandIndexFragment
+            cmdIndexFragment
         )
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        cmdIndexCommandIndexFragment.onUrlLaunchIntent = IntentAction.judge(
+        cmdIndexFragment.onUrlLaunchIntent = IntentAction.judge(
             activity
         )
 
         if(
-            cmdIndexCommandIndexFragment.onUrlLaunchIntent
+            cmdIndexFragment.onUrlLaunchIntent
         ){
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
@@ -103,12 +103,12 @@ object IndexInitHandler {
             UsePath.cmdclickStartupJsName
         )
         ConfigFromStartUpFileSetter.set(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             currentAppDirPath,
         )
 
         val pageSearchToolbarManager =
-            PageSearchToolbarManager(cmdIndexCommandIndexFragment)
+            PageSearchToolbarManager(cmdIndexFragment)
 
         pageSearchToolbarManager.cancleButtonClickListner()
         pageSearchToolbarManager.pageSearchTextChangeListner()

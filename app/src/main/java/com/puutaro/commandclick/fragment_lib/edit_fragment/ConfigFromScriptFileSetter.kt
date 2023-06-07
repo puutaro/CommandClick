@@ -107,6 +107,12 @@ object ConfigFromScriptFileSetter {
             String()
         )
 
+        editFragment.overrideItemClickExec = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC,
+            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE,
+        )
+
         editFragment.execEditBtnLongPress = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.EXEC_EDIT_BTN_LONG_PRESS,

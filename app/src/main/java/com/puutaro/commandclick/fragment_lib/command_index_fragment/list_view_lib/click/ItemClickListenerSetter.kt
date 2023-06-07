@@ -148,10 +148,8 @@ class ItemClickListenerSetter {
                         OnEditExecuteEvent.invoke(
                             cmdIndexCommandIndexFragment,
                             editFragmentTag,
-                            editExecuteValue,
                             sharedPref,
                             selectedShellFileName,
-                            settingSectionVariableList
                         )
                         return@setOnItemClickListener
                     }

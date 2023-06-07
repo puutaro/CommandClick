@@ -84,6 +84,11 @@ class SettingVariableSelects {
             OFF,
             ON,
         }
+
+        enum class overrideItemClickExecSelects {
+            ON,
+            OFF
+        }
     }
 
 }
