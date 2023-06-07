@@ -1,13 +1,28 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.FileSystems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object CmdClickSystemAppDir {
-    fun create(){
-        FileSystems.createDirs(
-            UsePath.cmdclickSystemAppDirPath
-        )
-                
+    fun create(
+        cmdIndexFragment: CommandIndexFragment
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+            val context = cmdIndexFragment.context
+            val systemZipName = "system"
+            val assetsPrefix = "appSystemDir"
+            val systemZipPath = "${assetsPrefix}/$systemZipName"
+            FileSystems.copyFileOrDir(
+                context,
+                systemZipPath,
+                assetsPrefix,
+                UsePath.cmdclickAppDirPath
+            )
+        }
+
     }
 }

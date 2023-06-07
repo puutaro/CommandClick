@@ -84,6 +84,19 @@ object IndexInitHandler {
                 SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr,
             )
         )
+
+        val pageSearchToolbarManager =
+            PageSearchToolbarManager(cmdIndexFragment)
+
+        pageSearchToolbarManager.cancleButtonClickListner()
+        pageSearchToolbarManager.pageSearchTextChangeListner()
+        pageSearchToolbarManager.onKeyListner()
+        pageSearchToolbarManager.searchTopClickLisnter()
+        pageSearchToolbarManager.searchDownClickLisnter()
+
+        if(
+            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
+        ) return
         FileSystems.updateLastModified(
             UsePath.cmdclickAppHistoryDirAdminPath,
             AppHistoryManager.makeAppHistoryFileNameForInit(
@@ -106,15 +119,6 @@ object IndexInitHandler {
             cmdIndexFragment,
             currentAppDirPath,
         )
-
-        val pageSearchToolbarManager =
-            PageSearchToolbarManager(cmdIndexFragment)
-
-        pageSearchToolbarManager.cancleButtonClickListner()
-        pageSearchToolbarManager.pageSearchTextChangeListner()
-        pageSearchToolbarManager.onKeyListner()
-        pageSearchToolbarManager.searchTopClickLisnter()
-        pageSearchToolbarManager.searchDownClickLisnter()
 
     }
 }

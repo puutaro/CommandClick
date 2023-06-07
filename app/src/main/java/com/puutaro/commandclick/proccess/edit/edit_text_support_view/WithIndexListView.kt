@@ -32,6 +32,7 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
+import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
@@ -64,6 +65,7 @@ class WithIndexListView(
     private val context = editFragment.context
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val noExtend = "NoExtend"
+    private val throughMark = "-"
     private var currentSetVariableMap: Map<String, String>? = mapOf()
     private var currentAppDirPath = String()
     private var currentScriptName = String()
@@ -75,7 +77,6 @@ class WithIndexListView(
     private var fannelDirName = String()
     private var fannelDirPath = String()
     private var clickDirPath = String()
-    private val overrideItemClickExec = "const override"
     private val clickDirName = "click"
     private val itemClickJsName = "itemClick.js"
     private val menuClickJsName = "menuClick.js"
@@ -208,6 +209,10 @@ class WithIndexListView(
         )
         filterDir = getFilterListDir(
             indexListMap,
+            "${currentAppDirPath}/${currentScriptName}",
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptName
         )
         filterPrefix = getFilterPrefix(
             indexListMap,
@@ -353,7 +358,6 @@ class WithIndexListView(
                         it.lowercase()
                     )
                 }
-
                 CommandListManager.execListUpdateByEditText(
                     filteredUrlHistoryList,
                     urlHistoryListAdapter as ArrayAdapter<String>,
@@ -472,6 +476,9 @@ class WithIndexListView(
         parentDirPath: String,
         selectedItem: String,
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         val onOverrideItemClickExec =
             editFragment.overrideItemClickExec !=
                     SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
@@ -583,6 +590,12 @@ class WithIndexListView(
                 execGetFile()
                 return
             }
+            preMenuType.desc.name -> {
+                execShowDescription(
+                    selectedItem
+                )
+                return
+            }
             preMenuType.editC.name -> {
                 editTextForListIndex.create(
                     "edit command variable",
@@ -639,6 +652,18 @@ class WithIndexListView(
         )
     }
 
+    private fun execShowDescription(
+        selectedItem: String,
+    ){
+        ScriptFileDescription.show(
+            editFragment.context,
+            ReadText(
+                currentAppDirPath,
+                selectedItem
+            ).textToList(),
+            selectedItem
+        )
+    }
     private fun execGetFile(){
         getFile.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
@@ -793,14 +818,18 @@ class WithIndexListView(
         )
         alertDialog.window?.setGravity(Gravity.BOTTOM)
     }
-    private fun makeFileList(): List<String> {
-        return FileSystems.sortedFiles(
+    private fun makeFileList(): MutableList<String> {
+        val fileListSource = FileSystems.sortedFiles(
             filterDir,
         ).filter {
             it.startsWith(filterPrefix)
                     && judgeBySuffixForIndex(it, filterSuffix)
                     && File("$filterDir/$it").isFile
         }
+        if(
+            fileListSource.isEmpty()
+        ) return mutableListOf(throughMark)
+        return fileListSource.toMutableList()
     }
 
     private fun judgeBySuffixForIndex(
@@ -907,8 +936,20 @@ private enum class IndexListEditKey {
 
 private fun getFilterListDir(
     fcbMap: Map<String, String>?,
+    currentScriptPath: String,
+    currentAppDirPath: String,
+    fannelDirName: String,
+    currentScriptName: String
 ): String {
-    return fcbMap?.get(IndexListEditKey.listDir.name)?.let {
+    return fcbMap?.get(IndexListEditKey.listDir.name)?.let{
+        ScriptPreWordReplacer.replace(
+            it,
+            currentScriptPath,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptName
+        )
+    }?.let {
         BothEdgeQuote.trim(it)
     } ?: String()
 }
@@ -986,5 +1027,6 @@ enum class preMenuType {
     get,
     bookmark,
     editC,
-    editS
+    editS,
+    desc
 }

@@ -14,6 +14,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -77,16 +78,27 @@ class CommandIndexFragment: Fragment() {
         FileSystems.createDirs(
             cmdclickAppHistoryDirAdminPath
         )
+        FileSystems.createDirs(
+            UsePath.cmdclickCcimportDirPath
+        )
         FileSystems.createFiles(
             cmdclickAppHistoryDirAdminPath,
             AppHistoryManager.makeAppHistoryFileNameForInit(
                 UsePath.cmdclickDefaultAppDirName,
             )
         )
+        CmdClickSystemAppDir.create(
+            this
+        )
 
         CommandClickScriptVariable.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +
+                    CommandClickScriptVariable.JS_FILE_SUFFIX
+        )
+        CommandClickScriptVariable.makeAppDirAdminFile(
+            UsePath.cmdclickAppDirAdminPath,
+            UsePath.cmdclickSystemAppDirName +
                     CommandClickScriptVariable.JS_FILE_SUFFIX
         )
 

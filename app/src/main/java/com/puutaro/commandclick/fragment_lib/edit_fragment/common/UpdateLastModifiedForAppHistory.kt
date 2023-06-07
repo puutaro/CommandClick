@@ -28,6 +28,9 @@ object UpdateLastModifiedForAppHistory {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
+        if(
+            currentAppDirPath == UsePath.cmdclickSystemAppDirPath
+        ) return
         FileSystems.updateLastModified(
             UsePath.cmdclickAppHistoryDirAdminPath,
             AppHistoryManager.makeAppHistoryFileNameForInit(
