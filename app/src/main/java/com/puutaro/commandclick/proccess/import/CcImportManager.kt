@@ -35,7 +35,6 @@ object CcImportManager {
         val trimRow = row
             .trim()
             .trim(';')
-        val cmdclickDirPath = UsePath.cmdclickDirPath
         if(
             !trimRow.contains(importPreWord)
         ) return row
