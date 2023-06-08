@@ -5,7 +5,8 @@ import com.puutaro.commandclick.common.variable.UsePath
 class UpdatelastModifyForEdit {
     private val guardDirPathList = listOf(
         UsePath.cmdclickAppDirAdminPath,
-        UsePath.cmdclickConfigDirPath
+        UsePath.cmdclickConfigDirPath,
+        UsePath.cmdclickSystemAppDirPath
     )
     fun judge(
         currentAppDirPath: String

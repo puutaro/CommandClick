@@ -39,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.FileSystems
@@ -482,7 +483,20 @@ class WithIndexListView(
         val onOverrideItemClickExec =
             editFragment.overrideItemClickExec !=
                     SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
-
+        if(
+            !onOverrideItemClickExec
+            && selectedItem.endsWith(
+                        CommandClickScriptVariable.HTML_FILE_SUFFIX
+                    ) || selectedItem.endsWith(
+                        CommandClickScriptVariable.HTM_FILE_SUFFIX
+                    )
+        ){
+            BroadCastIntent.send(
+                editFragment,
+                "${currentAppDirPath}/$selectedItem"
+            )
+            return
+        }
         if(
             !onOverrideItemClickExec
             && (
@@ -597,6 +611,9 @@ class WithIndexListView(
                 return
             }
             preMenuType.editC.name -> {
+                if(
+                    selectedItem == throughMark
+                ) return
                 editTextForListIndex.create(
                     "edit command variable",
                     filterDir,
@@ -618,6 +635,9 @@ class WithIndexListView(
                 }
             }
             preMenuType.editS.name -> {
+                if(
+                    selectedItem == throughMark
+                ) return
                 editTextForListIndex.create(
                     "edit setting variable",
                     filterDir,
@@ -655,6 +675,9 @@ class WithIndexListView(
     private fun execShowDescription(
         selectedItem: String,
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         ScriptFileDescription.show(
             editFragment.context,
             ReadText(
@@ -673,6 +696,9 @@ class WithIndexListView(
     private fun execCopyFile(
         selectedItem: String
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         selectedItemForCopy = selectedItem
         getDirectory.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
@@ -682,6 +708,9 @@ class WithIndexListView(
     private fun execCopyPath(
         selectedItem: String
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         val selectedItemPath = "${filterDir}/${selectedItem}"
         val clipboard = context?.getSystemService(
             Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -700,6 +729,9 @@ class WithIndexListView(
     private fun execWriteItem(
         selectedItem: String
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         val editor = Editor(
             filterDir,
             selectedItem,
@@ -748,6 +780,9 @@ class WithIndexListView(
     private fun execItemDelete(
         selectedItem: String,
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         val scriptContents = ReadText(
             filterDir,
             selectedItem
@@ -792,6 +827,9 @@ class WithIndexListView(
     private fun execItemCat(
         selectedItem: String,
     ){
+        if(
+            selectedItem == throughMark
+        ) return
         val scriptContents = ReadText(
             filterDir,
             selectedItem

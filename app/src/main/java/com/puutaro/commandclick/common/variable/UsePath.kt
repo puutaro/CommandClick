@@ -72,6 +72,8 @@ class UsePath {
         const val cmdclickSystemAppDirName = "system"
         private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"
         val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"
+        val ccImportManagerFannelName = "ccImportManager.js"
+        val ccImportAdminFannelPath = "${cmdclickSystemAppDirPath}/${ccImportManagerFannelName}"
         private const val cmdclickSystemDirName = "system"
         private const val cmdclickUrlSystemDirName = "url"
         const val cmdclickUrlSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickUrlSystemDirName}"

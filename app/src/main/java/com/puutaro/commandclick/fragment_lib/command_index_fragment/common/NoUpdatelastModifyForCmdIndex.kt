@@ -8,6 +8,7 @@ class NoUpdatelastModifyForCmdIndex {
         UsePath.cmdclickAppHistoryDirAdminPath,
         UsePath.cmdclickAppDirAdminPath,
         UsePath.cmdclickConfigDirPath,
+        UsePath.cmdclickSystemAppDirPath
     )
     fun judge(
         currentAppDirPath: String

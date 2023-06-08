@@ -10,6 +10,9 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
@@ -144,6 +147,13 @@ class ToolBarSettingButtonControl(
                 MenuEnums.CONFIG.itemId -> {
                     configEdit()
                 }
+                MenuEnums.CC_IMPORT.itemId -> {
+                    SystemFannelLauncher.launch(
+                        cmdIndexFragment,
+                        UsePath.cmdclickSystemAppDirPath,
+                        UsePath.ccImportManagerFannelName
+                    )
+                }
                 MenuEnums.TERMUX_SETUP.itemId -> {
                     val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
@@ -259,10 +269,11 @@ internal enum class MenuEnums(
     ADD(mainMenuGroupId, 60100, 1, "add"),
     SETTING(mainMenuGroupId, 60300, 3, "setting"),
     CHDIR(submenuSettingGroupId, 60301, 1, "change_app_dir"),
-    SHORTCUT(submenuSettingGroupId, 60302, 2, "create_short_cut"),
-    TERM_REFRESH(submenuSettingGroupId, 60303, 3, "term_refresh"),
-    TERMUX_SETUP(submenuSettingGroupId, 60304, 4, "termux_setup"),
-    CONFIG(submenuSettingGroupId, 60305, 5, "config"),
+    CC_IMPORT(submenuSettingGroupId, 60302, 2, "cc_import_manager"),
+    SHORTCUT(submenuSettingGroupId, 60303, 3, "create_short_cut"),
+    TERM_REFRESH(submenuSettingGroupId, 60304, 4, "term_refresh"),
+    TERMUX_SETUP(submenuSettingGroupId, 60305, 5, "termux_setup"),
+    CONFIG(submenuSettingGroupId, 60306, 6, "config"),
     SELECTTERM(mainMenuGroupId, 60400, 4, "select_term"),
     TERM1(submenuTermSlectGroupId, 60401, 1, "term_1"),
     TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),
