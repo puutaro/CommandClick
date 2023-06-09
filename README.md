@@ -206,6 +206,7 @@ At the same time, if you installed code editor, edit new file.
 			`add` -> add item   
 			`write` -> edit item by editor     
 			`cat` -> show time file contents   
+			`desc` -> show description   
 			`copy_path` -> copy item file path   
 			`copy_file` -> copy item file to other directory  
 			`editC` -> edit command variables  
