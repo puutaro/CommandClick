@@ -3,12 +3,12 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.content.Context
 import android.view.View
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatched
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -92,6 +92,20 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.setOnClickListener { view ->
             when (toolbarButtonBariantForEdit) {
                 ToolbarButtonBariantForEdit.HISTORY -> {
+                    val editExecuteTerminalFragment = TargetFragmentInstance()
+                        .getFromFragment<TerminalFragment>(
+                            editFragment.activity,
+                            context?.getString(R.string.edit_execute_terminal_fragment)
+                        )
+                    if(
+                        editExecuteTerminalFragment != null
+                    ){
+                        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+                        listener?.onKeyBoardVisibleChangeForEditFragment(
+                            false,
+                            true
+                        )
+                    }
                     HistoryBottunSwitcher.switch(
                         editFragment,
                         view,
@@ -118,6 +132,10 @@ class ToolbarButtonProducerForEdit(
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING -> {
+                    if(
+                        editFragment.terminalOn
+                        == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+                    ) return@setOnClickListener
                     val existEditExecuteTerminalFragment = ExistTerminalFragment
                         .how(
                             editFragment,
@@ -126,9 +144,7 @@ class ToolbarButtonProducerForEdit(
                             )
                         )
                     if(
-                        editFragment.editTerminalInitType
-                        == EditInitType.TERMINAL_SHRINK
-                        || existEditExecuteTerminalFragment == null
+                        existEditExecuteTerminalFragment?.isVisible != true
                     ) {
                         Toast.makeText(
                             view.context,
@@ -196,7 +212,9 @@ class ToolbarButtonProducerForEdit(
                             R.string.edit_execute_terminal_fragment
                         )
                     )
-                if(existEditExecuteTerminalFragment == null){
+                if(
+                    existEditExecuteTerminalFragment == null
+                ){
                     Toast.makeText(
                         view.context,
                         "no working",

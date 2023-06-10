@@ -17,6 +17,7 @@
         android:stopWithTask="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
+        android:extractNativeLibs="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_cmdclick_launcher"

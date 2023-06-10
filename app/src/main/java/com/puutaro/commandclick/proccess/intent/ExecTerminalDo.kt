@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
-import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent.Companion.execSetTermSizeForIntent
+import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
@@ -61,7 +61,7 @@ object ExecTerminalDo {
                 settingSectionEnd,
             )
 
-        execSetTermSizeForIntent(
+        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
             currentFragment,
             substituteSettingVariableList,
         )

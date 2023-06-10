@@ -101,6 +101,11 @@ object ConfigFromStartUpFileSetterForTerm {
             settingSectionEnd
         )
 
+        terminalFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
+            settingVariableList,
+            CommandClickScriptVariable.TERMINAL_DO
+        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+
         terminalFragment.ignoreHistoryPathList = SettingVariableReader.getStrListByReplace(
             settingVariableList,
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,

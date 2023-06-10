@@ -96,11 +96,6 @@ class CommandIndexFragment: Fragment() {
             UsePath.cmdclickDefaultAppDirName +
                     CommandClickScriptVariable.JS_FILE_SUFFIX
         )
-//        CommandClickScriptVariable.makeAppDirAdminFile(
-//            UsePath.cmdclickAppDirAdminPath,
-//            UsePath.cmdclickSystemAppDirName +
-//                    CommandClickScriptVariable.JS_FILE_SUFFIX
-//        )
 
         CommandClickScriptVariable.makeConfigJsFile(
             UsePath.cmdclickConfigDirPath,

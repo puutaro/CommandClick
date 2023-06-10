@@ -63,6 +63,11 @@ import java.net.URLDecoder
 class WithIndexListView(
     private val editFragment: EditFragment
 ) {
+    companion object {
+        val pxHeightNoTerminal = 85
+        val pxHeightOnTerminal = 49
+        val pxHeightOnKeyboard = 48
+    }
     private val context = editFragment.context
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val noExtend = "NoExtend"
@@ -233,9 +238,13 @@ class WithIndexListView(
 
         val fileList = makeFileList()
         val linearLayoutForTotal = LinearLayout(context)
+        linearLayoutForTotal.tag = editFragment.indexListLinearLayoutTagName
         val linearLayoutParamForTotal = LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            pxHeightCalculate(editFragment)
+            PxHeightCalculateForIndexList.culc(
+                editFragment,
+                editFragment.terminalOn
+            )
         )
 
         linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
@@ -1034,26 +1043,34 @@ private fun execAddSettingSubMenu(
     }
 }
 
-fun pxHeightCalculate(
-        editFragment: EditFragment
-    ): Int {
-    val defaultPxHeight = 300
-    val pxHeight = if(
-        Build.VERSION.SDK_INT > 30
-    ) {
-        val windowMetrics =
-            editFragment.activity?.windowManager?.currentWindowMetrics
-                ?: return defaultPxHeight
-        windowMetrics.bounds.height()
-    } else {
-        val display = editFragment.activity?.windowManager?.getDefaultDisplay()
-        val outMetrics = DisplayMetrics()
-        display?.getMetrics(outMetrics)
-        outMetrics.heightPixels
+private object PxHeightCalculateForIndexList {
+    fun culc(
+        editFragment: EditFragment,
+        terminalOn: String
+    ): Int
+    {
+        val defaultPxHeight = 300
+        val pxHeight = if (
+            Build.VERSION.SDK_INT > 30
+        ) {
+            val windowMetrics =
+                editFragment.activity?.windowManager?.currentWindowMetrics
+                    ?: return defaultPxHeight
+            windowMetrics.bounds.height()
+        } else {
+            val display = editFragment.activity?.windowManager?.getDefaultDisplay()
+            val outMetrics = DisplayMetrics()
+            display?.getMetrics(outMetrics)
+            outMetrics.heightPixels
+        }
+        val heightRate = if (
+            terminalOn
+            != SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+        ) WithIndexListView.pxHeightOnTerminal
+        else WithIndexListView.pxHeightNoTerminal
+        return (pxHeight * heightRate) / 100
     }
-    return (pxHeight * 49) / 100
 }
-
 enum class preMenuType {
     sync,
     delete,

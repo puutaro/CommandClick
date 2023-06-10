@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.util.*
 
 object ConfigFromScriptFileSetter {
@@ -30,6 +29,7 @@ object ConfigFromScriptFileSetter {
         )
 
         val context = editFragment.context
+
         val currentShellContentsList = ReadText(
             currentAppDirPath,
             currentShellFileName
@@ -158,26 +158,5 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
-        val onTerminalShrink = editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                || editFragment.terminalOn == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
-        if(
-            editFragment.languageType != LanguageTypeSelects.JAVA_SCRIPT
-            && onTerminalShrink
-        ) {
-            editFragment.editTerminalInitType = EditInitType.TERMINAL_SHRINK
-            val listener = context
-                    as? EditFragment.OnTerminalWebViewInitListenerForEdit
-            listener?.onTerminalWebViewInitForEdit(
-                EditInitType.TERMINAL_SHRINK,
-            )
-        } else {
-            editFragment.editTerminalInitType = EditInitType.TERMINAL_SHOW
-            val listener = context
-                    as? EditFragment.OnTerminalWebViewInitListenerForEdit
-            listener?.onTerminalWebViewInitForEdit(
-                EditInitType.TERMINAL_SHOW,
-            )
-        }
-
     }
 }

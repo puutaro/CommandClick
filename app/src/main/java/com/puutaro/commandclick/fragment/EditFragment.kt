@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ListIndexSizingToKeyboard
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
@@ -67,7 +69,6 @@ class EditFragment: Fragment() {
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
-    var editTerminalInitType = EditInitType.TERMINAL_SHRINK
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
@@ -78,6 +79,7 @@ class EditFragment: Fragment() {
     var execEditBtnLongPress = String()
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
+    val indexListLinearLayoutTagName = "indexListLinearLayoutTagName"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -196,9 +198,11 @@ class EditFragment: Fragment() {
             CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
         ) as String
 
+        ConfigFromScriptFileSetter.set(
+            this,
+        )
         if(
             UpdatelastModifyForEdit().judge(currentAppDirPath)
-            && tag != apiEditFragmentTag
         ) {
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
@@ -207,9 +211,6 @@ class EditFragment: Fragment() {
             FileSystems.updateLastModified(
                 currentAppDirPath,
                 currentShellFileName
-            )
-            ConfigFromScriptFileSetter.set(
-                this,
             )
             val pageSearchToolbarManagerForEdit =
                 PageSearchToolbarManagerForEdit(this)
@@ -224,6 +225,7 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
         }
+
 
         binding.editTextView.text = EditFragmentTitle.make(
             this,
@@ -270,6 +272,10 @@ class EditFragment: Fragment() {
                 )
                 return@setEventListener
             }
+            ListIndexSizingToKeyboard.handle(
+                this,
+                isOpen
+            )
             binding.editToolBarLinearLayout.isVisible = if(
                 isOpen
             ) !existIndexList

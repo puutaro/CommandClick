@@ -30,6 +30,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPrefere
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermMinimumForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
@@ -47,6 +48,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButto
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
+import org.eclipse.jgit.diff.Edit
 import java.util.*
 
 
@@ -63,6 +65,7 @@ class MainActivity:
     TerminalFragment.OnSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
+    TerminalFragment.OnTermSizeMinimumListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -277,6 +280,12 @@ class MainActivity:
         ExecTermLongChangeHandlerForTerm.handle(
             this,
             ChangeTargetFragment.CMD_VARIABLES_EDIT_FRAGMENT,
+        )
+    }
+
+    override fun onTermSizeMinimumForTerm() {
+        ExecTermMinimumForEdit.min(
+            this
         )
     }
 

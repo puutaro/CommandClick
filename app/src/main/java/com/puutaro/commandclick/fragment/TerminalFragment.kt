@@ -22,6 +22,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
@@ -43,6 +44,7 @@ class TerminalFragment: Fragment() {
     var firstDisplayUpdateRunner: Runnable? = null
     var lastDisplayUpdateRunner: Runnable? = null
     private var outputFileLength: Int = 0
+    var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var firstDisplayUpdate = true
     var onHistoryUrlTitle = CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
     var onAdBlock = CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE
@@ -135,6 +137,11 @@ class TerminalFragment: Fragment() {
             terminalViewModel,
         )
         return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
+        TerminalOnHandlerForEdit.handle(this)
     }
 
 
@@ -270,4 +277,9 @@ class TerminalFragment: Fragment() {
             preSelectedMultiModelArray: ArrayList<Int>
         )
     }
+
+    interface OnTermSizeMinimumListenerForTerm {
+        fun onTermSizeMinimumForTerm()
+    }
+
 }

@@ -12,6 +12,7 @@
 
 
 /// SETTING_SECTION_START
+terminalDo="OFF"
 editExecute="ALWAYS"
 overrideItemClickExec="ON"
 terminalFontZoom="0"

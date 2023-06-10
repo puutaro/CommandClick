@@ -71,5 +71,6 @@ dependencies {
     implementation("com.github.abumoallim:Android-Multi-Select-Dialog:v1.9")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
     implementation("org.jsoup:jsoup:1.7.3")
+//    implementation("ro.holdone:keyboardheightprovider:1.0.3")
 //    implementation("org.nanohttpd:nanohttpd-webserver:2.3.1")
 }
