@@ -16,6 +16,9 @@ object ListIndexSizingToKeyboard {
         editFragment: EditFragment,
         isOpen: Boolean
     ){
+        if(
+            !editFragment.existIndexList
+        ) return
         val activity = editFragment.activity
         val context = editFragment.context
         val binding = editFragment.binding
@@ -28,10 +31,6 @@ object ListIndexSizingToKeyboard {
             binding.editListLinearLayout.findViewWithTag<LinearLayout>(
                 indexListLinearLayoutTagName
             )
-        val terminalOn = if(
-            isOpen
-        ) SettingVariableSelects.Companion.TerminalDoSelects.ON.name
-        else SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
         val pxHeight = PxHeightCalculateForIndexList.culc(
             editFragment,
             editFragment.terminalOn,
