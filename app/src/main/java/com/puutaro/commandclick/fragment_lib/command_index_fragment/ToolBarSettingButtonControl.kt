@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.widget.ArrayAdapter
 import android.widget.PopupMenu
@@ -11,8 +12,6 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
@@ -24,6 +23,7 @@ import com.puutaro.commandclick.proccess.EnableGoForwardForWebVeiw
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 private val mainMenuGroupId = 1
@@ -103,7 +103,7 @@ class ToolBarSettingButtonControl(
                     itemId,
                     it.order,
                     it.itemName
-                ).setCheckable(true).setChecked(checked);
+                ).setCheckable(true).setChecked(checked)
             }
             popup.menu.add(
                 MenuEnums.ADD.groupId,
@@ -139,9 +139,10 @@ class ToolBarSettingButtonControl(
                     print("pass")
                 }
                 MenuEnums.CHDIR.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.CHDIR
+                    SystemFannelLauncher.launch(
+                        cmdIndexFragment,
+                        UsePath.cmdclickSystemAppDirPath,
+                        UsePath.appDirManagerFannelName
                     )
                 }
                 MenuEnums.CONFIG.itemId -> {
@@ -222,8 +223,9 @@ class ToolBarSettingButtonControl(
         }
     }
 
+
     private fun configEdit(){
-        val configDirPath = UsePath.cmdclickConfigDirPath
+        val configDirPath = UsePath.cmdclickSystemAppDirPath
         val configShellName = UsePath.cmdclickConfigFileName
         CommandClickScriptVariable.makeConfigJsFile(
             configDirPath,
@@ -247,11 +249,30 @@ class ToolBarSettingButtonControl(
             )
             return
         }
+        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
+        val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        SharePreffrenceMethod.putSharePreffrence(
+            sharedPref,
+            mapOf(
+                SharePrefferenceSetting.current_app_dir.name
+                        to UsePath.cmdclickSystemAppDirPath,
+                SharePrefferenceSetting.current_script_file_name.name
+                        to cmdclickConfigFileName,
+                SharePrefferenceSetting.on_shortcut.name
+                        to FragmentTagManager.Suffix.ON.name
+            )
+        )
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            UsePath.cmdclickSystemAppDirPath,
+            cmdclickConfigFileName,
+            FragmentTagManager.Suffix.ON.name
+        )
         val listener = cmdIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
-            context?.getString(R.string.cmd_config_variable_edit_fragment)
+            cmdEditFragmentTag
         )
     }
 }
@@ -294,7 +315,7 @@ private fun execAddSettingSubMenu(
         addMenuEnums.itemId,
         addMenuEnums.order,
         addMenuEnums.itemName
-    );
+    )
     (MenuEnums.values()).forEach{
         val groupId = it.groupId
         if( groupId != submenuGroupId) return@forEach

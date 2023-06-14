@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
+package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
 
 import android.R
 import android.app.AlertDialog
@@ -15,41 +15,7 @@ import java.io.File
 
 object CopyAppDirEventForEdit {
 
-    fun invoke(
-        editFragment: EditFragment,
-        currentAppDirPath: String,
-        scriptScriptName: String,
-    ){
-        val context = editFragment.context
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-        editText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Input, destination App dir name"
-            )
-            .setMessage("\tcurrent app dir name: ${scriptScriptName}")
-            .setView(editText)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                execCopyAppDir(
-                    editFragment,
-                    currentAppDirPath,
-                    scriptScriptName,
-                    editText
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
-        )
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-    }
-
-    private fun execCopyAppDir(
+    fun execCopyAppDir(
         editFragment: EditFragment,
         currentAppDirPath: String,
         scriptScriptName: String,

@@ -4,11 +4,11 @@ import android.webkit.JavascriptInterface
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
@@ -71,9 +71,15 @@ class JsEdit(
     ): String {
         val editTextId = editViewModel.variableNameToEditTextIdMap.get(targetVariableName)
             ?: return String()
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            terminalFragment.currentAppDirPath,
+            terminalFragment.currentScriptName,
+            FragmentTagManager.Suffix.ON.str
+        )
         val editFragment = TargetFragmentInstance().getFromFragment<EditFragment>(
             activity,
-            context?.getString(R.string.cmd_variable_edit_fragment)
+            cmdEditFragmentTag
         ) ?: return String()
         val binding = editFragment.binding
         val editLinearLayout = binding.editLinearLayout

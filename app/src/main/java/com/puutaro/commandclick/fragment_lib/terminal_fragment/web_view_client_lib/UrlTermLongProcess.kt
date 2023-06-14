@@ -1,11 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
-import com.puutaro.commandclick.proccess.IndexOrEditFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object UrlTermLongProcess {

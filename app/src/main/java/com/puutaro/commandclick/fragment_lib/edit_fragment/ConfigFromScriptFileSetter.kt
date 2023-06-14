@@ -1,9 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 
 object ConfigFromScriptFileSetter {
 
@@ -16,7 +16,7 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.on_shortcut
         )
         if (
-            onShortcut != ShortcutOnValueStr.ON.name
+            onShortcut != FragmentTagManager.Suffix.ON.name
         ) return
 
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -27,8 +27,6 @@ object ConfigFromScriptFileSetter {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-
-        val context = editFragment.context
 
         val currentShellContentsList = ReadText(
             currentAppDirPath,
@@ -70,9 +68,40 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
             editFragment.statusBarIconColorMode,
             SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
-            editFragment.urlHistoryOrButtonExec,
+            editFragment.statusBarIconColorMode,
             listOf(
                 SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
+            ),
+        )
+
+        editFragment.disableSettingButton = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DISABLE_SETTING_BUTTON,
+            CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
+            String(),
+            CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.Companion.disableSettingButtonSelects.ON.name
+            ),
+        )
+        editFragment.disableEditButton = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DISABLE_EDIT_BUTTON,
+            CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
+            String(),
+            CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.Companion.disableEditButtonSelects.ON.name
+            ),
+        )
+        editFragment.disablePlayButton = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DISABLE_PLAY_BUTTON,
+            CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
+            String(),
+            CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.Companion.disablePlayButtonSelects.ON.name
             ),
         )
 
@@ -119,12 +148,19 @@ object ConfigFromScriptFileSetter {
             String()
         )
 
+        editFragment.passCmdVariableEdit = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT,
+            String(),
+        )
+
         val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
             settingVariableList,
             CommandClickScriptVariable.HOME_SCRIPT_URL,
             currentShellFileName,
             currentAppDirPath,
         )
+
 
         editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
             val enableSuffix = it.endsWith(
@@ -151,8 +187,9 @@ object ConfigFromScriptFileSetter {
         ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameListSource
 
         if(
-            editFragment.tag ==
-            editFragment.context?.getString(R.string.setting_variable_edit_fragment)
+            editFragment.tag?.startsWith(
+                FragmentTagManager.Prefix.settingEditPrefix.str
+            ) == true
         ) return
         editFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
             settingVariableList,

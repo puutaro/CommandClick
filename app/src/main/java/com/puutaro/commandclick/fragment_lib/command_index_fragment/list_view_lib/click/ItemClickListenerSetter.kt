@@ -3,13 +3,11 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.Context
 import android.widget.ArrayAdapter
 import android.widget.ListView
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppDirectoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnOnceEditExecuteEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
@@ -27,8 +25,6 @@ object ItemClickListenerSetter {
     ){
         val activity = cmdIndexFragment.activity
         val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-        val context = cmdIndexFragment.context
-        val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
@@ -77,9 +73,6 @@ object ItemClickListenerSetter {
             ) return@setOnItemClickListener
             val currentFragmentTag =
                 cmdIndexFragment.tag ?: String()
-            val appDirAdminTag = context?.getString(
-                R.string.app_dir_admin
-            )
 
             val shellContentsList = ReadText(
                 currentAppDirPath,
@@ -128,8 +121,9 @@ object ItemClickListenerSetter {
                 SettingVariableSelects.Companion.EditExecuteSelects.ONCE.name -> {
                     val editFragmentTag = DecideEditTag(
                         shellContentsList,
+                        currentAppDirPath,
                         selectedShellFileName
-                    ).decide(context) ?: return@setOnItemClickListener
+                    ).decide() ?: return@setOnItemClickListener
                     OnOnceEditExecuteEvent.invoke(
                         cmdIndexFragment,
                         sharedPref,
@@ -141,8 +135,9 @@ object ItemClickListenerSetter {
                 SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name -> {
                     val editFragmentTag = DecideEditTag(
                         shellContentsList,
+                        currentAppDirPath,
                         selectedShellFileName
-                    ).decide(context) ?: return@setOnItemClickListener
+                    ).decide() ?: return@setOnItemClickListener
 
                     OnEditExecuteEvent.invoke(
                         cmdIndexFragment,
@@ -153,23 +148,11 @@ object ItemClickListenerSetter {
                     return@setOnItemClickListener
                 }
             }
-            if (
-                currentFragmentTag == cmdIndexFragmentTag
-            ) {
-                ExecJsOrSellHandler.handle(
-                    cmdIndexFragment,
-                    currentAppDirPath,
-                    selectedShellFileName,
-                )
-            } else if(
-                currentFragmentTag == appDirAdminTag
-            ) {
-                AppDirectoryAdminEvent.invoke(
-                    sharedPref,
-                    currentAppDirPath,
-                    selectedShellFileName
-                )
-            }
+            ExecJsOrSellHandler.handle(
+                cmdIndexFragment,
+                currentAppDirPath,
+                selectedShellFileName,
+            )
 
             cmdListAdapter.clear()
             CommandListManager.execListUpdate(

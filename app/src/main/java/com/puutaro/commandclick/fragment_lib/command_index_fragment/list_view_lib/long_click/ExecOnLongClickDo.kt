@@ -6,6 +6,7 @@ import android.content.Context
 import android.view.MenuItem
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -86,13 +87,9 @@ object ExecOnLongClickDo {
                 }
                 val editFragmentTag = DecideEditTag(
                     shellContentsList,
+                    currentAppDirPath,
                     shellScriptName
-                ).decide(
-                    context,
-                    context?.getString(
-                        com.puutaro.commandclick.R.string.setting_variable_edit_fragment
-                    )
-                )
+                ).decideForEdit()
                 val listener = cmdIndexFragment.context
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                 listener?.onLongClickMenuItemsforCmdIndex(
@@ -138,23 +135,6 @@ object ExecOnLongClickDo {
                     shellScriptName,
                     cmdListAdapter,
                 ).invoke()
-            }
-             R.id.shell_script_menu_copy_app_dir -> {
-                CopyAppDirEvent(
-                    cmdIndexFragment,
-                    currentAppDirPath,
-                    shellScriptName,
-                    cmdListAdapter,
-                ).invoke()
-            }
-            R.id.shell_script_menu_add -> {
-                AddConfirmDialog.show(
-                    cmdIndexFragment,
-                    cmdListAdapter,
-                    currentAppDirPath,
-                    cmdListView
-                )
-                return contextItemSelected
             }
             R.id.shell_script_menu_description -> {
                 ScriptFileDescription.show(

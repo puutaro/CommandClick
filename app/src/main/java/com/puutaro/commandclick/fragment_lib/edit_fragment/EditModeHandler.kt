@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 import kotlinx.coroutines.*
 
 
@@ -22,19 +23,21 @@ class EditModeHandler(
 
     private val context = editFragment.context
     private val currentEditFragmentTag = editFragment.tag
-    private val cmdVariableEditTagFName = context?.getString(
-        R.string.cmd_variable_edit_fragment
-    )
-    private val cmdConfigEditTagFName = context?.getString(
-        R.string.cmd_config_variable_edit_fragment
-    )
-    private val settingVariableEditTagFName = context?.getString(
-        R.string.setting_variable_edit_fragment
-    )
-    private val apiEditTagName = context?.getString(
-        R.string.api_cmd_variable_edit_api_fragment
-    )
-    private val enableCmdEdit = currentEditFragmentTag == cmdVariableEditTagFName
+    private val onPassCmdVariableEdit =
+        editFragment.passCmdVariableEdit ==
+                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+    private val enableCmdEdit = currentEditFragmentTag?.startsWith(
+        FragmentTagManager.Prefix.cmdEditPrefix.str
+    ) == true
+    private val onDisableSettingButton =
+        editFragment.disableSettingButton ==
+                SettingVariableSelects.Companion.disableSettingButtonSelects.ON.name
+    private val onDisableEditButton =
+        editFragment.disableSettingButton ==
+                SettingVariableSelects.Companion.disableEditButtonSelects.ON.name
+    private val onDisablePlayButton =
+        editFragment.disablePlayButton ==
+                SettingVariableSelects.Companion.disablePlayButtonSelects.ON.name
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
@@ -53,7 +56,7 @@ class EditModeHandler(
     private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
-    ) == ShortcutOnValueStr.ON.name
+    ) == FragmentTagManager.Suffix.ON.name
 
     private val enableEditExecute =
         (editExecuteValue == SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
@@ -80,8 +83,10 @@ class EditModeHandler(
 
     fun execByHowFullEdit(){
         if(
-            currentEditFragmentTag != settingVariableEditTagFName
-            && currentEditFragmentTag != cmdConfigEditTagFName
+            currentEditFragmentTag?.startsWith(
+                FragmentTagManager.Prefix.settingEditPrefix.str
+            ) != true
+            && !onPassCmdVariableEdit
         ) {
             editCommandVariable()
         }
@@ -125,11 +130,6 @@ class EditModeHandler(
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
-            howActive = (
-                        editFragment.tag != context?.getString(
-                            R.string.api_cmd_variable_edit_api_fragment
-                        )
-                    )
         )
 
         buttonCreate(
@@ -137,7 +137,8 @@ class EditModeHandler(
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentShellContentsList,
             editExecuteValue=editExecuteValue,
-            setDrawble = setDrawbleForOk()
+            setDrawble = setDrawbleForOk(),
+            howActive = !onDisablePlayButton
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
@@ -148,18 +149,17 @@ class EditModeHandler(
         )
         editTextProducerForEdit.adds()
 
-        val onEditButton = (
-                currentEditFragmentTag != cmdConfigEditTagFName
-                        && currentEditFragmentTag != apiEditTagName)
+        val onEditButton = !onPassCmdVariableEdit
+
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentShellContentsList,
-            howActive=onEditButton
+            howActive=onEditButton && !onDisableEditButton
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
-            howActive=enableEditExecute
+            howActive=enableEditExecute && !onDisableSettingButton
         )
     }
 

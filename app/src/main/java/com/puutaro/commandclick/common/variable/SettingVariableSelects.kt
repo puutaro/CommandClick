@@ -89,6 +89,21 @@ class SettingVariableSelects {
             ON,
             OFF
         }
+
+        enum class disableSettingButtonSelects {
+            ON,
+            OFF
+        }
+
+        enum class disablePlayButtonSelects {
+            ON,
+            OFF
+        }
+
+        enum class disableEditButtonSelects {
+            ON,
+            OFF
+        }
     }
 
 }

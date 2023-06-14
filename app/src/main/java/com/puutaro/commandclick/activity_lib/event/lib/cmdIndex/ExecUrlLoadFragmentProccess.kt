@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
+import android.content.Context
 import android.util.Log
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
@@ -7,10 +8,13 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
 import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object ExecUrlLoadFragmentProccess {
@@ -56,14 +60,26 @@ object ExecUrlLoadFragmentProccess {
     ){
         val terminalViewModel: TerminalViewModel =
             ViewModelProvider(activity).get(TerminalViewModel::class.java)
-        val editFragmentTag = activity.getString(R.string.cmd_variable_edit_fragment)
+        val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_app_dir
+            ),
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_script_file_name
+            ),
+            FragmentTagManager.Suffix.ON.str
+        )
         val supportFragmentManager = activity.supportFragmentManager
         val editFragment = try {
             supportFragmentManager.findFragmentByTag(
-                editFragmentTag
+                cmdEditFragmentTag
             ) as EditFragment
         } catch(e: java.lang.Exception){
-            Log.d(this.toString(), "not exist ${editFragmentTag}")
+            Log.d(this.toString(), "not exist ${cmdEditFragmentTag}")
             return
         }
         if(!editFragment.isVisible) return
@@ -75,7 +91,7 @@ object ExecUrlLoadFragmentProccess {
             false
         )
         ExecTerminalLongOrShort.open<CommandIndexFragment>(
-            editFragmentTag,
+            cmdEditFragmentTag,
             supportFragmentManager,
             terminalViewModel
         )

@@ -4,16 +4,18 @@ import android.content.*
 import android.os.Build
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
 import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
-import com.puutaro.commandclick.activity_lib.event.lib.app_some_admin.ExecSomeAdmin
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCmdListAjustForKeyboard
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.ShortCutManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -52,9 +54,28 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 shortCutManager.createShortCut()
             }
             ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
+                val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
+                val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+                SharePreffrenceMethod.putSharePreffrence(
+                    sharedPref,
+                    mapOf(
+                        SharePrefferenceSetting.current_app_dir.name
+                                to UsePath.cmdclickSystemAppDirPath,
+                        SharePrefferenceSetting.current_script_file_name.name
+                                to cmdclickConfigFileName,
+                        SharePrefferenceSetting.on_shortcut.name
+                                to FragmentTagManager.Suffix.ON.str
+                    )
+                )
+                val cmdEditFragmentTag = FragmentTagManager.makeTag(
+                    FragmentTagManager.Prefix.cmdEditPrefix.str,
+                    UsePath.cmdclickSystemAppDirPath,
+                    cmdclickConfigFileName,
+                    FragmentTagManager.Suffix.ON.str
+                )
                 WrapFragmentManager.changeFragmentEdit(
                     activity.supportFragmentManager,
-                    activity.getString(R.string.cmd_config_variable_edit_fragment),
+                    cmdEditFragmentTag,
                     String()
                 )
             }
@@ -75,12 +96,6 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 activity.finish()
                 activity.startActivity(execIntent)
-            }
-            ToolbarMenuCategoriesVariantForCmdIndex.CHDIR -> {
-                ExecSomeAdmin.execSomeAdmin(
-                    activity,
-                    activity.getString(R.string.app_dir_admin)
-                )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.FORWARD -> {
                 ExecGoForword.execGoForword(

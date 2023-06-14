@@ -21,10 +21,6 @@ class StartupOrEditExecuteOnceShell {
         ) {
 
             val context = cmdIndexCommandIndexFragment.context
-            val appDirAdminTag = context?.getString(R.string.app_dir_admin)
-            if(
-                cmdIndexCommandIndexFragment.tag == appDirAdminTag
-            ) return
 
             val activity = cmdIndexCommandIndexFragment.activity
             val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(

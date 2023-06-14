@@ -61,40 +61,6 @@ object ConfirmDialogForDelete {
                     cmdListAdapter,
                     cmdListView,
                 )
-                if(currentAppDirPath == UsePath.cmdclickAppDirAdminPath){
-                    val deleteAppDirName = scriptFileName.removeSuffix(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
-                    )
-                    val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                    val displayDeleteAppDirPath =
-                        "${
-                            UsePath.makeTermuxPathByReplace(
-                            cmdclickAppDirPath
-                        )}/${deleteAppDirName}"
-                    val alertDialogForAppDirAdmin = AlertDialog.Builder(context)
-                        .setTitle(
-                            "Delete bellow App dir, ok?"
-                        )
-                        .setMessage(
-                            "\tpath: ${displayDeleteAppDirPath}"
-                        )
-                        .setPositiveButton("OK", DialogInterface.OnClickListener {
-                                dialogForAppDirAdmin, whichForAppDirAdmin ->
-                            val deleteAppDirPath = "${cmdclickAppDirPath}/${deleteAppDirName}"
-                            FileSystems.removeDir(
-                                deleteAppDirPath
-                            )
-                        })
-                        .setNegativeButton("NO", null)
-                        .show()
-                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                        context?.getColor(R.color.black) as Int
-                    )
-                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                        context.getColor(R.color.black) as Int
-                    )
-
-                }
             })
             .setNegativeButton("NO", null)
             .show()

@@ -11,7 +11,7 @@ object LongClickJsMaker {
     ){
         if(
             terminalFragment.currentAppDirPath == UsePath.cmdclickAppDirAdminPath
-            || terminalFragment.currentAppDirPath == UsePath.cmdclickConfigDirPath
+            || terminalFragment.currentAppDirPath == UsePath.cmdclickSystemAppDirPath
         ) return
         execMake(
             terminalFragment,

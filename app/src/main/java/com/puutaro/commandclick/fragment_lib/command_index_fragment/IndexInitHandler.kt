@@ -17,26 +17,10 @@ object IndexInitHandler {
     fun handle(
         cmdIndexFragment: CommandIndexFragment
     ){
-        val context = cmdIndexFragment.context
         val activity = cmdIndexFragment.activity
         val startUpPref = cmdIndexFragment.activity?.getPreferences(
             Context.MODE_PRIVATE
         )
-        val appDirAdminTag = context?.getString(
-            R.string.app_dir_admin
-        )
-        if(
-            cmdIndexFragment.tag == appDirAdminTag
-        ){
-            SharePreffrenceMethod.putSharePreffrence(
-                startUpPref,
-                mapOf(
-                    SharePrefferenceSetting.current_app_dir.name
-                            to UsePath.cmdclickAppDirAdminPath,
-                )
-            )
-            return
-        }
 
         TerminalShower.show(
             cmdIndexFragment

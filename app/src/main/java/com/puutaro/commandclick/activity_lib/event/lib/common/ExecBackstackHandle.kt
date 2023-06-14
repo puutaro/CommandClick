@@ -1,17 +1,20 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
+import android.content.Context
 import android.view.KeyEvent
-import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -146,12 +149,22 @@ internal fun execBack(
         return
     }
 
-    val cmdVariableEditFragmentTag = activity.getString(R.string.cmd_variable_edit_fragment)
+    val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+    val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
+        FragmentTagManager.Prefix.cmdEditPrefix.str,
+        SharePreffrenceMethod.getStringFromSharePreffrence(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        ),
+        SharePreffrenceMethod.getStringFromSharePreffrence(
+            sharePref,
+            SharePrefferenceSetting.current_script_file_name
+        ),
+        FragmentTagManager.Suffix.ON.str
+    )
     val cmdVariableEditFragment = targetFragmentInstance.getFromActivity<EditFragment>(
         activity,
-        activity.getString(
-            R.string.cmd_variable_edit_fragment
-        )
+        cmdVariableEditFragmentTag
     )
 
     if(

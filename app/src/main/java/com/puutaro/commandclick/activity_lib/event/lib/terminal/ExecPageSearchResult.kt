@@ -1,9 +1,13 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object ExecPageSearchResult {
     fun reflect(
@@ -18,9 +22,22 @@ object ExecPageSearchResult {
         } catch (e: Exception) {
             null
         }
+        val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_app_dir
+            ),
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_script_file_name
+            ),
+            FragmentTagManager.Suffix.ON.str
+        )
         val cmdEditFragment = try {
             activity.supportFragmentManager.findFragmentByTag(
-                activity.getString(R.string.cmd_variable_edit_fragment)
+                cmdEditFragmentTag
             ) as EditFragment
         } catch (e: Exception) {
             null

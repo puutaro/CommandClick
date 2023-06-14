@@ -24,6 +24,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -33,6 +34,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
@@ -183,6 +185,26 @@ class WithIndexListView(
             Toast.LENGTH_LONG
         ).show()
     }
+
+    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+    var languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            languageType
+        )
+    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+    ) as String
+
+    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    var commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+    ) as String
+    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+    ) as String
 
     fun create(
         editParameters: EditParameters,
@@ -597,6 +619,13 @@ class WithIndexListView(
                 execAddItem()
                 return
             }
+            preMenuType.add_app_dir.name -> {
+                if(
+                    selectedItem == throughMark
+                ) return
+                execAddAppDir()
+                return
+            }
             preMenuType.copy_path.name -> {
                 execCopyPath(
                     selectedItem
@@ -607,6 +636,22 @@ class WithIndexListView(
                 execCopyFile(
                     selectedItem
                 )
+                return
+            }
+            preMenuType.copy_app_dir.name -> {
+                execCopyAppDir(
+                    selectedItem
+                )
+                return
+            }
+            preMenuType.rename_app_dir.name -> {
+                if(
+                    selectedItem == throughMark
+                ) return
+                execRenameForAppDirAdmin(
+                    selectedItem
+                )
+                updateFileList()
                 return
             }
             preMenuType.get.name -> {
@@ -679,6 +724,155 @@ class WithIndexListView(
             editFragment,
             execJsFilePath,
         )
+    }
+
+    private fun execAddAppDir(){
+        val context = editFragment.context
+        val editText = EditText(context)
+        editText.inputType = InputType.TYPE_CLASS_TEXT
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle(
+                "Input create app directory name"
+            )
+            .setView(editText)
+            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                val inputScriptFileName = editText.text.toString()
+                val jsFileSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
+                val isJsSuffix = inputScriptFileName.endsWith(jsFileSuffix)
+                val scriptFileName = if (
+                    isJsSuffix
+                ) inputScriptFileName
+                else inputScriptFileName + jsFileSuffix
+
+                CommandClickScriptVariable.makeAppDirAdminFile(
+                    UsePath.cmdclickAppDirAdminPath,
+                    scriptFileName
+                )
+                updateFileList()
+                val createAppDirName = if (
+                    isJsSuffix
+                ) {
+                    inputScriptFileName.removeSuffix(jsFileSuffix)
+                } else {
+                    inputScriptFileName
+                }
+                val createAppDirPath = "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
+                FileSystems.createDirs(
+                    createAppDirPath
+                )
+                FileSystems.createDirs(
+                    "${createAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+                )
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.window?.setGravity(Gravity.BOTTOM)
+    }
+
+    private fun execCopyAppDir(
+        selectedItem: String
+    ){
+        val context = editFragment.context
+        val editText = EditText(context)
+        editText.inputType = InputType.TYPE_CLASS_TEXT
+        editText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle(
+                "Input, destination App dir name"
+            )
+            .setMessage("\tcurrent app dir name: ${selectedItem}")
+            .setView(editText)
+            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                CopyAppDirEventForEdit.execCopyAppDir(
+                    editFragment,
+                    UsePath.cmdclickAppDirAdminPath,
+                    selectedItem,
+                    editText
+                )
+                updateFileList()
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.window?.setGravity(Gravity.BOTTOM)
+    }
+
+    private fun execRenameForAppDirAdmin(
+        selectedItem: String,
+    ){
+        val editTextForRenameAppDir = EditText(context)
+        val jsSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
+        editTextForRenameAppDir.setText(
+            selectedItem.removeSuffix(jsSuffix)
+        )
+        editTextForRenameAppDir.inputType = InputType.TYPE_CLASS_TEXT
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle(
+                "Rename app dir"
+            )
+            .setView(editTextForRenameAppDir)
+            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+                if(
+                    editTextForRenameAppDir.text.isNullOrEmpty()
+                ) {
+                    Toast.makeText(
+                        context,
+                        "No type item name",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@OnClickListener
+                }
+                val renamedAppDirNameSource = editTextForRenameAppDir.text.toString()
+                val renamedAppDirName = if(
+                    renamedAppDirNameSource.endsWith(jsSuffix)
+                ) renamedAppDirNameSource
+                else "${renamedAppDirNameSource}${jsSuffix}"
+                if(
+                    selectedItem == renamedAppDirName
+                ) return@OnClickListener
+                CommandClickScriptVariable.makeAppDirAdminFile(
+                    UsePath.cmdclickAppDirAdminPath,
+                    renamedAppDirName
+                )
+                FileSystems.removeFiles(
+                    UsePath.cmdclickAppDirAdminPath,
+                    selectedItem
+                )
+                val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+                val beforeMoveDirPath = cmdclickAppDirPath + '/' +
+                        selectedItem.removeSuffix(
+                            CommandClickScriptVariable.JS_FILE_SUFFIX
+                        )
+                val afterMoveDirPath = cmdclickAppDirPath + '/' +
+                        renamedAppDirName.removeSuffix(
+                            CommandClickScriptVariable.JS_FILE_SUFFIX
+                        )
+                FileSystems.moveDirectory(
+                    beforeMoveDirPath,
+                    afterMoveDirPath,
+                )
+                updateFileList()
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.window?.setGravity(Gravity.BOTTOM)
     }
 
     private fun execShowDescription(
@@ -821,6 +1015,43 @@ class WithIndexListView(
                     "${filterDir}/${deleteFannelDir}"
                 )
                 updateFileList()
+                if(
+                    filterDir.removeSuffix("/")
+                    == UsePath.cmdclickAppDirAdminPath
+                ){
+                    val deleteAppDirName = selectedItem.removeSuffix(
+                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                    )
+                    val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+                    val displayDeleteAppDirPath =
+                        "${
+                            UsePath.makeTermuxPathByReplace(
+                                cmdclickAppDirPath
+                            )}/${deleteAppDirName}"
+                    val alertDialogForAppDirAdmin = AlertDialog.Builder(context)
+                        .setTitle(
+                            "Delete bellow App dir, ok?"
+                        )
+                        .setMessage(
+                            "\tpath: ${displayDeleteAppDirPath}"
+                        )
+                        .setPositiveButton("OK", DialogInterface.OnClickListener {
+                                dialogForAppDirAdmin, whichForAppDirAdmin ->
+                            val deleteAppDirPath = "${cmdclickAppDirPath}/${deleteAppDirName}"
+                            FileSystems.removeDir(
+                                deleteAppDirPath
+                            )
+                        })
+                        .setNegativeButton("NO", null)
+                        .show()
+                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+                        context?.getColor(R.color.black) as Int
+                    )
+                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+                        context.getColor(R.color.black) as Int
+                    )
+
+                }
             })
             .setNegativeButton("NO", null)
             .show()
@@ -1076,9 +1307,12 @@ enum class preMenuType {
     delete,
     write,
     add,
+    add_app_dir,
+    rename_app_dir,
     cat,
     copy_path,
     copy_file,
+    copy_app_dir,
     get,
     bookmark,
     editC,

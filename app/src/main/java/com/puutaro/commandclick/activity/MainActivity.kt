@@ -42,13 +42,15 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
-import org.eclipse.jgit.diff.Edit
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.util.*
 
 
@@ -168,9 +170,22 @@ class MainActivity:
     override fun onToolbarMenuCategoriesForEdit(
         toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
     ) {
+        val startUpPref = getPreferences(Context.MODE_PRIVATE)
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                startUpPref,
+                SharePrefferenceSetting.current_app_dir
+            ),
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                startUpPref,
+                SharePrefferenceSetting.current_script_file_name
+            ),
+            FragmentTagManager.Suffix.ON.name
+        )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(
             this,
-            getString(R.string.cmd_variable_edit_fragment),
+            cmdEditFragmentTag,
             toolbarMenuCategoriesVariantForCmdIndex
         )
     }
@@ -263,7 +278,6 @@ class MainActivity:
     ) {
         ExecListItemClick.invoke(
             this,
-            currentFragmentTag
         )
     }
 

@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 import java.io.File
 
 class AppHistoryAdminEvent {
@@ -89,7 +90,7 @@ class AppHistoryAdminEvent {
             ) {
                 SharePrefferenceSetting.on_shortcut.defalutStr
             } else {
-                ShortcutOnValueStr.ON.name
+                FragmentTagManager.Suffix.ON.name
             }
             SharePreffrenceMethod.putSharePreffrence(
                 sharedPref,

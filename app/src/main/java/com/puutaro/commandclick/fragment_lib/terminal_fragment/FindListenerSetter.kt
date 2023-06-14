@@ -4,6 +4,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object FindListenerSetter {
@@ -15,6 +16,12 @@ object FindListenerSetter {
         binding.terminalWebView.setFindListener {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
+            val cmdEditFragmentTag = FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.cmdEditPrefix.str,
+                terminalFragment.currentAppDirPath,
+                terminalFragment.currentScriptName,
+                FragmentTagManager.Suffix.ON.str
+            )
             val commandIndexFragment =
                 TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
                     terminalFragment.activity,
@@ -23,7 +30,7 @@ object FindListenerSetter {
             val cmdEditFragment =
                 TargetFragmentInstance().getFromFragment<EditFragment>(
                     terminalFragment.activity,
-                    context?.getString(R.string.cmd_variable_edit_fragment)
+                    cmdEditFragmentTag
                 )
             val isNotVisibleCommandIndexFragment = commandIndexFragment?.isVisible != true
             val isNotVisibleCmdEditFragment = cmdEditFragment?.isVisible != true

@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
+import com.puutaro.commandclick.util.FragmentTagManager
 
 
 object ExecCommandEdit {
@@ -12,11 +12,10 @@ object ExecCommandEdit {
         onOpenTerminal: Boolean = false,
         terminalFragmentTagSource: String? = null
     ){
-        val context = activity.applicationContext
-        val cmdEditFragmentTagName = context.getString(R.string.cmd_variable_edit_fragment)
         val terminalFragmentTag = if(
             onOpenTerminal
-            && editFragmentTag == cmdEditFragmentTagName
+            && editFragmentTag.startsWith(FragmentTagManager.Prefix.cmdEditPrefix.str)
+            && editFragmentTag.endsWith(FragmentTagManager.Suffix.ON.str)
             && !terminalFragmentTagSource.isNullOrEmpty()
         ) {
             terminalFragmentTagSource

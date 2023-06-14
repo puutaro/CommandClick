@@ -28,14 +28,14 @@ setReplaceVariable="LIST_PREFIX=prefix"
 setReplaceVariable="LIST_SUFFIX=suffix"
 setReplaceVariable="CMDCLICK_ROOT_DIR_PATH=${00}"
 setReplaceVariable="CMDCLICK_CONF_DIR_PATH=${CMDCLICK_ROOT_DIR_PATH}/conf"
-setReplaceVariable="CMDCLICK_CCIMPORT_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/ccimport"
-setVariableType="ccImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_CCIMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!get!sync!util&add&write&cat!copy&copy_file&copy_path"
-scriptFileName="ccImportManager.js"
+setReplaceVariable="CMDCLICK_APP_DIR_ADMIN_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/AppDirAdmin"
+setVariableType="appDirAdminList:LI=${LIST_DIR_PATH}=${CMDCLICK_APP_DIR_ADMIN_DIR_PATH}!${LIST_SUFFIX}=.js|menu=add_app_dir!delete!copy_app_dir!rename_app_dir!sync"
+scriptFileName="appDirManager.js"
 /// SETTING_SECTION_END
 
 
 /// CMD_VARIABLE_SECTION_START
-ccImportList=""
+appDirAdminList=""
 /// CMD_VARIABLE_SECTION_END
 
 
@@ -44,5 +44,3 @@ ccImportList=""
 
 let args = jsArgs.get().split("\t");
 var FIRST_ARGS = args.at(0);
-
-

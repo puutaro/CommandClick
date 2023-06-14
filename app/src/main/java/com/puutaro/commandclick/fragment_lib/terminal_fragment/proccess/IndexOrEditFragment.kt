@@ -1,11 +1,10 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.FragmentTagPrefix
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
 class IndexOrEditFragment(
@@ -25,7 +24,12 @@ class IndexOrEditFragment(
             && commandIndexFragment.isVisible
         ) return ChangeTargetFragment.CMD_INDEX_FRAGMENT
         val cmdVariableEditFragmentTag =
-            FragmentTagPrefix.cmdEditPrefix + terminalFragment.currentScriptName
+            FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.cmdEditPrefix.str,
+                terminalFragment.currentAppDirPath,
+                terminalFragment.currentScriptName,
+                FragmentTagManager.Suffix.ON.str
+            )
         val cmdVariableEditFragment =
             TargetFragmentInstance().getFromFragment<EditFragment>(
                 activity,

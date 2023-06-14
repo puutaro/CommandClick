@@ -1,11 +1,14 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
+import android.content.Context
 import android.widget.EditText
 import com.abdeveloper.library.MultiSelectDialog
 import com.abdeveloper.library.MultiSelectModel
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object MultiSelectDialogForEdit {
@@ -31,14 +34,41 @@ object MultiSelectDialogForEdit {
                     selectedNames: ArrayList<String>,
                     dataString: String
                 ) {
+                    val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+                    val cmdEditFragmentTag = FragmentTagManager.makeTag(
+                        FragmentTagManager.Prefix.cmdEditPrefix.str,
+                        SharePreffrenceMethod.getStringFromSharePreffrence(
+                            sharePref,
+                            SharePrefferenceSetting.current_app_dir
+                        ),
+                        SharePreffrenceMethod.getStringFromSharePreffrence(
+                            sharePref,
+                            SharePrefferenceSetting.current_script_file_name
+                        ),
+                        FragmentTagManager.Suffix.ON.str
+                    )
+                    val settingEditFragmentTag = FragmentTagManager.makeTag(
+                        FragmentTagManager.Prefix.cmdEditPrefix.str,
+                        SharePreffrenceMethod.getStringFromSharePreffrence(
+                            sharePref,
+                            SharePrefferenceSetting.current_app_dir
+                        ),
+                        SharePreffrenceMethod.getStringFromSharePreffrence(
+                            sharePref,
+                            SharePrefferenceSetting.current_script_file_name
+                        ),
+                        String()
+                    )
                     val editFragmentSource = TargetFragmentInstance().getFromActivity<EditFragment>(
                         activity,
-                        activity.getString(R.string.cmd_variable_edit_fragment)
+                        cmdEditFragmentTag
                     )
-                    val editFragment = if(editFragmentSource == null){
+                    val editFragment = if(
+                        editFragmentSource == null
+                    ){
                         TargetFragmentInstance().getFromActivity<EditFragment>(
                             activity,
-                            activity.getString(R.string.setting_variable_edit_fragment)
+                            settingEditFragmentTag
                         )
                     } else editFragmentSource
                     if(editFragment == null) return

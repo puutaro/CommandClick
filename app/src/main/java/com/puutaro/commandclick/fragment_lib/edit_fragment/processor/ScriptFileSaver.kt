@@ -1,11 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 class ScriptFileSaver(
@@ -31,33 +31,26 @@ class ScriptFileSaver(
             readSharePreffernceMap
         )
 
-        val settingVariableEditFragment = context?.getString(
-            R.string.setting_variable_edit_fragment
-        )
-        val cmdConfigVariableEditFragment = context?.getString(
-            R.string.cmd_config_variable_edit_fragment
-        )
-
-        val editedShellContentsList = when(
-            editFragment.tag
-        ) {
-            settingVariableEditFragment,
-            cmdConfigVariableEditFragment -> {
-                if(onButton) return
-                editedTextContents.updateBySettingVariables(
-                    shellContentsList,
-                    recordNumToMapNameValueInSettingHolder,
-                )
-            }
-            else -> {
-                val shellContentsListUpdatedCmdVariable = editedTextContents.updateByCommandVariables(
-                    shellContentsList,
-                    recordNumToMapNameValueInCommandHolder,
-                )
-                updateShellScriptNameForEditCmdVriable(
-                    shellContentsListUpdatedCmdVariable
-                )
-            }
+        val editedShellContentsList = if(
+            editFragment.passCmdVariableEdit
+            == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+            || editFragment.tag?.startsWith(
+                FragmentTagManager.Prefix.settingEditPrefix.str
+            ) == true
+        ){
+            if(onButton) return
+            editedTextContents.updateBySettingVariables(
+                shellContentsList,
+                recordNumToMapNameValueInSettingHolder,
+            )
+        } else {
+            val shellContentsListUpdatedCmdVariable = editedTextContents.updateByCommandVariables(
+                shellContentsList,
+                recordNumToMapNameValueInCommandHolder,
+            )
+            updateShellScriptNameForEditCmdVriable(
+                shellContentsListUpdatedCmdVariable
+            )
         }
         editedTextContents.save(
             editedShellContentsList,

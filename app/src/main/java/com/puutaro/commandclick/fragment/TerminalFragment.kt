@@ -53,6 +53,7 @@ class TerminalFragment: Fragment() {
     var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
     var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
+    var currentScriptName = String()
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     val trimLastLine = 500
@@ -99,6 +100,7 @@ class TerminalFragment: Fragment() {
             container,
         false
         )
+
 
         if(savedInstanceState!=null) {
             binding.terminalWebView.restoreState(savedInstanceState)

@@ -85,6 +85,10 @@ class CommandClickScriptVariable {
         val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"
         val CMDCLICK_HOME_FANNEL = "homeFannel"
         val OVERRIDE_ITEM_CLICK_EXEC = "overrideItemClickExec"
+        val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
+        val DISABLE_SETTING_BUTTON = "disableSettingButton"
+        val DISABLE_PLAY_BUTTON = "disablePlayButton"
+        val DISABLE_EDIT_BUTTON = "disableEditButton"
 
         val SETTING_VARIABLE_NAMES_LIST = listOf(
             TERMINAL_DO,
@@ -116,7 +120,10 @@ class CommandClickScriptVariable {
             EXEC_EDIT_BTN_LONG_PRESS,
             IGNORE_HISTORY_PATHS,
             HOME_SCRIPT_URL,
-            OVERRIDE_ITEM_CLICK_EXEC
+            OVERRIDE_ITEM_CLICK_EXEC,
+            DISABLE_SETTING_BUTTON,
+            DISABLE_EDIT_BUTTON,
+            DISABLE_PLAY_BUTTON
         )
         private val terminalOn = SettingVariableSelects.Companion.TerminalDoSelects.ON.name
         private val terminalTermux = SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
@@ -157,6 +164,12 @@ class CommandClickScriptVariable {
         private val onUrlHistoryRegisterOn = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name
         private val overrideItemClickExecSelectsOn = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name
         private val overrideItemClickExecSelectsOff = SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
+        private val disableSettingButtonOn = SettingVariableSelects.Companion.disableSettingButtonSelects.ON.name
+        private val disableSettingButtonOff = SettingVariableSelects.Companion.disableSettingButtonSelects.OFF.name
+        private val disableEditButtonOn = SettingVariableSelects.Companion.disableEditButtonSelects.ON.name
+        private val disableEditButtonOff = SettingVariableSelects.Companion.disableEditButtonSelects.OFF.name
+        private val disablePlayButtonOn = SettingVariableSelects.Companion.disablePlayButtonSelects.ON.name
+        private val disablePlayButtonOff = SettingVariableSelects.Companion.disablePlayButtonSelects.OFF.name
         val TERMINAL_DO_DEFAULT_VALUE = terminalOn
         val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
         val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
@@ -168,12 +181,16 @@ class CommandClickScriptVariable {
         val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
         val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
         val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
+        val PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE =  "ON"
         val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
         val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
         val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.Companion.OnAdblockSelects.OFF.name
         val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.Companion.AutoExecSelects.ON.name
         val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
         val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
+        val DISABLE_SETTING_BUTTON_DEFAULT_VALUE = disableSettingButtonOff
+        val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
+        val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
 
 
         val setVariableForSettingHolder: List<String> = listOf(
@@ -191,6 +208,9 @@ class CommandClickScriptVariable {
             "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
             "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
             "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
+            "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
+            "${DISABLE_EDIT_BUTTON}:CB=${disableEditButtonOff}!${disableEditButtonOn}",
+            "${DISABLE_PLAY_BUTTON}:CB=${disablePlayButtonOff}!${disablePlayButtonOn}",
             "${CMDCLICK_TERMINAL_FONT_ZOOM}:NUM=0..1000!1",
             "${TERMINAL_COLOR}:CLR=",
             "${TERMINAL_FONT_COLOR}:CLR=",
@@ -295,6 +315,18 @@ class CommandClickScriptVariable {
                 |#   -> url history update signal
                 |#  - ${onUrlHistoryRegisterOn}: update
                 |#  - ${onUrlHistoryRegisterOff}: no update
+                |# * ${DISABLE_SETTING_BUTTON}
+                |#   -> setting button diable
+                |#  - ${disableSettingButtonOn}: on
+                |#  - ${disableSettingButtonOff}: off
+                |# * ${DISABLE_EDIT_BUTTON}
+                |#   -> edit button diable
+                |#  - ${disableEditButtonOn}: on
+                |#  - ${disableEditButtonOff}: off
+                |# * ${DISABLE_PLAY_BUTTON}
+                |#   -> play button diable
+                |#  - ${disablePlayButtonOn}: on
+                |#  - ${disablePlayButtonOff}: off
                 |# * ${EXEC_JS_OR_HTML_PATH}
                 |#   -> execute javascript or html file path
                 |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
@@ -353,6 +385,8 @@ class CommandClickScriptVariable {
                 |#   -> about whether to exc js and shell script item on click
                 |#    - ${overrideItemClickExecSelectsOff}: no exec
                 |#    - ${overrideItemClickExecSelectsOn}: exec (default)
+                |#    - ${PASS_CMDVARIABLE_EDIT}
+                |#   -> ON: pass cmd variable edit
                 |#
             """.trimIndent().replace("EX_INDENT_BLANK", "        ")
         }
@@ -444,7 +478,7 @@ class CommandClickScriptVariable {
         }
 
 
-        private fun makeAppDirShellContents(
+        private fun makeAppDirScriptContents(
             shellScriptName: String,
             shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
         ): String{
@@ -472,17 +506,17 @@ class CommandClickScriptVariable {
 
         fun makeAppDirAdminFile(
             dirPath: String,
-            shellScriptName: String
+            scriptScriptName: String
         ) {
             FileSystems.createDirs(dirPath)
             val createFile = File(
                 dirPath,
-                shellScriptName
+                scriptScriptName
             )
             if(createFile.isFile) return
             createFile.writeText(
-                makeAppDirShellContents(
-                    shellScriptName,
+                makeAppDirScriptContents(
+                    scriptScriptName,
                 )
             )
         }
@@ -532,6 +566,7 @@ class CommandClickScriptVariable {
             |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
             |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
             |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
+            |${PASS_CMDVARIABLE_EDIT}="${PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE}"
             |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
             |

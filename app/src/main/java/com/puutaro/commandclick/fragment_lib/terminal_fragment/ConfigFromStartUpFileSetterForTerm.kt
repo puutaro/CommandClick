@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -35,7 +36,7 @@ object ConfigFromStartUpFileSetterForTerm {
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
             ReadText(
-                UsePath.cmdclickConfigDirPath,
+                UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
             ).textToList(),
             settingSectionStart,
@@ -54,12 +55,14 @@ object ConfigFromStartUpFileSetterForTerm {
             ),
         )
 
+
         terminalFragment.fontZoomPercent =  SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
             "1"
         )
+
 
         terminalFragment.runShell =  SettingVariableReader.getStrValue(
             settingVariableListFromConfig,
@@ -78,10 +81,12 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        val currentShellFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val currentScriptFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
             sharePref,
             SharePrefferenceSetting.current_script_file_name
         )
+
+        terminalFragment.currentScriptName = currentScriptFileNameSource
 
         val currentShellFileName = if (
             terminalFragment.tag ==
@@ -89,7 +94,7 @@ object ConfigFromStartUpFileSetterForTerm {
                 R.string.index_terminal_fragment
             )
         ) UsePath.cmdclickStartupJsName
-        else currentShellFileNameSource
+        else currentScriptFileNameSource
 
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(

@@ -8,105 +8,107 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import java.net.URLDecoder
 
 
-class SearchViewAndAutoCompUpdater {
-    companion object {
+object SearchViewAndAutoCompUpdater {
 
-        fun update(
-            terminalFragment: TerminalFragment,
-            webView: WebView?,
-            url: String?,
+    fun update(
+        terminalFragment: TerminalFragment,
+        webView: WebView?,
+        url: String?,
+    ) {
+        val activity = terminalFragment.activity
+        val context = terminalFragment.context
+        val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            terminalFragment.currentAppDirPath,
+            terminalFragment.currentScriptName,
+            FragmentTagManager.Suffix.ON.str
+        )
+        val commandIndexFragment =
+            TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
+                activity,
+                cmdIndexFragmentTag
+            )
+        val cmdVariableEditFragment =
+            TargetFragmentInstance().getFromFragment<EditFragment>(
+                activity,
+                cmdVariableEditFragmentTag
+            )
+        if(
+            commandIndexFragment?.isVisible != true
+            && cmdVariableEditFragment?.isVisible != true
+        ) return
+
+        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val ulrTitle = BothEdgeQuote.trim(webView?.title)
+        val escapeStr = WebUrlVariables.escapeStr
+        if (ulrTitle.endsWith("\t${escapeStr}")) return
+
+        val urlCheckResult = EnableUrlPrefix.check(url)
+        if(!urlCheckResult) return
+        val searchViewTextSource = if(
+            url?.startsWith(WebUrlVariables.queryUrl) == true
         ) {
-            val activity = terminalFragment.activity
-            val context = terminalFragment.context
-            val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-            val cmdVariableEditFragmentTag = context?.getString(
-                    R.string.cmd_variable_edit_fragment
-                )
-            val commandIndexFragment =
-                TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
-                    activity,
-                    cmdIndexFragmentTag
-                )
-            val cmdVariableEditFragment =
-                TargetFragmentInstance().getFromFragment<EditFragment>(
-                    activity,
-                    cmdVariableEditFragmentTag
-                )
-            if(
-                commandIndexFragment?.isVisible != true
-                && cmdVariableEditFragment?.isVisible != true
-            ) return
-
-            val currentAppDirPath = terminalFragment.currentAppDirPath
-            val ulrTitle = BothEdgeQuote.trim(webView?.title)
-            val escapeStr = WebUrlVariables.escapeStr
-            if (ulrTitle.endsWith("\t${escapeStr}")) return
-
-            val urlCheckResult = EnableUrlPrefix.check(url)
-            if(!urlCheckResult) return
-            val searchViewTextSource = if(
-                url?.startsWith(WebUrlVariables.queryUrl) == true
-            ) {
-                queryUrlToText(url)
-            } else url ?:return
-            val searchViewText = if(
-                searchViewTextSource.startsWith(escapeStr)
-            ) {
-                String()
-            } else searchViewTextSource
-            updateSearchViewString(
-                terminalFragment,
-                commandIndexFragment,
-                searchViewText,
-            )
-            if(
-                searchViewText.isEmpty()
-            ) return
-
-            autoCompUpdater(
-                terminalFragment,
-                commandIndexFragment,
-                currentAppDirPath,
-            )
-        }
-
-        private fun autoCompUpdater(
-            terminalFragment: TerminalFragment,
-            commandIndexFragment: CommandIndexFragment?,
-            currentAppDirPath: String,
-        ){
-            if(
-                commandIndexFragment == null
-            ) return
-            if(
-                !commandIndexFragment.isVisible
-            ) return
-            val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
-            autoCompUpdateListner?.onAutoCompUpdate(
-                currentAppDirPath,
-            )
-        }
-
-        private fun updateSearchViewString(
-            terminalFragment: TerminalFragment,
-            commandIndexFragment: CommandIndexFragment?,
-            searchViewText: String,
+            queryUrlToText(url)
+        } else url ?:return
+        val searchViewText = if(
+            searchViewTextSource.startsWith(escapeStr)
         ) {
-            if(
-                commandIndexFragment == null
-            ) return
-            if(
-                !commandIndexFragment.isVisible
-            ) return
-            val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
-            listener?.onSearchTextChange(
-                searchViewText,
-            )
-        }
+            String()
+        } else searchViewTextSource
+        updateSearchViewString(
+            terminalFragment,
+            commandIndexFragment,
+            searchViewText,
+        )
+        if(
+            searchViewText.isEmpty()
+        ) return
+
+        autoCompUpdater(
+            terminalFragment,
+            commandIndexFragment,
+            currentAppDirPath,
+        )
+    }
+
+    private fun autoCompUpdater(
+        terminalFragment: TerminalFragment,
+        commandIndexFragment: CommandIndexFragment?,
+        currentAppDirPath: String,
+    ){
+        if(
+            commandIndexFragment == null
+        ) return
+        if(
+            !commandIndexFragment.isVisible
+        ) return
+        val autoCompUpdateListner = terminalFragment.context as? TerminalFragment.OnAutoCompUpdateListener
+        autoCompUpdateListner?.onAutoCompUpdate(
+            currentAppDirPath,
+        )
+    }
+
+    private fun updateSearchViewString(
+        terminalFragment: TerminalFragment,
+        commandIndexFragment: CommandIndexFragment?,
+        searchViewText: String,
+    ) {
+        if(
+            commandIndexFragment == null
+        ) return
+        if(
+            !commandIndexFragment.isVisible
+        ) return
+        val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
+        listener?.onSearchTextChange(
+            searchViewText,
+        )
     }
 }
 

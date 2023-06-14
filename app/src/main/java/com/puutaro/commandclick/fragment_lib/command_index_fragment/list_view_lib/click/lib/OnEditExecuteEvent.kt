@@ -3,9 +3,9 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.SharedPreferences
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
@@ -22,7 +22,7 @@ object OnEditExecuteEvent {
                 SharePrefferenceSetting.current_script_file_name.name
                         to selectedShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
-                        to ShortcutOnValueStr.ON.name
+                        to FragmentTagManager.Suffix.ON.name
             )
         )
         val listener = cmdIndexFragment.context

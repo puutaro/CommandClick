@@ -13,7 +13,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -26,6 +25,7 @@ import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -254,9 +254,9 @@ class UrlHistoryButtonEvent(
                 )
                 return@setOnItemClickListener
             } else if(
-                fragmentTag == context?.getString(
-                    com.puutaro.commandclick.R.string.cmd_variable_edit_fragment
-                )
+                fragmentTag?.startsWith(
+                    FragmentTagManager.Prefix.cmdEditPrefix.str
+                ) == true
             ) {
                 val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
                 listener?.onLaunchUrlByWebViewForEdit(

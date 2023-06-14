@@ -10,10 +10,10 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.ShortcutOnValueStr
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
@@ -29,9 +29,6 @@ class InitFragmentManager(
 
 
     fun registerSharePreferenceFromIntentExtra() {
-        if (
-            onShortcut == ShortcutOnValueStr.EDIT_API.name
-        ) return
         val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
         val okOneTask = mngr?.appTasks?.size == normalTaskNum
@@ -60,20 +57,11 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        if (onShortcut == ShortcutOnValueStr.EDIT_API.name) {
-            WrapFragmentManager.changeFragmentEdit(
-                activity.supportFragmentManager,
-                activity.getString(R.string.api_cmd_variable_edit_api_fragment),
-                String(),
-                true
-            )
-            return
-        }
-        val startUpShellFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val startUpScriptFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
             SharePrefferenceSetting.current_script_file_name
         )
-        val startUpAppDirName = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val startUpAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
@@ -85,10 +73,11 @@ class InitFragmentManager(
         val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
 
         if (
-            startUpShellFileName == emptyShellFileName
-            || startUpAppDirName == UsePath.cmdclickAppDirAdminPath
-            || startUpAppDirName == UsePath.cmdclickAppHistoryDirAdminPath
-            || startUpAppDirName == UsePath.cmdclickConfigDirPath
+            startUpScriptFileName.isEmpty()
+            || startUpScriptFileName == emptyShellFileName
+            || startUpAppDirPath == UsePath.cmdclickAppDirAdminPath
+            || startUpAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
+            || startUpAppDirPath == UsePath.cmdclickSystemAppDirPath
             || onShortcut == SharePrefferenceSetting.on_shortcut.defalutStr
         ) {
             WrapFragmentManager.initFragment(
@@ -99,7 +88,12 @@ class InitFragmentManager(
             )
             return
         }
-        val cmdVariableEditFragmentTag = activity.getString(R.string.cmd_variable_edit_fragment)
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            startUpAppDirPath,
+            startUpScriptFileName,
+            onShortcut
+        )
         val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,
             cmdVariableEditFragmentTag
@@ -107,7 +101,7 @@ class InitFragmentManager(
         if (cmdVariableEditFragment != null) return
         WrapFragmentManager.changeFragmentEdit(
             activity.supportFragmentManager,
-            activity.getString(R.string.cmd_variable_edit_fragment),
+            cmdVariableEditFragmentTag,
             activity.getString(R.string.edit_execute_terminal_fragment),
             true
         )
@@ -149,7 +143,7 @@ class InitFragmentManager(
                 SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
                 SharePrefferenceSetting.current_script_file_name.name to currentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
-                        to ShortcutOnValueStr.ON.name
+                        to FragmentTagManager.Suffix.ON.name
             )
         )
         exedRestartIntent(

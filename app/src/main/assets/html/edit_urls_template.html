@@ -229,9 +229,13 @@
    const onSortableJs = true;
    const onClickUrl = true;
    let url = document.querySelector("[name='url']");
-   let view_bookmarksSection = document.querySelector(".view_bookmarks");
+   let view_bookmarksSection = document.querySelector(
+      ".view_bookmarks"
+   );
 
-   const urlSourceContents = jsFileSystem.readLocalFile(addUrlsSourceFilePath);
+   const urlSourceContents = jsFileSystem.readLocalFile(addUrlsSourceFilePath
+   );
+
    function filterListByUrl(){
       if(!addUrlsSourceFilePath) {
          return ["", ""]

@@ -1,57 +1,90 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
 class DecideEditTag(
     private val shellContentsList: List<String>,
-    private val selectedShellFileName: String,
+    private val currentAppDirPath: String,
+    private val selectedScriptFileName: String,
 ) {
 
-    fun decide(
-        context: Context?,
-        cmdSettingEditFragmentTag: String? = null
-    ): String? {
-        val languageType =
-            JsOrShellFromSuffix.judge(selectedShellFileName)
+    private val languageType =
+        JsOrShellFromSuffix.judge(selectedScriptFileName)
 
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
-        ) as String
-        val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
-        ) as String
-        val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
-        ) as String
-        val enableCommandHolderVariablesEdit = howEnableVariableHolder(
-            commandSectionStart,
-            commandSectionEnd
-        )
+    private val languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+    ) as String
+    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+    ) as String
+    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+    ) as String
+    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+    ) as String
+    private val enableCommandHolderVariablesEdit = howEnableVariableHolder(
+        commandSectionStart,
+        commandSectionEnd
+    )
 
-        val enableSettingHolderVariablesEdit = howEnableVariableHolder(
-            settingSectionStart,
-            settingSectionEnd
-        )
+    private val enableSettingHolderVariablesEdit = howEnableVariableHolder(
+        settingSectionStart,
+        settingSectionEnd
+    )
+
+    fun decide(): String? {
         if(!enableCommandHolderVariablesEdit
             && !enableSettingHolderVariablesEdit
         ){
             return null
         }
         return if(enableCommandHolderVariablesEdit) {
-            context?.getString(com.puutaro.commandclick.R.string.cmd_variable_edit_fragment)
+            FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.cmdEditPrefix.str,
+                currentAppDirPath,
+                selectedScriptFileName,
+                FragmentTagManager.Suffix.ON.str
+            )
         } else {
-            cmdSettingEditFragmentTag
+            FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.settingEditPrefix.str,
+                currentAppDirPath,
+                selectedScriptFileName,
+                String()
+            )
         }
-
     }
+
+    fun decideForEdit(): String? {
+        if(!enableCommandHolderVariablesEdit
+            && !enableSettingHolderVariablesEdit
+        ){
+            return null
+        }
+        return if(enableCommandHolderVariablesEdit) {
+            FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.cmdEditPrefix.str,
+                currentAppDirPath,
+                selectedScriptFileName,
+                String()
+            )
+        } else {
+            FragmentTagManager.makeTag(
+                FragmentTagManager.Prefix.settingEditPrefix.str,
+                currentAppDirPath,
+                selectedScriptFileName,
+                String()
+            )
+        }
+    }
+
+
 
     private fun howEnableVariableHolder(
         startHolderName: String,

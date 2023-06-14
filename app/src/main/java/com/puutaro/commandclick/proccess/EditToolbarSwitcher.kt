@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -37,18 +38,18 @@ object EditToolbarSwitcher {
         if(
             !editExecuteTerminal.isVisible
         ) return
-        val cmdEditFragmentTag = context?.getString(
-            R.string.cmd_variable_edit_fragment
-        )
         val cmdEditFragmentConfirm = TargetFragmentInstance().getFromFragment<EditFragment>(
             activity,
-            cmdEditFragmentTag
+            cmdEditFragment.tag
         ) ?: return
         if(
             !cmdEditFragmentConfirm.isVisible
         ) return
         if(
-            cmdEditFragmentConfirm.tag != cmdEditFragmentTag
+            cmdEditFragmentConfirm.tag
+                ?.startsWith(
+                    FragmentTagManager.Prefix.cmdEditPrefix.str
+                ) != true
         ) return
         val onExec = execJsFile(
             cmdEditFragment,

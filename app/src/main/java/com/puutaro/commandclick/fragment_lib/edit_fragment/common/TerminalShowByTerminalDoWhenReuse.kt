@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object TerminalShowByTerminalDoWhenReuse {
@@ -19,9 +20,9 @@ object TerminalShowByTerminalDoWhenReuse {
             editFragment.context?.getString(R.string.edit_execute_terminal_fragment)
         ) ?: return
         if(
-            editFragment.tag != editFragment.context?.getString(
-                R.string.cmd_variable_edit_fragment
-            )
+            editFragment.tag?.startsWith(
+                FragmentTagManager.Prefix.cmdEditPrefix.str
+            ) != true
         ) return
         if(
             shellContentsList.isNullOrEmpty()

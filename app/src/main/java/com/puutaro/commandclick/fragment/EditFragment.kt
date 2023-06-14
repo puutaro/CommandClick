@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -79,6 +79,11 @@ class EditFragment: Fragment() {
     var execEditBtnLongPress = String()
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
+    var passCmdVariableEdit = String()
+    var disableSettingButton = CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE
+    var disableEditButton = CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE
+    var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
+
     val indexListLinearLayoutTagName = "indexListLinearLayoutTagName"
 
     override fun onCreateView(
@@ -100,73 +105,30 @@ class EditFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         binding.webSearch.webSearchToolbar.isVisible = false
-        val getIntent = activity?.intent
+        val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
         Keyboard.hiddenKeyboardForFragment(
             this
         )
         SetConfigInfo.set(this)
-        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+
         val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
             this,
-            sharePref
         )
-
-        val apiEditFragmentTag =
-            getString(
-            R.string.api_cmd_variable_edit_api_fragment
-        )
-        val cmdConfigVariableEditFragment =
-            getString(
-            R.string.cmd_config_variable_edit_fragment
-        )
-        val howConfigEdit = (
-                tag == cmdConfigVariableEditFragment
-                )
-        val howEditApi = (
-                tag == apiEditFragmentTag
-                )
-        if(howEditApi){
-            val currentAppDirPathSource = getIntent?.getStringExtra(
-                SharePrefferenceSetting.current_app_dir.name
-            )
-            val currentShellFileNameSource = getIntent?.getStringExtra(
-                SharePrefferenceSetting.current_script_file_name.name
-            )
-            val checkOkForAppDirPath =
-                validationSharePreferenceForEdit
-                    .checkCurrentAppDirPreference(
-                        currentAppDirPathSource
-                    )
-            if(!checkOkForAppDirPath) return
-            val checkOkForShellName =
-                validationSharePreferenceForEdit
-                    .checkCurrentShellNamePreference(
-                        currentAppDirPathSource,
-                        currentShellFileNameSource
-                    )
-            if(!checkOkForShellName) return
-        } else if(!howConfigEdit) {
-            val checkOkForAppDirPath =
-                validationSharePreferenceForEdit
-                    .checkCurrentAppDirPreference()
-            if(!checkOkForAppDirPath) return
-            val checkOkForShellName =
-                validationSharePreferenceForEdit
-                    .checkCurrentShellNamePreference()
-            if(!checkOkForShellName) return
-            val checkOkIndexList =
-                validationSharePreferenceForEdit
-                    .checkIndexList()
-            if(!checkOkIndexList) return
-        }
+        val checkOkForAppDirPath =
+            validationSharePreferenceForEdit
+                .checkCurrentAppDirPreference()
+        if(!checkOkForAppDirPath) return
+        val checkOkForShellName =
+            validationSharePreferenceForEdit
+                .checkCurrentShellNamePreference()
+        if(!checkOkForShellName) return
+        val checkOkIndexList =
+            validationSharePreferenceForEdit
+                .checkIndexList()
+        if(!checkOkIndexList) return
 
         readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
-            getIntent,
-            howConfigEdit,
-            howEditApi,
-            sharePref,
-            tag,
-            apiEditFragmentTag
+            this,
         )
 
         val currentAppDirPath =
@@ -179,6 +141,22 @@ class EditFragment: Fragment() {
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_script_file_name
             )
+        val shortcutOn =
+            SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.on_shortcut
+            )
+        SharePreffrenceMethod.putSharePreffrence(
+            sharePref,
+            mapOf(
+                SharePrefferenceSetting.current_app_dir.name
+                        to currentAppDirPath,
+                SharePrefferenceSetting.current_script_file_name.name
+                        to currentShellFileName,
+                        SharePrefferenceSetting.on_shortcut.name
+                        to shortcutOn
+            )
+        )
 
         languageType =
             JsOrShellFromSuffix.judge(currentShellFileName)
@@ -264,7 +242,6 @@ class EditFragment: Fragment() {
             if(terminalViewModel.onDialog) return@setEventListener
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
-                && tag != cmdConfigVariableEditFragment
             ) {
                 KeyboardWhenTermLongForEdit.handle(
                     this,

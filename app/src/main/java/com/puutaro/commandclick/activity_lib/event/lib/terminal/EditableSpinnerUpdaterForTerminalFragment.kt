@@ -1,12 +1,15 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
+import android.content.Context
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,9 +23,22 @@ object EditableSpinnerUpdaterForTerminalFragment {
     ) {
         if(spinnerId == null) return
         val throughMark = "-"
+        val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_app_dir
+            ),
+            SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_script_file_name
+            ),
+            FragmentTagManager.Suffix.ON.str
+        )
         val editExecuteFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,
-            activity.getString(R.string.cmd_variable_edit_fragment)
+            cmdEditFragmentTag
         )
         val binding = editExecuteFragment?.binding ?: return
         val editLinearLayout = binding.editLinearLayout

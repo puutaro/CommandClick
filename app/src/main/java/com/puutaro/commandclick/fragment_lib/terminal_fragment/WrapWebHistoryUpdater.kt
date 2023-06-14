@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
@@ -14,6 +15,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.BothEdgeQuote
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import kotlinx.coroutines.*
@@ -89,8 +91,11 @@ object WrapWebHistoryUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val cmdVariableEditFragmentTag = context?.getString(
-            R.string.cmd_variable_edit_fragment
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
+            FragmentTagManager.Prefix.cmdEditPrefix.str,
+            terminalFragment.currentAppDirPath,
+            terminalFragment.currentScriptName,
+            FragmentTagManager.Suffix.ON.name
         )
         val commandIndexFragment =
             TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
@@ -102,6 +107,11 @@ object WrapWebHistoryUpdater {
                 activity,
                 cmdVariableEditFragmentTag
             )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "debug.js",
+            cmdVariableEditFragmentTag + "\n" + cmdVariableEditFragment.toString()
+        )
         if(
             commandIndexFragment?.isVisible != true
             && cmdVariableEditFragment?.isVisible != true

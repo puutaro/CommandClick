@@ -15,11 +15,11 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -303,9 +303,12 @@ class ToolbarButtonProducerForEdit(
             SharePrefferenceSetting.on_shortcut
         )
         if(
-            editFragment.tag !=
-            context?.getString(R.string.cmd_variable_edit_fragment)
-            || onShortcut != ShortcutOnValueStr.ON.name
+            editFragment.tag?.startsWith(
+                FragmentTagManager.Prefix.cmdEditPrefix.str
+            ) != true
+            || editFragment.tag?.endsWith(
+                FragmentTagManager.Suffix.ON.name
+            ) != true
         ) return
         scriptFileSaver.save(
             shellContentsList,
@@ -322,44 +325,22 @@ class ToolbarButtonProducerForEdit(
         editExecuteValue: String,
         enableCmdEdit: Boolean
     ){
-        val startUpPref =  editFragment.activity?.getPreferences(
-            Context.MODE_PRIVATE
-        )
-        val beforeUpdateShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
+        val onPassCmdVariableEdit =
+            editFragment.passCmdVariableEdit ==
+                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+
         scriptFileSaver.save(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
-        val afterUpdateShellFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
-            startUpPref,
-            SharePrefferenceSetting.current_script_file_name
-        )
+
         val curentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
 
-        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-        val onAppDirAdminMode = curentAppDirPath == cmdclickAppDirAdminPath
-        execMoveDirWhenOk(
-            onAppDirAdminMode,
-            beforeUpdateShellFileName,
-            afterUpdateShellFileName
-        )
-        if(onAppDirAdminMode){
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                toolbarButtonBariantForEdit,
-                readSharePreffernceMap,
-                enableCmdEdit
-            )
-            return
-        }
+
         val EditExecuteAlways =
             SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
         val EditExecuteOnce =
@@ -372,6 +353,7 @@ class ToolbarButtonProducerForEdit(
             editExecuteValue == EditExecuteAlways
             && enableCmdEdit
             && on_shortcut
+            && !onPassCmdVariableEdit
         ) {
             Keyboard.hiddenKeyboardForFragment(
                 editFragment
@@ -415,13 +397,7 @@ class ToolbarButtonProducerForEdit(
             return
         }
 
-        val howConfigEdit = editFragment.tag == context?.getString(
-            R.string.cmd_config_variable_edit_fragment
-        )
-        val howEditApi = editFragment.tag == context?.getString(
-            R.string.api_cmd_variable_edit_api_fragment
-        )
-        if( howConfigEdit || howEditApi){
+        if(onPassCmdVariableEdit){
             val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
                 editFragment.tag,
@@ -429,7 +405,6 @@ class ToolbarButtonProducerForEdit(
                 readSharePreffernceMap,
                 enableCmdEdit
             )
-            if(howEditApi) editFragment.activity?.finish()
             return
         }
 
@@ -442,33 +417,6 @@ class ToolbarButtonProducerForEdit(
             enableCmdEdit
         )
     }
-
-
-    private fun execMoveDirWhenOk(
-        onAppDirAdminMode: Boolean,
-        beforeUpdateShellFileName: String,
-        afterUpdateShellFileName: String
-    ){
-        if(
-            onAppDirAdminMode
-            && beforeUpdateShellFileName != afterUpdateShellFileName
-        ){
-            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-            val beforeMoveDirPath = cmdclickAppDirPath + '/' +
-                    beforeUpdateShellFileName.removeSuffix(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
-                    )
-            val afterMoveDirPath = cmdclickAppDirPath + '/' +
-                    afterUpdateShellFileName.removeSuffix(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
-                    )
-            FileSystems.moveDirectory(
-                beforeMoveDirPath,
-                afterMoveDirPath,
-            )
-        }
-    }
-
 
     private fun createPopUpForSetting(
         editFragment: EditFragment,
@@ -599,7 +547,7 @@ internal fun popupMenuItemSelectedForEdit(
                 )
             }
             MenuEnumsForEdit.CONFIG.itemId -> {
-                val configDirPath = UsePath.cmdclickConfigDirPath
+                val configDirPath = UsePath.cmdclickSystemAppDirPath
                 val configShellName = UsePath.cmdclickConfigFileName
                 CommandClickScriptVariable.makeConfigJsFile(
                     configDirPath,

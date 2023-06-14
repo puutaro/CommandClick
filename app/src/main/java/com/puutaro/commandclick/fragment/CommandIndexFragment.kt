@@ -67,7 +67,6 @@ class CommandIndexFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val terminalViewModel: TerminalViewModel by activityViewModels()
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val thisFragmentTag = this.tag
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
         val defaultSystemPath =
@@ -98,7 +97,7 @@ class CommandIndexFragment: Fragment() {
         )
 
         CommandClickScriptVariable.makeConfigJsFile(
-            UsePath.cmdclickConfigDirPath,
+            UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
         )
 
@@ -143,22 +142,6 @@ class CommandIndexFragment: Fragment() {
         )
         registerForContextMenu(cmdListView)
 
-        val appDirAdminTag = context?.getString(
-            R.string.app_dir_admin
-        )
-        if(
-            thisFragmentTag == appDirAdminTag
-        ) {
-            val makeChangeDirView = MakeChangeDirView(
-                this,
-                binding
-            )
-            makeChangeDirView.addHeaderPrompt(
-                "select app dir"
-            )
-            makeChangeDirView.hideToolbar()
-            return
-        }
         val cmdindexInternetButton = binding.cmdindexInternetButton
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
@@ -257,21 +240,14 @@ class CommandIndexFragment: Fragment() {
         view: View,
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
-        val thisFragmentTag = this.tag
         super.onCreateContextMenu(menu, view, menuInfo)
         val inflater = this.activity?.menuInflater;
-        if(
-            thisFragmentTag == getString(R.string.app_dir_admin)
-        ) {
-            inflater?.inflate(R.menu.app_dir_admin_list_menu, menu)
-        } else {
-            inflater?.inflate(R.menu.cmd_index_list_menu, menu)
-        }
+        inflater?.inflate(R.menu.cmd_index_list_menu, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         super.onContextItemSelected(item)
-        val startUpPref =  activity?.getPreferences(Context.MODE_PRIVATE)
+        val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
             startUpPref
         )

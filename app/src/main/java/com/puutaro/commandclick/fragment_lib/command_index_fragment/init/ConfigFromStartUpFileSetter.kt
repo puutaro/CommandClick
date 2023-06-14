@@ -84,6 +84,7 @@ object ConfigFromStartUpFileSetter {
             cmdIndexFragment.shiban
         )
 
+
         cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,

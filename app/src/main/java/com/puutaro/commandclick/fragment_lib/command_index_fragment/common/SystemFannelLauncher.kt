@@ -26,8 +26,9 @@ object SystemFannelLauncher {
         ).textToList()
         val editFragmentTag = DecideEditTag(
             shellContentsList,
+            parentDirPath,
             fannelScriptName
-        ).decide(context)
+        ).decide()
             ?: return
         SharePreffrenceMethod.putSharePreffrence(
             sharedPref,

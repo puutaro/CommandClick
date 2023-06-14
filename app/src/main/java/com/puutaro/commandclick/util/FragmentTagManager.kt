@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util.Intent
+package com.puutaro.commandclick.util
 
 object FragmentTagManager {
 
@@ -28,9 +28,9 @@ object FragmentTagManager {
         scriptFileName: String,
         mode: String,
     ): String {
-        return "${prefix}${sepalateUnderBar}" +
-                "${parentAppDirPath}${sepalateUnderBar}" +
-                "${scriptFileName}${sepalateUnderBar}" +
+        return "${prefix}$sepalateUnderBar" +
+                "${parentAppDirPath}$sepalateUnderBar" +
+                "${scriptFileName}$sepalateUnderBar" +
                 mode
     }
 
