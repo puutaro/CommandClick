@@ -1,33 +1,26 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
+package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.text.InputType
 import android.view.Gravity
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
+object CopyAppDirEventForEdit {
 
-class CopyAppDirEvent(
-    cmdIndexCommandIndexFragment: CommandIndexFragment,
-    private val currentAppDirPath: String,
-    private val shellScriptName: String,
-    private val cmdListAdapter: ArrayAdapter<String>,
-) {
-
-    private val context = cmdIndexCommandIndexFragment.context
-    private val binding = cmdIndexCommandIndexFragment.binding
-    private val cmdListView = binding.cmdList
-
-    fun invoke(){
+    fun invoke(
+        editFragment: EditFragment,
+        currentAppDirPath: String,
+        scriptScriptName: String,
+    ){
+        val context = editFragment.context
         val editText = EditText(context)
         editText.inputType = InputType.TYPE_CLASS_TEXT
         editText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
@@ -35,10 +28,15 @@ class CopyAppDirEvent(
             .setTitle(
                 "Input, destination App dir name"
             )
-            .setMessage("\tcurrent app dir name: ${shellScriptName}")
+            .setMessage("\tcurrent app dir name: ${scriptScriptName}")
             .setView(editText)
             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                execCopyAppDir(editText)
+                execCopyAppDir(
+                    editFragment,
+                    currentAppDirPath,
+                    scriptScriptName,
+                    editText
+                )
             })
             .setNegativeButton("NO", null)
             .show()
@@ -52,8 +50,12 @@ class CopyAppDirEvent(
     }
 
     private fun execCopyAppDir(
+        editFragment: EditFragment,
+        currentAppDirPath: String,
+        scriptScriptName: String,
         editText: EditText
     ){
+        val context = editFragment.context
         val destiDirNameEditable = editText.text
         if(destiDirNameEditable.isNullOrEmpty()) return
         val destiDirNameSource = destiDirNameEditable.toString()
@@ -65,7 +67,7 @@ class CopyAppDirEvent(
         } else destiDirNameSource
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val sourceAppDirPath = cmdclickAppDirPath +
-                "/${shellScriptName.removeSuffix(
+                "/${scriptScriptName.removeSuffix(
                     CommandClickScriptVariable.JS_FILE_SUFFIX
                 )}"
         val destiAppDirPath = "${cmdclickAppDirPath}/${destiDirName}"
@@ -90,12 +92,6 @@ class CopyAppDirEvent(
         FileSystems.copyDirectory(
             sourceAppDirPath,
             destiAppDirPath,
-        )
-
-        CommandListManager.execListUpdate(
-            currentAppDirPath,
-            cmdListAdapter,
-            cmdListView,
         )
     }
 }
