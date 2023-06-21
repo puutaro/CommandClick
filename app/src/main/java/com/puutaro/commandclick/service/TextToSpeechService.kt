@@ -398,7 +398,9 @@ class TextToSpeechService:
                     currentOrder > fileListSize
                 ) {
                     textToSpeech?.stop()
-                    notificationManager?.notify(notificationId, notificationBuilder.build())
+                    notificationManager?.notify(
+                        notificationId, notificationBuilder.build()
+                    )
                     stopForeground(Service.STOP_FOREGROUND_DETACH)
                     notificationManager?.cancel(notificationId)
                     break
@@ -409,7 +411,9 @@ class TextToSpeechService:
                     notificationBuilder.setContentTitle(
                         "play list size must be more zero"
                     )
-                    notificationManager?.notify(notificationId, notificationBuilder.build())
+                    notificationManager?.notify(
+                        notificationId, notificationBuilder.build()
+                    )
                     return@launch
                 }
                 val displayRoopTimes = "${currentOrder % factListSize + 1}"
@@ -609,11 +613,11 @@ class TextToSpeechService:
                     if(onCurrentRoopBreak) break
                     if (i >= stringLength) break
                     val splitTextContent = makeSplitTextContent(
-                        text,
-                        currentBlockNum * lengthLimit,
-                        stringLength,
-                        lengthLimit,
-                    )
+                            text,
+                            currentBlockNum * lengthLimit,
+                            stringLength,
+                            lengthLimit,
+                        )
 
 //                    FileSystems.writeFile(
 //                        debugTemp,
@@ -682,30 +686,34 @@ class TextToSpeechService:
         ) endPosiEntry
         else stringLength - 1
         return text.substring(
-            i, endLength
-        )
+                i, endLength
+            )
     }
 
     private fun makeDisplayTitle(
         splitTextContent: String
     ): String {
         val displayFileConLimit = 100
-        val splitTextContentSize = splitTextContent.length - 1
+        val factSplitTextContent = splitTextContent
+            .replace("\n", "")
+        val factSplitTextContentSize = factSplitTextContent.length - 1
         val endStrNum = if(
-            splitTextContentSize <= displayFileConLimit
-        ) splitTextContentSize
+            factSplitTextContentSize <= displayFileConLimit
+        ) factSplitTextContentSize
         else displayFileConLimit
         val prefixSource =
-            splitTextContent
-                .replace(
-                    "\n",
-                    ""
-                ).substring(0..endStrNum)
+            factSplitTextContent
+                .substring(0..endStrNum)
         val prefixSourceLength = StringLength.count(prefixSource)
         if(
             prefixSourceLength <= displayFileConLimit
         ) return prefixSource
-        val displayFileConLimitHalf = displayFileConLimit / 2
+        val displayFileConLimitHalfSource = displayFileConLimit / 2
+        val prefixSourceSize = prefixSource.length - 1
+        val displayFileConLimitHalf = if(
+            displayFileConLimitHalfSource > prefixSourceSize
+        ) prefixSourceSize
+        else displayFileConLimitHalfSource
         return prefixSource.substring(0..displayFileConLimitHalf)
     }
 
