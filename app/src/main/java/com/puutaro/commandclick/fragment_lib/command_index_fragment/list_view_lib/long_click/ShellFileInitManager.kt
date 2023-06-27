@@ -13,153 +13,158 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Comma
 import com.puutaro.commandclick.util.*
 
 
-class ShellFileInitManager {
-    companion object {
+object ShellFileInitManager {
 
-        fun initDialog(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            currentAppDirPath: String,
-            shellScriptName: String,
-            cmdListAdapter: ArrayAdapter<String>,
-            cmdListView: ListView
-        ){
+    fun initDialog(
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        cmdListAdapter: ArrayAdapter<String>,
+        cmdListView: ListView
+    ){
 
-            val context = cmdIndexCommandIndexFragment.context
+        val context = cmdIndexCommandIndexFragment.context
 
-            val alertDialog = AlertDialog.Builder(context)
-                .setTitle("init ok?")
-                .setMessage("\tpath: ${shellScriptName}")
-                .setPositiveButton("OK", DialogInterface.OnClickListener {
-                        dialog, which ->
-                    excInit(
-                        cmdIndexCommandIndexFragment,
-                        currentAppDirPath,
-                        shellScriptName,
-                        cmdListAdapter,
-                        cmdListView
-                    )
-                })
-                .setNegativeButton("NO", null)
-                .show()
-            alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                context?.getColor(R.color.black) as Int
-            )
-            alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                context.getColor(R.color.black)
-            )
-            alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        }
-
-
-        private fun excInit(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            currentAppDirPath: String,
-            shellScriptName: String,
-            cmdListAdapter: ArrayAdapter<String>,
-            cmdListView: ListView
-        ){
-
-            val languageType =
-                JsOrShellFromSuffix.judge(shellScriptName)
-            val languageTypeToSectionHolderMap =
-                CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-            val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
-            ) as String
-            val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
-            ) as String
-
-            val shellContentsList = if(
-                shellScriptName == UsePath.cmdclickStartupJsName
-            ) {
-                CommandClickScriptVariable.makeAutoJsContents(
-                    shellScriptName
-                ).split("\n")
-            } else {
-                CommandClickScriptVariable.makeShellContents(
-                    cmdIndexCommandIndexFragment.shiban,
+        val alertDialog = AlertDialog.Builder(context)
+            .setTitle("init ok?")
+            .setMessage("\tpath: ${shellScriptName}")
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
+                execInit(
+                    cmdIndexCommandIndexFragment,
+                    currentAppDirPath,
                     shellScriptName,
-                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
-                    languageType
-                ).split("\n")
-            }
-            val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-                shellContentsList,
-                settingSectionStart,
-                settingSectionEnd
-            )?.filter {
-                val existSettingStartHolder =  (
-                        it.startsWith(settingSectionStart)
-                                && it.endsWith(settingSectionStart)
-                        )
-                val existSettingEndHolder =  (
-                        it.startsWith(settingSectionEnd)
-                                && it.endsWith(settingSectionEnd)
-                        )
-                !(existSettingStartHolder || existSettingEndHolder)
-            } ?: return
-            val settingVariableDefaultMap = settingVariableList.map {
-                val equalIndex = it.indexOf("=")
-                val variableName = if(equalIndex <= 0) {
-                    it
-                } else {
-                    MakeSettingVariableNameOrValue.returnValidVariableName(
-                        it,
-                        equalIndex,
-                        settingVariableList,
-                    ) ?: String()
-                }
-                val variableValueStr = makeValueStrForMap(
-                    it,
-                    variableName,
-                    equalIndex
+                    cmdListAdapter,
+                    cmdListView
                 )
-                variableName to variableValueStr
-            }.toMap().filterKeys {
-                it != CommandClickScriptVariable.SET_VARIABLE_TYPE
-                        && it != CommandClickScriptVariable.AFTER_COMMAND
-                        && it != CommandClickScriptVariable.BEFORE_COMMAND
-            }
+            })
+            .setNegativeButton("NO", null)
+            .show()
+        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+            context?.getColor(R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(R.color.black)
+        )
+        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+    }
 
-            var count_setting_section_start = 0
-            var count_setting_section_end = 0
-            val initedShellcontents = ReadText(
-                currentAppDirPath,
+
+    private fun execInit(
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        cmdListAdapter: ArrayAdapter<String>,
+        cmdListView: ListView
+    ){
+
+        val languageType =
+            JsOrShellFromSuffix.judge(shellScriptName)
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        val shellContentsList = if(
+            shellScriptName == UsePath.cmdclickStartupJsName
+        ) {
+            CommandClickScriptVariable.makeAutoJsContents(
                 shellScriptName
-            ).textToList().map {
-                if(
-                    it.startsWith(settingSectionStart)
-                    && it.endsWith(settingSectionStart)
-                ) count_setting_section_start++
-               if(
-                   it.startsWith(settingSectionEnd)
-                   && it.endsWith(settingSectionEnd)
-               ) count_setting_section_end++
-               makeSettingVariableRow(
-                   count_setting_section_start,
-                   count_setting_section_end,
-                   it,
-                   settingVariableDefaultMap
-               )
-            }
-
-            FileSystems.writeFile(
-                currentAppDirPath,
+            ).split("\n")
+        } else {
+            CommandClickScriptVariable.makeShellContents(
+                cmdIndexCommandIndexFragment.shiban,
                 shellScriptName,
-                initedShellcontents.joinToString("\n")
-            )
-            CommandListManager.execListUpdate(
-                currentAppDirPath,
-                cmdListAdapter,
-                cmdListView,
-            )
+                CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE,
+                languageType
+            ).split("\n")
         }
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            shellContentsList,
+            settingSectionStart,
+            settingSectionEnd
+        )?.filter {
+            val existSettingStartHolder =  (
+                    it.startsWith(settingSectionStart)
+                            && it.endsWith(settingSectionStart)
+                    )
+            val existSettingEndHolder =  (
+                    it.startsWith(settingSectionEnd)
+                            && it.endsWith(settingSectionEnd)
+                    )
+            !(existSettingStartHolder || existSettingEndHolder)
+        } ?: return
+        val hiddenSettingVariableList = SettingVariableReader.getStrListByReplace(
+            settingVariableList,
+            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
+            String(),
+            String(),
+        )
+        val settingVariableDefaultMap = settingVariableList.map {
+            val equalIndex = it.indexOf("=")
+            val variableName = if(equalIndex <= 0) {
+                it
+            } else {
+                MakeSettingVariableNameOrValue.returnValidVariableName(
+                    it,
+                    equalIndex,
+                    settingVariableList,
+                    hiddenSettingVariableList
+                ) ?: String()
+            }
+            val variableValueStr = makeValueStrForMap(
+                it,
+                variableName,
+                equalIndex
+            )
+            variableName to variableValueStr
+        }.toMap().filterKeys {
+            it != CommandClickScriptVariable.SET_VARIABLE_TYPE
+                    && it != CommandClickScriptVariable.AFTER_COMMAND
+                    && it != CommandClickScriptVariable.BEFORE_COMMAND
+        }
+
+        var count_setting_section_start = 0
+        var count_setting_section_end = 0
+        val initedShellcontents = ReadText(
+            currentAppDirPath,
+            shellScriptName
+        ).textToList().map {
+            if(
+                it.startsWith(settingSectionStart)
+                && it.endsWith(settingSectionStart)
+            ) count_setting_section_start++
+           if(
+               it.startsWith(settingSectionEnd)
+               && it.endsWith(settingSectionEnd)
+           ) count_setting_section_end++
+           makeSettingVariableRow(
+               count_setting_section_start,
+               count_setting_section_end,
+               it,
+               settingVariableDefaultMap
+           )
+        }
+
+        FileSystems.writeFile(
+            currentAppDirPath,
+            shellScriptName,
+            initedShellcontents.joinToString("\n")
+        )
+        CommandListManager.execListUpdate(
+            currentAppDirPath,
+            cmdListAdapter,
+            cmdListView,
+        )
     }
 }
 
 
-internal fun makeValueStrForMap(
+private fun makeValueStrForMap(
     rowStr: String,
     variableName: String,
     equalIndex: Int
@@ -176,7 +181,7 @@ internal fun makeValueStrForMap(
 }
 
 
-internal fun makeSettingVariableRow(
+private fun makeSettingVariableRow(
     count_setting_section_start: Int,
     count_setting_section_end: Int,
     rowStr: String,

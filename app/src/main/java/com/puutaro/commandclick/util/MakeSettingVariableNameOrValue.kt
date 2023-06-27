@@ -3,19 +3,24 @@ package com.puutaro.commandclick.util
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 
 
-object MakeSettingVariableNameOrValue {
+    object MakeSettingVariableNameOrValue {
 
     fun returnValidVariableName (
         substituteCmdStartEndContentStr: String,
         equalIndex: Int,
         substituteCmdStartEndContentList: List<String>,
+        hiddenSettingVariableList: List<String>
     ): String? {
         val variableNameSource = substituteCmdStartEndContentStr.substring(
             0, equalIndex
         )
+        val factSettingVariableNamesList =
+            CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST.filter {
+                !hiddenSettingVariableList.contains(it)
+            }
         val variableNameChecked =
             if (
-                CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST.contains(variableNameSource)
+                factSettingVariableNamesList.contains(variableNameSource)
             ) {
                 variableNameSource
             } else {

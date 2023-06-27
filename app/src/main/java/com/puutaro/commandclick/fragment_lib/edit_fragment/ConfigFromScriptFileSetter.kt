@@ -161,7 +161,6 @@ object ConfigFromScriptFileSetter {
             currentAppDirPath,
         )
 
-
         editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
             val enableSuffix = it.endsWith(
                     CommandClickScriptVariable.JS_FILE_SUFFIX

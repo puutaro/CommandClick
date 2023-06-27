@@ -89,6 +89,7 @@ class CommandClickScriptVariable {
         val DISABLE_SETTING_BUTTON = "disableSettingButton"
         val DISABLE_PLAY_BUTTON = "disablePlayButton"
         val DISABLE_EDIT_BUTTON = "disableEditButton"
+        val HIDE_SETTING_VARIABLES = "hideSettingVariables"
 
         val SETTING_VARIABLE_NAMES_LIST = listOf(
             TERMINAL_DO,
@@ -296,6 +297,11 @@ class CommandClickScriptVariable {
                 |#     ex) ${CMDCLICK_HOME_FANNEL}=..
                 |#     ex) ${CMDCLICK_HOME_FANNEL}=..
                 |#     ex) ${CMDCLICK_HOME_FANNEL}=..
+                |# * ${HIDE_SETTING_VARIABLES}
+                |#   -> specified setting varialle you want to hidden when edit
+                |#     ex) ${HIDE_SETTING_VARIABLES}="${EDIT_EXECUTE}"
+                |#     ex) ${HIDE_SETTING_VARIABLES}="${CMDCLICK_HISTORY_SWITCH}"
+                |#     ex) ${HIDE_SETTING_VARIABLES}=..
                 |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
                 |#   -> switch url history or button script exec
                 |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
@@ -557,6 +563,7 @@ class CommandClickScriptVariable {
             |
             |
             |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+            |${EDIT_EXECUTE}="${editExecuteAlways}"
             |${CMDCLICK_RUN_SHELL}="${CMDCLICK_RUN_SHELL_DEFAULT_VALUE}"
             |${CMDCLICK_SHIBAN}="${CMDCLICK_SHIBAN_DEFAULT_VALUE}"
             |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
@@ -567,6 +574,7 @@ class CommandClickScriptVariable {
             |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
             |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
             |${PASS_CMDVARIABLE_EDIT}="${PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE}"
+            |${HIDE_SETTING_VARIABLES}="${EDIT_EXECUTE}"
             |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
             |
             |
