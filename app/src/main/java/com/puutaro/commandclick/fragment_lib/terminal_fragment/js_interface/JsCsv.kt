@@ -7,6 +7,7 @@ import android.widget.Toast
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -77,7 +78,10 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
-                toastErrMessage(errMessage)
+                ToastErrMessage.launch(
+                    terminalFragment,
+                    errMessage
+                )
                 if(readCompSignal) break
                 val readingMark = "reading" +
                         ".".repeat(i)
@@ -396,7 +400,10 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
-                toastErrMessage(errMessage)
+                ToastErrMessage.launch(
+                    terminalFragment,
+                    errMessage
+                )
                 if(selectCompSignal) break
                 val selectingMark = "column selecting" +
                         ".".repeat(i)
@@ -480,7 +487,10 @@ class JsCsv(
         }
         runBlocking {
             for (i in 1..60){
-                toastErrMessage(errMessage)
+                ToastErrMessage.launch(
+                    terminalFragment,
+                    errMessage
+                )
                 if(filterCompSignal) break
                 val filteringMark = "filtering" +
                         ".".repeat(i)
@@ -649,21 +659,6 @@ class JsCsv(
             index == 0
         ) return "<td class=\"${rowFirstClassName}\">${cell}</td>"
         return "<td>${cell}</td>"
-    }
-
-    private fun toastErrMessage(
-        errMessage: String
-    ){
-        if(
-            errMessage.isEmpty()
-        ) return
-        val ts = Toast.makeText(
-            context,
-            errMessage,
-            Toast.LENGTH_LONG
-        )
-        ts.setGravity(Gravity.CENTER, 0, 0)
-        ts.show()
     }
 }
 

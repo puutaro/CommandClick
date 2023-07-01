@@ -102,6 +102,10 @@ object WebViewSettings {
             JsRecordToText(terminalFragment),
             JsInterfaceVariant.jsRecordToText.name
         )
+        terminalWebView.addJavascriptInterface(
+            JsPdf(terminalFragment),
+            JsInterfaceVariant.jsPdf.name
+        )
     }
 }
 
@@ -125,5 +129,6 @@ private enum class JsInterfaceVariant {
     jsText,
     jsPath,
     jsTextToSpeech,
-    jsRecordToText
+    jsRecordToText,
+    jsPdf,
 }

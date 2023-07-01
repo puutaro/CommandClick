@@ -2,32 +2,33 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.os.Handler
 import androidx.lifecycle.*
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
 
-class DisplaySwich {
-    companion object {
-        fun update (
-            terminalFragment: TerminalFragment,
-            terminalViewModel: TerminalViewModel,
-        ): Job {
-            try {
-                terminalFragment.displayUpdateCoroutineJob?.cancel()
-            } catch (e: Exception){
-                println("not cancel")
-            }
-            return monitorOutput(
-                terminalFragment,
-                terminalViewModel
-            )
+object DisplaySwich {
+    fun update (
+        terminalFragment: TerminalFragment,
+        terminalViewModel: TerminalViewModel,
+    ): Job {
+        try {
+            terminalFragment.displayUpdateCoroutineJob?.cancel()
+        } catch (e: Exception){
+            println("not cancel")
         }
+        return monitorOutput(
+            terminalFragment,
+            terminalViewModel
+        )
     }
 }
 
@@ -160,6 +161,19 @@ private fun setWebView(
 ) {
     try {
         val webView = terminalFragment.binding.terminalWebView
+        if(
+            !launchUrl.isNullOrEmpty()
+            && LoadUrlPrefixSuffix.judgeTextFile(launchUrl)
+        ) {
+            webView.loadDataWithBaseURL(
+                "",
+                TxtHtmlDescriber.make(launchUrl),
+                "text/html",
+                "utf-8",
+                null
+            )
+            return
+        }
         if(
             !launchUrl.isNullOrEmpty()
             && LoadUrlPrefixSuffix.judge(launchUrl)

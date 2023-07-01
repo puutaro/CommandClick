@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
@@ -30,7 +32,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
 
-class TerminalFragment: Fragment() {
+class   TerminalFragment: Fragment() {
 
 
     private var _binding: TerminalFragmentBinding? = null
@@ -67,6 +69,19 @@ class TerminalFragment: Fragment() {
             val urlStr = intent.getStringExtra(
                 BroadCastIntentScheme.ULR_LAUNCH.scheme
             ) ?: return
+            if(
+                LoadUrlPrefixSuffix.judgeTextFile(urlStr)
+            ) {
+                binding.terminalWebView.loadDataWithBaseURL(
+                    "",
+                    TxtHtmlDescriber.make(urlStr),
+                    "text/html",
+                    "utf-8",
+                    null
+                )
+                return
+            }
+
             if(
                 !LoadUrlPrefixSuffix.judge(urlStr)
             ) return
