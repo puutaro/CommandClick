@@ -1,16 +1,26 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
+import android.content.Context
+import androidx.fragment.app.FragmentActivity
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.TargetFragmentInstance
 import java.io.File
 
 object TxtHtmlDescriber {
     fun make(
         urlStr: String,
+        terminalFragment: TerminalFragment
     ): String {
-        FileSystems.createDirs(UsePath.cmdclickTextHtmlDirPath)
+        val sharePref = terminalFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        FileSystems.createDirs(UsePath.cmdclickScrollPosiDirPath)
         val filePath = urlStr.removePrefix(
             WebUrlVariables.filePrefix
         )
@@ -21,6 +31,15 @@ object TxtHtmlDescriber {
             parent,
             fileName
         ).readText()
+        val fannelRawName = SharePreffrenceMethod.getStringFromSharePreffrence(
+                sharePref,
+                SharePrefferenceSetting.current_script_file_name
+            ).replace(
+            Regex("\\.[a-zA-Z0-9]*$"),
+            ""
+        )
+        val htmlPosiFilePath =
+            "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}${fileName}"
         val insertContents =
             contents
 //                .replace("<", "&lt;")
@@ -48,8 +67,8 @@ object TxtHtmlDescriber {
         function checkOffset(){
             positionY = window.pageYOffset;
             jsFileSystem.writeLocalFile(
-                "${UsePath.cmdclickScrollPosiFilePath}",
-                title + positionY
+                "${htmlPosiFilePath}",
+                positionY
             );
         }
         window.addEventListener("load", function(){
@@ -60,16 +79,14 @@ object TxtHtmlDescriber {
         
         
         function execScroll(){
-            const positionYWithPrefix = jsFileSystem.readLocalFile(
-                "${UsePath.cmdclickScrollPosiFilePath}"
+            positionYEntry = jsFileSystem.readLocalFile(
+                "${htmlPosiFilePath}"
             );
-            if(positionYWithPrefix == null) return
-            const regex = new RegExp('^' + title);
-            const positionYEntry = positionYWithPrefix.replace(regex, "");
+            if(positionYEntry == null) return
             if(
                 isNaN(positionYEntry)
             ) return;
-            positionY =  positionYEntry;
+            positionY =  Number(positionYEntry);
             scrollTo(0, positionY);
         };
         </script>

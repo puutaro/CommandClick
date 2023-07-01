@@ -74,7 +74,10 @@ class   TerminalFragment: Fragment() {
             ) {
                 binding.terminalWebView.loadDataWithBaseURL(
                     "",
-                    TxtHtmlDescriber.make(urlStr),
+                    TxtHtmlDescriber.make(
+                        urlStr,
+                        this@TerminalFragment
+                    ),
                     "text/html",
                     "utf-8",
                     null
