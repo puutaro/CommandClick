@@ -37,8 +37,11 @@ object LoadUrlPrefixSuffix {
     }
 
     fun judgeTextFile(
-        urlStr: String
+        urlStr: String?
     ): Boolean {
+        if(
+            urlStr.isNullOrEmpty()
+        ) return false
         return judgeFilePrefix(urlStr)
                 && judgeNoHtmlSuffix(urlStr)
                 && judgeNoJsSuffix(urlStr)

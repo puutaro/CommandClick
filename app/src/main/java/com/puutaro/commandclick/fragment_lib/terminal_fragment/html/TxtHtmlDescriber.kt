@@ -1,17 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
 import android.content.Context
-import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.TargetFragmentInstance
 import java.io.File
 
 object TxtHtmlDescriber {
