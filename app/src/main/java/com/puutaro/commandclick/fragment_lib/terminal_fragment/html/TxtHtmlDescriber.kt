@@ -15,6 +15,8 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 import java.io.File
 
 object TxtHtmlDescriber {
+
+    private val indexDirName = "index"
     fun make(
         urlStr: String,
         terminalFragment: TerminalFragment
@@ -38,8 +40,13 @@ object TxtHtmlDescriber {
             Regex("\\.[a-zA-Z0-9]*$"),
             ""
         )
+        val currentFannelHtmlPosiDirPath = if(
+            fannelRawName.isEmpty()
+        ) indexDirName
+        else "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
+        FileSystems.createDirs(currentFannelHtmlPosiDirPath)
         val htmlPosiFilePath =
-            "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}${fileName}"
+            "${currentFannelHtmlPosiDirPath}/${fileName}"
         val insertContents =
             contents
 //                .replace("<", "&lt;")
