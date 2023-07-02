@@ -15,7 +15,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
 
-object DisplaySwich {
+object DisplaySwitch {
     fun update (
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
