@@ -38,7 +38,7 @@ object AdBlocker {
     }
 
 
-    fun loadFromAssets(
+    private fun loadFromAssets(
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
     ) {
