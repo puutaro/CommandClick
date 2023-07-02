@@ -302,6 +302,13 @@ class TextToSpeechService:
         val speed = intent.getStringExtra(
             TextToSpeechIntentExtra.speed.scheme
         )
+        val currentAppDirName = intent.getStringExtra(
+            TextToSpeechIntentExtra.currentAppDirName.scheme
+        )
+        val fannelRawName = intent.getStringExtra(
+            TextToSpeechIntentExtra.scriptRawName.scheme
+        )
+        val currentTrackFileName = "${currentAppDirName}${fannelRawName}.txt"
         instantiateTextToSpeech(
             intent
         )
@@ -353,7 +360,7 @@ class TextToSpeechService:
         val fileListSize = fileList.size - 1
         val pastTrackKeyValueList = ReadText(
             UsePath.cmdclickTempTextToSpeechDirPath,
-            UsePath.cmdclickTextToSpeechTrackFileName,
+            currentTrackFileName,
         ).textToList()
         val readLength = getIntValue(
             pastTrackKeyValueList,
@@ -426,7 +433,8 @@ class TextToSpeechService:
                             fileList,
                             notificationBuilder,
                             displayRoopTimes,
-                            cancelPendingIntent
+                            cancelPendingIntent,
+                            currentTrackFileName
                         )
                     } catch(e: Exception){
                         Log.e("textToSpeech", e.toString())
@@ -552,7 +560,8 @@ class TextToSpeechService:
         fileList: List<String>,
         notificationBuilder: NotificationCompat.Builder,
         displayRoopTimes: String,
-        cancelPendingIntent: PendingIntent
+        cancelPendingIntent: PendingIntent,
+        currentTrackFileName: String,
     ){
         val text = getText(
             playPath,
@@ -607,7 +616,7 @@ class TextToSpeechService:
                     """.trimMargin()
                     FileSystems.writeFile(
                         UsePath.cmdclickTempTextToSpeechDirPath,
-                        UsePath.cmdclickTextToSpeechTrackFileName,
+                        currentTrackFileName,
                         trackFileCon
                     )
                     if(onCurrentRoopBreak) break

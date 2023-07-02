@@ -11,4 +11,6 @@ enum class TextToSpeechIntentExtra(
     onTrack("on_track"),
     speed("speed"),
     pitch("pitch"),
+    currentAppDirName("currentAppDirName"),
+    scriptRawName("scriptRawName"),
 }
