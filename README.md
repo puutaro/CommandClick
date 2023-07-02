@@ -832,7 +832,14 @@ This, so colled, android app row code library.
 		pitch: String(int string)  
 	)  
 	  
-	- jsTextToSpeech.stop()    
+	- jsTextToSpeech.stop()
+
+  
+ - JsPdf
+	- jsPath.extractText(  
+  		path: pdf path string  
+  	   ) -> extracted text     
+
 
 ### Javascript pre order word
 - `${0}` -> current file path  
