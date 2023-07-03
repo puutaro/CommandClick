@@ -13,7 +13,7 @@
         />
 
     <TextView
-        android:id="@+id/text_view"
+        android:id="@+id/caption_view"
         android:gravity="center"
         android:textSize="18sp"
         android:textColor="#fff"

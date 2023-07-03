@@ -56,20 +56,6 @@ class GridJsDialog(
         val myImageAdapter = ImageAdapter(context)
         myImageAdapter.addAll(imagePathList.toMutableList())
         gridview.adapter = myImageAdapter
-
-//        val externalStorageDirectoryPath = Environment
-//            .getExternalStorageDirectory()
-//            .absolutePath
-//
-//        val targetPath = "$externalStorageDirectoryPath/DCIM/100ANDRO"
-//
-//        Toast.makeText(getApplicationContext(), targetPath, Toast.LENGTH_LONG).show()
-//        val targetDirector = File(targetPath)
-
-//        val files = targetDirector.listFiles()
-//        for (file in files) {
-//            myImageAdapter.add(file.absolutePath)
-//        }
         return gridview
     }
 
@@ -134,7 +120,5 @@ class GridJsDialog(
             returnValue = selectedElement
             return@setOnItemClickListener
         }
-
-
     }
 }

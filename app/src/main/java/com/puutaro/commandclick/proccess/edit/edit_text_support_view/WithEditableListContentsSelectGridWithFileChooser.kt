@@ -8,10 +8,10 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectGridViewProducer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class WithEditableListContentsSelectSpinnerWithFileChooser(
+class WithEditableListContentsSelectGridWithFileChooser(
     private val editFragment: EditFragment,
 ) {
     val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
@@ -31,15 +31,15 @@ class WithEditableListContentsSelectSpinnerWithFileChooser(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.5F
+        linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+        val insertGrid = EditableListContentsSelectGridViewProducer.make(
             insertEditText,
             editParameters,
-            0.3F,
+            0.2F,
         )
-        horizontalLinearLayout.addView(insertSpinner)
+        horizontalLinearLayout.addView(insertGrid)
         val insertChooseButton = DirOrFileChooseProducer.make(
             editFragment,
             onDirectoryPick,

@@ -114,7 +114,14 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+
     private val withEditableListContentsSelectSpinnerWithFileChooserWithButton = WithEditableListContentsSelectSpinnerWithFileChooserWithButton(
+        editFragment
+    )
+    private val withEditableListContentsSelectGridWithFileChooserWithButton = WithEditableListContentsSelectGridWithFileChooserWithButton(
+        editFragment
+    )
+    private val withEditableListContentsSelectGridWithFileChooser = WithEditableListContentsSelectGridWithFileChooser(
         editFragment
     )
 
@@ -125,6 +132,7 @@ class EditTextProducerForEdit(
     )
 
     private val withEditableFileSelectSpinnerView = WithEditableFileSelectSpinnerView()
+    private val withEditableFileSelectGridView = WithEditableFileSelectGridView()
 
     private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
 
@@ -301,6 +309,13 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.EDITABLE_FILE_SELECT_GRID_BOX.str -> {
+                    val innerLinearLayout = withEditableFileSelectGridView.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.LIST_CONTENTS_CHECK_BOX_BUTTON.str -> {
                     val innerLinearLayout = withListContentsSelectSpinnerWithButton.create(
                         insertTextView,
@@ -325,6 +340,14 @@ class EditTextProducerForEdit(
                     )
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_GRID_BOX_FILE_PICKER.str -> {
+                    editParameters.onDirectoryPick = false
+                    val innerLinearLayout = withEditableListContentsSelectGridWithFileChooser.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
                 EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX_DIRECTORY_PICKER_BUTTON.str -> {
                     editParameters.onDirectoryPick = true
                     val innerLinearLayout =
@@ -339,6 +362,16 @@ class EditTextProducerForEdit(
                     editParameters.onDirectoryPick = false
                     val innerLinearLayout =
                         withEditableListContentsSelectSpinnerWithFileChooserWithButton.create(
+                            insertTextView,
+                            insertEditText,
+                            editParameters,
+                        )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_GRID_BOX_FILE_PICKER_BUTTON.str -> {
+                    editParameters.onDirectoryPick = false
+                    val innerLinearLayout =
+                        withEditableListContentsSelectGridWithFileChooserWithButton.create(
                             insertTextView,
                             insertEditText,
                             editParameters,

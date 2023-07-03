@@ -22,6 +22,8 @@ class ImageAdapter(
         var imageView: ImageView? = null
         var textView: TextView? = null
     }
+    private val filePngAssetsPath = "res/png/file.png"
+    private val filePngBitMap = makeFileMarkBitMap(filePngAssetsPath)
     private var itemList = mutableListOf<String>()
     fun add(path: String) {
         itemList.add(path)
@@ -55,11 +57,11 @@ class ImageAdapter(
         if (convertViewArg == null) {
             val li = mContext?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val convertView = li.inflate(
-                R.layout.grid_items,
+                R.layout.grid_image_items,
                 parent,
                 false
             ) as View
-            val textView = convertView.findViewById<TextView>(R.id.text_view)
+            val textView = convertView.findViewById<TextView>(R.id.caption_view)
             textView.text = imageName
             holder = ViewHolder()
             holder.textView = textView
@@ -89,6 +91,12 @@ class ImageAdapter(
         reqWidth: Int,
         reqHeight: Int
     ): Bitmap? {
+        if(
+            path.isNullOrEmpty()
+        ) return null
+        if(
+            !File(path).isFile
+        ) return null
         var bm: Bitmap? = null
         val options = BitmapFactory.Options()
         options.inJustDecodeBounds = true
@@ -96,6 +104,11 @@ class ImageAdapter(
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
         options.inJustDecodeBounds = false
         bm = BitmapFactory.decodeFile(path, options)
+        if(
+            bm == null
+        ) {
+            return filePngBitMap
+        }
         return bm
     }
 
@@ -120,11 +133,24 @@ class ImageAdapter(
         imagePath: String
     ): ImageView? {
         val bm = decodeSampledBitmapFromUri(
-            imagePath, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
+            imagePath,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
         )
         imageView?.setImageBitmap(bm)
         imageView?.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView?.setPadding(8, 8, 8, 8)
         return imageView
+    }
+
+    private fun makeFileMarkBitMap(
+        assetsRelativePath: String
+    ): Bitmap {
+        val assetManager = mContext?.assets
+        return BitmapFactory.decodeStream(
+            assetManager?.open(
+                assetsRelativePath
+            )
+        )
     }
 }

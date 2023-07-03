@@ -4,25 +4,16 @@ import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectGridViewProducer
 
-class WithEditableListContentsSelectSpinnerWithFileChooser(
-    private val editFragment: EditFragment,
-) {
-    val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-
+class WithEditableFileSelectGridView {
     fun create(
         insertEditText: EditText,
         editParameters: EditParameters
     ): LinearLayout {
         val context = editParameters.context
         val currentVariableValue = editParameters.currentVariableValue
-        val onDirectoryPick = editParameters.onDirectoryPick
         val horizontalLinearLayout = LinearLayout(context)
         horizontalLinearLayout.orientation = LinearLayout.HORIZONTAL
         val linearParamsForEditTextTest = LinearLayout.LayoutParams(
@@ -31,22 +22,15 @@ class WithEditableListContentsSelectSpinnerWithFileChooser(
         )
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
-        linearParamsForEditTextTest.weight = 0.5F
+        linearParamsForEditTextTest.weight = 0.6F
         insertEditText.layoutParams = linearParamsForEditTextTest
         horizontalLinearLayout.addView(insertEditText)
-        val insertSpinner = EditableListContentsSelectSpinnerViewProducer.make(
+        val insertGridView = FileSelectGridViewProducer.make(
             insertEditText,
             editParameters,
-            0.3F,
+            0.4F,
         )
-        horizontalLinearLayout.addView(insertSpinner)
-        val insertChooseButton = DirOrFileChooseProducer.make(
-            editFragment,
-            onDirectoryPick,
-            insertEditText,
-            0.2F,
-        )
-        horizontalLinearLayout.addView(insertChooseButton)
+        horizontalLinearLayout.addView(insertGridView)
         return horizontalLinearLayout
     }
 }
