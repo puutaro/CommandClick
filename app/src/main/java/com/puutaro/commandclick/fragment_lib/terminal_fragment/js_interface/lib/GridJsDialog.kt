@@ -93,7 +93,7 @@ class GridJsDialog(
         val titleString = if(title.isNotEmpty()){
             title
         } else "Select bellow list"
-        val alertDialog = if(
+        terminalFragment.dialogInstance = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -111,10 +111,11 @@ class GridJsDialog(
                 .setView(gridview)
                 .create()
         }
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
+        val alertDialog = terminalFragment.dialogInstance
+        alertDialog?.window?.setGravity(Gravity.BOTTOM)
+        alertDialog?.show()
 
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
             }
@@ -123,7 +124,7 @@ class GridJsDialog(
         gridview.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
+            alertDialog?.dismiss()
             val selectedElement = imagePathList
                 .get(pos)
                 .split("\n")

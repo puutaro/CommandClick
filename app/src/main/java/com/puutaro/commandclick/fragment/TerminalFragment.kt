@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment
 
+import android.app.AlertDialog
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -61,6 +62,7 @@ class   TerminalFragment: Fragment() {
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var ignoreHistoryPathList: List<String>? = null
+    var dialogInstance: AlertDialog? = null
 
 
     var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
@@ -168,6 +170,8 @@ class   TerminalFragment: Fragment() {
         super.onPause()
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
+        dialogInstance?.dismiss()
+        terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
@@ -191,6 +195,8 @@ class   TerminalFragment: Fragment() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = false
+        dialogInstance?.dismiss()
+        terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
         InitCurrentMonitorFile.trim(this)
