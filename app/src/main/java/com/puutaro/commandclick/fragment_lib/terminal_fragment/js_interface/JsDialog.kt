@@ -2,13 +2,11 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import androidx.core.content.contentValuesOf
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.FormJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.GridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class JsDialog(
     terminalFragment: TerminalFragment
@@ -23,6 +21,10 @@ class JsDialog(
         terminalFragment
     )
     val multiSelectJsDialog = MultiSelectJsDialog(
+        terminalFragment
+    )
+
+    val gridJsDialog = GridJsDialog(
         terminalFragment
     )
 
@@ -71,6 +73,24 @@ class JsDialog(
             title,
             currentItemListStr,
             preSelectedItemListStr,
+        )
+    }
+
+    @JavascriptInterface
+    fun gridDialog(
+        title: String,
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        Toast.makeText(
+            context,
+            "grid",
+            Toast.LENGTH_LONG
+        ).show()
+        return gridJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
         )
     }
 }
