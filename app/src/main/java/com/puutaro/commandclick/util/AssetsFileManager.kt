@@ -9,7 +9,8 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object AssetsFileManager {
-    const val fileMarkPingPath = "res/png/file.png"
+    const val textImagePingPath = "res/png/text_image.png"
+    const val pdfImagePingPath = "res/png/pdf_image.png"
 
     fun readFromAssets(
         context: Context?,
