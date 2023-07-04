@@ -72,4 +72,6 @@ dependencies {
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
     implementation("org.jsoup:jsoup:1.7.3")
     implementation("com.itextpdf:itextg:5.5.10")
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 }

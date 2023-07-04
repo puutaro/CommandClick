@@ -3,12 +3,16 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.FileTempDownloader
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.ImageTempDownloader
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.ReadText
+
 
 object ImageOnLongClickListener {
 
@@ -36,6 +40,10 @@ object ImageOnLongClickListener {
                     ) {
                         val longPressImageUrl = hitTestResult.extra
                             ?: return@setOnLongClickListener false
+//                        ImageTempDownloader.download(
+//                            terminalFragment,
+//                            longPressImageUrl
+//                        )
                         val jsContentsListSource = ReadText(
                             currentHitSystemDirPath,
                             UsePath.longPressImageAnchorJsName,
@@ -66,6 +74,10 @@ object ImageOnLongClickListener {
                         ?: return@setOnLongClickListener false
                     val longPressImageUrl = message.data.getString("src")
                         ?: return@setOnLongClickListener  false
+//                    ImageTempDownloader.download(
+//                        terminalFragment,
+//                        longPressImageUrl
+//                    )
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
@@ -99,6 +111,12 @@ object ImageOnLongClickListener {
                 WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
                     val url = hitTestResult.extra
                         ?: return@setOnLongClickListener false
+//                    FileTempDownloader.downloadFile(url)
+//                    Toast.makeText(
+//                        terminalFragment.context,
+//                        url,
+//                        Toast.LENGTH_SHORT
+//                    ).show()
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true

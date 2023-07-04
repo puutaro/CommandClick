@@ -1,20 +1,44 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.download
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
 import com.puutaro.commandclick.common.variable.UsePath
-import java.net.URI
+import com.puutaro.commandclick.util.FileSystems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
 import java.net.URL
-import java.nio.file.Files
-import java.nio.file.Paths
 
-object FileDownloader {
+object FileTempDownloader {
 
     private val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
-    private val tempFileName = "temp"
 
-    fun downloadFile(urlStr: String, fileName: String) {
-        val url: URL =  URL(urlStr)
-        url.openStream().use {
-            Files.copy(it, Paths.get(fileName))
+    fun downloadFile(urlStr: String) {
+        val url =  URL(urlStr)
+        val path =
+            cmdclickTempDownloadDirPath +
+                    urlStr.substring(
+                        urlStr.lastIndexOf("/")
+                    )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                FileSystems.removeDir(
+                    cmdclickTempDownloadDirPath
+                )
+                FileSystems.createDirs(
+                    cmdclickTempDownloadDirPath
+                )
+            }
+            withContext(Dispatchers.IO) {
+                url
+                    .openStream()
+                    .copyTo(
+                        FileOutputStream(
+                            File(path)
+                        )
+                    )
+            }
         }
 
     }

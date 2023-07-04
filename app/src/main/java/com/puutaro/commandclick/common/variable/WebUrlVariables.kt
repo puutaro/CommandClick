@@ -14,6 +14,9 @@ class WebUrlVariables {
         val jsPrefix = "javascript:"
         val commandClickGitUrl = "https://github.com/puutaro/CommandClick#readme"
         val commandClickRepositoryUrl = "https://github.com/puutaro/commandclick-repository.git"
+        val base64Prefix = "data:image/"
+        val base64JpegPrefix = "${base64Prefix}jpeg;base64"
+        val base64PngPrefix = "${base64Prefix}png;base64"
 
         fun makeUrlHistoryFile(
             dirPath: String,

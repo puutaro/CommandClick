@@ -26,10 +26,10 @@ object WebChromeClientSetter {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress == 100) {
-                    progressBar.setVisibility(View.GONE)
+                    progressBar.visibility = View.GONE
                 } else {
-                    progressBar.setVisibility(View.VISIBLE)
-                    progressBar.setProgress(newProgress)
+                    progressBar.visibility = View.VISIBLE
+                    progressBar.progress = newProgress
                 }
             }
 

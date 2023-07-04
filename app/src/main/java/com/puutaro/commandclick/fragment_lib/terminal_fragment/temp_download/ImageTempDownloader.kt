@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.download
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -20,7 +20,7 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
-object ImageDownloader {
+object ImageTempDownloader {
 
     private val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
     private val tempFileName = "temp"
@@ -29,25 +29,14 @@ object ImageDownloader {
         terminalFragment: TerminalFragment,
         url: String
     ){
-        val context = terminalFragment.context
         val onBase64Image =
             url.trim().startsWith(WebUrlVariables.base64JpegPrefix)
                     || url.trim().startsWith(WebUrlVariables.base64PngPrefix)
-//        Toast.makeText(
-//            terminalFragment.context,
-//            "${onBase64Image.toString()}\n${url}",
-//            Toast.LENGTH_SHORT
-//        ).show()
         FileSystems.removeDir(
             cmdclickTempDownloadDirPath
         )
         FileSystems.createDirs(
             cmdclickTempDownloadDirPath
-        )
-        FileSystems.writeFile(
-            cmdclickTempDownloadDirPath,
-            "txt.txt",
-            url
         )
         CoroutineScope(Dispatchers.IO).launch {
             when(onBase64Image){

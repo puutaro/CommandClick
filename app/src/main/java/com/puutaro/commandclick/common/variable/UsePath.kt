@@ -5,6 +5,7 @@ import android.os.Environment
 
 class UsePath {
     companion object {
+        val pdfExtend = ".pdf"
         private val tsvExtend = ".tsv"
         private val rootPath = Environment.getExternalStorageDirectory().absolutePath +
                 "/" + Environment.DIRECTORY_DOCUMENTS
@@ -15,6 +16,9 @@ class UsePath {
         val cmdclickConfDirPath =  "$rootPath/$cmdclickConfRelativePath"
         private const val cmdclickTempDirName = "temp"
         private const val cmdclickTempRelativePath = "$cmdclickDirName/$cmdclickTempDirName"
+        private const val cmdclickTmpDownloadDirName = "download"
+        private const val cmdclickTempDownloadRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpDownloadDirName"
+        val cmdclickTempDownloadDirPath = "$rootPath/$cmdclickTempDownloadRelativeDirPath"
         private const val cmdclickTmpTextToSpeechDirName = "textToSpeech"
         private const val cmdclickTempTextToSpeechRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpTextToSpeechDirName"
         val cmdclickTempTextToSpeechDirPath = "$rootPath/$cmdclickTempTextToSpeechRelativeDirPath"
