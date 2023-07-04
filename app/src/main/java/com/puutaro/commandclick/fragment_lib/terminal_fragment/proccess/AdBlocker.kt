@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +44,7 @@ object AdBlocker {
     ) {
         try {
             terminalViewModel.blocklist =
-                FileSystems.readFromAssets(
+                AssetsFileManager.readFromAssets(
                     terminalFragment.context,
                     AD_HOSTS_FILE
                 ).split("\n").toHashSet()

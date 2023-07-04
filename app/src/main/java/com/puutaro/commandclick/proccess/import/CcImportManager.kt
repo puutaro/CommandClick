@@ -3,10 +3,9 @@ package com.puutaro.commandclick.proccess.import
 import android.content.Context
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.BothEdgeQuote
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -69,7 +68,7 @@ object CcImportManager {
                 assetsPrefix
             )
         ){
-            return FileSystems.readFromAssets(
+            return AssetsFileManager.readFromAssets(
                 context,
                 trimImportPathSource.removePrefix(assetsPrefix)
             )

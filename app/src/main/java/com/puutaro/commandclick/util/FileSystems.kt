@@ -1,16 +1,10 @@
 package com.puutaro.commandclick.util
 
-import android.content.Context
-import android.content.res.AssetManager
 import android.util.Log
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.InputStream
-import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 
@@ -235,44 +229,6 @@ object FileSystems {
         }
     }
 
-    fun copyFile(
-        sourceShellFilePath: String,
-        destiShellFilePath: String
-    ){
-        if(
-            !File(sourceShellFilePath).isFile
-        ) return
-        try {
-            Files.copy(
-                File(sourceShellFilePath).toPath(),
-                File(destiShellFilePath).toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-            )
-        } catch (e: Exception) {
-            return
-        }
-    }
-
-    fun readFromAssets(
-        context: Context?,
-        assetRelativePath: String,
-    ): String {
-        val fis2: InputStream =
-            context?.assets?.open(
-                assetRelativePath
-            ) ?: return String()
-        val contents = try {
-            fis2.bufferedReader().use {
-                it.readText()
-            }
-        } catch(e: Exception) {
-            fis2.close()
-            return String()
-        }
-        fis2.close()
-        return contents
-    }
-
     fun moveFile(
         sourceShellFilePath: String,
         destiShellFilePath: String
@@ -291,74 +247,21 @@ object FileSystems {
         }
     }
 
-    fun copyFileOrDir(
-        context: Context?,
-        path: String,
-        replacePrefix: String,
-        targetDirPath: String,
-    ) {
-        val assetManager = context?.assets
-            ?: return
-        var assets: Array<String>? = null
+    fun copyFile(
+        sourceShellFilePath: String,
+        destiShellFilePath: String
+    ){
+        if(
+            !File(sourceShellFilePath).isFile
+        ) return
         try {
-            assets = assetManager.list(path)
-                ?: return
-            if (
-                assets.size == 0
-            ) {
-                copyFile(
-                    context,
-                    path,
-                    replacePrefix,
-                    targetDirPath
-                )
-                return
-            }
-            val dir = File(
-                "${targetDirPath}/${path.removePrefix("${replacePrefix}/")}"
+            Files.copy(
+                File(sourceShellFilePath).toPath(),
+                File(destiShellFilePath).toPath(),
+                StandardCopyOption.REPLACE_EXISTING
             )
-            if (
-                !dir.exists()
-            ) dir.mkdir()
-            for (i in assets.indices) {
-                copyFileOrDir(
-                    context,
-                    path + "/" + assets[i],
-                    replacePrefix,
-                    targetDirPath
-                )
-            }
-        } catch (ex: IOException) {
-            Log.e("tag", "I/O Exception", ex)
-        }
-    }
-
-    private fun copyFile(
-        context: Context?,
-        filename: String,
-        replacePrefix: String,
-        targetDirPath: String
-    ) {
-        val assetManager = context?.getAssets()
-            ?: return
-        var `in`: InputStream? = null
-        var out: OutputStream? = null
-        try {
-            `in` = assetManager.open(filename)
-            val newFileName = targetDirPath + "/" + filename.removePrefix("${replacePrefix}/")
-            out = FileOutputStream(newFileName)
-            val buffer = ByteArray(1024)
-            var read: Int
-            while (`in`.read(buffer).also { read = it } != -1) {
-                out.write(buffer, 0, read)
-            }
-            `in`.close()
-            `in` = null
-            out.flush()
-            out.close()
-            out = null
-        } catch (e: java.lang.Exception) {
-            Log.e("tag", e.message!!)
+        } catch (e: Exception) {
+            return
         }
     }
 }

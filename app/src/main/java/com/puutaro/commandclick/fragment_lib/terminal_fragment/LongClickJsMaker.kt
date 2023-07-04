@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 
 object LongClickJsMaker {
@@ -34,7 +35,7 @@ object LongClickJsMaker {
         val context = terminalFragment.context
         val assetRelativePath = "${UsePath.cmdclickHitSystemDirRelativePath}/${fileName}"
 
-        val longPressJsContents = FileSystems.readFromAssets(
+        val longPressJsContents = AssetsFileManager.readFromAssets(
             context,
             assetRelativePath,
         )

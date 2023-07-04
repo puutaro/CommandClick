@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.util.AssetsFileManager
 import java.io.File
 
 
@@ -22,8 +23,7 @@ class ImageAdapter(
         var imageView: ImageView? = null
         var textView: TextView? = null
     }
-    private val filePngAssetsPath = "res/png/file.png"
-    private val filePngBitMap = makeFileMarkBitMap(filePngAssetsPath)
+    private val filePngBitMap = makeFileMarkBitMap()
     private var itemList = mutableListOf<String>()
     fun add(path: String) {
         itemList.add(path)
@@ -144,13 +144,13 @@ class ImageAdapter(
     }
 
     private fun makeFileMarkBitMap(
-        assetsRelativePath: String
     ): Bitmap {
         val assetManager = mContext?.assets
-        return BitmapFactory.decodeStream(
+        val fileMarkbitmap = BitmapFactory.decodeStream(
             assetManager?.open(
-                assetsRelativePath
+                AssetsFileManager.fileMarkPingPath
             )
         )
+        return fileMarkbitmap
     }
 }

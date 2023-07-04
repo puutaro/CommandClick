@@ -5,6 +5,7 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
@@ -46,7 +47,7 @@ object HtmlLauncher{
         val filterCode = intent.getStringExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme
         ) ?: "true"
-        val htmlContentsSource = FileSystems.readFromAssets(
+        val htmlContentsSource = AssetsFileManager.readFromAssets(
             context,
             "html/edit_urls_template.html"
         )
