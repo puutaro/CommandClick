@@ -144,10 +144,14 @@ At the same time, if you installed code editor, edit new file.
     | --------- | --------- | ------------ |
     | `CB` | checkbox | {variableName}:CB=value1!value2!|..   |
     | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;cmd={command string}(!label={button label}) |..   |
+    | `EB` | edit text with exec button | {variableName}:EB=cmd={command string}(!label={button label}) |..   |
     | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
     | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;cmd={command string}(!label={button label}) |..   |
     | `EFCB` | editable file checkbox | {variableName}:EFCB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
     | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
+    | `EFGB` | editable file grid box | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
+    | `EFGBB` | editable file grid box with exec button | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
+
     | `LCB` | list file checkbox | {variableName}:LCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
     | `LCBB` | list file checkbox with exec button | {variableName}:LCBB=listPath={target list file path}(!limitNum={list limit num})&#124;cmd={command string}(!label={button label}) |..   |
     | `ELCB` | editable list file checkbox | {variableName}:ELCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
@@ -155,8 +159,9 @@ At the same time, if you installed code editor, edit new file.
     | `EMCB` | multi checkbox | {variableName}:EMCB=value1!value2!.. |..   |
     | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;cmd={command string}(!label={button label}) |..   |
     | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB=listPath={target list file path} |..   |
-    | `ELCBDIR` | editable list file multi checkbox with directory select button | {variableName}:ELCBDIR=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `ELCBFL` | editable list file multi checkbox with file select button | {variableName}:ELCBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
+    | `ELCBDIR` | editable list file checkbox with directory select button | {variableName}:ELCBDIR=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
+    | `ELCBFL` | editable list file checkbox with file select button | {variableName}:ELCBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
+    | `ELGBFL` | editable list file multi Grid with file select button | {variableName}:ELGBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}!#124;{menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(!#124;prefix={grep prefix})(!#124;suffix={grep suffix}) |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
