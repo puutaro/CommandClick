@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
 import java.io.File
 
@@ -23,7 +24,13 @@ class ImageAdapter(
         var imageView: ImageView? = null
         var textView: TextView? = null
     }
-    private val filePngBitMap = makeFileMarkBitMap()
+    private val pdfExtend = UsePath.pdfExtend
+    private val textImagePngBitMap = makeFileMarkBitMap(
+        AssetsFileManager.textImagePingPath
+    )
+    private val pdfImagePngBitMap = makeFileMarkBitMap(
+        AssetsFileManager.pdfImagePingPath
+    )
     private var itemList = mutableListOf<String>()
     fun add(path: String) {
         itemList.add(path)
@@ -104,12 +111,20 @@ class ImageAdapter(
         options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
         options.inJustDecodeBounds = false
         bm = BitmapFactory.decodeFile(path, options)
-        if(
-            bm == null
-        ) {
-            return filePngBitMap
+        return when(bm){
+            null -> judgePdfOrOther(path)
+            else -> bm
         }
-        return bm
+    }
+
+    private fun judgePdfOrOther(
+        path: String
+    ): Bitmap {
+        val onPdf = path.endsWith(pdfExtend)
+        return when(onPdf){
+            true -> pdfImagePngBitMap
+            else -> textImagePngBitMap
+        }
     }
 
     private fun calculateInSampleSize(
@@ -144,11 +159,12 @@ class ImageAdapter(
     }
 
     private fun makeFileMarkBitMap(
+        assetsRelativePath: String
     ): Bitmap {
         val assetManager = mContext?.assets
         val fileMarkbitmap = BitmapFactory.decodeStream(
             assetManager?.open(
-                AssetsFileManager.fileMarkPingPath
+                assetsRelativePath
             )
         )
         return fileMarkbitmap
