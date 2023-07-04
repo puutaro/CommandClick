@@ -102,6 +102,10 @@ class EditTextProducerForEdit(
         editFragment,
     )
 
+    private val withEditableFileSelectGridWithButtonView = WithEditableFileSelectGridWithButtonView(
+        editFragment
+    )
+
     private val withEditableListContentsSelectSpinnerWithButton = WithEditableListContentsSelectSpinnerWithButton(
         editFragment,
     )
@@ -310,6 +314,7 @@ class EditTextProducerForEdit(
                     binding.editLinearLayout.addView(innerLinearLayout)
                 }
                 EditTextSupportViewName.EDITABLE_FILE_SELECT_GRID_BOX.str -> {
+                    editParameters.isReturnOnlyFileName = true
                     val innerLinearLayout = withEditableFileSelectGridView.create(
                         insertEditText,
                         editParameters,
@@ -343,6 +348,16 @@ class EditTextProducerForEdit(
                 EditTextSupportViewName.EDITABLE_LIST_CONTENTS_GRID_BOX_FILE_PICKER.str -> {
                     editParameters.onDirectoryPick = false
                     val innerLinearLayout = withEditableListContentsSelectGridWithFileChooser.create(
+                        insertEditText,
+                        editParameters,
+                    )
+                    binding.editLinearLayout.addView(innerLinearLayout)
+                }
+                EditTextSupportViewName.EDITABLE_FILE_SELECT_GRID_BOX_BUTTON.str -> {
+                    editParameters.isReturnOnlyFileName = true
+                    editParameters.onDirectoryPick = false
+                    val innerLinearLayout = withEditableFileSelectGridWithButtonView.create(
+                        insertTextView,
                         insertEditText,
                         editParameters,
                     )

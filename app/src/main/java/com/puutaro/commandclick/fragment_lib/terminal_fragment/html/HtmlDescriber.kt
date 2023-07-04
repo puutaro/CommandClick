@@ -53,7 +53,7 @@ object HtmlDescriber {
         }
         let toFilterSource = ${'$'}('#onCmdClickFilter');
         const percent = String.fromCharCode('％'.charCodeAt(0) - 0xFEE0);
-        let exp = /[^href=\"](\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/&#37;?=~_|!:,.;]*[-A-Z0-9+&@#\/&#37;=~_|])/ig;
+        let exp = /[^href=\"](\b(https?|ftp|file):\/\/[^ 　\t]*)/ig;
         ${'$'}('#onCmdClickFilter')
             .html(
                 ${'$'}('#onCmdClickFilter')

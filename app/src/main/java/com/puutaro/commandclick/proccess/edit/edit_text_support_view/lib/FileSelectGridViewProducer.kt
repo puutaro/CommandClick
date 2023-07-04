@@ -142,12 +142,13 @@ object FileSelectGridViewProducer {
             ->
             alertDialog?.dismiss()
             val selectedItem = adapter.getItem(pos)
+            val selectedFileName = File(selectedItem).name
             if(
                 currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
             ) {
                 FileSystems.updateLastModified(
                     filterDir,
-                    selectedItem
+                    selectedFileName
                 )
             }
             val currentGridList = makeGridList(
@@ -165,7 +166,11 @@ object FileSelectGridViewProducer {
             adapter.addAll(selectUpdatedGridList.toMutableList())
             adapter.notifyDataSetChanged()
             gridView.setSelection(0)
-            insertEditText.setText(selectedItem)
+            val returnFileStr = if(
+                editParameters.isReturnOnlyFileName
+            ) selectedFileName
+            else selectedItem
+            insertEditText.setText(returnFileStr)
             SelectJsExecutor.exec(
                 currentFragment,
                 selectJsPath,
@@ -202,11 +207,15 @@ object FileSelectGridViewProducer {
             it.startsWith(filterPrefix)
                     && judgeBySuffix(it, filterSuffix)
                     && File("$filterDir/$it").isFile
+        }.map {
+            "$filterDir/$it"
         }
         return sortedList.filter {
             it.startsWith(filterPrefix)
                     && judgeBySuffix(it, filterSuffix)
                     && File("$filterDir/$it").isDirectory
+        }.map {
+            "$filterDir/$it"
         }
     }
 

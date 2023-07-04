@@ -16,4 +16,5 @@ data class EditParameters(
     var currentVariableValue: String? = null
     var setVariableMap:  Map<String, String>? = null
     var onDirectoryPick: Boolean = false
+    var isReturnOnlyFileName: Boolean = false
 }
