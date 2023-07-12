@@ -151,7 +151,6 @@ At the same time, if you installed code editor, edit new file.
     | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
     | `EFGB` | editable file grid box | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
     | `EFGBB` | editable file grid box with exec button | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
-
     | `LCB` | list file checkbox | {variableName}:LCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
     | `LCBB` | list file checkbox with exec button | {variableName}:LCBB=listPath={target list file path}(!limitNum={list limit num})&#124;cmd={command string}(!label={button label}) |..   |
     | `ELCB` | editable list file checkbox | {variableName}:ELCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
