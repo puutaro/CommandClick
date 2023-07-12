@@ -162,7 +162,7 @@ At the same time, if you installed code editor, edit new file.
     | `ELCBFL` | editable list file checkbox with file select button | {variableName}:ELCBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `ELGBFL` | editable list file multi Grid with file select button | {variableName}:ELGBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
     | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}!#124;{menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(!#124;prefix={grep prefix})(!#124;suffix={grep suffix}) |..   |
+    | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
     | `H` | password input | {variableName}:H={password ..etc}   |
     | `RO` | read only | {variableName}:RO= |
     | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
