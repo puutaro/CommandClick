@@ -335,7 +335,7 @@ class ToolbarButtonProducerForEdit(
             recordNumToMapNameValueInSettingHolder,
         )
 
-        val curentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
@@ -345,14 +345,17 @@ class ToolbarButtonProducerForEdit(
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         val EditExecuteOnce =
             SettingVariableSelects.EditExecuteSelects.ONCE.name
-        val on_shortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.on_shortcut
-        ) != SharePrefferenceSetting.on_shortcut.defalutStr
+        val shortcutValue = FragmentTagManager.makeListFromTag(
+            editFragment.tag
+                ?: String()
+        ).getOrNull(FragmentTagManager.modeIndex)
+            ?: String()
+        val onShortcut = shortcutValue != SharePrefferenceSetting.on_shortcut.defalutStr
+                && shortcutValue.isNotEmpty()
         if(
             editExecuteValue == EditExecuteAlways
             && enableCmdEdit
-            && on_shortcut
+            && onShortcut
             && !onPassCmdVariableEdit
         ) {
             Keyboard.hiddenKeyboardForFragment(
@@ -364,7 +367,7 @@ class ToolbarButtonProducerForEdit(
             )
             ExecJsOrSellHandler.handle(
                 editFragment,
-                curentAppDirPath,
+                currentAppDirPath,
                 currentShellFileName,
             )
             return
@@ -372,7 +375,7 @@ class ToolbarButtonProducerForEdit(
         if(
             (editExecuteValue == EditExecuteAlways)
             == !enableCmdEdit
-            && on_shortcut
+            && onShortcut
         ){
             val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(

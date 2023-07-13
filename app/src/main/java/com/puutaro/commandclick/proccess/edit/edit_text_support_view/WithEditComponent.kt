@@ -313,10 +313,10 @@ class WithEditComponent(
 //        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
         linearParamsForEditTextTest.weight = editTextWeight
         insertEditText.layoutParams = linearParamsForEditTextTest
-        addTextChangeListenerForEditText(
-            insertEditText,
-            currentId
-        )
+//        addTextChangeListenerForEditText(
+//            insertEditText,
+//            currentId
+//        )
         return insertEditText
     }
 
@@ -398,57 +398,57 @@ class WithEditComponent(
         return textAndLabelOtherCompLength
     }
 
-    private fun addTextChangeListenerForEditText(
-        insertEditText: EditText,
-        currentOrder: Int,
-    ){
-        insertEditText.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(
-                s: Editable?
-            ) {}
-
-            override fun beforeTextChanged(
-                s: CharSequence?, start: Int, count: Int, after: Int
-            ) {}
-
-            override fun onTextChanged(
-                s: CharSequence?,
-                start: Int,
-                before: Int,
-                count: Int
-            ) {
-                val currentText = insertEditText.text
-                val includeBothQuoteInMiddle = checkMiddleText(currentText)
-                val includeForbbidenStr = "\\" in currentText
-                if (includeForbbidenStr ||
-                    includeBothQuoteInMiddle
-                ) {
-                    insertEditText.setError("\\ or both quote is used")
-
-                    buttonViewHowActive.buttonViewHowActive(
-                        ToolbarButtonBariantForEdit.OK.str,
-                        false
-                    )
-                    buttonViewHowActive.buttonViewHowActive(
-                        ToolbarButtonBariantForEdit.EDIT.str,
-                        false
-                    )
-                    validateErrEditTextNumberSet.add(currentOrder)
-                    return
-                }
-                validateErrEditTextNumberSet.remove(currentOrder)
-                if(validateErrEditTextNumberSet.size > 0) return
-                buttonViewHowActive.buttonViewHowActive(
-                    ToolbarButtonBariantForEdit.OK.str,
-                    true
-                )
-                buttonViewHowActive.buttonViewHowActive(
-                    ToolbarButtonBariantForEdit.EDIT.str,
-                    enableCmdEdit
-                )
-            }
-        })
-    }
+//    private fun addTextChangeListenerForEditText(
+//        insertEditText: EditText,
+//        currentOrder: Int,
+//    ){
+//        insertEditText.addTextChangedListener(object : TextWatcher {
+//            override fun afterTextChanged(
+//                s: Editable?
+//            ) {}
+//
+//            override fun beforeTextChanged(
+//                s: CharSequence?, start: Int, count: Int, after: Int
+//            ) {}
+//
+//            override fun onTextChanged(
+//                s: CharSequence?,
+//                start: Int,
+//                before: Int,
+//                count: Int
+//            ) {
+//                val currentText = insertEditText.text
+//                val includeBothQuoteInMiddle = checkMiddleText(currentText)
+//                val includeForbbidenStr = "\\" in currentText
+//                if (includeForbbidenStr ||
+//                    includeBothQuoteInMiddle
+//                ) {
+//                    insertEditText.setError("\\ or both quote is used")
+//
+//                    buttonViewHowActive.buttonViewHowActive(
+//                        ToolbarButtonBariantForEdit.OK.str,
+//                        false
+//                    )
+//                    buttonViewHowActive.buttonViewHowActive(
+//                        ToolbarButtonBariantForEdit.EDIT.str,
+//                        false
+//                    )
+//                    validateErrEditTextNumberSet.add(currentOrder)
+//                    return
+//                }
+//                validateErrEditTextNumberSet.remove(currentOrder)
+//                if(validateErrEditTextNumberSet.size > 0) return
+//                buttonViewHowActive.buttonViewHowActive(
+//                    ToolbarButtonBariantForEdit.OK.str,
+//                    true
+//                )
+//                buttonViewHowActive.buttonViewHowActive(
+//                    ToolbarButtonBariantForEdit.EDIT.str,
+//                    enableCmdEdit
+//                )
+//            }
+//        })
+//    }
 
     private fun hideSettingVariableWhenSettingEdit(
         editFragment: EditFragment,
@@ -456,10 +456,10 @@ class WithEditComponent(
         insertTextView: TextView,
         horizontalLinearLayout: LinearLayout,
     ){
-        val tag = editFragment.tag
-        if(
-            tag?.startsWith(FragmentTagManager.Prefix.settingEditPrefix.str) != true
-        ) return
+//        val tag = editFragment.tag
+//        if(
+//            tag?.startsWith(FragmentTagManager.Prefix.settingEditPrefix.str) != true
+//        ) return
         val isHidden = !editParameters.hideSettingVariableList.contains(
             editParameters.currentVariableName
         )

@@ -229,9 +229,6 @@ class EditTextProducerForEdit(
 
     private fun makeHideVariableList(
     ): List<String>{
-        if(
-            editFragment.tag?.startsWith(FragmentTagManager.Prefix.settingEditPrefix.str) != true
-        ) return emptyList()
         return ListSettingVariableListMaker.make(
             CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
             currentAppDirPath,

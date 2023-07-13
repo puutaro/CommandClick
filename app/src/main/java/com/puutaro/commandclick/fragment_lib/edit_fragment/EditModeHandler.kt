@@ -75,8 +75,6 @@ class EditModeHandler(
         binding,
         editFragment
     )
-
-
     val settingSectionStart = editFragment.settingSectionStart
     val settingSectionEnd = editFragment.settingSectionEnd
 
@@ -154,7 +152,6 @@ class EditModeHandler(
         editTextProducerForEdit.adds()
 
         val onEditButton = !onPassCmdVariableEdit
-
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
@@ -238,7 +235,7 @@ class EditModeHandler(
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
-            howActive=enableEditExecute && enableCmdEdit,
+            howActive=enableEditExecute && enableCmdEdit && !onPassCmdVariableEdit,
         )
     }
 

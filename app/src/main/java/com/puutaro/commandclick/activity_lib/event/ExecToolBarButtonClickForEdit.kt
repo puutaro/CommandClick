@@ -39,6 +39,10 @@ object ExecToolBarButtonClickForEdit {
                 )
             }
             ToolbarButtonBariantForEdit.EDIT -> {
+                val onShortcut = FragmentTagManager.makeListFromTag(
+                    callOwnerFragmentTag ?: String()
+                ).getOrNull(FragmentTagManager.modeIndex)
+                    ?: String()
                 val settingEditFragmentTag = FragmentTagManager.makeTag(
                     FragmentTagManager.Prefix.settingEditPrefix.str,
                     SharePreffrenceMethod.getStringFromSharePreffrence(
@@ -49,7 +53,7 @@ object ExecToolBarButtonClickForEdit {
                         sharePref,
                         SharePrefferenceSetting.current_script_file_name
                     ),
-                    String()
+                    onShortcut
                 )
                 ExecCommandEdit.execCommandEdit(
                     activity,
