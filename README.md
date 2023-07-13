@@ -166,7 +166,7 @@ At the same time, if you installed code editor, edit new file.
     | `CLR` | select color button  | {variableName}:CLR= |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
     
-      - In `EFCB`, `EFCBB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+      - In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
     
       - button option usage  
       		 ex) jsf '${0}' (`jsf` execute javascript file path  
@@ -196,7 +196,7 @@ At the same time, if you installed code editor, edit new file.
 			- `itemclick.js` option  
 			`const override = true;` -> when click, your handling when js and shell don't execute.   
 
-- predfine menu name  
+- predfine menu name in list index component  
       			`sync` -> sync list to current directory files   
 			`delete` -> delete item   
 			`add` -> add item   
