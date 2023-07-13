@@ -28,7 +28,6 @@ Table of Contents
   * [Edit](#edit)
   * [Write](#write)
   * [Kill](#kill)
-  * [Init](#init)
   * [Description](#description)
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
@@ -49,11 +48,9 @@ Table of Contents
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
   * [Internet Button exec script](#internet-button-exec-script)
-  * [Long Press exec script](#long-press-exec-script)
   * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
-  * [Edit api](#edit-api)
   * [Url command](#url-command)
   * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
   * [File api](#file-api)
@@ -142,7 +139,7 @@ At the same time, if you installed code editor, edit new file.
     | `passCmdVariableEdit`  | `string` | ON: pass cmd variable edit  |
 
  
-  - setVariableType option
+  - `setVariableType` option table  
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `LBL` | text label | {variableName}:LBL=${label name}   |
@@ -167,38 +164,161 @@ At the same time, if you installed code editor, edit new file.
     | `TM`  | get time button | {variableName}:TM=  |
     | `CLR` | select color button  | {variableName}:CLR= |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
-    
-      - In `EFCB`, `EFCBB`, {grep suffix} have `NoExtend` macro, It display no extend file list
-    
-      - button option usage  
-      		 ex) jsf '${0}' (`jsf` execute javascript file path  
-		 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
-		 ex) ::NoJsTermOut:: jsf '${0}' (`::NoJsTermOut::` disable terminal output when only javascript  
-		 ex) ::TermLong:: jsf '${0}' (`::TermLong::` terminal size to long  
-                 ex) echo ${0}   (`${0}` is current script path  
-                 ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
-                 ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
-                 ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
 
-      - list index component usage
-      			- this component must be one and other component is exclude by this.  
-      			- `listDir` and `click` dir is made in right under the fannel directory   
-      			- Files in listDir is list item  
-      			- Under `click` dir,there are `itemClick.js`, `menuClick.js`, and `subMenuClick.js`  
-      			- `itemClick.js` is trigger when item click  
-      			- `menuClick.js` is trigger when menu click  
-      			- `subMenuClick.js` is trigger when subMenu click  
-      			- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:   
-      				        ex)   
-				             let args = jsArgs.get().split("\t");   
-				             var PARENT_DIR = args.at(0);  
-			 	             var LIST_VIEW_DIR = args.at(1);  
-				             var ITEM_NAME = args.at(2);  
-				             var MENU_NAME = args.at(3);  
-			- `itemclick.js` option  
-			`const override = true;` -> when click, your handling when js and shell don't execute.   
+`setVariableType` Option usage  
+- This option can be combined
 
-- predfine menu name  
+ex1)  
+
+```js.js
+setVariableTypes="${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label"
+```
+
+- `LBL` is recommended to specify at the beginning  
+- `TXT` define edit text space. Without this, edit test no display.  
+- Left member must be defined by ritht options order(no value option is skip)  
+- Left member is sepalated by virtical var.    
+- No value option's left menber is blank in `setVariableType` option table.  
+- `LSB`, `ELSB`, `MSB`, and `GB` is same in how to specify.     
+   
+ex2)  
+
+```js.js
+setVariableTypes="${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2"
+```
+
+- Left member must be defined by ritht options order(no value option is skip)  
+
+ex3)  
+
+```js.js
+setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3"
+```
+
+- `NUM` is recommended to combline `TXT` option becuase of visualizing current number
+
+**[Recommend]**   
+`setVariableType` can specify file path like bellow. 
+  
+```js.js
+setVariableType="file://${01}/${001}/setVariableType.js"
+```
+
+setVariableType.js
+
+```setVariableTypes.js
+${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label,
+${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
+```
+
+- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
+
+```setVariableTypes.js
+${variable name1}:  
+	      LBL:TXT:LSB:BTN=  
+			     label=test label  
+			     |  
+				       listPath=${list file path}  
+			     |  
+				       cmd=jsf '${0}' exmple  
+						!label=button label,
+${variable name2}:  
+              HL:BTN=label=  
+			     cmd=jsf '${0}' exmple  
+						!label=button label2,
+
+```
+
+
+  
+  
+- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+
+
+- button option usage
+
+	ex)
+	
+	```js.js
+	jsf '${0}' (`jsf` execute javascript file path  
+	```
+	
+	ex)
+	 
+	```js.js
+	 jsf '${01}'
+	```
+	
+	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
+	ex)
+	
+	```js.js
+	 ::NoJsTermOut:: jsf '${0}'
+	```
+	
+	- `::NoJsTermOut::` disable terminal output when only javascript
+	
+	ex)
+	 
+	```js.js
+	 ::TermLong:: jsf '${0}'
+	```
+	
+	 - `::TermLong::` terminal size to long
+	
+	ex)
+	 
+	```sh.sh
+	echo ${0}
+	```
+	
+	- `${0}` is current script path
+	  
+	ex)
+	
+	```sh.sh
+	 ::BackStack:: ls    
+	```
+	
+	- `::BackStack::` is backstack, only work when prefix when only shellscript
+	
+	ex)
+	
+	```sh.sh
+	 ::TermOut:: ls
+	```
+	
+	- `::TermOut::` enable terminal output
+	
+	ex)
+	
+	```sh.sh
+	 top -n 1 > /dev/null  
+	 - when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)
+	```
+
+- list index component usage
+	- this component must be one and other component is exclude by this.  
+	- `listDir` and `click` dir is made in right under the fannel directory   
+	- Files in listDir is list item  
+	- Under `click` dir,there are `itemClick.js`, `menuClick.js`, and `subMenuClick.js`  
+	- `itemClick.js` is trigger when item click  
+	- `menuClick.js` is trigger when menu click  
+	- `subMenuClick.js` is trigger when subMenu click  
+	- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:
+   
+```js.js 
+	     let args = jsArgs.get().split("\t");   
+	     var PARENT_DIR = args.at(0);  
+	     var LIST_VIEW_DIR = args.at(1);  
+	     var ITEM_NAME = args.at(2);  
+	     var MENU_NAME = args.at(3);
+```
+
+- `itemclick.js` option  
+`const override = true;` -> when click, your handling when js and shell don't execute.   
+
+- predfine menu name in list index component  
       			`sync` -> sync list to current directory files   
 			`delete` -> delete item   
 			`add` -> add item   
@@ -236,11 +356,6 @@ At the same time, remove `fannel` direcotry (raw filename + `Dir`)
 
 (Shell only) Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
 
-
-#### Init
-
-Revert default setting varable in script proccess by `utility` -> `kill`  when long click list item in index mode
-(only setting variable, but excluede `setVariableType`)
 
 #### Description
 
@@ -297,25 +412,26 @@ Bellow is how to import. You can enjoy this all range import application!
 
 #### Local path import
 
-```
+```js.js
 ccimport {path}   
- 
-```   
+```
+
 * current directory -> `./`  
 * move parent direcoty -> ../  
 * other check [Javascript pre order word](#javascript-pre-order-word)   
 
 #### Assets import
 
-```
+```js.js
 ccimport /android_asset/{relative path}  
 ```
 
 #### WEB import
 
-```
+```js.js
 ccimport {URL}  
-```  
+```
+
 * It is possible to download by curl {URL}
 
 
@@ -340,7 +456,7 @@ You can set by onley this menu press.
 4. Click paste popup on termux  
 5. Continue pressing `Enter` on termux
 - clipboard contents:
-   ```
+   ```sh.sh
    pkg update -y && pkg upgrade -y \
    && yes | termux-setup-storage \
    && sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
@@ -427,24 +543,6 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
 
 
-
-### Long press exec script
-
-This script is executed when long press.   
-
-- `long_press_src_image_anchor.js`   
-		- When image anchor long press, trigger. In Default, display link page summary dialog.  
-		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
-		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
-- `long_press_src_anchor.js`  
-		- When source anchor long press, trigger. In Default, display link page summary dialog.  
-		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
-- `long_press_image_anchor.js`    
-		- When image long press, trigger.  In Default, launch current page url intent.  
-		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
     
   
 ### Edit execute once
@@ -462,38 +560,18 @@ Always edit and execute. So called `Script2GUI`. It's great feature.
 How the script file turns into a GUI Application! 
 
 
-### Edit api
-
-Type bellow command in termux, so that you can use `Command Click Gui Edit Dialog`  from termux command line
-
-```
-am start \
--n "com.puutaro.commandclick/.activity.MainActivity" \
---es current_app_dir "{current_app_dir}" \
---es current_script_file_name "{current_script_file_name}" \
---es on_shortcut "EDIT_API"
-
----
-
-ex) am start \
--n "com.puutaro.commandclick/.activity.MainActivity" \
---es current_app_dir "/storage/emulated/0/cmdclick/AppDir/default" \
---es current_script_file_name "twitter_test.js" \
---es on_shortcut "EDIT_API"
-```
-
 ### Url command
 
 Exec bellow command in `CommandClick` shellscript, so that you can launch web site.
 (This command is only active when command click focus)
 
-```
+```sh.sh
 am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "{url}"
+```
 
----
-
+```sh.sh
 ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
@@ -504,7 +582,7 @@ ex) am broadcast \
 Exec bellow command in `CommandClick` shellscript, so that you can make automaticaly make html, css and javascript.
 (This command is only active when command click focus)
 
-```
+```sh.sh
 am broadcast \
 		-a "com.puutaro.commandclick.html.launch" \
 		--es edit_path "{target edit file path}" \
@@ -529,7 +607,7 @@ am broadcast \
   - (Optional) `on_click_sort` is how to sort top when link click.  
   - (Optional) `filter_code` filter target source file  by javascript code. default value is `true`. You can use `urlString` and `urlTitle` variable to filter.  
   
-```
+```sh.sh
 ex) am broadcast \
 		-a "com.puutaro.commandclick.html.launch" \
 		--es edit_path "${PARENT_DIR_PATH}/tubePlayList" \
@@ -557,30 +635,48 @@ ex) am broadcast \
 `CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
 This, so colled, android app row code library.
 
+```js.js
  - jsFileStystem  
- 	- jsFileStystem.showFileList(dirPath: String)   
-		- return filelist tab sepalated   
-	- jsFileStystem.showDirList(dirPath: String)  
-		-return filelist tab sepalated   
- 	- jsFileStystem.readLocalFile(path: String) -> String  
-		- read local file and return file contents string  
-	- jsFileStystem.writeLocalFile(path: String, contents: String)  
-		- write local file
-	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)  
-		- write local monitor file  
-	- jsFileStystem.removeFile(path: String)  
-		- remove local file  
-	- jsFileStystem.createDir(path: String)  
-		- creaate local dirctory 
-	- jsFileStystem.removeDir(path: String)  
-		- remove local direcotry   
-	- jsFileStystem.copyDir(sourcePath: String, destiDirPath: String)  
-		- copy local directory 
+ 	- jsFileStystem.showFileList(
+		dirPath: String
+          )  -> return filelist tab sepalated   
+	- jsFileStystem.showDirList(
+		dirPath: String
+	  )  -> return filelist tab sepalated   
+ 	- jsFileStystem.readLocalFile(
+		path: String
+	   ) ->  read local file and return file contents string  
+	- jsFileStystem.writeLocalFile(
+		path: String, contents: String
+	  )  - write local file
+	- jsFileStystem.jsFile(
+		filename: String,
+		terminalOutPutOption: String
+	  ) - write local monitor file  
+	- jsFileStystem.removeFile(
+		path: String
+          ) - remove local file  
+	- jsFileStystem.createDir(
+		path: String
+	  ) - creaate local dirctory 
+	- jsFileStystem.removeDir(
+		path: String
+	)  - remove local direcotry   
+	- jsFileStystem.copyDir(
+		sourcePath: String,
+		destiDirPath: String
+	  )  - copy local directory 
 	- jsFileSystem.outputSwitch(
 		switch: String
-	) -> switch == on, then enable terminal output. other default.(althogh being webmode, terminal mode off, this inmterface switch on)   
-	- jsFileSystem.isFile(filePath: String) -> boolean on)   
-	- jsFileSystem.isDir(DirectoryPath: String) -> boolean on)   
+	) -> switch == on, then enable terminal output.
+                        other default.
+                        (althogh being webmode, terminal mode off, this inmterface switch on)   
+	- jsFileSystem.isFile(
+		filePath: String
+	   ) -> boolean   
+	- jsFileSystem.isDir(
+		DirectoryPath: String
+	   ) -> boolean   
 
 
  - JsArgs 
@@ -589,13 +685,30 @@ This, so colled, android app row code library.
 		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
 			-> `fristargment`\t`secondargument 2`  
 
-	- jsArgs.set(tabsepalete string) -> argment set (ex "{arg1}\t{arg2}\t..")  
+	- jsArgs.set(
+		tabsepalete string
+	    ) -> argment set (ex "{arg1}\t{arg2}\t..")  
 
  - JsIntent
- 	- jsIntent.launchEditSite(editPath: String, srcPath: String, onClickSort: String(true/false), onSortableJs: String(true/false), onClickUrl: String(true/false), filterCode: String)  
- 			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
- 	- jsIntent.launchUrl(urlString: String)  -> launch uri(not url but uri)
-	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: tabSepalatedString, extraLong: tabSepalatedString, extraFloat: tabSepalatedString)
+ 	- jsIntent.launchEditSite(
+		editPath: String,
+		srcPath: String,
+		onClickSort: String(true/false),
+		onSortableJs: String(true/false),
+		onClickUrl: String(true/false),
+		filterCode: String
+	  )  - ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
+ 	- jsIntent.launchUrl(
+		urlString: String
+          )  -> launch uri(not url but uri)
+	- jsIntent.launchApp(
+		action: String,
+		uriString: String,
+		extraString: tabSepalatedString,
+		extraInt: tabSepalatedString,
+		extraLong: tabSepalatedString,
+		extraFloat: tabSepalatedString
+	   )
 			ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
@@ -605,13 +718,21 @@ This, so colled, android app row code library.
 				beginTime=167889547868058\tendTime=165678973498789",
 				""
 			);  
-	- jsIntent.launchShortcut(currentAppDirPath: String,　currentShellFileName: String) -> launch index and fannel  
+	- jsIntent.launchShortcut(
+		currentAppDirPath: String,
+		currentShellFileName: String
+	    ) -> launch index and fannel  
 
 
  - JsDialog
- 	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
- 	- jsDialog.formJsDialog(formSettingVariables: String(tab sepalate), formCommandVariables: String(tab sepalate))
- 		 - formSettingVariables tabsepalete string  return {key}={value} contents
+ 	- jsDialog.listJsDialog(
+		listSource: String(tab sepalate)
+	   ) -> selected list
+ 	- jsDialog.formJsDialog(
+		formSettingVariables: String(tab sepalate),
+		formCommandVariables: String(tab sepalate)
+	  )
+ 		 -> formSettingVariables tabsepalete string  return {key}={value} contents
  		 - setting reference [Add](#add)
  		 - ex) 
  				jsDialog.formJsDialog(
@@ -637,32 +758,81 @@ This, so colled, android app row code library.
  - JsStop
  	- jsStop.how() (measure for `while roop` crush when application focus out)
  - JsToast
- 	- jsToast.short(contents: string)   
-	- jsToast.long(contents: string)   
+ 	- jsToast.short(
+		contents: string
+	  )   
+	- jsToast.long(
+		contents: string
+	  )   
  - JsCurl
- 	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..), Timeout: Int (miliSeconds))   
+ 	- jsCurl.get(
+		mainUrl: string,
+		queryParameter: String,
+		header: String(ex Authorication\tbear token,contentType\ttext/plain..),
+		Timeout: Int (miliSeconds)
+	  )
+	- jsCurl.getTextOrPdf(
+		url: text or pdf url
+	   )
  - JsUtil
- 	- jsUtil.sleep(sleepMiriTime: Int)   
-	- jsUtil.copyToClipboard(copyString: String, fontSize: Int)  
-	- jsUtil.echoFromClipboard() -> primary clipboard string  
-	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
+ 	- jsUtil.sleep(
+		sleepMiriTime: Int
+	  )   
+	- jsUtil.copyToClipboard(
+		copyString: String,
+		fontSize: Int
+	  )  
+	- jsUtil.echoFromClipboard()
+		-> primary clipboard string  
+	- jsUtil.convertDateTimeToMiliTime(
+		datetime: String(YYYY-MM-DDThh:mm)
+	   ) -> militime  
  - JsUrl
- 	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
-	- jsUrl.loadUrl(urlString: String)  
+ 	- jsUrl.makeJsUrl(
+		jsPath: String
+	  ) -> javascript:(
+		function() { ${jsPathCoontents} }
+	  )();  
+	- jsUrl.loadUrl(
+		urlString: String
+          )  
 
  - JsScript  
- 	- jsScript.subLabelingVars(jsContents: String) -> Labeling Section Contents  
-	- jsScript.subSettingVars(jsContents: String) -> Setting Section Contents  
-	- jsScript.subCmdVars(jsContents: String) -> Comamnd Section Contents  
-	- jsScript.subValOnlyValue(targetVariableName: String, VariableValueStringContents: String)  ->  Variable value String Contents  
-	- jsScript.bothQuoteTrim(VariableValueString: String) -> VariableValueString removed both edge quote  
-	- jsScript.replaceSettingVariable(scriptContents: String, replaceTabList: String) -> File contents String  
-	- jsScript.replaceVariableInHolder(scriptContents: String, replaceTabList: String) -> File contents String  
+ 	- jsScript.subLabelingVars(
+		jsContents: String
+	  ) -> Labeling Section Contents  
+	- jsScript.subSettingVars(
+		jsContents: String
+	  ) -> Setting Section Contents  
+	- jsScript.subCmdVars(
+		jsContents: String
+	  ) -> Comamnd Section Contents  
+	- jsScript.subValOnlyValue(
+		targetVariableName: String,
+		VariableValueStringContents: String
+	  )  ->  Variable value String Contents  
+	- jsScript.bothQuoteTrim(
+		VariableValueString: String
+	  ) -> VariableValueString removed both edge quote  
+	- jsScript.replaceSettingVariable(
+		scriptContents: String,
+		replaceTabList: String
+	  ) -> File contents String  
+	- jsScript.replaceVariableInHolder(
+		scriptContents: String,
+		replaceTabList: String
+	  ) -> File contents String  
 
  - JsListSelect  
  	update or remove method for editable list file checkbox 
- 	- jsListSelect.updateListFileCon(targetListFilePath: String, itemText: String)  
-	- jsListSelect.removeItemInListFileCon(targetListFilePath: String, itemText: String)
+ 	- jsListSelect.updateListFileCon(
+		targetListFilePath: String,
+		itemText: String
+	  )  
+	- jsListSelect.removeItemInListFileCon(
+		targetListFilePath: String,
+		itemText: String
+	  )
 	- jsListSelect.wrapRemoveItemInListFileCon(
                 targetListFilePath: String,  
                 removeTargetItem: String,  
@@ -720,9 +890,15 @@ This, so colled, android app row code library.
 		csvOrTsv: String,
 	 ) -> save csv or tsv instance with tag  
 	 
- 	- jsCsv.takeRowSize(tag: String) -> rowSize about csv(tsv) with tag  
-	- jsCsv.takeColSize(tag: String) -> colSize about csv(tsv) with tag  
-	- jsCsv.isRead(tag: String) 
+ 	- jsCsv.takeRowSize(
+		tag: String
+   	  ) -> rowSize about csv(tsv) with tag  
+	- jsCsv.takeColSize(
+		tag: String
+	  ) -> colSize about csv(tsv) with tag  
+	- jsCsv.isRead(
+		tag: String
+	   ) 
 		(comfirm read completed  about csv(tsv) with tag)
 		-> blank or String  
 	
@@ -780,7 +956,9 @@ This, so colled, android app row code library.
 	    
 	    
 - JsText  
-	- jsText.trans(tsvString) -> String transposed row and col  
+	- jsText.trans(
+		tsvString
+	   ) -> String transposed row and col  
 
 
  - JsPath  
@@ -832,7 +1010,7 @@ This, so colled, android app row code library.
 	- jsPath.extractText(  
   		path: pdf path string  
   	   ) -> extracted text     
-
+```
 
 ### Javascript pre order word
 - `${0}` -> current file path  
@@ -881,7 +1059,7 @@ Bellow respectable package is inclided assets. you can import like bellow.
 
 - Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
 
-```
+```js.js
 	if(
 		jsStop.how().includes("true")
 	) throw new Error('exit');
