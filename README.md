@@ -28,7 +28,6 @@ Table of Contents
   * [Edit](#edit)
   * [Write](#write)
   * [Kill](#kill)
-  * [Init](#init)
   * [Description](#description)
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
@@ -53,7 +52,6 @@ Table of Contents
   * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
-  * [Edit api](#edit-api)
   * [Url command](#url-command)
   * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
   * [File api](#file-api)
@@ -236,11 +234,6 @@ At the same time, remove `fannel` direcotry (raw filename + `Dir`)
 
 (Shell only) Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
 
-
-#### Init
-
-Revert default setting varable in script proccess by `utility` -> `kill`  when long click list item in index mode
-(only setting variable, but excluede `setVariableType`)
 
 #### Description
 
@@ -461,26 +454,6 @@ One time edit and execute
 Always edit and execute. So called `Script2GUI`. It's great feature. 
 How the script file turns into a GUI Application! 
 
-
-### Edit api
-
-Type bellow command in termux, so that you can use `Command Click Gui Edit Dialog`  from termux command line
-
-```
-am start \
--n "com.puutaro.commandclick/.activity.MainActivity" \
---es current_app_dir "{current_app_dir}" \
---es current_script_file_name "{current_script_file_name}" \
---es on_shortcut "EDIT_API"
-
----
-
-ex) am start \
--n "com.puutaro.commandclick/.activity.MainActivity" \
---es current_app_dir "/storage/emulated/0/cmdclick/AppDir/default" \
---es current_script_file_name "twitter_test.js" \
---es on_shortcut "EDIT_API"
-```
 
 ### Url command
 
