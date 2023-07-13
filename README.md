@@ -197,7 +197,8 @@ ${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=butt
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
 
-`setVariableType` can specify file path like bellow. (Recommend) 
+**[Recommend]**   
+`setVariableType` can specify file path like bellow. 
   
 ```js.js
 setVariableType="file://${01}/${001}/setVariableType.js"
@@ -206,25 +207,25 @@ setVariableType="file://${01}/${001}/setVariableType.js"
 setVariableType.js
 
 ```setVariableType.js
-	   ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label,
-	   ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
+${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label,
+${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
 ```
 
 - How to write about `setVariableType.js` is above same.  But, must be comma in varialbe define end. Instead, you can use indent and newline
 
 ```setVariableTypes.js
-     ${variable name1}:  
-		      LBL:TXT:LSB:BTN=  
-				     label=test label  
-				     |  
-					       listPath=${list file path}  
-				     |  
-					       cmd=jsf '${0}' exmple  
-							!label=button label,   
-	   ${variable name2}:  
-		      HL:BTN=label=  
-				     cmd=jsf '${0}' exmple  
-							!label=button label2,
+${variable name1}:  
+	      LBL:TXT:LSB:BTN=  
+			     label=test label  
+			     |  
+				       listPath=${list file path}  
+			     |  
+				       cmd=jsf '${0}' exmple  
+						!label=button label,
+${variable name2}:  
+              HL:BTN=label=  
+			     cmd=jsf '${0}' exmple  
+						!label=button label2,
 
 ```
 
@@ -358,7 +359,7 @@ Bellow is how to import. You can enjoy this all range import application!
 
 #### Local path import
 
-```js.sj
+```js.js
 ccimport {path}   
 ```
 
@@ -368,13 +369,13 @@ ccimport {path}
 
 #### Assets import
 
-```
+```js.js
 ccimport /android_asset/{relative path}  
 ```
 
 #### WEB import
 
-```js.sj
+```js.js
 ccimport {URL}  
 ```
 
@@ -583,29 +584,46 @@ This, so colled, android app row code library.
 
 ```js.js
  - jsFileStystem  
- 	- jsFileStystem.showFileList(dirPath: String)   
-		- return filelist tab sepalated   
-	- jsFileStystem.showDirList(dirPath: String)  
-		-return filelist tab sepalated   
- 	- jsFileStystem.readLocalFile(path: String) -> String  
-		- read local file and return file contents string  
-	- jsFileStystem.writeLocalFile(path: String, contents: String)  
-		- write local file
-	- jsFileStystem.jsFile(filename: String, terminalOutPutOption: String)  
-		- write local monitor file  
-	- jsFileStystem.removeFile(path: String)  
-		- remove local file  
-	- jsFileStystem.createDir(path: String)  
-		- creaate local dirctory 
-	- jsFileStystem.removeDir(path: String)  
-		- remove local direcotry   
-	- jsFileStystem.copyDir(sourcePath: String, destiDirPath: String)  
-		- copy local directory 
+ 	- jsFileStystem.showFileList(
+		dirPath: String
+          )  -> return filelist tab sepalated   
+	- jsFileStystem.showDirList(
+		dirPath: String
+	  )  -> return filelist tab sepalated   
+ 	- jsFileStystem.readLocalFile(
+		path: String
+	   ) ->  read local file and return file contents string  
+	- jsFileStystem.writeLocalFile(
+		path: String, contents: String
+	  )  - write local file
+	- jsFileStystem.jsFile(
+		filename: String,
+		terminalOutPutOption: String
+	  ) - write local monitor file  
+	- jsFileStystem.removeFile(
+		path: String
+          ) - remove local file  
+	- jsFileStystem.createDir(
+		path: String
+	  ) - creaate local dirctory 
+	- jsFileStystem.removeDir(
+		path: String
+	)  - remove local direcotry   
+	- jsFileStystem.copyDir(
+		sourcePath: String,
+		destiDirPath: String
+	  )  - copy local directory 
 	- jsFileSystem.outputSwitch(
 		switch: String
-	) -> switch == on, then enable terminal output. other default.(althogh being webmode, terminal mode off, this inmterface switch on)   
-	- jsFileSystem.isFile(filePath: String) -> boolean on)   
-	- jsFileSystem.isDir(DirectoryPath: String) -> boolean on)   
+	) -> switch == on, then enable terminal output.
+                        other default.
+                        (althogh being webmode, terminal mode off, this inmterface switch on)   
+	- jsFileSystem.isFile(
+		filePath: String
+	   ) -> boolean   
+	- jsFileSystem.isDir(
+		DirectoryPath: String
+	   ) -> boolean   
 
 
  - JsArgs 
@@ -614,13 +632,30 @@ This, so colled, android app row code library.
 		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
 			-> `fristargment`\t`secondargument 2`  
 
-	- jsArgs.set(tabsepalete string) -> argment set (ex "{arg1}\t{arg2}\t..")  
+	- jsArgs.set(
+		tabsepalete string
+	    ) -> argment set (ex "{arg1}\t{arg2}\t..")  
 
  - JsIntent
- 	- jsIntent.launchEditSite(editPath: String, srcPath: String, onClickSort: String(true/false), onSortableJs: String(true/false), onClickUrl: String(true/false), filterCode: String)  
- 			- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
- 	- jsIntent.launchUrl(urlString: String)  -> launch uri(not url but uri)
-	- jsIntent.launchApp(action: String, uriString: String, extraString: tabSepalatedString, extraInt: tabSepalatedString, extraLong: tabSepalatedString, extraFloat: tabSepalatedString)
+ 	- jsIntent.launchEditSite(
+		editPath: String,
+		srcPath: String,
+		onClickSort: String(true/false),
+		onSortableJs: String(true/false),
+		onClickUrl: String(true/false),
+		filterCode: String
+	  )  - ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
+ 	- jsIntent.launchUrl(
+		urlString: String
+          )  -> launch uri(not url but uri)
+	- jsIntent.launchApp(
+		action: String,
+		uriString: String,
+		extraString: tabSepalatedString,
+		extraInt: tabSepalatedString,
+		extraLong: tabSepalatedString,
+		extraFloat: tabSepalatedString
+	   )
 			ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
@@ -630,13 +665,21 @@ This, so colled, android app row code library.
 				beginTime=167889547868058\tendTime=165678973498789",
 				""
 			);  
-	- jsIntent.launchShortcut(currentAppDirPath: String,　currentShellFileName: String) -> launch index and fannel  
+	- jsIntent.launchShortcut(
+		currentAppDirPath: String,
+		currentShellFileName: String
+	    ) -> launch index and fannel  
 
 
  - JsDialog
- 	- jsDialog.listJsDialog(listSource: String(tab sepalate)) return selected list
- 	- jsDialog.formJsDialog(formSettingVariables: String(tab sepalate), formCommandVariables: String(tab sepalate))
- 		 - formSettingVariables tabsepalete string  return {key}={value} contents
+ 	- jsDialog.listJsDialog(
+		listSource: String(tab sepalate)
+	   ) -> selected list
+ 	- jsDialog.formJsDialog(
+		formSettingVariables: String(tab sepalate),
+		formCommandVariables: String(tab sepalate)
+	  )
+ 		 -> formSettingVariables tabsepalete string  return {key}={value} contents
  		 - setting reference [Add](#add)
  		 - ex) 
  				jsDialog.formJsDialog(
@@ -662,32 +705,81 @@ This, so colled, android app row code library.
  - JsStop
  	- jsStop.how() (measure for `while roop` crush when application focus out)
  - JsToast
- 	- jsToast.short(contents: string)   
-	- jsToast.long(contents: string)   
+ 	- jsToast.short(
+		contents: string
+	  )   
+	- jsToast.long(
+		contents: string
+	  )   
  - JsCurl
- 	- jsCurl.get(mainUrl: string, queryParameter: String, header: String(ex Authorication\tbear token,contentType\ttext/plain..), Timeout: Int (miliSeconds))   
+ 	- jsCurl.get(
+		mainUrl: string,
+		queryParameter: String,
+		header: String(ex Authorication\tbear token,contentType\ttext/plain..),
+		Timeout: Int (miliSeconds)
+	  )
+	- jsCurl.getTextOrPdf(
+		url: text or pdf url
+	   )
  - JsUtil
- 	- jsUtil.sleep(sleepMiriTime: Int)   
-	- jsUtil.copyToClipboard(copyString: String, fontSize: Int)  
-	- jsUtil.echoFromClipboard() -> primary clipboard string  
-	- jsUtil.convertDateTimeToMiliTime(datetime: String(YYYY-MM-DDThh:mm)) -> militime  
+ 	- jsUtil.sleep(
+		sleepMiriTime: Int
+	  )   
+	- jsUtil.copyToClipboard(
+		copyString: String,
+		fontSize: Int
+	  )  
+	- jsUtil.echoFromClipboard()
+		-> primary clipboard string  
+	- jsUtil.convertDateTimeToMiliTime(
+		datetime: String(YYYY-MM-DDThh:mm)
+	   ) -> militime  
  - JsUrl
- 	- jsUrl.makeJsUrl(jsPath: String) -> javascript:(function() { ${jsPathCoontents} })();  
-	- jsUrl.loadUrl(urlString: String)  
+ 	- jsUrl.makeJsUrl(
+		jsPath: String
+	  ) -> javascript:(
+		function() { ${jsPathCoontents} }
+	  )();  
+	- jsUrl.loadUrl(
+		urlString: String
+          )  
 
  - JsScript  
- 	- jsScript.subLabelingVars(jsContents: String) -> Labeling Section Contents  
-	- jsScript.subSettingVars(jsContents: String) -> Setting Section Contents  
-	- jsScript.subCmdVars(jsContents: String) -> Comamnd Section Contents  
-	- jsScript.subValOnlyValue(targetVariableName: String, VariableValueStringContents: String)  ->  Variable value String Contents  
-	- jsScript.bothQuoteTrim(VariableValueString: String) -> VariableValueString removed both edge quote  
-	- jsScript.replaceSettingVariable(scriptContents: String, replaceTabList: String) -> File contents String  
-	- jsScript.replaceVariableInHolder(scriptContents: String, replaceTabList: String) -> File contents String  
+ 	- jsScript.subLabelingVars(
+		jsContents: String
+	  ) -> Labeling Section Contents  
+	- jsScript.subSettingVars(
+		jsContents: String
+	  ) -> Setting Section Contents  
+	- jsScript.subCmdVars(
+		jsContents: String
+	  ) -> Comamnd Section Contents  
+	- jsScript.subValOnlyValue(
+		targetVariableName: String,
+		VariableValueStringContents: String
+	  )  ->  Variable value String Contents  
+	- jsScript.bothQuoteTrim(
+		VariableValueString: String
+	  ) -> VariableValueString removed both edge quote  
+	- jsScript.replaceSettingVariable(
+		scriptContents: String,
+		replaceTabList: String
+	  ) -> File contents String  
+	- jsScript.replaceVariableInHolder(
+		scriptContents: String,
+		replaceTabList: String
+	  ) -> File contents String  
 
  - JsListSelect  
  	update or remove method for editable list file checkbox 
- 	- jsListSelect.updateListFileCon(targetListFilePath: String, itemText: String)  
-	- jsListSelect.removeItemInListFileCon(targetListFilePath: String, itemText: String)
+ 	- jsListSelect.updateListFileCon(
+		targetListFilePath: String,
+		itemText: String
+	  )  
+	- jsListSelect.removeItemInListFileCon(
+		targetListFilePath: String,
+		itemText: String
+	  )
 	- jsListSelect.wrapRemoveItemInListFileCon(
                 targetListFilePath: String,  
                 removeTargetItem: String,  
@@ -745,9 +837,15 @@ This, so colled, android app row code library.
 		csvOrTsv: String,
 	 ) -> save csv or tsv instance with tag  
 	 
- 	- jsCsv.takeRowSize(tag: String) -> rowSize about csv(tsv) with tag  
-	- jsCsv.takeColSize(tag: String) -> colSize about csv(tsv) with tag  
-	- jsCsv.isRead(tag: String) 
+ 	- jsCsv.takeRowSize(
+		tag: String
+   	  ) -> rowSize about csv(tsv) with tag  
+	- jsCsv.takeColSize(
+		tag: String
+	  ) -> colSize about csv(tsv) with tag  
+	- jsCsv.isRead(
+		tag: String
+	   ) 
 		(comfirm read completed  about csv(tsv) with tag)
 		-> blank or String  
 	
@@ -805,7 +903,9 @@ This, so colled, android app row code library.
 	    
 	    
 - JsText  
-	- jsText.trans(tsvString) -> String transposed row and col  
+	- jsText.trans(
+		tsvString
+	   ) -> String transposed row and col  
 
 
  - JsPath  
