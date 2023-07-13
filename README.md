@@ -211,7 +211,7 @@ ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cm
 ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
 ```
 
-- How to write about `setVariableType.js` is above same.  But, must be comma in varialbe define end. Instead, you can use indent and newline
+- How to write about `setVariableType.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
 
 ```setVariableTypes.js
 ${variable name1}:  
