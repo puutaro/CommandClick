@@ -15,7 +15,7 @@ class FirstUrlHistoryFile {
         ){
             if(
                 terminalFragment.onHistoryUrlTitle ==
-                SettingVariableSelects.Companion.OnHistoryUrlTitle.ON.name
+                SettingVariableSelects.OnHistoryUrlTitle.ON.name
             ) return
             FileSystems.removeFiles(
                 currentAppDirPath,
@@ -28,7 +28,7 @@ class FirstUrlHistoryFile {
         ){
             if(
                 terminalFragment.onHistoryUrlTitle !=
-                SettingVariableSelects.Companion.OnHistoryUrlTitle.ON.name
+                SettingVariableSelects.OnHistoryUrlTitle.ON.name
             ) return
             val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val firstRow = ReadText(

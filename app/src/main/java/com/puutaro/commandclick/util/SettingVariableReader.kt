@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import java.io.File
 
 object SettingVariableReader {
     fun getStrValue(
@@ -12,7 +15,7 @@ object SettingVariableReader {
             cmdVariableList,
             variableName
         ) ?: variableDefaultStrValue
-        val runShellSourceTrim = BothEdgeQuote.trim(runShellSource)
+        val runShellSourceTrim = QuoteTool.trimBothEdgeQuote(runShellSource)
         return if(
             runShellSourceTrim == String()
         ) variableDefaultStrValue
@@ -31,7 +34,7 @@ object SettingVariableReader {
             cmdVariableList,
             variableName
         ) ?: defaultVariableStrValue
-        val historySwitchSourceTrim = BothEdgeQuote.trim(historySwitchSource)
+        val historySwitchSourceTrim = QuoteTool.trimBothEdgeQuote(historySwitchSource)
 
         return if(
             noDefaultValueList.contains(historySwitchSourceTrim)
@@ -75,17 +78,44 @@ object SettingVariableReader {
         val variableValueListSource = CommandClickVariables.substituteCmdClickVariableList(
             settingVariableList,
             variableName
-        )?.joinToString(",") ?: String()
+        )?.joinToString(",").let {
+            QuoteTool.removeDoubleQuoteByIgnoreBackSlash(it)
+        } ?: String()
         val fannelDirName = scriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         return ScriptPreWordReplacer.replace(
             variableValueListSource,
-            "${currentAppDirPath}/${scriptName}",
             currentAppDirPath,
             fannelDirName,
             scriptName
         ).split(",")
+    }
+
+    fun setListFromPath(
+        settingVariableList: List<String>?,
+        settingValName: String,
+    ): List<String> {
+        val setListFilePath = getStrValue(
+            settingVariableList,
+            settingValName,
+            String(),
+        )
+        val setListFilePathObj = File(setListFilePath)
+        val setListFileDirPath = setListFilePathObj.parent
+            ?: String()
+        if(
+            setListFileDirPath.isNotEmpty()
+        ) {
+            FileSystems.createDirs(
+                setListFileDirPath
+            )
+        }
+        val setListFileName = setListFilePathObj.name
+        return ReadText(
+            setListFileDirPath,
+            setListFileName
+        ).textToList()
     }
 }

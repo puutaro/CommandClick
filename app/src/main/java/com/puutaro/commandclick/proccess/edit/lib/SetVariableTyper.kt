@@ -3,17 +3,25 @@ package com.puutaro.commandclick.proccess.edit.lib
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import java.io.File
 
 object SetVariableTyper {
+
+    private val filePrefix = "file://"
 
     fun makeRecordNumToSetVariableMaps(
         setVariableTypeList: List<String>?,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?
     ): Map<Int, Map<String, String>>? {
-        if(setVariableTypeList == null) return null
+        if(
+            setVariableTypeList == null
+        ) return null
         val usedRecordNumSet = mutableSetOf<Int>()
-        val setVariableTypeListLength = setVariableTypeList.size -1
-        if(setVariableTypeListLength < 0) return null
+        val setVariableTypeListLength = setVariableTypeList.size - 1
+        if(
+            setVariableTypeListLength < 0
+        ) return null
         return (0..setVariableTypeListLength).map {
             val currentFetchSetVariableType = setVariableTypeList[it]
             val currentFetchSetVariableTypeLength = currentFetchSetVariableType.length
@@ -62,7 +70,10 @@ object SetVariableTyper {
 
 
     fun makeSetVariableTypeList(
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+        currentAppDirPath: String,
+        fannelDirName: String,
+        currentShellFileName: String,
     ): List<String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
                 entry ->
@@ -75,15 +86,52 @@ object SetVariableTyper {
             val setTargetVariableValueBeforeTrim = entryValue?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
             )
-            if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
+            val setTargetVariableValueSource = if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
                 setTargetVariableValueBeforeTrim.trim('"')
             } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
                 setTargetVariableValueBeforeTrim.trim('\'')
             } else {
                 setTargetVariableValueBeforeTrim
             } ?: String()
+            if(
+                !setTargetVariableValueSource.startsWith(
+                    filePrefix
+                )
+            ) return@map setTargetVariableValueSource
+            makeSetVariableValueFromFile(
+                setTargetVariableValueSource,
+                currentAppDirPath,
+                currentShellFileName,
+                fannelDirName
+            )
         }?.joinToString(",")
             ?.split(',')
             ?.filter { it.isNotEmpty() }
+    }
+
+    private fun makeSetVariableValueFromFile(
+        setTargetVariableValueSource: String,
+        currentAppDirPath: String,
+        currentShellFileName: String,
+        fannelDirName: String
+    ): String {
+        val setVariableTypeFilePath =
+            ScriptPreWordReplacer.replace(
+                setTargetVariableValueSource
+                    .removePrefix(
+                        filePrefix
+                    ),
+                currentAppDirPath,
+                fannelDirName,
+                currentShellFileName,
+            )
+        val setVariableTypeFilePathObj = File(setVariableTypeFilePath)
+        val setVariableTypeFileDirPath = setVariableTypeFilePathObj.parent
+            ?: String()
+        val setVariableTypeFileName = setVariableTypeFilePathObj.name
+        return SettingFile.read(
+            setVariableTypeFileDirPath,
+            setVariableTypeFileName
+        )
     }
 }

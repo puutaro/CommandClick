@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.ValueCallback
 import android.webkit.WebView
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
@@ -13,7 +12,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
@@ -118,7 +117,7 @@ object WrapWebHistoryUpdater {
         ) return
 
         val currentAppDirPath = terminalFragment.currentAppDirPath
-        val ulrTitle = BothEdgeQuote.trim(webViewTitle)
+        val ulrTitle = QuoteTool.trimBothEdgeQuote(webViewTitle)
         val escapeStr = WebUrlVariables.escapeStr
         if (ulrTitle.endsWith("\t${escapeStr}")) return
 
@@ -165,10 +164,10 @@ object WrapWebHistoryUpdater {
         else String()
         if(
             registerUrlTitle.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             )
             || registerUrlTitle.endsWith(
-                CommandClickScriptVariable.JSX_FILE_SUFFIX
+                UsePath.JSX_FILE_SUFFIX
             )
         ) return
         FirstUrlHistoryFile.update(

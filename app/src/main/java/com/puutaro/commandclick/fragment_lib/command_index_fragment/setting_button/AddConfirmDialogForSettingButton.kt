@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.widget.ArrayAdapter
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -108,15 +109,15 @@ private fun makeNewShellName(
     shellContentsList: List<String>,
     shellScriptName: String,
     languageTypeSelects: LanguageTypeSelects,
-    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.Companion.HolderTypeName, String>?
+    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
 
 ): String {
     if(languageTypeToSectionHolderMap.isNullOrEmpty()) return shellScriptName
     val substituteSettingVariableList =
         CommandClickVariables.substituteVariableListFromHolder(
             shellContentsList,
-            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START],
-            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END],
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START],
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END],
         )
     val newShellScriptNameSource = CommandClickVariables.substituteCmdClickVariable(
         substituteSettingVariableList,
@@ -125,8 +126,8 @@ private fun makeNewShellName(
     val languageSuffix = when(
         languageTypeSelects
     ){
-        LanguageTypeSelects.SHELL_SCRIPT -> CommandClickScriptVariable.SHELL_FILE_SUFFIX
-        else -> CommandClickScriptVariable.JS_FILE_SUFFIX
+        LanguageTypeSelects.SHELL_SCRIPT -> UsePath.SHELL_FILE_SUFFIX
+        else -> UsePath.JS_FILE_SUFFIX
     }
     return if(
         newShellScriptNameSource == null
@@ -147,23 +148,23 @@ private fun makeNewShellName(
 private fun makeShellScriptContentsQuoteComp(
     shellContentsList: List<String>,
     newShellScriptName: String,
-    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.Companion.HolderTypeName, String>?
+    languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
 ): String {
     val recordNumToMapNameValueInCommandHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
             languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
             ) as String,
             languageTypeToSectionHolderMap[
-                    CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
             ] as String,
         )
     val recordNumToMapNameValueInSettingHolder =
         RecordNumToMapNameValueInHolder.parse(
             shellContentsList,
-            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START) as String,
-            languageTypeToSectionHolderMap[CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END] as String,
+            languageTypeToSectionHolderMap.get(CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START) as String,
+            languageTypeToSectionHolderMap[CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END] as String,
             true,
             newShellScriptName
         )

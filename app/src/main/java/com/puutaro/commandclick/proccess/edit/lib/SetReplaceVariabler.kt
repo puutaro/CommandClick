@@ -2,15 +2,25 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import java.io.File
 
 object SetReplaceVariabler {
 
+    private val filePrefix = "file://"
+
     fun makeSetReplaceVariableMap(
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+        currentAppDirPath: String,
+        fannelDirName: String,
+        currentShellFileName: String,
     ): Map<String, String>? {
         val firstSetVariableMapStringList = execMakeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolder
+            recordNumToMapNameValueInSettingHolder,
+            currentAppDirPath,
+            currentShellFileName,
+            fannelDirName
         )?.map { "${it.key}\t${it.value}"} ?: return null
 
         val firstSetVariableMapStringListSize = firstSetVariableMapStringList.size
@@ -36,7 +46,10 @@ object SetReplaceVariabler {
     }
 
     private fun execMakeSetReplaceVariableMap(
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+        currentAppDirPath: String,
+        currentShellFileName: String,
+        fannelDirName: String
     ): Map<String, String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
                 entry ->
@@ -49,13 +62,24 @@ object SetReplaceVariabler {
             val setTargetVariableValueBeforeTrim = entryValue?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
             )
-            if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
+            val setTargetVariableValueSource = if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
                 setTargetVariableValueBeforeTrim.trim('"')
             } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
                 setTargetVariableValueBeforeTrim.trim('\'')
             } else {
                 setTargetVariableValueBeforeTrim
             } ?: return null
+            if(
+                !setTargetVariableValueSource.startsWith(
+                    filePrefix
+                )
+            ) return@map setTargetVariableValueSource
+            makeSetVariableValueFromFile(
+                setTargetVariableValueSource,
+                currentAppDirPath,
+                currentShellFileName,
+                fannelDirName
+            )
         }?.joinToString(",")
             ?.split(',')
             ?.filter {
@@ -67,7 +91,7 @@ object SetReplaceVariabler {
                     setTargetVariableValueList
                         .firstOrNull()
                         ?.let {
-                            BothEdgeQuote.trim(it)
+                            QuoteTool.trimBothEdgeQuote(it)
                         } ?: return null
                 val setTargetVariableValueListSize =
                     setTargetVariableValueList.size
@@ -76,10 +100,36 @@ object SetReplaceVariabler {
                 ) setTargetVariableValueList.slice(
                     1.. setTargetVariableValueListSize - 1
                 ).firstOrNull()
-                    ?.let { BothEdgeQuote.trim(it)}
+                    ?.let { QuoteTool.trimBothEdgeQuote(it)}
                     ?: return null
                 else return null
                 replaceVariableName to replaceString
             }?.toMap()
+    }
+
+    private fun makeSetVariableValueFromFile(
+        setTargetVariableValueSource: String,
+        currentAppDirPath: String,
+        currentShellFileName: String,
+        fannelDirName: String
+    ): String {
+        val setVariableTypeFilePath =
+            ScriptPreWordReplacer.replace(
+                setTargetVariableValueSource
+                    .removePrefix(
+                        filePrefix
+                    ),
+                currentAppDirPath,
+                fannelDirName,
+                currentShellFileName,
+            )
+        val setReplaceVariableFilePathObj = File(setVariableTypeFilePath)
+        val setReplaceVariableFileDirPath = setReplaceVariableFilePathObj.parent
+            ?: return String()
+        val setReplaceVariableFileName = setReplaceVariableFilePathObj.name
+        return SettingFile.read(
+            setReplaceVariableFileDirPath,
+            setReplaceVariableFileName
+        )
     }
 }

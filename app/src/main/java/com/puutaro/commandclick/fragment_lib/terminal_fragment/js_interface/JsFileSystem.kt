@@ -47,7 +47,7 @@ class JsFileSystem(
         outPutOption: String,
     ) {
         if(
-            SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
+            SettingVariableSelects.TerminalOutPutModeSelects.NO.name
             == outPutOption
         ) return
         val currentMonitorPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
@@ -62,12 +62,12 @@ class JsFileSystem(
         val addContents = "\n### $currentTime ${fileName}\n"
         terminalViewModel.onBottomScrollbyJs = !(
                 outPutOption ==
-                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                        SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
                 )
         if(
-            SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH.name
+            SettingVariableSelects.TerminalOutPutModeSelects.REFLASH.name
             == outPutOption
-            || SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+            || SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
             == outPutOption
         ) {
             FileSystems.writeFile(
@@ -106,7 +106,7 @@ class JsFileSystem(
         wrap: String
     ) {
         if (
-            SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
+            SettingVariableSelects.TerminalOutPutModeSelects.NO.name
             == outPutOption
         ) return
         val currentMonitorPath =
@@ -116,12 +116,12 @@ class JsFileSystem(
             ?: return
         terminalViewModel.onBottomScrollbyJs = !(
                 outPutOption ==
-                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                        SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
                 )
         if (
-            SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH.name
+            SettingVariableSelects.TerminalOutPutModeSelects.REFLASH.name
             == outPutOption
-            || SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+            || SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
             == outPutOption
         ) {
             FileSystems.writeFile(

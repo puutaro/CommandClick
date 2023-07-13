@@ -19,7 +19,7 @@ object CommandClickVariables {
         return shellFileNameRowString.substring(
             equalIndex + 1, shellFileNameRowString.length
         ).let {
-            BothEdgeQuote.trim(it)
+            QuoteTool.trimBothEdgeQuote(it)
         }
     }
 
@@ -37,7 +37,7 @@ object CommandClickVariables {
         }.joinToString("\n")
             .split("\n")
             .map {
-                BothEdgeQuote.trim(
+                QuoteTool.trimBothEdgeQuote(
                     it
                 )
             }.filter {
@@ -82,16 +82,16 @@ object CommandClickVariables {
             substituteVariableListFromHolder(
                 shellContentsList,
                 languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
                 ),
                 languageTypeHolderMap?.get(
-                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
                 )
             )
 
         return substituteCmdClickVariable(
             variablesSettingHolderList,
             CommandClickScriptVariable.EDIT_EXECUTE
-        ) ?: SettingVariableSelects.Companion.EditExecuteSelects.NO.name
+        ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
     }
 }

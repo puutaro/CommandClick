@@ -17,16 +17,16 @@ class DecideEditTag(
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
     private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
     private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
     private val enableCommandHolderVariablesEdit = howEnableVariableHolder(
         commandSectionStart,

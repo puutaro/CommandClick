@@ -99,12 +99,12 @@ class CopyFileEvent(
         )
         val sourceFannelName =
             sourceScriptFileName
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         val selectedFannelName =
             File(selectedShellFilePath).name
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
         val selectedFannelDir = selectedFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(
@@ -132,7 +132,7 @@ private fun makeSelectedShellFilePath(
 ): String {
     val selectedAppDirPath = UsePath.cmdclickAppDirPath + '/' +
             selectedShellFileName.removeSuffix(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             )
     val selectedShellFilePathSource = if(sourceAppDirPath == selectedAppDirPath) {
         sourceAppDirPath +

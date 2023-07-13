@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.UsePath
 
 object JsOrShellFromSuffix {
     fun judge(
@@ -9,7 +10,7 @@ object JsOrShellFromSuffix {
     ):LanguageTypeSelects {
         if(
             shellScriptName.endsWith(
-                CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                UsePath.SHELL_FILE_SUFFIX
             )
         ) return LanguageTypeSelects.SHELL_SCRIPT
         return  LanguageTypeSelects.JAVA_SCRIPT

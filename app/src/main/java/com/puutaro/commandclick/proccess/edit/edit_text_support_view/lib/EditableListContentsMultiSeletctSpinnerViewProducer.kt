@@ -15,6 +15,7 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
         isInsertTextViewVisible: Boolean = false
     ): Button {
@@ -26,8 +27,9 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForSpinner.weight = weight
-        val elcbMap = ListContentsSelectSpinnerViewProducer.getElcbMap(
-            editParameters
+        val elcbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
+            editParameters,
+            currentComponentIndex
         )
         val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
             elcbMap,

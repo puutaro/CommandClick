@@ -53,10 +53,10 @@ object ScriptFileDescription {
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
         ) as String
         val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
         ) as String
         val removePrefix = if(languageType == LanguageTypeSelects.SHELL_SCRIPT){
             "#"

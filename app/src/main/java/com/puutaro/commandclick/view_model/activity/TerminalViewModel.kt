@@ -23,6 +23,7 @@ class TerminalViewModel: ViewModel() {
     var onExecInternetButtonShell = false
     var goBackFlag = false
     var onDialog = false
+    var dialogReturnValue = String()
     var jsArguments = String()
     var blocklist = hashSetOf<String>()
     var isStop = false

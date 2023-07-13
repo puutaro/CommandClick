@@ -17,6 +17,7 @@ object EditableListContentsSelectSpinnerViewProducer {
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
         val currentFragment = editParameters.currentFragment
@@ -30,8 +31,9 @@ object EditableListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbMap = ListContentsSelectSpinnerViewProducer.getElcbMap(
-            editParameters
+        val elcbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
+            editParameters,
+            currentComponentIndex
         )
         val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
             elcbMap,

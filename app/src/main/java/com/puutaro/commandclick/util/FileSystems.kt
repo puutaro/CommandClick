@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util
 
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
@@ -107,7 +108,7 @@ object FileSystems {
             CommandClickScriptVariable.EMPTY_STRING
             || fileName ==
                     CommandClickScriptVariable.EMPTY_STRING +
-            CommandClickScriptVariable.SHELL_FILE_SUFFIX
+            UsePath.SHELL_FILE_SUFFIX
         ) return
         val monitor1File = File(
             dirPath,
@@ -159,7 +160,7 @@ object FileSystems {
             reverse
         ).filter {
             it.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             )
         }
     }
@@ -173,9 +174,9 @@ object FileSystems {
             reverse
         ).filter {
             it.endsWith(
-                CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                UsePath.SHELL_FILE_SUFFIX
             ) || it.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             )
         }
     }
@@ -189,11 +190,11 @@ object FileSystems {
             reverse
         ).filter {
             it.endsWith(
-                CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                UsePath.SHELL_FILE_SUFFIX
             ) || it.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             ) || it.endsWith(
-                CommandClickScriptVariable.HTML_FILE_SUFFIX
+                UsePath.HTML_FILE_SUFFIX
             )
         }
     }

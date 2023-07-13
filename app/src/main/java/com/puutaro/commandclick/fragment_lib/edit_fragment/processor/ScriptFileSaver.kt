@@ -33,7 +33,7 @@ class ScriptFileSaver(
 
         val editedShellContentsList = if(
             editFragment.passCmdVariableEdit
-            == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+            == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
             || editFragment.tag?.startsWith(
                 FragmentTagManager.Prefix.settingEditPrefix.str
             ) == true

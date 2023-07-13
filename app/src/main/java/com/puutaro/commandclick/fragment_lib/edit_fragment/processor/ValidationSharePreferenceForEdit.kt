@@ -68,7 +68,6 @@ class ValidationSharePreferenceForEdit(
                 FragmentTagManager.parentAppDirPathIndex
             )
         } else checkCurrentAppDirPathSource
-
         val checkCurrentScriptName = if(
             checkCurrentScriptNameSource.isNullOrEmpty()
         ) {
@@ -82,13 +81,11 @@ class ValidationSharePreferenceForEdit(
             && File(
                 "${checkCurrentAppDirPath}/${checkCurrentScriptName}"
             ).isFile
-        ) {
-            return editExecuteCheck(
+        ) return editExecuteCheck(
                 onShortcut,
                 checkCurrentAppDirPath,
                 checkCurrentScriptName
             )
-        }
         val listener = context
                 as? EditFragment.OnInitEditFragmentListener
         listener?.onInitEditFragment()
@@ -118,20 +115,20 @@ class ValidationSharePreferenceForEdit(
         val settingSectionStart = languageTypeToSectionHolderMap
             ?.get(
                 CommandClickScriptVariable
-                    .Companion.HolderTypeName.SETTING_SEC_START
+                    .HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion
+            CommandClickScriptVariable
                 .HolderTypeName.SETTING_SEC_END
         ) as String
 
         val commandSectionStart = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable
-                .Companion.HolderTypeName.CMD_SEC_START
+                .HolderTypeName.CMD_SEC_START
         ) as String
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable
-                .Companion.HolderTypeName.CMD_SEC_END
+                .HolderTypeName.CMD_SEC_END
         ) as String
         val variablesSettingHolderList =
             CommandClickVariables.substituteVariableListFromHolder(
@@ -142,7 +139,7 @@ class ValidationSharePreferenceForEdit(
         val onPassCmdVariableEdit = CommandClickVariables.substituteCmdClickVariable(
             variablesSettingHolderList,
             CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT
-        ) == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+        ) == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
         val variablesCommandHolderListSize =
             CommandClickVariables.substituteVariableListFromHolder(
                 shellContentsList,
@@ -164,7 +161,7 @@ class ValidationSharePreferenceForEdit(
         )
         if(
             editExecuteValue
-            != SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
+            != SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ){
             val listener = context
                     as? EditFragment.OnInitEditFragmentListener

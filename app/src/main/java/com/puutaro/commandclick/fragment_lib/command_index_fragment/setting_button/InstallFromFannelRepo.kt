@@ -10,38 +10,44 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.FannelListVariable
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
+import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
+import java.io.File
+import java.io.PipedOutputStream
 
 
 class InstallFromFannelRepo(
-    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
+    private val cmdIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
     private val cmdListAdapter: ArrayAdapter<String>,
 ) {
 
-    private val context = cmdIndexCommandIndexFragment.context
-    private val binding = cmdIndexCommandIndexFragment.binding
+    private val context = cmdIndexFragment.context
+    private val binding = cmdIndexFragment.binding
     private val cmdListView = binding.cmdList
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexCommandIndexFragment)
+    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexFragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
-    private val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+    private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private val blankListMark = "let's sync by long click"
     private val fannelDirSuffix = UsePath.fannelDirSuffix
@@ -51,6 +57,11 @@ class InstallFromFannelRepo(
         R.layout.simple_list_item_1,
         makeFannelListForListView()
     )
+    val languageType = LanguageTypeSelects.JAVA_SCRIPT
+    val languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            languageType
+        )
 
     fun install(){
         if(context == null) return
@@ -87,7 +98,7 @@ class InstallFromFannelRepo(
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
 
-        val alertDialog = cmdIndexCommandIndexFragment.fannelInstallDialog
+        val alertDialog = cmdIndexFragment.fannelInstallDialog
             ?: return
         alertDialog.setView(linearLayoutForTotal)
         alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
@@ -154,8 +165,8 @@ class InstallFromFannelRepo(
                 parent, View, pos, id
             ->
             alertDialog.dismiss()
-            cmdIndexCommandIndexFragment.repoCloneJob?.cancel()
-            cmdIndexCommandIndexFragment.repoCloneProgressJob?.cancel()
+            cmdIndexFragment.repoCloneJob?.cancel()
+            cmdIndexFragment.repoCloneProgressJob?.cancel()
             terminalViewModel.onDialog = false
             fannelListUpdateJob?.cancel()
             val updateFannelsList = makeFannelListForListView()
@@ -179,8 +190,8 @@ class InstallFromFannelRepo(
             )
             val selectedFannelName =
                 selectedFannel
-                    .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                    .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                    .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                    .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
             val fannelDir = selectedFannelName + fannelDirSuffix
             FileSystems.copyDirectory(
                 "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
@@ -192,7 +203,7 @@ class InstallFromFannelRepo(
                 cmdListView,
             )
             Toast.makeText(
-                cmdIndexCommandIndexFragment.context,
+                cmdIndexFragment.context,
                 "install ok: ${selectedFannelName}",
                 Toast.LENGTH_LONG
             ).show()
@@ -205,24 +216,17 @@ class InstallFromFannelRepo(
         fannelListView.setOnItemLongClickListener {
                 parent, listSelectedView, pos, id
             ->
-            val popup = PopupMenu(context, listSelectedView)
-            val inflater = popup.menuInflater
-            inflater.inflate(
-                com.puutaro.commandclick.R.menu.history_admin_menu,
-                popup.menu
-            )
-            popup.menu.add(
-                FannelMenuEnums.SYNC.groupId,
-                FannelMenuEnums.SYNC.itemId,
-                FannelMenuEnums.SYNC.order,
-                FannelMenuEnums.SYNC.itemName,
+            val selectedContents = fannelListAdapter.getItem(pos)
+                ?: return@setOnItemLongClickListener true
 
-                )
-            popup.setOnMenuItemClickListener {
-                    menuItem ->
-                gitCloneAndMakeFannelList()
-                true
-            }
+            val popup = makePopup(
+                listSelectedView
+            )
+            setPopupMenuItemClickListener(
+                popup,
+                listSelectedView,
+                selectedContents
+            )
             popup.show()
             true
         }
@@ -275,7 +279,10 @@ class InstallFromFannelRepo(
 
     private fun gitCloneAndMakeFannelList(){
         if(context == null) return
-        val intent = Intent(cmdIndexCommandIndexFragment.activity, GitCloneService::class.java)
+        val intent = Intent(
+            cmdIndexFragment.activity,
+            GitCloneService::class.java
+        )
         context.startForegroundService(intent)
     }
 
@@ -319,6 +326,59 @@ class InstallFromFannelRepo(
             fannelListSource
         } else mutableListOf(blankListMark)
     }
+
+    private fun setPopupMenuItemClickListener(
+        popup: PopupMenu,
+        listSelectedView: View,
+        selectedContents: String
+    ){
+        popup.setOnMenuItemClickListener {
+                menuItem ->
+            val listSelectedViewContext = listSelectedView.context
+            when(menuItem.itemId){
+                FannelMenuEnums.SYNC.itemId -> {
+                    gitCloneAndMakeFannelList()
+                }
+                FannelMenuEnums.DESC.itemId -> {
+                    val selectedFannel =
+                        selectedContents
+                            .split("\n")
+                            .firstOrNull()
+                            ?: return@setOnMenuItemClickListener true
+                    val currentScriptContentsList = ReadText(
+                        UsePath.cmdclickFannelDirPath,
+                        selectedFannel
+                    ).textToList()
+                    ScriptFileDescription.show(
+                        listSelectedViewContext,
+                        currentScriptContentsList,
+                        selectedFannel
+                    )
+                }
+            }
+            true
+        }
+    }
+
+    private fun makePopup(
+        listSelectedView: View
+    ): PopupMenu {
+        val popup = PopupMenu(context, listSelectedView)
+        val inflater = popup.menuInflater
+        inflater.inflate(
+            com.puutaro.commandclick.R.menu.history_admin_menu,
+            popup.menu
+        )
+        FannelMenuEnums.values().forEach {
+            popup.menu.add(
+                it.groupId,
+                it.itemId,
+                it.order,
+                it.itemName,
+            )
+        }
+        return popup
+    }
 }
 
 private const val mainMenuGroupId = 100000
@@ -330,4 +390,5 @@ private enum class FannelMenuEnums(
     val itemName: String
 ) {
     SYNC(mainMenuGroupId, 100100, 1, "sync"),
+    DESC(mainMenuGroupId, 100200, 2, "desc"),
 }

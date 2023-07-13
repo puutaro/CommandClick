@@ -89,7 +89,7 @@ object WebViewClientSetter {
                 request: WebResourceRequest?
             ): WebResourceResponse? {
                 if(
-                    terminalFragment.onAdBlock != SettingVariableSelects.Companion.OnAdblockSelects.ON.name
+                    terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
                 ) return super.shouldInterceptRequest(view, request)
                 val empty3 = ByteArrayInputStream("".toByteArray())
                 val blocklist = terminalViewModel.blocklist

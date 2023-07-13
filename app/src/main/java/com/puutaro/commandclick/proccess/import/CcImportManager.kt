@@ -3,9 +3,10 @@ package com.puutaro.commandclick.proccess.import
 import android.content.Context
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -28,8 +29,8 @@ object CcImportManager {
             ?: return String()
         val scriptFileName = jsFileObj.name
         val fannelDirName = scriptFileName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         val trimRow = row
             .trim()
@@ -43,14 +44,13 @@ object CcImportManager {
             .let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    scriptPath,
                     recentAppDirPath,
                     fannelDirName,
                     scriptFileName
                 )
             }
             .let {
-                BothEdgeQuote.trim(it)
+                QuoteTool.trimBothEdgeQuote(it)
             }
         if(
             trimImportPathSource.startsWith(

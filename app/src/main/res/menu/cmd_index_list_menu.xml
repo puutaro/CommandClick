@@ -13,8 +13,6 @@
                 android:title="@string/shell_script_menu_delete" />
             <item android:id="@+id/shell_script_menu_kill"
                 android:title="@string/shell_script_menu_kill" />
-            <item android:id="@+id/shell_script_menu_init"
-                android:title="@string/shell_script_menu_init" />
             <item android:id="@+id/shell_script_menu_description"
                 android:title="@string/shell_script_menu_description" />
         </menu>

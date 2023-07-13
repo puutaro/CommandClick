@@ -82,11 +82,6 @@ class JsDialog(
         message: String,
         imagePathListTabSepaStr: String
     ): String {
-        Toast.makeText(
-            context,
-            "grid",
-            Toast.LENGTH_LONG
-        ).show()
         return gridJsDialog.create(
             title,
             message,

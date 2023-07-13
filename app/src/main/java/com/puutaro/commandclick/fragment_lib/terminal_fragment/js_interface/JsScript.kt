@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 
 class JsScript(
@@ -16,22 +16,22 @@ class JsScript(
                 LanguageTypeSelects.JAVA_SCRIPT
         ]
     private val labelingStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
     )
     private val labelingEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
     )
     private val settingStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     )
     private val settingEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     )
     private val commandStartHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     )
     private val commandEndHolder = languageTypeHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
 
     @JavascriptInterface
@@ -107,7 +107,7 @@ class JsScript(
             it.startsWith(targetValPrefix)
         }.map {
             val removedValName = it.removePrefix(targetValPrefix)
-            BothEdgeQuote.trim(removedValName)
+            QuoteTool.trimBothEdgeQuote(removedValName)
         }.joinToString("\n")
     }
 
@@ -115,7 +115,7 @@ class JsScript(
     fun bothQuoteTrim(
         valString: String
     ): String {
-        return BothEdgeQuote.trim(valString)
+        return QuoteTool.trimBothEdgeQuote(valString)
     }
 
     @JavascriptInterface
@@ -185,7 +185,7 @@ class JsScript(
             val keyValueListSize = keyValueList.size
             val key = keyValueList.first()
             val replaceValue = replaceMap.get(key)?.let{
-                BothEdgeQuote.trim(it)
+                QuoteTool.trimBothEdgeQuote(it)
             } ?: return@map it
             if(
                 keyValueListSize < 2

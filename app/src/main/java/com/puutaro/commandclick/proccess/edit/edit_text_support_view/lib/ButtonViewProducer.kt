@@ -4,33 +4,43 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
-import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ListDialogForButton
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
 object ButtonViewProducer {
-    private val setVariableSetSeparator = "|"
-    private val jsFrag = "jsf"
-    private val blankString = "cmdclickBlank"
+    private const val setVariableSetSeparator = "|"
+    private const val jsFrag = "jsf"
+    private const val settingFrag = "setf"
+    private const val blankString = "cmdclickBlank"
+    private const val buttoLabelThis = "this"
     fun make (
         editFragment: EditFragment,
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
         weight: Float,
+        currentComponentIndex: Int,
         isInsertTextViewVisible: Boolean = false
     ): Button {
         val context = editParameters.context
@@ -59,10 +69,14 @@ object ButtonViewProducer {
             true ,
         )
 
-        val buttonMap = getButtonMap(
-            editParameters,
+        val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
+            editParameters
         )
 
+        val buttonMap = getButtonMap(
+            currentSetVariableValue,
+            currentComponentIndex
+        )
         val linearParamsForButton = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -71,10 +85,8 @@ object ButtonViewProducer {
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
-
         insertButton.text = makeButtonLabel(
             getButtonLabel(buttonMap),
-            isInsertTextViewVisible,
             insertTextView.text.toString(),
         )
         insertTextView.isVisible = isInsertTextViewVisible
@@ -105,10 +117,18 @@ object ButtonViewProducer {
                 setReplaceVariableMap,
             )
             val doubleColon = "::"
-            val backStackMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.BackStack.name + doubleColon
-            val termOutMacro = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermOut.name + doubleColon
-            val noJsTermOut = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.NoJsTermOut.name + doubleColon
-            val termLong = doubleColon + SettingVariableSelects.Companion.ButtonEditExecVariantSelects.TermLong.name + doubleColon
+            val backStackMacro = doubleColon +
+                    SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
+                    doubleColon
+            val termOutMacro = doubleColon +
+                    SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
+                    doubleColon
+            val noJsTermOut = doubleColon +
+                    SettingVariableSelects.ButtonEditExecVariantSelects.NoJsTermOut.name +
+                    doubleColon
+            val termLong = doubleColon +
+                    SettingVariableSelects.ButtonEditExecVariantSelects.TermLong.name +
+                    doubleColon
 
             val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
             val onTermOutMacro = innerExecCmd.contains(termOutMacro)
@@ -138,16 +158,28 @@ object ButtonViewProducer {
                 execCmdAfterTrimButtonEditExecVariant
             ).split(" ")
 
-
+            val firstCmdStr = QuoteTool.trimBothEdgeQuote(
+                execCmdReplaceBlankList.firstOrNull()
+            )
             if(
-                BothEdgeQuote.trim(
-                    execCmdReplaceBlankList.firstOrNull()
-                ) == jsFrag
+                firstCmdStr == jsFrag
             ){
                 execJsFileForButton(
                     editFragment,
                     terminalViewModel,
                     execCmdReplaceBlankList
+                )
+                return@setOnClickListener
+            }
+            if(
+                firstCmdStr == settingFrag
+            ){
+                execSettingCmd(
+                    editFragment,
+                    insertEditText,
+                    readSharePreffernceMap,
+                    execCmdReplaceBlankList,
+                    currentSetVariableValue,
                 )
                 return@setOnClickListener
             }
@@ -191,12 +223,12 @@ object ButtonViewProducer {
         val currentScriptName = scriptFileObj.name
             ?: return String()
         val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
-                BothEdgeQuote.trim(
+                QuoteTool.trimBothEdgeQuote(
                     execCmdEditableString
                 )
         return innerExecCmdSourceBeforeReplace.trim(';')
@@ -204,7 +236,6 @@ object ButtonViewProducer {
             .let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    currentScriptPath,
                     currentAppDirPath,
                     fannelDirName,
                     currentScriptName
@@ -217,7 +248,6 @@ object ButtonViewProducer {
                     .let {
                         ScriptPreWordReplacer.replace(
                             it,
-                            currentScriptPath,
                             currentAppDirPath,
                             fannelDirName,
                             currentScriptName
@@ -266,6 +296,248 @@ object ButtonViewProducer {
         }.joinToString("")
     }
 
+    private fun execSettingCmd(
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        readSharePreffernceMap: Map<String, String>,
+        execCmdReplaceBlankList: List<String>,
+        currentSetVariableValue: String?
+    ){
+        val setFOptionMap = getSetFOptionMap(
+            execCmdReplaceBlankList
+        ) ?: return
+        val settingArg = setFOptionMap.get(SET_F_OPTION_MAP_KEY.type)
+            ?: return
+        when(settingArg){
+            SettingCmdArgs.ListAdd.name -> {
+                val listConSlSpiOptionsStr = getFromSetVariableValueByIndex(
+                    currentSetVariableValue,
+                    0
+                )
+                execListAddForSetting(
+                    editFragment,
+                    insertEditText,
+                    readSharePreffernceMap,
+                    listConSlSpiOptionsStr,
+                    setFOptionMap
+                )
+            }
+//            SettingCmdArgs.ListAdd_BY_SB.name -> {
+//                val listConSlSpiOptionsStr = getFromSetVariableValueByIndex(
+//                    currentSetVariableValue,
+//                    0
+//                )
+//                execListAddBySBForSetting(
+//                    editFragment,
+//                    insertEditText,
+//                    listConSlSpiOptionsStr,
+//                    setFOptionMap
+//                )
+//            }
+            else -> {}
+        }
+    }
+
+    private fun execListAddForSetting(
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        readSharePreffernceMap: Map<String, String>,
+        listConSlSpiOptionsStr: String?,
+        setFOptionMap: Map<String, String>
+    ){
+        val context = editFragment.context
+        val suffixList = setFOptionMap.get(
+            SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
+        )?.split("&") ?: emptyList()
+        val addSourceDirPath = setFOptionMap.get(
+            SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
+        ) ?: return
+        val isFull = !setFOptionMap.get(
+            SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
+        ).isNullOrEmpty()
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val listCon = FileSystems.sortedFiles(
+            addSourceDirPath,
+            "on"
+        ).filter {
+            fileName ->
+            fileName != currentScriptName
+                    && suffixList.any {
+                    suffix ->
+                fileName.endsWith(suffix)
+                    }
+        }.map {
+            "$addSourceDirPath/$it"
+        }.joinToString("\n")
+        if(
+            listCon.isEmpty()
+        ) return
+        GridDialogForButton.create(
+            editFragment,
+            listCon,
+        )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO){
+                for (i in 1..6000) {
+                    delay(100)
+                    if (!terminalViewModel.onDialog) break
+                }
+
+            }
+            val selectedScript = withContext(Dispatchers.IO) {
+                terminalViewModel.dialogReturnValue.replace(
+                    "${addSourceDirPath}/",
+                    ""
+                )
+            }
+            terminalViewModel.dialogReturnValue = String()
+            if(
+                selectedScript.isEmpty()
+            ) return@launch
+            if(
+                selectedScript == currentScriptName
+            ) {
+                Toast.makeText(
+                    context,
+                    "this script cannot register\n ${selectedScript}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+            val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+            val listFilePath = listConSlSpiOptionsStr
+                ?.split("!")
+                ?.filter {
+                    it.contains(listPathKey)
+                }?.firstOrNull()
+                ?.replace("${listPathKey}=", "")
+                ?.let {
+                    QuoteTool.trimBothEdgeQuote(it)
+                } ?: return@launch
+            val listFilePathOjb = File(listFilePath)
+            val listDirPath = listFilePathOjb.parent
+                ?: return@launch
+            FileSystems.createDirs(listDirPath)
+            val listFileName = listFilePathOjb.name
+            if(
+                ReadText(
+                    listDirPath,
+                    listFileName
+                ).textToList().filter {
+                    it == selectedScript
+                }.isNotEmpty()
+            ) {
+                Toast.makeText(
+                    context,
+                    "this script already register\n ${selectedScript}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+            withContext(Dispatchers.IO){
+                val insertSelectedScript = if(
+                    isFull
+                ) "$addSourceDirPath/$selectedScript"
+                else selectedScript
+                val updateListCon = insertSelectedScript + "\n" + ReadText(
+                    listDirPath,
+                    listFileName
+                ).readText()
+                FileSystems.writeFile(
+                    listDirPath,
+                    listFileName,
+                    updateListCon
+                )
+            }
+            withContext(Dispatchers.Main){
+                insertEditText.setText(listFilePath)
+            }
+        }
+    }
+
+    private fun execListAddBySBForSetting(
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        listConSlSpiOptionsStr: String?,
+        setFOptionMap: Map<String, String>
+    ){
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val listCon = setFOptionMap.get(
+            SET_F_OPTION_MAP_KEY.ListAddBySB.selectsValues.name
+        )?.replace("&", "\n") ?: return
+        Toast.makeText(
+            editFragment.context,
+            listCon,
+            Toast.LENGTH_LONG
+        ).show()
+        ListDialogForButton.create(
+            editFragment,
+            listCon,
+        )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO){
+                for (i in 1..6000) {
+                    delay(100)
+                    if (!terminalViewModel.onDialog) break
+                }
+            }
+            val selectedItem = terminalViewModel.dialogReturnValue
+            terminalViewModel.dialogReturnValue = String()
+            if(
+                selectedItem.isEmpty()
+            ) return@launch
+            val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+            val listFilePath = listConSlSpiOptionsStr
+                ?.split("!")
+                ?.filter {
+                    it.contains(listPathKey)
+                }?.firstOrNull()
+                ?.replace("${listPathKey}=", "")
+                ?.let {
+                    QuoteTool.trimBothEdgeQuote(it)
+                } ?: return@launch
+            val listFilePathOjb = File(listFilePath)
+            val listDirPath = listFilePathOjb.parent
+                ?: return@launch
+            FileSystems.createDirs(listDirPath)
+            val listFileName = listFilePathOjb.name
+            if(
+                ReadText(
+                    listDirPath,
+                    listFileName
+                ).textToList().filter {
+                    it == selectedItem
+                }.isNotEmpty()
+            ) {
+                Toast.makeText(
+                    context,
+                    "this script already register\n ${selectedItem}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@launch
+            }
+            withContext(Dispatchers.IO){
+                val updateListCon = selectedItem + "\n" + ReadText(
+                    listDirPath,
+                    listFileName
+                ).readText()
+                FileSystems.writeFile(
+                    listDirPath,
+                    listFileName,
+                    updateListCon
+                )
+            }
+            withContext(Dispatchers.Main){
+                insertEditText.setText(listFilePath)
+            }
+        }
+    }
+
     private fun execJsFileForButton(
         editFragment: EditFragment,
         terminalViewModel: TerminalViewModel,
@@ -273,7 +545,7 @@ object ButtonViewProducer {
     ){
         terminalViewModel.jsArguments = String()
         val jsFilePathIndex = 1
-        val jsFilePath = BothEdgeQuote.trim(
+        val jsFilePath = QuoteTool.trimBothEdgeQuote(
             execCmdReplaceBlankList.get(
                 jsFilePathIndex
             )
@@ -291,7 +563,7 @@ object ButtonViewProducer {
             execCmdReplaceBlankList
                 .slice(2..execCmdReplaceBlankList.size-1)
                 .map{
-                    BothEdgeQuote.trim(
+                    QuoteTool.trimBothEdgeQuote(
                         it.replace(blankString, " ")
                     )
                 }.joinToString("\t")
@@ -304,15 +576,15 @@ object ButtonViewProducer {
 
     private fun makeButtonLabel(
         buttonLabelSource: String?,
-        isInsertTextViewVisible: Boolean,
         textViewLabel: String,
     ): String {
         return if(
+            buttonLabelSource == buttoLabelThis
+        ) textViewLabel
+        else if(
             !buttonLabelSource.isNullOrEmpty()
         ) buttonLabelSource
-        else if(isInsertTextViewVisible){
-            "EXEC"
-        } else textViewLabel
+        else "EXEC"
     }
 
     private fun getCmdPrefix(
@@ -331,51 +603,21 @@ object ButtonViewProducer {
         ) ?: String()
     }
 
-    fun getButtonMap(
-        editParameters: EditParameters
+    private fun getButtonMap(
+        currentSetVariableValue: String?,
+        currentComponentIndex: Int
     ): Map<String, String>? {
-        val currentSetVariableMap = editParameters.setVariableMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-        val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
-                "Dir"
-        return currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                "${currentAppDirPath}/${currentScriptName}",
-                currentAppDirPath,
-                fannelDirName,
-                currentScriptName
-            )
-        }.let {
-            ReplaceVariableMapReflecter.reflect(
-                BothEdgeQuote.trim(it),
-                editParameters
-            )
-        }?.let {
+        return currentSetVariableValue?.let {
             if(
                 it.contains(
                     setVariableSetSeparator
                 )
             ) return@let it.split(
                 setVariableSetSeparator
-            ).let {
-                val cmdPrefixEntry = it
-                    .slice(1 until it.size)
-                    .joinToString(setVariableSetSeparator)
-                BothEdgeQuote.trim(cmdPrefixEntry)
+            ).getOrNull(currentComponentIndex).let {
+                QuoteTool.trimBothEdgeQuote(it)
             }
-            BothEdgeQuote.trim(it)
+            QuoteTool.trimBothEdgeQuote(it)
         }?.split('!')
             ?.map {
                 CcScript.makeKeyValuePairFromSeparatedString(
@@ -385,10 +627,57 @@ object ButtonViewProducer {
             }?.toMap()
     }
 
+    private fun getSetFOptionMap(
+        execCmdReplaceBlankList: List<String>,
+    ): Map<String, String>? {
+        val execCmdReplaceBlankListSize = execCmdReplaceBlankList.size
+        val optionList = if(
+            execCmdReplaceBlankList.size > 1
+        ) execCmdReplaceBlankList.slice(
+            1 until execCmdReplaceBlankListSize
+        )
+        else return null
+        return optionList.map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }.toMap()
+    }
+
+    private fun getFromSetVariableValueByIndex(
+        currentSetVariableValue: String?,
+        targetIndex: Int
+    ): String? {
+        return currentSetVariableValue?.let {
+            if(
+                it.contains(
+                    setVariableSetSeparator
+                )
+            ) return@let it.split(
+                setVariableSetSeparator
+            ).getOrNull(targetIndex).let {
+                QuoteTool.trimBothEdgeQuote(it)
+            }
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+    }
 
 
-    private enum class ButtonEditKey {
+    enum class ButtonEditKey {
         cmd,
         label,
+    }
+
+    object SET_F_OPTION_MAP_KEY {
+        val type = "type"
+        enum class ListAdd {
+            dirPath,
+            suffix,
+            howFull,
+        }
+        enum class ListAddBySB {
+            selectsValues,
+        }
     }
 }

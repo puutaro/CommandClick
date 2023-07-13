@@ -34,7 +34,7 @@ class AppHistoryAdminEvent {
             }
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                selectedAppDirName + CommandClickScriptVariable.JS_FILE_SUFFIX
+                selectedAppDirName + UsePath.JS_FILE_SUFFIX
             )
 
             val selectedAppShellFileName = AppHistoryManager
@@ -51,7 +51,7 @@ class AppHistoryAdminEvent {
                 JsOrShellFromSuffix.judge(selectedAppShellFileName)
             )
             val onEditExecute = updateEditExecuteValue ==
-                    SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
+                    SettingVariableSelects.EditExecuteSelects.ALWAYS.name
             if (!onEditExecute) {
                 SharePreffrenceMethod.putSharePreffrence(
                     sharedPref,
@@ -86,7 +86,7 @@ class AppHistoryAdminEvent {
                 CommandClickScriptVariable.EMPTY_STRING
                 || selectedAppShellFileName ==
                 CommandClickScriptVariable.EMPTY_STRING +
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             ) {
                 SharePrefferenceSetting.on_shortcut.defalutStr
             } else {

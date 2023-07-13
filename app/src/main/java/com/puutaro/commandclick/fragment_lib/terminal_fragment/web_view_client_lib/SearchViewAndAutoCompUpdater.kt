@@ -7,7 +7,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import java.net.URLDecoder
@@ -45,7 +45,7 @@ object SearchViewAndAutoCompUpdater {
         ) return
 
         val currentAppDirPath = terminalFragment.currentAppDirPath
-        val ulrTitle = BothEdgeQuote.trim(webView?.title)
+        val ulrTitle = QuoteTool.trimBothEdgeQuote(webView?.title)
         val escapeStr = WebUrlVariables.escapeStr
         if (ulrTitle.endsWith("\t${escapeStr}")) return
 

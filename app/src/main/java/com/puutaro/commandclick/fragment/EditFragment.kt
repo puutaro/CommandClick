@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -48,21 +47,21 @@ class EditFragment: Fragment() {
                 languageType
             )
     var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
 
     var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
     var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-    var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
+    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
@@ -164,16 +163,16 @@ class EditFragment: Fragment() {
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
         settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
         commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
         ) as String
         commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
 
         ConfigFromScriptFileSetter.set(
@@ -184,7 +183,7 @@ class EditFragment: Fragment() {
         ) {
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,
-                File(currentAppDirPath).name + CommandClickScriptVariable.JS_FILE_SUFFIX
+                File(currentAppDirPath).name + UsePath.JS_FILE_SUFFIX
             )
             FileSystems.updateLastModified(
                 currentAppDirPath,

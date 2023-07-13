@@ -46,11 +46,11 @@ class AutoShellExecManager {
                     languageType
                 )
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
             ) as String
 
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val substituteSettingVariableList =
@@ -65,7 +65,7 @@ class AutoShellExecManager {
             )
             if(
                 onAutoShell !=
-                SettingVariableSelects.Companion.AutoExecSelects.ON.name
+                SettingVariableSelects.AutoExecSelects.ON.name
             ) return
             ExecJsLoad.execJsLoad(
                 cmdIndexCommandIndexFragment,

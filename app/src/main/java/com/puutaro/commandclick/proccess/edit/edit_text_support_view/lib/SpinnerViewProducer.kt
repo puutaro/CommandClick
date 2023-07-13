@@ -9,7 +9,7 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 
 
 class SpinnerViewProducer {
@@ -17,6 +17,7 @@ class SpinnerViewProducer {
         fun make(
             insertEditText: EditText,
             editParameters: EditParameters,
+            currentComponentIndex: Int,
             weight: Float,
         ): Spinner {
             val context = editParameters.context
@@ -31,18 +32,19 @@ class SpinnerViewProducer {
                 context as Context,
                 R.layout.sppinner_layout,
             )
-            val sppinerList = currentSetVariableMap?.get(
-                SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-            )
-                ?.split('|')
-                ?.firstOrNull()
-                .let {
-                    ReplaceVariableMapReflecter.reflect(
-                        BothEdgeQuote.trim(it),
-                        editParameters
-                    )
-                }?.split('!')
-                ?: listOf()
+            val sppinerList =
+                currentSetVariableMap?.get(
+                    SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+                )
+                    ?.split('|')
+                    ?.getOrNull(currentComponentIndex)
+                    .let {
+                        ReplaceVariableMapReflecter.reflect(
+                            QuoteTool.trimBothEdgeQuote(it),
+                            editParameters
+                        )
+                    }?.split('!')
+                    ?: listOf()
             val currentExistItem = insertEditText.text.toString()
             val updatedSppinerList = if(
                 sppinerList.contains(

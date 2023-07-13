@@ -30,18 +30,18 @@ class MakeExecCmdForTermux {
             val normalOutputMark = OutputMark.NORMAL_OUTPUT_MARK.str
             val refleshOutputMark = OutputMark.REFLESH_OUTPUT_MARK.str
             val monitorFileReDirectMark = when(terminalOutputMode) {
-                SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH.name,
-                SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name -> refleshOutputMark
+                SettingVariableSelects.TerminalOutPutModeSelects.REFLASH.name,
+                SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name -> refleshOutputMark
                 else -> normalOutputMark
             }
             val debugSign = if(
                 terminalOutputMode ==
-                SettingVariableSelects.Companion.TerminalOutPutModeSelects.DEBUG.name
+                SettingVariableSelects.TerminalOutPutModeSelects.DEBUG.name
             ) " 2>&1 "
             else String()
             terminalViewModel.onBottomScrollbyJs = !(
                     terminalOutputMode ==
-                            SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                            SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
                     )
 
             val beforeCommandSource = CommandClickVariables.substituteCmdClickVariable(
@@ -66,9 +66,9 @@ class MakeExecCmdForTermux {
 
 
             val execCmdSource = if(
-                terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                || terminalOutputMode == SettingVariableSelects.Companion.TerminalOutPutModeSelects.NO.name
-                || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                terminalDo == SettingVariableSelects.TerminalDoSelects.OFF.name
+                || terminalOutputMode == SettingVariableSelects.TerminalOutPutModeSelects.NO.name
+                || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
                 || !terminalViewModel.launchUrl.isNullOrEmpty()
             ) {
                 "${beforeCommandSource};" +

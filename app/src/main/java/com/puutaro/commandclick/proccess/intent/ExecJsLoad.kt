@@ -55,10 +55,10 @@ object ExecJsLoad {
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val jsContentsList = if (jsContentsListSource.isNullOrEmpty()) {
@@ -130,12 +130,12 @@ object ExecJsLoad {
         )?.trim(' ') ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
         terminalViewModel.onBottomScrollbyJs = !(
                 terminalOutputMode ==
-                        SettingVariableSelects.Companion.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
+                        SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
                 )
 
         if (
             onUpdateLastModify
-            == SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
+            == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
         ) return
         FileSystems.updateLastModified(
             recentAppDirPath,

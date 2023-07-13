@@ -58,7 +58,7 @@ class ToolbarButtonProducerForEdit(
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
-        editExecuteValue :String = SettingVariableSelects.Companion.EditExecuteSelects.NO.name,
+        editExecuteValue :String = SettingVariableSelects.EditExecuteSelects.NO.name,
         setDrawble: Int? = null
     ) {
         insertImageButtonParam.weight = 1F
@@ -134,7 +134,7 @@ class ToolbarButtonProducerForEdit(
                 ToolbarButtonBariantForEdit.SETTING -> {
                     if(
                         editFragment.terminalOn
-                        == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+                        == SettingVariableSelects.TerminalDoSelects.OFF.name
                     ) return@setOnClickListener
                     val existEditExecuteTerminalFragment = ExistTerminalFragment
                         .how(
@@ -327,7 +327,7 @@ class ToolbarButtonProducerForEdit(
     ){
         val onPassCmdVariableEdit =
             editFragment.passCmdVariableEdit ==
-                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
 
         scriptFileSaver.save(
             shellContentsList,
@@ -342,9 +342,9 @@ class ToolbarButtonProducerForEdit(
 
 
         val EditExecuteAlways =
-            SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
+            SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         val EditExecuteOnce =
-            SettingVariableSelects.Companion.EditExecuteSelects.ONCE.name
+            SettingVariableSelects.EditExecuteSelects.ONCE.name
         val on_shortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.on_shortcut

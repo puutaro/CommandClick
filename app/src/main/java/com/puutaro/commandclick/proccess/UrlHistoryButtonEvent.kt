@@ -230,13 +230,13 @@ class UrlHistoryButtonEvent(
             alertDialog.dismiss()
             if(
                 selectedUrl.endsWith(
-                    CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                    UsePath.SHELL_FILE_SUFFIX
                 )
                 || selectedUrl.endsWith(
-                    CommandClickScriptVariable.JS_FILE_SUFFIX
+                    UsePath.JS_FILE_SUFFIX
                 )
                 || selectedUrl.endsWith(
-                    CommandClickScriptVariable.JSX_FILE_SUFFIX,
+                    UsePath.JSX_FILE_SUFFIX,
                 )
             ) {
                 execShellFile(selectedUrl)

@@ -48,10 +48,10 @@ object ConfirmDialogForDelete {
                 )
                 val fannelDirName = scriptFileName
                     .removeSuffix(
-                        CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                        UsePath.SHELL_FILE_SUFFIX
                     )
                     .removeSuffix(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                        UsePath.JS_FILE_SUFFIX
                     ) + UsePath.fannelDirSuffix
                 FileSystems.removeDir(
                     "${currentAppDirPath}/${fannelDirName}"

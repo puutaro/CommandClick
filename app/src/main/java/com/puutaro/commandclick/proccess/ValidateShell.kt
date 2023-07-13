@@ -23,23 +23,23 @@ class ValidateShell() {
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
+                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
             ) as String
             val labelingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
+                CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
             ) as String
             val settingSectionStart = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
             ) as String
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val commandSectionStart = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
             ) as String
             val commandSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+                CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
             ) as String
 
 
@@ -97,23 +97,23 @@ private class CheckVariableValue(
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
     ) as String
     val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
     ) as String
     val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
     val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
     val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
 
 
@@ -186,23 +186,23 @@ private class HolderCheck(
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     val labelingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
     ) as String
     val labelingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.LABELING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
     ) as String
     val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
     val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
     val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
 
 

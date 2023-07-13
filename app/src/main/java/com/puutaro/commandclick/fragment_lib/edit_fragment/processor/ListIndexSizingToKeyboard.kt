@@ -70,7 +70,7 @@ private object PxHeightCalculateForIndexList {
         }
         val heightRate = if (
             terminalOn
-            != SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+            != SettingVariableSelects.TerminalDoSelects.OFF.name
         ) WithIndexListView.pxHeightOnTerminal
         else WithIndexListView.pxHeightNoTerminal
         return (pxHeight * heightRate) / 100

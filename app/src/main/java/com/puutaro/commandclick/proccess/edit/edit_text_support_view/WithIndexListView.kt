@@ -35,12 +35,12 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Comma
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextForListIndex
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.Editor
@@ -89,7 +89,7 @@ class WithIndexListView(
     private val itemClickJsName = "itemClick.js"
     private val menuClickJsName = "menuClick.js"
     private val subMenuClickJsName = "subMenuClick.js"
-    private val editTextForListIndex = EditTextForListIndex(
+    private val formDialogForListIndexOrButton = FormDialogForListIndexOrButton(
         editFragment
     )
     private var selectedItemForCopy = String()
@@ -124,12 +124,12 @@ class WithIndexListView(
         )
         val sourceFannelName =
             selectedItemForCopy
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         val targetFannelName =
             File(targetScriptFilePath).name
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
         val targetFannelDir = targetFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(
@@ -171,8 +171,8 @@ class WithIndexListView(
         )
         val sourceFannelName =
             getFileName
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(
             "${sourceDirPath}/${sourceFannelDir}",
@@ -192,18 +192,18 @@ class WithIndexListView(
             languageType
         )
     var settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
 
     var settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
     var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
 
     fun create(
@@ -221,8 +221,8 @@ class WithIndexListView(
             SharePrefferenceSetting.current_script_file_name
         )
         fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
 
@@ -237,7 +237,6 @@ class WithIndexListView(
         )
         filterDir = getFilterListDir(
             indexListMap,
-            "${currentAppDirPath}/${currentScriptName}",
             currentAppDirPath,
             fannelDirName,
             currentScriptName
@@ -513,13 +512,13 @@ class WithIndexListView(
         ) return
         val onOverrideItemClickExec =
             editFragment.overrideItemClickExec !=
-                    SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name
+                    SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
         if(
             !onOverrideItemClickExec
             && selectedItem.endsWith(
-                        CommandClickScriptVariable.HTML_FILE_SUFFIX
+                        UsePath.HTML_FILE_SUFFIX
                     ) || selectedItem.endsWith(
-                        CommandClickScriptVariable.HTM_FILE_SUFFIX
+                        UsePath.HTM_FILE_SUFFIX
                     )
         ){
             BroadCastIntent.send(
@@ -532,9 +531,9 @@ class WithIndexListView(
             !onOverrideItemClickExec
             && (
                     selectedItem.endsWith(
-                    CommandClickScriptVariable.JS_FILE_SUFFIX
+                        UsePath.JS_FILE_SUFFIX
                 ) || selectedItem.endsWith(
-                        CommandClickScriptVariable.JSX_FILE_SUFFIX
+                        UsePath.JSX_FILE_SUFFIX
                     )
                 )
         ) {
@@ -552,7 +551,7 @@ class WithIndexListView(
         if(
             !onOverrideItemClickExec
             && selectedItem.endsWith(
-                CommandClickScriptVariable.SHELL_FILE_SUFFIX
+                UsePath.SHELL_FILE_SUFFIX
             )
         ) {
             val outputPath =
@@ -668,7 +667,7 @@ class WithIndexListView(
                 if(
                     selectedItem == throughMark
                 ) return
-                editTextForListIndex.create(
+                formDialogForListIndexOrButton.create(
                     "edit command variable",
                     filterDir,
                     selectedItem,
@@ -692,7 +691,7 @@ class WithIndexListView(
                 if(
                     selectedItem == throughMark
                 ) return
-                editTextForListIndex.create(
+                formDialogForListIndexOrButton.create(
                     "edit setting variable",
                     filterDir,
                     selectedItem,
@@ -737,7 +736,7 @@ class WithIndexListView(
             .setView(editText)
             .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
                 val inputScriptFileName = editText.text.toString()
-                val jsFileSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
+                val jsFileSuffix = UsePath.JS_FILE_SUFFIX
                 val isJsSuffix = inputScriptFileName.endsWith(jsFileSuffix)
                 val scriptFileName = if (
                     isJsSuffix
@@ -812,7 +811,7 @@ class WithIndexListView(
         selectedItem: String,
     ){
         val editTextForRenameAppDir = EditText(context)
-        val jsSuffix = CommandClickScriptVariable.JS_FILE_SUFFIX
+        val jsSuffix = UsePath.JS_FILE_SUFFIX
         editTextForRenameAppDir.setText(
             selectedItem.removeSuffix(jsSuffix)
         )
@@ -852,11 +851,11 @@ class WithIndexListView(
                 val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
                 val beforeMoveDirPath = cmdclickAppDirPath + '/' +
                         selectedItem.removeSuffix(
-                            CommandClickScriptVariable.JS_FILE_SUFFIX
+                            UsePath.JS_FILE_SUFFIX
                         )
                 val afterMoveDirPath = cmdclickAppDirPath + '/' +
                         renamedAppDirName.removeSuffix(
-                            CommandClickScriptVariable.JS_FILE_SUFFIX
+                            UsePath.JS_FILE_SUFFIX
                         )
                 FileSystems.moveDirectory(
                     beforeMoveDirPath,
@@ -1008,8 +1007,8 @@ class WithIndexListView(
                 )
                 val deleteFannelName =
                     selectedItem
-                        .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                        .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                        .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                        .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
                 val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
                 FileSystems.removeDir(
                     "${filterDir}/${deleteFannelDir}"
@@ -1020,7 +1019,7 @@ class WithIndexListView(
                     == UsePath.cmdclickAppDirAdminPath
                 ){
                     val deleteAppDirName = selectedItem.removeSuffix(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                        UsePath.JS_FILE_SUFFIX
                     )
                     val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
                     val displayDeleteAppDirPath =
@@ -1132,14 +1131,13 @@ class WithIndexListView(
             ?.let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    "${currentAppDirPath}/${currentScriptName}",
                     currentAppDirPath,
                     fannelDirName,
                     currentScriptName
                 )
             }.let {
                 ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
+                    QuoteTool.trimBothEdgeQuote(it),
                     editParameters
                 )
             }?.split('!')?.map {
@@ -1165,14 +1163,13 @@ class WithIndexListView(
             ?.let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    "${currentAppDirPath}/${currentScriptName}",
                     currentAppDirPath,
                     fannelDirName,
                     currentScriptName
                 )
             }.let {
                 ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
+                    QuoteTool.trimBothEdgeQuote(it),
                     editParameters
                 )
             }?.let {
@@ -1214,7 +1211,6 @@ private enum class IndexListEditKey {
 
 private fun getFilterListDir(
     fcbMap: Map<String, String>?,
-    currentScriptPath: String,
     currentAppDirPath: String,
     fannelDirName: String,
     currentScriptName: String
@@ -1222,20 +1218,19 @@ private fun getFilterListDir(
     return fcbMap?.get(IndexListEditKey.listDir.name)?.let{
         ScriptPreWordReplacer.replace(
             it,
-            currentScriptPath,
             currentAppDirPath,
             fannelDirName,
             currentScriptName
         )
     }?.let {
-        BothEdgeQuote.trim(it)
+        QuoteTool.trimBothEdgeQuote(it)
     } ?: String()
 }
 private fun getFilterPrefix(
     fcbMap: Map<String, String>?,
 ): String {
     return fcbMap?.get(IndexListEditKey.prefix.name)?.let {
-        BothEdgeQuote.trim(it)
+        QuoteTool.trimBothEdgeQuote(it)
     } ?: String()
 }
 
@@ -1243,7 +1238,7 @@ private fun getFilterSuffix(
     fcbMap: Map<String, String>?,
 ): String {
     return fcbMap?.get(IndexListEditKey.suffix.name)?.let {
-        BothEdgeQuote.trim(it)
+        QuoteTool.trimBothEdgeQuote(it)
     } ?: String()
 }
 
@@ -1296,7 +1291,7 @@ private object PxHeightCalculateForIndexList {
         }
         val heightRate = if (
             terminalOn
-            != SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+            != SettingVariableSelects.TerminalDoSelects.OFF.name
         ) WithIndexListView.pxHeightOnTerminal
         else WithIndexListView.pxHeightNoTerminal
         return (pxHeight * heightRate) / 100

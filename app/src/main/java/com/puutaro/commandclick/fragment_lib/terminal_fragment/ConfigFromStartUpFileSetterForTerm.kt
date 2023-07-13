@@ -1,11 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
+import com.puutaro.commandclick.proccess.StartUpScriptMaker
+import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
 
 
@@ -27,12 +28,13 @@ object ConfigFromStartUpFileSetterForTerm {
                 languageType
             )
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
 
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
+
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
             ReadText(
@@ -47,11 +49,11 @@ object ConfigFromStartUpFileSetterForTerm {
             settingVariableListFromConfig,
             CommandClickScriptVariable.ON_ADBLOCK,
             CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
-            SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
+            SettingVariableSelects.OnAdblockSelects.INHERIT.name,
             CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.OnAdblockSelects.ON.name,
-                SettingVariableSelects.Companion.OnAdblockSelects.OFF.name,
+                SettingVariableSelects.OnAdblockSelects.ON.name,
+                SettingVariableSelects.OnAdblockSelects.OFF.name,
             ),
         )
 
@@ -81,6 +83,12 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
+        terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+            String()
+        )
+
         val currentScriptFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
             sharePref,
             SharePrefferenceSetting.current_script_file_name
@@ -88,7 +96,11 @@ object ConfigFromStartUpFileSetterForTerm {
 
         terminalFragment.currentScriptName = currentScriptFileNameSource
 
-        val currentShellFileName = if (
+        StartUpScriptMaker.make(
+            terminalFragment,
+            terminalFragment.currentAppDirPath
+        )
+        val currentScriptFileName = if (
             terminalFragment.tag ==
             terminalFragment.context?.getString(
                 R.string.index_terminal_fragment
@@ -97,11 +109,22 @@ object ConfigFromStartUpFileSetterForTerm {
         else currentScriptFileNameSource
 
 
+        val fannelDirName = currentScriptFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             ReadText(
                 terminalFragment.currentAppDirPath,
-                currentShellFileName
-            ).textToList(),
+                currentScriptFileName
+            ).readText().let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    terminalFragment.currentAppDirPath,
+                    fannelDirName,
+                    terminalFragment.currentScriptName,
+                )
+            }.split("\n"),
             settingSectionStart,
             settingSectionEnd
         )
@@ -111,23 +134,23 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
 
-        terminalFragment.ignoreHistoryPathList = SettingVariableReader.getStrListByReplace(
-            settingVariableList,
-            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
-            currentShellFileName,
-            terminalFragment.currentAppDirPath,
-        )
 
-        
+        terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
+            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
+            terminalFragment.currentAppDirPath,
+            currentScriptFileName,
+            fannelDirName,
+            settingVariableList ?: emptyList(),
+        )
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.ON_ADBLOCK,
             terminalFragment.onAdBlock,
-            SettingVariableSelects.Companion.OnAdblockSelects.INHERIT.name,
+            SettingVariableSelects.OnAdblockSelects.INHERIT.name,
             terminalFragment.onAdBlock,
             listOf(
-                SettingVariableSelects.Companion.OnAdblockSelects.ON.name,
-                SettingVariableSelects.Companion.OnAdblockSelects.OFF.name,
+                SettingVariableSelects.OnAdblockSelects.ON.name,
+                SettingVariableSelects.OnAdblockSelects.OFF.name,
             ),
         )
 
@@ -138,8 +161,8 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
             CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.ON.name,
-                SettingVariableSelects.Companion.OnUrlHistoryRegisterSelects.OFF.name,
+                SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name,
+                SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name,
             ),
         )
 
@@ -178,6 +201,24 @@ object ConfigFromStartUpFileSetterForTerm {
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_FONT_COLOR,
             terminalFragment.terminalFontColor
+        )
+
+        terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+            String()
+        )
+
+        terminalFragment.srcAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+            String()
+        )
+
+        terminalFragment.imageLongPressMenuFilePath = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+            String()
         )
     }
 }

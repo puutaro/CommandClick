@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import kotlinx.coroutines.*
 import java.lang.Runnable
 
@@ -15,11 +16,19 @@ object InDeCrementerViewProducer {
     fun make(
         insertEditText: EditText,
         editParameters: EditParameters,
-        numEntityMap: Map<String, String?>,
+        currentComponentIndex: Int,
         weight: Float,
         onIncrement: Boolean = true,
     ): Button {
         val context = editParameters.context
+        val variableTypeValue = editParameters.setVariableMap?.get(
+            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+        )
+        val numEntityMap = makeNumEntityMap(
+            variableTypeValue,
+            currentComponentIndex
+        )
+
         val initMinNum = -1000000
         val initMaxNum =  1000000
         val initStepNum = 1
@@ -123,9 +132,10 @@ object InDeCrementerViewProducer {
 
     fun makeNumEntityMap (
         variableTypeValue: String?,
+        currentComponentIndex: Int
     ): Map<String, String?>{
         val variableValueList = variableTypeValue?.split('|')
-            ?.firstOrNull()
+            ?.getOrNull(currentComponentIndex)
             ?.split('!')
         val minMaxElement = variableValueList?.firstOrNull {
             it.contains("..")

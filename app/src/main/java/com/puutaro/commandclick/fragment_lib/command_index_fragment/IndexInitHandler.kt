@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -9,7 +8,9 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromStartUpFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.StartUpScriptMaker
 import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -17,6 +18,7 @@ object IndexInitHandler {
     fun handle(
         cmdIndexFragment: CommandIndexFragment
     ){
+        val context = cmdIndexFragment.context
         val activity = cmdIndexFragment.activity
         val startUpPref = cmdIndexFragment.activity?.getPreferences(
             Context.MODE_PRIVATE
@@ -39,7 +41,7 @@ object IndexInitHandler {
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
                 UsePath.cmdclickDefaultAppDirName +
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                        UsePath.JS_FILE_SUFFIX
             )
         } else {
             UpdateLastModifyFromSharePrefDir.update(startUpPref)
@@ -49,7 +51,7 @@ object IndexInitHandler {
             cmdclickAppDirAdminPath,
             "on"
         ).firstOrNull()?.removeSuffix(
-            CommandClickScriptVariable.JS_FILE_SUFFIX
+            UsePath.JS_FILE_SUFFIX
         ) ?: UsePath.cmdclickDefaultAppDirName
         val currentAppDirPath = "${cmdclickAppDirPath}/${currentDirName}"
         FileSystems.createDirs(
@@ -95,9 +97,9 @@ object IndexInitHandler {
             currentAppDirPath,
             UsePath.cmdclickInternetButtonExecJsFileName
         )
-        CommandClickScriptVariable.makeAutoJsFile(
-            currentAppDirPath,
-            UsePath.cmdclickStartupJsName
+        StartUpScriptMaker.make(
+            cmdIndexFragment,
+            currentAppDirPath
         )
         ConfigFromStartUpFileSetter.set(
             cmdIndexFragment,

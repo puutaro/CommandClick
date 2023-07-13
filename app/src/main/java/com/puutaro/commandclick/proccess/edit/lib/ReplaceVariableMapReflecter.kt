@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -21,8 +22,8 @@ object ReplaceVariableMapReflecter {
             SharePrefferenceSetting.current_script_file_name
         )
         val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         var innerExecCmd = replaceTargetStr
         setReplaceVariableMap?.forEach {
@@ -31,7 +32,6 @@ object ReplaceVariableMapReflecter {
                 .let {
                     ScriptPreWordReplacer.replace(
                         it,
-                        "${currentAppDirPath}/${currentScriptName}",
                         currentAppDirPath,
                         fannelDirName,
                         currentScriptName

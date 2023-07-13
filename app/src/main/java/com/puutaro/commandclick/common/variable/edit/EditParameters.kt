@@ -9,12 +9,15 @@ data class EditParameters(
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
     val readSharePreffernceMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
-    val onFixNormalSpinner: Boolean
+    val onFixNormalSpinner: Boolean,
+    val hideSettingVariableList: List<String>
 ) {
     val context = currentFragment.context
     var currentId: Int = 0
+    var currentVariableName: String? = null
     var currentVariableValue: String? = null
     var setVariableMap:  Map<String, String>? = null
+    var variableTypeList: List<String> = emptyList()
     var onDirectoryPick: Boolean = false
     var isReturnOnlyFileName: Boolean = false
 }

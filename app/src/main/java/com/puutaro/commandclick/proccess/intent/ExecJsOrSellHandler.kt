@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent
 
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.util.JsOrShellFromSuffix

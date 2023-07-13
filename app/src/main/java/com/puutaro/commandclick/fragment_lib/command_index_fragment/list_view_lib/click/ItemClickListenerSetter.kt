@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter
 import android.widget.ListView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
@@ -51,7 +52,7 @@ object ItemClickListenerSetter {
             )
             if(
                 selectedShellFileName.endsWith(
-                    CommandClickScriptVariable.HTML_FILE_SUFFIX
+                    UsePath.HTML_FILE_SUFFIX
                 )
             ) {
                 BroadCastIntent.send(
@@ -99,10 +100,10 @@ object ItemClickListenerSetter {
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
             val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
             ) as String
             val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+                CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
             ) as String
 
             val settingSectionVariableList =
@@ -116,9 +117,9 @@ object ItemClickListenerSetter {
                 CommandClickVariables.substituteCmdClickVariable(
                     settingSectionVariableList,
                     CommandClickScriptVariable.EDIT_EXECUTE,
-                ) ?: SettingVariableSelects.Companion.EditExecuteSelects.NO.name
+                ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
             when (editExecuteValue) {
-                SettingVariableSelects.Companion.EditExecuteSelects.ONCE.name -> {
+                SettingVariableSelects.EditExecuteSelects.ONCE.name -> {
                     val editFragmentTag = DecideEditTag(
                         shellContentsList,
                         currentAppDirPath,
@@ -132,7 +133,7 @@ object ItemClickListenerSetter {
                     )
                     return@setOnItemClickListener
                 }
-                SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name -> {
+                SettingVariableSelects.EditExecuteSelects.ALWAYS.name -> {
                     val editFragmentTag = DecideEditTag(
                         shellContentsList,
                         currentAppDirPath,

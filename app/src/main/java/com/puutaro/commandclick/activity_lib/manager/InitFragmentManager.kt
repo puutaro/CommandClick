@@ -92,7 +92,7 @@ class InitFragmentManager(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             startUpAppDirPath,
             startUpScriptFileName,
-            onShortcut
+            FragmentTagManager.Suffix.ON.str
         )
         val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,

@@ -5,6 +5,7 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
@@ -130,10 +131,10 @@ object EditToolbarSwitcher {
                 ) return
                 if(
                     !editLongPressType.endsWith(
-                        CommandClickScriptVariable.JSX_FILE_SUFFIX
+                        UsePath.JSX_FILE_SUFFIX
                     )
                     || !editLongPressType.endsWith(
-                        CommandClickScriptVariable.JS_FILE_SUFFIX
+                        UsePath.JS_FILE_SUFFIX
                     )
                 ) return
                 cmdEditFragment.jsExecuteJob?.cancel()
@@ -176,10 +177,10 @@ private fun execJsFile(
         !File(editLongPressType).isFile
     ) return false
     val isJsSuffix = editLongPressType.endsWith(
-        CommandClickScriptVariable.JSX_FILE_SUFFIX
+        UsePath.JSX_FILE_SUFFIX
     )
             || editLongPressType.endsWith(
-        CommandClickScriptVariable.JS_FILE_SUFFIX
+        UsePath.JS_FILE_SUFFIX
     )
     if(!isJsSuffix) return false
     if(cmdEditFragment == null) return false

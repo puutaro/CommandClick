@@ -37,8 +37,6 @@ object RecordNumToMapNameValueInHolder {
                 val isMultipleVariables =
                     it.startsWith("${CommandClickScriptVariable.SET_VARIABLE_TYPE}=")
                             || it.startsWith("${CommandClickScriptVariable.SET_REPLACE_VARIABLE}=")
-                            || it.startsWith("${CommandClickScriptVariable.HOME_SCRIPT_URL}=")
-                            || it.startsWith("${CommandClickScriptVariable.CMDCLICK_HOME_FANNEL}=")
                 val isNotContainHitedList = !hitedList.contains(it)
                 if (isNotContainHitedList && !isMultipleVariables) hitedList.add(it)
                 (isNotContainHitedList || isMultipleVariables)
@@ -48,12 +46,6 @@ object RecordNumToMapNameValueInHolder {
         }
         val substituteCmdStartEndContentListSize =
             filteredSubstituteCmdStartEndContentList.size - 1
-        val hiddenSettingVariableList = SettingVariableReader.getStrListByReplace(
-            substituteCmdStartEndContentList,
-            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-            String(),
-            String(),
-        )
         return (0..substituteCmdStartEndContentListSize).map {
                 listOrderNum ->
             val substituteCmdStartEndContentStr =
@@ -67,7 +59,6 @@ object RecordNumToMapNameValueInHolder {
                 recordNum,
                 substituteCmdStartEndContentStr,
                 filteredSubstituteCmdStartEndContentList,
-                hiddenSettingVariableList,
                 onForSetting,
                 currentShellFileName
             )
@@ -83,7 +74,6 @@ private fun makeResultEntryMap(
     recordNum: Int,
     substituteCmdStartEndContentStr: String,
     substituteCmdStartEndContentList: List<String>,
-    hiddenSettingVariableList: List<String>,
     onForSetting: Boolean,
     currentShellFileName: String?
 ): Pair<Int, Map<String, String>?> {
@@ -94,7 +84,6 @@ private fun makeResultEntryMap(
                 substituteCmdStartEndContentStr,
                 equalIndex,
                 substituteCmdStartEndContentList,
-                hiddenSettingVariableList
             ) ?: String()
         } else {
             substituteCmdStartEndContentStr.substring(
@@ -121,7 +110,7 @@ private fun makeResultEntryMap(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name to
                         variableName,
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name to
-                        BothEdgeQuote.trim(variableValue)
+                        QuoteTool.trimBothEdgeQuote(variableValue)
             )
         }
         recordNum to insertVariableMap

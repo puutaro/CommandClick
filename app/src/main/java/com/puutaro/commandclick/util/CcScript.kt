@@ -21,7 +21,7 @@ object CcScript {
     }
 
 
-    fun getValueFromSeparatedList(
+    private fun getValueFromSeparatedList(
         keyValueList: List<String>,
         separator: String,
     ): String {

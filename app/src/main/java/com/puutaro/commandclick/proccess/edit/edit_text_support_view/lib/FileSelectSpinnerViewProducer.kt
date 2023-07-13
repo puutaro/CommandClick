@@ -25,6 +25,7 @@ object FileSelectSpinnerViewProducer {
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
         val currentFragment = editParameters.currentFragment
@@ -44,7 +45,8 @@ object FileSelectSpinnerViewProducer {
             R.layout.sppinner_layout,
         )
         val fcbMap = getFcbMap(
-            editParameters
+            editParameters,
+            currentComponentIndex
         )
         val filterDir = getSelectDirPath(
             fcbMap,
@@ -204,7 +206,7 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.prefix.name)?.let {
-                BothEdgeQuote.trim(it)
+                QuoteTool.trimBothEdgeQuote(it)
             } ?: String()
     }
 
@@ -212,7 +214,7 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.suffix.name)?.let {
-            BothEdgeQuote.trim(it)
+            QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
     }
 
@@ -220,7 +222,7 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.type.name)?.let {
-            val trimType = BothEdgeQuote.trim(it)
+            val trimType = QuoteTool.trimBothEdgeQuote(it)
             if(
                 trimType.isEmpty()
             ) return@let FilterFileType.file.name
@@ -232,7 +234,7 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.selectJs.name)?.let {
-            val trimType = BothEdgeQuote.trim(it)
+            val trimType = QuoteTool.trimBothEdgeQuote(it)
             if(
                 trimType.isEmpty()
             ) return@let FilterFileType.file.name
@@ -242,7 +244,8 @@ object FileSelectSpinnerViewProducer {
 
 
     fun getFcbMap(
-        editParameters: EditParameters
+        editParameters: EditParameters,
+        currentComponentIndex: Int
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -254,24 +257,23 @@ object FileSelectSpinnerViewProducer {
             SharePrefferenceSetting.current_script_file_name
         )
         val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
-            ?.firstOrNull()
+            ?.getOrNull(currentComponentIndex)
             ?.let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    "${currentAppDirPath}/${currentScriptName}",
                     currentAppDirPath,
                     fannelDirName,
                     currentScriptName
                 )
             }.let {
                 ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
+                    QuoteTool.trimBothEdgeQuote(it),
                     editParameters
                 )
             }?.split('!')?.map {

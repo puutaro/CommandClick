@@ -25,19 +25,19 @@ class EditModeHandler(
     private val currentEditFragmentTag = editFragment.tag
     private val onPassCmdVariableEdit =
         editFragment.passCmdVariableEdit ==
-                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_DEFAULT_VALUE
+                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
     private val enableCmdEdit = currentEditFragmentTag?.startsWith(
         FragmentTagManager.Prefix.cmdEditPrefix.str
     ) == true
     private val onDisableSettingButton =
         editFragment.disableSettingButton ==
-                SettingVariableSelects.Companion.disableSettingButtonSelects.ON.name
+                SettingVariableSelects.disableSettingButtonSelects.ON.name
     private val onDisableEditButton =
         editFragment.disableSettingButton ==
-                SettingVariableSelects.Companion.disableEditButtonSelects.ON.name
+                SettingVariableSelects.disableEditButtonSelects.ON.name
     private val onDisablePlayButton =
         editFragment.disablePlayButton ==
-                SettingVariableSelects.Companion.disablePlayButtonSelects.ON.name
+                SettingVariableSelects.disablePlayButtonSelects.ON.name
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
@@ -59,8 +59,11 @@ class EditModeHandler(
     ) == FragmentTagManager.Suffix.ON.name
 
     private val enableEditExecute =
-        (editExecuteValue == SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
-                && onShortcut)
+        (
+                editExecuteValue ==
+                        SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+                && onShortcut
+                )
 
 
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
@@ -102,20 +105,20 @@ class EditModeHandler(
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
                 languageTypeToSectionHolderMap?.get(
-                    CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
                 ) as String,
                 languageTypeToSectionHolderMap[
-                        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+                        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
                 ] as String,
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentShellContentsList,
                 languageTypeToSectionHolderMap.get(
-                    CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
                 ) as String,
                 languageTypeToSectionHolderMap[
-                        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+                        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
                 ] as String,
                 true,
                 currentShellFileName
@@ -142,6 +145,7 @@ class EditModeHandler(
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
+            readSharePreffernceMap,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -218,6 +222,7 @@ class EditModeHandler(
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
+            readSharePreffernceMap,
             currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -238,16 +243,16 @@ class EditModeHandler(
     }
 
     private fun buttonCreate(
-        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
+        toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
         howActive: Boolean = true,
-        editExecuteValue: String = SettingVariableSelects.Companion.EditExecuteSelects.NO.name,
+        editExecuteValue: String = SettingVariableSelects.EditExecuteSelects.NO.name,
         setDrawble: Int? = null
     ){
         toolbarButtonProducerForEdit.make(
-            toolbarButtonBariantForEdit,
+            toolbarButtonVariantForEdit,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             shellContentsList,
@@ -256,7 +261,7 @@ class EditModeHandler(
         )
         if(howActive) return
         buttonViewHowActive.buttonViewHowActive(
-            toolbarButtonBariantForEdit.str,
+            toolbarButtonVariantForEdit.str,
             howActive,
         )
     }

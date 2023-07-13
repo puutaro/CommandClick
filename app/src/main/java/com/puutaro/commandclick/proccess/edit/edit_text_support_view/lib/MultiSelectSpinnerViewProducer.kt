@@ -16,6 +16,7 @@ object MultiSelectSpinnerViewProducer {
         insertTextView: TextView,
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
         isInsertTextViewVisible: Boolean = false
     ): Button {
@@ -39,10 +40,10 @@ object MultiSelectSpinnerViewProducer {
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
             ?.split('|')
-            ?.firstOrNull()
+            ?.getOrNull(currentComponentIndex)
             .let {
                 ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
+                    QuoteTool.trimBothEdgeQuote(it),
                     editParameters
                 )
             }?.split('!')

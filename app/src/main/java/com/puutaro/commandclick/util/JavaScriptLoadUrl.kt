@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CcImportManager
 import java.io.File
@@ -21,22 +22,22 @@ object JavaScriptLoadUrl {
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
         ) as String
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
         val scriptFileName = jsFileObj.name
         val fannelDirName = scriptFileName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         val jsList = if(
             jsListSource.isNullOrEmpty()
@@ -54,7 +55,10 @@ object JavaScriptLoadUrl {
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                recordNumToMapNameValueInSettingHolder
+                recordNumToMapNameValueInSettingHolder,
+                recentAppDirPath,
+                fannelDirName,
+                scriptFileName
             )
         var countSettingSectionStart = 0
         var countSettingSectionEnd = 0
@@ -122,7 +126,6 @@ object JavaScriptLoadUrl {
             .let {
                 ScriptPreWordReplacer.replace(
                     it,
-                    execJsPath,
                     recentAppDirPath,
                     fannelDirName,
                     scriptFileName
@@ -135,7 +138,6 @@ object JavaScriptLoadUrl {
                         .let {
                             ScriptPreWordReplacer.replace(
                                 it,
-                                execJsPath,
                                 recentAppDirPath,
                                 fannelDirName,
                                 scriptFileName

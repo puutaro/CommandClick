@@ -1,9 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
+import java.io.File
 
 object ConfigFromScriptFileSetter {
 
@@ -23,31 +25,42 @@ object ConfigFromScriptFileSetter {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
+        val fannelDirName = currentScriptFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
 
         val currentShellContentsList = ReadText(
             currentAppDirPath,
-            currentShellFileName
+            currentScriptFileName
         ).textToList()
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             currentShellContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
-        )
+        )?.joinToString("\n")?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptFileName,
+            )
+        }?.split("\n")
 
         editFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
             editFragment.historySwitch,
-            SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
+            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
             editFragment.historySwitch,
             listOf(
-                SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
-                SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+                SettingVariableSelects.HistorySwitchSelects.OFF.name,
+                SettingVariableSelects.HistorySwitchSelects.ON.name
             ),
         )
 
@@ -55,11 +68,11 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
             editFragment.urlHistoryOrButtonExec,
-            SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
+            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
             editFragment.urlHistoryOrButtonExec,
             listOf(
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
             ),
         )
 
@@ -67,10 +80,10 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
             editFragment.statusBarIconColorMode,
-            SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
+            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
             editFragment.statusBarIconColorMode,
             listOf(
-                SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
+                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
 
@@ -81,7 +94,7 @@ object ConfigFromScriptFileSetter {
             String(),
             CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.disableSettingButtonSelects.ON.name
+                SettingVariableSelects.disableSettingButtonSelects.ON.name
             ),
         )
         editFragment.disableEditButton = SettingVariableReader.getCbValue(
@@ -91,7 +104,7 @@ object ConfigFromScriptFileSetter {
             String(),
             CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.disableEditButtonSelects.ON.name
+                SettingVariableSelects.disableEditButtonSelects.ON.name
             ),
         )
         editFragment.disablePlayButton = SettingVariableReader.getCbValue(
@@ -101,7 +114,7 @@ object ConfigFromScriptFileSetter {
             String(),
             CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.disablePlayButtonSelects.ON.name
+                SettingVariableSelects.disablePlayButtonSelects.ON.name
             ),
         )
 
@@ -154,36 +167,22 @@ object ConfigFromScriptFileSetter {
             String(),
         )
 
-        val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
+        val bottomScriptUrlList = SettingVariableReader.setListFromPath(
             settingVariableList,
-            CommandClickScriptVariable.HOME_SCRIPT_URL,
-            currentShellFileName,
-            currentAppDirPath,
-        )
-
-        editFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
-            val enableSuffix = it.endsWith(
-                    CommandClickScriptVariable.JS_FILE_SUFFIX
-                )
-                    || it.endsWith(
-                        CommandClickScriptVariable.SHELL_FILE_SUFFIX
-                    )
-                    || it.endsWith(
-                        CommandClickScriptVariable.HTML_FILE_SUFFIX
-                    )
-            it.isNotEmpty()
-                    && enableSuffix
-        }
-
-        val homeFannelHistoryNameListSource = CommandClickVariables.substituteCmdClickVariableList(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
+            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH
         )
         if(
-            !homeFannelHistoryNameListSource
-                ?.joinToString("")
-                .isNullOrEmpty()
-        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameListSource
+            bottomScriptUrlList.isNotEmpty()
+        ) editFragment.bottomScriptUrlList = bottomScriptUrlList
+
+
+        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
+        )
+        if(
+            homeFannelHistoryNameList.isNotEmpty()
+        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
         if(
             editFragment.tag?.startsWith(

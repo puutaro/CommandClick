@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
+import java.io.File
 
 
 object ConfigFromStartUpFileSetter {
@@ -15,37 +16,48 @@ object ConfigFromStartUpFileSetter {
     ){
 
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
+        val startupFannelDirName = cmdclickStartupJsName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                 languageType
             )
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
 
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             ReadText(
                 currentAppDirPath,
-                UsePath.cmdclickStartupJsName
+                cmdclickStartupJsName
             ).textToList(),
             settingSectionStart,
             settingSectionEnd
-        )
+        )?.joinToString("\n")?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                startupFannelDirName,
+                cmdclickStartupJsName,
+            )
+        }?.split("\n")
 
         cmdIndexFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
             cmdIndexFragment.historySwitch,
-            SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
+            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
             cmdIndexFragment.historySwitch,
             listOf(
-                SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
-                SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+                SettingVariableSelects.HistorySwitchSelects.OFF.name,
+                SettingVariableSelects.HistorySwitchSelects.ON.name
             ),
         )
 
@@ -53,11 +65,11 @@ object ConfigFromStartUpFileSetter {
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
             cmdIndexFragment.urlHistoryOrButtonExec,
-            SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
+            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
             cmdIndexFragment.urlHistoryOrButtonExec,
             listOf(
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
             ),
         )
 
@@ -65,10 +77,10 @@ object ConfigFromStartUpFileSetter {
             settingVariableList,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
             cmdIndexFragment.statusBarIconColorMode,
-            SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
+            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
             cmdIndexFragment.urlHistoryOrButtonExec,
             listOf(
-                SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
+                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
 
@@ -90,29 +102,21 @@ object ConfigFromStartUpFileSetter {
             CommandClickScriptVariable.TERMINAL_COLOR,
             cmdIndexFragment.terminalColor
         )
-
-        val bottomScriptUrlListSource = SettingVariableReader.getStrListByReplace(
+        val bottomScriptUrlList = SettingVariableReader.setListFromPath(
             settingVariableList,
-            CommandClickScriptVariable.HOME_SCRIPT_URL,
-            cmdclickStartupJsName,
-            currentAppDirPath,
-        )
-        cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlListSource.filter {
-            val enableSuffix = it.endsWith(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                    || it.endsWith(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
-                    || it.endsWith(CommandClickScriptVariable.HTML_FILE_SUFFIX)
-            it.isNotEmpty()
-                    && enableSuffix
-        }
-
-        val homeFannelHistoryNameListSource = CommandClickVariables.substituteCmdClickVariableList(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
+            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH
         )
         if(
-            !homeFannelHistoryNameListSource
-                ?.joinToString("")
-                .isNullOrEmpty()
-        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameListSource
+            bottomScriptUrlList.isNotEmpty()
+        ) cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlList
+
+        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
+        )
+        if(
+            homeFannelHistoryNameList.isNotEmpty()
+        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
+
     }
 }

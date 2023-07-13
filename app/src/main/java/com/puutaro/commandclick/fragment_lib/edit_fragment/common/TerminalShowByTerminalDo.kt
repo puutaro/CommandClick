@@ -24,8 +24,8 @@ class TerminalShowByTerminalDo {
                 CommandClickScriptVariable.TERMINAL_DO
             )
             val onTerminalDoOffAndTermux = (
-                    terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
-                            || terminalDo == SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+                    terminalDo == SettingVariableSelects.TerminalDoSelects.OFF.name
+                            || terminalDo == SettingVariableSelects.TerminalDoSelects.TERMUX.name
                     )
             if(
                 onTerminalDoOffAndTermux

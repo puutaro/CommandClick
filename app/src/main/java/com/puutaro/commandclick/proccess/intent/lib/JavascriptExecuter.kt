@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.intent.lib
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -18,7 +19,7 @@ object JavascriptExecuter {
     ) {
         if(
             onUrlLaunchMacro
-            != SettingVariableSelects.Companion.OnUrlLaunchMacroSelects.OFF.name
+            != SettingVariableSelects.OnUrlLaunchMacroSelects.OFF.name
         ) return
         if(
             substituteSettingVariableList.isNullOrEmpty()
@@ -29,10 +30,10 @@ object JavascriptExecuter {
         ) ?: return
         if(
             execJsOrHtmlPath.endsWith(
-                CommandClickScriptVariable.JS_FILE_SUFFIX
+                UsePath.JS_FILE_SUFFIX
             )
             || execJsOrHtmlPath.endsWith(
-                CommandClickScriptVariable.JSX_FILE_SUFFIX
+                UsePath.JSX_FILE_SUFFIX
             )
         ) {
             terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
@@ -42,10 +43,10 @@ object JavascriptExecuter {
             return
         }
         val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
-            CommandClickScriptVariable.HTML_FILE_SUFFIX
+            UsePath.HTML_FILE_SUFFIX
         )
                 || execJsOrHtmlPath.endsWith(
-            CommandClickScriptVariable.HTM_FILE_SUFFIX
+            UsePath.HTM_FILE_SUFFIX
         )
         val enableHtml =
             execJsOrHtmlPath.startsWith(

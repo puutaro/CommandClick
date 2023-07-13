@@ -131,8 +131,8 @@ class EditedTextContents(
             CommandClickScriptVariable.SCRIPT_FILE_NAME
         ) ?: currentScriptFileName
         val scriptFileSuffix = when(editFragment.languageType){
-            LanguageTypeSelects.SHELL_SCRIPT -> CommandClickScriptVariable.SHELL_FILE_SUFFIX
-            else -> CommandClickScriptVariable.JS_FILE_SUFFIX
+            LanguageTypeSelects.SHELL_SCRIPT -> UsePath.SHELL_FILE_SUFFIX
+            else -> UsePath.JS_FILE_SUFFIX
         }
         return UsePath.compExtend(
             updateScriptFileNameSource,
@@ -146,8 +146,8 @@ class EditedTextContents(
     ): String {
         val selectedFannelName =
             scriptFileName
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX)
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
         return curentAppDirPath + "/" + selectedFannelName + UsePath.fannelDirSuffix
     }
 

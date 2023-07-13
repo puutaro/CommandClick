@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 
 object LoadUrlPrefixSuffix {
@@ -12,10 +13,10 @@ object LoadUrlPrefixSuffix {
             urlStr.isNullOrEmpty()
         ) return false
         val enableHtmlSuffix = urlStr.endsWith(
-            CommandClickScriptVariable.HTML_FILE_SUFFIX
+            UsePath.HTML_FILE_SUFFIX
         )
                 || urlStr.endsWith(
-            CommandClickScriptVariable.HTM_FILE_SUFFIX
+            UsePath.HTM_FILE_SUFFIX
         )
         val enableHtml =
                 urlStr.startsWith(
@@ -62,9 +63,9 @@ object LoadUrlPrefixSuffix {
         launchUrl: String,
     ): Boolean {
         return !launchUrl.endsWith(
-            CommandClickScriptVariable.HTML_FILE_SUFFIX
+            UsePath.HTML_FILE_SUFFIX
         ) && !launchUrl.endsWith(
-            CommandClickScriptVariable.HTM_FILE_SUFFIX
+            UsePath.HTM_FILE_SUFFIX
         )
     }
 
@@ -72,9 +73,9 @@ object LoadUrlPrefixSuffix {
         launchUrl: String,
     ): Boolean {
         return !launchUrl.endsWith(
-            CommandClickScriptVariable.JS_FILE_SUFFIX
+            UsePath.JS_FILE_SUFFIX
         ) && !launchUrl.endsWith(
-            CommandClickScriptVariable.JSX_FILE_SUFFIX
+            UsePath.JSX_FILE_SUFFIX
         )
     }
 }

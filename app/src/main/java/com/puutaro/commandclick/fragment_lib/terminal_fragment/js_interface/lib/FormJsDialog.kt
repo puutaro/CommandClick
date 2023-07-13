@@ -13,7 +13,6 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
@@ -27,38 +26,31 @@ class FormJsDialog(
 ) {
 
     private var returnValue = String()
-
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private val variableTypeDefineListForMiniEdit
+        = TypeVariable.variableTypeDefineListForMiniEdit
 
     private val exitTextStartId = 90000
 
-    private val withSpinnerView = WithSpinnerView()
-    private val withEditableSpinnerView = WithEditableSpinnerView()
-
-    private val withEditableFileSelectSpinnerView = WithEditableFileSelectSpinnerView()
-
-    private val withEditableListContentsSelectSpinnerView = WithEditableListContentsSelectSpinnerView()
-
-    private val withInDeCremenView = WithInDeCremenView()
-
+    private val withEditComponentForFormJsDialog = WithEditComponentForFormJsDialog()
     private val languageType =
         LanguageTypeSelects.JAVA_SCRIPT
 
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
     private val settingSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
     ) as String
     private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
     private val commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_START
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
     ) as String
     private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.Companion.HolderTypeName.CMD_SEC_END
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
 
 
@@ -111,7 +103,10 @@ class FormJsDialog(
             )
 
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
-            recordNumToMapNameValueInSettingHolder
+            recordNumToMapNameValueInSettingHolder,
+            String(),
+            String(),
+            String(),
         )
 
         val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
@@ -120,7 +115,10 @@ class FormJsDialog(
         )
 
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolder
+            recordNumToMapNameValueInSettingHolder,
+            String(),
+            String(),
+            String()
         )
 
         val scrollView = ScrollView(context)
@@ -151,7 +149,8 @@ class FormJsDialog(
             recordNumToMapNameValueInCommandHolder,
             virtualReadPreffrenceMap,
             setReplaceVariableMap,
-            true
+            true,
+            emptyList()
         )
 
         execFormPartsAdd(
@@ -283,74 +282,89 @@ class FormJsDialog(
                 currentRecordNum
             )
             editParameters.currentId = currentId
+            editParameters.currentVariableName = currentVariableName
             editParameters.currentVariableValue = currentVariableValue
-            when(
-                editParameters.setVariableMap?.get(
-                    SetVariableTypeColumn.VARIABLE_TYPE.name
-                )
-            ) {
-                EditTextSupportViewName.CHECK_BOX.str -> {
-                    val innerLinearLayout = withSpinnerView.create(
-                        insertEditText,
-                        editParameters
-                    )
-                    linearLayout.addView(innerLinearLayout)
-                }
-                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
-                    val innerLinearLayout = withEditableSpinnerView.create(
-                        insertEditText,
-                        editParameters
-                    )
-                    linearLayout.addView(innerLinearLayout)
-                }
-                EditTextSupportViewName.EDITABLE_FILE_SELECT_CHECK_BOX.str -> {
-                    val innerLinearLayout = withEditableFileSelectSpinnerView.create(
-                        insertEditText,
-                        editParameters
-                    )
-                    linearLayout.addView(innerLinearLayout)
-                }
-                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_CHECK_BOX.str -> {
-                    val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
-                        insertEditText,
-                        editParameters
-                    )
-                    linearLayout.addView(innerLinearLayout)
-                }
-                EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
-                    val innerLinearLayout = withInDeCremenView.create(
-                        insertEditText,
-                        editParameters
-                    )
-                    linearLayout.addView(innerLinearLayout)
-                }
-                EditTextSupportViewName.PASSWORD.str -> {
-                    val insertingEditText = execInsertEditText(
-                        insertEditText,
-                        linearParams,
-                        currentVariableValue,
-                        EditTextType.PASSWORD
-                    )
-                    linearLayout.addView(insertingEditText)
-                }
-                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
-                    val insertingEditText = execInsertEditText(
-                        insertEditText,
-                        linearParams,
-                        currentVariableValue,
-                        EditTextType.READ_ONLY
-                    )
-                    linearLayout.addView(insertingEditText)
-                }
-                else -> {
-                    val insertingEditText = execInsertEditText(
-                        insertEditText,
-                        linearParams,
-                        currentVariableValue,
-                    )
-                    linearLayout.addView(insertingEditText)
-                }
-            }
+            editParameters.setVariableMap = recordNumToSetVariableMaps?.get(
+                currentRecordNum
+            )
+            val variableTypeList = editParameters.setVariableMap?.get(
+                SetVariableTypeColumn.VARIABLE_TYPE.name
+            )?.split(":")?.filter {
+                variableTypeDefineListForMiniEdit.contains(it)
+            } ?: emptyList()
+            editParameters.variableTypeList = variableTypeList
+            val horizontalLinearLayout = withEditComponentForFormJsDialog.insert(
+                insertTextView,
+                editParameters
+            )
+            linearLayout.addView(horizontalLinearLayout)
+//            when(
+//                editParameters.setVariableMap?.get(
+//                    SetVariableTypeColumn.VARIABLE_TYPE.name
+//                )
+//            ) {
+//                EditTextSupportViewName.CHECK_BOX.str -> {
+//                    val innerLinearLayout = withSpinnerView.create(
+//                        insertEditText,
+//                        editParameters
+//                    )
+//                    linearLayout.addView(innerLinearLayout)
+//                }
+//                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
+//                    val innerLinearLayout = withEditableSpinnerView.create(
+//                        insertEditText,
+//                        editParameters
+//                    )
+//                    linearLayout.addView(innerLinearLayout)
+//                }
+//                EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
+//                    val innerLinearLayout = withEditableFileSelectSpinnerView.create(
+//                        insertEditText,
+//                        editParameters
+//                    )
+//                    linearLayout.addView(innerLinearLayout)
+//                }
+//                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
+//                    val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
+//                        insertEditText,
+//                        editParameters
+//                    )
+//                    linearLayout.addView(innerLinearLayout)
+//                }
+//                EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
+//                    val innerLinearLayout = withInDeCremenView.create(
+//                        insertEditText,
+//                        editParameters
+//                    )
+//                    linearLayout.addView(innerLinearLayout)
+//                }
+//                EditTextSupportViewName.PASSWORD.str -> {
+//                    val insertingEditText = execInsertEditText(
+//                        insertEditText,
+//                        linearParams,
+//                        currentVariableValue,
+//                        EditTextType.PASSWORD
+//                    )
+//                    linearLayout.addView(insertingEditText)
+//                }
+//                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
+//                    val insertingEditText = execInsertEditText(
+//                        insertEditText,
+//                        linearParams,
+//                        currentVariableValue,
+//                        EditTextType.READ_ONLY
+//                    )
+//                    linearLayout.addView(insertingEditText)
+//                }
+//                else -> {
+//                    val insertingEditText = execInsertEditText(
+//                        insertEditText,
+//                        linearParams,
+//                        currentVariableValue,
+//                    )
+//                    linearLayout.addView(insertingEditText)
+//                }
+//            }
         }
     }
 

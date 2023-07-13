@@ -146,15 +146,6 @@ object ExecOnLongClickDo {
                     shellScriptName
                 )
             }
-            R.id.shell_script_menu_init -> {
-                ShellFileInitManager.initDialog(
-                    cmdIndexFragment,
-                    currentAppDirPath,
-                    shellScriptName,
-                    cmdListAdapter,
-                    cmdListView
-                )
-            }
             else -> {
                 cmdIndexFragment.mParentContextMenuListIndex = listPosition
             }

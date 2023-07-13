@@ -19,7 +19,7 @@ object AdBlocker {
         val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         terminalFragment.loadAssetCoroutineJob?.cancel()
         if(
-            terminalFragment.onAdBlock != SettingVariableSelects.Companion.OnAdblockSelects.ON.name
+            terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
         ) return
         if(
             terminalFragment.loadAssetCoroutineJob != null

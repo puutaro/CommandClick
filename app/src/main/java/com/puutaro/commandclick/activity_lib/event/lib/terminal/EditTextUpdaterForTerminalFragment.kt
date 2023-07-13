@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 import android.content.Context
 import android.util.Log
 import android.widget.EditText
+import android.widget.Toast
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment

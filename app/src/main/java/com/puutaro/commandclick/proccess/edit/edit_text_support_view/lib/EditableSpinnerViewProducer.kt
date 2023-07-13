@@ -3,19 +3,19 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 
 object EditableSpinnerViewProducer {
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
         val context = editParameters.context
@@ -35,10 +35,10 @@ object EditableSpinnerViewProducer {
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
             ?.split('|')
-            ?.firstOrNull()
+            ?.getOrNull(currentComponentIndex)
             .let {
                 ReplaceVariableMapReflecter.reflect(
-                    BothEdgeQuote.trim(it),
+                    QuoteTool.trimBothEdgeQuote(it),
                     editParameters
                 )
             }?.split('!')

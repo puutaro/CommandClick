@@ -16,7 +16,7 @@ object AppHistoryManager {
         val currentAppDirName = File(currentAppDirPath).name
         if(
             currentScriptFileName.isEmpty()
-        ) return "${currentAppDirName}__${CommandClickScriptVariable.JS_FILE_SUFFIX}"
+        ) return "${currentAppDirName}__${UsePath.JS_FILE_SUFFIX}"
         return "${currentAppDirName}__${currentScriptFileName}"
     }
 

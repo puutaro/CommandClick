@@ -30,7 +30,7 @@ class CommandIndexFragment: Fragment() {
     var mParentContextMenuListIndex: Int = 0
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
-    var historySwitch = SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name
+    var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
@@ -93,7 +93,7 @@ class CommandIndexFragment: Fragment() {
         CommandClickScriptVariable.makeAppDirAdminFile(
             UsePath.cmdclickAppDirAdminPath,
             UsePath.cmdclickDefaultAppDirName +
-                    CommandClickScriptVariable.JS_FILE_SUFFIX
+                    UsePath.JS_FILE_SUFFIX
         )
 
         CommandClickScriptVariable.makeConfigJsFile(

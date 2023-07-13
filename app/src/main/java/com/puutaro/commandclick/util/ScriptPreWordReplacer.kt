@@ -12,13 +12,12 @@ object ScriptPreWordReplacer {
 
     fun replace(
         tergetString: String,
-        currentScriptPath: String,
         currentAppDirPath: String,
         fannelDirName: String,
         currentScriptName: String
     ): String {
         return tergetString
-            .replace(currentScriptPathMark, currentScriptPath)
+            .replace(currentScriptPathMark, "$currentAppDirPath/$currentScriptName")
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
             .replace(currentAppDirPathMark, currentAppDirPath)
             .replace(fannelDirNameMark, fannelDirName)

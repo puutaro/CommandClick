@@ -4,6 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -41,11 +42,10 @@ object SelectJsExecutor {
                 ?: return@launch
             val scriptName = jsFilePathObj.name
             val fannelDirName = scriptName
-                .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-                .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+                .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                     "Dir"
             val jsFileContents = makeSelectJsContents(
-                jsFilePath,
                 currentAppDir,
                 scriptName,
                 fannelDirName,
@@ -66,7 +66,6 @@ object SelectJsExecutor {
     }
 }
 private fun makeSelectJsContents(
-    jsFilePath: String,
     currentAppDir: String,
     scriptName: String,
     fannelDirName: String,
@@ -78,7 +77,6 @@ private fun makeSelectJsContents(
     ).readText().let {
         ScriptPreWordReplacer.replace(
             it,
-            jsFilePath,
             currentAppDir,
             fannelDirName,
             scriptName

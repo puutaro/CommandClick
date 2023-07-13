@@ -9,7 +9,7 @@ object TerminalOnHandlerForEdit {
     ){
         if(
             terminalFragment.terminalOn
-            != SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+            != SettingVariableSelects.TerminalDoSelects.OFF.name
         ) return
         val context = terminalFragment.context
         val listener = context as? TerminalFragment.OnTermSizeMinimumListenerForTerm

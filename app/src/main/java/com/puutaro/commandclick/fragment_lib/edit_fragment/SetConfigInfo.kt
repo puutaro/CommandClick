@@ -27,11 +27,11 @@ object SetConfigInfo {
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
             CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
-            SettingVariableSelects.Companion.HistorySwitchSelects.INHERIT.name,
+            SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
             CommandClickScriptVariable.HISTORY_SWITCH_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.HistorySwitchSelects.OFF.name,
-                SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+                SettingVariableSelects.HistorySwitchSelects.OFF.name,
+                SettingVariableSelects.HistorySwitchSelects.ON.name
             ),
         )
 
@@ -39,10 +39,10 @@ object SetConfigInfo {
             settingVariableList,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
-            SettingVariableSelects.Companion.StatusBarIconColorModeSelects.INHERIT.name,
+            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.StatusBarIconColorModeSelects.BLACK.name
+                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
 
@@ -50,18 +50,21 @@ object SetConfigInfo {
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
-            SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.INHERIT.name,
+            SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE,
             listOf(
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
-                SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
+                SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
             ),
         )
 
-        editFragment.homeFannelHistoryNameList = CommandClickVariables.substituteCmdClickVariableList(
+        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
             settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNEL
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
         )
+        if(
+            homeFannelHistoryNameList.isNotEmpty()
+        ) editFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
         editFragment.runShell =  SettingVariableReader.getStrValue(
             settingVariableList,

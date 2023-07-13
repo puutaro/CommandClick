@@ -2,7 +2,11 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.text.Editable
+import android.text.InputType
+import android.text.TextWatcher
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
@@ -12,27 +16,33 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFcbMap
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFilterType
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
+import com.puutaro.commandclick.proccess.lib.NestLinearLayout
+import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
 
 object FileSelectGridViewProducer {
     private val noExtend = "NoExtend"
-    private val gridButtonLabel = "ISL"
+    private val gridButtonLabel = "GSL"
 
     private var alertDialog: AlertDialog? = null
 
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
     ): Button {
-        val currentFragment = editParameters.currentFragment
+        val editFragment = editParameters.currentFragment as EditFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
         val linearParamsForGrid = LinearLayout.LayoutParams(
@@ -41,7 +51,8 @@ object FileSelectGridViewProducer {
         )
         linearParamsForGrid.weight = weight
         val fcbMap = getFcbMap(
-            editParameters
+            editParameters,
+            currentComponentIndex
         )
         val filterDir = getSelectDirPath(
             fcbMap,
@@ -82,9 +93,35 @@ object FileSelectGridViewProducer {
                 currentGridList.toMutableList()
             )
             gridView.adapter = adapter
+
+            val searchText = EditText(context)
+            makeSearchEditText(
+                adapter,
+                searchText,
+                currentGridList.joinToString("\n"),
+            )
+            val linearLayoutForTotal = LinearLayoutForTotal.make(
+                context
+            )
+            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
+            val listWeight = 1F - searchTextWeight
+            val linearLayoutForListView = NestLinearLayout.make(
+                context,
+                listWeight
+            )
+            val linearLayoutForSearch = NestLinearLayout.make(
+                context,
+                searchTextWeight
+            )
+            linearLayoutForListView.addView(gridView)
+            linearLayoutForSearch.addView(searchText)
+            linearLayoutForTotal.addView(linearLayoutForListView)
+            linearLayoutForTotal.addView(linearLayoutForSearch)
+
             setGridViewItemClickListener(
-                currentFragment,
+                editFragment,
                 insertEditText,
+                searchText,
                 gridView,
                 adapter,
                 editParameters,
@@ -94,7 +131,7 @@ object FileSelectGridViewProducer {
             alertDialog = AlertDialog.Builder(
                 buttonContext
             )
-                .setView(gridView)
+                .setView(linearLayoutForTotal)
                 .create()
             alertDialog?.window?.setGravity(Gravity.BOTTOM)
             alertDialog?.show()
@@ -110,13 +147,17 @@ object FileSelectGridViewProducer {
     }
 
     private fun setGridViewItemClickListener(
-        currentFragment: Fragment,
+        editFragment: Fragment,
         insertEditText: EditText,
+        searchText: EditText,
         gridView: GridView,
         adapter: ImageAdapter,
         editParameters: EditParameters,
         fcbMap: Map<String, String>?
     ){
+        Keyboard.hiddenKeyboardForFragment(
+            editFragment
+        )
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -141,7 +182,21 @@ object FileSelectGridViewProducer {
                 parent, View, pos, id
             ->
             alertDialog?.dismiss()
-            val selectedItem = adapter.getItem(pos)
+            val currentGridList = makeGridList(
+                filterDir,
+                filterPrefix,
+                filterSuffix,
+                filterType
+            )
+            val selectedItem = currentGridList.filter {
+                Regex(
+                    searchText.text.toString()
+                        .lowercase()
+                        .replace("\n", "")
+                ).containsMatchIn(
+                    it.lowercase()
+                )
+            }.get(pos)
             val selectedFileName = File(selectedItem).name
             if(
                 currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
@@ -151,12 +206,6 @@ object FileSelectGridViewProducer {
                     selectedFileName
                 )
             }
-            val currentGridList = makeGridList(
-                filterDir,
-                filterPrefix,
-                filterSuffix,
-                filterType
-            )
             val selectUpdatedGridList = listOf(
                 selectedItem,
             ) + currentGridList.filter {
@@ -166,13 +215,9 @@ object FileSelectGridViewProducer {
             adapter.addAll(selectUpdatedGridList.toMutableList())
             adapter.notifyDataSetChanged()
             gridView.setSelection(0)
-            val returnFileStr = if(
-                editParameters.isReturnOnlyFileName
-            ) selectedFileName
-            else selectedItem
-            insertEditText.setText(returnFileStr)
+            insertEditText.setText(selectedFileName)
             SelectJsExecutor.exec(
-                currentFragment,
+                editFragment,
                 selectJsPath,
                 selectedItem,
             )
@@ -201,22 +246,64 @@ object FileSelectGridViewProducer {
             filterDir,
             "on"
         )
-        if (
-            filterType != FilterFileType.dir.name
-        ) return sortedList.filter {
-            it.startsWith(filterPrefix)
-                    && judgeBySuffix(it, filterSuffix)
-                    && File("$filterDir/$it").isFile
-        }.map {
-            "$filterDir/$it"
+        val isFile = filterType != FilterFileType.dir.name
+        return when(isFile){
+            true -> {
+                sortedList.filter {
+                    it.startsWith(filterPrefix)
+                            && judgeBySuffix(it, filterSuffix)
+                            && File("$filterDir/$it").isFile
+                }.map {
+                    "$filterDir/$it"
+                }
+            }
+            false -> sortedList.filter {
+                it.startsWith(filterPrefix)
+                        && judgeBySuffix(it, filterSuffix)
+                        && File("$filterDir/$it").isDirectory
+            }.map {
+                "$filterDir/$it"
+            }
         }
-        return sortedList.filter {
-            it.startsWith(filterPrefix)
-                    && judgeBySuffix(it, filterSuffix)
-                    && File("$filterDir/$it").isDirectory
-        }.map {
-            "$filterDir/$it"
-        }
+    }
+
+    private fun makeSearchEditText(
+        imageAdapter:  ImageAdapter,
+        searchText: EditText,
+        listCon: String,
+    ) {
+        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+        linearLayoutParamForSearchText.topMargin = 20
+        linearLayoutParamForSearchText.bottomMargin = 20
+        searchText.layoutParams = linearLayoutParamForSearchText
+        searchText.inputType = InputType.TYPE_CLASS_TEXT
+        searchText.background = null
+        searchText.hint = "search"
+        searchText.setPadding(30, 10, 20, 10)
+        searchText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if (!searchText.hasFocus()) return
+                val filteredList = listCon.split("\n").filter {
+                    Regex(
+                        searchText.text.toString()
+                            .lowercase()
+                            .replace("\n", "")
+                    ).containsMatchIn(
+                        it.lowercase()
+                    )
+                }
+
+                imageAdapter.clear()
+                imageAdapter.addAll(filteredList.toMutableList())
+                imageAdapter.notifyDataSetChanged()
+            }
+        })
     }
 
     private fun getSelectDirPath(
@@ -241,7 +328,7 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.prefix.name)?.let {
-            BothEdgeQuote.trim(it)
+            QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
     }
 
@@ -249,7 +336,7 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.suffix.name)?.let {
-            BothEdgeQuote.trim(it)
+            QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
     }
 
@@ -257,7 +344,7 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
     ): String {
         return fcbMap?.get(FileSelectEditKey.selectJs.name)?.let {
-            val trimType = BothEdgeQuote.trim(it)
+            val trimType = QuoteTool.trimBothEdgeQuote(it)
             if(
                 trimType.isEmpty()
             ) return@let FilterFileType.file.name

@@ -23,11 +23,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
@@ -58,38 +57,22 @@ class   TerminalFragment: Fragment() {
     var currentScriptName = String()
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
+    var ignoreHistoryPathList: List<String>? = null
+    var srcImageAnchorLongPressMenuFilePath: String = String()
+    var srcAnchorLongPressMenuFilePath: String = String()
+    var imageLongPressMenuFilePath: String = String()
     val trimLastLine = 500
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
-    var ignoreHistoryPathList: List<String>? = null
     var dialogInstance: AlertDialog? = null
 
 
-    var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
+    private var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            val urlStr = intent.getStringExtra(
-                BroadCastIntentScheme.ULR_LAUNCH.scheme
-            ) ?: return
-            if(
-                LoadUrlPrefixSuffix.judgeTextFile(urlStr)
-            ) {
-                binding.terminalWebView.loadDataWithBaseURL(
-                    "",
-                    TxtHtmlDescriber.make(
-                        urlStr,
-                        this@TerminalFragment
-                    ),
-                    "text/html",
-                    "utf-8",
-                    null
-                )
-                return
-            }
-
-            if(
-                !LoadUrlPrefixSuffix.judge(urlStr)
-            ) return
-            binding.terminalWebView.loadUrl(urlStr)
+            BroadcastHtmlReceiveHandler.handle(
+                this@TerminalFragment,
+                intent,
+            )
         }
     }
 
@@ -141,7 +124,6 @@ class   TerminalFragment: Fragment() {
         WebViewClientSetter.set(this@TerminalFragment)
 
         WebViewSettings.set(this)
-        LongClickJsMaker.make(this)
         ImageOnLongClickListener.set(this)
         if(
             IntentAction.judge(this.activity)

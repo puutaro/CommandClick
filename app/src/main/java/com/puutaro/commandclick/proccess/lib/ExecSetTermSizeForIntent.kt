@@ -25,10 +25,10 @@ object ExecSetTermSizeForIntent {
             CommandClickScriptVariable.TERMINAL_SIZE_TYPE
         ) ?: String()
         val onSetTerminalSize = when(terminalSizeType){
-            SettingVariableSelects.Companion.TerminalSizeTypeSelects.SHORT.name -> {
+            SettingVariableSelects.TerminalSizeTypeSelects.SHORT.name -> {
                 ReadLines.SHORTH != terminalViewModel.readlinesNum
             }
-            SettingVariableSelects.Companion.TerminalSizeTypeSelects.LONG.name -> {
+            SettingVariableSelects.TerminalSizeTypeSelects.LONG.name -> {
                 ReadLines.LONGTH != terminalViewModel.readlinesNum
             }
             else -> false

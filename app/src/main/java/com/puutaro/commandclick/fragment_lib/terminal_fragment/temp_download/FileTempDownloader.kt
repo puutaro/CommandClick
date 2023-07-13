@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
+import android.util.Log
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
@@ -31,13 +32,21 @@ object FileTempDownloader {
                 )
             }
             withContext(Dispatchers.IO) {
-                url
-                    .openStream()
-                    .copyTo(
-                        FileOutputStream(
-                            File(path)
+                try {
+                    url
+                        .openStream()
+                        .copyTo(
+                            FileOutputStream(
+                                File(path)
+                            )
                         )
+                } catch (e: Exception){
+                    Log.w(
+                        this@FileTempDownloader::class.java.name,
+                        "downlaod err $path"
                     )
+                    return@withContext
+                }
             }
         }
 

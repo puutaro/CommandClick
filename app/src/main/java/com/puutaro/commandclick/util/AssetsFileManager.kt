@@ -11,6 +11,11 @@ import java.io.OutputStream
 object AssetsFileManager {
     const val textImagePingPath = "res/png/text_image.png"
     const val pdfImagePingPath = "res/png/pdf_image.png"
+    val urlIntenderFannelName = "UrlIntender.js"
+    val assetsLongPressUrlIntenderPath = "fannels/long_press_menu/${urlIntenderFannelName}"
+    val siteSumamryFannelName = "siteSummary.js"
+    val assetsLongPressSiteSummaryPath = "fannels/long_press_menu/${siteSumamryFannelName}"
+
 
     fun readFromAssets(
         context: Context?,
@@ -31,6 +36,27 @@ object AssetsFileManager {
         }
         fis2.close()
         return contents
+    }
+
+    fun copyFileOrDirFromAssetsWhenNoExist(
+        context: Context?,
+        path: String,
+        replacePrefix: String,
+        targetDirPath: String,
+        targetFileName: String
+    ){
+        if(
+            File(
+                targetDirPath,
+                targetFileName
+            ).isFile
+        ) return
+        copyFileOrDirFromAssets(
+            context,
+            path,
+            replacePrefix,
+            targetDirPath,
+        )
     }
 
     fun copyFileOrDirFromAssets(

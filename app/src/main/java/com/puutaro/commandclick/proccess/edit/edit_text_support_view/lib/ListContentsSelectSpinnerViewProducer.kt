@@ -3,10 +3,10 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Context
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -20,6 +20,7 @@ object ListContentsSelectSpinnerViewProducer {
     fun make (
         insertEditText: EditText,
         editParameters: EditParameters,
+        currentComponentIndex: Int,
         weight: Float,
     ): Spinner {
         val currentFragment = editParameters.currentFragment
@@ -32,8 +33,9 @@ object ListContentsSelectSpinnerViewProducer {
         )
         linearParamsForSpinner.weight = weight
 
-        val elcbMap = getElcbMap(
-            editParameters
+        val elcbMap = getElsbMap(
+            editParameters,
+            currentComponentIndex
         )
         val listContentsFilePath = getListPath(
             elcbMap,
@@ -168,8 +170,9 @@ object ListContentsSelectSpinnerViewProducer {
             } ?: String()
     }
 
-    fun getElcbMap(
-        editParameters: EditParameters
+    fun getElsbMap(
+        editParameters: EditParameters,
+        currentComponentIndex: Int,
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -181,26 +184,25 @@ object ListContentsSelectSpinnerViewProducer {
             SharePrefferenceSetting.current_script_file_name
         )
         val fannelDirName = currentScriptName
-            .removeSuffix(CommandClickScriptVariable.JS_FILE_SUFFIX)
-            .removeSuffix(CommandClickScriptVariable.SHELL_FILE_SUFFIX) +
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.let {
             ScriptPreWordReplacer.replace(
                 it,
-                "${currentAppDirPath}/${currentScriptName}",
                 currentAppDirPath,
                 fannelDirName,
                 currentScriptName
             )
         }.let {
             ReplaceVariableMapReflecter.reflect(
-                BothEdgeQuote.trim(it),
+                QuoteTool.trimBothEdgeQuote(it),
                 editParameters
             )
         }?.split('|')
-            ?.firstOrNull()
+            ?.getOrNull(currentComponentIndex)
             ?.split('!')?.map {
                 CcScript.makeKeyValuePairFromSeparatedString(
                     it,

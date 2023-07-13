@@ -22,7 +22,7 @@ object UpdateLastModifiedForAppHistory {
         ) return
         if(
             editExecuteValue !=
-            SettingVariableSelects.Companion.EditExecuteSelects.ALWAYS.name
+            SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,

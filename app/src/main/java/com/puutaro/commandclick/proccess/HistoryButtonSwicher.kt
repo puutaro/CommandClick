@@ -28,7 +28,7 @@ object HistoryBottunSwitcher {
     ) {
         val switchOnSource = (
                 historySwitch ==
-                        SettingVariableSelects.Companion.HistorySwitchSelects.ON.name
+                        SettingVariableSelects.HistorySwitchSelects.ON.name
                 )
         val switchOn = if(
             clickType == CLICLTYPE.LONG
@@ -68,7 +68,7 @@ private fun urlHistoryButtonHandler(
 ) {
 
     val urlHistoryOrButtonExecUrlHistory =
-        SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
+        SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val urlHistoryOrButtonExec = when(
         fragment
     ){
@@ -77,7 +77,7 @@ private fun urlHistoryButtonHandler(
         is EditFragment
             -> fragment.urlHistoryOrButtonExec
         else
-            -> SettingVariableSelects.Companion.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
+            -> SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     }
     val onTerminal = when(
         fragment
@@ -86,7 +86,7 @@ private fun urlHistoryButtonHandler(
         -> true
         is EditFragment
         -> {
-            fragment.terminalOn != SettingVariableSelects.Companion.TerminalDoSelects.OFF.name
+            fragment.terminalOn != SettingVariableSelects.TerminalDoSelects.OFF.name
         }
         else
         -> true

@@ -6,12 +6,14 @@ import android.content.DialogInterface
 import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
-import com.puutaro.commandclick.util.BothEdgeQuote
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.io.File
 
 class JsFileSelect(
@@ -20,6 +22,7 @@ class JsFileSelect(
     private val context = terminalFragment.context
     private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
     private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
+    private val editViewModel: EditViewModel by terminalFragment.activityViewModels()
 
     @JavascriptInterface
     fun execEditTargetFileName(
@@ -38,6 +41,7 @@ class JsFileSelect(
             settingVariables,
             commandVariables,
         )
+
         val replaceContentsList = replaceContents.split("\n")
         val editFileNameForDialog = replaceContentsList.filter {
             it.contains(targetVariable)
@@ -45,7 +49,7 @@ class JsFileSelect(
             .firstOrNull()
             ?.split('=')
             ?.lastOrNull()
-            .let { BothEdgeQuote.trim(it) }
+            .let { QuoteTool.trimBothEdgeQuote(it) }
         val renameFileNameKeyValue = replaceContentsList.filter {
             it.contains(renameVariable)
         }.firstOrNull() ?: return
@@ -53,7 +57,7 @@ class JsFileSelect(
         val renameFileNameForDialog = renameFileNameKeyValue
             .split("=")
             .lastOrNull()
-            .let { BothEdgeQuote.trim(it) }
+            .let { QuoteTool.trimBothEdgeQuote(it) }
         val scriptFileObj = File(scriptFilePath)
         val parentDirPath = scriptFileObj.parent ?: return
         val scriptFileName = scriptFileObj.name

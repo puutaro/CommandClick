@@ -52,6 +52,7 @@ import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity:
@@ -89,9 +90,9 @@ class MainActivity:
     EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
-    var filePath: ValueCallback<Array<Uri>>? = null
+    private var filePath: ValueCallback<Array<Uri>>? = null
     var savedInstanceStateVal: Bundle? = null
-    val getFile = registerForActivityResult(
+    private val getFile = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
     ) {
             if (it.resultCode == Activity.RESULT_CANCELED) {
@@ -427,7 +428,8 @@ class MainActivity:
     ) {
         if (onDirectoryPick) {
             storageHelper.openFolderPicker()
-            storageHelper.onFolderSelected = { requestCode, folder ->
+            storageHelper.onFolderSelected = {
+                    requestCode, folder ->
                 val absolutePath = folder.getAbsolutePath(this)
                 insertEditText.setText(absolutePath)
             }

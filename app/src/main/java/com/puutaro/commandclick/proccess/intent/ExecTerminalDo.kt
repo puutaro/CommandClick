@@ -42,10 +42,10 @@ object ExecTerminalDo {
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_START
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.Companion.HolderTypeName.SETTING_SEC_END
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
         val shellContentsList = if(shellContentsListSource.isNullOrEmpty()) {
@@ -71,7 +71,7 @@ object ExecTerminalDo {
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: String()
         val backgroundExec =
-            terminalDo != SettingVariableSelects.Companion.TerminalDoSelects.TERMUX.name
+            terminalDo != SettingVariableSelects.TerminalDoSelects.TERMUX.name
 
         val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
@@ -124,7 +124,7 @@ object ExecTerminalDo {
 
         if(
             onUpdateLastModify
-            == SettingVariableSelects.Companion.OnUpdateLastModifySelects.OFF.name
+            == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
         ) return
         FileSystems.updateLastModified(
             recentAppDirPath,

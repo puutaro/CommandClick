@@ -84,9 +84,6 @@ class ListJsDialog(
         val linearLayoutForTotal = LinearLayoutForTotal.make(
             context
         )
-        val dpHeight = DpHeightCalculator.calculate(
-            terminalFragment
-        )
         val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
         val listWeight = 1F - searchTextWeight
         val linearLayoutForListView = NestLinearLayout.make(

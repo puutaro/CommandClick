@@ -9,15 +9,12 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
         substituteCmdStartEndContentStr: String,
         equalIndex: Int,
         substituteCmdStartEndContentList: List<String>,
-        hiddenSettingVariableList: List<String>
     ): String? {
         val variableNameSource = substituteCmdStartEndContentStr.substring(
             0, equalIndex
         )
         val factSettingVariableNamesList =
-            CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST.filter {
-                !hiddenSettingVariableList.contains(it)
-            }
+            CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST
         val variableNameChecked =
             if (
                 factSettingVariableNamesList.contains(variableNameSource)
@@ -39,12 +36,6 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
             )
             || substituteCmdStartEndContentStr.startsWith(
                 "${CommandClickScriptVariable.SET_REPLACE_VARIABLE}="
-            )
-            || substituteCmdStartEndContentStr.startsWith(
-                "${CommandClickScriptVariable.HOME_SCRIPT_URL}="
-            )
-            || substituteCmdStartEndContentStr.startsWith(
-                "${CommandClickScriptVariable.CMDCLICK_HOME_FANNEL}="
             )
         ) {
             variableNameChecked
