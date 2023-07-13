@@ -48,7 +48,6 @@ Table of Contents
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
   * [Internet Button exec script](#internet-button-exec-script)
-  * [Long Press exec script](#long-press-exec-script)
   * [Button exec script](#button-exec-script)
   * [Edit execute once](#edit-execute-once)
   * [Edit execute always](#edit-execute-always)
@@ -140,7 +139,7 @@ At the same time, if you installed code editor, edit new file.
     | `passCmdVariableEdit`  | `string` | ON: pass cmd variable edit  |
 
  
-  - setVariableType option
+  - `setVariableType` option table  
     | option| description | example  |
     | --------- | --------- | ------------ |
     | `LBL` | text label | {variableName}:LBL=${label name}   |
@@ -165,36 +164,105 @@ At the same time, if you installed code editor, edit new file.
     | `TM`  | get time button | {variableName}:TM=  |
     | `CLR` | select color button  | {variableName}:CLR= |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
-    
-      - In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
-    
-      - button option usage  
-      		 ex) jsf '${0}' (`jsf` execute javascript file path  
-		 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
-		 ex) ::NoJsTermOut:: jsf '${0}' (`::NoJsTermOut::` disable terminal output when only javascript  
-		 ex) ::TermLong:: jsf '${0}' (`::TermLong::` terminal size to long  
-                 ex) echo ${0}   (`${0}` is current script path  
-                 ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
-                 ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
-                 ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
 
-      - list index component usage
-      			- this component must be one and other component is exclude by this.  
-      			- `listDir` and `click` dir is made in right under the fannel directory   
-      			- Files in listDir is list item  
-      			- Under `click` dir,there are `itemClick.js`, `menuClick.js`, and `subMenuClick.js`  
-      			- `itemClick.js` is trigger when item click  
-      			- `menuClick.js` is trigger when menu click  
-      			- `subMenuClick.js` is trigger when subMenu click  
-      			- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:   
-      				        ex)   
-				             let args = jsArgs.get().split("\t");   
-				             var PARENT_DIR = args.at(0);  
-			 	             var LIST_VIEW_DIR = args.at(1);  
-				             var ITEM_NAME = args.at(2);  
-				             var MENU_NAME = args.at(3);  
-			- `itemclick.js` option  
-			`const override = true;` -> when click, your handling when js and shell don't execute.   
+`setVariableType` Option usage  
+- This option can be combined
+
+ex1)  
+
+```js.js
+${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label
+```
+
+- `LBL` is recommended to specify at the beginning  
+- `TXT` define edit text space. Without this, edit test no display.  
+- Left member must be defined by ritht options order(no value option is skip)  
+- Left member is sepalated by virtical var.    
+- No value option's left menber is blank in `setVariableType` option table.  
+- `LSB`, `ELSB`, `MSB`, and `GB` is same in how to specify.     
+   
+ex2)  
+
+```js.js
+${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2
+```
+
+- Left member must be defined by ritht options order(no value option is skip)  
+
+ex3)  
+
+```js.js
+${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3
+```
+
+- `NUM` is recommended to combline `TXT` option becuase of visualizing current number
+
+`setVariableType` can specify file path like bellow. (Recommend) 
+  
+```js.js
+setVariableType="file://${01}/${001}/setVariableType.js"
+```
+
+setVariableType.js
+
+```setVariableType.js
+	   ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label,
+	   ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
+```
+
+- How to write about `setVariableType.js` is above same.  But, must be comma in varialbe define end. Instead, you can use indent and newline
+
+```setVariableTypes.js
+     ${variable name1}:  
+		      LBL:TXT:LSB:BTN=  
+				     label=test label  
+				     |  
+					       listPath=${list file path}  
+				     |  
+					       cmd=jsf '${0}' exmple  
+							!label=button label,   
+	   ${variable name2}:  
+		      HL:BTN=label=  
+				     cmd=jsf '${0}' exmple  
+							!label=button label2,
+
+```
+
+
+  
+  
+- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+
+- button option usage  
+	 ex) jsf '${0}' (`jsf` execute javascript file path  
+	 ex) jsf '${01}' (`jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
+	 ex) ::NoJsTermOut:: jsf '${0}' (`::NoJsTermOut::` disable terminal output when only javascript  
+	 ex) ::TermLong:: jsf '${0}' (`::TermLong::` terminal size to long  
+	 ex) echo ${0}   (`${0}` is current script path  
+	 ex) ::BackStack:: ls    (`::BackStack::` is backstack, only work when prefix when only shellscript
+	 ex) ::TermOut:: ls      (`::TermOut::` enable terminal output  
+	 ex) top -n 1 > /dev/null  (when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)  
+
+- list index component usage
+	- this component must be one and other component is exclude by this.  
+	- `listDir` and `click` dir is made in right under the fannel directory   
+	- Files in listDir is list item  
+	- Under `click` dir,there are `itemClick.js`, `menuClick.js`, and `subMenuClick.js`  
+	- `itemClick.js` is trigger when item click  
+	- `menuClick.js` is trigger when menu click  
+	- `subMenuClick.js` is trigger when subMenu click  
+	- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:
+   
+```js.js 
+	     let args = jsArgs.get().split("\t");   
+	     var PARENT_DIR = args.at(0);  
+	     var LIST_VIEW_DIR = args.at(1);  
+	     var ITEM_NAME = args.at(2);  
+	     var MENU_NAME = args.at(3);
+```
+
+- `itemclick.js` option  
+`const override = true;` -> when click, your handling when js and shell don't execute.   
 
 - predfine menu name in list index component  
       			`sync` -> sync list to current directory files   
@@ -290,10 +358,10 @@ Bellow is how to import. You can enjoy this all range import application!
 
 #### Local path import
 
-```
+```js.sj
 ccimport {path}   
- 
-```   
+```
+
 * current directory -> `./`  
 * move parent direcoty -> ../  
 * other check [Javascript pre order word](#javascript-pre-order-word)   
@@ -306,9 +374,10 @@ ccimport /android_asset/{relative path}
 
 #### WEB import
 
-```
+```js.sj
 ccimport {URL}  
-```  
+```
+
 * It is possible to download by curl {URL}
 
 
@@ -333,7 +402,7 @@ You can set by onley this menu press.
 4. Click paste popup on termux  
 5. Continue pressing `Enter` on termux
 - clipboard contents:
-   ```
+   ```sh.sh
    pkg update -y && pkg upgrade -y \
    && yes | termux-setup-storage \
    && sed -r 's/^\#\s(allow-external-apps.*)/\1/' -i "$HOME/.termux/termux.properties" 
@@ -420,24 +489,6 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
 
 
-
-### Long press exec script
-
-This script is executed when long press.   
-
-- `long_press_src_image_anchor.js`   
-		- When image anchor long press, trigger. In Default, display link page summary dialog.  
-		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
-		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
-- `long_press_src_anchor.js`  
-		- When source anchor long press, trigger. In Default, display link page summary dialog.  
-		- `CMDCLICK_LONG_PRESS_LINK_URL` is replaced to anchr's url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
-- `long_press_image_anchor.js`    
-		- When image long press, trigger.  In Default, launch current page url intent.  
-		- `CMDCLICK_LONG_PRESS_IMAGE_URL` is replaced to image url by System  
-		- `CMDCLICK_CURRENT_PAGE_URL` is replaced to current page url by System  
     
   
 ### Edit execute once
@@ -460,13 +511,13 @@ How the script file turns into a GUI Application!
 Exec bellow command in `CommandClick` shellscript, so that you can launch web site.
 (This command is only active when command click focus)
 
-```
+```sh.sh
 am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "{url}"
+```
 
----
-
+```sh.sh
 ex) am broadcast \
  -a "com.puutaro.commandclick.url.launch" \
  --es url "https://github.com/puutaro/CommandClick/edit/master/README.md"
@@ -477,7 +528,7 @@ ex) am broadcast \
 Exec bellow command in `CommandClick` shellscript, so that you can make automaticaly make html, css and javascript.
 (This command is only active when command click focus)
 
-```
+```sh.sh
 am broadcast \
 		-a "com.puutaro.commandclick.html.launch" \
 		--es edit_path "{target edit file path}" \
@@ -502,7 +553,7 @@ am broadcast \
   - (Optional) `on_click_sort` is how to sort top when link click.  
   - (Optional) `filter_code` filter target source file  by javascript code. default value is `true`. You can use `urlString` and `urlTitle` variable to filter.  
   
-```
+```sh.sh
 ex) am broadcast \
 		-a "com.puutaro.commandclick.html.launch" \
 		--es edit_path "${PARENT_DIR_PATH}/tubePlayList" \
@@ -530,6 +581,7 @@ ex) am broadcast \
 `CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
 This, so colled, android app row code library.
 
+```js.js
  - jsFileStystem  
  	- jsFileStystem.showFileList(dirPath: String)   
 		- return filelist tab sepalated   
@@ -805,7 +857,7 @@ This, so colled, android app row code library.
 	- jsPath.extractText(  
   		path: pdf path string  
   	   ) -> extracted text     
-
+```
 
 ### Javascript pre order word
 - `${0}` -> current file path  
@@ -854,7 +906,7 @@ Bellow respectable package is inclided assets. you can import like bellow.
 
 - Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
 
-```
+```js.js
 	if(
 		jsStop.how().includes("true")
 	) throw new Error('exit');
