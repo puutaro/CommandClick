@@ -171,7 +171,7 @@ At the same time, if you installed code editor, edit new file.
 ex1)  
 
 ```js.js
-${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label
+setVariableTypes="${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label"
 ```
 
 - `LBL` is recommended to specify at the beginning  
@@ -184,7 +184,7 @@ ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cm
 ex2)  
 
 ```js.js
-${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2
+setVariableTypes="${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2"
 ```
 
 - Left member must be defined by ritht options order(no value option is skip)  
@@ -192,7 +192,7 @@ ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2
 ex3)  
 
 ```js.js
-${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3
+setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3"
 ```
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
@@ -206,12 +206,12 @@ setVariableType="file://${01}/${001}/setVariableType.js"
 
 setVariableType.js
 
-```setVariableType.js
+```setVariableTypes.js
 ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cmd=jsf '${0}' exmple!label=button label,
 ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
 ```
 
-- How to write about `setVariableType.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
+- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
 
 ```setVariableTypes.js
 ${variable name1}:  
