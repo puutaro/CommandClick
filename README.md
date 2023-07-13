@@ -124,12 +124,15 @@ At the same time, if you installed code editor, edit new file.
     | `disablePlayButton`  | `ON`/`OFF` | play button diable; `ON`: on, `OFF`: off  
     | `execPlayBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when play button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `execEditBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when edit button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
-    | `homeFannel` | `string` | specified `fannel` put always bottom in app history and multiple specify enable |
-    | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) |
-    | `homeScriptUrl`  | `string` | specified `script`, url and html put always bottom in url history and multiple specify enable |
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
-    | `setReplaceVariable`  | `string` | string replaced with certain string ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"  
-    | `setVariableType` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `setReplaceVariables`  | `string` | string replaced with certain string. You also have multiple specifing this. ex) setReplaceVariables="{replaceVariablle1}={repalce string1} or setReplaceVariables="file://{file path}"  
+    | `setVariableTypes` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) ${setting variable name}="..." or hideSettingVariables="file://{file path} |
+    | `homeScriptUrlsPath`  | `path strings` | specified `script`, url and html put always bottom in url history |
+    | `homeFannelsPath` | `path strings` | specified `fannel` put always bottom in app history |
+    | `srcImageAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
+    | `srcAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
+    | `imageLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
@@ -142,42 +145,28 @@ At the same time, if you installed code editor, edit new file.
   - setVariableType option
     | option| description | example  |
     | --------- | --------- | ------------ |
-    | `CB` | checkbox | {variableName}:CB=value1!value2!|..   |
-    | `CBB` | checkbox with exec button | {variableName}:CBB=value1!value2!&#124;cmd={command string}(!label={button label}) |..   |
-    | `EB` | edit text with exec button | {variableName}:EB=cmd={command string}(!label={button label}) |..   |
-    | `ECB` | editable checkbox | {variableName}:ECB=value1!value2!|..   |
-    | `ECBB` | editable checkbox with exec button | {variableName}:ECB=value1!value2&#124;cmd={command string}(!label={button label}) |..   |
-    | `EFCB` | editable file checkbox | {variableName}:EFCB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
-    | `EFCBB` | editable file checkbox with exec button | {variableName}:EFCB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
-    | `EFGB` | editable file grid box | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
-    | `EFGBB` | editable file grid box with exec button | {variableName}:EFGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`})&#124;cmd={command string}(!label={button label}) |..   |
-    | `LCB` | list file checkbox | {variableName}:LCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
-    | `LCBB` | list file checkbox with exec button | {variableName}:LCBB=listPath={target list file path}(!limitNum={list limit num})&#124;cmd={command string}(!label={button label}) |..   |
-    | `ELCB` | editable list file checkbox | {variableName}:ELCB=listPath={target list file path}(!limitNum={list limit num}) |..   |
-    | `ELCBB` | editable list file checkbox with exec button | {variableName}:ELCB=listPath={target list file path}(!limitNum={list limit num})&#124;cmd={command string}(!label={button label}) |..   |
-    | `EMCB` | multi checkbox | {variableName}:EMCB=value1!value2!.. |..   |
-    | `EMCBB` | multi checkbox with exec button | {variableName}:EMCBB=value1!value2!&#124;cmd={command string}(!label={button label}) |..   |
-    | `ELMCB` | editable list file multi checkbox | {variableName}:ELMCB=listPath={target list file path} |..   |
-    | `ELCBDIR` | editable list file checkbox with directory select button | {variableName}:ELCBDIR=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `ELCBFL` | editable list file checkbox with file select button | {variableName}:ELCBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `ELGBFL` | editable list file multi Grid with file select button | {variableName}:ELGBFL=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `ELMCBB` | editable list file multi checkbox with exec button | {variableName}:ELCB=listPath={target list file path}!#124;cmd={command string}(!label={button label}) |..   |
-    | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
-    | `H` | password input | {variableName}:H={password ..etc}   |
-    | `RO` | read only | {variableName}:RO= |
-    | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
-    | `NUMB` | increment or decrement number with exec button | {variableName}:NUMB={init_value}!{min}..{max}!{step}(!{number of decimal places})&#124;cmd={command string}(!label={button label}) |
+    | `LBL` | text label | {variableName}:LBL=${label name}   |
+    | `TXT` | edit text enphasys | {variableName}:TXT=   |
+    | `CB` | c(s)elect box | {variableName}:CB=value1!value2!|..   |
+    | `ECB` | editable c(s)elect box | {variableName}:ECB=value1!value2!|..   |
+    | `LSB` | list contents select box | {variableName}:LSB=listPath={target list file path}(!limitNum={list limit num}) |..   |
+    | `ELSB` | editable list contents select box | {variableName}:ELSB=listPath={target list file path}(!limitNum={list limit num}) |..   |
+    | `LMSB` | editable list contents multi select box | {variableName}:LMSB=listPath={target list file path} |..   |
+    | `FSB` | file select box | {variableName}:FSB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
+    | `GB` | grid select box | {variableName}:GB={variableName}:GB=listPath={target list file path}(!limitNum={list limit num}) |..   |
+    | `FGB` | file select grid box | {variableName}:FGB=dirPath={target direcotry path(default: current directory)}(&prefix={grep prefix})(&suffix={grep suffix})(&type={`file` or `dir` (default value is `file`}) |..   |
+    | `MSB` | multi select box | {variableName}:MSB={variableName}:MSB=listPath={target list file path}(!limitNum={list limit num}) |..   |
     | `FL` | file select button | {variableName}:FL=  |
-    | `FLB` | file select button with exec button | {variableName}:FLB=cmd={command string}(!label={button label})  |
-    | `MFL` | file select button | {variableName}:MFL=  |
     | `DIR`  | directory select button | {variableName}:DIR= |
-    | `DIRB`  | directory select button | {variableName}:DIRB=cmd={command string}(!label={button label}) |
-    | `MDIR`  | directory select button | {variableName}:MDIR= |
-    | `DT`  | create file button | {variableName}:DT=  |
-    | `CLR` | select color  | {variableName}:CLR= |
-    | `CLRB` | select color with exec button | {variableName}:CLRB=cmd={command string}(!label={button label}) |
+    | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
     | `BTN` | botton  | {variableName}:BTN=cmd={command string}(!label={button label})    |
-    | `FBTN` | botton  | {variableName}:FBTN=cmd={command string}(!label={button label})    |
+    | `RO` | read only | {variableName}:RO= |
+    | `H` | password input | {variableName}:H={password ..etc}   |
+    | `HL` | label hidden | {variableName}:HL=   |
+    | `DT`  | get date button | {variableName}:DT=  |
+    | `TM`  | get time button | {variableName}:TM=  |
+    | `CLR` | select color button  | {variableName}:CLR= |
+    | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
     
       - In `EFCB`, `EFCBB`, {grep suffix} have `NoExtend` macro, It display no extend file list
     
