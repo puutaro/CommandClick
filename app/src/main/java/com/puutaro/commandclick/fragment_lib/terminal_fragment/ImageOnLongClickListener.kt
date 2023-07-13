@@ -28,8 +28,6 @@ object ImageOnLongClickListener {
         val longPressForSrcImageAnchor = LongPressForSrcImageAnchor(terminalFragment)
         val longPressForSrcAnchor = LongPressForSrcAnchor(terminalFragment)
         val longPressForImage = LongPressForImage(terminalFragment)
-        val currentHitSystemDirPath =
-            "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickHitSystemDirRelativePath}"
 
         activity?.registerForContextMenu(terminalWebView)
         terminalWebView.setOnLongClickListener() { view ->
@@ -57,21 +55,6 @@ object ImageOnLongClickListener {
                             currentUrl
 
                         )
-//                        val jsContentsListSource = ReadText(
-//                            currentHitSystemDirPath,
-//                            UsePath.longPressImageAnchorJsName,
-//                        ).readText()
-//                            .replace(
-//                                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
-//                                currentUrl
-//                            )
-//                            .split("\n")
-//                        ExecJsLoad.execJsLoad(
-//                            terminalFragment,
-//                            currentHitSystemDirPath,
-//                            UsePath.longPressImageAnchorJsName,
-//                            jsContentsListSource
-//                        )
                     }
                     false
                 }
@@ -87,32 +70,6 @@ object ImageOnLongClickListener {
 //                        terminalFragment,
 //                        longPressImageUrl
 //                    )
-//                    if (
-//                        currentPageUrl?.startsWith(httpsStartStr) == true
-//                        || currentPageUrl?.startsWith(httpStartStr) == true
-//                    ) {
-//                        val jsContentsListSource = ReadText(
-//                            currentHitSystemDirPath,
-//                            UsePath.longPressSrcImageAnchorJsName,
-//                        ).readText()
-//                            .replace(
-//                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL,
-//                                longPressLinkUrl
-//                            )
-//                            .replace(
-//                                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL,
-//                                longPressImageUrl
-//                            )
-//                            .replace(
-//                                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
-//                                currentUrl
-//                            )
-//                            .split("\n")
-                    Toast.makeText(
-                        terminalFragment.context,
-                        "src_iamge_anchor" + "\n" + currentPageUrl,
-                        Toast.LENGTH_LONG
-                    ).show()
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
@@ -130,16 +87,6 @@ object ImageOnLongClickListener {
                     val url = hitTestResult.extra
                         ?: return@setOnLongClickListener false
 //                    FileTempDownloader.downloadFile(url)
-//                    Toast.makeText(
-//                        terminalFragment.context,
-//                        url,
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-                    Toast.makeText(
-                        terminalFragment.context,
-                        "src_anchor" + "\n" + currentPageUrl,
-                        Toast.LENGTH_LONG
-                    ).show()
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true

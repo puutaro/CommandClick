@@ -470,11 +470,6 @@ object ButtonViewProducer {
         val listCon = setFOptionMap.get(
             SET_F_OPTION_MAP_KEY.ListAddBySB.selectsValues.name
         )?.replace("&", "\n") ?: return
-        Toast.makeText(
-            editFragment.context,
-            listCon,
-            Toast.LENGTH_LONG
-        ).show()
         ListDialogForButton.create(
             editFragment,
             listCon,

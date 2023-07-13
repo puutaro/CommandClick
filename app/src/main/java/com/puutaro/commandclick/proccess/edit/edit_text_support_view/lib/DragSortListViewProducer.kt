@@ -64,11 +64,6 @@ object DragSortListViewProducer {
         dragSortListViewButtonView.text = dragSortButtonLabel
         dragSortListViewButtonView.setOnClickListener {
                 buttonView ->
-            Toast.makeText(
-                context,
-                "${elsbMap }\n${parentDir}/${listFileName}",
-                Toast.LENGTH_LONG
-            ).show()
             val buttonContext = buttonView.context
             val dragSortList = ReadText(
                 parentDir,
