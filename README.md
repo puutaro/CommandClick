@@ -642,60 +642,89 @@ ex) am broadcast \
 This, so colled, android app row code library.
 
 ```js.js
- - jsFileStystem  
+
+ - jsFileStystem
+
  	- jsFileStystem.showFileList(
 		dirPath: String
-          )  -> return filelist tab sepalated   
+          )
+		-> return filelist tab sepalated
+ 
 	- jsFileStystem.showDirList(
 		dirPath: String
-	  )  -> return filelist tab sepalated   
+	  )
+		-> return filelist tab sepalated
+ 
  	- jsFileStystem.readLocalFile(
 		path: String
-	   ) ->  read local file and return file contents string  
+	   )
+		->  read local file and return file contents string
+
 	- jsFileStystem.writeLocalFile(
 		path: String, contents: String
-	  )  - write local file
+	  )
+		- write local file
+
 	- jsFileStystem.jsFile(
 		filename: String,
 		terminalOutPutOption: String
-	  ) - write local monitor file  
+	  )
+		- write local monitor file  
 	- jsFileStystem.removeFile(
 		path: String
-          ) - remove local file  
+          )
+		- remove local file
+ 
 	- jsFileStystem.createDir(
 		path: String
-	  ) - creaate local dirctory 
+	  )
+		- creaate local dirctory
+
 	- jsFileStystem.removeDir(
 		path: String
-	)  - remove local direcotry   
+	)
+		- remove local direcotry
+
 	- jsFileStystem.copyDir(
 		sourcePath: String,
 		destiDirPath: String
-	  )  - copy local directory 
+	  )
+		- copy local directory
+
 	- jsFileSystem.outputSwitch(
 		switch: String
-	) -> switch == on, then enable terminal output.
+	)
+		-> switch == on, then enable terminal output.
                         other default.
-                        (althogh being webmode, terminal mode off, this inmterface switch on)   
+                        (althogh being webmode, terminal mode off, this inmterface switch on)
+ 
 	- jsFileSystem.isFile(
 		filePath: String
-	   ) -> boolean   
+	   )
+		-> boolean
+
 	- jsFileSystem.isDir(
 		DirectoryPath: String
-	   ) -> boolean   
+	   )
+		-> boolean   
 
 
- - JsArgs 
-	- jsArgs.get() -> tabsepalete string  
-		jsArgs soruce is jsf argument in edit  
-		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
-			-> `fristargment`\t`secondargument 2`  
+ - JsArgs
+
+	- jsArgs.get()
+		-> tabsepalete string  
+			jsArgs soruce is jsf argument in edit  
+			ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
+				-> `fristargment`\t`secondargument 2`  
 
 	- jsArgs.set(
 		tabsepalete string
-	    ) -> argment set (ex "{arg1}\t{arg2}\t..")  
+	    )
+		-> argment set (ex "{arg1}\t{arg2}\t..")  
+
 
  - JsIntent
+
  	- jsIntent.launchEditSite(
 		editPath: String,
 		srcPath: String,
@@ -703,10 +732,14 @@ This, so colled, android app row code library.
 		onSortableJs: String(true/false),
 		onClickUrl: String(true/false),
 		filterCode: String
-	  )  - ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
+	  )
+		- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
+
  	- jsIntent.launchUrl(
 		urlString: String
-          )  -> launch uri(not url but uri)
+          )
+		-> launch uri(not url but uri)
+
 	- jsIntent.launchApp(
 		action: String,
 		uriString: String,
@@ -715,7 +748,7 @@ This, so colled, android app row code library.
 		extraLong: tabSepalatedString,
 		extraFloat: tabSepalatedString
 	   )
-			ex) bellow, launch google calendar  
+		ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
 				"content://com.android.calendar/events",
@@ -723,17 +756,22 @@ This, so colled, android app row code library.
 				"",
 				beginTime=167889547868058\tendTime=165678973498789",
 				""
-			);  
+			);
+
 	- jsIntent.launchShortcut(
 		currentAppDirPath: String,
 		currentShellFileName: String
-	    ) -> launch index and fannel  
+	    )
+		-> launch index and fannel  
 
 
  - JsDialog
+
  	- jsDialog.listJsDialog(
 		listSource: String(tab sepalate)
-	   ) -> selected list
+	   )
+		-> selected list
+
  	- jsDialog.formJsDialog(
 		formSettingVariables: String(tab sepalate),
 		formCommandVariables: String(tab sepalate)
@@ -752,8 +790,9 @@ This, so colled, android app row code library.
 		title: String,  
 		currentItemListStr: String(tab sepalate),  
 		preSelectedItemListStr: String(tab sepalate),  
-	    ) -> tab sepalated items
- 		 - ex) 
+	    )
+		-> tab sepalated items
+ 		 	- ex) 
  				jsDialog.multiListDialog(
 					"{item1}\t{item2}",  
 					`{item1}\t{item2}\t{item3}\t{item4}`  
@@ -762,83 +801,122 @@ This, so colled, android app row code library.
 				
 				
  - JsStop
- 	- jsStop.how() (measure for `while roop` crush when application focus out)
+
+ 	- jsStop.how()
+		(measure for `while roop` crush when application focus out)
+
+
  - JsToast
+
  	- jsToast.short(
 		contents: string
-	  )   
+	  )
+
 	- jsToast.long(
 		contents: string
-	  )   
+	  )
+
+
  - JsCurl
+
  	- jsCurl.get(
 		mainUrl: string,
 		queryParameter: String,
 		header: String(ex Authorication\tbear token,contentType\ttext/plain..),
 		Timeout: Int (miliSeconds)
 	  )
+
 	- jsCurl.getTextOrPdf(
 		url: text or pdf url
 	   )
+
+
  - JsUtil
+
  	- jsUtil.sleep(
 		sleepMiriTime: Int
-	  )   
+	  )
+
 	- jsUtil.copyToClipboard(
 		copyString: String,
 		fontSize: Int
-	  )  
+	  )
+
 	- jsUtil.echoFromClipboard()
-		-> primary clipboard string  
+		-> primary clipboard string
+
 	- jsUtil.convertDateTimeToMiliTime(
 		datetime: String(YYYY-MM-DDThh:mm)
-	   ) -> militime  
+	   )
+		-> militime
+
+
  - JsUrl
+
  	- jsUrl.makeJsUrl(
 		jsPath: String
-	  ) -> javascript:(
-		function() { ${jsPathCoontents} }
-	  )();  
+	  )
+		-> javascript:(
+			function() { ${jsPathCoontents} }
+	  	   )();
+
 	- jsUrl.loadUrl(
 		urlString: String
           )  
 
- - JsScript  
+
+ - JsScript
+
  	- jsScript.subLabelingVars(
 		jsContents: String
-	  ) -> Labeling Section Contents  
+	  )
+		-> Labeling Section Contents
+
 	- jsScript.subSettingVars(
 		jsContents: String
-	  ) -> Setting Section Contents  
+	  )
+		-> Setting Section Contents
+
 	- jsScript.subCmdVars(
 		jsContents: String
-	  ) -> Comamnd Section Contents  
+	  )
+		-> Comamnd Section Contents
+
 	- jsScript.subValOnlyValue(
 		targetVariableName: String,
 		VariableValueStringContents: String
-	  )  ->  Variable value String Contents  
+	  )
+		->  Variable value String Contents
+
 	- jsScript.bothQuoteTrim(
 		VariableValueString: String
 	  ) -> VariableValueString removed both edge quote  
 	- jsScript.replaceSettingVariable(
 		scriptContents: String,
 		replaceTabList: String
-	  ) -> File contents String  
+	  )
+		-> File contents String
+
 	- jsScript.replaceVariableInHolder(
 		scriptContents: String,
 		replaceTabList: String
-	  ) -> File contents String  
+	  )
+		-> File contents String  
 
- - JsListSelect  
+
+ - JsListSelect
+
  	update or remove method for editable list file checkbox 
  	- jsListSelect.updateListFileCon(
 		targetListFilePath: String,
 		itemText: String
-	  )  
+	  )
+
 	- jsListSelect.removeItemInListFileCon(
 		targetListFilePath: String,
 		itemText: String
 	  )
+
 	- jsListSelect.wrapRemoveItemInListFileCon(
                 targetListFilePath: String,  
                 removeTargetItem: String,  
@@ -847,8 +925,10 @@ This, so colled, android app row code library.
                 defaultVariable: String = String()  
           )  
 
- - JsFileSelect  
- 	edit selected file  
+
+ - JsFileSelect
+ 	edit selected file
+ 
 	- execEditTargetFileName(  
         	targetVariable: rename target command variable string,  
         	renameVariable: rename destination command variable String,  
@@ -860,48 +940,68 @@ This, so colled, android app row code library.
         	scriptFilePath: fannel path string  
     	)  
 
+
  - JsEdit  
- 	`edit component` edit tool   
+ 	`edit component` edit tool
+
 	- jsEdit.getFromEditText(
 		targetVariableName: String,
-	    ) -> target variable value stirng  
+	    )
+		-> target variable value stirng  
 	    
- 	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)   
+ 	- jsEdit.updateEditText(
+		updateVariableName: String,
+		updateVariableValue: String
+	  )   
 	
-	- jsEdit.onSpinnerUpdateForTermFragment(spinnerId: Int, variableValue: String)   
+	- jsEdit.onSpinnerUpdateForTermFragment(
+		spinnerId: Int,
+		variableValue: String
+	  )
+
 	- jsEdit.updateByVariable(
 		fannelScriptPath: String,
 		targetVariableName: String,
 		updateVariableValue: String,
-	    ) -> update target variable value  
+	    ) 
+     		-> update target variable value
+
 	- jsEdit.removeFromEditHtml(
 		editPath: String(edit site source path),
 		removeUri: String(remove uri)
-	)  ->    remoev uri from edit site source  
+	)
+		-> remoev uri from edit site source  
 
 
- - JsCsv  
- 	csv edit tool   
+ - JsCsv
+ 	csv edit tool
+
 	- jsCsv.read(
 		tag: String,
 		csvPath: String,
 		withNoHeader: String,
 		csvOrTsv: String,
 		limitRowNumSource: Int
-	  ) -> save csv or tsv instance with tag, also header   
+	  )
+		-> save csv or tsv instance with tag, also header   
 	 
 	- jsCsv.readM(
 		tag: String,
 		csvString: String,
 		csvOrTsv: String,
-	 ) -> save csv or tsv instance with tag  
+	 )
+		-> save csv or tsv instance with tag  
 	 
  	- jsCsv.takeRowSize(
 		tag: String
-   	  ) -> rowSize about csv(tsv) with tag  
+   	  )
+		-> rowSize about csv(tsv) with tag
+
 	- jsCsv.takeColSize(
 		tag: String
-	  ) -> colSize about csv(tsv) with tag  
+	  )
+		-> colSize about csv(tsv) with tag
+
 	- jsCsv.isRead(
 		tag: String
 	   ) 
@@ -911,93 +1011,124 @@ This, so colled, android app row code library.
 	- jsCsv.toHeader(  
         	tag: String,  
         	colNum: Int,  
-    	) -> schema name  
+    	)
+		-> schema name  
 	
 	- jsCsv.toHeaderRow(
 		tag: String,
 		startColNumSource: Int,
 		endColNumSource: Int,
-	) -> headerList sepalated by tab   
+	)
+		-> headerList sepalated by tab   
 	
 	- jsCsv.toRow(
 		tag: String,
 		rowNum: Int,
 		startColNumSource: Int,
 		endColNumSource: Int,
-	    ) -> rowList sepalated by tab    
+	    )
+		-> rowList sepalated by tab    
 	
 	- jsCsv.toCol(
 		tag: String,
 		colNum: Int,
 		startRowNumSource: Int,
 		endRowNumSource: Int,
-	    ) -> colList sepalated by tab    
+	    )
+		-> colList sepalated by tab    
 	
-	- jsCsv.toHtml(tsvString: String, onTh: String (empty -> ordinaly `td tag` html, some string -> `th tag` html))  
+	- jsCsv.toHtml(
+		tsvString: String,
+		onTh: String (empty -> ordinaly `td tag` html, some string -> `th tag` html)
+	  )  
 		convert tsv to html string  
 		-> html string   
 	
-	- jsCsv.outPutTsvForDRow(tab: String) 
+	- jsCsv.outPutTsvForDRow(
+		tab: String
+	   ) 
 		convert row direction tsv to Tsv  
-		-> tsv string  
-	- jsCsv.outPutTsvForDCol(tab: String) 
+		-> tsv string
+
+	- jsCsv.outPutTsvForDCol(
+		tab: String
+	  ) 
 		convert col direction tsv to Tsv  
-		-> tsv string  
+		-> tsv string
+
 	- jsCsv.filter(
 		srcTag: String,
 		destTag: String,
 		tabSepaFormura: String ({schema1},>,1500\t{schema2},in,Monday,\t{schema3},=,super man\t..)  
-	    ) -> save filterd tsv instance with tag, also header     
+	    )
+		-> save filterd tsv instance with tag, also header
+ 
 	- jsCsv.selectColumn(
 		srcTag: String,
 		destTag: String,
 		comaSepaColumns: String ({column1}\t{column2}\t{column3}\t..)  
-	    ) -> save culumn selected tsv instance with tag, also header     
+	    )
+		-> save culumn selected tsv instance with tag, also header
+ 
 	- jsCsv.sliceHeader(
 		tag: String,
 		startColNumSource: Int,
 		endColNumSource: Int,
 		headerRow: String,
-	    )　-> header string sliced with tab delimiter   
+	    )
+		-> header string sliced with tab delimiter   
 	    
 	    
-- JsText  
+- JsText
+
 	- jsText.trans(
 		tsvString
-	   ) -> String transposed row and col  
+	   )
+		-> String transposed row and col  
 
 
  - JsPath  
- 	path edit tool   
+ 	path edit tool
+
 	- jsPath.compPrefix(  
 		path: String,  
 		prefix: String,  
-	  ) -> complete prefix     
+	  )
+		-> complete prefix     
 	 
 	- jsPath.compExtend(  
 		path: String,  
 		extend: String  
-	    ) -> complete suffix    
+	    )
+		-> complete suffix    
 	 
  	- jsPath.checkExtend(  
  	 	tag: String,  
 		extendTabSeparateStr: tab separated String  
-	  ) -> boolean (true when including tab separated extend String)  
+	  )
+		-> boolean (true when including tab separated extend String)
+
 	- jsPath.checkPrefix(
 		name: String,  
 		prefixTabSeparateStr: String  
-	    ) -> boolean (true when including tab separated prefix String)    
+	    )
+		-> boolean (true when including tab separated prefix String)
+ 
 	- jsPath.removeExtend(  
 	 	path: String,  
 	 	extend: String  
-	) -> remove extend 
+	)
+		-> remove extend 
 	
 	- jsPath.removePrefix(  
 		path: String,  
 		prefix: String  
-	    ) -> remove prefix      
+	    )
+		-> remove prefix      
 
-- JsTextToSpeech    
+
+- JsTextToSpeech
+
 	- jsTextToSpeech.speech(  
 		playListFilePath: String,    
 		playMode: String(ordinaly|shuffle|reverse|number),  
@@ -1015,8 +1146,10 @@ This, so colled, android app row code library.
  - JsPdf
 	- jsPath.extractText(  
   		path: pdf path string  
-  	   ) -> extracted text     
+  	   )
+		-> extracted text     
 ```
+
 
 ### Javascript pre order word
 - `${0}` -> current file path  
