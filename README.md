@@ -244,7 +244,7 @@ ${variable name2}:
 	```js.js
 	jsf '${0}' 
 	```
- 	- (`jsf` execute javascript file path
+ 	- `jsf` execute javascript file path
     
 	
 	ex)
