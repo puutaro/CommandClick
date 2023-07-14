@@ -165,6 +165,9 @@ At the same time, if you installed code editor, edit new file.
     | `CLR` | select color button  | {variableName}:CLR= |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
 
+- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+
+
 `setVariableType` Option usage  
 - This option can be combined
 
@@ -232,7 +235,6 @@ ${variable name2}:
 
   
   
-- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
 
 
 - button option usage
@@ -240,8 +242,10 @@ ${variable name2}:
 	ex)
 	
 	```js.js
-	jsf '${0}' (`jsf` execute javascript file path  
+	jsf '${0}' 
 	```
+ 	- (`jsf` execute javascript file path
+    
 	
 	ex)
 	 
