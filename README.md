@@ -694,7 +694,7 @@ This, so colled, android app row code library.
 	- jsFileSystem.outputSwitch(
 		switch: String
 	)
-		-> switch == on, then enable terminal output.
+		- switch == on, then enable terminal output.
                         other default.
                         (althogh being webmode, terminal mode off, this inmterface switch on)
  
@@ -733,7 +733,7 @@ This, so colled, android app row code library.
 		onClickUrl: String(true/false),
 		filterCode: String
 	  )
-		- ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
+		- ref: [html automaticaly creation command to edit target edit file]
 
  	- jsIntent.launchUrl(
 		urlString: String
@@ -748,6 +748,8 @@ This, so colled, android app row code library.
 		extraLong: tabSepalatedString,
 		extraFloat: tabSepalatedString
 	   )
+		- launch app site
+
 		ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
@@ -762,7 +764,7 @@ This, so colled, android app row code library.
 		currentAppDirPath: String,
 		currentShellFileName: String
 	    )
-		-> launch index and fannel  
+		- launch index and fannel  
 
 
  - JsDialog
@@ -803,6 +805,7 @@ This, so colled, android app row code library.
  - JsStop
 
  	- jsStop.how()
+		-> Boolean
 		(measure for `while roop` crush when application focus out)
 
 
@@ -811,10 +814,12 @@ This, so colled, android app row code library.
  	- jsToast.short(
 		contents: string
 	  )
+		- short toast
 
 	- jsToast.long(
 		contents: string
 	  )
+		- long toast
 
 
  - JsCurl
@@ -825,10 +830,12 @@ This, so colled, android app row code library.
 		header: String(ex Authorication\tbear token,contentType\ttext/plain..),
 		Timeout: Int (miliSeconds)
 	  )
+		-> get response
 
 	- jsCurl.getTextOrPdf(
 		url: text or pdf url
 	   )
+		-> text or pdf file  
 
 
  - JsUtil
@@ -836,11 +843,13 @@ This, so colled, android app row code library.
  	- jsUtil.sleep(
 		sleepMiriTime: Int
 	  )
+		- sleep miri seconds
 
 	- jsUtil.copyToClipboard(
 		copyString: String,
 		fontSize: Int
 	  )
+		- copy to clipboard
 
 	- jsUtil.echoFromClipboard()
 		-> primary clipboard string
@@ -862,7 +871,8 @@ This, so colled, android app row code library.
 
 	- jsUrl.loadUrl(
 		urlString: String
-          )  
+          )
+		-> load url by webview  
 
 
  - JsScript
@@ -905,17 +915,20 @@ This, so colled, android app row code library.
 
 
  - JsListSelect
+	This interface exist for `LSB`, `ELSB`, `GB` and `MSB` `setVariableTypes` option (ref [Add]
 
  	update or remove method for editable list file checkbox 
  	- jsListSelect.updateListFileCon(
 		targetListFilePath: String,
 		itemText: String
 	  )
+		- update `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
 
 	- jsListSelect.removeItemInListFileCon(
 		targetListFilePath: String,
 		itemText: String
 	  )
+		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
 
 	- jsListSelect.wrapRemoveItemInListFileCon(
                 targetListFilePath: String,  
@@ -923,11 +936,12 @@ This, so colled, android app row code library.
                 currentScriptPath: String,  
                 replaceTargetVariable: String = String(),  
                 defaultVariable: String = String()  
-          )  
+          )
+		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` and update View
 
 
  - JsFileSelect
- 	edit selected file
+ 	This interface exist for `FCB`, `FSB` setVariableTypes` option (ref [Add]
  
 	- execEditTargetFileName(  
         	targetVariable: rename target command variable string,  
@@ -938,7 +952,8 @@ This, so colled, android app row code library.
         	prefix: file select direcotry grep prefix string,  
 		suffix: file select direcotry grep suffix string,  
         	scriptFilePath: fannel path string  
-    	)  
+    	)
+		- edit targetVariable value and update view by form dialog
 
 
  - JsEdit  
@@ -947,24 +962,26 @@ This, so colled, android app row code library.
 	- jsEdit.getFromEditText(
 		targetVariableName: String,
 	    )
-		-> target variable value stirng  
+		-> get target variable value stirng  from view
 	    
  	- jsEdit.updateEditText(
 		updateVariableName: String,
 		updateVariableValue: String
-	  )   
+	  )
+		- update `updateVariableName` view value
 	
-	- jsEdit.onSpinnerUpdateForTermFragment(
-		spinnerId: Int,
+	- jsEdit.updateSpinner(
+		updateVariableName: String,
 		variableValue: String
 	  )
+		- update `updateVariableName` spinner view selected value
 
 	- jsEdit.updateByVariable(
 		fannelScriptPath: String,
 		targetVariableName: String,
 		updateVariableValue: String,
 	    ) 
-     		-> update target variable value
+     		-> update target variable  value
 
 	- jsEdit.removeFromEditHtml(
 		editPath: String(edit site source path),
@@ -983,14 +1000,14 @@ This, so colled, android app row code library.
 		csvOrTsv: String,
 		limitRowNumSource: Int
 	  )
-		-> save csv or tsv instance with tag, also header   
+		- save csv or tsv instance with tag, also header   
 	 
 	- jsCsv.readM(
 		tag: String,
 		csvString: String,
 		csvOrTsv: String,
 	 )
-		-> save csv or tsv instance with tag  
+		- save csv or tsv instance with tag  
 	 
  	- jsCsv.takeRowSize(
 		tag: String
@@ -1138,7 +1155,8 @@ This, so colled, android app row code library.
 		onTrack: String(empty or notEmply(on Track)),    
 		speed: String(int string)    
 		pitch: String(int string)  
-	)  
+	)
+		- execute text to speech 
 	  
 	- jsTextToSpeech.stop()
 
