@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
+import android.graphics.Bitmap
 import android.net.Uri
 import android.text.InputType
 import android.view.Gravity
@@ -47,6 +48,11 @@ object WebChromeClientSetter {
                     fileChooserParams
                 )
                 return true
+            }
+
+
+            override fun getDefaultVideoPoster(): Bitmap? {
+                return Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
             }
 
             override fun onJsAlert(

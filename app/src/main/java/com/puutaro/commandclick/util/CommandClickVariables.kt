@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 
 
 object CommandClickVariables {
@@ -93,5 +94,26 @@ object CommandClickVariables {
             variablesSettingHolderList,
             CommandClickScriptVariable.EDIT_EXECUTE
         ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
+    }
+
+    fun makeConfigContentsList(
+    ): List<String> {
+        val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
+        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
+        val configDirName = cmdclickConfigFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return ReadText(
+            cmdclickSystemAppDirPath,
+            cmdclickConfigFileName
+        ).readText().let {
+            ScriptPreWordReplacer.replace(
+                it,
+                cmdclickSystemAppDirPath,
+                configDirName,
+                cmdclickConfigFileName,
+            )
+        }.split("\n")
     }
 }

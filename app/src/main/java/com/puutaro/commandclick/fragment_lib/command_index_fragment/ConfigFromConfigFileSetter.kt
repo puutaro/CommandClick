@@ -1,20 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
-import java.io.File
 
 object ConfigFromConfigFileSetter {
     fun set(
         cmdIndexFragment: CommandIndexFragment
     ){
-
-        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -28,10 +23,7 @@ object ConfigFromConfigFileSetter {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            ReadText(
-                UsePath.cmdclickSystemAppDirPath,
-                cmdclickConfigFileName
-            ).textToList(),
+            CommandClickVariables.makeConfigContentsList(),
             settingSectionStart,
             settingSectionEnd
         )

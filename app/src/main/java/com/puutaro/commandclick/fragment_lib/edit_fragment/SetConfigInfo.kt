@@ -2,27 +2,20 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 
 object SetConfigInfo {
     fun set(
         editFragment: EditFragment
     ){
-
+        val configConList = CommandClickVariables.makeConfigContentsList()
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            ReadText(
-                UsePath.cmdclickSystemAppDirPath,
-                UsePath.cmdclickConfigFileName
-            ).textToList(),
+            configConList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
         )
-
-
         editFragment.historySwitch =  SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
