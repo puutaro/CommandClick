@@ -68,7 +68,7 @@ Table of Contents
 
 App installation
 -----  
-- Anadroid 8+  
+- Android 8+  
 Reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
 Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
 
