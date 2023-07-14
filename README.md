@@ -250,10 +250,11 @@ ${variable name2}:
 	ex)
 	 
 	```js.js
-	 jsf '${01}'
+	 jsf '${01}/${02}'
 	```
 	
-	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
+	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)
+   
 	ex)
 	
 	```js.js
