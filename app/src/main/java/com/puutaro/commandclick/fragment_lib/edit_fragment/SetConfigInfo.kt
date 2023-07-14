@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -10,7 +11,10 @@ object SetConfigInfo {
     fun set(
         editFragment: EditFragment
     ){
-        val configConList = CommandClickVariables.makeConfigContentsList()
+        val configConList = CommandClickVariables.makeScriptContentsList(
+            UsePath.cmdclickSystemAppDirPath,
+            UsePath.cmdclickConfigFileName
+        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             configConList,
             editFragment.settingSectionStart,

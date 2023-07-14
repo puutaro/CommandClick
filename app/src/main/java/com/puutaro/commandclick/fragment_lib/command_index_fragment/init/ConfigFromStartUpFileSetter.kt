@@ -16,10 +16,6 @@ object ConfigFromStartUpFileSetter {
     ){
 
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
-        val startupFannelDirName = cmdclickStartupJsName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -34,20 +30,13 @@ object ConfigFromStartUpFileSetter {
         ) as String
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            ReadText(
+            CommandClickVariables.makeScriptContentsList(
                 currentAppDirPath,
                 cmdclickStartupJsName
-            ).textToList(),
+            ),
             settingSectionStart,
             settingSectionEnd
-        )?.joinToString("\n")?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                startupFannelDirName,
-                cmdclickStartupJsName,
-            )
-        }?.split("\n")
+        )
 
         cmdIndexFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,

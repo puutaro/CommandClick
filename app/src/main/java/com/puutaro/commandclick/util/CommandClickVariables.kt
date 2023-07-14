@@ -96,23 +96,24 @@ object CommandClickVariables {
         ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
     }
 
-    fun makeConfigContentsList(
+    fun makeScriptContentsList(
+        currentAppDirPath: String,
+        scriptName: String,
+
     ): List<String> {
-        val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
-        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val configDirName = cmdclickConfigFileName
+        val configDirName = scriptName
             .removeSuffix(UsePath.JS_FILE_SUFFIX)
             .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         return ReadText(
-            cmdclickSystemAppDirPath,
-            cmdclickConfigFileName
+            currentAppDirPath,
+            scriptName
         ).readText().let {
             ScriptPreWordReplacer.replace(
                 it,
-                cmdclickSystemAppDirPath,
+                currentAppDirPath,
                 configDirName,
-                cmdclickConfigFileName,
+                scriptName,
             )
         }.split("\n")
     }

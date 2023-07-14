@@ -37,10 +37,10 @@ object ConfigFromStartUpFileSetterForTerm {
 
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
-            ReadText(
+            CommandClickVariables.makeScriptContentsList(
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
-            ).textToList(),
+            ),
             settingSectionStart,
             settingSectionEnd
         )
@@ -83,12 +83,6 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
-            settingVariableListFromConfig,
-            CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-            String()
-        )
-
         val currentScriptFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
             sharePref,
             SharePrefferenceSetting.current_script_file_name
@@ -100,31 +94,54 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment,
             terminalFragment.currentAppDirPath
         )
+        val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
         val currentScriptFileName = if (
             terminalFragment.tag ==
             terminalFragment.context?.getString(
                 R.string.index_terminal_fragment
             )
-        ) UsePath.cmdclickStartupJsName
+        ) cmdclickStartupJsName
         else currentScriptFileNameSource
 
+        if(
+            currentScriptFileName != cmdclickStartupJsName
+        ){
+            val settingVariableListFromStartup = CommandClickVariables.substituteVariableListFromHolder(
+                CommandClickVariables.makeScriptContentsList(
+                    terminalFragment.currentAppDirPath,
+                    cmdclickStartupJsName
+                ),
+                settingSectionStart,
+                settingSectionEnd
+            )
+            terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+                String()
+            )
+
+            terminalFragment.srcAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+                String()
+            )
+
+            terminalFragment.imageLongPressMenuFilePath = SettingVariableReader.getStrValue(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+                String()
+            )
+        }
 
         val fannelDirName = currentScriptFileName
             .removeSuffix(UsePath.JS_FILE_SUFFIX)
             .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            ReadText(
+            CommandClickVariables.makeScriptContentsList(
                 terminalFragment.currentAppDirPath,
                 currentScriptFileName
-            ).readText().let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    terminalFragment.currentAppDirPath,
-                    fannelDirName,
-                    terminalFragment.currentScriptName,
-                )
-            }.split("\n"),
+            ),
             settingSectionStart,
             settingSectionEnd
         )
@@ -202,23 +219,36 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR,
             terminalFragment.terminalFontColor
         )
-
-        terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+        val srcImageAnchorLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
             String()
         )
+        if(
+            srcImageAnchorLongPressMenuFilePathSource.isNotEmpty()
+        ) terminalFragment.srcImageAnchorLongPressMenuFilePath =
+            srcImageAnchorLongPressMenuFilePathSource
 
-        terminalFragment.srcAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
+        val srcAnchorLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
             String()
         )
+        if(
+            srcAnchorLongPressMenuFilePathSource.isNotEmpty()
+        ) terminalFragment.srcAnchorLongPressMenuFilePath =
+            srcAnchorLongPressMenuFilePathSource
 
-        terminalFragment.imageLongPressMenuFilePath = SettingVariableReader.getStrValue(
+
+        val imageLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
             String()
         )
+        if(
+            imageLongPressMenuFilePathSource.isNotEmpty()
+        ) terminalFragment.imageLongPressMenuFilePath =
+            imageLongPressMenuFilePathSource
+
     }
 }

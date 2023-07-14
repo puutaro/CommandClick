@@ -1,11 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
-import java.io.File
 
 object ConfigFromScriptFileSetter {
 
