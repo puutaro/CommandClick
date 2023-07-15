@@ -168,7 +168,94 @@ At the same time, if you installed code editor, edit new file.
 - In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
 
 
+`setReplaceVariables` usage  
+
+- This option is specified global enviroment variable  
+- This option is specified multiply  
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="settingVariables=editSettingVariables"
+setReplaceVariables="currentAppDirPath=${01}"
+setReplaceVariables="currentFannelDirPath=${currentAppDirPath}/${001}"
+setVariableTypes:GB="file://${01}/${001}/setVariableTypes.js"
+/// SETTING_SECTION_END
+
+
+const currentFannelDirPath = "${currentFannelDirPath}"
+.
+.
+.
+```
+
+
+**[Recommend]**   
+`setReplaceVariables` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+/// SETTING_SECTION_END
+```
+
+setReplaceVariables.js
+
+```setReplaceVariables.js
+setReplaceVariables="settingVariables=editSettingVariables",
+setReplaceVariables="currentAppDirPath=${01}",
+setReplaceVariables="currentFannelDirPath=${currentAppDirPath}/${001}",
+```
+
+- How to write about `setReplaceVariables.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent, newline, and comment out by `//` or `#`
+
+```setReplaceVariables.js
+
+# replace variable1 description
+settingVariables=
+	"editSettingVariables",
+// replace variable2 description
+currentAppDirPath=
+	"${01}",
+// replace variable3 description
+setReplaceVariables=
+	"currentFannelDirPath=${currentAppDirPath}/${001}",
+
+```
+
+
 `setVariableType` Option usage  
+
+- This setting is applied to command variable
+- This setting can be specify multiply.
+- `setReplaceVariables` can apply to this.
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="txtPdfPath:GB=listPath=${currentFannelDirPath}/listfile!limitNum=10"
+TTS_PLAY:BTN=cmd="jsf '{0}' play"
+.
+.
+.
+/// SETTING_SECTION_END
+
+
+/// CMD_VARIABLE_SECTION_START
+txtPdfPath=""
+TTS_PLAY=""
+.
+.
+.
+/// CMD_VARIABLE_SECTION_END
+
+
 - This option can be combined
 
 ex1)  
@@ -195,7 +282,9 @@ setVariableTypes="${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=but
 ex3)  
 
 ```js.js
+/// SETTING_SECTION_START
 setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3"
+/// SETTING_SECTION_END
 ```
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
@@ -204,7 +293,9 @@ setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}'
 `setVariableType` can specify file path like bellow. 
   
 ```js.js
+/// SETTING_SECTION_START
 setVariableType="file://${01}/${001}/setVariableType.js"
+/// SETTING_SECTION_END
 ```
 
 setVariableType.js
@@ -214,9 +305,11 @@ ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cm
 ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
 ```
 
-- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
+- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent, newline, and comment out by `//` or `#`
 
 ```setVariableTypes.js
+
+// variable name1 description
 ${variable name1}:  
 	      LBL:TXT:LSB:BTN=  
 			     label=test label  
@@ -225,6 +318,7 @@ ${variable name1}:
 			     |  
 				       cmd=jsf '${0}' exmple  
 						!label=button label,
+# variable name2 description
 ${variable name2}:  
               HL:BTN=label=  
 			     cmd=jsf '${0}' exmple  
@@ -232,10 +326,90 @@ ${variable name2}:
 
 ```
 
+`hideSettingVariables` usage
 
-  
-  
+- This option is used in order to take appearance sinply by hiding setting variables  
+- This option is specified multiply  
 
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}/setVariableTypes.js"
+hideSettingVariables="setReplaceVariables"
+hideSettingVariables="setVariableTypes"
+/// SETTING_SECTION_END
+
+```
+
+
+**[Recommend]**   
+
+
+`hideSettingVariables` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}setVariableTypes.js"
+hideSettingVariables="file://${01}/${001}/hideSettingVariables.js"
+/// SETTING_SECTION_END
+```
+
+setReplaceVariables.js
+
+```setReplaceVariables.js
+// setReplace variables comment
+setReplaceVariables,
+"setVariableTypes",
+```
+
+ignoreHistoryPaths usage
+
+- This option is used in order to certain url ignore like `grep -v`  
+- This option is specified multiply  
+
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+ignoreHistoryPaths="${currentAppDirPath}"
+ignoreHistoryPaths="hogehoge"
+/// SETTING_SECTION_END
+
+```
+
+
+**[Recommend]**   
+
+
+`ignoreHistoryPaths` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}/setVariableTypes.js"
+ignoreHistoryPaths="file://${01}/${001}/hideSettingVariables.js"
+/// SETTING_SECTION_END
+```
+
+ignoreHistoryPaths.js
+
+```ignoreHistoryPaths.js
+// ignoreHistoryPaths comment
+"${currentAppDirPath}",
+"hogehoge",
+```
 
 - button option usage
 
