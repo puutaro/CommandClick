@@ -1,20 +1,38 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
+import android.content.DialogInterface
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Handler
 import android.os.Looper
+import android.text.Html
+import android.text.Spannable
+import android.text.SpannableString
+import android.util.Log
+import android.view.Gravity
+import android.view.ViewGroup
 import android.webkit.WebView
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import androidx.core.text.HtmlCompat
+import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.FileTempDownloader
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.ImageTempDownloader
-import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.BitmapTool
+import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.FileSystems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 object ImageOnLongClickListener {
@@ -22,6 +40,7 @@ object ImageOnLongClickListener {
     fun set(
         terminalFragment: TerminalFragment
     ) {
+        val context = terminalFragment.context
         val activity = terminalFragment.activity
         val binding = terminalFragment.binding
         val terminalWebView = binding.terminalWebView
@@ -45,15 +64,10 @@ object ImageOnLongClickListener {
                     ) {
                         val longPressImageUrl = hitTestResult.extra
                             ?: return@setOnLongClickListener false
-//                        ImageTempDownloader.download(
-//                            terminalFragment,
-//                            longPressImageUrl
-//                        )
                         longPressForImage.launch(
                             terminalWebView.title,
                             longPressImageUrl,
                             currentUrl
-
                         )
                     }
                     false

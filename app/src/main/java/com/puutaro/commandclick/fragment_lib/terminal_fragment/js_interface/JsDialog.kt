@@ -5,8 +5,10 @@ import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.FormJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.GridJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.SpanableJsDialog
 
 class JsDialog(
     terminalFragment: TerminalFragment
@@ -25,6 +27,14 @@ class JsDialog(
     )
 
     val gridJsDialog = GridJsDialog(
+        terminalFragment
+    )
+
+    val spanableJsDialog = SpanableJsDialog(
+        terminalFragment
+    )
+
+    val imageJsDialog = ImageJsDialog(
         terminalFragment
     )
 
@@ -86,6 +96,28 @@ class JsDialog(
             title,
             message,
             imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun spannableDialog(
+        title: String,
+        htmlSpannableStr: String
+    ){
+       spanableJsDialog.create(
+           title,
+           htmlSpannableStr
+       )
+    }
+
+    @JavascriptInterface
+    fun imageDialog(
+        title: String,
+        imageSrcFilePath: String
+    ){
+        imageJsDialog.create(
+            title,
+            imageSrcFilePath
         )
     }
 }

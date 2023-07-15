@@ -1,14 +1,14 @@
 package com.puutaro.commandclick.proccess.lib
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.util.DpHeightCalculator
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 
 object SearchTextLinearWeight {
 
     fun calculate(
         fragment: Fragment
     ): Float {
-        val dpHeight = DpHeightCalculator.calculate(fragment)
+        val dpHeight = ScreenSizeCalculator.dpHeight(fragment)
         val hideShowRate =
             if(dpHeight > 730f) 60f / dpHeight
             else if(dpHeight > 670f) 0.01f

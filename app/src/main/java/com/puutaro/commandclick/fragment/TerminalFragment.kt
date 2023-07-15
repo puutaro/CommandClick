@@ -93,6 +93,7 @@ class   TerminalFragment: Fragment() {
     ): View {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.readlinesNum = ReadLines.SHORTH
+        terminalViewModel.tempSpannable = null
 
         outputFileLength = savedInstanceState?.getInt("outputFileLength")
             ?:arguments?.getInt("outputFileLength") ?: 0

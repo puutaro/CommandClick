@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.view_model.activity
 
+import android.text.Spannable
 import androidx.lifecycle.ViewModel
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
@@ -29,6 +30,7 @@ class TerminalViewModel: ViewModel() {
     var isStop = false
     var multiSelectTabString = String()
     var jsExecuteJob: Job? = null
+    var tempSpannable: Spannable? = null
 }
 
 

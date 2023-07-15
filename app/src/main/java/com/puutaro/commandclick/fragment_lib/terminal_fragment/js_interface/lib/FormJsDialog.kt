@@ -225,7 +225,7 @@ class FormJsDialog(
     private fun makeVirtualJsContentsList(
         formSettingVariables: String,
         formCommandVariables: String
-    ): List<String>? {
+    ): List<String> {
         val setVariableTypeSource =
             formSettingVariables
                 .split("\t")

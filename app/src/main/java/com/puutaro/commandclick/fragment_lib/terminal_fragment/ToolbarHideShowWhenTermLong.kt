@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
-import com.puutaro.commandclick.util.DpHeightCalculator
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -82,7 +82,7 @@ private fun execHideShow(
 private fun getScreenHeight(
     terminalFragment: TerminalFragment
 ): Int {
-    val dpHeight = DpHeightCalculator.calculate(
+    val dpHeight = ScreenSizeCalculator.dpHeight(
         terminalFragment
     )
     val hideShowRate =

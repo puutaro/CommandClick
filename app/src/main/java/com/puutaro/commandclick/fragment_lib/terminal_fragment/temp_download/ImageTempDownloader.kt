@@ -9,6 +9,7 @@ import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,14 +17,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
+import java.math.BigInteger
+import java.security.MessageDigest
 import java.util.regex.Matcher
 import java.util.regex.Pattern
+import java.util.zip.CRC32
+import java.util.zip.Checksum
 
 
 object ImageTempDownloader {
 
-    private val cmdclickTempDownloadDirPath = UsePath.cmdclickTempDownloadDirPath
-    private val tempFileName = "temp"
+    private val cmdclickTempDownloadDirPath =
+        UsePath.cmdclickTempDownloadDirPath
 
     fun download(
         terminalFragment: TerminalFragment,
@@ -59,25 +64,22 @@ object ImageTempDownloader {
     ){
         val context = terminalFragment.context
         val bitmap =
-            withContext(Dispatchers.IO) {
-                Glide.with(terminalFragment.activity as FragmentActivity)
-                    .asBitmap()
-                    .load(url)
-                    .submit()
-                    .get()
-            }
+            makeBitMap(
+                terminalFragment,
+                url
+            )
+        val imageName = BitmapTool.hash(
+            bitmap
+        )
         val file = File(
             cmdclickTempDownloadDirPath,
-            "$tempFileName.png"
+            "$imageName.png"
         )
         // ③
         withContext(Dispatchers.IO) {
             FileOutputStream(file).use { stream ->
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             }
-        }
-        withContext(Dispatchers.Main) {
-            finishToast(context)
         }
     }
 
@@ -98,9 +100,12 @@ object ImageTempDownloader {
                 .first()
 
             val byteArr: ByteArray = Base64.decode(attachment, Base64.DEFAULT)
+            val crc32: Checksum = CRC32()
+            crc32.update(byteArr, 0, byteArr.size)
+            val imageName = crc32.value
             val f = File(
                 cmdclickTempDownloadDirPath,
-                "$tempFileName.$extend"
+                "$imageName.$extend"
             )
             withContext(Dispatchers.IO) {
                 f.createNewFile()
@@ -114,12 +119,26 @@ object ImageTempDownloader {
             withContext(Dispatchers.IO) {
                 fo.close()
             }
-            withContext(Dispatchers.Main) {
-                finishToast(context)
-            }
+//            withContext(Dispatchers.Main) {
+//                finishToast(context)
+//            }
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
         }
+    }
+
+
+    suspend fun makeBitMap(
+        terminalFragment: TerminalFragment,
+        url: String
+    ): Bitmap {
+        return withContext(Dispatchers.IO) {
+                Glide.with(terminalFragment.activity as FragmentActivity)
+                    .asBitmap()
+                    .load(url)
+                    .submit()
+                    .get()
+            }
     }
 
     private fun parseBase64(
@@ -130,7 +149,10 @@ object ImageTempDownloader {
         ) return String()
         try {
             val pattern: Pattern =
-                Pattern.compile("((?<=base64,).*\\s*)", Pattern.DOTALL or Pattern.MULTILINE)
+                Pattern.compile(
+                    "((?<=base64,).*\\s*)",
+                    Pattern.DOTALL or Pattern.MULTILINE
+                )
             val matcher: Matcher = pattern.matcher(base64)
             return if (matcher.find()) {
                 matcher.group().toString()
