@@ -68,7 +68,7 @@ Table of Contents
 
 App installation
 -----  
-- Anadroid 8+  
+- Android 8+  
 Reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
 Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
 
@@ -165,7 +165,97 @@ At the same time, if you installed code editor, edit new file.
     | `CLR` | select color button  | {variableName}:CLR= |
     | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
 
+- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+
+
+`setReplaceVariables` usage  
+
+- This option is specified global enviroment variable  
+- This option is specified multiply  
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="settingVariables=editSettingVariables"
+setReplaceVariables="currentAppDirPath=${01}"
+setReplaceVariables="currentFannelDirPath=${currentAppDirPath}/${001}"
+setVariableTypes:GB="file://${01}/${001}/setVariableTypes.js"
+/// SETTING_SECTION_END
+
+
+const currentFannelDirPath = "${currentFannelDirPath}"
+.
+.
+.
+```
+
+
+**[Recommend]**   
+`setReplaceVariables` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+/// SETTING_SECTION_END
+```
+
+setReplaceVariables.js
+
+```setReplaceVariables.js
+setReplaceVariables="settingVariables=editSettingVariables",
+setReplaceVariables="currentAppDirPath=${01}",
+setReplaceVariables="currentFannelDirPath=${currentAppDirPath}/${001}",
+```
+
+- How to write about `setReplaceVariables.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent, newline, and comment out by `//` or `#`
+
+```setReplaceVariables.js
+
+# replace variable1 description
+settingVariables=
+	"editSettingVariables",
+// replace variable2 description
+currentAppDirPath=
+	"${01}",
+// replace variable3 description
+setReplaceVariables=
+	"currentFannelDirPath=${currentAppDirPath}/${001}",
+
+```
+
+
 `setVariableType` Option usage  
+
+- This setting is applied to command variable
+- This setting can be specify multiply.
+- `setReplaceVariables` can apply to this.
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="txtPdfPath:GB=listPath=${currentFannelDirPath}/listfile!limitNum=10"
+TTS_PLAY:BTN=cmd="jsf '{0}' play"
+.
+.
+.
+/// SETTING_SECTION_END
+
+
+/// CMD_VARIABLE_SECTION_START
+txtPdfPath=""
+TTS_PLAY=""
+.
+.
+.
+/// CMD_VARIABLE_SECTION_END
+
+
 - This option can be combined
 
 ex1)  
@@ -192,7 +282,9 @@ setVariableTypes="${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=but
 ex3)  
 
 ```js.js
+/// SETTING_SECTION_START
 setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}' exmple!label=button label3"
+/// SETTING_SECTION_END
 ```
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
@@ -201,7 +293,9 @@ setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}'
 `setVariableType` can specify file path like bellow. 
   
 ```js.js
+/// SETTING_SECTION_START
 setVariableType="file://${01}/${001}/setVariableType.js"
+/// SETTING_SECTION_END
 ```
 
 setVariableType.js
@@ -211,9 +305,11 @@ ${variable name1}:LBL:TXT:LSB:BTN=label=test label|listPath=${list file path}|cm
 ${variable name2}:HL:BTN=label=cmd=jsf '${0}' exmple!label=button label2,
 ```
 
-- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent and newline
+- How to write about `setVariableTypes.js` is above same.  But, must be comma in variable definition end. Instead, you can use indent, newline, and comment out by `//` or `#`
 
 ```setVariableTypes.js
+
+// variable name1 description
 ${variable name1}:  
 	      LBL:TXT:LSB:BTN=  
 			     label=test label  
@@ -222,6 +318,7 @@ ${variable name1}:
 			     |  
 				       cmd=jsf '${0}' exmple  
 						!label=button label,
+# variable name2 description
 ${variable name2}:  
               HL:BTN=label=  
 			     cmd=jsf '${0}' exmple  
@@ -229,27 +326,110 @@ ${variable name2}:
 
 ```
 
+`hideSettingVariables` usage
 
-  
-  
-- In `FSB`, `FGB`, {grep suffix} have `NoExtend` macro, It display no extend file list
+- This option is used in order to take appearance sinply by hiding setting variables  
+- This option is specified multiply  
 
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}/setVariableTypes.js"
+hideSettingVariables="setReplaceVariables"
+hideSettingVariables="setVariableTypes"
+/// SETTING_SECTION_END
+
+```
+
+
+**[Recommend]**   
+
+
+`hideSettingVariables` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}setVariableTypes.js"
+hideSettingVariables="file://${01}/${001}/hideSettingVariables.js"
+/// SETTING_SECTION_END
+```
+
+setReplaceVariables.js
+
+```setReplaceVariables.js
+// setReplace variables comment
+setReplaceVariables,
+"setVariableTypes",
+```
+
+ignoreHistoryPaths usage
+
+- This option is used in order to certain url ignore like `grep -v`  
+- This option is specified multiply  
+
+
+
+ex)
+
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+ignoreHistoryPaths="${currentAppDirPath}"
+ignoreHistoryPaths="hogehoge"
+/// SETTING_SECTION_END
+
+```
+
+
+**[Recommend]**   
+
+
+`ignoreHistoryPaths` can specify file path like bellow.   
+But, setReplaceVariable cannot use in file path.  
+(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+  
+```js.js
+/// SETTING_SECTION_START
+setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setVariableTypes="file://${01}/${001}/setVariableTypes.js"
+ignoreHistoryPaths="file://${01}/${001}/hideSettingVariables.js"
+/// SETTING_SECTION_END
+```
+
+ignoreHistoryPaths.js
+
+```ignoreHistoryPaths.js
+// ignoreHistoryPaths comment
+"${currentAppDirPath}",
+"hogehoge",
+```
 
 - button option usage
 
 	ex)
 	
 	```js.js
-	jsf '${0}' (`jsf` execute javascript file path  
+	jsf '${0}' 
 	```
+ 	- `jsf` execute javascript file path
+    
 	
 	ex)
 	 
 	```js.js
-	 jsf '${01}'
+	 jsf '${01}/${02}'
 	```
 	
-	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)  
+	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)
+  	- [ref pre order word](#javascript-pre-order-word)  
+   
 	ex)
 	
 	```js.js
@@ -636,60 +816,89 @@ ex) am broadcast \
 This, so colled, android app row code library.
 
 ```js.js
- - jsFileStystem  
+
+ - jsFileStystem
+
  	- jsFileStystem.showFileList(
 		dirPath: String
-          )  -> return filelist tab sepalated   
+          )
+		-> return filelist tab sepalated
+ 
 	- jsFileStystem.showDirList(
 		dirPath: String
-	  )  -> return filelist tab sepalated   
+	  )
+		-> return filelist tab sepalated
+ 
  	- jsFileStystem.readLocalFile(
 		path: String
-	   ) ->  read local file and return file contents string  
+	   )
+		->  read local file and return file contents string
+
 	- jsFileStystem.writeLocalFile(
 		path: String, contents: String
-	  )  - write local file
+	  )
+		- write local file
+
 	- jsFileStystem.jsFile(
 		filename: String,
 		terminalOutPutOption: String
-	  ) - write local monitor file  
+	  )
+		- write local monitor file  
 	- jsFileStystem.removeFile(
 		path: String
-          ) - remove local file  
+          )
+		- remove local file
+ 
 	- jsFileStystem.createDir(
 		path: String
-	  ) - creaate local dirctory 
+	  )
+		- creaate local dirctory
+
 	- jsFileStystem.removeDir(
 		path: String
-	)  - remove local direcotry   
+	)
+		- remove local direcotry
+
 	- jsFileStystem.copyDir(
 		sourcePath: String,
 		destiDirPath: String
-	  )  - copy local directory 
+	  )
+		- copy local directory
+
 	- jsFileSystem.outputSwitch(
 		switch: String
-	) -> switch == on, then enable terminal output.
+	)
+		- switch == on, then enable terminal output.
                         other default.
-                        (althogh being webmode, terminal mode off, this inmterface switch on)   
+                        (althogh being webmode, terminal mode off, this inmterface switch on)
+ 
 	- jsFileSystem.isFile(
 		filePath: String
-	   ) -> boolean   
+	   )
+		-> boolean
+
 	- jsFileSystem.isDir(
 		DirectoryPath: String
-	   ) -> boolean   
+	   )
+		-> boolean   
 
 
- - JsArgs 
-	- jsArgs.get() -> tabsepalete string  
-		jsArgs soruce is jsf argument in edit  
-		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
-			-> `fristargment`\t`secondargument 2`  
+ - JsArgs
+
+	- jsArgs.get()
+		-> tabsepalete string  
+			jsArgs soruce is jsf argument in edit  
+			ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
+				-> `fristargment`\t`secondargument 2`  
 
 	- jsArgs.set(
 		tabsepalete string
-	    ) -> argment set (ex "{arg1}\t{arg2}\t..")  
+	    )
+		-> argment set (ex "{arg1}\t{arg2}\t..")  
+
 
  - JsIntent
+
  	- jsIntent.launchEditSite(
 		editPath: String,
 		srcPath: String,
@@ -697,10 +906,14 @@ This, so colled, android app row code library.
 		onSortableJs: String(true/false),
 		onClickUrl: String(true/false),
 		filterCode: String
-	  )  - ref: [html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)  
+	  )
+		- ref: [html automaticaly creation command to edit target edit file]
+
  	- jsIntent.launchUrl(
 		urlString: String
-          )  -> launch uri(not url but uri)
+          )
+		-> launch uri(not url but uri)
+
 	- jsIntent.launchApp(
 		action: String,
 		uriString: String,
@@ -709,7 +922,9 @@ This, so colled, android app row code library.
 		extraLong: tabSepalatedString,
 		extraFloat: tabSepalatedString
 	   )
-			ex) bellow, launch google calendar  
+		- launch app site
+
+		ex) bellow, launch google calendar  
 			jsIntent.launchApp(
 				"android.intent.action.INSERT",
 				"content://com.android.calendar/events",
@@ -717,17 +932,22 @@ This, so colled, android app row code library.
 				"",
 				beginTime=167889547868058\tendTime=165678973498789",
 				""
-			);  
+			);
+
 	- jsIntent.launchShortcut(
 		currentAppDirPath: String,
 		currentShellFileName: String
-	    ) -> launch index and fannel  
+	    )
+		- launch index and fannel  
 
 
  - JsDialog
+
  	- jsDialog.listJsDialog(
 		listSource: String(tab sepalate)
-	   ) -> selected list
+	   )
+		-> selected list
+
  	- jsDialog.formJsDialog(
 		formSettingVariables: String(tab sepalate),
 		formCommandVariables: String(tab sepalate)
@@ -746,8 +966,9 @@ This, so colled, android app row code library.
 		title: String,  
 		currentItemListStr: String(tab sepalate),  
 		preSelectedItemListStr: String(tab sepalate),  
-	    ) -> tab sepalated items
- 		 - ex) 
+	    )
+		-> tab sepalated items
+ 		 	- ex) 
  				jsDialog.multiListDialog(
 					"{item1}\t{item2}",  
 					`{item1}\t{item2}\t{item3}\t{item4}`  
@@ -756,93 +977,146 @@ This, so colled, android app row code library.
 				
 				
  - JsStop
- 	- jsStop.how() (measure for `while roop` crush when application focus out)
+
+ 	- jsStop.how()
+		-> Boolean
+		(measure for `while roop` crush when application focus out)
+
+
  - JsToast
+
  	- jsToast.short(
 		contents: string
-	  )   
+	  )
+		- short toast
+
 	- jsToast.long(
 		contents: string
-	  )   
+	  )
+		- long toast
+
+
  - JsCurl
+
  	- jsCurl.get(
 		mainUrl: string,
 		queryParameter: String,
 		header: String(ex Authorication\tbear token,contentType\ttext/plain..),
 		Timeout: Int (miliSeconds)
 	  )
+		-> get response
+
 	- jsCurl.getTextOrPdf(
 		url: text or pdf url
 	   )
+		-> text or pdf file  
+
+
  - JsUtil
+
  	- jsUtil.sleep(
 		sleepMiriTime: Int
-	  )   
+	  )
+		- sleep miri seconds
+
 	- jsUtil.copyToClipboard(
 		copyString: String,
 		fontSize: Int
-	  )  
+	  )
+		- copy to clipboard
+
 	- jsUtil.echoFromClipboard()
-		-> primary clipboard string  
+		-> primary clipboard string
+
 	- jsUtil.convertDateTimeToMiliTime(
 		datetime: String(YYYY-MM-DDThh:mm)
-	   ) -> militime  
+	   )
+		-> militime
+
+
  - JsUrl
+
  	- jsUrl.makeJsUrl(
 		jsPath: String
-	  ) -> javascript:(
-		function() { ${jsPathCoontents} }
-	  )();  
+	  )
+		-> javascript:(
+			function() { ${jsPathCoontents} }
+	  	   )();
+
 	- jsUrl.loadUrl(
 		urlString: String
-          )  
+          )
+		-> load url by webview  
 
- - JsScript  
+
+ - JsScript
+
  	- jsScript.subLabelingVars(
 		jsContents: String
-	  ) -> Labeling Section Contents  
+	  )
+		-> Labeling Section Contents
+
 	- jsScript.subSettingVars(
 		jsContents: String
-	  ) -> Setting Section Contents  
+	  )
+		-> Setting Section Contents
+
 	- jsScript.subCmdVars(
 		jsContents: String
-	  ) -> Comamnd Section Contents  
+	  )
+		-> Comamnd Section Contents
+
 	- jsScript.subValOnlyValue(
 		targetVariableName: String,
 		VariableValueStringContents: String
-	  )  ->  Variable value String Contents  
+	  )
+		->  Variable value String Contents
+
 	- jsScript.bothQuoteTrim(
 		VariableValueString: String
 	  ) -> VariableValueString removed both edge quote  
 	- jsScript.replaceSettingVariable(
 		scriptContents: String,
 		replaceTabList: String
-	  ) -> File contents String  
+	  )
+		-> File contents String
+
 	- jsScript.replaceVariableInHolder(
 		scriptContents: String,
 		replaceTabList: String
-	  ) -> File contents String  
+	  )
+		-> File contents String  
 
- - JsListSelect  
+
+ - JsListSelect
+	This interface exist for `LSB`, `ELSB`, `GB` and `MSB` `setVariableTypes` option (ref [Add]
+
  	update or remove method for editable list file checkbox 
  	- jsListSelect.updateListFileCon(
 		targetListFilePath: String,
 		itemText: String
-	  )  
+	  )
+		- update `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
+
 	- jsListSelect.removeItemInListFileCon(
 		targetListFilePath: String,
 		itemText: String
 	  )
+		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
+
 	- jsListSelect.wrapRemoveItemInListFileCon(
                 targetListFilePath: String,  
                 removeTargetItem: String,  
                 currentScriptPath: String,  
                 replaceTargetVariable: String = String(),  
                 defaultVariable: String = String()  
-          )  
+          )
+		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` and update View
 
- - JsFileSelect  
- 	edit selected file  
+
+ - JsFileSelect
+ 	This interface exist for `FCB`, `FSB` setVariableTypes` option (ref [Add]
+ 
 	- execEditTargetFileName(  
         	targetVariable: rename target command variable string,  
         	renameVariable: rename destination command variable String,  
@@ -852,50 +1126,73 @@ This, so colled, android app row code library.
         	prefix: file select direcotry grep prefix string,  
 		suffix: file select direcotry grep suffix string,  
         	scriptFilePath: fannel path string  
-    	)  
+    	)
+		- edit targetVariable value and update view by form dialog
+
 
  - JsEdit  
- 	`edit component` edit tool   
+ 	`edit component` edit tool
+
 	- jsEdit.getFromEditText(
 		targetVariableName: String,
-	    ) -> target variable value stirng  
+	    )
+		-> get target variable value stirng  from view
 	    
- 	- jsEdit.updateEditText(updateVariableName: String, updateVariableValue: String)   
+ 	- jsEdit.updateEditText(
+		updateVariableName: String,
+		updateVariableValue: String
+	  )
+		- update `updateVariableName` view value
 	
-	- jsEdit.onSpinnerUpdateForTermFragment(spinnerId: Int, variableValue: String)   
+	- jsEdit.updateSpinner(
+		updateVariableName: String,
+		variableValue: String
+	  )
+		- update `updateVariableName` spinner view selected value
+
 	- jsEdit.updateByVariable(
 		fannelScriptPath: String,
 		targetVariableName: String,
 		updateVariableValue: String,
-	    ) -> update target variable value  
+	    ) 
+     		-> update target variable  value
+
 	- jsEdit.removeFromEditHtml(
 		editPath: String(edit site source path),
 		removeUri: String(remove uri)
-	)  ->    remoev uri from edit site source  
+	)
+		-> remoev uri from edit site source  
 
 
- - JsCsv  
- 	csv edit tool   
+ - JsCsv
+ 	csv edit tool
+
 	- jsCsv.read(
 		tag: String,
 		csvPath: String,
 		withNoHeader: String,
 		csvOrTsv: String,
 		limitRowNumSource: Int
-	  ) -> save csv or tsv instance with tag, also header   
+	  )
+		- save csv or tsv instance with tag, also header   
 	 
 	- jsCsv.readM(
 		tag: String,
 		csvString: String,
 		csvOrTsv: String,
-	 ) -> save csv or tsv instance with tag  
+	 )
+		- save csv or tsv instance with tag  
 	 
  	- jsCsv.takeRowSize(
 		tag: String
-   	  ) -> rowSize about csv(tsv) with tag  
+   	  )
+		-> rowSize about csv(tsv) with tag
+
 	- jsCsv.takeColSize(
 		tag: String
-	  ) -> colSize about csv(tsv) with tag  
+	  )
+		-> colSize about csv(tsv) with tag
+
 	- jsCsv.isRead(
 		tag: String
 	   ) 
@@ -905,93 +1202,124 @@ This, so colled, android app row code library.
 	- jsCsv.toHeader(  
         	tag: String,  
         	colNum: Int,  
-    	) -> schema name  
+    	)
+		-> schema name  
 	
 	- jsCsv.toHeaderRow(
 		tag: String,
 		startColNumSource: Int,
 		endColNumSource: Int,
-	) -> headerList sepalated by tab   
+	)
+		-> headerList sepalated by tab   
 	
 	- jsCsv.toRow(
 		tag: String,
 		rowNum: Int,
 		startColNumSource: Int,
 		endColNumSource: Int,
-	    ) -> rowList sepalated by tab    
+	    )
+		-> rowList sepalated by tab    
 	
 	- jsCsv.toCol(
 		tag: String,
 		colNum: Int,
 		startRowNumSource: Int,
 		endRowNumSource: Int,
-	    ) -> colList sepalated by tab    
+	    )
+		-> colList sepalated by tab    
 	
-	- jsCsv.toHtml(tsvString: String, onTh: String (empty -> ordinaly `td tag` html, some string -> `th tag` html))  
+	- jsCsv.toHtml(
+		tsvString: String,
+		onTh: String (empty -> ordinaly `td tag` html, some string -> `th tag` html)
+	  )  
 		convert tsv to html string  
 		-> html string   
 	
-	- jsCsv.outPutTsvForDRow(tab: String) 
+	- jsCsv.outPutTsvForDRow(
+		tab: String
+	   ) 
 		convert row direction tsv to Tsv  
-		-> tsv string  
-	- jsCsv.outPutTsvForDCol(tab: String) 
+		-> tsv string
+
+	- jsCsv.outPutTsvForDCol(
+		tab: String
+	  ) 
 		convert col direction tsv to Tsv  
-		-> tsv string  
+		-> tsv string
+
 	- jsCsv.filter(
 		srcTag: String,
 		destTag: String,
 		tabSepaFormura: String ({schema1},>,1500\t{schema2},in,Monday,\t{schema3},=,super man\t..)  
-	    ) -> save filterd tsv instance with tag, also header     
+	    )
+		-> save filterd tsv instance with tag, also header
+ 
 	- jsCsv.selectColumn(
 		srcTag: String,
 		destTag: String,
 		comaSepaColumns: String ({column1}\t{column2}\t{column3}\t..)  
-	    ) -> save culumn selected tsv instance with tag, also header     
+	    )
+		-> save culumn selected tsv instance with tag, also header
+ 
 	- jsCsv.sliceHeader(
 		tag: String,
 		startColNumSource: Int,
 		endColNumSource: Int,
 		headerRow: String,
-	    )　-> header string sliced with tab delimiter   
+	    )
+		-> header string sliced with tab delimiter   
 	    
 	    
-- JsText  
+- JsText
+
 	- jsText.trans(
 		tsvString
-	   ) -> String transposed row and col  
+	   )
+		-> String transposed row and col  
 
 
  - JsPath  
- 	path edit tool   
+ 	path edit tool
+
 	- jsPath.compPrefix(  
 		path: String,  
 		prefix: String,  
-	  ) -> complete prefix     
+	  )
+		-> complete prefix     
 	 
 	- jsPath.compExtend(  
 		path: String,  
 		extend: String  
-	    ) -> complete suffix    
+	    )
+		-> complete suffix    
 	 
  	- jsPath.checkExtend(  
  	 	tag: String,  
 		extendTabSeparateStr: tab separated String  
-	  ) -> boolean (true when including tab separated extend String)  
+	  )
+		-> boolean (true when including tab separated extend String)
+
 	- jsPath.checkPrefix(
 		name: String,  
 		prefixTabSeparateStr: String  
-	    ) -> boolean (true when including tab separated prefix String)    
+	    )
+		-> boolean (true when including tab separated prefix String)
+ 
 	- jsPath.removeExtend(  
 	 	path: String,  
 	 	extend: String  
-	) -> remove extend 
+	)
+		-> remove extend 
 	
 	- jsPath.removePrefix(  
 		path: String,  
 		prefix: String  
-	    ) -> remove prefix      
+	    )
+		-> remove prefix      
 
-- JsTextToSpeech    
+
+- JsTextToSpeech
+
 	- jsTextToSpeech.speech(  
 		playListFilePath: String,    
 		playMode: String(ordinaly|shuffle|reverse|number),  
@@ -1001,7 +1329,8 @@ This, so colled, android app row code library.
 		onTrack: String(empty or notEmply(on Track)),    
 		speed: String(int string)    
 		pitch: String(int string)  
-	)  
+	)
+		- execute text to speech 
 	  
 	- jsTextToSpeech.stop()
 
@@ -1009,8 +1338,10 @@ This, so colled, android app row code library.
  - JsPdf
 	- jsPath.extractText(  
   		path: pdf path string  
-  	   ) -> extracted text     
+  	   )
+		-> extracted text     
 ```
+
 
 ### Javascript pre order word
 - `${0}` -> current file path  
