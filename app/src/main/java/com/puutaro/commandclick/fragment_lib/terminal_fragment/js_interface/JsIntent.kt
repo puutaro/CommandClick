@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.net.Uri
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
@@ -11,12 +12,16 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra
+import com.puutaro.commandclick.util.Intent.IntentVarient
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 
 class JsIntent(
     private val terminalFragment: TerminalFragment
 ) {
+    private val context = terminalFragment.context
+    private val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
 
@@ -165,5 +170,25 @@ class JsIntent(
             currentScriptFileName
         )
         terminalFragment.activity?.startActivity(execIntent)
+    }
+
+    @JavascriptInterface
+    fun shareImage(
+        imageFilePath: String,
+    ){
+        val imageFilePathObj = File(imageFilePath)
+        if(
+            !imageFilePathObj.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "no exist\n ${imageFilePath}",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+        IntentVarient.sharePngImage(
+            imageFilePathObj,
+            activity
+        )
     }
 }

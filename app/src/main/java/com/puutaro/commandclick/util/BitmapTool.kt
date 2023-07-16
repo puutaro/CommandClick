@@ -2,6 +2,9 @@ package com.puutaro.commandclick.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.util.Log
+import android.view.View
 import com.puutaro.commandclick.fragment.TerminalFragment
 import java.nio.ByteBuffer
 import java.util.Arrays
@@ -32,6 +35,26 @@ object BitmapTool {
             true
         )
     }
+
+    fun getScreenShotFromView(v: View): Bitmap? {
+        // create a bitmap object
+        var screenshot: Bitmap? = null
+        try {
+            screenshot = Bitmap.createBitmap(
+                v.measuredWidth,
+                v.measuredHeight,
+                Bitmap.Config.ARGB_8888
+            )
+            // Now draw this bitmap on a canvas
+            val canvas = Canvas(screenshot)
+            v.draw(canvas)
+        } catch (e: Exception) {
+            Log.e("GFG", "Failed to capture screenshot because:" + e.message)
+        }
+        // return the bitmap
+        return screenshot
+    }
+
 
 
 }

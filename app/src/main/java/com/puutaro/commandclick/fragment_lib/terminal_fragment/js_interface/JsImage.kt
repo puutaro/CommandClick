@@ -74,21 +74,5 @@ class JsImage(
         }
         return htmlSpannableStr
     }
-
 }
 
-private fun displayProgress(
-    context: Context?,
-    i: Int
-){
-    if(
-        i % 20 != 0
-    ) return
-//    withContext(Dispatchers.Main) {
-        Toast.makeText(
-            context,
-            "#".repeat(i / 20 + 1),
-            Toast.LENGTH_SHORT
-        ).show()
-//    }
-}

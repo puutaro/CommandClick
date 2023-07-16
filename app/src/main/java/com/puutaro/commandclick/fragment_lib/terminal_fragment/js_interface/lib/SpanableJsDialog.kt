@@ -1,28 +1,40 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.content.DialogInterface
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.net.Uri
 import android.text.Html
-import android.text.Spannable
 import android.text.Spanned
+import android.util.Log
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
-import android.webkit.JavascriptInterface
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.BitmapTool
+import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.Intent.IntentVarient
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+
 
 class SpanableJsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
+    val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
     fun create(
@@ -47,7 +59,7 @@ class SpanableJsDialog(
         }
     }
 
-    fun execCreate(
+    private fun execCreate(
         title: String,
         htmlSpannableStr: String
     ){
@@ -66,6 +78,33 @@ class SpanableJsDialog(
         )
             .setTitle(title)
             .setView(scrollView)
+            .setNegativeButton("SHARE", DialogInterface.OnClickListener{
+                    dialog, which ->
+                terminalViewModel.onDialog = false
+                FileSystems.removeDir(
+                    UsePath.cmdclickTempCreateDirPath
+                )
+                FileSystems.createDirs(
+                    UsePath.cmdclickTempCreateDirPath
+                )
+                val bitmap = BitmapTool.getScreenShotFromView(scrollView)
+                    ?: return@OnClickListener
+                val imageName = BitmapTool.hash(
+                    bitmap
+                ) + ".png"
+                val file = File(
+                    UsePath.cmdclickTempCreateDirPath,
+                    imageName
+                )
+                // ③
+                FileOutputStream(file).use { stream ->
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+                }
+                IntentVarient.sharePngImage(
+                    file,
+                    activity
+                )
+            })
             .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
                 terminalViewModel.onDialog = false
             })
@@ -78,6 +117,9 @@ class SpanableJsDialog(
         })
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
             context?.getColor(android.R.color.black) as Int
+        )
+        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+            context.getColor(android.R.color.black) as Int
         )
     }
 
