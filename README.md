@@ -940,6 +940,10 @@ This, so colled, android app row code library.
 	    )
 		- launch index and fannel  
 
+	- jsIntent.shareImage(
+		shareImageFilePath: String
+	  )
+		- share image intent
 
  - JsDialog
 
@@ -1009,7 +1013,12 @@ This, so colled, android app row code library.
 	- jsCurl.getTextOrPdf(
 		url: text or pdf url
 	   )
-		-> text or pdf file  
+		-> download text or pdf file image to bellow `/storage/emulated/0/Document/cmdclick/temp/download`
+
+	- jsCurl.getImage(
+	        url: String
+	    )
+		download image to bellow `/storage/emulated/0/Document/cmdclick/temp/download`
 
 
  - JsUtil
