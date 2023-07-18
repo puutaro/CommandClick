@@ -81,10 +81,7 @@ class SpanableJsDialog(
             .setNegativeButton("SHARE", DialogInterface.OnClickListener{
                     dialog, which ->
                 terminalViewModel.onDialog = false
-                FileSystems.removeDir(
-                    UsePath.cmdclickTempCreateDirPath
-                )
-                FileSystems.createDirs(
+                FileSystems.removeAndCreateDir(
                     UsePath.cmdclickTempCreateDirPath
                 )
                 val bitmap = BitmapTool.getScreenShotFromView(scrollView)
