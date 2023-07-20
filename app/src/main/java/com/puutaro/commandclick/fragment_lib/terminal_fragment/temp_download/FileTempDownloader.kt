@@ -24,10 +24,7 @@ object FileTempDownloader {
                     )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                FileSystems.removeDir(
-                    cmdclickTempDownloadDirPath
-                )
-                FileSystems.createDirs(
+                FileSystems.removeAndCreateDir(
                     cmdclickTempDownloadDirPath
                 )
             }

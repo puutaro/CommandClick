@@ -83,6 +83,10 @@ object WebViewSettings {
             JsInterfaceVariant.jsFileSelect.name
         )
         terminalWebView.addJavascriptInterface(
+            JsDirSelect(terminalFragment),
+            JsInterfaceVariant.jsDirSelect.name
+        )
+        terminalWebView.addJavascriptInterface(
             JsCsv(terminalFragment),
             JsInterfaceVariant.jsCsv.name
         )
@@ -106,10 +110,6 @@ object WebViewSettings {
             JsPdf(terminalFragment),
             JsInterfaceVariant.jsPdf.name
         )
-        terminalWebView.addJavascriptInterface(
-            JsImage(terminalFragment),
-            JsInterfaceVariant.jsImage.name
-        )
     }
 }
 
@@ -129,11 +129,11 @@ private enum class JsInterfaceVariant {
     jsListSelect,
     jsEdit,
     jsFileSelect,
+    jsDirSelect,
     jsCsv,
     jsText,
     jsPath,
     jsTextToSpeech,
     jsRecordToText,
     jsPdf,
-    jsImage,
 }

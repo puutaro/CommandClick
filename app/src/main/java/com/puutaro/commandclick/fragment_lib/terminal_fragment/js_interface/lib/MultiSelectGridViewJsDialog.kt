@@ -7,12 +7,13 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.component.adapter.ImageAdapter
+import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -24,7 +25,7 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
 
-class GridJsDialog(
+class MultiSelectGridViewJsDialog(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
@@ -64,8 +65,9 @@ class GridJsDialog(
 
         val gridView = GridView(context)
         gridView.numColumns = 2
+        gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        val myImageAdapter = ImageAdapter(context)
+        val myImageAdapter = MultiSelectImageAdapter(context)
         myImageAdapter.addAll(
             imagePathList.toMutableList()
         )
@@ -78,9 +80,6 @@ class GridJsDialog(
         )
         invokeListItemSetClickListenerForListDialog(
             gridView,
-            imagePathList.joinToString("\n"),
-            searchText,
-            terminalViewModel,
         )
 
         val linearLayoutForTotal = LinearLayoutForTotal.make(
@@ -114,8 +113,8 @@ class GridJsDialog(
                 .toMutableList()
         val context = context ?: return
         val linearLayoutForGridView = createLinearLayoutForGridView(
-                imagePathList,
-            )
+            imagePathList,
+        )
 
         val titleString = if(
             title.isNotEmpty()
@@ -131,18 +130,42 @@ class GridJsDialog(
                 .setTitle(titleString)
                 .setMessage(message)
                 .setView(linearLayoutForGridView)
-                .create()
+                .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
+                    terminalFragment.dialogInstance?.dismiss()
+                    terminalViewModel.onDialog = false
+                    returnValue = String()
+                })
+                .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
+                    terminalFragment.dialogInstance?.dismiss()
+                    terminalViewModel.onDialog = false
+                })
+                .show()
         } else {
             AlertDialog.Builder(
-                context
+                context,
             )
                 .setTitle(titleString)
                 .setView(linearLayoutForGridView)
-                .create()
+                .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
+                    terminalFragment.dialogInstance?.dismiss()
+                    terminalViewModel.onDialog = false
+                    returnValue = String()
+                })
+                .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
+                    terminalFragment.dialogInstance?.dismiss()
+                    terminalViewModel.onDialog = false
+                })
+                .show()
         }
         alertDialog = terminalFragment.dialogInstance
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
-        alertDialog?.show()
+        alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
+            context.getColor(android.R.color.black)
+        )
+        alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
+            context.getColor(android.R.color.black)
+        )
+//        alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
@@ -151,7 +174,7 @@ class GridJsDialog(
     }
 
     private fun makeSearchEditText(
-        imageAdapter:  ImageAdapter,
+        imageAdapter:  MultiSelectImageAdapter,
         searchText: EditText,
         listCon: String,
     ) {
@@ -191,29 +214,16 @@ class GridJsDialog(
 
     private fun invokeListItemSetClickListenerForListDialog(
         gridView: GridView,
-        listCon: String,
-        searchText: EditText,
-        terminalViewModel: TerminalViewModel,
     ) {
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog?.dismiss()
-            val selectedElement = listCon.split("\n").filter {
-                Regex(
-                    searchText.text.toString()
-                        .lowercase()
-                        .replace("\n", "")
-                ).containsMatchIn(
-                    it.lowercase()
-                )
-            }
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
-                ?: return@setOnItemClickListener
-            terminalViewModel.onDialog = false
-            returnValue = selectedElement
+            val multiSelectImageAdapter = gridView.adapter as MultiSelectImageAdapter
+            multiSelectImageAdapter.onItemSelect(
+                View,
+                pos
+            )
+            returnValue = multiSelectImageAdapter.selectedItemList.joinToString("\t")
             return@setOnItemClickListener
         }
     }

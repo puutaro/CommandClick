@@ -3,25 +3,32 @@ package com.puutaro.commandclick.component.adapter
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.text.Spannable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
-import com.puutaro.commandclick.R
+import androidx.fragment.app.Fragment
+import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import java.io.File
 
+class MultiSelectSpannableAdapter(
+    private val fragment: Fragment,
+    private val mContext: Context?
+) : BaseAdapter() {
 
-class ImageAdapter(
-        private val mContext: Context?
-    ) : BaseAdapter() {
+    private var holder: ViewHolder = ViewHolder()
+
+    val selectedItemList = mutableListOf<String>()
 
     class ViewHolder {
-        var imageView: ImageView? = null
+        var spannableView: TextView? = null
         var textView: TextView? = null
     }
     private val pdfExtend = UsePath.pdfExtend
@@ -55,26 +62,42 @@ class ImageAdapter(
     override fun getItemId(position: Int): Long {
         return 0
     }
+    fun onItemSelect(
+        v: View?,
+        pos: Int,
+    ) {
+        if(v == null) return
+        val selectedItem = itemList[pos]
+        when(
+            selectedItemList.contains(selectedItem)
+        ){
+            true
+            -> selectedItemList.remove(selectedItem)
+            false
+            -> selectedItemList.add(selectedItem)
+        }
+        notifyDataSetChanged()
+    }
+
 
     override fun getView(position: Int, convertViewArg: View?, parent: ViewGroup): View {
-        val holder: ViewHolder
         val imagePath = itemList[position]
         val imageName = File(imagePath).name
 
         if (convertViewArg == null) {
             val li = mContext?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val convertView = li.inflate(
-                R.layout.grid_image_items,
+                com.puutaro.commandclick.R.layout.grid_spannable_items,
                 parent,
                 false
             ) as View
-            val textView = convertView.findViewById<TextView>(R.id.caption_view)
+            val textView = convertView.findViewById<TextView>(com.puutaro.commandclick.R.id.spannable_caption_view)
             textView.text = imageName
             holder = ViewHolder()
             holder.textView = textView
-            val imageView = convertView.findViewById<ImageView>(R.id.image_view)
-            holder.imageView = setImageView(
-                imageView,
+            val spannableView = convertView.findViewById<TextView>(com.puutaro.commandclick.R.id.spannable_image_view)
+            holder.spannableView = setSpannableView(
+                spannableView,
                 imagePath
             )
             convertView.tag = holder
@@ -85,9 +108,23 @@ class ImageAdapter(
         }
         holder = convertViewArg.tag as ViewHolder
         holder.textView?.text = imageName
-        val imageView = holder.imageView
-        setImageView(
-            imageView,
+        val spannableView = holder.spannableView
+
+
+        val selectedItem = itemList[position]
+        if (
+            selectedItemList.contains(selectedItem)
+        ) {
+            holder.textView?.setTextColor(Color.parseColor("#95eddd"))
+            holder.spannableView?.alpha = 0.4F
+        } else {
+            holder.textView?.setTextColor(Color.parseColor("#ffffff"))
+            holder.spannableView?.alpha = 1F
+        }
+
+
+        setSpannableView(
+            spannableView,
             imagePath
         )
         return convertViewArg
@@ -143,19 +180,38 @@ class ImageAdapter(
         return inSampleSize
     }
 
-    private fun setImageView(
-        imageView: ImageView?,
+    private fun setSpannableView(
+        spannableView: TextView?,
         imagePath: String
-    ): ImageView? {
-        val bm = decodeSampledBitmapFromUri(
+    ): TextView? {
+        val beforeResizeBitMap = decodeSampledBitmapFromUri(
             imagePath,
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT,
+        ) as Bitmap
+        val baseWidth = (ScreenSizeCalculator.dpWidth(fragment) * 50) / 100
+        val resizeScale: Double =
+            (baseWidth / beforeResizeBitMap.width).toDouble()
+        val bitMap = Bitmap.createScaledBitmap(
+            beforeResizeBitMap,
+            (beforeResizeBitMap.width * resizeScale).toInt(),
+            (beforeResizeBitMap.height * resizeScale).toInt(),
+            true
         )
-        imageView?.setImageBitmap(bm)
-        imageView?.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView?.setPadding(8, 8, 8, 8)
-        return imageView
+       Img2Ascii()
+            .bitmap(bitMap)
+            .quality(5) // 1 - 5
+            .color(true)
+            .convert(object : Img2Ascii.Listener {
+                override fun onProgress(percentage: Int) {
+//                                    textView.setText("$percentage %")
+                }
+
+                override fun onResponse(text: Spannable) {
+                    spannableView?.text = text
+                }
+            })
+        return spannableView
     }
 
     private fun makeFileMarkBitMap(

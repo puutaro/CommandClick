@@ -7,8 +7,11 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.GridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.AsciiArtJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.SpanableJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectSpannableJsDialog
+import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(
     terminalFragment: TerminalFragment
@@ -22,7 +25,16 @@ class JsDialog(
     val formJsDialog = FormJsDialog(
         terminalFragment
     )
+
     val multiSelectJsDialog = MultiSelectJsDialog(
+        terminalFragment
+    )
+
+    val multiSelectGridViewJsDialog = MultiSelectGridViewJsDialog(
+        terminalFragment
+    )
+
+    val multiSelectSpannableJsDialog = MultiSelectSpannableJsDialog(
         terminalFragment
     )
 
@@ -30,7 +42,7 @@ class JsDialog(
         terminalFragment
     )
 
-    val spanableJsDialog = SpanableJsDialog(
+    val asciiArtJsDialog = AsciiArtJsDialog(
         terminalFragment
     )
 
@@ -74,6 +86,22 @@ class JsDialog(
     }
 
     @JavascriptInterface
+    fun getFormValue(
+        targetVariableName: String,
+        contentsTabSepaListCon: String
+    ): String {
+        val renameDirNameKeyValue = contentsTabSepaListCon
+            .split("\t").filter {
+            it.contains(targetVariableName)
+        }.firstOrNull() ?: return String()
+        if(renameDirNameKeyValue.isEmpty()) return String()
+        return renameDirNameKeyValue
+            .split("=")
+            .lastOrNull()
+            .let { QuoteTool.trimBothEdgeQuote(it) }
+    }
+
+    @JavascriptInterface
     fun multiListDialog(
         title: String,
         currentItemListStr: String,
@@ -100,13 +128,39 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun spannableDialog(
+    fun multiSelectGridDialog(
         title: String,
-        htmlSpannableStr: String
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        return multiSelectGridViewJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun multiSelectSpannableGridDialog(
+        title: String,
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        return multiSelectSpannableJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun asciiArtDialog(
+        title: String,
+        imagePath: String
     ){
-       spanableJsDialog.create(
+       asciiArtJsDialog.create(
            title,
-           htmlSpannableStr
+           imagePath
        )
     }
 

@@ -7,13 +7,10 @@ import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.view_model.activity.EditViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,23 +18,19 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.File
 
-class JsFileSelect(
+class JsDirSelect(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
-    private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
     @JavascriptInterface
-    fun execEditTargetFileName(
+    fun execEditDirName(
         targetVariable: String,
         renameVariable: String,
         targetDirPath: String,
         settingVariables: String,
         commandVariables: String,
-        prefix: String,
-        suffix: String,
         scriptFilePath: String,
         title: String,
     ){
@@ -46,20 +39,19 @@ class JsFileSelect(
             settingVariables,
             commandVariables,
         )
-
         val replaceContentsList = replaceContents.split("\n")
-        val editFileNameForDialog = replaceContentsList.filter {
+        val editDirNameForDialog = replaceContentsList.filter {
             it.contains(targetVariable)
         }
             .firstOrNull()
             ?.split('=')
             ?.lastOrNull()
             .let { QuoteTool.trimBothEdgeQuote(it) }
-        val renameFileNameKeyValue = replaceContentsList.filter {
+        val renameDirNameKeyValue = replaceContentsList.filter {
             it.contains(renameVariable)
         }.firstOrNull() ?: return
-        if(renameFileNameKeyValue.isEmpty()) return
-        val renameFileNameForDialog = renameFileNameKeyValue
+        if(renameDirNameKeyValue.isEmpty()) return
+        val renameDirNameForDialog = renameDirNameKeyValue
             .split("=")
             .lastOrNull()
             .let { QuoteTool.trimBothEdgeQuote(it) }
@@ -67,20 +59,18 @@ class JsFileSelect(
         val parentDirPath = scriptFileObj.parent ?: return
         val scriptFileName = scriptFileObj.name
         when(
-            renameFileNameForDialog
+            renameDirNameForDialog
         ){
             String() -> {
                 terminalViewModel.onDialog = true
                 runBlocking {
-                    withContext(Dispatchers.Main) {
+                    withContext(Dispatchers.Main){
                         execDeleteFilePath(
                             parentDirPath,
                             scriptFileName,
                             targetDirPath,
-                            editFileNameForDialog,
+                            editDirNameForDialog,
                             targetVariable,
-                            prefix,
-                            suffix,
                         )
                     }
                     withContext(Dispatchers.IO){
@@ -96,11 +86,9 @@ class JsFileSelect(
                     parentDirPath,
                     scriptFileName,
                     targetDirPath,
-                    editFileNameForDialog,
+                    editDirNameForDialog,
                     targetVariable,
-                    renameFileNameForDialog,
-                    prefix,
-                    suffix
+                    renameDirNameForDialog,
                 )
             }
         }
@@ -110,57 +98,47 @@ class JsFileSelect(
         parentDirPath: String,
         scriptFileName: String,
         targetDirPath: String,
-        editFileNameForDialog: String,
+        editDirNameForDialog: String,
         targetVariable: String,
-        prefix: String,
-        suffix: String
     ){
         val context = terminalFragment.context
         val alertDialog = AlertDialog.Builder(context)
             .setTitle(
                 "delete ok?"
             )
-            .setMessage(" ${editFileNameForDialog}")
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
+            .setMessage(" ${editDirNameForDialog}")
+            .setPositiveButton("OK", DialogInterface.OnClickListener {
+                    dialog, which ->
+                val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
+                val removeDirPathObj = File(removeDirPath)
                 if(
-                    !File(
-                        targetDirPath,
-                        editFileNameForDialog
-                    ).isFile
+                    !removeDirPathObj.isDirectory
                 ){
                     Toast.makeText(
                         context,
-                        "not exist editFileNameForDialog ${editFileNameForDialog}",
+                        "not exist editDirNameForDialog ${removeDirPath}",
                         Toast.LENGTH_LONG
                     ).show()
                     terminalViewModel.onDialog = false
                     return@OnClickListener
                 }
-                FileSystems.removeFiles(
-                    targetDirPath,
-                    editFileNameForDialog
+                FileSystems.removeDir(
+                    removeDirPath
                 )
                 terminalViewModel.onDialog = false
-                val recentLogFile = FileSystems.sortedFiles(
-                    targetDirPath
-                ).filter {
-                    val onPrefix = it.startsWith(prefix)
-                    val onSuffix = if(
-                        suffix == noSuffixMacroWord
-                    ){
-                        !totalExtendRegex.containsMatchIn(it)
-                    } else it.endsWith(suffix)
-                    onPrefix && onSuffix
+                val recentDirName = FileSystems.showDirList(targetDirPath).filter {
+                    File(it).isDirectory
                 }.lastOrNull() ?: return@OnClickListener
                 updateScriptFile(
                     parentDirPath,
                     scriptFileName,
-                    "${targetVariable}=\"${recentLogFile}\""
+                    "${targetVariable}=\"${recentDirName}\""
                 )
                 JsEdit(terminalFragment).updateEditText(
                     targetVariable,
-                    recentLogFile
+                    recentDirName
                 )
+                terminalViewModel.onDialog = false
             })
             .setNegativeButton("NO", DialogInterface.OnClickListener {
                     dialog, which ->
@@ -185,43 +163,37 @@ class JsFileSelect(
         parentDirPath: String,
         scriptFileName: String,
         targetDirPath: String,
-        editFileNameForDialog: String,
+        editDirNameForDialog: String,
         targetVariable: String,
-        renameFileNameForDialog: String,
-        prefix: String,
-        suffix: String
-    ){
-        val renameFileNameOkForDialog = makeRenameFileNameOkForDialog(
-            renameFileNameForDialog,
-            prefix,
-            suffix
-        )
-        if(
-            editFileNameForDialog == renameFileNameOkForDialog
-        ){
+        renameDirNameForDialog: String,
+    ) {
+        if (
+            editDirNameForDialog == renameDirNameForDialog
+        ) {
             Toast.makeText(
                 context,
-                "rename file is same current file",
+                "rename dir is same current dir",
                 Toast.LENGTH_LONG
             ).show()
             return
         }
-        FileSystems.copyFile(
-            "${targetDirPath}/${editFileNameForDialog}",
-            "${targetDirPath}/${renameFileNameOkForDialog}",
+        val srcDirPath = "${targetDirPath}/${editDirNameForDialog}"
+        val destiDirPath = "${targetDirPath}/${renameDirNameForDialog}"
+        FileSystems.copyDirectory(
+            srcDirPath,
+            destiDirPath
         )
-        FileSystems.removeFiles(
-            targetDirPath,
-            editFileNameForDialog
+        FileSystems.removeDir(
+            srcDirPath
         )
         updateScriptFile(
             parentDirPath,
             scriptFileName,
-            "${targetVariable}=\"${renameFileNameOkForDialog}\""
+            "${targetVariable}=\"${renameDirNameForDialog}\""
         )
         JsEdit(terminalFragment).updateEditText(
             targetVariable,
-            renameFileNameOkForDialog
+            renameDirNameForDialog
         )
     }
 
@@ -256,25 +228,6 @@ class JsFileSelect(
             parentDirPath,
             scriptFileName,
             replaceContents
-        )
-    }
-
-    private fun makeRenameFileNameOkForDialog(
-        renameFileNameForDialog: String,
-        prefix: String,
-        suffix: String
-    ): String {
-        val renameFileNameOkForDialogSource = UsePath.compPrefix(
-            renameFileNameForDialog,
-            prefix
-        )
-        if(
-            suffix == noSuffixMacroWord
-        ) return renameFileNameOkForDialogSource
-            .replace(totalExtendRegex, "")
-        return UsePath.compExtend(
-            renameFileNameOkForDialogSource,
-            suffix
         )
     }
 }

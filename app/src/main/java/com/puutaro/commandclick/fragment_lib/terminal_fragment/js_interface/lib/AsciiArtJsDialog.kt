@@ -1,26 +1,22 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.net.Uri
-import android.text.Html
-import android.text.Spanned
-import android.util.Log
+import android.graphics.BitmapFactory
+import android.text.Spannable
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.fragment.app.activityViewModels
+import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.IntentVarient
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,7 +26,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 
-class SpanableJsDialog(
+class AsciiArtJsDialog(
     private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
@@ -39,15 +35,19 @@ class SpanableJsDialog(
 
     fun create(
         title: String,
-        htmlSpannableStr: String
-
+        imagePath: String
     ){
         terminalViewModel.onDialog = true
         runBlocking {
+            val asciiArtSpannable =  withContext(Dispatchers.IO){
+                makeAsciiArt(
+                    imagePath,
+                )
+            }
             withContext(Dispatchers.Main) {
                 execCreate(
                     title,
-                    htmlSpannableStr
+                    asciiArtSpannable
                 )
             }
             withContext(Dispatchers.IO) {
@@ -61,13 +61,11 @@ class SpanableJsDialog(
 
     private fun execCreate(
         title: String,
-        htmlSpannableStr: String
+        spannable: Spannable?,
     ){
         val asciiText = TextView(context)
 
-        asciiText.text = makeSpannable(
-            htmlSpannableStr
-        )
+        asciiText.text = spannable
         val scrollView = makeScrollView()
         val linearLayout = makeLinearLayout()
         linearLayout.addView(asciiText)
@@ -116,7 +114,7 @@ class SpanableJsDialog(
             context?.getColor(android.R.color.black) as Int
         )
         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black) as Int
+            context.getColor(android.R.color.black)
         )
     }
 
@@ -146,20 +144,48 @@ class SpanableJsDialog(
         return scrollView
     }
 
-    private fun makeSpannable(
-        htmlSpannableStr: String
-    ): Spanned {
-        val tempSpannable = terminalViewModel.tempSpannable
-        if(
-            tempSpannable != null
+    private suspend fun makeAsciiArt(
+        imagePath: String,
+    ): Spannable? {
+        val beforeResizeBitMap = withContext(
+            Dispatchers.IO
         ) {
-            terminalViewModel.tempSpannable = null
-            return tempSpannable
+            BitmapFactory.decodeFile(imagePath)
         }
-        return Html.fromHtml(
-                htmlSpannableStr,
-                Html.FROM_HTML_MODE_LEGACY
-            )
+        val baseWidth = ScreenSizeCalculator.dpWidth(terminalFragment)
+        val resizeScale: Double =
+            (baseWidth / beforeResizeBitMap.width).toDouble()
+        val bitMap = Bitmap.createScaledBitmap(
+            beforeResizeBitMap,
+            (beforeResizeBitMap.width * resizeScale).toInt(),
+            (beforeResizeBitMap.height * resizeScale).toInt(),
+            true
+        )
+        var htmlSpannableStr: Spannable? = null
 
+        withContext(Dispatchers.IO) {
+            Img2Ascii()
+                .bitmap(bitMap)
+                .quality(5) // 1 - 5
+                .color(true)
+                .convert(object : Img2Ascii.Listener {
+                    override fun onProgress(percentage: Int) {
+//                                    textView.setText("$percentage %")
+                    }
+
+                    override fun onResponse(text: Spannable) {
+                        htmlSpannableStr = text
+                    }
+                })
+        }
+        withContext(Dispatchers.IO){
+            for(i in 1..50){
+                delay(100)
+                if(
+                    !htmlSpannableStr.isNullOrEmpty()
+                ) break
+            }
+        }
+    return htmlSpannableStr
     }
 }

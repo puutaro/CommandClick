@@ -9,7 +9,6 @@ import java.io.File
 class JsPath(
     terminalFragment: TerminalFragment
 ) {
-
     private val context = terminalFragment.context
 
     @JavascriptInterface

@@ -120,7 +120,7 @@ object FileSystems {
                 fileName
             )
         } else {
-            val time= System.currentTimeMillis();
+            val time= System.currentTimeMillis()
             monitor1File.setLastModified(time)
         }
     }
@@ -264,5 +264,16 @@ object FileSystems {
         } catch (e: Exception) {
             return
         }
+    }
+
+    fun removeAndCreateDir(
+        dirPath: String
+    ){
+        removeDir(
+            dirPath
+        )
+        createDirs(
+            dirPath
+        )
     }
 }

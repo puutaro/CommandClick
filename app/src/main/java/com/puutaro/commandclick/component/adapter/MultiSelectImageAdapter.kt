@@ -3,6 +3,7 @@ package com.puutaro.commandclick.component.adapter
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,16 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
 import java.io.File
+import kotlin.math.roundToInt
 
 
-class ImageAdapter(
-        private val mContext: Context?
-    ) : BaseAdapter() {
+class MultiSelectImageAdapter(
+    private val mContext: Context?
+) : BaseAdapter() {
+
+    private var holder: ViewHolder = ViewHolder()
+
+    val selectedItemList = mutableListOf<String>()
 
     class ViewHolder {
         var imageView: ImageView? = null
@@ -55,9 +61,25 @@ class ImageAdapter(
     override fun getItemId(position: Int): Long {
         return 0
     }
+    fun onItemSelect(
+        v: View?,
+        pos: Int,
+    ) {
+        if(v == null) return
+        val selectedItem = itemList[pos]
+        when(
+            selectedItemList.contains(selectedItem)
+        ){
+            true
+            -> selectedItemList.remove(selectedItem)
+            false
+            -> selectedItemList.add(selectedItem)
+        }
+        notifyDataSetChanged()
+    }
+
 
     override fun getView(position: Int, convertViewArg: View?, parent: ViewGroup): View {
-        val holder: ViewHolder
         val imagePath = itemList[position]
         val imageName = File(imagePath).name
 
@@ -68,11 +90,11 @@ class ImageAdapter(
                 parent,
                 false
             ) as View
-            val textView = convertView.findViewById<TextView>(R.id.caption_view)
+            val textView = convertView.findViewById<TextView>(com.puutaro.commandclick.R.id.caption_view)
             textView.text = imageName
             holder = ViewHolder()
             holder.textView = textView
-            val imageView = convertView.findViewById<ImageView>(R.id.image_view)
+            val imageView = convertView.findViewById<ImageView>(com.puutaro.commandclick.R.id.image_view)
             holder.imageView = setImageView(
                 imageView,
                 imagePath
@@ -86,6 +108,15 @@ class ImageAdapter(
         holder = convertViewArg.tag as ViewHolder
         holder.textView?.text = imageName
         val imageView = holder.imageView
+        val selectedItem = itemList[position]
+        if (
+            selectedItemList.contains(selectedItem)
+        ) { holder.textView?.setTextColor(Color.parseColor("#95eddd"))
+            holder.imageView?.alpha = 0.4F
+        } else {
+            holder.textView?.setTextColor(Color.parseColor("#ffffff"))
+            holder.imageView?.alpha = 1F
+        }
         setImageView(
             imageView,
             imagePath
@@ -135,9 +166,9 @@ class ImageAdapter(
         var inSampleSize = 1
         if (height > reqHeight || width > reqWidth) {
             inSampleSize = if (width > height) {
-                Math.round(height.toFloat() / reqHeight.toFloat())
+                (height.toFloat() / reqHeight.toFloat()).roundToInt()
             } else {
-                Math.round(width.toFloat() / reqWidth.toFloat())
+                (width.toFloat() / reqWidth.toFloat()).roundToInt()
             }
         }
         return inSampleSize

@@ -37,10 +37,7 @@ object ImageTempDownloader {
         val onBase64Image =
             url.trim().startsWith(WebUrlVariables.base64JpegPrefix)
                     || url.trim().startsWith(WebUrlVariables.base64PngPrefix)
-        FileSystems.removeDir(
-            cmdclickTempDownloadDirPath
-        )
-        FileSystems.createDirs(
+        FileSystems.removeAndCreateDir(
             cmdclickTempDownloadDirPath
         )
         CoroutineScope(Dispatchers.IO).launch {

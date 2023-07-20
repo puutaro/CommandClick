@@ -30,7 +30,6 @@ class TerminalViewModel: ViewModel() {
     var isStop = false
     var multiSelectTabString = String()
     var jsExecuteJob: Job? = null
-    var tempSpannable: Spannable? = null
 }
 
 
