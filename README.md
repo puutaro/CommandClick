@@ -880,7 +880,12 @@ This, so colled, android app row code library.
 	- jsFileSystem.isDir(
 		DirectoryPath: String
 	   )
-		-> boolean   
+		-> boolean
+
+	- jsFileSystem.removeAndCreateDir(
+	        dirPath: String
+	  )
+		-> remove and create directory
 
 
  - JsArgs
