@@ -950,6 +950,7 @@ This, so colled, android app row code library.
 	  )
 		- share image intent
 
+
  - JsDialog
 
  	- jsDialog.listJsDialog(
@@ -968,7 +969,13 @@ This, so colled, android app row code library.
 					"efcb:EFCB=tube\tnumber:NUM=2!1..100!1\tpassword:H=\ttxt:TXT=\tcb:CB=aa!bb\tcb2:CB=gg!tt\tcb3:ECB=gg!tt",  
 					`efcb=\tefcb=tubeCrara\tnumber=\tpassword=\ttxt=cb2=tt\tdb3=gg`  
 				)      
- 			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt  
+ 			        -> efcb:EFCB=tubelist\nnumber:NUM=99\npassword:H=1234\ntxt:TXT=yrcy\ncb=aa\ncb2=tt\ncb3=tt
+
+	- jsDialog.getFormValue(
+		targetVariableName: String,
+        	contentsTabSepalateFormJsReturnValue: String
+	  )
+		-> target variable value
 				
 				
 	- jsDialog.multiListDialog(
@@ -982,8 +989,73 @@ This, so colled, android app row code library.
 					"{item1}\t{item2}",  
 					`{item1}\t{item2}\t{item3}\t{item4}`  
 				)      
- 			        -> {item1}\t{item2}\t{item4}  
-				
+ 			        -> {item1}\t{item2}\t{item4}
+
+	- jsDialog.gridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		-> selected image path
+
+	- jsDialog.onlyImageGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		(this dialog only image grid view without file name search)
+		-> selected image path
+
+	- jsDialog.onlySpannableGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		(this dialog only image grid view without file name search)
+		-> selected spannable image path
+
+	- jsDialog.multiSelectGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		-> selected spannable image paths
+
+	- jsDialog.onlySpannableGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		(this dialog only spannable image grid view without file name search)
+		-> selected spannable image path
+
+	- jsDialog.multiSelectOnlyImageGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		(this dialog only image grid view without file name search)
+		-> selected image paths				
+
+	- jsDialog.multiSelectSpannableGridDialog(
+		title: String,
+        	message: String,
+        	imagePathListTabSepalateString: String
+	  )
+		-> selected spannable image paths
+
+	- jsDialog.asciiArtDialog(
+		title: String,
+        	imagePath: String
+	  )
+		-> display ascii art with share button
+
+	- jsDialog.imageDialog(
+		title: String,
+        	imagePath: String
+	  )
+		-> display image with share button
+
 				
  - JsStop
 
@@ -1141,7 +1213,21 @@ This, so colled, android app row code library.
 		suffix: file select direcotry grep suffix string,  
         	scriptFilePath: fannel path string  
     	)
-		- edit targetVariable value and update view by form dialog
+		- edit targetVariable value(file name) and update view by form dialog
+
+ - JsDirSelect
+ 	This interface exist for `FCB`, `FSB` setVariableTypes` option (ref [Add]
+ 
+	- execEditTargetFileName(  
+        	targetVariable: rename target command variable string,  
+        	renameVariable: rename destination command variable String,  
+        	targetDirPath: file select direcoty path,  
+        	settingVariables: setting variable with tab sepalator,   
+        	commandVariables: command variable with tab sepalator, 
+        	scriptFilePath: fannel path string,
+		title: title string
+    	)
+		- edit targetVariable value(directory name) and update view by form dialog
 
 
  - JsEdit  
