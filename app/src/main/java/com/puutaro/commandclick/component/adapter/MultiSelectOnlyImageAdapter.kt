@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -109,6 +110,9 @@ class MultiSelectOnlyImageAdapter(
                 imageView,
                 imagePath
             )
+            selectedChange(
+                imagePath
+            )
             convertView.tag = holder
             convertView.layoutParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -119,6 +123,19 @@ class MultiSelectOnlyImageAdapter(
         holder = convertViewArg.tag as ViewHolder
         val imageView = holder.imageView
         val selectedItem = itemList[position]
+        selectedChange(
+            selectedItem
+        )
+        setImageView(
+            imageView,
+            imagePath
+        )
+        return convertViewArg
+    }
+
+    private fun selectedChange(
+        selectedItem: String
+    ){
         if (
             selectedItemList.contains(selectedItem)
         ) {
@@ -126,11 +143,6 @@ class MultiSelectOnlyImageAdapter(
         } else {
             holder.checkedImageView?.isVisible = false
         }
-        setImageView(
-            imageView,
-            imagePath
-        )
-        return convertViewArg
     }
 
 

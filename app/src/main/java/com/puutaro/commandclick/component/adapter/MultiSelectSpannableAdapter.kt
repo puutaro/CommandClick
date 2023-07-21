@@ -110,6 +110,9 @@ class MultiSelectSpannableAdapter(
                 textImagePngBitMap,
                 pdfImagePngBitMap,
             )
+            selectedChange(
+                imagePath
+            )
             convertView.tag = holder
             convertView.layoutParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
@@ -119,6 +122,22 @@ class MultiSelectSpannableAdapter(
         holder = convertViewArg.tag as ViewHolder
         val spannableView = holder.spannableView
         val selectedItem = itemList[position]
+        selectedChange(
+            selectedItem
+        )
+        SppannableAdapterTool.setSpannableView(
+            fragment,
+            spannableView,
+            imagePath,
+            textImagePngBitMap,
+            pdfImagePngBitMap,
+        )
+        return convertViewArg
+    }
+
+    private fun selectedChange(
+        selectedItem: String
+    ){
         if (
             selectedItemList.contains(selectedItem)
         ) {
@@ -128,13 +147,5 @@ class MultiSelectSpannableAdapter(
             holder.spannableView?.alpha = 1F
             holder.imageCheckedView?.isVisible = false
         }
-        SppannableAdapterTool.setSpannableView(
-            fragment,
-            spannableView,
-            imagePath,
-            textImagePngBitMap,
-            pdfImagePngBitMap,
-        )
-        return convertViewArg
     }
 }

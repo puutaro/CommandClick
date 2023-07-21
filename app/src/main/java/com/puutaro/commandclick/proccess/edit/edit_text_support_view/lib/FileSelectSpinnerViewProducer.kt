@@ -105,6 +105,7 @@ object FileSelectSpinnerViewProducer {
                 if(
                     selectedItem != throughMark
                     && currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
+                    && File(selectedItem).isFile
                 ) {
                     FileSystems.updateLastModified(
                         filterDir,

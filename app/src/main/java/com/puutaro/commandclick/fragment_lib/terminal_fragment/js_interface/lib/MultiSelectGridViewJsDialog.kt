@@ -71,12 +71,6 @@ class MultiSelectGridViewJsDialog(
             imagePathList.toMutableList()
         )
         gridView.adapter = myImageAdapter
-        val searchText = EditText(context)
-        makeSearchEditText(
-            myImageAdapter,
-            searchText,
-            imagePathList.joinToString("\n"),
-        )
         invokeListItemSetClickListenerForListDialog(
             gridView,
         )
@@ -95,7 +89,6 @@ class MultiSelectGridViewJsDialog(
             searchTextWeight
         )
         linearLayoutForListView.addView(gridView)
-        linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
         return linearLayoutForTotal
@@ -164,50 +157,10 @@ class MultiSelectGridViewJsDialog(
         alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
             context.getColor(android.R.color.black)
         )
-//        alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
                 returnValue = String()
-            }
-        })
-    }
-
-    private fun makeSearchEditText(
-        imageAdapter:  MultiSelectImageAdapter,
-        searchText: EditText,
-        listCon: String,
-    ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (!searchText.hasFocus()) return
-                val filteredList = listCon.split("\n").filter {
-                    Regex(
-                        searchText.text.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
-                    )
-                }
-
-                imageAdapter.clear()
-                imageAdapter.addAll(filteredList.toMutableList())
-                imageAdapter.notifyDataSetChanged()
             }
         })
     }

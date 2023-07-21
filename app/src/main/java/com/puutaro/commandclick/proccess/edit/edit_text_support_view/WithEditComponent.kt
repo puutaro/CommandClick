@@ -3,40 +3,39 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 import android.content.Context
 import android.text.Editable
 import android.text.InputType
-import android.text.TextWatcher
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ButtonViewHowActive
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ColorPickerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DatePickerProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DragSortListViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSelectGridViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSeletctSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectGridViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectOnlyImageGridViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectGridViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectOnlyImageGridViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.InDeCrementerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiFileSelectGridViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.TimePickerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.VariableLabelAdder
-import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 class WithEditComponent(
@@ -162,6 +161,24 @@ class WithEditComponent(
                     )
                     horizontalLinearLayout.addView(insertGridSelectBox)
                 }
+                EditTextSupportViewName.MULTI_GRID_BOX.str -> {
+                    val insertGridSelectBox = EditableListContentsMultiSelectGridViewProducer.make(
+                        insertEditText,
+                        editParameters,
+                        currentComponentIndex,
+                        otherComponentWeight,
+                    )
+                    horizontalLinearLayout.addView(insertGridSelectBox)
+                }
+                EditTextSupportViewName.ONlY_IMAGE_GRID_BOX.str -> {
+                    val insertGridSelectBox = EditableListContentsSelectOnlyImageGridViewProducer.make(
+                        insertEditText,
+                        editParameters,
+                        currentComponentIndex,
+                        otherComponentWeight,
+                    )
+                    horizontalLinearLayout.addView(insertGridSelectBox)
+                }
                 EditTextSupportViewName.MULTI_SELECT_BOX.str -> {
                     val multiSelectSpinner = MultiSelectSpinnerViewProducer.make(
                         insertTextView,
@@ -202,6 +219,24 @@ class WithEditComponent(
                 }
                 EditTextSupportViewName.FILE_SELECT_GRID_BOX.str -> {
                     val fileSelectGridSelectBox = FileSelectGridViewProducer.make(
+                        insertEditText,
+                        editParameters,
+                        currentComponentIndex,
+                        otherComponentWeight,
+                    )
+                    horizontalLinearLayout.addView(fileSelectGridSelectBox)
+                }
+                EditTextSupportViewName.MULTI_FILE_SELECT_GRID_BOX.str -> {
+                    val fileSelectGridSelectBox = MultiFileSelectGridViewProducer.make(
+                        insertEditText,
+                        editParameters,
+                        currentComponentIndex,
+                        otherComponentWeight,
+                    )
+                    horizontalLinearLayout.addView(fileSelectGridSelectBox)
+                }
+                EditTextSupportViewName.FILE_SELECT_ONLY_IMAGE_GRID_BOX.str -> {
+                    val fileSelectGridSelectBox = FileSelectOnlyImageGridViewProducer.make(
                         insertEditText,
                         editParameters,
                         currentComponentIndex,

@@ -101,6 +101,9 @@ class MultiSelectImageAdapter(
                 imageView,
                 imagePath
             )
+            selectedChange(
+                imagePath
+            )
             convertView.tag = holder
             convertView.layoutParams = RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
@@ -111,6 +114,19 @@ class MultiSelectImageAdapter(
         holder.textView?.text = imageName
         val imageView = holder.imageView
         val selectedItem = itemList[position]
+        selectedChange(
+            selectedItem
+        )
+        setImageView(
+            imageView,
+            imagePath
+        )
+        return convertViewArg
+    }
+
+    private fun selectedChange(
+        selectedItem: String
+    ){
         if (
             selectedItemList.contains(selectedItem)
         ) { holder.textView?.setTextColor(Color.parseColor("#95eddd"))
@@ -119,11 +135,6 @@ class MultiSelectImageAdapter(
             holder.textView?.setTextColor(Color.parseColor("#ffffff"))
             holder.imageView?.alpha = 1F
         }
-        setImageView(
-            imageView,
-            imagePath
-        )
-        return convertViewArg
     }
 
     private fun setImageView(
