@@ -12,6 +12,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectOnlyImageGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectSpannableJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlyImageGridJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlySpannableGridJsDialog
 import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(
@@ -44,6 +46,14 @@ class JsDialog(
     )
 
     val gridJsDialog = GridJsDialog(
+        terminalFragment
+    )
+
+    val onlyImageGridJsDialog = OnlyImageGridJsDialog(
+        terminalFragment
+    )
+
+    val onlySpannableGridJsDialog = OnlySpannableGridJsDialog(
         terminalFragment
     )
 
@@ -126,6 +136,32 @@ class JsDialog(
         imagePathListTabSepaStr: String
     ): String {
         return gridJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun onlyImageGridDialog(
+        title: String,
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        return onlyImageGridJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun onlySpannableGridDialog(
+        title: String,
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        return onlySpannableGridJsDialog.create(
             title,
             message,
             imagePathListTabSepaStr

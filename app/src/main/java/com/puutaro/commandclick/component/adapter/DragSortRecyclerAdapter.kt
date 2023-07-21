@@ -19,7 +19,9 @@ class DragSortRecyclerAdapter(
         var textView: TextView
 
         init {
-            textView = v.findViewById(com.puutaro.commandclick.R.id.text_view_in_recycler_view)
+            textView = v.findViewById(
+                com.puutaro.commandclick.R.id.text_view_in_recycler_view
+            )
         }
     }
 
@@ -27,7 +29,10 @@ class DragSortRecyclerAdapter(
 
 
     // Create new views (invoked by the layout manager)
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): ViewHolder {
         // create a new view
         val view: View = LayoutInflater.from(parent.context)
             .inflate(
@@ -50,7 +55,10 @@ class DragSortRecyclerAdapter(
     }
 
     // Replace the contents of a view (invoked by the layout manager)
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: ViewHolder,
+        position: Int
+    ) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 //        holder.imageView.setImageResource(iImages[position])

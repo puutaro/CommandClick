@@ -1,12 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.content.DialogInterface
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.net.Uri
-import android.text.Html
-import android.text.Spanned
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageView

@@ -13,7 +13,7 @@ import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.util.AssetsFileManager
 
 
-class multiSelectOnlyImageAdapter(
+class MultiSelectOnlyImageAdapter(
     private val mContext: Context?
 ) : BaseAdapter() {
 
@@ -78,30 +78,41 @@ class multiSelectOnlyImageAdapter(
     }
 
 
-    override fun getView(position: Int, convertViewArg: View?, parent: ViewGroup): View {
+    override fun getView(
+        position: Int,
+        convertViewArg: View?,
+        parent: ViewGroup
+    ): View {
         val imagePath = itemList[position]
 
         if (convertViewArg == null) {
-            val li = mContext?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+            val li = mContext?.getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE
+            ) as LayoutInflater
             val convertView = li.inflate(
-                R.layout.grid_only_image_items,
+                R.layout.multi_grid_only_image_layout,
                 parent,
                 false
             ) as View
             val checkedImageView =
-                convertView.findViewById<ImageView>(R.id.only_image_checkd_view)
+                convertView.findViewById<ImageView>(
+                    R.id.multi_only_image_checkd_view
+                )
             checkedImageView.isVisible = false
             holder = ViewHolder()
             holder.checkedImageView = checkedImageView
             val imageView =
-                convertView.findViewById<ImageView>(R.id.only_image_image_view)
+                convertView.findViewById<ImageView>(
+                    R.id.multi_only_image_image_view
+                )
             holder.imageView = setImageView(
                 imageView,
                 imagePath
             )
             convertView.tag = holder
             convertView.layoutParams = RelativeLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
             )
             return convertView
         }

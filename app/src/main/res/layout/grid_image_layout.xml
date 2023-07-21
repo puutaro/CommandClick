@@ -5,15 +5,15 @@
     android:background="@color/white"
     android:padding="3dp" >
 
-    <TextView
-        android:id="@+id/text_con_view"
+    <ImageView
+        android:id="@+id/grid_image_view"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:scaleType="centerCrop"
         />
 
     <TextView
-        android:id="@+id/caption_view"
+        android:id="@+id/grid_caption_view"
         android:gravity="center"
         android:textSize="18sp"
         android:textColor="#fff"

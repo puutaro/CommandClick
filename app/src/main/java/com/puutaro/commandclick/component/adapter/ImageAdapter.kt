@@ -55,7 +55,11 @@ class ImageAdapter(
         return 0
     }
 
-    override fun getView(position: Int, convertViewArg: View?, parent: ViewGroup): View {
+    override fun getView(
+        position: Int,
+        convertViewArg: View?,
+        parent: ViewGroup
+    ): View {
         val holder: ViewHolder
         val imagePath = itemList[position]
         val imageName = File(imagePath).name
@@ -63,15 +67,15 @@ class ImageAdapter(
         if (convertViewArg == null) {
             val li = mContext?.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             val convertView = li.inflate(
-                R.layout.grid_image_items,
+                R.layout.grid_image_layout,
                 parent,
                 false
             ) as View
-            val textView = convertView.findViewById<TextView>(R.id.caption_view)
+            val textView = convertView.findViewById<TextView>(R.id.grid_caption_view)
             textView.text = imageName
             holder = ViewHolder()
             holder.textView = textView
-            val imageView = convertView.findViewById<ImageView>(R.id.image_view)
+            val imageView = convertView.findViewById<ImageView>(R.id.grid_image_view)
             holder.imageView = setImageView(
                 imageView,
                 imagePath

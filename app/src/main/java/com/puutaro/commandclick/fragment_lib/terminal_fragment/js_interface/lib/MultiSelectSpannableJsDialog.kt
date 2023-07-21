@@ -2,16 +2,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.MultiSelectSpannableAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -74,12 +68,6 @@ class MultiSelectSpannableJsDialog(
             imagePathList.toMutableList()
         )
         gridView.adapter = myImageAdapter
-//        val searchText = EditText(context)
-//        makeSearchEditText(
-//            myImageAdapter,
-//            searchText,
-//            imagePathList.joinToString("\n"),
-//        )
         invokeListItemSetClickListenerForListDialog(
             gridView,
         )
@@ -98,7 +86,6 @@ class MultiSelectSpannableJsDialog(
             searchTextWeight
         )
         linearLayoutForListView.addView(gridView)
-//        linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
         return linearLayoutForTotal
@@ -167,7 +154,7 @@ class MultiSelectSpannableJsDialog(
         alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
             context.getColor(android.R.color.black)
         )
-//        alertDialog?.show()
+
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
@@ -175,58 +162,20 @@ class MultiSelectSpannableJsDialog(
             }
         })
     }
-
-    private fun makeSearchEditText(
-        imageAdapter: MultiSelectSpannableAdapter,
-        searchText: EditText,
-        listCon: String,
-    ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (!searchText.hasFocus()) return
-                val filteredList = listCon.split("\n").filter {
-                    Regex(
-                        searchText.text.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
-                    )
-                }
-
-                imageAdapter.clear()
-                imageAdapter.addAll(filteredList.toMutableList())
-                imageAdapter.notifyDataSetChanged()
-            }
-        })
-    }
-
     private fun invokeListItemSetClickListenerForListDialog(
         gridView: GridView,
     ) {
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            val multiSelectSpannableAdapter = gridView.adapter as MultiSelectSpannableAdapter
+            val multiSelectSpannableAdapter =
+                gridView.adapter as MultiSelectSpannableAdapter
             multiSelectSpannableAdapter.onItemSelect(
                 View,
                 pos
             )
-            returnValue = multiSelectSpannableAdapter.selectedItemList.joinToString("\t")
+            returnValue =
+                multiSelectSpannableAdapter.selectedItemList.joinToString("\t")
             return@setOnItemClickListener
         }
     }

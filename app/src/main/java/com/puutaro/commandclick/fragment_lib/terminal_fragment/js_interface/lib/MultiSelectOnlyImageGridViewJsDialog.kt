@@ -2,17 +2,12 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.component.adapter.multiSelectOnlyImageAdapter
+import com.puutaro.commandclick.component.adapter.MultiSelectOnlyImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -65,17 +60,11 @@ class MultiSelectOnlyImageGridViewJsDialog(
         gridView.numColumns = 2
         gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        val myImageAdapter = multiSelectOnlyImageAdapter(context)
+        val myImageAdapter = MultiSelectOnlyImageAdapter(context)
         myImageAdapter.addAll(
             imagePathList.toMutableList()
         )
         gridView.adapter = myImageAdapter
-//        val searchText = EditText(context)
-//        makeSearchEditText(
-//            myImageAdapter,
-//            searchText,
-//            imagePathList.joinToString("\n"),
-//        )
         invokeListItemSetClickListenerForListDialog(
             gridView,
         )
@@ -94,7 +83,6 @@ class MultiSelectOnlyImageGridViewJsDialog(
             searchTextWeight
         )
         linearLayoutForListView.addView(gridView)
-//        linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
         return linearLayoutForTotal
@@ -163,7 +151,6 @@ class MultiSelectOnlyImageGridViewJsDialog(
         alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
             context.getColor(android.R.color.black)
         )
-//        alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
@@ -178,12 +165,14 @@ class MultiSelectOnlyImageGridViewJsDialog(
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            val multiSelectOnlyImageAdapter = gridView.adapter as multiSelectOnlyImageAdapter
+            val multiSelectOnlyImageAdapter =
+                gridView.adapter as MultiSelectOnlyImageAdapter
             multiSelectOnlyImageAdapter.onItemSelect(
                 View,
                 pos
             )
-            returnValue = multiSelectOnlyImageAdapter.selectedItemList.joinToString("\t")
+            returnValue =
+                multiSelectOnlyImageAdapter.selectedItemList.joinToString("\t")
             return@setOnItemClickListener
         }
     }
