@@ -950,6 +950,7 @@ This, so colled, android app row code library.
 	  )
 		- share image intent
 
+
  - JsDialog
 
  	- jsDialog.listJsDialog(
@@ -1227,6 +1228,7 @@ This, so colled, android app row code library.
 		title: title string
     	)
 		- edit targetVariable value(directory name) and update view by form dialog
+
 
  - JsEdit  
  	`edit component` edit tool
