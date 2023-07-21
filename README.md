@@ -1212,8 +1212,21 @@ This, so colled, android app row code library.
 		suffix: file select direcotry grep suffix string,  
         	scriptFilePath: fannel path string  
     	)
-		- edit targetVariable value and update view by form dialog
+		- edit targetVariable value(file name) and update view by form dialog
 
+ - JsDirSelect
+ 	This interface exist for `FCB`, `FSB` setVariableTypes` option (ref [Add]
+ 
+	- execEditTargetFileName(  
+        	targetVariable: rename target command variable string,  
+        	renameVariable: rename destination command variable String,  
+        	targetDirPath: file select direcoty path,  
+        	settingVariables: setting variable with tab sepalator,   
+        	commandVariables: command variable with tab sepalator, 
+        	scriptFilePath: fannel path string,
+		title: title string
+    	)
+		- edit targetVariable value(directory name) and update view by form dialog
 
  - JsEdit  
  	`edit component` edit tool
