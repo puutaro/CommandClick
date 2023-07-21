@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.AsciiArtJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectOnlyImageGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectSpannableJsDialog
 import com.puutaro.commandclick.util.QuoteTool
 
@@ -31,6 +32,10 @@ class JsDialog(
     )
 
     val multiSelectGridViewJsDialog = MultiSelectGridViewJsDialog(
+        terminalFragment
+    )
+
+    val multiSelectOnlyImageGridViewJsDialog = MultiSelectOnlyImageGridViewJsDialog(
         terminalFragment
     )
 
@@ -134,6 +139,19 @@ class JsDialog(
         imagePathListTabSepaStr: String
     ): String {
         return multiSelectGridViewJsDialog.create(
+            title,
+            message,
+            imagePathListTabSepaStr
+        )
+    }
+
+    @JavascriptInterface
+    fun multiSelectOnlyImageGridDialog(
+        title: String,
+        message: String,
+        imagePathListTabSepaStr: String
+    ): String {
+        return multiSelectOnlyImageGridViewJsDialog.create(
             title,
             message,
             imagePathListTabSepaStr

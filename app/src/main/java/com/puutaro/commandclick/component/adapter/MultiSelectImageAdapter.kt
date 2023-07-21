@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +10,9 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.util.AssetsFileManager
 import java.io.File
-import kotlin.math.roundToInt
 
 
 class MultiSelectImageAdapter(
@@ -30,11 +27,12 @@ class MultiSelectImageAdapter(
         var imageView: ImageView? = null
         var textView: TextView? = null
     }
-    private val pdfExtend = UsePath.pdfExtend
-    private val textImagePngBitMap = makeFileMarkBitMap(
+    private val textImagePngBitMap = ImageAdapterTool.makeFileMarkBitMap(
+        mContext,
         AssetsFileManager.textImagePingPath
     )
-    private val pdfImagePngBitMap = makeFileMarkBitMap(
+    private val pdfImagePngBitMap = ImageAdapterTool.makeFileMarkBitMap(
+        mContext,
         AssetsFileManager.pdfImagePingPath
     )
     private var itemList = mutableListOf<String>()
@@ -124,80 +122,20 @@ class MultiSelectImageAdapter(
         return convertViewArg
     }
 
-    private fun decodeSampledBitmapFromUri(
-        path: String?,
-        reqWidth: Int,
-        reqHeight: Int
-    ): Bitmap? {
-        if(
-            path.isNullOrEmpty()
-        ) return null
-        if(
-            !File(path).isFile
-        ) return null
-        var bm: Bitmap? = null
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(path, options)
-        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight)
-        options.inJustDecodeBounds = false
-        bm = BitmapFactory.decodeFile(path, options)
-        return when(bm){
-            null -> judgePdfOrOther(path)
-            else -> bm
-        }
-    }
-
-    private fun judgePdfOrOther(
-        path: String
-    ): Bitmap {
-        val onPdf = path.endsWith(pdfExtend)
-        return when(onPdf){
-            true -> pdfImagePngBitMap
-            else -> textImagePngBitMap
-        }
-    }
-
-    private fun calculateInSampleSize(
-        options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int
-    ): Int {
-        val height = options.outHeight
-        val width = options.outWidth
-        var inSampleSize = 1
-        if (height > reqHeight || width > reqWidth) {
-            inSampleSize = if (width > height) {
-                (height.toFloat() / reqHeight.toFloat()).roundToInt()
-            } else {
-                (width.toFloat() / reqWidth.toFloat()).roundToInt()
-            }
-        }
-        return inSampleSize
-    }
-
     private fun setImageView(
         imageView: ImageView?,
         imagePath: String
     ): ImageView? {
-        val bm = decodeSampledBitmapFromUri(
+        val bm = ImageAdapterTool.decodeSampledBitmapFromUri(
             imagePath,
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.MATCH_PARENT,
+            pdfImagePngBitMap,
+            textImagePngBitMap,
         )
         imageView?.setImageBitmap(bm)
         imageView?.scaleType = ImageView.ScaleType.CENTER_CROP
         imageView?.setPadding(8, 8, 8, 8)
         return imageView
-    }
-
-    private fun makeFileMarkBitMap(
-        assetsRelativePath: String
-    ): Bitmap {
-        val assetManager = mContext?.assets
-        val fileMarkbitmap = BitmapFactory.decodeStream(
-            assetManager?.open(
-                assetsRelativePath
-            )
-        )
-        return fileMarkbitmap
     }
 }

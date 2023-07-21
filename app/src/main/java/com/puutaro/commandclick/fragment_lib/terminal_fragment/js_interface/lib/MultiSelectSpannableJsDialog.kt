@@ -74,12 +74,12 @@ class MultiSelectSpannableJsDialog(
             imagePathList.toMutableList()
         )
         gridView.adapter = myImageAdapter
-        val searchText = EditText(context)
-        makeSearchEditText(
-            myImageAdapter,
-            searchText,
-            imagePathList.joinToString("\n"),
-        )
+//        val searchText = EditText(context)
+//        makeSearchEditText(
+//            myImageAdapter,
+//            searchText,
+//            imagePathList.joinToString("\n"),
+//        )
         invokeListItemSetClickListenerForListDialog(
             gridView,
         )
@@ -98,7 +98,7 @@ class MultiSelectSpannableJsDialog(
             searchTextWeight
         )
         linearLayoutForListView.addView(gridView)
-        linearLayoutForSearch.addView(searchText)
+//        linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
         return linearLayoutForTotal
@@ -171,6 +171,7 @@ class MultiSelectSpannableJsDialog(
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
+                returnValue = String()
             }
         })
     }

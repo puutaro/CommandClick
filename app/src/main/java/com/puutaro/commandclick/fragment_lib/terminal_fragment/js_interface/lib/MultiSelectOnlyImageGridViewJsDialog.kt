@@ -11,9 +11,8 @@ import android.widget.AbsListView
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
+import com.puutaro.commandclick.component.adapter.multiSelectOnlyImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
@@ -24,8 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 
-
-class MultiSelectGridViewJsDialog(
+class MultiSelectOnlyImageGridViewJsDialog(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
@@ -67,17 +65,17 @@ class MultiSelectGridViewJsDialog(
         gridView.numColumns = 2
         gridView.choiceMode = AbsListView.CHOICE_MODE_MULTIPLE
 
-        val myImageAdapter = MultiSelectImageAdapter(context)
+        val myImageAdapter = multiSelectOnlyImageAdapter(context)
         myImageAdapter.addAll(
             imagePathList.toMutableList()
         )
         gridView.adapter = myImageAdapter
-        val searchText = EditText(context)
-        makeSearchEditText(
-            myImageAdapter,
-            searchText,
-            imagePathList.joinToString("\n"),
-        )
+//        val searchText = EditText(context)
+//        makeSearchEditText(
+//            myImageAdapter,
+//            searchText,
+//            imagePathList.joinToString("\n"),
+//        )
         invokeListItemSetClickListenerForListDialog(
             gridView,
         )
@@ -96,7 +94,7 @@ class MultiSelectGridViewJsDialog(
             searchTextWeight
         )
         linearLayoutForListView.addView(gridView)
-        linearLayoutForSearch.addView(searchText)
+//        linearLayoutForSearch.addView(searchText)
         linearLayoutForTotal.addView(linearLayoutForListView)
         linearLayoutForTotal.addView(linearLayoutForSearch)
         return linearLayoutForTotal
@@ -174,59 +172,19 @@ class MultiSelectGridViewJsDialog(
         })
     }
 
-    private fun makeSearchEditText(
-        imageAdapter:  MultiSelectImageAdapter,
-        searchText: EditText,
-        listCon: String,
-    ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if (!searchText.hasFocus()) return
-                val filteredList = listCon.split("\n").filter {
-                    Regex(
-                        searchText.text.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
-                    )
-                }
-
-                imageAdapter.clear()
-                imageAdapter.addAll(filteredList.toMutableList())
-                imageAdapter.notifyDataSetChanged()
-            }
-        })
-    }
-
     private fun invokeListItemSetClickListenerForListDialog(
         gridView: GridView,
     ) {
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            val multiSelectImageAdapter = gridView.adapter as MultiSelectImageAdapter
-            multiSelectImageAdapter.onItemSelect(
+            val multiSelectOnlyImageAdapter = gridView.adapter as multiSelectOnlyImageAdapter
+            multiSelectOnlyImageAdapter.onItemSelect(
                 View,
                 pos
             )
-            returnValue = multiSelectImageAdapter.selectedItemList.joinToString("\t")
+            returnValue = multiSelectOnlyImageAdapter.selectedItemList.joinToString("\t")
             return@setOnItemClickListener
         }
     }
 }
-

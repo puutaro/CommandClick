@@ -7,35 +7,22 @@
     android:background="@color/white"
     android:padding="3dp" >
 
-    <TextView
-        android:id="@+id/spannable_image_view"
+    <ImageView
+        android:id="@+id/only_image_image_view"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:scaleType="centerCrop"
         />
 
     <ImageView
-        android:id="@+id/spannable_check_image_view"
+        android:id="@+id/only_image_checkd_view"
         android:gravity="center_vertical"
         android:layout_centerInParent="true"
         android:src="@drawable/icons8_checked"
         app:tint="#7cd6c6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:elevation="2dp"
         />
-<!--    #95eddd #6ac4b4-->
-<!--    <TextView-->
-<!--        android:id="@+id/spannable_caption_view"-->
-<!--        android:gravity="center"-->
-<!--        android:textSize="18sp"-->
-<!--        android:textColor="#fff"-->
-<!--        android:shadowDx="2"-->
-<!--        android:shadowDy="2"-->
-<!--        android:shadowRadius="2"-->
-<!--        android:shadowColor="#444"-->
-<!--        android:layout_margin="10dp"-->
-<!--        android:foregroundGravity="bottom"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"/>-->
 
 </RelativeLayout>
