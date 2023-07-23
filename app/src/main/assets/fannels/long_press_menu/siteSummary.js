@@ -10,7 +10,7 @@
 /// LABELING_SECTION_END
 
 /// SETTING_SECTION_START
-setVariableTypes="toLang:CB=-!ja!en!ch!sp"
+setVariableTypes="toLang:CB=-!ja!en!zh!es"
 /// SETTING_SECTION_END
 
 

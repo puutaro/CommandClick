@@ -2,9 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -22,8 +20,8 @@ class JsTrans(
     private val languageMap = mapOf<String,Language>(
         "ja" to Language.JAPANESE,
         "en" to Language.ENGLISH,
-        "ch" to Language.CHINESE_TRADITIONAL,
-        "sp" to Language.SPANISH
+        "zh" to Language.CHINESE_TRADITIONAL,
+        "es" to Language.SPANISH
     )
 
     @JavascriptInterface
