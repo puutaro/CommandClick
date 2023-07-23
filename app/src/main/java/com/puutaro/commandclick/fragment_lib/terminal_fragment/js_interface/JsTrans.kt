@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import com.puutaro.commandclick.common.variable.Translate
 import com.puutaro.commandclick.fragment.TerminalFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,12 +18,7 @@ class JsTrans(
     terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val languageMap = mapOf<String,Language>(
-        "ja" to Language.JAPANESE,
-        "en" to Language.ENGLISH,
-        "zh" to Language.CHINESE_TRADITIONAL,
-        "es" to Language.SPANISH
-    )
+    private val languageMap = Translate.languageMap
 
     @JavascriptInterface
     fun get(
