@@ -288,5 +288,4 @@ class   TerminalFragment: Fragment() {
     interface OnTermSizeMinimumListenerForTerm {
         fun onTermSizeMinimumForTerm()
     }
-
 }

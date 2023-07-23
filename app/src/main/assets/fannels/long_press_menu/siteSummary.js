@@ -5,7 +5,18 @@
 // * Support long press menu
 //  - src anchor
 //  - src image anchor
+// toLang
+//  -> translate language
 /// LABELING_SECTION_END
+
+/// SETTING_SECTION_START
+setVariableTypes="toLang:CB=-!ja!en!ch!sp"
+/// SETTING_SECTION_END
+
+
+/// CMD_VARIABLE_SECTION_START
+toLang="-"
+/// CMD_VARIABLE_SECTION_END
 
 
 const targetUrl = "CMDCLICK_LONG_PRESS_LINK_URL";
@@ -20,7 +31,10 @@ var summary = makeSummary(tocArr);
 if(summary.length < LEAST_STRING_NUM) {
     summary = summaryComp(summary);
 };
-alert(summary);
+const transSummary = transSummuryByToLang(
+    summary,
+);
+alert(transSummary);
 
 
 function makeTocArr(list){
@@ -160,4 +174,17 @@ function decideMode(){
         targetUrl != cmdclickLongPressLinkUrlStr
     ) return getUrlMode;
     return "";
+};
+
+function transSummuryByToLang(
+    summary
+){
+    if(
+        toLang == "-"
+        || !toLang
+    ) return summary;
+    return jsTrans.get(
+        summary,
+        toLang
+    );
 };
