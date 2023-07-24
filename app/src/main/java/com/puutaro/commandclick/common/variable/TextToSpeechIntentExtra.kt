@@ -7,7 +7,7 @@ enum class TextToSpeechIntentExtra(
     playMode("play_mode"),
     onRoop("on_roop"),
     playNumber("play_number"),
-    englishMode("english"),
+    transMode("english"),
     onTrack("on_track"),
     speed("speed"),
     pitch("pitch"),

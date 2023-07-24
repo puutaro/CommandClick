@@ -13,7 +13,6 @@ import com.puutaro.commandclick.service.TextToMp3Service
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
-import java.util.Locale
 
 class JsTextToSpeech(
     private val terminalFragment: TerminalFragment,
@@ -26,7 +25,7 @@ class JsTextToSpeech(
         playMode: String,
         onRoop: String,
         playNumber: String,
-        englishMode: String,
+        transMode: String,
         onTrack: String,
         speed: String,
         pitch: String
@@ -51,7 +50,7 @@ class JsTextToSpeech(
             intent.putExtra(TextToSpeechIntentExtra.playMode.scheme, playMode)
             intent.putExtra(TextToSpeechIntentExtra.onRoop.scheme, onRoop)
             intent.putExtra(TextToSpeechIntentExtra.playNumber.scheme, playNumber)
-            intent.putExtra(TextToSpeechIntentExtra.englishMode.scheme, englishMode)
+            intent.putExtra(TextToSpeechIntentExtra.transMode.scheme, transMode)
             intent.putExtra(TextToSpeechIntentExtra.onTrack.scheme, onTrack)
             intent.putExtra(TextToSpeechIntentExtra.speed.scheme, speed)
             intent.putExtra(TextToSpeechIntentExtra.pitch.scheme, pitch)

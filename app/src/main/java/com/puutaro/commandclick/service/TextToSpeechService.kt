@@ -15,6 +15,7 @@ import com.anggrayudi.storage.file.isEmpty
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.Translate
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
@@ -25,6 +26,8 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.StringLength
 import kotlinx.coroutines.*
+import me.bush.translator.Language
+import me.bush.translator.Translator
 import org.jsoup.Jsoup
 import java.io.File
 import java.util.*
@@ -45,6 +48,10 @@ class TextToSpeechService:
     private var onCurrentRoopBreak = false
     private var currentOrder: Int = 0
     private var currentBlockNum: Int = 0
+    private var transMode: String = String()
+    private val languageMap = Translate.languageMap
+    private val languageLocaleMap = Translate.languageLocaleMap
+    private val noTransMark = "-"
 
     private var broadcastReceiverForTextToSpeechPrevious: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -477,23 +484,24 @@ class TextToSpeechService:
         intent: Intent
     ){
         if(textToSpeech != null) return
-        val englishMode = intent.getStringExtra(
-            TextToSpeechIntentExtra.englishMode.scheme
+        transMode = intent.getStringExtra(
+            TextToSpeechIntentExtra.transMode.scheme
         ) ?: String()
+        val defaultLocale = Locale.getDefault()
         val lang = if(
-            englishMode.isNotEmpty()
-        ) Locale.US
-        else Locale.getDefault()
+            transMode.isEmpty()
+            || transMode == noTransMark
+        ) defaultLocale
+        else languageLocaleMap.get(transMode)
         textToSpeech = TextToSpeech(applicationContext, TextToSpeech.OnInitListener { status ->
             if (
                 status != TextToSpeech.SUCCESS
             ) return@OnInitListener
             textToSpeech?.let { tts ->
-                val locale = Locale.getDefault()
-                if (tts.isLanguageAvailable(locale) > TextToSpeech.LANG_AVAILABLE) {
+                if (tts.isLanguageAvailable(lang) > TextToSpeech.LANG_AVAILABLE) {
                     tts.language = lang
                 } else {
-                    tts.language = Locale.US
+                    tts.language = Locale.ENGLISH
                 }
             }
         })
@@ -577,6 +585,7 @@ class TextToSpeechService:
         }
         done = true
         val lengthLimit = 500
+        val translator = Translator()
         execTextToSpeechJob = CoroutineScope(Dispatchers.IO).launch {
             val stringLength = text.length
             val totalTimesSource = stringLength / lengthLimit
@@ -621,12 +630,16 @@ class TextToSpeechService:
                     )
                     if(onCurrentRoopBreak) break
                     if (i >= stringLength) break
-                    val splitTextContent = makeSplitTextContent(
+                    val splitTextContentSrc = makeSplitTextContent(
                             text,
                             currentBlockNum * lengthLimit,
                             stringLength,
                             lengthLimit,
                         )
+                    val splitTextContent = execTranslate(
+                        translator,
+                        splitTextContentSrc
+                    )
 
 //                    FileSystems.writeFile(
 //                        debugTemp,
@@ -830,6 +843,25 @@ class TextToSpeechService:
         )
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         notificationManager?.cancel(notificationId)
+    }
+
+    private suspend fun execTranslate(
+        translator: Translator,
+        splitTextContentSrc: String
+    ): String {
+        if(
+            transMode.isEmpty()
+            || transMode == noTransMark
+        ) return splitTextContentSrc
+        val translatedText = translator.translate(
+            splitTextContentSrc,
+            languageMap.get(transMode) ?: Language.ENGLISH,
+            Language.AUTO
+        ).translatedText
+        if(
+            translatedText.isEmpty()
+        ) return splitTextContentSrc
+        return translatedText
     }
 }
 
