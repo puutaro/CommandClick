@@ -23,7 +23,8 @@ class JsTrans(
     @JavascriptInterface
     fun get(
         text: String,
-        langStr: String
+        langStr: String,
+        isProgress: Boolean
     ): String {
         val language = languageMap.get(langStr) ?: Language.ENGLISH
         val translator = Translator()
@@ -37,7 +38,8 @@ class JsTrans(
                 translator,
                 language,
                 currentOrder,
-                chunkedListLength
+                chunkedListLength,
+                isProgress
             )
         }.joinToString("")
     }
@@ -48,12 +50,16 @@ class JsTrans(
         language: Language,
         currentOrder: Int,
         chunkedListLength: Int,
+        isProgress: Boolean,
     ): String {
         var chunkTranslation = String()
         var transFinish = false
         var transResult: Result<Translation>? = null
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.Main){
+                if(
+                    !isProgress
+                ) return@withContext
                 if(
                     currentOrder % 3 != 1
                 ) return@withContext
