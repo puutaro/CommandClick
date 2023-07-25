@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.view.MotionEvent
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel

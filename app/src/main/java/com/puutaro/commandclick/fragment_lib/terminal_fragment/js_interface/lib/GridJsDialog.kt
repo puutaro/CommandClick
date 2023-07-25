@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.ImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -122,7 +121,7 @@ class GridJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.dialogInstance = if(
+        terminalFragment.alertDialogInstance = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -140,7 +139,7 @@ class GridJsDialog(
                 .setView(linearLayoutForGridView)
                 .create()
         }
-        alertDialog = terminalFragment.dialogInstance
+        alertDialog = terminalFragment.alertDialogInstance
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {

@@ -25,6 +25,7 @@ class JsUrl(
     fun loadUrl(
         urlStr: String
     ) {
+        //            TODO register scrollY position
         BroadCastIntent.send(
             terminalFragment,
             urlStr

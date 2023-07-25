@@ -5,6 +5,8 @@ import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 
 object WebViewSettings {
     fun set(
@@ -117,28 +119,3 @@ object WebViewSettings {
     }
 }
 
-
-private enum class JsInterfaceVariant {
-    jsFileSystem,
-    jsIntent,
-    jsDialog,
-    jsArgs,
-    cmdIntent,
-    jsCurl,
-    jsToast,
-    jsStop,
-    jsUtil,
-    jsUrl,
-    jsScript,
-    jsListSelect,
-    jsEdit,
-    jsFileSelect,
-    jsDirSelect,
-    jsCsv,
-    jsText,
-    jsPath,
-    jsTextToSpeech,
-    jsRecordToText,
-    jsPdf,
-    jsTrans,
-}

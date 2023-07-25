@@ -52,7 +52,11 @@ object WebChromeClientSetter {
 
 
             override fun getDefaultVideoPoster(): Bitmap? {
-                return Bitmap.createBitmap(50, 50, Bitmap.Config.ARGB_8888)
+                return Bitmap.createBitmap(
+                    50,
+                    50,
+                    Bitmap.Config.ARGB_8888
+                )
             }
 
             override fun onJsAlert(

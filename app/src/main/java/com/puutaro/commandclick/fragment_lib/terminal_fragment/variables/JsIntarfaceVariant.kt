@@ -1,4 +1,26 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.variables
 
-class JsIntarfaceVariant {
+enum class JsInterfaceVariant {
+    jsFileSystem,
+    jsIntent,
+    jsDialog,
+    jsArgs,
+    cmdIntent,
+    jsCurl,
+    jsToast,
+    jsStop,
+    jsUtil,
+    jsUrl,
+    jsScript,
+    jsListSelect,
+    jsEdit,
+    jsFileSelect,
+    jsDirSelect,
+    jsCsv,
+    jsText,
+    jsPath,
+    jsTextToSpeech,
+    jsRecordToText,
+    jsPdf,
+    jsTrans,
 }

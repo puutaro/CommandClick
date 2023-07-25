@@ -2,7 +2,7 @@ package com.puutaro.commandclick.activity_lib.event
 
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecUrlLoadFragmentProccess
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 
 object ExecTermLongChangeHandlerForTerm {
     fun handle(

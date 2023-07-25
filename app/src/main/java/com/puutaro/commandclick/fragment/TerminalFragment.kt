@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -25,7 +26,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocke
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
@@ -64,7 +65,8 @@ class   TerminalFragment: Fragment() {
     val trimLastLine = 500
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
-    var dialogInstance: AlertDialog? = null
+    var alertDialogInstance: AlertDialog? = null
+    var dialogInstance: Dialog? = null
 
 
     private var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
@@ -153,6 +155,7 @@ class   TerminalFragment: Fragment() {
         super.onPause()
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
+        alertDialogInstance?.dismiss()
         dialogInstance?.dismiss()
         terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
@@ -178,6 +181,7 @@ class   TerminalFragment: Fragment() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = false
+        alertDialogInstance?.dismiss()
         dialogInstance?.dismiss()
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()

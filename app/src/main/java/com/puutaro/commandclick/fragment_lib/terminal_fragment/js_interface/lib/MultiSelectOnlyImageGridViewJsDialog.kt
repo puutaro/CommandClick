@@ -107,7 +107,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.dialogInstance = if(
+        terminalFragment.alertDialogInstance = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -117,12 +117,12 @@ class MultiSelectOnlyImageGridViewJsDialog(
                 .setMessage(message)
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                 })
                 .show()
@@ -133,17 +133,17 @@ class MultiSelectOnlyImageGridViewJsDialog(
                 .setTitle(titleString)
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                 })
                 .show()
         }
-        alertDialog = terminalFragment.dialogInstance
+        alertDialog = terminalFragment.alertDialogInstance
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
             context.getColor(android.R.color.black)

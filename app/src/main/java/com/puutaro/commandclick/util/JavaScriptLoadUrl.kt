@@ -156,4 +156,129 @@ object JavaScriptLoadUrl {
         ) return null
         return "javascript:(function() { ${loadJsUrl} })();"
     }
+
+
+    fun makeFromContents (
+        jsList: List<String>
+    ):String? {
+        val commentOutMark = "//"
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        val commandSectionStart = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+        ) as String
+        val commandSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+        ) as String
+        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+            jsList,
+            settingSectionStart,
+            settingSectionEnd,
+            true
+        )
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMap(
+                recordNumToMapNameValueInSettingHolder,
+                String(),
+                String(),
+                String()
+            )
+        var countSettingSectionStart = 0
+        var countSettingSectionEnd = 0
+        var countCmdSectionStart = 0
+        var countCmdSectionEnd = 0
+        val loadJsUrl = jsList.map {
+            if(
+                it.startsWith(settingSectionStart)
+                && it.endsWith(settingSectionStart)
+            ) countSettingSectionStart++
+            if(
+                it.startsWith(settingSectionEnd)
+                && it.endsWith(settingSectionEnd)
+            ) countSettingSectionEnd++
+            if(
+                it.startsWith(commandSectionStart)
+                && it.endsWith(commandSectionStart)
+            ) countCmdSectionStart++
+            if(
+                it.startsWith(commandSectionEnd)
+                && it.endsWith(commandSectionEnd)
+            ) countCmdSectionEnd++
+            if(
+                countSettingSectionStart > 0
+                && countSettingSectionEnd == 0
+            ) "$it;"
+            else if(
+                countCmdSectionStart > 0
+                && countCmdSectionEnd == 0
+            ) "$it;"
+            else it
+        }.joinToString("\n").split("\n").map {
+            val trimJsRow = it
+                .trim(' ')
+                .trim('\t')
+                .trim(' ')
+                .trim('\t')
+            if(
+                trimJsRow.startsWith(commentOutMark)
+            ) return@map String()
+            if(
+                !trimJsRow.contains(commentOutMark)
+            ) return@map trimJsRow
+            if(
+                !trimJsRow.endsWith(";")
+            ) return@map trimJsRow
+            val trimJsRowList = trimJsRow.split(";")
+            val includeCommentOut =  trimJsRowList
+                .lastOrNull()
+                ?.contains(commentOutMark)
+            if(
+                includeCommentOut != true
+            ) return@map trimJsRow
+            val trimJsRowListSize = trimJsRowList.size
+            val sliceTrimJsRowList = trimJsRowList.slice(
+                0..trimJsRowListSize - 2
+            ).joinToString(";") + ";"
+            sliceTrimJsRowList
+        }.joinToString(" ")
+            .let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    String(),
+                    String(),
+                    String()
+                )
+            }.let {
+                var loadJsUrlSource = it
+                setReplaceVariableMap?.forEach {
+                    val replaceVariable = "\${${it.key}}"
+                    val replaceString = it.value
+                        .let {
+                            ScriptPreWordReplacer.replace(
+                                it,
+                                String(),
+                                String(),
+                                String()
+                            )
+                        }
+                    loadJsUrlSource = loadJsUrlSource.replace(
+                        replaceVariable,
+                        replaceString
+                    )
+                }
+                loadJsUrlSource
+            }
+        if(
+            loadJsUrl.isEmpty()
+            || loadJsUrl.isBlank()
+        ) return null
+        return "javascript:(function() { ${loadJsUrl} })();"
+    }
 }

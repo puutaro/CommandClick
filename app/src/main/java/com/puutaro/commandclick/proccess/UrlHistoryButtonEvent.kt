@@ -228,6 +228,7 @@ class UrlHistoryButtonEvent(
                 } ?: return@setOnItemClickListener
             terminalViewModel.onDialog = false
             alertDialog.dismiss()
+//            TODO register scrollY position
             if(
                 selectedUrl.endsWith(
                     UsePath.SHELL_FILE_SUFFIX

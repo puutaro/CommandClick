@@ -110,7 +110,7 @@ class OnlySpannableGridJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.dialogInstance = if(
+        terminalFragment.alertDialogInstance = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -128,7 +128,7 @@ class OnlySpannableGridJsDialog(
                 .setView(linearLayoutForGridView)
                 .create()
         }
-        alertDialog = terminalFragment.dialogInstance
+        alertDialog = terminalFragment.alertDialogInstance
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {

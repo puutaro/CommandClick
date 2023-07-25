@@ -14,6 +14,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectSpannableJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlyImageGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlySpannableGridJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
 import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(
@@ -62,6 +63,10 @@ class JsDialog(
     )
 
     val imageJsDialog = ImageJsDialog(
+        terminalFragment
+    )
+
+    val webViewJsDialog = WebViewJsDialog(
         terminalFragment
     )
 
@@ -227,5 +232,12 @@ class JsDialog(
             title,
             imageSrcFilePath
         )
+    }
+
+    @JavascriptInterface
+    fun webView(
+        urlStr: String
+    ){
+        webViewJsDialog.create(urlStr)
     }
 }

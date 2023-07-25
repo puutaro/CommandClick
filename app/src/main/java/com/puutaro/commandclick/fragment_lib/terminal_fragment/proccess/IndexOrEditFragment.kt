@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variable.ChangeTargetFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.TargetFragmentInstance
 

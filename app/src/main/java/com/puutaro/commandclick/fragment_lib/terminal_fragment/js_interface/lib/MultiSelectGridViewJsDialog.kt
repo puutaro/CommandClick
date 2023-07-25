@@ -2,13 +2,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.text.Editable
-import android.text.InputType
-import android.text.TextWatcher
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.AbsListView
-import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
@@ -113,7 +108,7 @@ class MultiSelectGridViewJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.dialogInstance = if(
+        terminalFragment.alertDialogInstance = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -123,12 +118,12 @@ class MultiSelectGridViewJsDialog(
                 .setMessage(message)
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                 })
                 .show()
@@ -139,17 +134,17 @@ class MultiSelectGridViewJsDialog(
                 .setTitle(titleString)
                 .setView(linearLayoutForGridView)
                 .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                     returnValue = String()
                 })
                 .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.alertDialogInstance?.dismiss()
                     terminalViewModel.onDialog = false
                 })
                 .show()
         }
-        alertDialog = terminalFragment.dialogInstance
+        alertDialog = terminalFragment.alertDialogInstance
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
             context.getColor(android.R.color.black)
