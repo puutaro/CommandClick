@@ -75,6 +75,10 @@ class WebViewJsDialog(
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
             terminalFragment.dialogInstance?.show()
+
+            terminalFragment.dialogInstance?.setOnCancelListener {
+                terminalFragment.dialogInstance?.dismiss()
+            }
 //            webViewCloseBtn?.setOnClickListener {
 //                terminalFragment.dialogInstance?.dismiss()
 //            }
