@@ -4,7 +4,8 @@ import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.databinding.TerminalFragmentBinding
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
@@ -14,8 +15,9 @@ object HtmlLauncher{
     fun launch(
         intent: Intent,
         context: Context,
-        binding: TerminalFragmentBinding,
+        terminalFragment: TerminalFragment,
     ) {
+        val binding = terminalFragment.binding
         val editFilePath = intent.getStringExtra(
             BroadCastIntentScheme.HTML_LAUNCH.scheme
         ) ?: return
@@ -47,6 +49,9 @@ object HtmlLauncher{
         val filterCode = intent.getStringExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme
         ) ?: "true"
+        val onDialog = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.ON_DIALOG.scheme
+        ) ?: "false"
         val htmlContentsSource = AssetsFileManager.readFromAssets(
             context,
             "html/edit_urls_template.html"
@@ -84,12 +89,19 @@ object HtmlLauncher{
                     Regex("CommandClickFilterBoolean"),
                     filterCode
                 )
+                .replace(
+                    Regex("const onDialog =.*"),
+                    "const onDialog = ${onDialog}"
+                )
         FileSystems.writeFile(
             parentDir,
             htmlFileName,
             htmlContents
         )
-        binding.terminalWebView.loadUrl(htmlFilePath)
+        if(
+            onDialog == "true"
+        ) JsDialog(terminalFragment).webView(htmlFilePath)
+        else binding.terminalWebView.loadUrl(htmlFilePath)
     }
 
 }

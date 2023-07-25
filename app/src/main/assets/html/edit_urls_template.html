@@ -228,6 +228,7 @@
    const clickSortTop = true;
    const onSortableJs = true;
    const onClickUrl = true;
+   const onDialog = false;
    let url = document.querySelector("[name='url']");
    let view_bookmarksSection = document.querySelector(
       ".view_bookmarks"
@@ -267,7 +268,7 @@
          addUrl = "//" + addUrl;
       }
       if(onClickUrl){
-         var item = '<li class="btn_bookmark"><a class="url-launch" href="' + addUrl + '" target="_blank" data-link=' + dataLink + '>' + addName + "</a></li>"
+         var item = `<li class="btn_bookmark"><a class="url-launch" href="javascript:onLinkClick('` + addUrl + `')" data-link=` + dataLink + '>' + addName + '</a></li>'
       } else {
          var item = '<li class="btn_bookmark"><a class="url-launch" href="#" data-link=' + dataLink + '>' + addName + "</a></li>"
       }
@@ -301,15 +302,17 @@
    function saveSortedBookmark(){
       const sortedContents = [...document.querySelectorAll(".url-launch")].map((item) => {
          return item.textContent + "\t" + decodeURI(
-            item.href.replace(/^file:\/\//, '')
-         );
+            item.href
+         ).replace("javascript:onLinkClick\(\'", "")
+            .replace(/\'\)$/, "")
+            .replace(/^file:\/\//, '');
       }).join("\n")
+
       jsFileSystem.writeLocalFile(
          editTargetUrlsFilePath,
          sortedContents
       )
    }
-
 
    function removeBookmark(thisItem){
 
@@ -319,8 +322,10 @@
       itemURL = decodeURI(
             item.querySelector(
                ".url-launch"
-            ).href.replace(/^file:\/\//, '')
-         );
+            ).href
+         ).replace("javascript:onLinkClick\(\'", "")
+            .replace(/\'\)$/, "")
+            .replace(/^file:\/\//, '');
       itemTitle = item.querySelector(".url-launch").textContent
 
       var result = window.confirm("delete ok?\n\t" + itemTitle);
@@ -337,7 +342,6 @@
          return urlString !== itemURL
       });
       let removedBookmarkContents = changedBookmarkContentsList.join("\n");
-
       jsFileSystem.writeLocalFile(
          editTargetUrlsFilePath,
          removedBookmarkContents
@@ -401,7 +405,10 @@
    function launchUrl(thisItem){
       setTimeout(
          function(){
-            document.location.href = latestUrlString;
+            if(
+               onDialog
+            ) jsWebViewDialogManager.dismiss();
+            jsUrl.sLoadUrl(latestUrlString);
          },
          100
       );
@@ -444,17 +451,25 @@
          return urlTitle === inputUrlTitle
       });
       if(duplicationTitleList.length > 0){
-         alert("you must specify unique site title");
+         jsToast.short(
+            "you must specify unique site title"
+         );
          return
       }
       if(inputUrlTitle === ""){
-         alert("you must fill the siteName input");
+         jsToast.short(
+            "you must fill the siteName input"
+         );
          return
       } else if(latestUrlString === ""){
-         alert("you must fill the url input");
+         jsToast.short(
+            "you must fill the url input"
+         );
          return
       } else if(!patterURL.test(latestUrlString)){
-         alert("you must enter a valid url");
+         jsToast.short(
+            "you must enter a valid url"
+         );
          return
       }
       let writeBookmarkContents = inputUrlTitle + "\t" + latestUrlString + "\n" + bookmarkContents;
@@ -462,6 +477,13 @@
       location.reload()
    };
 
+   function onLinkClick(addUrl){
+      if(
+         onDialog
+      ) jsWebViewDialogManager.dismiss();
+      jsToast.short(addUrl);
+      jsUrl.sLoadUrl(addUrl);
+   };
    </script>
 </body>
 </html>

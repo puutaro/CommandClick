@@ -4,11 +4,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.JavascriptInterface
-import android.webkit.WebChromeClient
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -16,7 +13,12 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog_js_interface.JsWebViewDialogManager
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJsInterfaceVariant
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -36,7 +38,8 @@ class WebViewJsDialog(
         urlStrSrc: String
     ) {
         val urlStr = if(
-            urlStrSrc.startsWith(WebUrlVariables.filePrefix)
+            urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
+            || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
         ) urlStrSrc
@@ -58,9 +61,6 @@ class WebViewJsDialog(
             val progressBar = terminalFragment.dialogInstance?.findViewById<ProgressBar>(
                 com.puutaro.commandclick.R.id.dialog_webview_progressBar
             )
-//            val webViewCloseBtn = terminalFragment.dialogInstance?.findViewById<ImageButton>(
-//                com.puutaro.commandclick.R.id.webview_dialog_cancel
-//            )
             val webViewSearchBtn = terminalFragment.dialogInstance?.findViewById<ImageButton>(
                 com.puutaro.commandclick.R.id.webview_dialog_search
             )
@@ -79,9 +79,6 @@ class WebViewJsDialog(
             terminalFragment.dialogInstance?.setOnCancelListener {
                 terminalFragment.dialogInstance?.dismiss()
             }
-//            webViewCloseBtn?.setOnClickListener {
-//                terminalFragment.dialogInstance?.dismiss()
-//            }
             webViewSearchBtnSetClickListener(
                 webView,
                 webViewSearchBtn
@@ -95,9 +92,10 @@ class WebViewJsDialog(
                 webViewBackBtn,
             )
             webViewClientSetter(webView)
-            webChromeClientSetter(
+            WebChromeClientSetter.set(
+                terminalFragment,
                 webView,
-                progressBar,
+                progressBar as ProgressBar
             )
         }
     }
@@ -105,17 +103,29 @@ class WebViewJsDialog(
     private fun webViewSetting(
         webView: WebView
     ){
-        webView.addJavascriptInterface(
-            JsToast(terminalFragment),
-            JsInterfaceVariant.jsToast.name
-        )
         val settings = webView.settings
         settings.javaScriptEnabled = true
         settings.domStorageEnabled = true
         settings.allowContentAccess = true
         settings.allowFileAccess = true
-        settings.textZoom = 120
+        settings.textZoom = (terminalFragment.fontZoomPercent * 95 ) / 100
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        webView.addJavascriptInterface(
+            JsToast(terminalFragment),
+            JsInterfaceVariant.jsToast.name
+        )
+        webView.addJavascriptInterface(
+            JsFileSystem(terminalFragment),
+            JsInterfaceVariant.jsFileSystem.name
+        )
+        webView.addJavascriptInterface(
+            JsUrl(terminalFragment),
+            JsInterfaceVariant.jsUrl.name
+        )
+        webView.addJavascriptInterface(
+            JsWebViewDialogManager(terminalFragment),
+            DialogJsInterfaceVariant.jsWebViewDialogManager.name
+        )
     }
 
     private fun webViewSearchBtnSetClickListener(
@@ -189,28 +199,28 @@ class WebViewJsDialog(
         }
     }
 
-    private fun webChromeClientSetter(
-        webView: WebView,
-        progressBar: ProgressBar?
-    ){
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-                if (newProgress == 100) {
-                    progressBar?.visibility = View.GONE
-                } else {
-                    progressBar?.visibility = View.VISIBLE
-                    progressBar?.progress = newProgress
-                }
-            }
-            override fun getDefaultVideoPoster(): Bitmap? {
-                return Bitmap.createBitmap(
-                    50,
-                    50,
-                    Bitmap.Config.ARGB_8888
-                )
-            }
-        }
-    }
+//    private fun webChromeClientSetter(
+//        webView: WebView,
+//        progressBar: ProgressBar?
+//    ){
+//        webView.webChromeClient = object : WebChromeClient() {
+//            override fun onProgressChanged(view: WebView, newProgress: Int) {
+//                super.onProgressChanged(view, newProgress)
+//                if (newProgress == 100) {
+//                    progressBar?.visibility = View.GONE
+//                } else {
+//                    progressBar?.visibility = View.VISIBLE
+//                    progressBar?.progress = newProgress
+//                }
+//            }
+//            override fun getDefaultVideoPoster(): Bitmap? {
+//                return Bitmap.createBitmap(
+//                    50,
+//                    50,
+//                    Bitmap.Config.ARGB_8888
+//                )
+//            }
+//        }
+//    }
 
 }

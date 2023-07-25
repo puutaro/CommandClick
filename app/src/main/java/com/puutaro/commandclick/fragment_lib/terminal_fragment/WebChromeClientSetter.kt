@@ -10,6 +10,7 @@ import android.view.Gravity
 import android.view.View
 import android.webkit.*
 import android.widget.EditText
+import android.widget.ProgressBar
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
@@ -17,13 +18,12 @@ import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 object WebChromeClientSetter {
 
     fun set(
-        terminalFragment: TerminalFragment
+        terminalFragment: TerminalFragment,
+        webView: WebView,
+        progressBar: ProgressBar
     ){
 
-        val binding = terminalFragment.binding
-        val progressBar = binding.progressBar
-
-        binding.terminalWebView.webChromeClient = object : WebChromeClient() {
+        webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
                 super.onProgressChanged(view, newProgress)
                 if (newProgress == 100) {

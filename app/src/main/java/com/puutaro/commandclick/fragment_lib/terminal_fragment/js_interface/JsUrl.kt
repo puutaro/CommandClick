@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.content.Context
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -26,6 +24,16 @@ class JsUrl(
         urlStr: String
     ) {
         //            TODO register scrollY position
+        BroadCastIntent.send(
+            terminalFragment,
+            urlStr
+        )
+    }
+
+    @JavascriptInterface
+    fun sLoadUrl(
+        urlStr: String
+    ) {
         BroadCastIntent.send(
             terminalFragment,
             urlStr

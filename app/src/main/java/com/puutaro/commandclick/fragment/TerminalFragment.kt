@@ -83,7 +83,7 @@ class   TerminalFragment: Fragment() {
             HtmlLauncher.launch(
                 intent,
                 context,
-                binding,
+                this@TerminalFragment,
             )
         }
     }
@@ -120,7 +120,11 @@ class   TerminalFragment: Fragment() {
         UrlHistoryBackUp.backup(this)
         AdBlocker.init(this)
 
-        WebChromeClientSetter.set(this)
+        WebChromeClientSetter.set(
+            this,
+            binding.terminalWebView,
+            binding.progressBar
+        )
         FindListenerSetter.set(this)
 
         WebViewClientSetter.set(this@TerminalFragment)

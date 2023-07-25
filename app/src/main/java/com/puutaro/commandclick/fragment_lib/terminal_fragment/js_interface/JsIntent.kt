@@ -32,7 +32,8 @@ class JsIntent(
         onClickSort: String = "true",
         onSortableJs: String = "true",
         onClickUrl: String = "true",
-        filterCode: String? = null
+        filterCode: String? = null,
+        onDialog: String
     ) {
         val jsIntent = Intent()
         jsIntent.action = BroadCastIntentScheme.HTML_LAUNCH.action
@@ -59,6 +60,10 @@ class JsIntent(
         jsIntent.putExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme,
             filterCode
+        )
+        jsIntent.putExtra(
+            BroadCastIntentExtraForHtml.ON_DIALOG.scheme,
+            onDialog
         )
         terminalFragment.activity?.sendBroadcast(jsIntent)
     }
