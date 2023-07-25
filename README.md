@@ -1449,7 +1449,8 @@ This, so colled, android app row code library.
 	translate text by specified language
 	- jsTrans.get(
 		text: String,
-  	        langStr: following language prefix string: en(english), zw(chinese), sp(spanish), ko(korean), ja(japanese))    
+  	        langStr: following language prefix string: en(english), zw(chinese), sp(spanish), ko(korean), ja(japanese)),
+		isProgress: Boolean (true: display progress, false: no)
 	  )
 		-> translated text
 
