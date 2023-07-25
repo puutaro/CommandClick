@@ -3,20 +3,9 @@
 /// LABELING_SECTION_START
 // Display summary for current site @puutaro
 // * Support long press menu
-//  - src anchor 
-//  - src image anchor 
-// toLang
-//  -> translate language
+//  - src anchor
+//  - src image anchor
 /// LABELING_SECTION_END
-
-/// SETTING_SECTION_START
-setVariableTypes="toLang:CB=-!ja!en!zh!es!ko"
-/// SETTING_SECTION_END
-
-
-/// CMD_VARIABLE_SECTION_START
-toLang="-"
-/// CMD_VARIABLE_SECTION_END
 
 
 const targetUrl = "CMDCLICK_LONG_PRESS_LINK_URL";
@@ -24,22 +13,19 @@ const getUrlMode = "getUrlMode";
 const LEAST_STRING_NUM = 300;
 const summaryMode = decideMode();
 var doc = makeDoc();
-var list = doc.querySelectorAll("h1,h2,h3"); 
+var list = doc.querySelectorAll("h1,h2,h3");
 let tocArr = makeTocArr(list);
 var summary = makeSummary(tocArr);
 
 if(summary.length < LEAST_STRING_NUM) {
     summary = summaryComp(summary);
 };
-const transSummary = transSummuryByToLang(
-    summary,
-);
-alert(transSummary);
+alert(summary);
 
 
 function makeTocArr(list){
     if(list.length <= 0) return [];
-    var tocArr = [], curH2 = [], curH3 = []; 
+    var tocArr = [], curH2 = [], curH3 = [];
     for (var i = 0; i < list.length; i++) {
         var e = list[i];
         var tagName = e.tagName ;
@@ -65,8 +51,8 @@ function makePtagSummaryTotal(summaryPList, summaryEntry, prefix="-"){
         );
         if(!summaryEntryPreTagText.trim()) continue;
         summaryEntryPTagTextTotal = summaryEntryPTagTextTotal.concat(
-            "\n\t\t\t\t", 
-            prefix + " ", 
+            "\n\t\t\t\t",
+            prefix + " ",
             summaryEntryPreTagText
         );
         if(
@@ -85,7 +71,7 @@ function summaryComp(summary){
     var summaryEntry = summary;
     var summaryEntryPtagTextTotal = "";
     summaryEntryPtagTextTotal = makePtagSummaryTotal(
-        summaryPList, 
+        summaryPList,
         summaryEntry
     );
     summaryEntry = summaryEntry.concat(
@@ -98,7 +84,7 @@ function summaryComp(summary){
     var summaryEntryPreTagTextTotal = "";
 
     summaryEntryPreTagTextTotal = makePtagSummaryTotal(
-        summaryPreList, 
+        summaryPreList,
         summaryEntry,
         "--",
     );
@@ -122,14 +108,14 @@ function makeSummary(tocArr){
         if (ch.length <= 0) continue;
         for (var i2 in ch) {
             h2Con = ch[i2].text.trim().replaceAll('\n', ' ');
-            if(!h2Con) break; 
+            if(!h2Con) break;
             summary = summary.concat("\t\t", h2Con, '\n');
 
             h3ch = ch[i2].children;
             if (h3ch.length <= 0) continue;
             for (var i3 in h3ch){
                 h3Con = h3ch[i3].trim().replaceAll('\n', ' ');
-                if(!h3Con) break; 
+                if(!h3Con) break;
                 summary = summary.concat("\t\t\t\t", h3Con, '\n');
             };
         };
@@ -176,15 +162,3 @@ function decideMode(){
     return "";
 };
 
-function transSummuryByToLang(
-    summary
-){
-    if(
-        toLang == "-"
-        || !toLang
-    ) return summary;
-    return jsTrans.get(
-        summary,
-        toLang
-    );
-};

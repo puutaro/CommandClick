@@ -26,8 +26,6 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.StringLength
 import kotlinx.coroutines.*
-import me.bush.translator.Language
-import me.bush.translator.Translator
 import org.jsoup.Jsoup
 import java.io.File
 import java.util.*
@@ -49,7 +47,6 @@ class TextToSpeechService:
     private var currentOrder: Int = 0
     private var currentBlockNum: Int = 0
     private var transMode: String = String()
-    private val languageMap = Translate.languageMap
     private val languageLocaleMap = Translate.languageLocaleMap
     private val noTransMark = "-"
 
@@ -585,7 +582,6 @@ class TextToSpeechService:
         }
         done = true
         val lengthLimit = 500
-        val translator = Translator()
         execTextToSpeechJob = CoroutineScope(Dispatchers.IO).launch {
             val stringLength = text.length
             val totalTimesSource = stringLength / lengthLimit
@@ -630,16 +626,12 @@ class TextToSpeechService:
                     )
                     if(onCurrentRoopBreak) break
                     if (i >= stringLength) break
-                    val splitTextContentSrc = makeSplitTextContent(
+                    val splitTextContent = makeSplitTextContent(
                             text,
                             currentBlockNum * lengthLimit,
                             stringLength,
                             lengthLimit,
                         )
-                    val splitTextContent = execTranslate(
-                        translator,
-                        splitTextContentSrc
-                    )
 
 //                    FileSystems.writeFile(
 //                        debugTemp,
@@ -843,25 +835,6 @@ class TextToSpeechService:
         )
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         notificationManager?.cancel(notificationId)
-    }
-
-    private suspend fun execTranslate(
-        translator: Translator,
-        splitTextContentSrc: String
-    ): String {
-        if(
-            transMode.isEmpty()
-            || transMode == noTransMark
-        ) return splitTextContentSrc
-        val translatedText = translator.translate(
-            splitTextContentSrc,
-            languageMap.get(transMode) ?: Language.ENGLISH,
-            Language.AUTO
-        ).translatedText
-        if(
-            translatedText.isEmpty()
-        ) return splitTextContentSrc
-        return translatedText
     }
 }
 

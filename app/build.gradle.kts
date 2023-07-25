@@ -79,5 +79,4 @@ dependencies {
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("androidx.recyclerview:recyclerview:1.3.0")
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
-    implementation("com.github.therealbush:translator:1.0.2")
 }

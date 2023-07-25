@@ -112,10 +112,10 @@ object WebViewSettings {
             JsPdf(terminalFragment),
             JsInterfaceVariant.jsPdf.name
         )
-        terminalWebView.addJavascriptInterface(
-            JsTrans(terminalFragment),
-            JsInterfaceVariant.jsTrans.name
-        )
+//        terminalWebView.addJavascriptInterface(
+//            JsTrans(terminalFragment),
+//            JsInterfaceVariant.jsTrans.name
+//        )
     }
 }
 
