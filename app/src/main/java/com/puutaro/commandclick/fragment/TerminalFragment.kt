@@ -125,16 +125,17 @@ class   TerminalFragment: Fragment() {
 
         WebViewSettings.set(this)
         ImageOnLongClickListener.set(this)
-        if(
-            IntentAction.judge(this.activity)
-        ){
-            val urlString = activity?.intent?.dataString
-            urlString?.let {
-                firstDisplayUpdate = false
-                val webView = this.binding.terminalWebView
-                webView.loadUrl(it)
-            }
-        }
+        IntentAction.handle(this)
+//        if(
+//            IntentAction.handle(this.activity)
+//        ){
+//            val urlString = activity?.intent?.dataString
+//            urlString?.let {
+//                firstDisplayUpdate = false
+//                val webView = this.binding.terminalWebView
+//                webView.loadUrl(it)
+//            }
+//        }
         DisplaySwitch.update(
             this,
             terminalViewModel,

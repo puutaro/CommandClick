@@ -32,7 +32,7 @@ class InitFragmentManager(
         val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
         val okOneTask = mngr?.appTasks?.size == normalTaskNum
-
+//IntentAction.handle(activity) &&
         val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
         if (
             disableOneTaskForUrlLaunch
@@ -41,7 +41,7 @@ class InitFragmentManager(
             execUrlIntent()
             return
         }
-
+//IntentAction.handle(activity) &&
         val disableTaskRootForUrlLaunch =
             IntentAction.judge(activity) && !activity.isTaskRoot
         if (
