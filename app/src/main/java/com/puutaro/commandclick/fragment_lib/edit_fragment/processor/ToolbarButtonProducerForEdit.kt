@@ -21,6 +21,9 @@ import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 class ToolbarButtonProducerForEdit(
@@ -152,6 +155,9 @@ class ToolbarButtonProducerForEdit(
                             Toast.LENGTH_SHORT
                         ).show()
                         return@setOnClickListener
+                    }
+                    CoroutineScope(Dispatchers.Main).launch {
+                        ScrollPosition.save(editFragment.activity)
                     }
                     val onShorth = terminalViewModel.readlinesNum == ReadLines.SHORTH
                     EditLayoutViewHideShow.exec(

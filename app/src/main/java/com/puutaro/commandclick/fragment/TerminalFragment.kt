@@ -162,7 +162,6 @@ class   TerminalFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
-        ScrollPosition.save(this@TerminalFragment.activity)
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
         alertDialogInstance?.dismiss()

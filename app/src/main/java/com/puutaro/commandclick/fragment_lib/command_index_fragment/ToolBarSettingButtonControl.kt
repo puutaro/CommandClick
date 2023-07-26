@@ -21,10 +21,14 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.EnableGoForwardForWebVeiw
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
+import com.puutaro.commandclick.proccess.ScrollPosition
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 private val mainMenuGroupId = 1
 private val submenuTermSlectGroupId = 2
@@ -62,6 +66,9 @@ class ToolBarSettingButtonControl(
 
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                ScrollPosition.save(cmdIndexFragment.activity)
+            }
             ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
                 cmdIndexFragment,
             )
@@ -117,6 +124,9 @@ class ToolBarSettingButtonControl(
                 submenuSettingGroupId
             )
             popup.show()
+            CoroutineScope(Dispatchers.Main).launch {
+                ScrollPosition.save(cmdIndexFragment.activity)
+            }
             true
         }
     }
