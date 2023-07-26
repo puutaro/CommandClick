@@ -123,6 +123,7 @@ class   TerminalFragment: Fragment() {
 
         ConfigFromStartUpFileSetterForTerm.set(this)
         UrlHistoryBackUp.backup(this)
+        ScrollYPosiBackUp.backup()
         AdBlocker.init(this)
 
         WebChromeClientSetter.set(
@@ -137,16 +138,6 @@ class   TerminalFragment: Fragment() {
         WebViewSettings.set(this)
         ImageOnLongClickListener.set(this)
         IntentAction.handle(this)
-//        if(
-//            IntentAction.handle(this.activity)
-//        ){
-//            val urlString = activity?.intent?.dataString
-//            urlString?.let {
-//                firstDisplayUpdate = false
-//                val webView = this.binding.terminalWebView
-//                webView.loadUrl(it)
-//            }
-//        }
         DisplaySwitch.update(
             this,
             terminalViewModel,

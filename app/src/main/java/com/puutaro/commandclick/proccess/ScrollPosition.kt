@@ -11,7 +11,7 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object ScrollPosition {
 
-    private val takePisLines = 100
+    val takePosiLines = 100
     private val cmdclickSiteScrollPosiDirPath = UsePath.cmdclickSiteScrollPosiDirPath
     private val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
 
@@ -86,7 +86,7 @@ object ScrollPosition {
             cmdclickSiteScrollPosiFileName
         )
             .textToList()
-            .take(takePisLines)
+            .take(takePosiLines)
         val sitePosiLineListFiltered = sitePosiLineList.filter {
             !it.startsWith(currentUrl)
         }

@@ -41,6 +41,7 @@ object UsePath {
     private const val cmdclickSiteScrollPosiDirRelativePath = "$cmdclickSiteRelativeDirPath/$cmdclickScrollPosiDirName"
     val cmdclickSiteScrollPosiDirPath =  "$rootPath/$cmdclickSiteScrollPosiDirRelativePath"
     val cmdclickSiteScrollPosiFileName = "scrollPosi.txt"
+    val cmdclickSiteScrollPosiBkFileName = "scrollPosi.txt.bk"
     private val cmdclickSiteScrollPosiFileRelativePath =
         "$cmdclickSiteScrollPosiDirRelativePath/$cmdclickSiteScrollPosiFileName"
     val cmdclickSiteScrollPosiFilePath =  "$rootPath/$cmdclickSiteScrollPosiFileRelativePath"
