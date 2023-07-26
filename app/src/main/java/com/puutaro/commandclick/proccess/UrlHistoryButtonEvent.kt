@@ -14,7 +14,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -27,6 +26,10 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -44,6 +47,7 @@ class UrlHistoryButtonEvent(
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
+    private val takeUrlListNum = 400
 
 
     fun invoke(
@@ -226,10 +230,11 @@ class UrlHistoryButtonEvent(
                         currentAppDirPath
                     )
                 } ?: return@setOnItemClickListener
-            terminalViewModel.onDialog = false
             alertDialog.dismiss()
-//            TODO register scrollY position
-            if(
+            CoroutineScope(Dispatchers.Main).launch{
+                ScrollPosition.save(fragment.activity)
+            }
+            if (
                 selectedUrl.endsWith(
                     UsePath.SHELL_FILE_SUFFIX
                 )
@@ -244,7 +249,7 @@ class UrlHistoryButtonEvent(
                 return@setOnItemClickListener
             }
 
-            if(
+            if (
                 fragmentTag == context?.getString(
                     com.puutaro.commandclick.R.string.command_index_fragment
                 )
@@ -254,7 +259,7 @@ class UrlHistoryButtonEvent(
                     selectedUrl,
                 )
                 return@setOnItemClickListener
-            } else if(
+            } else if (
                 fragmentTag?.startsWith(
                     FragmentTagManager.Prefix.cmdEditPrefix.str
                 ) == true
@@ -282,13 +287,12 @@ class UrlHistoryButtonEvent(
         ) return emptyList()
         val usedTitle = mutableSetOf<String>()
         val usedUrl = mutableSetOf<String>()
-        val takeListNum = 200
         return makeBottomScriptUrlList() + ReadText(
             "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
             UsePath.cmdclickUrlHistoryFileName
         ).textToList()
             .distinct()
-            .take(takeListNum)
+            .take(takeUrlListNum)
             .filter {
                 makeUrlHistoryList(
                     it,

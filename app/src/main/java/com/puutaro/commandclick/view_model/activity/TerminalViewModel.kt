@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.view_model.activity
 
-import android.text.Spannable
 import androidx.lifecycle.ViewModel
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath

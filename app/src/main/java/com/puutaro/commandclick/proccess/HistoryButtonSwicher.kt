@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess
 
 import android.content.SharedPreferences
 import android.view.View
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath

@@ -22,5 +22,6 @@ enum class JsInterfaceVariant {
     jsTextToSpeech,
     jsRecordToText,
     jsPdf,
+    jsProcess,
     jsTrans,
 }

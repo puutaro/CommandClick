@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -28,8 +29,12 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.proccess.ScrollPosition
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 
 class   TerminalFragment: Fragment() {
@@ -157,6 +162,7 @@ class   TerminalFragment: Fragment() {
 
     override fun onPause() {
         super.onPause()
+        ScrollPosition.save(this@TerminalFragment.activity)
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
         alertDialogInstance?.dismiss()

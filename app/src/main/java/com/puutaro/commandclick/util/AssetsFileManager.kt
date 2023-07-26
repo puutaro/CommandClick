@@ -8,15 +8,15 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 
-    object AssetsFileManager {
+object AssetsFileManager {
     const val textImagePingPath = "res/png/text_image.png"
     const val pdfImagePingPath = "res/png/pdf_image.png"
-    val urlIntenderFannelName = "UrlIntender.js"
-    val assetsLongPressUrlIntenderPath = "fannels/long_press_menu/${urlIntenderFannelName}"
-    val siteSumamryFannelName = "siteSummary.js"
+    const val urlIntenderFannelName = "UrlIntender.js"
+    const val assetsLongPressUrlIntenderPath = "fannels/long_press_menu/${urlIntenderFannelName}"
+    const val siteSumamryFannelName = "siteSummary.js"
     val assetsLongPressSiteSummaryPath = "fannels/long_press_menu/${siteSumamryFannelName}"
-    val assetsDialogWebViewDirPath = "fannels/dialog_webview"
-    val assetsHighlightSchForDialogWebViewPath =
+    private const val assetsDialogWebViewDirPath = "fannels/dialog_webview"
+    const val assetsHighlightSchForDialogWebViewPath =
         "${assetsDialogWebViewDirPath}/highlightSchForDialogWebView.js"
 
 
