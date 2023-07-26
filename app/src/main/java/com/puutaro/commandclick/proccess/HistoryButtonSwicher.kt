@@ -10,6 +10,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button.CmdClickHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -25,6 +28,9 @@ object HistoryBottunSwitcher {
         sharedPref: SharedPreferences?,
         clickType: CLICLTYPE
     ) {
+        CoroutineScope(Dispatchers.Main).launch{
+            ScrollPosition.save(fragment.activity)
+        }
         val switchOnSource = (
                 historySwitch ==
                         SettingVariableSelects.HistorySwitchSelects.ON.name

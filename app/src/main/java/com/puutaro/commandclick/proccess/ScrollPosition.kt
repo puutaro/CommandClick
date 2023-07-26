@@ -56,7 +56,7 @@ object ScrollPosition {
     ){
         val webView = terminalFragment.binding.terminalWebView
         val url = webView.url ?: return
-        val scrollY = webView.scrollY ?: return
+        val scrollY = webView.scrollY
         saveYPosi(
             url,
             scrollY.toString(),
@@ -96,7 +96,7 @@ object ScrollPosition {
             cmdclickSiteScrollPosiDirPath,
             cmdclickSiteScrollPosiFileName,
             updateScrollPosCon
-        );
+        )
     }
 
     private fun readYPosi(

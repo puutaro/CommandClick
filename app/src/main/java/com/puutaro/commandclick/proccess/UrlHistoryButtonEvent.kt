@@ -231,9 +231,6 @@ class UrlHistoryButtonEvent(
                     )
                 } ?: return@setOnItemClickListener
             alertDialog.dismiss()
-            CoroutineScope(Dispatchers.Main).launch{
-                ScrollPosition.save(fragment.activity)
-            }
             if (
                 selectedUrl.endsWith(
                     UsePath.SHELL_FILE_SUFFIX
