@@ -13,7 +13,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
-import com.puutaro.commandclick.proccess.ScrollPosition
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
@@ -25,7 +24,6 @@ object ExecBackstackHandle {
         activity: MainActivity,
     ) {
         if(keyCode != KeyEvent.KEYCODE_BACK) return
-        ScrollPosition.save(activity)
         DoEexecBackstack(activity)
         return
     }

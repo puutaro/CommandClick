@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.content.Context
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
@@ -8,15 +7,12 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
-import com.puutaro.commandclick.proccess.ScrollPosition
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
@@ -141,7 +137,10 @@ object WebViewClientSetter {
                     webview?.url?.let {
                         val scrollY = webview.scrollY
                         if(scrollY > 300) return@let
-                        webview.scrollY = ScrollPosition.getYPosi(it)
+                        webview.scrollY = ScrollPosition.getYPosi(
+                            terminalFragment,
+                            it
+                        )
                     }
                 }
                 val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"

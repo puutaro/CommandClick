@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.ScrollPosition
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -10,14 +10,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 object ScrollYPosiBackUp {
-    fun backup(){
+    fun backup(
+        terminalFragment: TerminalFragment
+    ){
         val takePosiLinesForBackup = ScrollPosition.takePosiLines
         CoroutineScope(Dispatchers.Main).launch {
-            val cmdclickSiteScrollPosiDirPath =
-                UsePath.cmdclickSiteScrollPosiDirPath
+            val currentAppDirPath = terminalFragment.currentAppDirPath
+            val cmdclickSiteScrollPosiDirPath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+            val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
             FileSystems.createDirs(cmdclickSiteScrollPosiDirPath)
-            val cmdclickSiteScrollPosiFileName =
-                UsePath.cmdclickSiteScrollPosiFileName
             val scrollPosiConList = ReadText(
                 cmdclickSiteScrollPosiDirPath,
                 cmdclickSiteScrollPosiFileName

@@ -35,16 +35,6 @@ object UsePath {
     const val cmdclickScrollPosiDirName = "scrollPosi"
     private const val cmdclickScrollPosiDirRelativePath = "$cmdclickTextHtmlRelativeDirPath/$cmdclickScrollPosiDirName"
     val cmdclickScrollPosiDirPath =  "$rootPath/$cmdclickScrollPosiDirRelativePath"
-    private const val cmdclickTmpSiteDirName = "site"
-    private const val cmdclickSiteRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpSiteDirName"
-    val cmdclickSiteDirPath = "$rootPath/$cmdclickSiteRelativeDirPath"
-    private const val cmdclickSiteScrollPosiDirRelativePath = "$cmdclickSiteRelativeDirPath/$cmdclickScrollPosiDirName"
-    val cmdclickSiteScrollPosiDirPath =  "$rootPath/$cmdclickSiteScrollPosiDirRelativePath"
-    val cmdclickSiteScrollPosiFileName = "scrollPosi.txt"
-    val cmdclickSiteScrollPosiBkFileName = "scrollPosi.txt.bk"
-    private val cmdclickSiteScrollPosiFileRelativePath =
-        "$cmdclickSiteScrollPosiDirRelativePath/$cmdclickSiteScrollPosiFileName"
-    val cmdclickSiteScrollPosiFilePath =  "$rootPath/$cmdclickSiteScrollPosiFileRelativePath"
     private const val cmdclickAppDirAdminName = "AppDirAdmin"
     private const val cmdclickAppDirAdminRelativePath = "$cmdclickConfRelativePath/$cmdclickAppDirAdminName"
     val cmdclickAppDirAdminPath =  "$rootPath/$cmdclickAppDirAdminRelativePath"
@@ -100,13 +90,19 @@ object UsePath {
     val ccImportAdminFannelPath = "${cmdclickSystemAppDirPath}/${ccImportManagerFannelName}"
     val appDirManagerFannelName = "appDirManager.js"
     val appDirManagerFannelPath = "${cmdclickSystemAppDirPath}/${appDirManagerFannelName}"
+
+
     private const val cmdclickSystemDirName = "system"
     private const val cmdclickUrlSystemDirName = "url"
     const val cmdclickUrlSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickUrlSystemDirName}"
+    private const val cmdclickScrollSystemDirName = "scroll"
+    const val cmdclickScrollSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickScrollSystemDirName}"
     private const val cmdclickHitSystemDirName = "hit"
     const val cmdclickHitSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickHitSystemDirName}"
     val cmdclickUrlHistoryFileName = "cmdclickUrlHistory${tsvExtend}"
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory${tsvExtend}"
+    val cmdclickSiteScrollPosiFileName = "scrollPosi${tsvExtend}"
+    val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi${tsvExtend}"
     const val assetsFannelsReplacePrefix = "fannels/startUp"
     const val startUpFannelAsetsDirPath = assetsFannelsReplacePrefix
     const val startUpFannleAssetsPath = assetsFannelsReplacePrefix

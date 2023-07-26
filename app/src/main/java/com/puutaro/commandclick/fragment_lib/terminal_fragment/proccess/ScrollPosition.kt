@@ -1,6 +1,5 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
@@ -12,18 +11,28 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 object ScrollPosition {
 
     val takePosiLines = 100
-    private val cmdclickSiteScrollPosiDirPath = UsePath.cmdclickSiteScrollPosiDirPath
-    private val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
 
     fun getYPosi(
+        terminalFragment: TerminalFragment,
         currentUrl: String
     ): Int {
-        return readYPosi(currentUrl).toInt()
+        return readYPosi(
+            terminalFragment,
+            currentUrl
+        ).toInt()
     }
 
     fun save(
-        activity: FragmentActivity?
+        terminalFragment: TerminalFragment,
+        oldPositionY: Float,
+        rawY: Float,
     ){
+        val activity = terminalFragment.activity
+        val oldCurrYDff = oldPositionY - rawY
+        if(
+            -20 < oldCurrYDff
+            && oldCurrYDff < 20
+        ) return
         val indexTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
@@ -58,15 +67,20 @@ object ScrollPosition {
         val url = webView.url ?: return
         val scrollY = webView.scrollY
         saveYPosi(
+            terminalFragment,
             url,
             scrollY.toString(),
         )
     }
 
     private fun saveYPosi(
+        terminalFragment: TerminalFragment,
         currentUrl: String,
         scrollPosi: String
     ){
+        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val cmdclickSiteScrollPosiDirPath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+        val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
         if(
             currentUrl.isEmpty()
         ) return
@@ -100,11 +114,16 @@ object ScrollPosition {
     }
 
     private fun readYPosi(
+        terminalFragment: TerminalFragment,
         currentUrl: String
     ): Float {
         if(
             currentUrl.isEmpty()
         ) return 0f
+        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val cmdclickSiteScrollPosiDirPath =
+            "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
+        val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
         val isRegisterPrefix = howRegisterPrefix(
             currentUrl
         )

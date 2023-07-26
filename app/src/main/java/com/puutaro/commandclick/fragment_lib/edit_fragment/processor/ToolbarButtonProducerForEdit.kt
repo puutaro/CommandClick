@@ -156,9 +156,6 @@ class ToolbarButtonProducerForEdit(
                         ).show()
                         return@setOnClickListener
                     }
-                    CoroutineScope(Dispatchers.Main).launch {
-                        ScrollPosition.save(editFragment.activity)
-                    }
                     val onShorth = terminalViewModel.readlinesNum == ReadLines.SHORTH
                     EditLayoutViewHideShow.exec(
                         editFragment,

@@ -50,7 +50,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeT
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.proccess.ScrollPosition
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.util.*
 import kotlin.collections.ArrayList

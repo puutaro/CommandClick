@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -29,12 +28,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.proccess.ScrollPosition
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 
 
 class   TerminalFragment: Fragment() {
@@ -116,14 +111,14 @@ class   TerminalFragment: Fragment() {
         }
 
         ExecDownLoadManager.set(this)
-        ToolbarHideShowWhenTermLong.invoke(
+        ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
             terminalViewModel,
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
         UrlHistoryBackUp.backup(this)
-        ScrollYPosiBackUp.backup()
+        ScrollYPosiBackUp.backup(this)
         AdBlocker.init(this)
 
         WebChromeClientSetter.set(
