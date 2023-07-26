@@ -914,7 +914,8 @@ This, so colled, android app row code library.
 		onClickSort: String(true/false),
 		onSortableJs: String(true/false),
 		onClickUrl: String(true/false),
-		filterCode: String
+		filterCode: String,
+		onDialog: String(true/false)
 	  )
 		- ref: [html automaticaly creation command to edit target edit file]
 
@@ -1059,6 +1060,11 @@ This, so colled, android app row code library.
         	imagePath: String
 	  )
 		-> display image with share button
+
+	- jsDialog.webview(
+		urlStr: String
+	  )
+		- launch webview dialog with url 
 
 				
  - JsStop
