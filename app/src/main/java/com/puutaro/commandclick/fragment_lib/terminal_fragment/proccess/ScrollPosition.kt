@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.ReadText
 
 object ScrollPosition {
 
-    val takePosiLines = 100
+    val takePosiLines = 50
 
     fun getYPosi(
         terminalFragment: TerminalFragment,
