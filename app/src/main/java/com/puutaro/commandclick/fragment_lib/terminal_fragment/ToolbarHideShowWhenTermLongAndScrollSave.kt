@@ -21,6 +21,7 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
 
         val context = terminalFragment.context
         val binding = terminalFragment.binding
+        val terminalWebView = binding.terminalWebView
         val listener =
             context as? TerminalFragment.OnToolBarVisibleChangeListener
         var oldPositionY = 0f
@@ -48,9 +49,11 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                                 event.rawY,
                                 listener
                             )
-                            CoroutineScope(Dispatchers.Main).launch {
+                            val url = terminalWebView.url
+                            CoroutineScope(Dispatchers.IO).launch {
                                 ScrollPosition.save(
                                     terminalFragment,
+                                    url,
                                     oldPositionY,
                                     event.rawY,
                                 )

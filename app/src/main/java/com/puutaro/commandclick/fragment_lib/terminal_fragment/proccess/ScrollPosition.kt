@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object ScrollPosition {
 
@@ -24,47 +22,32 @@ object ScrollPosition {
 
     fun save(
         terminalFragment: TerminalFragment,
+        url: String?,
         oldPositionY: Float,
         rawY: Float,
     ){
-        val activity = terminalFragment.activity
+        if(
+            !terminalFragment.isVisible
+        ) return
+        if(
+            url.isNullOrEmpty()
+        ) return
         val oldCurrYDff = oldPositionY - rawY
         if(
             -20 < oldCurrYDff
             && oldCurrYDff < 20
         ) return
-        val indexTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
-            activity,
-            activity?.getString(R.string.index_terminal_fragment)
+        execSave(
+            terminalFragment,
+            url
         )
-        if(
-            indexTerminalFragment != null
-            && indexTerminalFragment.isVisible
-        ) {
-            execSave(
-                indexTerminalFragment,
-            )
-            return
-        }
-        val editExecuteTerminalFragment = TargetFragmentInstance().getFromFragment<TerminalFragment>(
-            activity,
-            activity?.getString(R.string.edit_execute_terminal_fragment)
-        )
-        if(
-            editExecuteTerminalFragment != null
-            && editExecuteTerminalFragment.isVisible
-        ) {
-            execSave(
-                editExecuteTerminalFragment,
-            )
-        }
     }
 
     private fun execSave(
-        terminalFragment: TerminalFragment
+        terminalFragment: TerminalFragment,
+        url: String,
     ){
         val webView = terminalFragment.binding.terminalWebView
-        val url = webView.url ?: return
         val scrollY = webView.scrollY
         saveYPosi(
             terminalFragment,
