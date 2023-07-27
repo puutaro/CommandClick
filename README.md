@@ -38,7 +38,7 @@ Table of Contents
   * [Import library](#import-library)
   * [Config](#config)
   * [Termux setting](#termux-setting)
-  * [Select term](#select-term)
+  * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
   * [Search mode](#search-mode)
@@ -130,6 +130,7 @@ At the same time, if you installed code editor, edit new file.
     | `srcImageAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
     | `srcAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
     | `imageLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
+    | `noScrollSaveUrls` | `file path string` | ignore scroll yPosition save |
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
@@ -674,9 +675,9 @@ You can set by onley this menu press.
 
 
 
-#### Select term
+#### No scroll save url
 
-You can select terminal tab form `term_1` to `term_4`.
+Register scroll y position ignore domain 
 
 #### Term reflesh
 
