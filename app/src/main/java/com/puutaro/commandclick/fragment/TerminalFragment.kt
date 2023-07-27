@@ -59,6 +59,7 @@ class   TerminalFragment: Fragment() {
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     var ignoreHistoryPathList: List<String>? = null
+    var noScrollSaveUrls = emptyList<String>()
     var srcImageAnchorLongPressMenuFilePath: String = String()
     var srcAnchorLongPressMenuFilePath: String = String()
     var imageLongPressMenuFilePath: String = String()

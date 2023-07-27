@@ -111,12 +111,15 @@ object UsePath {
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
+    val settingsDirPath = "\${01}/\${001}/settings"
     val srcImageAnchorLongPressMenuFilePath =
         "${longPressMenuDirPath}/srcImageAnchorLongPressMenu.txt"
     val srcAnchorLongPressMenuFilePath =
         "${longPressMenuDirPath}/srcAnchorLongPressMenu.txt"
     val imageLongPressMenuFilePath =
         "${longPressMenuDirPath}/imageLongPressMenu.txt"
+    val noScrollSaveUrlsFilePath =
+        "${settingsDirPath}/noScrollSaveUrls.txt"
 
     fun makeOmitPath(
         path: String

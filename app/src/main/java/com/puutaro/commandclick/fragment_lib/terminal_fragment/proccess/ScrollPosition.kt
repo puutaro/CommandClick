@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
+import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -10,11 +11,22 @@ object ScrollPosition {
 
     val takePosiLines = 50
 
-    fun getYPosi(
+    fun execScroll(
         terminalFragment: TerminalFragment,
+        webView: WebView,
         currentUrl: String
-    ): Int {
-        return readYPosi(
+    ) {
+        val scrollY = webView.scrollY
+        if(
+            scrollY > 300
+        ) return
+        if(
+            judgeNoExec(
+                terminalFragment,
+                currentUrl
+            )
+        ) return
+        webView.scrollY = readYPosi(
             terminalFragment,
             currentUrl
         ).toInt()
@@ -69,6 +81,12 @@ object ScrollPosition {
         ) return
         if(
             scrollPosi.isEmpty()
+        ) return
+        if(
+            judgeNoExec(
+                terminalFragment,
+                currentUrl
+            )
         ) return
         val isRegisterPrefix = howRegisterPrefix(
             currentUrl
@@ -141,5 +159,21 @@ object ScrollPosition {
                 || currentUrl.startsWith(WebUrlVariables.httpsPrefix)
                 || currentUrl.startsWith(WebUrlVariables.filePrefix)
                 || currentUrl.startsWith(WebUrlVariables.slashPrefix)
+    }
+
+    private fun judgeNoExec(
+        terminalFragment: TerminalFragment,
+        currentUrl: String
+    ): Boolean {
+        val noScrollSaveUrlList = terminalFragment.noScrollSaveUrls
+        if(
+            noScrollSaveUrlList.isEmpty()
+        ) return false
+        return noScrollSaveUrlList.filter {
+            if(
+                it.isEmpty()
+            ) return@filter false
+            currentUrl.startsWith(it)
+        }.isNotEmpty()
     }
 }

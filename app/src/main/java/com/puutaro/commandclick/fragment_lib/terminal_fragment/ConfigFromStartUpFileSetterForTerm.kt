@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -131,6 +132,11 @@ object ConfigFromStartUpFileSetterForTerm {
                 CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
                 String()
             )
+
+            terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
+            )
         }
 
         val fannelDirName = currentScriptFileName
@@ -250,5 +256,13 @@ object ConfigFromStartUpFileSetterForTerm {
         ) terminalFragment.imageLongPressMenuFilePath =
             imageLongPressMenuFilePathSource
 
+        val noScrollSaveUrls = SettingVariableReader.setListFromPath(
+            settingVariableList,
+            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
+        )
+        if(
+            noScrollSaveUrls.isNotEmpty()
+        ) terminalFragment.noScrollSaveUrls =
+            noScrollSaveUrls
     }
 }

@@ -85,6 +85,7 @@ object CommandClickScriptVariable {
     val DISABLE_PLAY_BUTTON = "disablePlayButton"
     val DISABLE_EDIT_BUTTON = "disableEditButton"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
+    val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
@@ -123,6 +124,7 @@ object CommandClickScriptVariable {
         DISABLE_SETTING_BUTTON,
         DISABLE_EDIT_BUTTON,
         DISABLE_PLAY_BUTTON,
+        NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         IMAGE_LONG_PRESS_MENU_FILE_PATH
@@ -243,6 +245,8 @@ object CommandClickScriptVariable {
         UsePath.srcAnchorLongPressMenuFilePath
     private val imageLongPressMenuFilePath =
         UsePath.imageLongPressMenuFilePath
+    private val noScrollSaveUrlsFilePath =
+        UsePath.noScrollSaveUrlsFilePath
     private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
         "${listPathForListConSlSpi}=" +
                 "${srcImageAnchorLongPressMenuFilePath}!${limitNumForListConSlSpi}=20" +
@@ -273,6 +277,8 @@ object CommandClickScriptVariable {
                     "${buttonSetfListAddSourceDirPath}=\${01}" +
                             "!${buttonLabel}=ADD"
                 ).joinToString(" ")
+    private val setVariableValueForNoScrollSaveUrlsFilePath =
+        "${listPathForListConSlSpi}=${noScrollSaveUrlsFilePath}"
     val setVariableForSettingHolder: List<String> = listOf(
         "${TERMINAL_DO}:CB=${terminalOn}!${terminalTermux}!${terminalOff}",
         "${EDIT_EXECUTE}:CB=${editExecuteNo}!${editExecuteOnce}!${editExecuteAlways}",
@@ -302,6 +308,7 @@ object CommandClickScriptVariable {
         "${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcImageAnchorLongPressMenuFilePath}",
         "${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcAnchorLongPressMenuFilePath}",
         "${IMAGE_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForImageLongPressMenuFilePath}",
+        "${NO_SCROLL_SAVE_URLS}:DSL=${setVariableValueForNoScrollSaveUrlsFilePath}",
     )
 
     fun makeShellScriptName(
@@ -497,7 +504,7 @@ object CommandClickScriptVariable {
         """.trimIndent().replace("EX_INDENT_BLANK", "        ")
     }
 
-    fun makeShellContents(
+    fun makeScriptContents(
         shiban: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String,
@@ -524,6 +531,7 @@ object CommandClickScriptVariable {
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcAnchorLongPressMenuFilePath}
         |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${imageLongPressMenuFilePath}
+        |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
         |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
         |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
         |${IGNORE_HISTORY_PATHS}=""
@@ -560,7 +568,7 @@ object CommandClickScriptVariable {
         onUpdateLastModifyValue: String = onUpdateLastModifyOn,
         shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
     ) {
-        val shellContents =  makeShellContents(
+        val shellContents =  makeScriptContents(
             shiban,
             shellScriptName,
             onUpdateLastModifyValue,
@@ -734,6 +742,7 @@ object CommandClickScriptVariable {
         |${IGNORE_HISTORY_PATHS}=""
         |${EXEC_JS_OR_HTML_PATH}=""
         |${HOME_SCRIPT_URLS_PATH}="${homeScriptUrlsFilePath}"
+        |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
         |${TERMINAL_FONT_COLOR}=""
         |${TERMINAL_COLOR}=""

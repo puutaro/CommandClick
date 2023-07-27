@@ -191,5 +191,10 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+
+        editFragment.onNoUrlSaveMenu = !CommandClickVariables.substituteCmdClickVariable(
+            settingVariableList,
+            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
+        ).isNullOrEmpty()
     }
 }

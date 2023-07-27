@@ -322,4 +322,11 @@ class CommandIndexFragment: Fragment() {
             searchText: String = String(),
         )
     }
+
+    interface OnUpdateNoSaveUrlPathsListener {
+        fun onUpdateNoSaveUrlPaths(
+            currentAppDirPath: String,
+            fannelName: String,
+        )
+    }
 }

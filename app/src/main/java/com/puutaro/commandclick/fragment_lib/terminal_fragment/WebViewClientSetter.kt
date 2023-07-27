@@ -135,10 +135,9 @@ object WebViewClientSetter {
                 super.onPageFinished(webview, url)
                 CoroutineScope(Dispatchers.Main).launch{
                     webview?.url?.let {
-                        val scrollY = webview.scrollY
-                        if(scrollY > 300) return@let
-                        webview.scrollY = ScrollPosition.getYPosi(
+                        ScrollPosition.execScroll(
                             terminalFragment,
+                            webview,
                             it
                         )
                     }

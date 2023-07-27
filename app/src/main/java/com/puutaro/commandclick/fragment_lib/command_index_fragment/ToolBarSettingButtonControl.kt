@@ -21,13 +21,11 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.EnableGoForwardForWebVeiw
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
+import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 private val mainMenuGroupId = 1
 private val submenuTermSlectGroupId = 2
@@ -82,6 +80,12 @@ class ToolBarSettingButtonControl(
                 MenuEnums.INSTALL_FANNEL.itemName
             )
             popup.menu.add(
+                MenuEnums.NO_SCROLL_SAVE_URL.groupId,
+                MenuEnums.NO_SCROLL_SAVE_URL.itemId,
+                MenuEnums.NO_SCROLL_SAVE_URL.order,
+                MenuEnums.NO_SCROLL_SAVE_URL.itemName
+            )
+            popup.menu.add(
                 MenuEnums.FORWARD.groupId,
                 MenuEnums.FORWARD.itemId,
                 MenuEnums.FORWARD.order,
@@ -89,25 +93,25 @@ class ToolBarSettingButtonControl(
             ).setEnabled(
                 EnableGoForwardForWebVeiw.check(cmdIndexFragment)
             )
-            val sub = popup.menu.addSubMenu(
-                MenuEnums.SELECTTERM.groupId,
-                MenuEnums.SELECTTERM.itemId,
-                MenuEnums.SELECTTERM.order,
-                MenuEnums.SELECTTERM.itemName
-            )
-            val currentMonitorFileName = terminalViewModel.currentMonitorFileName
-            (MenuEnums.values()).forEach{
-                val groupId = it.groupId
-                if( groupId != submenuTermSlectGroupId) return@forEach
-                val itemId = it.itemId
-                val checked = it.itemName == currentMonitorFileName
-                sub.add(
-                    groupId,
-                    itemId,
-                    it.order,
-                    it.itemName
-                ).setCheckable(true).setChecked(checked)
-            }
+//            val sub = popup.menu.addSubMenu(
+//                MenuEnums.SELECTTERM.groupId,
+//                MenuEnums.SELECTTERM.itemId,
+//                MenuEnums.SELECTTERM.order,
+//                MenuEnums.SELECTTERM.itemName
+//            )
+//            val currentMonitorFileName = terminalViewModel.currentMonitorFileName
+//            (MenuEnums.values()).forEach{
+//                val groupId = it.groupId
+//                if( groupId != submenuTermSlectGroupId) return@forEach
+//                val itemId = it.itemId
+//                val checked = it.itemName == currentMonitorFileName
+//                sub.add(
+//                    groupId,
+//                    itemId,
+//                    it.order,
+//                    it.itemName
+//                ).setCheckable(true).setChecked(checked)
+//            }
             popup.menu.add(
                 MenuEnums.ADD.groupId,
                 MenuEnums.ADD.itemId,
@@ -174,6 +178,13 @@ class ToolBarSettingButtonControl(
                     InstallFannelHandler.handle(
                         cmdIndexFragment,
                         installFromFannelRepo
+                    )
+                }
+                MenuEnums.NO_SCROLL_SAVE_URL.itemId -> {
+                    NoScrollUrlSaver.save(
+                        cmdIndexFragment,
+                        currentAppDirPath,
+                        String()
                     )
                 }
                 MenuEnums.SELECTTERM.itemId  -> {
@@ -303,8 +314,9 @@ internal enum class MenuEnums(
     TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),
     TERM3(submenuTermSlectGroupId, 60403, 3, "term_3"),
     TERM4(submenuTermSlectGroupId, 60404, 4, "term_4"),
-    INSTALL_FANNEL(mainMenuGroupId, 60600, 6, "install_fannel"),
-    FORWARD(mainMenuGroupId, 60670, 7, "forward")
+    NO_SCROLL_SAVE_URL(mainMenuGroupId, 60600, 6, "no_scroll_save_url"),
+    INSTALL_FANNEL(mainMenuGroupId, 60700, 7, "install_fannel"),
+    FORWARD(mainMenuGroupId, 60870, 8, "forward")
 }
 
 

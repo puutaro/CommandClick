@@ -82,7 +82,7 @@ class EditFragment: Fragment() {
     var disableSettingButton = CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE
     var disableEditButton = CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE
     var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
-
+    var onNoUrlSaveMenu = false
     val indexListLinearLayoutTagName = "indexListLinearLayoutTagName"
 
     override fun onCreateView(
@@ -358,6 +358,13 @@ class EditFragment: Fragment() {
     interface OnLongTermKeyBoardOpenAjustListenerForEdit {
         fun onLongTermKeyBoardOpenAjustForEdit(
             weight: Float
+        )
+    }
+
+    interface OnUpdateNoSaveUrlPathsListenerForEdit {
+        fun onUpdateNoSaveUrlPathsForEdit(
+            currentAppDirPath: String,
+            fannelName: String,
         )
     }
 }

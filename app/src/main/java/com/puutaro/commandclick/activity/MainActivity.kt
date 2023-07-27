@@ -26,6 +26,7 @@ import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUrlPaths
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
@@ -51,6 +52,7 @@ import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import org.eclipse.jgit.diff.Edit
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -77,6 +79,7 @@ class MainActivity:
     CommandIndexFragment.OnLaunchUrlByWebViewListener,
     CommandIndexFragment.OnFilterWebViewListener,
     CommandIndexFragment.OnPageSearchToolbarClickListener,
+    CommandIndexFragment.OnUpdateNoSaveUrlPathsListener,
     EditFragment.onToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -87,7 +90,8 @@ class MainActivity:
     EditFragment.OnTermSizeLongListenerForEdit,
     EditFragment.OnMultiSelectListenerForEdit,
     EditFragment.OnLongPressPlayOrEditButtonListener,
-    EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit {
+    EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit,
+    EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     private var filePath: ValueCallback<Array<Uri>>? = null
@@ -518,6 +522,28 @@ class MainActivity:
         ExecOnLongTermKeyBoardOpenAdjustForEdit.adjust(
             this,
             weight
+        )
+    }
+
+    override fun onUpdateNoSaveUrlPaths(
+        currentAppDirPath: String,
+        fannelName: String,
+    ) {
+        ExecUpdateNoSaveUrlPaths.update(
+            this,
+            currentAppDirPath,
+            fannelName
+        )
+    }
+
+    override fun onUpdateNoSaveUrlPathsForEdit(
+        currentAppDirPath: String,
+        fannelName: String,
+    ) {
+        ExecUpdateNoSaveUrlPaths.update(
+            this,
+            currentAppDirPath,
+            fannelName
         )
     }
  }
