@@ -38,7 +38,7 @@ Table of Contents
   * [Import library](#import-library)
   * [Config](#config)
   * [Termux setting](#termux-setting)
-  * [Select term](#select-term)
+  * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
   * [Search mode](#search-mode)
@@ -675,9 +675,9 @@ You can set by onley this menu press.
 
 
 
-#### Select term
+#### No scroll save url
 
-You can select terminal tab form `term_1` to `term_4`.
+Register scroll y position ignore domain 
 
 #### Term reflesh
 
