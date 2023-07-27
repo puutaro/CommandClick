@@ -53,6 +53,9 @@ object FileSystems {
             || fileName.isEmpty()
         ) return
         val filePath = File(dirPath, fileName)
+        if(!filePath.isDirectory){
+            createDirs(dirPath)
+        }
         try {
             filePath.writeText(contents)
         } catch (e: java.lang.Exception){

@@ -99,7 +99,6 @@ object CommandClickVariables {
     fun makeScriptContentsList(
         currentAppDirPath: String,
         scriptName: String,
-
     ): List<String> {
         val configDirName = scriptName
             .removeSuffix(UsePath.JS_FILE_SUFFIX)

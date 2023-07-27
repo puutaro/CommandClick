@@ -110,8 +110,9 @@ object UsePath {
     val cmdclickFirstHistoryTitle = "firstHistoryTitle${tsvExtend}"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
-    val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val settingsDirPath = "\${01}/\${001}/settings"
+    val homeScriptUrlsFilePath =  "${settingsDirPath}/homeScriptUrlsPath.txt"
+    val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "${longPressMenuDirPath}/srcImageAnchorLongPressMenu.txt"
     val srcAnchorLongPressMenuFilePath =
@@ -120,7 +121,10 @@ object UsePath {
         "${longPressMenuDirPath}/imageLongPressMenu.txt"
     val noScrollSaveUrlsFilePath =
         "${settingsDirPath}/noScrollSaveUrls.txt"
-
+    val selectMenuFannelPath = "\${01}/selectMenu${JS_FILE_SUFFIX}"
+    val menuListDirPathForSelectMenuFannel = "\${01}/\${001}/menuList"
+    val menuListFilePathForSelectMenu =
+        "${menuListDirPathForSelectMenuFannel}/menu.txt"
     fun makeOmitPath(
         path: String
     ): String {

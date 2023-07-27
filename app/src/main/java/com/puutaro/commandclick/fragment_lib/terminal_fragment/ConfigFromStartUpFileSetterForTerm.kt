@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
-import com.puutaro.commandclick.proccess.StartUpScriptMaker
+import com.puutaro.commandclick.proccess.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
 
@@ -91,7 +90,7 @@ object ConfigFromStartUpFileSetterForTerm {
 
         terminalFragment.currentScriptName = currentScriptFileNameSource
 
-        StartUpScriptMaker.make(
+        StartFileMaker.makeForStartupScript(
             terminalFragment,
             terminalFragment.currentAppDirPath
         )

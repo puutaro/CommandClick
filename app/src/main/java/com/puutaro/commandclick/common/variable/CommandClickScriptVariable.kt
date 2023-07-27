@@ -201,7 +201,7 @@ object CommandClickScriptVariable {
         .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
             "Dir"
     private val homeScriptUrlsFilePath =
-        "\${01}/\${001}/${HOME_SCRIPT_URLS_PATH}Dir/${HOME_SCRIPT_URLS_PATH}.txt"
+        UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =
         "\${01}/\${001}/${CMDCLICK_HOME_FANNELS_PATH}Dir/${CMDCLICK_HOME_FANNELS_PATH}.txt"
 
@@ -508,7 +508,8 @@ object CommandClickScriptVariable {
         shiban: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String,
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
+        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
+        execJsOrHtmlPathValue: String = String(),
     ): String{
         val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
         return """${shiban}
@@ -535,7 +536,7 @@ object CommandClickScriptVariable {
         |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
         |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
         |${IGNORE_HISTORY_PATHS}=""
-        |${EXEC_JS_OR_HTML_PATH}=""
+        |${EXEC_JS_OR_HTML_PATH}="${execJsOrHtmlPathValue}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
         |${TERMINAL_COLOR}=""
         |${TERMINAL_FONT_COLOR}=""
@@ -566,13 +567,15 @@ object CommandClickScriptVariable {
         dirPath: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String = onUpdateLastModifyOn,
-        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
+        shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
+        execJsOrHtmlPathValue: String = String(),
     ) {
         val shellContents =  makeScriptContents(
             shiban,
             shellScriptName,
             onUpdateLastModifyValue,
-            shellOrJs
+            shellOrJs,
+            execJsOrHtmlPathValue
         ).let {
             if(shellOrJs != LanguageTypeSelects.JAVA_SCRIPT) return@let it
             it
@@ -640,7 +643,8 @@ object CommandClickScriptVariable {
 
     fun makeButtonExecJS(
         dirPath: String,
-        shellScriptName: String
+        shellScriptName: String,
+        execJsOrHtmlPathValue: String = String()
     ){
         val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
         FileSystems.createDirs(dirPath)
@@ -655,7 +659,8 @@ object CommandClickScriptVariable {
             dirPath,
             shellScriptName,
             onUpdateLastModifyOff,
-            shellOrJs
+            shellOrJs,
+            execJsOrHtmlPathValue
         )
     }
 

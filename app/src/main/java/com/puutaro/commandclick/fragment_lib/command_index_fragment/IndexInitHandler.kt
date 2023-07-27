@@ -8,10 +8,13 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromStartUpFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.proccess.StartUpScriptMaker
+import com.puutaro.commandclick.proccess.StartFileMaker
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object IndexInitHandler {
     fun handle(
@@ -91,22 +94,29 @@ object IndexInitHandler {
                 currentAppDirPath,
             )
         )
-        CommandClickScriptVariable.makeButtonExecJS(
-            currentAppDirPath,
-            UsePath.cmdclickButtonExecShellFileName
-        )
-        CommandClickScriptVariable.makeButtonExecJS(
-            currentAppDirPath,
-            UsePath.cmdclickInternetButtonExecJsFileName
-        )
-        StartUpScriptMaker.make(
-            cmdIndexFragment,
-            currentAppDirPath
-        )
-        ConfigFromStartUpFileSetter.set(
-            cmdIndexFragment,
-            currentAppDirPath,
-        )
+        CoroutineScope(Dispatchers.IO).launch {
+            CommandClickScriptVariable.makeButtonExecJS(
+                currentAppDirPath,
+                UsePath.cmdclickButtonExecShellFileName
+            )
+            CommandClickScriptVariable.makeButtonExecJS(
+                currentAppDirPath,
+                UsePath.cmdclickInternetButtonExecJsFileName,
+                UsePath.selectMenuFannelPath
+            )
+            StartFileMaker.makeForStartupScript(
+                cmdIndexFragment,
+                currentAppDirPath
+            )
+            StartFileMaker.makeForSelectMenu(
+                cmdIndexFragment,
+                currentAppDirPath
+            )
+            ConfigFromStartUpFileSetter.set(
+                cmdIndexFragment,
+                currentAppDirPath,
+            )
+        }
 
     }
 }

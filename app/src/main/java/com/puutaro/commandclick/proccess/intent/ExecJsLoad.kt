@@ -6,6 +6,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -61,12 +62,23 @@ object ExecJsLoad {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val jsContentsList = if (jsContentsListSource.isNullOrEmpty()) {
+        val fannelDirName = selectedJsFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        val jsContents = if (jsContentsListSource.isNullOrEmpty()) {
             ReadText(
                 recentAppDirPath,
                 selectedJsFileName
-            ).textToList()
-        } else jsContentsListSource
+            ).readText()
+        } else jsContentsListSource.joinToString("\n")
+        val jsContentsList =
+            ScriptPreWordReplacer.replace(
+                jsContents,
+                recentAppDirPath,
+                fannelDirName,
+                selectedJsFileName,
+            ).split("\n")
         val substituteSettingVariableList =
             CommandClickVariables.substituteVariableListFromHolder(
                 jsContentsList,
