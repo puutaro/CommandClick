@@ -60,41 +60,10 @@ object ExecOnLongClickDo {
                 return contextItemSelected
             }
             R.id.shell_script_menu_edit -> {
-                SharePreffrenceMethod.putSharePreffrence(
-                    sharedPref,
-                    mapOf(
-                        SharePrefferenceSetting.current_script_file_name.name
-                                to shellScriptName,
-                    )
-                )
-                val shellContentsList = ReadText(
-                    currentAppDirPath,
-                    shellScriptName
-                ).textToList()
-                val validateErrMessage = ValidateShell.correct(
+                ScriptFileEdit.edit(
                     cmdIndexFragment,
-                    shellContentsList,
-                    shellScriptName
-                )
-                if(validateErrMessage.isNotEmpty()){
-                    val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
-                    VaridateionErrDialog.show(
-                        cmdIndexFragment,
-                        shellScriptPath,
-                        validateErrMessage
-                    )
-                    return contextItemSelected
-                }
-                val editFragmentTag = DecideEditTag(
-                    shellContentsList,
                     currentAppDirPath,
-                    shellScriptName
-                ).decideForEdit()
-                val listener = cmdIndexFragment.context
-                        as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                listener?.onLongClickMenuItemsforCmdIndex(
-                    LongClickMenuItemsforCmdIndex.EDIT,
-                    editFragmentTag
+                    shellScriptName,
                 )
                 return contextItemSelected
             }

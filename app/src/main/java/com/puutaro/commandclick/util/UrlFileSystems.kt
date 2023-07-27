@@ -31,6 +31,9 @@ object UrlFileSystems {
     val cmdBookmaker =
         "https://raw.githubusercontent.com/" +
                 "puutaro/commandclick-repository/master/fannel/cmdBookmaker.js"
+    val webSearcher =
+            "https://raw.githubusercontent.com/" +
+                    "puutaro/commandclick-repository/master/fannel/webSearcher.js"
 
     fun getFileNameFromUrl(
         urlStr: String

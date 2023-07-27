@@ -12,6 +12,7 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
@@ -84,6 +85,12 @@ class ToolBarSettingButtonControl(
                 MenuEnums.NO_SCROLL_SAVE_URL.itemId,
                 MenuEnums.NO_SCROLL_SAVE_URL.order,
                 MenuEnums.NO_SCROLL_SAVE_URL.itemName
+            )
+            popup.menu.add(
+                MenuEnums.EDIT_STARTUP.groupId,
+                MenuEnums.EDIT_STARTUP.itemId,
+                MenuEnums.EDIT_STARTUP.order,
+                MenuEnums.EDIT_STARTUP.itemName
             )
             popup.menu.add(
                 MenuEnums.FORWARD.groupId,
@@ -218,6 +225,13 @@ class ToolBarSettingButtonControl(
                     )
                     terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_4
                 }
+                MenuEnums.EDIT_STARTUP.itemId -> {
+                    ScriptFileEdit.edit(
+                        cmdIndexFragment,
+                        currentAppDirPath,
+                        UsePath.cmdclickStartupJsName,
+                    )
+                }
                 MenuEnums.TERM_REFRESH.itemId -> {
                     TermRefresh.refresh(
                         terminalViewModel.currentMonitorFileName
@@ -314,9 +328,10 @@ internal enum class MenuEnums(
     TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),
     TERM3(submenuTermSlectGroupId, 60403, 3, "term_3"),
     TERM4(submenuTermSlectGroupId, 60404, 4, "term_4"),
-    NO_SCROLL_SAVE_URL(mainMenuGroupId, 60600, 6, "no_scroll_save_url"),
-    INSTALL_FANNEL(mainMenuGroupId, 60700, 7, "install_fannel"),
-    FORWARD(mainMenuGroupId, 60870, 8, "forward")
+    EDIT_STARTUP(mainMenuGroupId, 60600, 6, "edit_startup"),
+    NO_SCROLL_SAVE_URL(mainMenuGroupId, 60700, 7, "no_scroll_save_url"),
+    INSTALL_FANNEL(mainMenuGroupId, 60800, 8, "install_fannel"),
+    FORWARD(mainMenuGroupId, 60900, 9, "forward")
 }
 
 

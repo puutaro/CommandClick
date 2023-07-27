@@ -23,6 +23,7 @@ object StartFileMaker {
     private val selectMenu = UrlFileSystems.selectMenu
     private val highlightSch = UrlFileSystems.highlightSch
     private val cmdBookmaker = UrlFileSystems.cmdBookmaker
+    private val webSearcher = UrlFileSystems.webSearcher
 
 
     fun makeForStartupScript(
@@ -57,7 +58,7 @@ object StartFileMaker {
             }
             withContext(Dispatchers.IO){
                 UrlFileSystems.createFile(
-                    urlTrans,
+                    webSearcher,
                     currentAppDirPath,
                 )
             }
@@ -81,10 +82,6 @@ object StartFileMaker {
             listOf(
                 "${currentAppDirPath}/" +
                         UrlFileSystems.getFileNameFromUrl(
-                            urlTrans
-                        ),
-                "${currentAppDirPath}/" +
-                        UrlFileSystems.getFileNameFromUrl(
                             textToSpeech
                         ),
             )
@@ -95,8 +92,9 @@ object StartFileMaker {
             cmdclickStartupJsName,
             listOf(
                 UrlFileSystems.getFileNameFromUrl(siteSummaryUrl),
+                UrlFileSystems.getFileNameFromUrl(shareImage),
+                UrlFileSystems.getFileNameFromUrl(webSearcher),
                 UrlFileSystems.getFileNameFromUrl(urlIntender),
-                UrlFileSystems.getFileNameFromUrl(shareImage)
             )
         )
         InitSettingListFile.makeFile(
@@ -115,6 +113,7 @@ object StartFileMaker {
             listOf(
                 UrlFileSystems.getFileNameFromUrl(siteSummaryUrl),
                 UrlFileSystems.getFileNameFromUrl(urlIntender),
+                UrlFileSystems.getFileNameFromUrl(webSearcher),
             )
         )
     }
@@ -140,6 +139,12 @@ object StartFileMaker {
                     cmdBookmaker,
                     currentAppDirPath,
                 )
+                withContext(Dispatchers.IO){
+                    UrlFileSystems.createFile(
+                        urlTrans,
+                        currentAppDirPath,
+                    )
+                }
             }
             val selectMenuListFilePath = InitSettingListFile.pathReplace(
                 UsePath.menuListFilePathForSelectMenu,
@@ -153,6 +158,12 @@ object StartFileMaker {
                 listOf(
                     UrlFileSystems.getFileNameFromUrl(
                         siteSummaryUrl
+                    ),
+                    UrlFileSystems.getFileNameFromUrl(
+                        urlTrans
+                    ),
+                    UrlFileSystems.getFileNameFromUrl(
+                        webSearcher
                     ),
                     UrlFileSystems.getFileNameFromUrl(
                         cmdBookmaker
