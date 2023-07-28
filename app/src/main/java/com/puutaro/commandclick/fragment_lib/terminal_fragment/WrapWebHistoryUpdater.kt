@@ -106,11 +106,6 @@ object WrapWebHistoryUpdater {
                 activity,
                 cmdVariableEditFragmentTag
             )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "debug.js",
-            cmdVariableEditFragmentTag + "\n" + cmdVariableEditFragment.toString()
-        )
         if(
             commandIndexFragment?.isVisible != true
             && cmdVariableEditFragment?.isVisible != true
