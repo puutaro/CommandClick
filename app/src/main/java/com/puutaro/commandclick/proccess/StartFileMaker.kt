@@ -62,6 +62,10 @@ object StartFileMaker {
                     currentAppDirPath,
                 )
             }
+            UrlFileSystems.createFile(
+                cmdBookmaker,
+                currentAppDirPath,
+            )
         }
         CommandClickScriptVariable.makeAutoJsFile(
             currentAppDirPath,
@@ -83,6 +87,10 @@ object StartFileMaker {
                 "${currentAppDirPath}/" +
                         UrlFileSystems.getFileNameFromUrl(
                             textToSpeech
+                        ),
+                "${currentAppDirPath}/" +
+                        UrlFileSystems.getFileNameFromUrl(
+                            cmdBookmaker
                         ),
             )
         )
@@ -135,10 +143,6 @@ object StartFileMaker {
                     highlightSch,
                     currentAppDirPath,
                 )
-                UrlFileSystems.createFile(
-                    cmdBookmaker,
-                    currentAppDirPath,
-                )
                 withContext(Dispatchers.IO){
                     UrlFileSystems.createFile(
                         urlTrans,
@@ -165,9 +169,22 @@ object StartFileMaker {
                     UrlFileSystems.getFileNameFromUrl(
                         webSearcher
                     ),
-                    UrlFileSystems.getFileNameFromUrl(
-                        cmdBookmaker
-                    ),
+                )
+            )
+        }
+    }
+
+    fun makeForConfig(
+        fragment: Fragment,
+        currentAppDirPath: String
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+            InitSettingListFile.makeFile(
+                UsePath.homeFannelsFilePath,
+                UsePath.cmdclickSystemAppDirPath,
+                UsePath.cmdclickConfigFileName,
+                listOf(
+                    "${UsePath.cmdclickDefaultAppDirName}__.js",
                 )
             )
         }

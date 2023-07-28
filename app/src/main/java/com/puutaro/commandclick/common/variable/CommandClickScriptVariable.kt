@@ -203,7 +203,7 @@ object CommandClickScriptVariable {
     private val homeScriptUrlsFilePath =
         UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =
-        "\${01}/\${001}/${CMDCLICK_HOME_FANNELS_PATH}Dir/${CMDCLICK_HOME_FANNELS_PATH}.txt"
+        UsePath.homeFannelsFilePath
 
     private val buttonCmd = ButtonViewProducer.ButtonEditKey.cmd.name
     private val buttonLabel = ButtonViewProducer.ButtonEditKey.label.name

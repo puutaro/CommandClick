@@ -85,7 +85,14 @@ object UsePath {
     val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"
     val cmdclickConfigFileName = "cmdclickConfig${JS_FILE_SUFFIX}"
     private val cmdclickConfigFileRelativePath = "$cmdclickSystemAppRelativePath/$cmdclickConfigFileName"
-    val cmdclickConfigFilePath =  "$rootPath/$cmdclickConfigFileRelativePath"
+    val cmdclickConfigFilePath = "$rootPath/$cmdclickConfigFileRelativePath"
+    val cmdclickConfigFannelDirName =  "cmdclickConfigDir"
+    private val cmdclickConfigFannelDirRelativePath =
+        "$cmdclickSystemAppRelativePath/$cmdclickConfigFannelDirName"
+    val cmdclickConfigFannelDirPath =
+        "$rootPath/$cmdclickConfigFannelDirRelativePath"
+    val homeFannelsFilePath =
+        "\${01}/\${001}/settings/homeFannelsFilePaths.txt"
     val ccImportManagerFannelName = "ccImportManager.js"
     val ccImportAdminFannelPath = "${cmdclickSystemAppDirPath}/${ccImportManagerFannelName}"
     val appDirManagerFannelName = "appDirManager.js"

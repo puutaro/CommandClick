@@ -95,6 +95,10 @@ object IndexInitHandler {
             )
         )
         CoroutineScope(Dispatchers.IO).launch {
+            StartFileMaker.makeForConfig(
+                cmdIndexFragment,
+                currentAppDirPath
+            )
             CommandClickScriptVariable.makeButtonExecJS(
                 currentAppDirPath,
                 UsePath.cmdclickButtonExecShellFileName
