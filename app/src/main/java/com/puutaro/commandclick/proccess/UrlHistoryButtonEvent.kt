@@ -353,14 +353,14 @@ class UrlHistoryButtonEvent(
         return when(
             fragment
         ){
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
+            is CommandIndexFragment -> {
                 fragment.bottomScriptUrlList.map {
                         url ->
                     val title = url.split("/")
                         .lastOrNull()
                         ?: String()
                     "${title}\t${url}"
-                }
+                }.reversed()
             }
             is EditFragment -> {
                 fragment.bottomScriptUrlList.map {

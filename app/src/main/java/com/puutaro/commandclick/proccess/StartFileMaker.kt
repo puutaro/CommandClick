@@ -24,6 +24,7 @@ object StartFileMaker {
     private val highlightSch = UrlFileSystems.highlightSch
     private val cmdBookmaker = UrlFileSystems.cmdBookmaker
     private val webSearcher = UrlFileSystems.webSearcher
+    private val askGpt35 = UrlFileSystems.askGpt35
 
 
     fun makeForStartupScript(
@@ -66,6 +67,10 @@ object StartFileMaker {
                 cmdBookmaker,
                 currentAppDirPath,
             )
+            UrlFileSystems.createFile(
+                askGpt35,
+                currentAppDirPath,
+            )
         }
         CommandClickScriptVariable.makeAutoJsFile(
             currentAppDirPath,
@@ -87,6 +92,10 @@ object StartFileMaker {
                 "${currentAppDirPath}/" +
                         UrlFileSystems.getFileNameFromUrl(
                             textToSpeech
+                        ),
+                "${currentAppDirPath}/" +
+                        UrlFileSystems.getFileNameFromUrl(
+                            askGpt35
                         ),
                 "${currentAppDirPath}/" +
                         UrlFileSystems.getFileNameFromUrl(
