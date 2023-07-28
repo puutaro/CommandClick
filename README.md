@@ -2,7 +2,8 @@
 # Command Click
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))  
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
+<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
@@ -73,9 +74,11 @@ Table of Contents
 
 App installation
 -----  
-- Android 8+  
-Reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
-Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
+- Android 8+
+
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
+
+Or reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
 
 
 Usage
