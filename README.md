@@ -44,6 +44,8 @@ Table of Contents
   * [Search mode](#search-mode)
     * [Terminal filter](#terminal-filter)
     * [Terminal search](#terminal-search)
+    * [Launch web menu](#launch-web-menu)
+    * [Highlight search](#highlight-search)
     * [Web search](#web-search)
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
@@ -699,10 +701,17 @@ It's default setting in terminal short size. If you type string, realtime filter
 
 When terminal mark or web mark long press, you can search typing word.
 
-##### Web search
+##### Launch web menu
 
-If you web mark press when terminal size long, you can web search.
-Also, Click url on web terminal view, this mode is automatic set
+This is shortcut menu with internet button.
+When you look website, press internet button no highlight, launch menu by inernet button script
+
+
+#### Highlight search
+
+This is speed search mode.  
+When you look website, highlight text and click internet button..
+
 
 
 ### Auto exec script
