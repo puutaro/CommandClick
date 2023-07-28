@@ -110,8 +110,8 @@ object StartFileMaker {
             listOf(
                 UrlFileSystems.getFileNameFromUrl(siteSummaryUrl),
                 UrlFileSystems.getFileNameFromUrl(shareImage),
-                UrlFileSystems.getFileNameFromUrl(webSearcher),
                 UrlFileSystems.getFileNameFromUrl(urlIntender),
+                UrlFileSystems.getFileNameFromUrl(webSearcher),
             )
         )
         InitSettingListFile.makeFile(

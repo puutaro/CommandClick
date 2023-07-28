@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
@@ -55,6 +56,10 @@ class WebViewJsDialog(
                 com.puutaro.commandclick.R.id.webview_dialog_webview
             ) ?: return@launch
             webViewSetting(webView)
+            ExecDownLoadManager.set(
+                terminalFragment,
+                webView
+            )
             webView.loadUrl(
                 urlStr
             )
@@ -108,6 +113,8 @@ class WebViewJsDialog(
         settings.domStorageEnabled = true
         settings.allowContentAccess = true
         settings.allowFileAccess = true
+        settings.builtInZoomControls = true
+        settings.displayZoomControls = false
         settings.textZoom = (terminalFragment.fontZoomPercent * 95 ) / 100
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
         webView.addJavascriptInterface(

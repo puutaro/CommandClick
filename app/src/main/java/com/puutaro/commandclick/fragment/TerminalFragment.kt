@@ -111,7 +111,10 @@ class   TerminalFragment: Fragment() {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
 
-        ExecDownLoadManager.set(this)
+        ExecDownLoadManager.set(
+            this,
+            binding.terminalWebView
+        )
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
             terminalViewModel,
