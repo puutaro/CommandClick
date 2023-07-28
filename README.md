@@ -3,9 +3,11 @@
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
-[![Release: 0.0.40](https://img.shields.io/badge/Release-0.0.40-brightgreen.svg)]((https://github.com/puutaro/CommandClick/releases))
+![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
+![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
-So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .
+
+So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .  
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
@@ -81,7 +83,7 @@ App installation
 
 Or get it on belllow release link  
   
-<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/badge/get it on Release-0.0.40-brightgreen.svg"  width="170"></a>　　
+<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
 
 
 
