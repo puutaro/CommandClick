@@ -1,5 +1,10 @@
-![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)
+
 # Command Click
+![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
+[![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
+[![Release: 0.0.40](https://img.shields.io/badge/Release-0.0.40-brightgreen.svg)]((https://github.com/puutaro/CommandClick/releases))
+<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
@@ -44,6 +49,8 @@ Table of Contents
   * [Search mode](#search-mode)
     * [Terminal filter](#terminal-filter)
     * [Terminal search](#terminal-search)
+    * [Launch web menu](#launch-web-menu)
+    * [Highlight search](#highlight-search)
     * [Web search](#web-search)
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
@@ -68,9 +75,14 @@ Table of Contents
 
 App installation
 -----  
-- Android 8+  
-Reffer to [here release page](https://github.com/puutaro/CommandClick/releases), and apk download to your smartphone.  
-Futuristicly, upload `Google play` and `F-droid` (`F-droid` [ready](https://gitlab.com/fdroid/rfp/-/issues/2353).)
+- Android 8+
+
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
+
+Or get it on belllow release link  
+  
+<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/badge/get it on Release-0.0.40-brightgreen.svg"  width="170"></a>　　
+
 
 
 Usage
@@ -699,10 +711,17 @@ It's default setting in terminal short size. If you type string, realtime filter
 
 When terminal mark or web mark long press, you can search typing word.
 
-##### Web search
+##### Launch web menu
 
-If you web mark press when terminal size long, you can web search.
-Also, Click url on web terminal view, this mode is automatic set
+This is shortcut menu with internet button.
+When you look website, press internet button no highlight, launch menu by inernet button script
+
+
+#### Highlight search
+
+This is speed search mode.  
+When you look website, highlight text and click internet button..
+
 
 
 ### Auto exec script
