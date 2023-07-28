@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
 import android.content.Context
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -22,7 +23,7 @@ class EditedTextContents(
     readSharePreffernceMap: Map<String, String>
 ) {
 
-    private val curentAppDirPath = readSharePreffernceMap.get(
+    private val currentAppDirPath = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
     private val currentScriptFileName = readSharePreffernceMap.get(
@@ -81,13 +82,19 @@ class EditedTextContents(
         )
 
         FileSystems.writeFile(
-            curentAppDirPath,
+            currentAppDirPath,
             updateScriptFileName,
             submitScriptContentsList.joinToString("\n")
         )
         if(
-            updateScriptFileName.lowercase() == currentScriptFileName.lowercase()
-        ) return
+            updateScriptFileName.lowercase()
+            == currentScriptFileName.lowercase()
+        ) {
+            judgeAndUpdateWeekAgoLastModify(
+                currentScriptFileName
+            )
+            return
+        }
         val sharePref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
@@ -97,11 +104,11 @@ class EditedTextContents(
             )
         )
         val currentFannelDir = makeFunnelDirPath(
-            curentAppDirPath,
+            currentAppDirPath,
             currentScriptFileName
         )
         val updateFannelDir = makeFunnelDirPath(
-            curentAppDirPath,
+            currentAppDirPath,
             updateScriptFileName
         )
         FileSystems.copyDirectory(
@@ -112,8 +119,20 @@ class EditedTextContents(
             currentFannelDir
         )
         FileSystems.removeFiles(
-            curentAppDirPath,
+            currentAppDirPath,
             currentScriptFileName,
+        )
+    }
+
+    private fun judgeAndUpdateWeekAgoLastModify(
+        scriptFileName: String,
+    ){
+        if(
+            editFragment.onUpdateLastModify
+        ) return
+        FileSystems.updateWeekPastLastModified(
+            currentAppDirPath,
+            scriptFileName
         )
     }
 

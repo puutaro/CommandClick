@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.fragment.EditFragment
 
 class UpdatelastModifyForEdit {
     private val guardDirPathList = listOf(
@@ -8,10 +9,14 @@ class UpdatelastModifyForEdit {
         UsePath.cmdclickSystemAppDirPath
     )
     fun judge(
+        editFragment: EditFragment,
         currentAppDirPath: String
     ): Boolean {
-        return guardDirPathList.indexOf(currentAppDirPath).let {
-            it == -1
-        }
+        if(
+            guardDirPathList.indexOf(
+                currentAppDirPath
+            ) != -1
+        ) return false
+        return editFragment.onUpdateLastModify
     }
 }

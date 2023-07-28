@@ -45,9 +45,17 @@ object ExecOnLongClickDo {
         } catch (e: ClassCastException) {
             return false
         }
-        val listPosition = info?.position ?: cmdIndexFragment.mParentContextMenuListIndex
-        val shellScriptName = cmdListView.adapter.getItem(listPosition).toString()
-        if(shellScriptName == CommandClickScriptVariable.EMPTY_STRING) return true
+        val listPosition = info
+            ?.position
+            ?: cmdIndexFragment.mParentContextMenuListIndex
+        val shellScriptName =
+            cmdListView.adapter
+                .getItem(listPosition)
+                .toString()
+        if(
+            shellScriptName
+            == CommandClickScriptVariable.EMPTY_STRING
+        ) return true
         when (item.itemId) {
             R.id.shell_script_menu_delete -> {
                 ConfirmDialogForDelete.show(

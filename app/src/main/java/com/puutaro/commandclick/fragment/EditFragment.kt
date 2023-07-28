@@ -83,6 +83,7 @@ class EditFragment: Fragment() {
     var disableEditButton = CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE
     var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
     var onNoUrlSaveMenu = false
+    var onUpdateLastModify = false
     val indexListLinearLayoutTagName = "indexListLinearLayoutTagName"
 
     override fun onCreateView(
@@ -179,7 +180,10 @@ class EditFragment: Fragment() {
             this,
         )
         if(
-            UpdatelastModifyForEdit().judge(currentAppDirPath)
+            UpdatelastModifyForEdit().judge(
+                this,
+                currentAppDirPath
+            )
         ) {
             FileSystems.updateLastModified(
                 UsePath.cmdclickAppDirAdminPath,

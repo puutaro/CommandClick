@@ -8,6 +8,7 @@ import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
+import java.util.Date
 
 
 object FileSystems {
@@ -117,15 +118,47 @@ object FileSystems {
             dirPath,
             fileName
         )
-        if(!monitor1File.exists()) {
+        if(
+            !monitor1File.exists()
+        ) {
            createFiles(
                 dirPath,
                 fileName
             )
-        } else {
-            val time= System.currentTimeMillis()
-            monitor1File.setLastModified(time)
+            return
         }
+        val time= System.currentTimeMillis()
+        monitor1File.setLastModified(time)
+    }
+
+    fun updateWeekPastLastModified(
+        dirPath: String,
+        fileName: String
+    ){
+        if(
+            fileName ==
+            CommandClickScriptVariable.EMPTY_STRING
+            || fileName ==
+            CommandClickScriptVariable.EMPTY_STRING +
+            UsePath.SHELL_FILE_SUFFIX
+        ) return
+        val monitor1File = File(
+            dirPath,
+            fileName
+        )
+        if(
+            !monitor1File.exists()
+        ) {
+            createFiles(
+                dirPath,
+                fileName
+            )
+            return
+        }
+        val currentTime= System.currentTimeMillis()
+        val weekPastMillis =  (24 * 7) * (60 * 60) * 1000
+        val weekPastTime = currentTime - weekPastMillis
+        monitor1File.setLastModified(weekPastTime)
     }
 
     fun sortedFiles(
