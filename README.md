@@ -79,6 +79,8 @@ App installation
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
+Or get it on belllow release link  
+  
 <a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/badge/get it on Release-0.0.40-brightgreen.svg"  width="170"></a>　　
 
 
