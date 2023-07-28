@@ -45,6 +45,7 @@ Table of Contents
   * [Import library](#import-library)
   * [Config](#config)
   * [Termux setting](#termux-setting)
+  * [Edit startup](#edit-startup)
   * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
@@ -687,7 +688,11 @@ You can set by onley this menu press.
 
 - When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
+#### Edit startup
 
+Edit `statup script` contenst.  
+`statup script` is setting script for `current app directory`. So this setting directly link to usability.    
+[ref](#startup-script)
 
 #### No scroll save url
 
