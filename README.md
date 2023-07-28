@@ -79,7 +79,7 @@ App installation
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
-[![Release: 0.0.40](https://img.shields.io/badge/Release-0.0.40-brightgreen.svg)](https://github.com/puutaro/CommandClick/releases)
+[![Release: 0.0.40](https://img.shields.io/badge/Release-0.0.40-brightgreen.svg)](https://github.com/puutaro/CommandClick/releases){:target="_blank"}
 
 
 Usage
