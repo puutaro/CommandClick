@@ -123,7 +123,7 @@ class WebViewJsDialog(
                 currentFannelPath,
                 rightMenuMapStr
             )
-            webViewBackBtnSetClickListner(
+            webViewBackBtnSetClickListener(
                 webView,
                 webViewBackBtn,
             )
@@ -354,7 +354,7 @@ class WebViewJsDialog(
         terminalFragment.binding.terminalWebView.loadUrl(currentUrl)
     }
 
-    private fun webViewBackBtnSetClickListner(
+    private fun webViewBackBtnSetClickListener(
         webView: WebView,
         webViewBackBtn: ImageButton?,
     ){
