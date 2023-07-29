@@ -197,5 +197,11 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
         ).isNullOrEmpty()
+        editFragment.onUpdateLastModify = !(
+                CommandClickVariables.substituteCmdClickVariable(
+                    settingVariableList,
+                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+                ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
+                )
     }
 }

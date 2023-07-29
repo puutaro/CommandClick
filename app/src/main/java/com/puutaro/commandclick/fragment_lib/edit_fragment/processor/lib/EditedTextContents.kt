@@ -96,7 +96,6 @@ class EditedTextContents(
             == currentScriptFileName.lowercase()
         ) {
             judgeAndUpdateWeekAgoLastModify(
-                currentScriptFileName,
                 submitScriptContentsList
 
             )
@@ -133,9 +132,22 @@ class EditedTextContents(
     }
 
     private fun judgeAndUpdateWeekAgoLastModify(
-        scriptFileName: String,
         submitScriptContentsList: List<String>
     ){
+        if(
+            howUpdateLastModify(
+                submitScriptContentsList
+            )
+        ) return
+        FileSystems.updateWeekPastLastModified(
+            currentAppDirPath,
+            currentScriptFileName
+        )
+    }
+
+    private fun howUpdateLastModify(
+        submitScriptContentsList: List<String>
+    ): Boolean {
         val fannelDirName = currentScriptFileName
             .removeSuffix(UsePath.JS_FILE_SUFFIX)
             .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
@@ -152,19 +164,12 @@ class EditedTextContents(
                 currentScriptFileName,
             )
         }?.split("\n")
-        editFragment.onUpdateLastModify = !(
+        return !(
                 CommandClickVariables.substituteCmdClickVariable(
                     settingVariableList,
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
                 ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
                 )
-        if(
-            editFragment.onUpdateLastModify
-        ) return
-        FileSystems.updateWeekPastLastModified(
-            currentAppDirPath,
-            scriptFileName
-        )
     }
 
     private fun makeUpdateScriptFileName(
