@@ -35,6 +35,7 @@ object ScrollPosition {
     fun save(
         terminalFragment: TerminalFragment,
         url: String?,
+        scrollY: Int,
         oldPositionY: Float,
         rawY: Float,
     ){
@@ -51,16 +52,16 @@ object ScrollPosition {
         ) return
         execSave(
             terminalFragment,
-            url
+            url,
+            scrollY
         )
     }
 
     private fun execSave(
         terminalFragment: TerminalFragment,
         url: String,
+        scrollY: Int,
     ){
-        val webView = terminalFragment.binding.terminalWebView
-        val scrollY = webView.scrollY
         saveYPosi(
             terminalFragment,
             url,

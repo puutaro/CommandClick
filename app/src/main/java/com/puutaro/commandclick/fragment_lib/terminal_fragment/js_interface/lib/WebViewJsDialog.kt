@@ -7,10 +7,13 @@ import android.content.Intent
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
@@ -19,13 +22,16 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFi
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog_js_interface.JsWebViewDialogManager
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJsInterfaceVariant
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.ByteArrayInputStream
 
 
 class WebViewJsDialog(
@@ -34,6 +40,7 @@ class WebViewJsDialog(
 
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
+    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
 
     fun create(
         urlStrSrc: String
@@ -158,6 +165,13 @@ class WebViewJsDialog(
             val currentUrl = webView.url
                 ?: return@setOnClickListener
             terminalFragment.dialogInstance?.dismiss()
+            ScrollPosition.save(
+                terminalFragment,
+                currentUrl,
+                webView.scrollY,
+                100f,
+                0f,
+            )
             terminalFragment.binding.terminalWebView.loadUrl(currentUrl)
         }
     }
@@ -203,31 +217,21 @@ class WebViewJsDialog(
                 }
                 return false
             }
+
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                if(
+                    terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
+                ) return super.shouldInterceptRequest(view, request)
+                val empty3 = ByteArrayInputStream("".toByteArray())
+                val blocklist = terminalViewModel.blocklist
+                if (blocklist.contains(":::::" + request?.url?.host)) {
+                    return WebResourceResponse("text/plain", "utf-8", empty3)
+                }
+                return super.shouldInterceptRequest(view, request)
+            }
         }
     }
-
-//    private fun webChromeClientSetter(
-//        webView: WebView,
-//        progressBar: ProgressBar?
-//    ){
-//        webView.webChromeClient = object : WebChromeClient() {
-//            override fun onProgressChanged(view: WebView, newProgress: Int) {
-//                super.onProgressChanged(view, newProgress)
-//                if (newProgress == 100) {
-//                    progressBar?.visibility = View.GONE
-//                } else {
-//                    progressBar?.visibility = View.VISIBLE
-//                    progressBar?.progress = newProgress
-//                }
-//            }
-//            override fun getDefaultVideoPoster(): Bitmap? {
-//                return Bitmap.createBitmap(
-//                    50,
-//                    50,
-//                    Bitmap.Config.ARGB_8888
-//                )
-//            }
-//        }
-//    }
-
 }

@@ -54,6 +54,7 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                                 ScrollPosition.save(
                                     terminalFragment,
                                     url,
+                                    terminalWebView.scrollY,
                                     oldPositionY,
                                     event.rawY,
                                 )
