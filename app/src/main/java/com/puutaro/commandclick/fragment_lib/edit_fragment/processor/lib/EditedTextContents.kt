@@ -4,6 +4,7 @@ import android.content.Context
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -11,9 +12,11 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
@@ -69,7 +72,9 @@ class EditedTextContents(
     fun save(
         lastScriptContentsList: List<String>,
     ){
-        if(lastScriptContentsList.isEmpty()) return
+        if(
+            lastScriptContentsList.isEmpty()
+        ) return
 
         val submitScriptContentsList = CommentOutLabelingSection.commentOut(
             lastScriptContentsList,
@@ -91,11 +96,14 @@ class EditedTextContents(
             == currentScriptFileName.lowercase()
         ) {
             judgeAndUpdateWeekAgoLastModify(
-                currentScriptFileName
+                currentScriptFileName,
+                submitScriptContentsList
+
             )
             return
         }
-        val sharePref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharePref =
+            editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharePref,
             mapOf(
@@ -126,7 +134,30 @@ class EditedTextContents(
 
     private fun judgeAndUpdateWeekAgoLastModify(
         scriptFileName: String,
+        submitScriptContentsList: List<String>
     ){
+        val fannelDirName = currentScriptFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            submitScriptContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd
+        )?.joinToString("\n")?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptFileName,
+            )
+        }?.split("\n")
+        editFragment.onUpdateLastModify = !(
+                CommandClickVariables.substituteCmdClickVariable(
+                    settingVariableList,
+                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+                ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
+                )
         if(
             editFragment.onUpdateLastModify
         ) return

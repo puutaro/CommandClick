@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
@@ -196,11 +197,5 @@ object ConfigFromScriptFileSetter {
             settingVariableList,
             CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
         ).isNullOrEmpty()
-        editFragment.onUpdateLastModify = !(
-                CommandClickVariables.substituteCmdClickVariable(
-                    settingVariableList,
-                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
-                ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
-                )
     }
 }
