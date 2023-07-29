@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.ListView
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
@@ -14,10 +16,10 @@ import java.io.File
 
 class LongPressForSrcImageAnchor(
     private val terminalFragment: TerminalFragment,
+    private val context: Context?,
+    private val srcImageAnchorMenuFilePath: String,
 )  {
-    private val context = terminalFragment.context
     private val currentAppDirPath = terminalFragment.currentAppDirPath
-    private val srcImageAnchorMenuFilePath = terminalFragment.srcImageAnchorLongPressMenuFilePath
     private val srcImageAnchorLongPressMenuFilePathObj = File(srcImageAnchorMenuFilePath)
     private val srcImageAnchorLongPressMenuDirPath = srcImageAnchorLongPressMenuFilePathObj.parent
     private val srcImageAnchorLongPressMenuFileName = srcImageAnchorLongPressMenuFilePathObj.name
@@ -53,7 +55,6 @@ class LongPressForSrcImageAnchor(
             )
             return
         }
-
         val dialogListView = ListView(context)
         val dialogListAdapter = ArrayAdapter(
             context,
@@ -76,7 +77,6 @@ class LongPressForSrcImageAnchor(
             .create()
         alertDialog.window?.setGravity(Gravity.BOTTOM)
         alertDialog.show()
-
         alertDialog.setOnCancelListener(
             object : DialogInterface.OnCancelListener {
                 override fun onCancel(

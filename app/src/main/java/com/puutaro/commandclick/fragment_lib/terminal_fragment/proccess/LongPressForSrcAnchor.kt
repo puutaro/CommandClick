@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.R
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.ArrayAdapter
@@ -15,10 +16,10 @@ import java.io.File
 
 class LongPressForSrcAnchor(
     private val terminalFragment: TerminalFragment,
+    private val context: Context?,
+    private val srcAnchorMenuFilePath: String,
 )  {
-    private val context = terminalFragment.context
     private val currentAppDirPath = terminalFragment.currentAppDirPath
-    private val srcAnchorMenuFilePath = terminalFragment.srcAnchorLongPressMenuFilePath
     private val srcAnchorLongPressMenuFilePathObj = File(srcAnchorMenuFilePath)
     private val srcAnchorLongPressMenuDirPath = srcAnchorLongPressMenuFilePathObj.parent
     private val srcAnchorLongPressMenuFileName = srcAnchorLongPressMenuFilePathObj.name

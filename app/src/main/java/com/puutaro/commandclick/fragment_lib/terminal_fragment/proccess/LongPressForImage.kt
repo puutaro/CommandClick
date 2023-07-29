@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.R
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.view.Gravity
 import android.widget.ArrayAdapter
@@ -15,10 +16,10 @@ import java.io.File
 
 class LongPressForImage(
     private val terminalFragment: TerminalFragment,
+    private val context: Context?,
+    private val imageMenuFilePath: String,
 )  {
-    private val context = terminalFragment.context
     private val currentAppDirPath = terminalFragment.currentAppDirPath
-    private val imageMenuFilePath = terminalFragment.imageLongPressMenuFilePath
     private val imageLongPressMenuFilePathObj = File(imageMenuFilePath)
     private val imageLongPressMenuDirPath = imageLongPressMenuFilePathObj.parent
     private val imageLongPressMenuFileName = imageLongPressMenuFilePathObj.name

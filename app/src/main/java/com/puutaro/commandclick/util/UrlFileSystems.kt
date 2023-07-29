@@ -25,9 +25,6 @@ object UrlFileSystems {
     val selectMenu =
         "https://raw.githubusercontent.com/puutaro/" +
                 "commandclick-repository/master/fannel/selectMenu.js"
-    val highlightSch =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/highlightSch.js"
     val cmdBookmaker =
         "https://raw.githubusercontent.com/" +
                 "puutaro/commandclick-repository/master/fannel/cmdBookmaker.js"

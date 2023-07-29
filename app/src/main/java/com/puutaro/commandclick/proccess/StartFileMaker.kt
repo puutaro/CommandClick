@@ -21,7 +21,6 @@ object StartFileMaker {
     private val textToSpeech = UrlFileSystems.textToSpeech
     private val urlTrans = UrlFileSystems.urlTrans
     private val selectMenu = UrlFileSystems.selectMenu
-    private val highlightSch = UrlFileSystems.highlightSch
     private val cmdBookmaker = UrlFileSystems.cmdBookmaker
     private val webSearcher = UrlFileSystems.webSearcher
     private val askGpt35 = UrlFileSystems.askGpt35
@@ -148,10 +147,6 @@ object StartFileMaker {
                     selectMenu,
                     currentAppDirPath,
                 )
-                UrlFileSystems.createFile(
-                    highlightSch,
-                    currentAppDirPath,
-                )
                 withContext(Dispatchers.IO){
                     UrlFileSystems.createFile(
                         urlTrans,
@@ -183,9 +178,104 @@ object StartFileMaker {
         }
     }
 
+    fun makeForWebSearcher(
+        fragment: Fragment,
+        currentAppDirPath: String,
+    ){
+        val webSearcherFannelName = UrlFileSystems.getFileNameFromUrl(
+            webSearcher
+        )
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                val centerMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                    UsePath.centerMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    centerMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            siteSummaryUrl
+                        ),
+                    )
+                )
+            }
+            withContext(Dispatchers.IO) {
+                val centerMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                    UsePath.rightMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    centerMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            urlTrans
+                        ),
+                    )
+                )
+            }
+            withContext(Dispatchers.IO) {
+                val srcImageAnchorMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                    UsePath.srcImageAnchorMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    srcImageAnchorMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            siteSummaryUrl
+                        ),
+                    )
+                )
+            }
+            withContext(Dispatchers.IO) {
+                val srcAnchorListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                    UsePath.srcAnchorListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    srcAnchorListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            siteSummaryUrl
+                        ),
+                    )
+                )
+            }
+            withContext(Dispatchers.IO) {
+                val imageMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                    UsePath.imageMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    imageMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            shareImage
+                        ),
+                    )
+                )
+            }
+        }
+    }
+
     fun makeForConfig(
         fragment: Fragment,
-        currentAppDirPath: String
     ){
         CoroutineScope(Dispatchers.IO).launch {
             InitSettingListFile.makeFile(

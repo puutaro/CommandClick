@@ -11,6 +11,7 @@ object UsePath {
     val JSX_FILE_SUFFIX = ".jsx"
     val HTML_FILE_SUFFIX = ".html"
     val HTM_FILE_SUFFIX = ".htm"
+    val TXT_FILE_SUFFIX = ".txt"
     private val rootPath = Environment.getExternalStorageDirectory().absolutePath +
             "/" + Environment.DIRECTORY_DOCUMENTS
     private const val cmdclickDirName = "cmdclick"
@@ -132,6 +133,16 @@ object UsePath {
     val menuListDirPathForSelectMenuFannel = "\${01}/\${001}/menuList"
     val menuListFilePathForSelectMenu =
         "${menuListDirPathForSelectMenuFannel}/menu.txt"
+    val centerMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/centerMenuList${TXT_FILE_SUFFIX}"
+    val rightMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/rightMenuList${TXT_FILE_SUFFIX}"
+    val srcImageAnchorMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/srcImageAnchorMenuList${TXT_FILE_SUFFIX}"
+    val srcAnchorListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/srcAnchorMenuList${TXT_FILE_SUFFIX}"
+    val imageMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/imageMenuList${TXT_FILE_SUFFIX}"
     fun makeOmitPath(
         path: String
     ): String {

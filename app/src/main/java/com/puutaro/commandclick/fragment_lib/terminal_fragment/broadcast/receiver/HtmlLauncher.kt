@@ -100,7 +100,15 @@ object HtmlLauncher{
         )
         if(
             onDialog == "true"
-        ) JsDialog(terminalFragment).webView(htmlFilePath)
+        ) JsDialog(terminalFragment).webView(
+            htmlFilePath,
+            String(),
+            String(),
+            String(),
+            String(),
+            String(),
+            String()
+        )
         else binding.terminalWebView.loadUrl(htmlFilePath)
     }
 

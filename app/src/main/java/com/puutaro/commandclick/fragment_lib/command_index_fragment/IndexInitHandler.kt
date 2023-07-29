@@ -96,8 +96,7 @@ object IndexInitHandler {
         )
         CoroutineScope(Dispatchers.IO).launch {
             StartFileMaker.makeForConfig(
-                cmdIndexFragment,
-                currentAppDirPath
+                cmdIndexFragment
             )
             CommandClickScriptVariable.makeButtonExecJS(
                 currentAppDirPath,
@@ -113,6 +112,10 @@ object IndexInitHandler {
                 currentAppDirPath
             )
             StartFileMaker.makeForSelectMenu(
+                cmdIndexFragment,
+                currentAppDirPath
+            )
+            StartFileMaker.makeForWebSearcher(
                 cmdIndexFragment,
                 currentAppDirPath
             )
