@@ -1091,7 +1091,13 @@ This, so colled, android app row code library.
 		-> display image with share button
 
 	- jsDialog.webview(
-		urlStr: String
+		urlStr: String,
+		currentFannelPath: String,
+	        centerMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
+	        rightMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
+	        srcAnchorImageMapStr: String(ex menuFilePath=~), 
+	        srcAnchorMapStr: String(ex menuFilePath=~), 
+	        imageMapStr: String(ex menuFilePath=~), 
 	  )
 		- launch webview dialog with url 
 
