@@ -7,7 +7,9 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 
-So called `Script browser`, It's a enforced browser by javascript and shellscript. Also, it is termux gui client .  
+So called `Script browser`.  
+It's a enforced browser by javascript and shellscript.   
+Also, it is termux gui client .  
 
 ![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
 
@@ -45,6 +47,7 @@ Table of Contents
   * [Import library](#import-library)
   * [Config](#config)
   * [Termux setting](#termux-setting)
+  * [Edit startup](#edit-startup)
   * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
@@ -687,7 +690,11 @@ You can set by onley this menu press.
 
 - When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
+#### Edit startup
 
+Edit `statup script` contenst.  
+`statup script` is setting script for `current app directory`. So this setting directly link to usability.    
+[ref](#startup-script)
 
 #### No scroll save url
 
