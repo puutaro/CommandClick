@@ -22,51 +22,51 @@ class JsDialog(
 ) {
     val context = terminalFragment.context
 
-    val listJsDialog = ListJsDialog(
+    private val listJsDialog = ListJsDialog(
         terminalFragment,
     )
 
-    val formJsDialog = FormJsDialog(
+    private val formJsDialog = FormJsDialog(
         terminalFragment
     )
 
-    val multiSelectJsDialog = MultiSelectJsDialog(
+    private val multiSelectJsDialog = MultiSelectJsDialog(
         terminalFragment
     )
 
-    val multiSelectGridViewJsDialog = MultiSelectGridViewJsDialog(
+    private val multiSelectGridViewJsDialog = MultiSelectGridViewJsDialog(
         terminalFragment
     )
 
-    val multiSelectOnlyImageGridViewJsDialog = MultiSelectOnlyImageGridViewJsDialog(
+    private val multiSelectOnlyImageGridViewJsDialog = MultiSelectOnlyImageGridViewJsDialog(
         terminalFragment
     )
 
-    val multiSelectSpannableJsDialog = MultiSelectSpannableJsDialog(
+    private val multiSelectSpannableJsDialog = MultiSelectSpannableJsDialog(
         terminalFragment
     )
 
-    val gridJsDialog = GridJsDialog(
+    private val gridJsDialog = GridJsDialog(
         terminalFragment
     )
 
-    val onlyImageGridJsDialog = OnlyImageGridJsDialog(
+    private val onlyImageGridJsDialog = OnlyImageGridJsDialog(
         terminalFragment
     )
 
-    val onlySpannableGridJsDialog = OnlySpannableGridJsDialog(
+    private val onlySpannableGridJsDialog = OnlySpannableGridJsDialog(
         terminalFragment
     )
 
-    val asciiArtJsDialog = AsciiArtJsDialog(
+    private val asciiArtJsDialog = AsciiArtJsDialog(
         terminalFragment
     )
 
-    val imageJsDialog = ImageJsDialog(
+    private val imageJsDialog = ImageJsDialog(
         terminalFragment
     )
 
-    val webViewJsDialog = WebViewJsDialog(
+    private val webViewJsDialog = WebViewJsDialog(
         terminalFragment
     )
 

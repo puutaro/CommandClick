@@ -108,7 +108,13 @@ class CommandIndexFragment: Fragment() {
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
         context?.let {
-            window?.statusBarColor = Color.parseColor(terminalColor)
+            window?.statusBarColor = try {
+                Color.parseColor(terminalColor)
+            } catch (e: Exception){
+                Color.parseColor(
+                    CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
+                )
+            }
         }
 
 

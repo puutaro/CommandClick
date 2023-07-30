@@ -2,13 +2,11 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 
 object AppHistoryManager {
+
+    private val jsSuffix = UsePath.JS_FILE_SUFFIX
     fun makeAppHistoryFileNameForInit (
         currentAppDirPath: String,
         currentScriptFileName: String = String()
@@ -40,6 +38,11 @@ object AppHistoryManager {
         }
         return appHistoryList.slice(
             1..appHistoryListLength - 1
-        ).joinToString()
+        ).joinToString().let {
+            if(
+                it == jsSuffix
+            ) return@let String()
+            it
+        }
     }
 }

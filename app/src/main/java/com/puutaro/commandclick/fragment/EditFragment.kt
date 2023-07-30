@@ -16,7 +16,7 @@ import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdatelastModifyForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
@@ -180,7 +180,7 @@ class EditFragment: Fragment() {
             this,
         )
         if(
-            UpdatelastModifyForEdit().judge(
+            UpdateLastModifyForEdit().judge(
                 this,
                 currentAppDirPath
             )
