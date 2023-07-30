@@ -1,16 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.content.SharedPreferences
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
-import androidx.appcompat.view.ContextThemeWrapper
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,8 +21,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppHistoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
@@ -40,31 +36,12 @@ class CmdClickHistoryButtonEvent (
     private val sharedPref: SharedPreferences?,
     )
 {
-
     private val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
     private val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
     private val context = fragment.context
     private val currentViewContext = historyButtonInnerView.context
-    private val historyListView = RecyclerView(
-        ContextThemeWrapper(
-            currentViewContext,
-            com.puutaro.commandclick.R.style.ScrollbarRecyclerView
-        )
-    )
-    private val searchText = makeSearchEditTextView()
     private val searchTextLinearWeight = SearchTextLinearWeight.calculate(fragment)
     private val listLinearWeight = 1F - searchTextLinearWeight
-    private val linearLayoutForTotal = LinearLayoutForTotal.make(
-        currentViewContext
-    )
-    private val linearLayoutForListView = NestLinearLayout.make(
-        currentViewContext,
-        listLinearWeight
-    )
-    private val linearLayoutForSearch = NestLinearLayout.make(
-        currentViewContext,
-        searchTextLinearWeight
-    )
 
     private val homeFannelList = when(
         fragment
@@ -92,6 +69,26 @@ class CmdClickHistoryButtonEvent (
         val historyListAdapter = FannelHistoryAdapter(
             historyList.toMutableList()
         )
+        val fannelHistoryDialog = Dialog(
+            currentViewContext
+        )
+        fannelHistoryDialog.setContentView(
+                com.puutaro.commandclick.R.layout.fannel_history_recycler_view
+            )
+        val searchText =
+            fannelHistoryDialog.findViewById<EditText>(
+                com.puutaro.commandclick.R.id.fannel_history_search_edit_text
+            )
+        val searchTextLinearParams =
+            searchText.layoutParams as LinearLayout.LayoutParams
+        searchTextLinearParams.weight = searchTextLinearWeight
+        val historyListView =
+            fannelHistoryDialog.findViewById<RecyclerView>(
+                com.puutaro.commandclick.R.id.fannel_history_recycler_view
+            )
+        val historyListViewLinearParams =
+            historyListView.layoutParams as LinearLayout.LayoutParams
+        historyListViewLinearParams.weight = listLinearWeight
         historyListView.layoutManager = LinearLayoutManager(
             currentViewContext,
             LinearLayoutManager.VERTICAL,
@@ -101,43 +98,41 @@ class CmdClickHistoryButtonEvent (
         historyListView.layoutManager?.scrollToPosition(
             historyListAdapter.itemCount - 1
         )
-
-        linearLayoutForListView.addView(historyListView)
-
-        makeSearchEditText(historyListAdapter)
-
-        linearLayoutForSearch.addView(searchText)
-        linearLayoutForTotal.addView(linearLayoutForListView)
-        linearLayoutForTotal.addView(linearLayoutForSearch)
-
-
-        val alertDialog = AlertDialog.Builder(
-            context
+        makeSearchEditText(
+            historyListAdapter,
+            searchText
         )
-//            .setTitle("Select app history")
-            .setView(linearLayoutForTotal)
-            .create()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
-            }
-        })
+        fannelHistoryDialog.window
+            ?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        fannelHistoryDialog.window
+            ?.setGravity(Gravity.BOTTOM)
+        fannelHistoryDialog.show()
+        fannelHistoryDialog.setOnCancelListener(
+            object : DialogInterface.OnCancelListener {
+                override fun onCancel(dialog: DialogInterface?) {
+                    terminalViewModel.onDialog = false
+                    fannelHistoryDialog.dismiss()
+                }
+            })
         terminalViewModel.onDialog = true
 
         invokeItemSetLongTimeClickListenerForHistory(
             historyListAdapter,
+            searchText,
             cmdclickAppHistoryDirAdminPath
         )
         invokeItemSetClickListenerForHistory(
-            alertDialog,
+            fannelHistoryDialog,
             historyListAdapter
         )
     }
 
     private fun makeSearchEditText(
-        historyListAdapter: FannelHistoryAdapter
+        historyListAdapter: FannelHistoryAdapter,
+        searchText: EditText,
     ){
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -175,7 +170,7 @@ class CmdClickHistoryButtonEvent (
     }
 
     private fun invokeItemSetClickListenerForHistory(
-        alertDialog: AlertDialog,
+        alertDialog: Dialog,
         historyListAdapter: FannelHistoryAdapter,
     ) {
         historyListAdapter.itemClickListener = object: FannelHistoryAdapter.OnItemClickListener {
@@ -214,6 +209,7 @@ class CmdClickHistoryButtonEvent (
 
     private fun invokeItemSetLongTimeClickListenerForHistory(
         historyListAdapter: FannelHistoryAdapter,
+        searchText: EditText,
         cmdclickAppHistoryDirAdminPath: String,
     ){
         historyListAdapter.itemLongClickListener = object : FannelHistoryAdapter.OnItemLongClickListener {
@@ -275,17 +271,6 @@ class CmdClickHistoryButtonEvent (
         )
         historyListAdapter.historyList.remove(selectedHistoryFile)
         historyListAdapter.notifyDataSetChanged()
-    }
-
-    private fun makeSearchEditTextView(
-    ): EditText {
-        val searchEditText = EditText(currentViewContext)
-        searchEditText.textSize = 20f
-        searchEditText.hint = "search"
-        searchEditText.setPadding(40, 20, 20, 35)
-        searchEditText.setBackgroundResource(android.R.color.transparent)
-        searchEditText.inputType = InputType.TYPE_CLASS_TEXT
-        return searchEditText
     }
 
 
