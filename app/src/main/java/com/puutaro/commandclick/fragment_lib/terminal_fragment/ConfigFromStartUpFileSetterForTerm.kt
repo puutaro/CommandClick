@@ -17,6 +17,10 @@ object ConfigFromStartUpFileSetterForTerm {
     ){
         val activity = terminalFragment.activity
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+        CommandClickScriptVariable.makeConfigJsFile(
+            UsePath.cmdclickSystemAppDirPath,
+            UsePath.cmdclickConfigFileName
+        )
         terminalFragment.currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
             sharePref,
             SharePrefferenceSetting.current_app_dir
@@ -58,7 +62,7 @@ object ConfigFromStartUpFileSetterForTerm {
         )
 
 
-        terminalFragment.fontZoomPercent =  SettingVariableReader.getNumValue(
+        terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE,
