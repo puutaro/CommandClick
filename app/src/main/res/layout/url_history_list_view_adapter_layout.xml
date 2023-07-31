@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/url_hisotry_thumbnail"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:padding="20dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:tint="@color/web_icon_color"
+        android:layout_gravity="center_vertical"
+        android:contentDescription=""
+        />
+<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        >-->
+        <TextView
+            android:id="@+id/url_history_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000"
+            android:padding="5dp"
+            android:textSize="18sp"
+            android:layout_gravity="center_vertical"
+            />
+<!--        <TextView-->
+<!--            android:id="@+id/url_history_domain"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="70dp"-->
+<!--            android:textColor="#000"-->
+<!--            android:padding="5dp"-->
+<!--            android:gravity="center_vertical"-->
+<!--            android:maxLines="1"-->
+<!--            />-->
+<!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

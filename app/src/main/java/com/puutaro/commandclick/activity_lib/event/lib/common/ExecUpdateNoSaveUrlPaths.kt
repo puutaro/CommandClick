@@ -10,6 +10,7 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.UrlTool
 import java.io.File
 
 object ExecUpdateNoSaveUrlPaths {
@@ -106,9 +107,6 @@ object ExecUpdateNoSaveUrlPaths {
         terminalFragment: TerminalFragment,
     ): String? {
         val context = terminalFragment.context
-        val httpsPrefix = "httpsPrefix"
-        val httpPrefix = "httpPrefix"
-        val filePrefix = "filePrefix"
         val url = terminalFragment.binding.terminalWebView.url
             ?: return null
         val isUrl = url.startsWith(WebUrlVariables.filePrefix)
@@ -125,32 +123,6 @@ object ExecUpdateNoSaveUrlPaths {
         if(
             url.startsWith(WebUrlVariables.filePrefix)
         ) return url
-        return url
-            .replace(
-                WebUrlVariables.httpsPrefix,
-                httpsPrefix
-            )
-            .replace(
-                WebUrlVariables.httpPrefix,
-                httpPrefix
-            )
-            .replace(
-                WebUrlVariables.filePrefix,
-                filePrefix
-            )
-            .split("/")
-            .firstOrNull()
-            ?.replace(
-                httpsPrefix,
-                WebUrlVariables.httpsPrefix,
-            )
-            ?.replace(
-                httpPrefix,
-                WebUrlVariables.httpPrefix,
-            )
-            ?.replace(
-                filePrefix,
-                WebUrlVariables.filePrefix,
-            )
+        return UrlTool.extractDomain(url)
     }
 }

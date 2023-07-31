@@ -25,7 +25,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.UrlTitleTrimmer
+import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -304,7 +304,7 @@ class CmdClickHistoryButtonEvent (
             .firstOrNull()
             ?.split("\t")
             ?.firstOrNull() ?: return historyRow
-        val urlTitle = UrlTitleTrimmer.trim(
+        val urlTitle = UrlTool.trimTitle(
             urlTitleSource
         )
         return "${historyRow}\n\t- ${urlTitle}"

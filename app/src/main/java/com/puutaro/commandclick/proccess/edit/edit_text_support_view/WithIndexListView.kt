@@ -50,7 +50,7 @@ import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.UrlTitleTrimmer
+import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -377,7 +377,7 @@ class WithIndexListView(
                     val urlTitleSource =
                         it.split("\t")
                             .firstOrNull() ?:String()
-                    UrlTitleTrimmer.trim(
+                    UrlTool.trimTitle(
                         urlTitleSource
                     )
                 }.filter {
