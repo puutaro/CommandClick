@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import java.io.File
@@ -14,14 +15,16 @@ import java.io.File
 class UrlHistoryAdapter(
     context: Context,
     private val mResource: Int,
-    val urlHistoryList: MutableList<String>
+    private val urlHistoryList: MutableList<String>
 ) : ArrayAdapter<String>(
         context,
         mResource,
         urlHistoryList
     ) {
     private val mInflater =
-        context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+        context.getSystemService(
+            Context.LAYOUT_INFLATER_SERVICE
+        ) as LayoutInflater
 
 
 
@@ -31,22 +34,25 @@ class UrlHistoryAdapter(
      * @param resource リソースID
      * @param items リストビューの要素
      */
-
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        val view: View
-        view = convertView ?: mInflater.inflate(
+    private var displayTimes = 0
+    override fun getView(
+        position: Int,
+        convertView: View?,
+        parent: ViewGroup
+    ): View {
+        val view = convertView ?: mInflater.inflate(
             mResource,
             parent,
             false
         )
-
-        // リストビューに表示する要素を取得
         val titleUrlLine = urlHistoryList[position].split("\t")
-        val title = titleUrlLine.firstOrNull() ?: String()
         val urlStr = titleUrlLine.getOrNull(1) ?: String()
-
-
-        // サムネイル画像を設定
+        val title = titleUrlLine.firstOrNull().let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let urlStr
+            it
+        }
         val thumbnailView = view.findViewById<ImageView>(
             R.id.url_hisotry_thumbnail
         )
@@ -55,22 +61,16 @@ class UrlHistoryAdapter(
             title,
             urlStr
         )
-//            .setImageBitmap(titleUrlLine.getThumbnail())
-
-        // タイトルを設定
         val titleTextView = view.findViewById<TextView>(
             R.id.url_history_title
         )
         titleTextView.text = title
-//        val domainTextView = view.findViewById<TextView>(
-//            R.id.url_history_domain
-//        )
-//        domainTextView.text = UrlTool.extractDomain(urlStr)
+        displayTimes++
         return view
     }
 
     override fun getCount(): Int {
-        return urlHistoryList.size - 1
+        return urlHistoryList.size
     }
 
     override fun clear() {
@@ -78,13 +78,17 @@ class UrlHistoryAdapter(
     }
 
     override fun add(`object`: String?) {
-        if(`object`.isNullOrEmpty()) return
+        if(
+            `object`.isNullOrEmpty()
+        ) return
         urlHistoryList.add(`object`)
     }
 
 
     fun addAll(items: List<String>) {
-        if(items.isEmpty()) return
+        if(
+            items.isEmpty()
+        ) return
         urlHistoryList.addAll(items)
     }
 

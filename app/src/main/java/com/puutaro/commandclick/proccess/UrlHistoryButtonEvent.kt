@@ -56,10 +56,16 @@ class UrlHistoryButtonEvent(
         val urlHistoryListView = urlHistoryDialog.findViewById<ListView>(
             com.puutaro.commandclick.R.id.url_history_list_view
         )
+        val urlHistoryListViewLinearParams =
+            urlHistoryListView.layoutParams as LinearLayout.LayoutParams
+        urlHistoryListViewLinearParams.weight = listLinearWeight
         val urlHistoryList = mekeUrlHistoryList()
         val searchText = urlHistoryDialog.findViewById<EditText>(
             com.puutaro.commandclick.R.id.url_history_search_edit_text
         )
+        val searchTextLinearParams =
+            searchText.layoutParams as LinearLayout.LayoutParams
+        searchTextLinearParams.weight = searchTextLinearWeight
 
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
             historyButtonInnerView.context,
@@ -70,7 +76,6 @@ class UrlHistoryButtonEvent(
         urlHistoryListView.setSelection(
             urlHistoryDisplayListAdapter.count
         )
-
         makeSearchEditText(
             urlHistoryListView,
             urlHistoryDisplayListAdapter,
@@ -89,9 +94,6 @@ class UrlHistoryButtonEvent(
             )
         urlHistoryDialog.window?.setGravity(Gravity.BOTTOM);
         urlHistoryDialog.show()
-
-
-
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryListView,
             urlHistoryList,
