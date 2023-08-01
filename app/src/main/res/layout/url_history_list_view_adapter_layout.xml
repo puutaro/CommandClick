@@ -26,13 +26,13 @@
             android:id="@+id/url_history_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#505050"
+            android:textColor="#3A3A3A"
             android:padding="5dp"
             android:textSize="18sp"
             android:layout_gravity="center_vertical"
             />
 <!--        <TextView-->
-<!--            android:id="@+id/url_history_domain"-->
+<!--            android:id="@+id/url_history_domain" "#494949"-->
 <!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="70dp"-->
 <!--            android:textColor="#000"-->
