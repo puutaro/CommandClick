@@ -177,7 +177,7 @@ class EditTextProducerForEdit(
                 editTextSupportViewNameList.contains(it)
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
-            val isListIndex =  variableTypeList.contains(
+            val isListIndex = variableTypeList.contains(
                 EditTextSupportViewName.LIST_INDEX.str
             )
             when(isListIndex) {
