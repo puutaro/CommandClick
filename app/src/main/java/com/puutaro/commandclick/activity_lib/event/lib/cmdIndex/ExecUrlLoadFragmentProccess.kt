@@ -83,13 +83,13 @@ object ExecUrlLoadFragmentProccess {
             return
         }
         if(!editFragment.isVisible) return
-        if(
-            terminalViewModel.readlinesNum != ReadLines.SHORTH
-        ) return
         EditLayoutViewHideShow.exec(
             editFragment,
             false
         )
+        if(
+            terminalViewModel.readlinesNum != ReadLines.SHORTH
+        ) return
         ExecTerminalLongOrShort.open<CommandIndexFragment>(
             cmdEditFragmentTag,
             supportFragmentManager,

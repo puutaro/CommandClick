@@ -241,6 +241,7 @@ class EditFragment: Fragment() {
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        terminalViewModel.readlinesNum = ReadLines.SHORTH
         val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->

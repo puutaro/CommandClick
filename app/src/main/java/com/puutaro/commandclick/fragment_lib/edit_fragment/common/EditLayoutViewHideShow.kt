@@ -10,5 +10,6 @@ object EditLayoutViewHideShow {
     ){
         editFragment.binding.editTextScroll.isVisible = onShow
         editFragment.binding.editListLinearLayout.isVisible = onShow
+        editFragment.binding.editTextView.isVisible = onShow
     }
 }

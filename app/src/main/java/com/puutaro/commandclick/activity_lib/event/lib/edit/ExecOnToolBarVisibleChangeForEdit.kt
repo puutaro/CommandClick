@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.edit
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
