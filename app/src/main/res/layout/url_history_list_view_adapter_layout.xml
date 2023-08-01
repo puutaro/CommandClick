@@ -26,7 +26,7 @@
             android:id="@+id/url_history_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#2e2e2e"
+            android:textColor="#505050"
             android:padding="5dp"
             android:textSize="18sp"
             android:layout_gravity="center_vertical"
