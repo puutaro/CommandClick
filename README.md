@@ -11,8 +11,6 @@ So called `Script browser`.
 It's a enforced browser by javascript and shellscript.   
 Also, it is termux gui client .  
 
-![image](https://user-images.githubusercontent.com/55217593/216516311-c65c2795-30e3-4487-bd13-0fe8f7e72cdf.png)
-
 
 Pros
 ----
