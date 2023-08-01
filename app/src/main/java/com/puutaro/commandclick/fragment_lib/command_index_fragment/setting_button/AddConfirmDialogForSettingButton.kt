@@ -2,11 +2,11 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 
 import android.app.AlertDialog
 import android.content.DialogInterface
-import android.widget.ArrayAdapter
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -20,7 +20,6 @@ object AddConfirmDialogForSettingButton {
         binding: CommandIndexFragmentBinding,
         currentAppDirPath: String,
         shellScriptName: String,
-        cmdListAdapter: ArrayAdapter<String>,
         languageTypeSelects: LanguageTypeSelects
     ){
         val context = cmdIndexFragment.context
@@ -76,9 +75,8 @@ object AddConfirmDialogForSettingButton {
                         shellScriptContentsQuoteComp
                     )
                 }
-                CommandListManager.execListUpdate(
+                CommandListManager.execListUpdateForCmdIndex(
                     currentAppDirPath,
-                    cmdListAdapter,
                     binding.cmdList,
                 )
             })
@@ -88,19 +86,18 @@ object AddConfirmDialogForSettingButton {
                     currentAppDirPath,
                     shellScriptName,
                 )
-                CommandListManager.execListUpdate(
+                CommandListManager.execListUpdateForCmdIndex(
                     currentAppDirPath,
-                    cmdListAdapter,
                     binding.cmdList,
                 )
             })
             .show()
         alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
             context?.getColor(android.R.color.black) as Int
-        );
+        )
         alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
             context.getColor(android.R.color.black)
-        );
+        )
     }
 }
 

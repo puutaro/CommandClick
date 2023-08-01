@@ -16,14 +16,13 @@ import java.io.File
 
 
 class CopyFileEvent(
-    cmdIndexCommandIndexFragment: CommandIndexFragment,
+    cmdIndexFragment: CommandIndexFragment,
     private val sourceAppDirPath: String,
     private val sourceShellFileName:String,
-    private val cmdListAdaptar: ArrayAdapter<String>,
 ) {
 
-    private val context = cmdIndexCommandIndexFragment.context
-    private val binding = cmdIndexCommandIndexFragment.binding
+    private val context = cmdIndexFragment.context
+    private val binding = cmdIndexFragment.binding
     private val cmdListView = binding.cmdList
     val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
 
@@ -40,7 +39,7 @@ class CopyFileEvent(
             )
         } ?: return
         appDirListView.adapter = appDirListAdapter
-        appDirListView.setSelection(appDirListAdapter.count);
+        appDirListView.setSelection(appDirListAdapter.count)
         val alertDialogBuilder = AlertDialog.Builder(
             context,
         )
@@ -49,7 +48,7 @@ class CopyFileEvent(
             .setTitle("Select app dirctory name")
             .setView(appDirListView)
         val alertdialog = alertDialog.create()
-        alertdialog.getWindow()?.setGravity(Gravity.BOTTOM);
+        alertdialog.window?.setGravity(Gravity.BOTTOM)
         alertdialog.show()
 
 
@@ -116,9 +115,8 @@ class CopyFileEvent(
             selectedShellFilePath
         )
 
-        CommandListManager.execListUpdate(
+        CommandListManager.execListUpdateForCmdIndex(
             sourceAppDirPath,
-            cmdListAdaptar,
             cmdListView,
         )
 

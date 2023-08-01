@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ArrayAdapter
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -14,39 +13,37 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object KeyListenerSetter {
     fun set(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
-        cmdListAdapter: ArrayAdapter<String>
     ){
-        val context = cmdIndexCommandIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
-        val binding = cmdIndexCommandIndexFragment.binding
+        val context = cmdIndexFragment.context
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
         cmdSearchEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
-                if (event.getAction() != KeyEvent.ACTION_DOWN ||
+                if (event.action != KeyEvent.ACTION_DOWN ||
                     keyCode != KeyEvent.KEYCODE_ENTER
                 ) return false
-                Keyboard.hiddenKeyboardForFragment(cmdIndexCommandIndexFragment)
+                Keyboard.hiddenKeyboardForFragment(cmdIndexFragment)
                 if(
                     terminalViewModel.readlinesNum == ReadLines.SHORTH
                 ) {
-                    CommandListManager.execListUpdate(
+                    CommandListManager.execListUpdateForCmdIndex(
                         currentAppDirPath,
-                        cmdListAdapter,
-                        cmdListView
+                        cmdListView,
                     )
                     return false
                 }
                 if(
                     cmdSearchEditText.text.isNullOrEmpty()
                 ) return false
-                if(!cmdIndexCommandIndexFragment.WebSearchSwitch) {
+                if(!cmdIndexFragment.WebSearchSwitch) {
                     return false
                 }
                 UrlTexter.launch(
-                    cmdIndexCommandIndexFragment,
+                    cmdIndexFragment,
                     cmdSearchEditText,
                     cmdSearchEditText.text.toString()
                 )

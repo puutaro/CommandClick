@@ -24,16 +24,18 @@
             android:layout_above="@+id/cmdindex_all_toolbar_linear_layout"
             app:srl_direction="both"
             >
-            <ListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/cmd_list"
                 android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:textIsSelectable="true"
-                android:transcriptMode="alwaysScroll"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
                 android:stackFromBottom="true"
                 />
+            <!--                android:transcriptMode="alwaysScroll"-->
         </com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout>
 
         <LinearLayout

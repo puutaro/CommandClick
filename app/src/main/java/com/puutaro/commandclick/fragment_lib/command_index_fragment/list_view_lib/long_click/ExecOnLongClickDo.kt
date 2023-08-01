@@ -4,23 +4,18 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.ScriptFileDescription
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -31,7 +26,7 @@ object ExecOnLongClickDo {
         currentAppDirPath: String,
         item: MenuItem,
         contextItemSelected: Boolean,
-        cmdListAdapter: ArrayAdapter<String>,
+        fannelIndexListAdapter: FannelIndexListAdapter,
     ): Boolean {
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         val activity = cmdIndexFragment.activity
@@ -40,18 +35,17 @@ object ExecOnLongClickDo {
         val binding = cmdIndexFragment.binding
         val cmdListView = binding.cmdList
 
-        val info: AdapterView.AdapterContextMenuInfo? = try {
-            item.menuInfo as AdapterView.AdapterContextMenuInfo?
-        } catch (e: ClassCastException) {
-            return false
-        }
-        val listPosition = info
-            ?.position
-            ?: cmdIndexFragment.mParentContextMenuListIndex
+//        val info: AdapterView.AdapterContextMenuInfo? = try {
+//            item.menuInfo as AdapterView.AdapterContextMenuInfo?
+//        } catch (e: ClassCastException) {
+//            return false
+//        }
+        val listPosition = cmdIndexFragment.recyclerViewIndex
+//            info
+//            ?.position
+//            ?: cmdIndexFragment.mParentContextMenuListIndex
         val shellScriptName =
-            cmdListView.adapter
-                .getItem(listPosition)
-                .toString()
+            fannelIndexListAdapter.fannelIndexList.get(listPosition)
         if(
             shellScriptName
             == CommandClickScriptVariable.EMPTY_STRING
@@ -62,7 +56,6 @@ object ExecOnLongClickDo {
                     cmdIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
-                    cmdListAdapter,
                     cmdListView
                 )
                 return contextItemSelected
@@ -90,7 +83,6 @@ object ExecOnLongClickDo {
                     currentAppDirPath,
                     shellScriptName,
                     terminalViewModel.currentMonitorFileName,
-                    cmdListAdapter,
                     cmdListView
                 )
                 return contextItemSelected
@@ -110,7 +102,6 @@ object ExecOnLongClickDo {
                     cmdIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
-                    cmdListAdapter,
                 ).invoke()
             }
             R.id.shell_script_menu_description -> {

@@ -8,4 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray_out">#D9D9D9</color>
+    <color name="fannel_icon_color">#49d1a2</color>
+    <color name="file_icon_color">#f5a571</color>
+    <color name="terminal_color">#043d02</color>
+    <color name="web_icon_color">#1b8ef2</color>
+
+
 </resources>

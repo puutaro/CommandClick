@@ -4,9 +4,8 @@ import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
-import android.widget.ArrayAdapter
-import android.widget.ListView
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -22,8 +21,7 @@ object ConfirmDialogforKill {
         currentAppDirPath: String,
         shellScriptName: String,
         currentMonitorFileName: String,
-        cmdListAdapter: ArrayAdapter<String>,
-        cmdListView: ListView
+        cmdListView: RecyclerView
     ){
 
 
@@ -49,9 +47,8 @@ object ConfirmDialogforKill {
                     execCmd
                 )
 
-                CommandListManager.execListUpdate(
+                CommandListManager.execListUpdateForCmdIndex(
                     currentAppDirPath,
-                    cmdListAdapter,
                     cmdListView,
                 )
             })

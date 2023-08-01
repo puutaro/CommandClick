@@ -15,7 +15,6 @@ class AddScriptHandler(
     private val cmdIndexCommandIndexFragment: CommandIndexFragment,
     private val sharedPref: SharedPreferences?,
     private val currentAppDirPath: String,
-    private val cmdListAdapter: ArrayAdapter<String>,
 ) {
     val context = cmdIndexCommandIndexFragment.context
     val binding = cmdIndexCommandIndexFragment.binding
@@ -33,7 +32,7 @@ class AddScriptHandler(
             languageSelectList
         )
         languageSelectListView.adapter = languageSelectListAdapter
-        languageSelectListView.setSelection(languageSelectListAdapter.count);
+        languageSelectListView.setSelection(languageSelectListAdapter.count)
         val alertDialog = AlertDialog.Builder(
             context
         )
@@ -93,7 +92,6 @@ class AddScriptHandler(
                 binding,
                 currentAppDirPath,
                 shellScriptName,
-                cmdListAdapter,
                 languageTypeSelects
             )
         }

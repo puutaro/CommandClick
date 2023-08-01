@@ -4,4 +4,5 @@ import androidx.lifecycle.ViewModel
 
 
 class CommandIndexViewModel: ViewModel() {
+    var onFocusSearchText = false
 }

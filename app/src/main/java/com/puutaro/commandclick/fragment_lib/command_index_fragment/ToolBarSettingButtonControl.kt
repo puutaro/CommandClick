@@ -2,13 +2,13 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
 import android.content.SharedPreferences
-import android.widget.ArrayAdapter
 import android.widget.PopupMenu
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
@@ -35,7 +35,6 @@ private val submenuSettingGroupId = 3
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,
     private val cmdIndexFragment: CommandIndexFragment,
-    private val cmdListAdapter: ArrayAdapter<String>,
     private val sharedPref: SharedPreferences?,
     readSharePreffernceMap: Map<String, String>,
 ){
@@ -51,7 +50,6 @@ class ToolBarSettingButtonControl(
     private val installFromFannelRepo = InstallFromFannelRepo(
         cmdIndexFragment,
         currentAppDirPath,
-        cmdListAdapter,
     )
 
 
@@ -146,7 +144,6 @@ class ToolBarSettingButtonControl(
                         cmdIndexFragment,
                         sharedPref,
                         currentAppDirPath,
-                        cmdListAdapter,
                     ).handle()
                 }
                 MenuEnums.SETTING.itemId -> {

@@ -31,6 +31,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -237,6 +238,8 @@ class EditFragment: Fragment() {
             currentShellContentsList
         )
         editModeHandler.execByHowFullEdit()
+        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+        cmdIndexViewModel.onFocusSearchText = false
         val terminalViewModel: TerminalViewModel by activityViewModels()
         val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {

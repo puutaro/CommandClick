@@ -10,6 +10,7 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
@@ -17,6 +18,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
@@ -28,6 +30,7 @@ class CommandIndexFragment: Fragment() {
     private var _binding: CommandIndexFragmentBinding? = null
     val binding get() = _binding!!
     var mParentContextMenuListIndex: Int = 0
+    var recyclerViewIndex = 0
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
@@ -43,7 +46,6 @@ class CommandIndexFragment: Fragment() {
     var repoCloneProgressJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
     var fannelInstallDialog: AlertDialog? = null
-    var onFocusSearchText = false
     var savedEditTextContents = String()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
@@ -66,6 +68,8 @@ class CommandIndexFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+        cmdIndexViewModel.onFocusSearchText = false
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         val cmdclickAppHistoryDirAdminPath = UsePath.cmdclickAppHistoryDirAdminPath
@@ -117,7 +121,6 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-
         readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
             startUpPref
         )
@@ -128,23 +131,30 @@ class CommandIndexFragment: Fragment() {
         )
 
         val cmdListView = binding.cmdList
+        cmdListView.setHasFixedSize(true)
         val makeListView = MakeListView(
             binding,
             this,
             readSharePreffernceMap
         )
-        val cmdListAdapter = makeListView.makeList(
+        val fannelIndexListAdapter = makeListView.makeList(
             requireContext()
         )
         makeListView.makeClickItemListener(
-            cmdListAdapter
+            fannelIndexListAdapter
         )
-        makeListView.cmdListSwipeToRefresh(
-            cmdListAdapter,
+        makeListView.cmdListSwipeToRefresh()
+        cmdListView.adapter = fannelIndexListAdapter
+        cmdListView.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
         )
-        cmdListView.adapter = cmdListAdapter
+        cmdListView.layoutManager?.scrollToPosition(
+            fannelIndexListAdapter.itemCount - 1
+        )
         makeListView.makeTextFilter(
-            cmdListAdapter,
+            fannelIndexListAdapter,
         )
         registerForContextMenu(cmdListView)
 
@@ -188,7 +198,6 @@ class CommandIndexFragment: Fragment() {
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
             this,
-            cmdListAdapter,
             startUpPref,
             readSharePreffernceMap
         )
@@ -214,13 +223,16 @@ class CommandIndexFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+        cmdIndexViewModel.onFocusSearchText = false
         jsExecuteJob?.cancel()
         _binding = null
     }
 
     override fun onPause() {
         savedEditTextContents = binding.cmdSearchEditText.text.toString()
-        onFocusSearchText = binding.cmdSearchEditText.hasFocus()
+        val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
+        cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         fannelInstallDialog?.dismiss()
         showTerminalJobWhenReuse?.cancel()
         super.onPause()
@@ -241,18 +253,19 @@ class CommandIndexFragment: Fragment() {
     }
 
 
-    override fun onCreateContextMenu(
-        menu: ContextMenu,
-        view: View,
-        menuInfo: ContextMenu.ContextMenuInfo?
-    ) {
-        super.onCreateContextMenu(menu, view, menuInfo)
-        val inflater = this.activity?.menuInflater;
-        inflater?.inflate(R.menu.cmd_index_list_menu, menu)
-    }
+//    override fun onCreateContextMenu(
+//        menu: ContextMenu,
+//        view: View,
+//        menuInfo: ContextMenu.ContextMenuInfo?
+//    ) {
+//        super.onCreateContextMenu(menu, view, menuInfo)
+//        val inflater = this.activity?.menuInflater;
+//        inflater?.inflate(R.menu.cmd_index_list_menu, menu)
+//    }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         super.onContextItemSelected(item)
+
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
             startUpPref
@@ -263,13 +276,13 @@ class CommandIndexFragment: Fragment() {
             readSharePreffernceMap
         )
 
-        val cmdListAdapter = makeListView.makeList(
+        val fannelIndexListAdapter = makeListView.makeList(
             requireContext()
         )
         return makeListView.onLongClickDo (
             item,
             super.onContextItemSelected(item),
-            cmdListAdapter
+            fannelIndexListAdapter
         )
     }
 

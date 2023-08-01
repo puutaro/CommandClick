@@ -1,15 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.R
 import android.content.Context
 import android.view.MenuItem
-import android.widget.ArrayAdapter
 import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.ItemClickListenerSetter
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelContentsClickListener
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelNameClickListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.KeyListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
@@ -32,7 +32,7 @@ class MakeListView(
 
     fun makeList(
         context: Context
-    ):  ArrayAdapter<String> {
+    ): FannelIndexListAdapter {
         FileSystems.createDirs(currentAppDirPath)
         val cmdList = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
             currentAppDirPath
@@ -40,54 +40,56 @@ class MakeListView(
         val baskstackOrder =
             cmdIndexFragment.activity?.supportFragmentManager?.getBackStackEntryCount() ?: 0
         cmdSearchEditText.hint = "(${baskstackOrder}) ${UsePath.makeOmitPath(currentAppDirPathTermux)}"
-        return ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            cmdList
+        return FannelIndexListAdapter(
+            cmdIndexFragment,
+            currentAppDirPath,
+            cmdList.toMutableList()
         )
     }
 
     fun makeTextFilter(
-        cmdListAdapter: ArrayAdapter<String>,
+        cmdListAdapter: FannelIndexListAdapter,
     ){
-        cmdListView.setTextFilterEnabled(false)
-        cmdListView.isTextFilterEnabled = false
-        val filteringCmdStrList = (0..cmdListAdapter.getCount()-1).map{
-            cmdListAdapter.getItem(it) ?: String()
-        }
+//        cmdListView.setTextFilterEnabled(false)
+//        cmdListView.isTextFilterEnabled = false
+//        val filteringCmdStrList = (0..cmdListAdapter.getCount()-1).map{
+//            cmdListAdapter.getItem(it) ?: String()
+//        }
 
         TextChangedListenerAdder.add(
             cmdIndexFragment,
-            filteringCmdStrList,
+            currentAppDirPath,
             cmdListAdapter
         )
 
         KeyListenerSetter.set(
             cmdIndexFragment,
             currentAppDirPath,
-            cmdListAdapter,
         )
     }
 
     fun makeClickItemListener(
-        cmdListAdapter: ArrayAdapter<String>
+        fannelIndexListAdapter: FannelIndexListAdapter
     ){
-        ItemClickListenerSetter.set(
+        FannelNameClickListenerSetter.set(
             cmdIndexFragment,
             currentAppDirPath,
-            cmdListAdapter
+            fannelIndexListAdapter
+        )
+        FannelContentsClickListener.set(
+            cmdIndexFragment,
+            currentAppDirPath,
+            fannelIndexListAdapter
         )
     }
 
     fun cmdListSwipeToRefresh(
-        cmdListAdapter: ArrayAdapter<String>,
     ){
         val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
         cmdListSwipeToRefresh.setOnRefreshListener(SwipyRefreshLayout.OnRefreshListener {
                 direction ->
-            CommandListManager.execListUpdate(
+            CommandListManager.execListUpdateForCmdIndex(
                 currentAppDirPath,
-                cmdListAdapter,
                 cmdListView,
             )
             cmdListSwipeToRefresh.isRefreshing = false
@@ -97,14 +99,14 @@ class MakeListView(
     fun onLongClickDo (
         item: MenuItem,
         contextItemSelected: Boolean,
-        cmdListAdapter: ArrayAdapter<String>,
+        fannelIndexListAdapter: FannelIndexListAdapter,
     ): Boolean {
         return ExecOnLongClickDo.invoke(
             cmdIndexFragment,
             currentAppDirPath,
             item,
             contextItemSelected,
-            cmdListAdapter,
+            fannelIndexListAdapter,
         )
     }
 }

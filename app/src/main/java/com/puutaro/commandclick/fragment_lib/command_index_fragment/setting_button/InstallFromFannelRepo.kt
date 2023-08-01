@@ -20,6 +20,7 @@ import com.puutaro.commandclick.common.variable.FannelListVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
@@ -39,7 +40,6 @@ import java.io.PipedOutputStream
 class InstallFromFannelRepo(
     private val cmdIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
-    private val cmdListAdapter: ArrayAdapter<String>,
 ) {
 
     private val context = cmdIndexFragment.context
@@ -197,9 +197,8 @@ class InstallFromFannelRepo(
                 "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
                 "${currentAppDirPath}/${fannelDir}"
             )
-            CommandListManager.execListUpdate(
+            CommandListManager.execListUpdateForCmdIndex(
                 currentAppDirPath,
-                cmdListAdapter,
                 cmdListView,
             )
             Toast.makeText(
