@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
@@ -163,6 +164,8 @@ class WithEditComponentForListIndex {
         val insertEditText = EditText(context)
         insertEditText.tag = currentVariableName
         insertEditText.id = currentId
+        insertEditText.backgroundTintList =
+            context?.getColorStateList(R.color.gray_out)
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
         insertEditText.setSelectAllOnFocus(true)

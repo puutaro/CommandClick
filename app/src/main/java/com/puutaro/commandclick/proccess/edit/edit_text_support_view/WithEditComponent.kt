@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -337,6 +338,8 @@ class WithEditComponent(
         insertEditText.clearFocus()
         insertEditText.tag = currentVariableName
         insertEditText.id = currentId
+//        insertEditText.setTextColor(context?.getColor(R.color.terminal_color) as Int)
+        insertEditText.backgroundTintList = context?.getColorStateList(R.color.gray_out)
         editViewModel.variableNameToEditTextIdMap.put(
             currentVariableName as String,
             currentId

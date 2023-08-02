@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -53,6 +54,10 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
         FileSystems.createDirs(parentDir)
         val gridButtonView = Button(context)
         gridButtonView.text = gridButtonLabel
+        ButtonSetter.set(
+            context,
+            gridButtonView
+        )
         gridButtonView.setOnClickListener {
                 buttonView ->
             val buttonContext = buttonView.context

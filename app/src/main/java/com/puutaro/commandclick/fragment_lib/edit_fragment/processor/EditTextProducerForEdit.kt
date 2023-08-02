@@ -205,14 +205,20 @@ class EditTextProducerForEdit(
     ): Button {
         val descriptionButton = Button(context)
         val buttonLabel = "Desctiption"
-        descriptionButton.setText(buttonLabel)
+        descriptionButton.text = buttonLabel
+        val linearParamsForButton = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT,
+        )
+        descriptionButton.layoutParams = linearParamsForButton
         context?.let {
             descriptionButton.setTextColor(
                 it.getColor(R.color.white)
             )
-            descriptionButton.setBackgroundTintList(
-                it.getColorStateList(com.puutaro.commandclick.R.color.black)
-            )
+            descriptionButton.backgroundTintList =
+                it.getColorStateList(
+                    com.puutaro.commandclick.R.color.terminal_color
+                )
         }
         descriptionButton.setOnClickListener { innerButtonView ->
             ScriptFileDescription.show(

@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import java.util.Calendar
 
 object DatePickerProducer {
@@ -21,6 +22,10 @@ object DatePickerProducer {
         val chooseButtonStr = "date"
         val insertButtonView = Button(context)
         insertButtonView.text = chooseButtonStr
+        ButtonSetter.set(
+            context,
+            insertButtonView
+        )
 
         setOnButtonClickListener(
             insertButtonView,

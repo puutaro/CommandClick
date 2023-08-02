@@ -14,6 +14,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -65,6 +66,10 @@ object MultiFileSelectGridViewProducer {
         gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
         gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
         gridButtonView.text = gridButtonLabel
+        ButtonSetter.set(
+            context,
+            gridButtonView
+        )
 
         gridButtonView.setOnClickListener {
                 buttonView ->

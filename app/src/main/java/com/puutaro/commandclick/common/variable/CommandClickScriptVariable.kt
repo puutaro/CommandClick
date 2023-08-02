@@ -180,7 +180,8 @@ object CommandClickScriptVariable {
     val TERMINAL_OUTPUT_MODE_DEFAULT_VALUE = terminalOutPutModeNormal
     val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
-    val TERMINAL_COLOR_DEFAULT_VALUE = "#121212"
+    val TERMINAL_COLOR_DEFAULT_VALUE = "#043d02"
+//            #121212
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
     val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff

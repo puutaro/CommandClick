@@ -74,17 +74,19 @@
                         android:contentDescription="@string/history"
                         android:backgroundTint="@color/white"
                         android:layout_gravity="center"
-                        android:layout_weight="0.2"/>
+                        android:layout_weight="0.2"
+                        app:tint="@color/terminal_color"
+                        />
 
                     <ImageButton
                         android:id="@+id/cmdindex_internet_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_terminal"
-                        app:tint="@color/black"
                         android:backgroundTint="@color/gray_out"
                         android:layout_gravity="center"
                         android:enabled="false"
+                        app:tint="@color/terminal_color"
                         android:contentDescription="@string/setting"
                         android:layout_weight="0.1"/>
                     <AutoCompleteTextView
@@ -112,7 +114,9 @@
                         android:backgroundTint="@color/white"
                         android:layout_gravity="center"
                         android:contentDescription="@string/setting"
-                        android:layout_weight="0.2"/>
+                        android:layout_weight="0.2"
+                        app:tint="@color/terminal_color"
+                        />
                 </LinearLayout>
             </android.widget.Toolbar>
         </LinearLayout>

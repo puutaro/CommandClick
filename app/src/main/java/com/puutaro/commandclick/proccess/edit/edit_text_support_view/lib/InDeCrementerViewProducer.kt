@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import android.view.MotionEvent
@@ -7,8 +8,11 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.appcompat.content.res.AppCompatResources
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import kotlinx.coroutines.*
 import java.lang.Runnable
 
@@ -80,6 +84,10 @@ object InDeCrementerViewProducer {
         } else {
             insertButtonView.text = "-"
         }
+        ButtonSetter.set(
+            context,
+            insertButtonView
+        )
 
 
 

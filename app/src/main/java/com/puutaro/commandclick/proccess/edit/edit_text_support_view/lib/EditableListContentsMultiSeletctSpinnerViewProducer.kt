@@ -6,6 +6,7 @@ import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.*
 import java.io.File
 
@@ -44,9 +45,12 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
         val buttonLabel = "LSLs"
-        insertButton.setText(buttonLabel)
+        insertButton.text = buttonLabel
         insertTextView.isVisible = isInsertTextViewVisible
-
+        ButtonSetter.set(
+            context,
+            insertButton
+        )
         insertButton.setOnClickListener {
                 innerButtonView ->
             val updatedEditableSpinnerList = ReadText(

@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
@@ -162,6 +163,8 @@ class WithEditComponentForFormJsDialog {
         insertEditText.clearFocus()
         insertEditText.tag = currentVariableName
         insertEditText.id = currentId
+        insertEditText.backgroundTintList =
+            context?.getColorStateList(R.color.gray_out)
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(currentVariableValue)
         insertEditText.setSelectAllOnFocus(true)

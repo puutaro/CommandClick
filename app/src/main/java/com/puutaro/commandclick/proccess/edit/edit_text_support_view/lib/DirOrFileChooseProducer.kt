@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -30,6 +31,10 @@ object DirOrFileChooseProducer {
         }
         val insertButtonView = Button(context)
         insertButtonView.text = chooseButtonStr
+        ButtonSetter.set(
+            context,
+            insertButtonView
+        )
 
         val prefixRegex = Regex("^content.*fileprovider/root/storage")
 

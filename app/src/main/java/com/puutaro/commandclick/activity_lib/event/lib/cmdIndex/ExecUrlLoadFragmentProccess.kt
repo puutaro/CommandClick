@@ -40,7 +40,7 @@ object ExecUrlLoadFragmentProccess {
             cmdindexInternetButton.setImageResource(
                 SearchSwichImage.WEB.image
             )
-            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.black)
+            cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
             cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.gray_out));
             (it.getColor(R.color.white))
         }

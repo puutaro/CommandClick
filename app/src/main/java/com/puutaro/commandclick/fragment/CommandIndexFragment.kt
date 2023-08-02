@@ -169,7 +169,7 @@ class CommandIndexFragment: Fragment() {
                     )
             cmdindexInternetButton.isEnabled = enableInternetButton
             if(enableInternetButton){
-                cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.black)
+                cmdindexInternetButton.imageTintList = context?.getColorStateList(R.color.terminal_color)
             } else {
                 cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
             }

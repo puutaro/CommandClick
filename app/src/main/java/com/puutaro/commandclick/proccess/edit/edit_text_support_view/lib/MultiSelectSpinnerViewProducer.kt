@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.*
 
@@ -32,6 +33,10 @@ object MultiSelectSpinnerViewProducer {
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
+        ButtonSetter.set(
+            context,
+            insertButton
+        )
         val buttonLabel = "SLs"
         insertButton.setText(buttonLabel)
         insertTextView.isVisible = isInsertTextViewVisible

@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -51,6 +52,10 @@ object EditableListContentsMultiSelectGridViewProducer {
         FileSystems.createDirs(parentDir)
         val gridButtonView = Button(context)
         gridButtonView.text = gridButtonLabel
+        ButtonSetter.set(
+            context,
+            gridButtonView
+        )
         gridButtonView.setOnClickListener {
                 buttonView ->
             val buttonContext = buttonView.context

@@ -28,7 +28,7 @@ object ExecSetTermSizeForCmdIndexFragment {
             )
             context?.let {
                 cmdindexInternetButton.imageTintList =
-                    it.getColorStateList(R.color.black)
+                    it.getColorStateList(R.color.terminal_color)
                 cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.gray_out)
             }
         } else {
@@ -37,7 +37,7 @@ object ExecSetTermSizeForCmdIndexFragment {
                 SearchSwichImage.WEB.image
             )
             context?.let {
-                cmdindexInternetButton.imageTintList = it.getColorStateList(R.color.black)
+                cmdindexInternetButton.imageTintList = it.getColorStateList(R.color.terminal_color)
                 cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.gray_out));
                 (it.getColor(R.color.white))
             }

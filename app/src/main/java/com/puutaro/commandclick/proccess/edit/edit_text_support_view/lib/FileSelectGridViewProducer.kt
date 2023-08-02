@@ -21,6 +21,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFcbMap
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFilterType
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -72,6 +73,10 @@ object FileSelectGridViewProducer {
         gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
         gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
         gridButtonView.text = gridButtonLabel
+        ButtonSetter.set(
+            context,
+            gridButtonView
+        )
 
         gridButtonView.setOnClickListener {
                 buttonView ->

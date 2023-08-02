@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.skydoves.colorpickerview.ColorPickerDialog
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 
@@ -20,6 +21,10 @@ object ColorPickerViewProducer {
         val chooseButtonStr = "clr"
         val insertButtonView = Button(context)
         insertButtonView.text = chooseButtonStr
+        ButtonSetter.set(
+            context,
+            insertButtonView
+        )
 
         setOnColorPickerButtonClickListener(
             editFragment,

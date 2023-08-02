@@ -63,7 +63,8 @@ class ToolbarButtonProducerForEdit(
     ) {
         insertImageButtonParam.weight = 1F
         val makeButtonView = ImageButton(context)
-
+        makeButtonView.imageTintList =
+            context?.getColorStateList(R.color.terminal_color)
         if (setDrawble == null) {
             makeButtonView.setImageResource(
                 toolbarButtonBariantForEdit.drawbleIconInt
@@ -73,7 +74,8 @@ class ToolbarButtonProducerForEdit(
                 setDrawble
             )
         }
-        makeButtonView.setBackgroundTintList(context?.getColorStateList(R.color.white))
+        makeButtonView.backgroundTintList =
+            context?.getColorStateList(R.color.white)
         makeButtonView.layoutParams = insertImageButtonParam
         makeButtonView.tag = toolbarButtonBariantForEdit.str
 

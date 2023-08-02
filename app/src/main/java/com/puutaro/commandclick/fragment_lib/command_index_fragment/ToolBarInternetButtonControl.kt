@@ -28,7 +28,7 @@ class ToolBarInternetButtonControl(
     )
 
     fun interneButtontSetOnClickListener () {
-        val blackStateList = context?.getColorStateList(R.color.black)
+        val terminalStateList = context?.getColorStateList(R.color.terminal_color)
         val whiteStateList = context?.getColorStateList(R.color.white)
         val grayStateList = context?.getColorStateList(R.color.gray_out)
         cmdindexInternet.setOnClickListener {
@@ -41,7 +41,7 @@ class ToolBarInternetButtonControl(
                 ) as TerminalFragment
             } catch(e: Exception){
                 context?.let {
-                    cmdindexInternet.imageTintList = it.getColorStateList(R.color.black)
+                    cmdindexInternet.imageTintList = it.getColorStateList(R.color.terminal_color)
                     cmdindexInternet.backgroundTintList = it.getColorStateList(R.color.gray_out)
                 }
                 return@setOnClickListener
@@ -63,12 +63,12 @@ class ToolBarInternetButtonControl(
             }
 
             if(cmdIndexCommandIndexFragment.WebSearchSwitch){
-                cmdindexInternet.imageTintList = blackStateList
+                cmdindexInternet.imageTintList = terminalStateList
                 cmdindexInternet.backgroundTintList = whiteStateList;
                 cmdIndexCommandIndexFragment.WebSearchSwitch = !cmdIndexCommandIndexFragment.WebSearchSwitch
                 return@setOnClickListener
             }
-            cmdindexInternet.imageTintList = blackStateList
+            cmdindexInternet.imageTintList = terminalStateList
             cmdindexInternet.backgroundTintList = grayStateList
             cmdIndexCommandIndexFragment.WebSearchSwitch = !cmdIndexCommandIndexFragment.WebSearchSwitch
         }

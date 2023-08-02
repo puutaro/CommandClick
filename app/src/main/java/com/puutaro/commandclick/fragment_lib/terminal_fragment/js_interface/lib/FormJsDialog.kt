@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -275,6 +276,8 @@ class FormJsDialog(
             val insertEditText = EditText(context)
             insertEditText.tag = currentVariableName
             insertEditText.id = currentId
+            insertEditText.backgroundTintList =
+                context?.getColorStateList(R.color.gray_out)
             insertEditText.setSelectAllOnFocus(true)
             val currentRecordNum =
                 currentRecordNumToMapNameValueInHolder.key
@@ -298,73 +301,6 @@ class FormJsDialog(
                 editParameters
             )
             linearLayout.addView(horizontalLinearLayout)
-//            when(
-//                editParameters.setVariableMap?.get(
-//                    SetVariableTypeColumn.VARIABLE_TYPE.name
-//                )
-//            ) {
-//                EditTextSupportViewName.CHECK_BOX.str -> {
-//                    val innerLinearLayout = withSpinnerView.create(
-//                        insertEditText,
-//                        editParameters
-//                    )
-//                    linearLayout.addView(innerLinearLayout)
-//                }
-//                EditTextSupportViewName.EDITABLE_CHECK_BOX.str -> {
-//                    val innerLinearLayout = withEditableSpinnerView.create(
-//                        insertEditText,
-//                        editParameters
-//                    )
-//                    linearLayout.addView(innerLinearLayout)
-//                }
-//                EditTextSupportViewName.EDITABLE_FILE_SELECT_BOX.str -> {
-//                    val innerLinearLayout = withEditableFileSelectSpinnerView.create(
-//                        insertEditText,
-//                        editParameters
-//                    )
-//                    linearLayout.addView(innerLinearLayout)
-//                }
-//                EditTextSupportViewName.EDITABLE_LIST_CONTENTS_SELECT_BOX.str -> {
-//                    val innerLinearLayout = withEditableListContentsSelectSpinnerView.create(
-//                        insertEditText,
-//                        editParameters
-//                    )
-//                    linearLayout.addView(innerLinearLayout)
-//                }
-//                EditTextSupportViewName.NUM_INDE_CREMENTER.str -> {
-//                    val innerLinearLayout = withInDeCremenView.create(
-//                        insertEditText,
-//                        editParameters
-//                    )
-//                    linearLayout.addView(innerLinearLayout)
-//                }
-//                EditTextSupportViewName.PASSWORD.str -> {
-//                    val insertingEditText = execInsertEditText(
-//                        insertEditText,
-//                        linearParams,
-//                        currentVariableValue,
-//                        EditTextType.PASSWORD
-//                    )
-//                    linearLayout.addView(insertingEditText)
-//                }
-//                EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str -> {
-//                    val insertingEditText = execInsertEditText(
-//                        insertEditText,
-//                        linearParams,
-//                        currentVariableValue,
-//                        EditTextType.READ_ONLY
-//                    )
-//                    linearLayout.addView(insertingEditText)
-//                }
-//                else -> {
-//                    val insertingEditText = execInsertEditText(
-//                        insertEditText,
-//                        linearParams,
-//                        currentVariableValue,
-//                    )
-//                    linearLayout.addView(insertingEditText)
-//                }
-//            }
         }
     }
 

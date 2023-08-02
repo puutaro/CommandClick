@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <data>
@@ -57,7 +59,9 @@
                 android:backgroundTint="@color/white"
                 android:layout_gravity="center"
                 android:contentDescription="@string/setting"
-                android:layout_weight="0.11"/>
+                android:layout_weight="0.11"
+                app:tint="@color/terminal_color"
+                />
             <ImageButton
                 android:id="@+id/cmdindex_search_top_allow"
                 android:layout_width="0dp"
@@ -66,7 +70,9 @@
                 android:backgroundTint="@color/white"
                 android:layout_gravity="center"
                 android:contentDescription="@string/setting"
-                android:layout_weight="0.11"/>
+                android:layout_weight="0.11"
+                app:tint="@color/terminal_color"
+                />
             <ImageButton
                 android:id="@+id/cmdindex_search_cancel"
                 android:layout_width="0dp"
@@ -75,7 +81,9 @@
                 android:backgroundTint="@color/white"
                 android:layout_gravity="center"
                 android:contentDescription="@string/setting"
-                android:layout_weight="0.11"/>
+                android:layout_weight="0.11"
+                app:tint="@color/terminal_color"
+                />
         </LinearLayout>
     </android.widget.Toolbar>
 </layout>

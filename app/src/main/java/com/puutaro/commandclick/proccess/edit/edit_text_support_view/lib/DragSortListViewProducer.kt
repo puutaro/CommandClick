@@ -18,6 +18,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.DragSortRecyclerAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
@@ -62,6 +63,10 @@ object DragSortListViewProducer {
         dragSortListViewButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
         dragSortListViewButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
         dragSortListViewButtonView.text = dragSortButtonLabel
+        ButtonSetter.set(
+            context,
+            dragSortListViewButtonView
+        )
         dragSortListViewButtonView.setOnClickListener {
                 buttonView ->
             val buttonContext = buttonView.context

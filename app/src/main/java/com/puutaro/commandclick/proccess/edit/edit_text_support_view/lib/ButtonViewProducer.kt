@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
@@ -17,6 +16,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ListDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
+import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -85,9 +85,14 @@ object ButtonViewProducer {
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
+        insertButton.layoutParams = linearParamsForButton
         insertButton.text = makeButtonLabel(
             getButtonLabel(buttonMap),
             insertTextView.text.toString(),
+        )
+        ButtonSetter.set(
+            context,
+            insertButton
         )
         insertTextView.isVisible = isInsertTextViewVisible
 
@@ -206,8 +211,6 @@ object ButtonViewProducer {
                 )
             }
         }
-
-        insertButton.layoutParams = linearParamsForButton
         return insertButton
     }
 
