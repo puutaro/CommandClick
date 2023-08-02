@@ -41,7 +41,7 @@ object ExecUrlLoadFragmentProccess {
                 SearchSwichImage.WEB.image
             )
             cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
-            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.gray_out));
+            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color));
             (it.getColor(R.color.white))
         }
         if(terminalViewModel.readlinesNum == ReadLines.SHORTH) {

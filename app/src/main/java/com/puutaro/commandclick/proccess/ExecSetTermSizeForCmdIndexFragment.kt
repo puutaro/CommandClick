@@ -29,7 +29,7 @@ object ExecSetTermSizeForCmdIndexFragment {
             context?.let {
                 cmdindexInternetButton.imageTintList =
                     it.getColorStateList(R.color.terminal_color)
-                cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.gray_out)
+                cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.icon_selected_color)
             }
         } else {
             cmdListSwipeToRefresh.isVisible = false
@@ -38,7 +38,7 @@ object ExecSetTermSizeForCmdIndexFragment {
             )
             context?.let {
                 cmdindexInternetButton.imageTintList = it.getColorStateList(R.color.terminal_color)
-                cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.gray_out));
+                cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.icon_selected_color);
                 (it.getColor(R.color.white))
             }
         }

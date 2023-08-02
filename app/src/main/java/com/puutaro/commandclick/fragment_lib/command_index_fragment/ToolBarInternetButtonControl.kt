@@ -30,7 +30,7 @@ class ToolBarInternetButtonControl(
     fun interneButtontSetOnClickListener () {
         val terminalStateList = context?.getColorStateList(R.color.terminal_color)
         val whiteStateList = context?.getColorStateList(R.color.white)
-        val grayStateList = context?.getColorStateList(R.color.gray_out)
+        val grayStateList = context?.getColorStateList(R.color.icon_selected_color)
         cmdindexInternet.setOnClickListener {
                 buttonView ->
             if(!cmdIndexCommandIndexFragment.isVisible) return@setOnClickListener
@@ -42,7 +42,7 @@ class ToolBarInternetButtonControl(
             } catch(e: Exception){
                 context?.let {
                     cmdindexInternet.imageTintList = it.getColorStateList(R.color.terminal_color)
-                    cmdindexInternet.backgroundTintList = it.getColorStateList(R.color.gray_out)
+                    cmdindexInternet.backgroundTintList = it.getColorStateList(R.color.icon_selected_color)
                 }
                 return@setOnClickListener
             }

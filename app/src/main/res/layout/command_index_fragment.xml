@@ -95,7 +95,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@null"
                         android:text=""
-                        android:textColorHighlight ="@color/edit_text_selected_color"
                         android:textCursorDrawable="@null"
                         android:autofillHints=""
                         android:selectAllOnFocus="true"
