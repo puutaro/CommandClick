@@ -25,7 +25,8 @@ class FannelIndexListAdapter(
 {
     val context = cmdIndexFragment.context
     val activity = cmdIndexFragment.activity
-    var longPressPosition = 0
+    private val shortSizeThreshold = 50
+    private val middleSizeThreshold = 100
 
 
     class FannelIndexListViewHolder(
@@ -50,7 +51,7 @@ class FannelIndexListAdapter(
             v: View?,
             menuInfo: ContextMenu.ContextMenuInfo?
         ) {
-            val inflater = activity?.menuInflater;
+            val inflater = activity?.menuInflater
             inflater?.inflate(com.puutaro.commandclick.R.menu.cmd_index_list_menu, menu)
         }
     }
@@ -99,13 +100,20 @@ class FannelIndexListAdapter(
         position: Int
     ) {
         val fannelName = fannelIndexList[position]
-        val fannelPath = "${currentAppDirPath}/${fannelName}"
         val fannelConList = ReadText(
             currentAppDirPath,
             fannelName
         ).textToList()
         holder.fannelContentsTextView.text =
             fannelConList.joinToString("\n")
+        val fannelConListSize = fannelConList.size
+        if(
+            fannelConListSize < shortSizeThreshold
+        ) holder.fannelContentsTextView.textSize = 2f
+        else if(
+            fannelConListSize < middleSizeThreshold
+        ) holder.fannelContentsTextView.textSize = 1f
+        else holder.fannelContentsTextView.textSize = 0.5f
         holder.fannelNameTextView.text = fannelName
         setFannelContentsBackColor(
             holder.fannelContentsTextView,
@@ -113,10 +121,10 @@ class FannelIndexListAdapter(
             fannelName,
         )
         val itemView = holder.itemView
-        this@FannelIndexListAdapter.itemLongClickListener = object: FannelIndexListAdapter.OnItemLongClickListener {
+        this@FannelIndexListAdapter.itemLongClickListener = object: OnItemLongClickListener {
             override fun onItemLongClick(
                 itemView: View,
-                holder: FannelIndexListAdapter.FannelIndexListViewHolder,
+                holder: FannelIndexListViewHolder,
                 position: Int
             ) {
                 cmdIndexFragment.recyclerViewIndex = position
@@ -142,15 +150,6 @@ class FannelIndexListAdapter(
                 holder
             )
         }
-    }
-
-    fun getPosition(): Int {
-        return longPressPosition
-    }
-
-    // 長押しされた要素の位置をセットする
-    fun setPosition(position: Int) {
-        longPressPosition = position
     }
 
     var fannelNameClickListener: OnFannelNameItemClickListener? = null
@@ -204,12 +203,6 @@ class FannelIndexListAdapter(
         ) as String
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
-        val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             fannelConList,
