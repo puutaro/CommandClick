@@ -202,7 +202,7 @@ class WithEditComponentForListIndex {
         ) return 1F
         if(
             !isTextEmphasis
-        ) return 0.001F
+        ) return 0F
         return when(true){
             (TextAndLabelOtherCompLength >= 3) -> 0.45F
             (TextAndLabelOtherCompLength == 2) -> 0.6F
