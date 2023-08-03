@@ -15,6 +15,10 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class FannelIndexListAdapter(
@@ -54,6 +58,11 @@ class FannelIndexListAdapter(
             val inflater = activity?.menuInflater
             inflater?.inflate(com.puutaro.commandclick.R.menu.cmd_index_list_menu, menu)
         }
+    }
+
+    override fun getItemId(position: Int): Long {
+        setHasStableIds(true)
+        return super.getItemId(position)
     }
 
     override fun onCreateViewHolder(
@@ -99,56 +108,73 @@ class FannelIndexListAdapter(
         holder: FannelIndexListViewHolder,
         position: Int
     ) {
-        val fannelName = fannelIndexList[position]
-        val fannelConList = ReadText(
-            currentAppDirPath,
-            fannelName
-        ).textToList()
-        holder.fannelContentsTextView.text =
-            fannelConList.joinToString("\n")
-        val fannelConListSize = fannelConList.size
-        if(
-            fannelConListSize < shortSizeThreshold
-        ) holder.fannelContentsTextView.textSize = 2f
-        else if(
-            fannelConListSize < middleSizeThreshold
-        ) holder.fannelContentsTextView.textSize = 1f
-        else holder.fannelContentsTextView.textSize = 0.5f
-        holder.fannelNameTextView.text = fannelName
-        setFannelContentsBackColor(
-            holder.fannelContentsTextView,
-            fannelConList,
-            fannelName,
-        )
-        val itemView = holder.itemView
-        this@FannelIndexListAdapter.itemLongClickListener = object: OnItemLongClickListener {
-            override fun onItemLongClick(
-                itemView: View,
-                holder: FannelIndexListViewHolder,
-                position: Int
-            ) {
-                cmdIndexFragment.recyclerViewIndex = position
+        CoroutineScope(Dispatchers.IO).launch {
+            val fannelName = fannelIndexList[position]
+            withContext(Dispatchers.Main) {
+                holder.fannelNameTextView.text = fannelName
             }
-        }
-        itemView.setOnLongClickListener {
-            itemLongClickListener?.onItemLongClick(
-                itemView,
-                holder,
-                position
+            val fannelConList = withContext(Dispatchers.IO) {
+                ReadText(
+                    currentAppDirPath,
+                    fannelName
+                ).textToList()
+            }
+            withContext(Dispatchers.Main) {
+                holder.fannelContentsTextView.text =
+                    fannelConList.joinToString("\n")
+            }
+            val textSize = withContext(Dispatchers.IO) {
+                culCTextSize(
+                    fannelConList
+                )
+            }
+            withContext(Dispatchers.Main) {
+                holder.fannelContentsTextView.textSize = textSize
+            }
+             val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
+                 setFannelContentsBackColor(
+                     fannelConList,
+                     fannelName,
+                 )
+             }
+            withContext(Dispatchers.Main){
+                holder.fannelContentsTextView.setBackgroundColor(
+                context?.getColor(fannelConBackGroundColorInt) as Int
             )
-            false
-        }
-        itemView.setOnClickListener {
-            fannelNameClickListener?.onFannelNameClick(
-                itemView,
-                holder
-            )
-        }
-        holder.fannelContentsTextView.setOnClickListener {
-            fannelContentsClickListener?.onFannelContentsClick(
-                itemView,
-                holder
-            )
+                withContext(Dispatchers.Main) {
+                    val itemView = holder.itemView
+                    this@FannelIndexListAdapter.itemLongClickListener =
+                        object : OnItemLongClickListener {
+                            override fun onItemLongClick(
+                                itemView: View,
+                                holder: FannelIndexListViewHolder,
+                                position: Int
+                            ) {
+                                cmdIndexFragment.recyclerViewIndex = position
+                            }
+                        }
+                    itemView.setOnLongClickListener {
+                        itemLongClickListener?.onItemLongClick(
+                            itemView,
+                            holder,
+                            position
+                        )
+                        false
+                    }
+                    itemView.setOnClickListener {
+                        fannelNameClickListener?.onFannelNameClick(
+                            itemView,
+                            holder
+                        )
+                    }
+                    holder.fannelContentsTextView.setOnClickListener {
+                        fannelContentsClickListener?.onFannelContentsClick(
+                            itemView,
+                            holder
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -185,14 +211,26 @@ class FannelIndexListAdapter(
 //        )
 //    }
 
+    private fun culCTextSize(
+        fannelConList: List<String>
+    ): Float {
+        val fannelConListSize = fannelConList.size
+        if (
+            fannelConListSize < shortSizeThreshold
+        ) return 2f
+        else if (
+            fannelConListSize < middleSizeThreshold
+        ) return 1f
+        return 0.5f
+    }
+
     private fun setFannelContentsBackColor(
-        fannelContentsTextView: TextView,
         fannelConList: List<String>,
         fannelName: String,
-    ){
+    ): Int {
         if(
             context == null
-        ) return
+        ) return com.puutaro.commandclick.R.color.fannel_icon_color
         val languageType =
             JsOrShellFromSuffix.judge(fannelName)
 
@@ -217,15 +255,8 @@ class FannelIndexListAdapter(
         if(
             editExecuteValue
             == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-        ) {
-            fannelContentsTextView.setBackgroundColor(
-                context.getColor(com.puutaro.commandclick.R.color.terminal_color)
-            )
-            return
-        }
-        fannelContentsTextView.setBackgroundColor(
-            context.getColor(com.puutaro.commandclick.R.color.fannel_icon_color)
-        )
+        ) return com.puutaro.commandclick.R.color.terminal_color
+        return com.puutaro.commandclick.R.color.fannel_icon_color
     }
 
 }

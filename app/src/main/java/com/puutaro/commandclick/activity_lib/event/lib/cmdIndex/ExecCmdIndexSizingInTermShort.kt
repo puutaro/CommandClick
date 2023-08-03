@@ -10,22 +10,24 @@ object ExecCmdIndexSizingInTermShort {
     fun execCmdIndexSizingInTermShort(
         activity: MainActivity,
         isKeyboardShowing: Boolean,
-    ){
-        val cmdIndexCommandIndexFragment = try {
+    ) {
+        val cmdIndexFragment = try {
             activity.supportFragmentManager.findFragmentByTag(
                 activity.getString(R.string.command_index_fragment)
             ) as CommandIndexFragment
         } catch (e: Exception) {
             return
         }
+        val binding = cmdIndexFragment.binding
         if(isKeyboardShowing) {
-            cmdIndexCommandIndexFragment.binding.commandIndexFragment.layoutParams =
+            binding.commandIndexFragment.layoutParams =
                 CmdIndexLinearWeightParam.listViewShortWeight
-            cmdIndexCommandIndexFragment.binding.cmdListSwipeToRefresh.isVisible = false
+            binding.cmdListSwipeToRefresh.isVisible = false
             return
         }
-        cmdIndexCommandIndexFragment.binding.cmdListSwipeToRefresh.isVisible = true
-        cmdIndexCommandIndexFragment.binding.commandIndexFragment.layoutParams =
+        binding.cmdListSwipeToRefresh.isVisible = true
+        binding.commandIndexFragment.layoutParams =
             CmdIndexLinearWeightParam.listViewLongWeight
+
     }
 }

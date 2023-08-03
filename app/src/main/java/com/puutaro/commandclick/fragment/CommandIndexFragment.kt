@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -13,6 +14,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
@@ -132,6 +134,7 @@ class CommandIndexFragment: Fragment() {
 
         val cmdListView = binding.cmdList
         cmdListView.setHasFixedSize(true)
+        cmdListView.setItemViewCacheSize(100)
         val makeListView = MakeListView(
             binding,
             this,
@@ -191,6 +194,16 @@ class CommandIndexFragment: Fragment() {
                 this.isVisible,
                 this.WebSearchSwitch
             )
+            if(!isOpen
+                && binding.cmdListSwipeToRefresh.isVisible
+            ){
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(100)
+                    cmdListView.scrollToPosition(
+                        fannelIndexListAdapter.itemCount - 1
+                    )
+                }
+            }
         }
 
         fannelInstallDialog = FannelInstallDialog.create(this)

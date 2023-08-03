@@ -52,7 +52,6 @@ import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import org.eclipse.jgit.diff.Edit
 import java.util.*
 import kotlin.collections.ArrayList
 
