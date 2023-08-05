@@ -51,7 +51,7 @@ class ToolbarButtonProducerForEdit(
 
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
+        SharePrefferenceSetting.current_app_dir
     )
 
     private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
