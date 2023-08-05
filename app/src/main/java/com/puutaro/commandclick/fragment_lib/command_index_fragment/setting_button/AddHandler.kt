@@ -12,12 +12,12 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 class AddScriptHandler(
-    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
+    private val cmdIndexFragment: CommandIndexFragment,
     private val sharedPref: SharedPreferences?,
     private val currentAppDirPath: String,
 ) {
-    val context = cmdIndexCommandIndexFragment.context
-    val binding = cmdIndexCommandIndexFragment.binding
+    val context = cmdIndexFragment.context
+    val binding = cmdIndexFragment.binding
 
     fun handle(){
         if(context == null)  return
@@ -25,7 +25,7 @@ class AddScriptHandler(
         val languageSelectList = LanguageTypeSelects.values().map {
             it.str
         }
-        val languageSelectListView = ListView(cmdIndexCommandIndexFragment.context)
+        val languageSelectListView = ListView(cmdIndexFragment.context)
         val languageSelectListAdapter = ArrayAdapter(
             context,
             R.layout.simple_list_item_1,
@@ -81,14 +81,14 @@ class AddScriptHandler(
                 )
 
             AddShellScript.addShellOrJavaScript (
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 sharedPref,
                 currentAppDirPath,
                 shellScriptName,
                 languageTypeSelects
             )
             AddConfirmDialogForSettingButton.invoke(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 binding,
                 currentAppDirPath,
                 shellScriptName,

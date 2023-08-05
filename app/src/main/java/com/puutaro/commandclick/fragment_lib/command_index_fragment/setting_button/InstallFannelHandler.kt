@@ -10,20 +10,20 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 
 object InstallFannelHandler {
     fun handle(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         installFromFannelRepo: InstallFromFannelRepo
     ){
-        val activity = cmdIndexCommandIndexFragment.activity ?: return
+        val activity = cmdIndexFragment.activity ?: return
         getNotificationPermissionLauncher(
             activity,
-            cmdIndexCommandIndexFragment
+            cmdIndexFragment
         )
         installFromFannelRepo.install()
     }
 
     private fun getNotificationPermissionLauncher(
         activity: Activity,
-        cmdIndexCommandIndexFragment: CommandIndexFragment
+        cmdIndexIndexFragment: CommandIndexFragment
     ){
         if(Build.VERSION.SDK_INT < 33) return
         val firstPermissionCheck =
@@ -35,7 +35,7 @@ object InstallFannelHandler {
             firstPermissionCheck == PackageManager.PERMISSION_GRANTED
         ) return
         val listener =
-            cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+            cmdIndexIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.INSTALL_FANNEL
         )

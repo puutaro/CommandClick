@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.ReadText
 
 object FannelContentsClickListener {
     fun set(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){

@@ -1,6 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/menu_list_thumbnail"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        app:tint="@color/cmdclick_text_black"
+        android:layout_gravity="center_vertical"
+        android:contentDescription=""
+        />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/menu_list_title"
+        android:layout_gravity="center_vertical"
+        android:text="@string/global_setting_menu_string_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/global_menu_string_size"
+        android:textColor="@color/cmdclick_text_black"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        />
+<!--    android:drawableStart="@drawable/icons8_edit"-->
+<!--    android:drawablePadding="20dp"-->
+
+</androidx.appcompat.widget.LinearLayoutCompat>

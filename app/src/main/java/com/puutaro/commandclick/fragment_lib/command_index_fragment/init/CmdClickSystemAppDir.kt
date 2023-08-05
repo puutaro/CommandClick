@@ -9,10 +9,10 @@ import kotlinx.coroutines.launch
 
 object CmdClickSystemAppDir {
     fun create(
-        cmdIndexFragment: CommandIndexFragment
+        cmdIndexCommandIndexFragment: CommandIndexFragment
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            val context = cmdIndexFragment.context
+            val context = cmdIndexCommandIndexFragment.context
             val systemZipName = "system"
             val assetsPrefix = "appSystemDir"
             val systemZipPath = "${assetsPrefix}/$systemZipName"

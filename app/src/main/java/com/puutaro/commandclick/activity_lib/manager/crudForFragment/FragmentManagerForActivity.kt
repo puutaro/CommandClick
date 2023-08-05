@@ -3,6 +3,7 @@ package com.puutaro.commandclick.activity_lib.manager.curdForFragment;
 import android.util.Log
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -31,7 +32,7 @@ class FragmentManagerForActivity(
         terminalFragment: String,
         commandIndexFragment: String
     ) {
-        val sampleCommandIndexFragmentBottom = com.puutaro.commandclick.fragment.CommandIndexFragment()
+        val CommandIndexFragmentBottom = CommandIndexFragment()
         val sampleFragmentTop = TerminalFragment()
         transaction.replace(
             R.id.main_container,
@@ -40,7 +41,7 @@ class FragmentManagerForActivity(
         )
         transaction.add(
             R.id.main_container,
-            sampleCommandIndexFragmentBottom,
+            CommandIndexFragmentBottom,
             commandIndexFragment
         )
     }

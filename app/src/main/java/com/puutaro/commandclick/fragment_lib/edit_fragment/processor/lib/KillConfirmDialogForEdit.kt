@@ -4,6 +4,7 @@ import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
@@ -20,9 +21,17 @@ class KillConfirmDialogForEdit {
             shellScriptName: String,
             currentMonitorFileName: String,
         ){
-
-
             val context = editFragment.context
+            if(
+                !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
+            ) {
+                Toast.makeText(
+                    context,
+                    "only shell extend",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
             val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
             terminalViewModel.onDisplayUpdate = true
             val alertDialog = AlertDialog.Builder(editFragment.context)

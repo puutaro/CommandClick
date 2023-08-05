@@ -15,17 +15,17 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object TextChangedListenerAdder {
     fun add (
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         cmdListAdapter: FannelIndexListAdapter
     ){
-        val context = cmdIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-        val binding = cmdIndexFragment.binding
+        val context = cmdIndexCommandIndexFragment.context
+        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        val binding = cmdIndexCommandIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
         val googleSuggest = GoogleSuggest(
-            cmdIndexFragment,
+            cmdIndexCommandIndexFragment,
             cmdSearchEditText
         )
 
@@ -45,14 +45,14 @@ object TextChangedListenerAdder {
                     cmdSearchEditText.threshold = 100000;
                     return
                 }
-                if(!cmdIndexFragment.WebSearchSwitch) return
+                if(!cmdIndexCommandIndexFragment.WebSearchSwitch) return
                 googleSuggest.set(cmdSearchEditText.text)
             }
 
             override fun afterTextChanged(s: Editable?) {
                 if(!cmdSearchEditText.hasFocus()) return
                 if(
-                    !cmdIndexFragment.WebSearchSwitch
+                    !cmdIndexCommandIndexFragment.WebSearchSwitch
                 ) {
                     val listener = context as? CommandIndexFragment.OnFilterWebViewListener
                     listener?.onFilterWebView(

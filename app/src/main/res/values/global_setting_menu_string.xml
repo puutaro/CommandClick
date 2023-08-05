@@ -11,5 +11,6 @@
     <string name="global_setting_menu_string_select_term_term2">term2</string>
     <string name="global_setting_menu_string_select_term_term3">term3</string>
     <string name="global_setting_menu_string_select_term_term4">term4</string>
+    <string name="global_setting_menu_string_edit_startup">edit_startup</string>
     <string name="global_setting_menu_string_forward">forward</string>
 </resources>

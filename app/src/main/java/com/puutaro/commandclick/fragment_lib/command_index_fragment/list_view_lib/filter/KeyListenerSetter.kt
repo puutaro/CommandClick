@@ -13,12 +13,12 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object KeyListenerSetter {
     fun set(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
     ){
-        val context = cmdIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-        val binding = cmdIndexFragment.binding
+        val context = cmdIndexCommandIndexFragment.context
+        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        val binding = cmdIndexCommandIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
         cmdSearchEditText.setOnKeyListener(object : View.OnKeyListener {
@@ -26,7 +26,7 @@ object KeyListenerSetter {
                 if (event.action != KeyEvent.ACTION_DOWN ||
                     keyCode != KeyEvent.KEYCODE_ENTER
                 ) return false
-                Keyboard.hiddenKeyboardForFragment(cmdIndexFragment)
+                Keyboard.hiddenKeyboardForFragment(cmdIndexCommandIndexFragment)
                 if(
                     terminalViewModel.readlinesNum == ReadLines.SHORTH
                 ) {
@@ -39,11 +39,11 @@ object KeyListenerSetter {
                 if(
                     cmdSearchEditText.text.isNullOrEmpty()
                 ) return false
-                if(!cmdIndexFragment.WebSearchSwitch) {
+                if(!cmdIndexCommandIndexFragment.WebSearchSwitch) {
                     return false
                 }
                 UrlTexter.launch(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     cmdSearchEditText,
                     cmdSearchEditText.text.toString()
                 )

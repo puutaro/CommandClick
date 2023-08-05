@@ -15,12 +15,12 @@ import com.puutaro.commandclick.util.ReadText
 
 object ConfirmDialogForDelete {
     fun show(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         scriptFileName: String,
         cmdListView: RecyclerView
     ){
-        val context = cmdIndexCommandIndexFragment.context
+        val context = cmdIndexFragment.context
 
         val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
         val shellContents = ReadText(

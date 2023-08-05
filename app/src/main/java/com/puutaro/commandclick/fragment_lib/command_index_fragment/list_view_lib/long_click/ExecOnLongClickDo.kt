@@ -4,9 +4,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.MenuItem
-import android.view.View
-import android.widget.AdapterView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -22,17 +19,17 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 object ExecOnLongClickDo {
 
     fun invoke(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         item: MenuItem,
         contextItemSelected: Boolean,
         fannelIndexListAdapter: FannelIndexListAdapter,
     ): Boolean {
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-        val activity = cmdIndexFragment.activity
+        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        val activity = cmdIndexCommandIndexFragment.activity
         val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-        val context = cmdIndexFragment.context
-        val binding = cmdIndexFragment.binding
+        val context = cmdIndexCommandIndexFragment.context
+        val binding = cmdIndexCommandIndexFragment.binding
         val cmdListView = binding.cmdList
 
 //        val info: AdapterView.AdapterContextMenuInfo? = try {
@@ -40,7 +37,7 @@ object ExecOnLongClickDo {
 //        } catch (e: ClassCastException) {
 //            return false
 //        }
-        val listPosition = cmdIndexFragment.recyclerViewIndex
+        val listPosition = cmdIndexCommandIndexFragment.recyclerViewIndex
 //            info
 //            ?.position
 //            ?: cmdIndexFragment.mParentContextMenuListIndex
@@ -53,7 +50,7 @@ object ExecOnLongClickDo {
         when (item.itemId) {
             R.id.shell_script_menu_delete -> {
                 ConfirmDialogForDelete.show(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
                     cmdListView
@@ -62,7 +59,7 @@ object ExecOnLongClickDo {
             }
             R.id.shell_script_menu_edit -> {
                 ScriptFileEdit.edit(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
                 )
@@ -79,7 +76,7 @@ object ExecOnLongClickDo {
             }
             R.id.shell_script_menu_kill  -> {
                 ConfirmDialogforKill.show(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
                     terminalViewModel.currentMonitorFileName,
@@ -99,14 +96,14 @@ object ExecOnLongClickDo {
             }
             R.id.shell_script_menu_copy_file -> {
                 CopyFileEvent(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     shellScriptName,
                 ).invoke()
             }
             R.id.shell_script_menu_description -> {
                 ScriptFileDescription.show(
-                    cmdIndexFragment.context,
+                    cmdIndexCommandIndexFragment.context,
                     ReadText(
                         currentAppDirPath,
                         shellScriptName
@@ -115,7 +112,7 @@ object ExecOnLongClickDo {
                 )
             }
             else -> {
-                cmdIndexFragment.mParentContextMenuListIndex = listPosition
+                cmdIndexCommandIndexFragment.mParentContextMenuListIndex = listPosition
             }
         }
         return contextItemSelected

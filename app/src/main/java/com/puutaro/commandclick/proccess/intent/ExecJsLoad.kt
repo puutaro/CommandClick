@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.intent
 
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -21,7 +20,7 @@ import java.io.File
 
 object ExecJsLoad {
     fun execJsLoad(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
@@ -156,7 +155,7 @@ object ExecJsLoad {
     }
 
     private fun jsUrlLaunchHandler(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         launchUrlString: String,
     ){
         when (currentFragment) {
@@ -199,7 +198,7 @@ object ExecJsLoad {
     }
 
     private suspend fun launchUrlByWebView(
-        currentFragment: Fragment,
+        currentFragment: androidx.fragment.app.Fragment,
         onLaunchUrl: Boolean,
         launchUrlString: String
     ){

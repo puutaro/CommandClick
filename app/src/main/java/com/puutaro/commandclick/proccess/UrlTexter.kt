@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 
 object UrlTexter {
     fun launch(
-        fragment: androidx.fragment.app.Fragment,
+        fragment: Fragment,
         cmdSearchEditText: AutoCompleteTextView,
         inputUrl: String?
     ){
@@ -24,7 +24,7 @@ object UrlTexter {
         ) cmdSearchEditText.setText(inputUrl)
         else cmdSearchEditText.setText(inputUrl)
         when(fragment) {
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
+            is CommandIndexFragment -> {
                 val listener = fragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
                 listener?.onLaunchUrlByWebView(
                     searchUrl,

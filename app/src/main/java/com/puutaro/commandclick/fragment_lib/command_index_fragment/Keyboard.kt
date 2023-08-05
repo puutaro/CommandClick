@@ -6,66 +6,64 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 
 
-class KeyboardForCmdIndex {
-    companion object {
+object KeyboardForCmdIndex {
 
-        fun historyAndSearchHideShow(
-            isOpen: Boolean,
-            cmdIndexFragment: CommandIndexFragment,
-        ){
+    fun historyAndSearchHideShow(
+        isOpen: Boolean,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+    ){
 
-            val binding = cmdIndexFragment.binding
-            val cmdIndexHistory = binding.cmdindexHistoryButton
-            val cmdIndexSetting = binding.cmdindexSettingButton
-            val cmdSearchEditText = binding.cmdSearchEditText
-            val linearLayoutParam = ToolbarWidgetWeightForLinearLayout.buttonWideWeight
-            val linearLayoutParamShrink =ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
-            if(!isOpen) {
-                cmdIndexSetting.layoutParams = linearLayoutParam
-                cmdIndexHistory.layoutParams = linearLayoutParam
-                cmdSearchEditText.setText(String())
-                cmdSearchEditText.clearFocus()
-                return
-            }
-            cmdIndexSetting.layoutParams = linearLayoutParamShrink
-            cmdIndexHistory.layoutParams = linearLayoutParamShrink
-        }
-
-        fun ajustCmdIndexFragmentWhenTermLong(
-            isOpen: Boolean,
-            cmdIndexFragment: CommandIndexFragment,
-        ){
-            val binding = cmdIndexFragment.binding
-            val context = cmdIndexFragment.context
-            val cmdIndexSwipToRefreshLayout = binding.cmdListSwipeToRefresh
-            val cmdIndexHistory = binding.cmdindexHistoryButton
-            val cmdIndexSetting = binding.cmdindexSettingButton
-            val cmdSearchEditText = binding.cmdSearchEditText
-            val linearLayoutParamForButtonWideWeight = ToolbarWidgetWeightForLinearLayout.buttonWideWeight
-            val linearLayoutParamShrinkForButtonShrinkWeight = ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
-            val linearLayoutParamForSearchTextWideWeight = ToolbarWidgetWeightForLinearLayout.searchEditTextWideWeight
-            val linearLayoutParamShrinkForSearchTextShrinkWeight =ToolbarWidgetWeightForLinearLayout.searchEditTextShrinkWeight
-            if(isOpen){
-                cmdIndexSwipToRefreshLayout.isVisible = false
-                cmdIndexHistory.layoutParams = linearLayoutParamShrinkForButtonShrinkWeight
-                cmdIndexSetting.layoutParams = linearLayoutParamShrinkForButtonShrinkWeight
-                cmdSearchEditText.layoutParams = linearLayoutParamForSearchTextWideWeight
-                val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                listener?.onToolbarMenuCategories(
-                    ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN
-                )
-                return
-            }
-            cmdIndexHistory.layoutParams = linearLayoutParamForButtonWideWeight
-            cmdIndexSetting.layoutParams = linearLayoutParamForButtonWideWeight
-            cmdSearchEditText.layoutParams = linearLayoutParamShrinkForSearchTextShrinkWeight
-            if(!cmdIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
+        val binding = cmdIndexCommandIndexFragment.binding
+        val cmdIndexHistory = binding.cmdindexHistoryButton
+        val cmdIndexSetting = binding.cmdindexSettingButton
+        val cmdSearchEditText = binding.cmdSearchEditText
+        val linearLayoutParam = ToolbarWidgetWeightForLinearLayout.buttonWideWeight
+        val linearLayoutParamShrink =ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
+        if(!isOpen) {
+            cmdIndexSetting.layoutParams = linearLayoutParam
+            cmdIndexHistory.layoutParams = linearLayoutParam
+            cmdSearchEditText.setText(String())
             cmdSearchEditText.clearFocus()
-            cmdIndexSwipToRefreshLayout.isVisible = true
+            return
+        }
+        cmdIndexSetting.layoutParams = linearLayoutParamShrink
+        cmdIndexHistory.layoutParams = linearLayoutParamShrink
+    }
+
+    fun ajustCmdIndexFragmentWhenTermLong(
+        isOpen: Boolean,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
+    ){
+        val binding = cmdIndexCommandIndexFragment.binding
+        val context = cmdIndexCommandIndexFragment.context
+        val cmdIndexSwipToRefreshLayout = binding.cmdListSwipeToRefresh
+        val cmdIndexHistory = binding.cmdindexHistoryButton
+        val cmdIndexSetting = binding.cmdindexSettingButton
+        val cmdSearchEditText = binding.cmdSearchEditText
+        val linearLayoutParamForButtonWideWeight = ToolbarWidgetWeightForLinearLayout.buttonWideWeight
+        val linearLayoutParamShrinkForButtonShrinkWeight = ToolbarWidgetWeightForLinearLayout.buttonShrinkWeight
+        val linearLayoutParamForSearchTextWideWeight = ToolbarWidgetWeightForLinearLayout.searchEditTextWideWeight
+        val linearLayoutParamShrinkForSearchTextShrinkWeight =ToolbarWidgetWeightForLinearLayout.searchEditTextShrinkWeight
+        if(isOpen){
+            cmdIndexSwipToRefreshLayout.isVisible = false
+            cmdIndexHistory.layoutParams = linearLayoutParamShrinkForButtonShrinkWeight
+            cmdIndexSetting.layoutParams = linearLayoutParamShrinkForButtonShrinkWeight
+            cmdSearchEditText.layoutParams = linearLayoutParamForSearchTextWideWeight
             val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(
-                ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE
+                ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN
             )
+            return
         }
+        cmdIndexHistory.layoutParams = linearLayoutParamForButtonWideWeight
+        cmdIndexSetting.layoutParams = linearLayoutParamForButtonWideWeight
+        cmdSearchEditText.layoutParams = linearLayoutParamShrinkForSearchTextShrinkWeight
+        if(!cmdIndexCommandIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
+        cmdSearchEditText.clearFocus()
+        cmdIndexSwipToRefreshLayout.isVisible = true
+        val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+        listener?.onToolbarMenuCategories(
+            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE
+        )
     }
 }

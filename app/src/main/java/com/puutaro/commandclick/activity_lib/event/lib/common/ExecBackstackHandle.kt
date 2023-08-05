@@ -133,18 +133,18 @@ internal fun execBack(
         return
     }
     val targetFragmentInstance = TargetFragmentInstance()
-    val cmdIndexCommandIndexFragment = targetFragmentInstance.getFromActivity<CommandIndexFragment>(
+    val cmdIndexFragment = targetFragmentInstance.getFromActivity<CommandIndexFragment>(
         activity,
         activity.getString(
             R.string.command_index_fragment
         )
     )
     if(
-        cmdIndexCommandIndexFragment != null
-        && cmdIndexCommandIndexFragment.isVisible
+        cmdIndexFragment != null
+        && cmdIndexFragment.isVisible
     ) {
         ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-            cmdIndexCommandIndexFragment
+            cmdIndexFragment
         )
         return
     }

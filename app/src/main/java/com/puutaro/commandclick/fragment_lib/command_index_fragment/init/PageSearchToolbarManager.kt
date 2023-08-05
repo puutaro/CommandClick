@@ -12,11 +12,11 @@ import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 
 class PageSearchToolbarManager(
-    private val cmdindexCommandIndexFragment: CommandIndexFragment,
+    private val cmdindexFragment: CommandIndexFragment,
 ) {
 
-    private val context = cmdindexCommandIndexFragment.context
-    private val binding = cmdindexCommandIndexFragment.binding
+    private val context = cmdindexFragment.context
+    private val binding = cmdindexFragment.binding
     private val pageSearch = binding.pageSearch
     private val cmdindexSearchCancel = pageSearch.cmdindexSearchCancel
     private val cmdPageSearchEditText = pageSearch.cmdPageSearchEditText
@@ -28,7 +28,7 @@ class PageSearchToolbarManager(
         cmdindexSearchCancel.setOnClickListener {
                 cancelView ->
             CmdIndexToolbarSwitcher.switch(
-                cmdindexCommandIndexFragment,
+                cmdindexFragment,
                 false
             )
         }
@@ -83,7 +83,7 @@ class PageSearchToolbarManager(
     fun searchTopClickLisnter(){
         cmdindexSearchTopAllow.setOnClickListener {
                 TopAllowButtonView ->
-            if(!cmdindexCommandIndexFragment.isVisible) return@setOnClickListener
+            if(!cmdindexFragment.isVisible) return@setOnClickListener
             listener?.onPageSearchToolbarClick(
                 PageSearchToolbarButtonVariant.TOP,
                 indexTerminalTag
@@ -96,7 +96,7 @@ class PageSearchToolbarManager(
     fun searchDownClickLisnter(){
         cmdindexSearchDownAllow.setOnClickListener {
                 DownAllowButtonView ->
-            if(!cmdindexCommandIndexFragment.isVisible) return@setOnClickListener
+            if(!cmdindexFragment.isVisible) return@setOnClickListener
             listener?.onPageSearchToolbarClick(
                 PageSearchToolbarButtonVariant.DOWN,
                 indexTerminalTag

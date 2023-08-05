@@ -4,6 +4,7 @@ import android.R
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -17,18 +18,26 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 object ConfirmDialogforKill {
 
     fun show(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         shellScriptName: String,
         currentMonitorFileName: String,
         cmdListView: RecyclerView
     ){
-
-
-        val context = cmdIndexCommandIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        val context = cmdIndexFragment.context
+        if(
+            !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
+        ){
+            Toast.makeText(
+                context,
+                "no shell extend",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         terminalViewModel.onDisplayUpdate = true
-        val alertDialog = AlertDialog.Builder(cmdIndexCommandIndexFragment.context)
+        val alertDialog = AlertDialog.Builder(cmdIndexFragment.context)
             .setTitle(
                 "Kill bellow shell path process, ok?"
             )

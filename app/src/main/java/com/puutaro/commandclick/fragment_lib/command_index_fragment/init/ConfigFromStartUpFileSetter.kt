@@ -6,12 +6,11 @@ import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
-import java.io.File
 
 
 object ConfigFromStartUpFileSetter {
     fun set(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
     ){
 
@@ -38,58 +37,58 @@ object ConfigFromStartUpFileSetter {
             settingSectionEnd
         )
 
-        cmdIndexFragment.historySwitch = SettingVariableReader.getCbValue(
+        cmdIndexCommandIndexFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,
-            cmdIndexFragment.historySwitch,
+            cmdIndexCommandIndexFragment.historySwitch,
             SettingVariableSelects.HistorySwitchSelects.INHERIT.name,
-            cmdIndexFragment.historySwitch,
+            cmdIndexCommandIndexFragment.historySwitch,
             listOf(
                 SettingVariableSelects.HistorySwitchSelects.OFF.name,
                 SettingVariableSelects.HistorySwitchSelects.ON.name
             ),
         )
 
-        cmdIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
+        cmdIndexCommandIndexFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
-            cmdIndexFragment.urlHistoryOrButtonExec,
+            cmdIndexCommandIndexFragment.urlHistoryOrButtonExec,
             SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name,
-            cmdIndexFragment.urlHistoryOrButtonExec,
+            cmdIndexCommandIndexFragment.urlHistoryOrButtonExec,
             listOf(
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
             ),
         )
 
-        cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
+        cmdIndexCommandIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-            cmdIndexFragment.statusBarIconColorMode,
+            cmdIndexCommandIndexFragment.statusBarIconColorMode,
             SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
-            cmdIndexFragment.urlHistoryOrButtonExec,
+            cmdIndexCommandIndexFragment.urlHistoryOrButtonExec,
             listOf(
                 SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
 
-            cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
+            cmdIndexCommandIndexFragment.runShell = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            cmdIndexFragment.runShell
+            cmdIndexCommandIndexFragment.runShell
         )
 
-        cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
+        cmdIndexCommandIndexFragment.shiban = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_SHIBAN,
-            cmdIndexFragment.shiban
+            cmdIndexCommandIndexFragment.shiban
         )
 
 
-        cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
+        cmdIndexCommandIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,
-            cmdIndexFragment.terminalColor
+            cmdIndexCommandIndexFragment.terminalColor
         )
         val bottomScriptUrlList = SettingVariableReader.setListFromPath(
             settingVariableList,
@@ -97,7 +96,7 @@ object ConfigFromStartUpFileSetter {
         )
         if(
             bottomScriptUrlList.isNotEmpty()
-        ) cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlList
+        ) cmdIndexCommandIndexFragment.bottomScriptUrlList = bottomScriptUrlList
 
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
             settingVariableList,
@@ -105,7 +104,7 @@ object ConfigFromStartUpFileSetter {
         )
         if(
             homeFannelHistoryNameList.isNotEmpty()
-        ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
+        ) cmdIndexCommandIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
     }
 }

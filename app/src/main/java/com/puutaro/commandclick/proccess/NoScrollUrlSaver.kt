@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.proccess
 
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 object NoScrollUrlSaver {
     fun save(
-        fragment: Fragment,
+        fragment: androidx.fragment.app.Fragment,
         currentAppDirPath: String,
         fannelName: String,
     ){

@@ -4,13 +4,13 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 object TerminalShower {
     fun show(
-        cmdIndexCommandIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
-        val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
+        val listener = cmdIndexFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
         listener?.onKeyBoardVisibleChange(
             false,
             true,
-            cmdIndexCommandIndexFragment.WebSearchSwitch
+            cmdIndexFragment.WebSearchSwitch
         )
     }
 }

@@ -1,17 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object ListViewUpdaterOnStart {
     fun update(
-        cmdIndexCommandIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
-        val binding = cmdIndexCommandIndexFragment.binding
-        val readSharePreffernceMap = cmdIndexCommandIndexFragment.readSharePreffernceMap
+        val binding = cmdIndexFragment.binding
+        val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
         val cmdList = binding.cmdList
         CommandListManager.execListUpdateForCmdIndex(
             SharePreffrenceMethod.getReadSharePreffernceMap(

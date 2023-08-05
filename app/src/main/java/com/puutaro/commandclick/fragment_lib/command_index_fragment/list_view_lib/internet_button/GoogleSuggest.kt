@@ -6,9 +6,7 @@ import android.os.Build
 import android.text.Editable
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.WebUrlVariables
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
@@ -26,7 +24,7 @@ import java.util.zip.GZIPInputStream
 
 
 class GoogleSuggest(
-    private val fragment: Fragment,
+    private val fragment: androidx.fragment.app.Fragment,
     private val cmdSearchEditText: AutoCompleteTextView
 ){
     private val context = fragment.context
@@ -70,7 +68,7 @@ class GoogleSuggest(
         )
 
         when(fragment) {
-            is CommandIndexFragment -> {
+            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                 fragment.suggestJob?.cancel()
                     fragment . suggestJob = launchSuggestCoroutine (connection)
             }
@@ -156,7 +154,7 @@ class GoogleSuggest(
 
 
 private class SuggestEditTexter(
-    private val fragment: Fragment,
+    private val fragment: androidx.fragment.app.Fragment,
     private val cmdSearchEditText: AutoCompleteTextView
 ) {
 

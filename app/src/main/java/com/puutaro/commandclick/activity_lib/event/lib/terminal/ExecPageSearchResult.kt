@@ -15,7 +15,7 @@ object ExecPageSearchResult {
         activeMatchOrdinal: Int,
         numberOfMatches: Int
     ) {
-        val cmdIndexCommandIndexFragment = try {
+        val cmdIndexFragment = try {
             activity.supportFragmentManager.findFragmentByTag(
                 activity.getString(R.string.command_index_fragment)
             ) as CommandIndexFragment
@@ -42,7 +42,7 @@ object ExecPageSearchResult {
         } catch (e: Exception) {
             null
         }
-        val isVisibleCommandIndexFragment = cmdIndexCommandIndexFragment?.isVisible == true
+        val isVisibleCommandIndexFragment = cmdIndexFragment?.isVisible == true
         val isVisibleCmdEditFragment = cmdEditFragment?.isVisible == true
         if(
             isVisibleCommandIndexFragment
@@ -50,13 +50,13 @@ object ExecPageSearchResult {
         ) return
         if(
             isVisibleCommandIndexFragment
-            && cmdIndexCommandIndexFragment != null
+            && cmdIndexFragment != null
         ){
             execReflectForCmdIndex(
                 activity,
                 activeMatchOrdinal,
                 numberOfMatches,
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
             )
             return
         }
@@ -77,9 +77,9 @@ private fun execReflectForCmdIndex(
     activity: MainActivity,
     activeMatchOrdinal: Int,
     numberOfMatches: Int,
-    cmdIndexCommandIndexFragment: CommandIndexFragment,
+    cmdIndexFragment: CommandIndexFragment,
 ){
-    val binding = cmdIndexCommandIndexFragment.binding
+    val binding = cmdIndexFragment.binding
     val pageSearch = binding.pageSearch
     val cmdindexSearchTotal = pageSearch.cmdindexSearchTotal
     val displayActivePerTotal = "${activeMatchOrdinal}/${numberOfMatches}"

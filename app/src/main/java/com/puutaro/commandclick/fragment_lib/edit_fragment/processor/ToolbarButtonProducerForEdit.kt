@@ -1,20 +1,26 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.content.Context
+import android.util.Size
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.checkAllMatched
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
@@ -34,12 +40,18 @@ class ToolbarButtonProducerForEdit(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
     )
+    private var menuPopupWindow: PopupWindow? = null
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val sharedPref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         editFragment,
         readSharePreffernceMap,
+    )
+
+    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        readSharePreffernceMap,
+        SharePrefferenceSetting.current_script_file_name
     )
 
     private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -52,6 +64,9 @@ class ToolbarButtonProducerForEdit(
         editFragment,
         readSharePreffernceMap,
     )
+    private val menuListMap = MenuEnumsForEdit.values().map {
+        it.itemName to it.imageId
+    }
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
@@ -80,9 +95,10 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.tag = toolbarButtonBariantForEdit.str
 
         makeButtonView.setOnLongClickListener {
-                view ->
+                buttonInnerView ->
             onLongClickHandler(
-                view,
+                buttonInnerView,
+                makeButtonView,
                 toolbarButtonBariantForEdit,
                 shellContentsList,
                 recordNumToMapNameValueInCommandHolder,
@@ -185,7 +201,8 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun onLongClickHandler(
-        view: View,
+        buttonInnerView: View,
+        makeButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
@@ -195,7 +212,7 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.HISTORY -> {
                 HistoryBottunSwitcher.switch(
                     editFragment,
-                    view,
+                    buttonInnerView,
                     editFragment.context?.getString(
                         R.string.edit_execute_terminal_fragment
                     ),
@@ -218,16 +235,15 @@ class ToolbarButtonProducerForEdit(
                     existEditExecuteTerminalFragment == null
                 ){
                     Toast.makeText(
-                        view.context,
+                        buttonInnerView.context,
                         "no working",
                         Toast.LENGTH_SHORT
                     ).show()
                     return
                 }
                 createPopUpForSetting(
-                    editFragment,
-                    context,
-                    view
+                    buttonInnerView,
+                    makeButtonView
                 )
             }
             ToolbarButtonBariantForEdit.OK -> {
@@ -300,10 +316,6 @@ class ToolbarButtonProducerForEdit(
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
-        val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.on_shortcut
-        )
         if(
             editFragment.tag?.startsWith(
                 FragmentTagManager.Prefix.cmdEditPrefix.str
@@ -335,11 +347,6 @@ class ToolbarButtonProducerForEdit(
             shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-        )
-
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
         )
 
 
@@ -424,259 +431,157 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun createPopUpForSetting(
-        editFragment: EditFragment,
-        context: Context?,
-        view: View
+        buttonInnerView: View,
+        settingButtonView: ImageButton
     ){
-        val popup = PopupMenu(context, view)
-        val terminalFragment = editFragment.activity?.supportFragmentManager?.findFragmentByTag(
-            context?.getString(R.string.edit_execute_terminal_fragment)
-        )
-        val enableTerminalFragment =
-            terminalFragment != null && terminalFragment.isVisible
-        if(enableTerminalFragment) {
-//            popup.menu.add(
-//                MenuEnumsForEdit.TERM_REFRESH.groupId,
-//                MenuEnumsForEdit.TERM_REFRESH.itemId,
-//                MenuEnumsForEdit.TERM_REFRESH.order,
-//                MenuEnumsForEdit.TERM_REFRESH.itemName
-//            )
-            popup.menu.add(
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.groupId,
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemId,
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.order,
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName
-            ).setEnabled(
-                editFragment.onNoUrlSaveMenu
+        val settingButtonViewContext = buttonInnerView.context
+        menuPopupWindow = PopupWindow(
+            settingButtonView.context,
+        ).apply {
+            elevation = 5f
+            isFocusable = true
+            isOutsideTouchable = true
+            setBackgroundDrawable(null)
+            animationStyle = R.style.popup_window_animation_phone
+            val inflater = LayoutInflater.from(settingButtonView.context)
+            contentView = inflater.inflate(
+                R.layout.setting_popup_for_index,
+                LinearLayoutCompat(settingButtonViewContext),
+                false
+            ).apply {
+                val menuListView =
+                    this.findViewById<NoScrollListView>(
+                        R.id.setting_menu_list_view
+                    )
+                val menuListAdapter = MenuListAdapter(
+                    settingButtonViewContext,
+                    menuListMap.toMutableList()
+                )
+                menuListView.adapter = menuListAdapter
+                menuListViewSetOnItemClickListener(menuListView)
+                navButtonsSeter(this)
+                measure(
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                )
+            }
+        }.also { popupWindow ->
+            // Absolute location of the anchor view
+            val location = IntArray(2).apply {
+                settingButtonView.getLocationOnScreen(this)
+            }
+            val size = Size(
+                popupWindow.contentView.measuredWidth,
+                popupWindow.contentView.measuredHeight
             )
-            popup.menu.add(
-                MenuEnumsForEdit.FORWARD.groupId,
-                MenuEnumsForEdit.FORWARD.itemId,
-                MenuEnumsForEdit.FORWARD.order,
-                MenuEnumsForEdit.FORWARD.itemName
-            ).setEnabled(
-                EnableGoForwardForWebVeiw.check(editFragment)
+            popupWindow.showAtLocation(
+                settingButtonView,
+                Gravity.TOP or Gravity.START,
+                location[0] - (size.width - settingButtonView.width) / 2,
+                location[1] - size.height
             )
-            popup.menu.add(
-                MenuEnumsForEdit.KILL.groupId,
-                MenuEnumsForEdit.KILL.itemId,
-                MenuEnumsForEdit.KILL.order,
-                MenuEnumsForEdit.KILL.itemName
-            );
-//            val sub = popup.menu.addSubMenu(
-//                MenuEnumsForEdit.SELECTTERM.groupId,
-//                MenuEnumsForEdit.SELECTTERM.itemId,
-//                MenuEnumsForEdit.SELECTTERM.order,
-//                MenuEnumsForEdit.SELECTTERM.itemName
-//            )
-//            val currentMonitorFileName = terminalViewModel.currentMonitorFileName
-//            (MenuEnumsForEdit.values()).forEach {
-//                val groupId = it.groupId
-//                if (groupId != submenuTermSlectGroupId) return@forEach
-//                val itemId = it.itemId
-//                val checked = if (it.itemName == currentMonitorFileName) {
-//                    true
-//                } else {
-//                    false
-//                }
-//                sub.add(
-//                    groupId,
-//                    itemId,
-//                    it.order,
-//                    it.itemName
-//                ).setCheckable(true).setChecked(checked);
-//            }
         }
-        execAddSettingSubMenu(
-            popup,
-            MenuEnumsForEdit.SETTING,
-            submenuSettingGroupId
+    }
+
+    private fun navButtonsSeter(
+        settingButtonInnerView: View
+    ){
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_back_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.BACK,
+            EnableNavForWebView.checkForGoBack(editFragment)
         )
-        popup.show()
-        popupMenuItemSelectedForEdit(
-            popup,
-            editFragment,
-            readSharePreffernceMap,
-            terminalViewModel,
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_reload_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
+            EnableNavForWebView.checkForReload(editFragment),
+        )
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_forward_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
+            EnableNavForWebView.checkForGoForward(editFragment)
         )
     }
-}
 
+    private fun execSetNavImageButton (
+        settingButtonInnerView: View,
+        buttonId: Int,
+        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+        buttonEnable: Boolean
+    ){
+        val navImageButton =
+            settingButtonInnerView.findViewById<AppCompatImageButton>(
+                buttonId
+            )
+        navImageButton.setOnClickListener {
+            menuPopupWindow?.dismiss()
+            val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+            listener?.onToolbarMenuCategoriesForEdit(
+                toolbarMenuCategoriesVariantForCmdIndex
+            )
+        }
+        navImageButton.isEnabled = buttonEnable
+        val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
+        navImageButton.imageTintList = context?.getColorStateList(colorId)
+    }
 
-internal fun popupMenuItemSelectedForEdit(
-    popup: PopupMenu,
-    editFragment: EditFragment,
-    readSharePreffernceMap: Map<String, String>,
-    terminalViewModel: TerminalViewModel,
-){
-    val context = editFragment.context
-    val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
-    )
-    val fannelName = SharePreffrenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
-    )
-
-    popup.setOnMenuItemClickListener { menuItem ->
-        when (menuItem.itemId) {
-            MenuEnumsForEdit.SELECTTERM.itemId  -> {
-                println("pass")
-            }
-            MenuEnumsForEdit.TERM1.itemId  -> {
-                FileSystems.updateLastModified(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1
-                )
-                terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_1
-            }
-            MenuEnumsForEdit.TERM2.itemId  -> {
-                FileSystems.updateLastModified(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_2
-                )
-                terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
-            }
-            MenuEnumsForEdit.TERM3.itemId  -> {
-                FileSystems.updateLastModified(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_3
-                )
-                terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_3
-            }
-            MenuEnumsForEdit.TERM4.itemId  -> {
-                FileSystems.updateLastModified(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_4
-                )
-                terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_4
-            }
-            MenuEnumsForEdit.SETTING.itemId  -> {
-                println("pass")
-            }
-            MenuEnumsForEdit.SHORTCUT.itemId -> {
-                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                listener?.onToolbarMenuCategoriesForEdit(
-                    ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
-                )
-            }
-            MenuEnumsForEdit.TERMUX_SETUP.itemId -> {
-                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                listener?.onToolbarMenuCategoriesForEdit(
-                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
-                )
-            }
-            MenuEnumsForEdit.CONFIG.itemId -> {
-                val configDirPath = UsePath.cmdclickSystemAppDirPath
-                val configShellName = UsePath.cmdclickConfigFileName
-                CommandClickScriptVariable.makeConfigJsFile(
-                    configDirPath,
-                    configShellName
-                )
-                val shellContentsList = ReadText(
-                    configDirPath,
-                    configShellName
-                ).textToList()
-                val validateErrMessage = ValidateShell.correct(
-                    editFragment,
-                    shellContentsList,
-                    configShellName
-                )
-                if(validateErrMessage.isNotEmpty()){
-                    val shellScriptPath = "${configDirPath}/${configShellName}"
-                    VaridateionErrDialog.show(
+    private fun menuListViewSetOnItemClickListener(
+        menuListView: NoScrollListView
+    ){
+        menuListView.setOnItemClickListener {
+                parent, View, pos, id ->
+            menuPopupWindow?.dismiss()
+            val menuListAdapter = menuListView.adapter as MenuListAdapter
+            when(menuListAdapter.getItem(pos)){
+                MenuEnumsForEdit.SETTING.itemName -> {
+                    SubMenuDialogForEdit.launch(
                         editFragment,
-                        shellScriptPath,
-                        validateErrMessage
                     )
-                } else {
-                    val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                    listener?.onToolbarMenuCategoriesForEdit(
-                        ToolbarMenuCategoriesVariantForCmdIndex.CONFIG
+                }
+                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName -> {
+                    NoScrollUrlSaver.save(
+                        editFragment,
+                        currentAppDirPath,
+                        String()
+                    )
+                }
+                MenuEnumsForEdit.KILL.itemName -> {
+                    KillConfirmDialogForEdit.show(
+                        editFragment,
+                        currentAppDirPath,
+                        currentShellFileName,
+                        terminalViewModel.currentMonitorFileName,
+                    )
+                }
+                MenuEnumsForEdit.TERM_REFRESH.itemName -> {
+                    TermRefresh.refresh(
+                        terminalViewModel.currentMonitorFileName
                     )
                 }
             }
-            MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemId -> {
-                NoScrollUrlSaver.save(
-                    editFragment,
-                    currentAppDirPath,
-                    fannelName,
-                )
-            }
-            MenuEnumsForEdit.FORWARD.itemId -> {
-                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                listener?.onToolbarMenuCategoriesForEdit(
-                    ToolbarMenuCategoriesVariantForCmdIndex.FORWARD
-                )
-            }
-            MenuEnumsForEdit.TERM_REFRESH.itemId -> {
-                TermRefresh.refresh(
-                    terminalViewModel.currentMonitorFileName
-                )
-            }
-            MenuEnumsForEdit.KILL.itemId -> {
-                KillConfirmDialogForEdit.show(
-                    editFragment,
-                    currentAppDirPath,
-                    fannelName,
-                    terminalViewModel.currentMonitorFileName,
-                )
-
-
-            }
-            else -> {}
-        }.checkAllMatched
-        true
+        }
     }
 }
 
-private val mainMenuGroupId = 100
-private val submenuTermSlectGroupId = 200
-private val submenuSettingGroupId = 300
 
-
-internal enum class MenuEnumsForEdit(
-    val groupId: Int,
-    val itemId: Int,
-    val order: Int,
-    val itemName: String
+private enum class MenuEnumsForEdit(
+    val itemName: String,
+    val imageId: Int,
 ) {
-    KILL(mainMenuGroupId, 70100, 1, "kill"),
-    SETTING(mainMenuGroupId, 70400, 4, "setting"),
-    SHORTCUT(submenuSettingGroupId, 70401, 1, "create_short_cut"),
-    TERMUX_SETUP(submenuSettingGroupId, 70402, 2, "termux_setup"),
-    CONFIG(submenuSettingGroupId, 70403, 3, "config"),
-    SELECTTERM(mainMenuGroupId, 70700, 7, "select_term"),
-    TERM1(submenuTermSlectGroupId, 70701, 1, "term_1"),
-    TERM2(submenuTermSlectGroupId, 70702, 2, "term_2"),
-    TERM3(submenuTermSlectGroupId, 70703, 3, "term_3"),
-    TERM4(submenuTermSlectGroupId, 70704, 4, "term_4"),
-    TERM_REFRESH(mainMenuGroupId, 70800, 8, "term_refresh"),
-    NO_SCROLL_SAVE_URL(mainMenuGroupId, 70900, 9, "no_scroll_save_url"),
-    FORWARD(mainMenuGroupId, 71000, 10, "forward"),
-}
-
-
-internal fun execAddSettingSubMenu(
-    popup: PopupMenu,
-    addMenuEnums: MenuEnumsForEdit,
-    submenuGroupId: Int
-){
-    val sub = popup.menu.addSubMenu(
-        addMenuEnums.groupId,
-        addMenuEnums.itemId,
-        addMenuEnums.order,
-        addMenuEnums.itemName
-    );
-    (MenuEnumsForEdit.values()).forEach{
-        val groupId = it.groupId
-        if( groupId != submenuGroupId) return@forEach
-        sub.add(
-            groupId,
-            it.itemId,
-            it.order,
-            it.itemName
-        )
-    }
+//    SHORTCUT(submenuSettingGroupId, 70401, 1, "create_short_cut"),
+//    TERMUX_SETUP(submenuSettingGroupId, 70402, 2, "termux_setup"),
+//    CONFIG(submenuSettingGroupId, 70403, 3, "config"),
+//    SELECTTERM(mainMenuGroupId, 70700, 7, "select_term"),
+//    TERM1(submenuTermSlectGroupId, 70701, 1, "term_1"),
+//    TERM2(submenuTermSlectGroupId, 70702, 2, "term_2"),
+//    TERM3(submenuTermSlectGroupId, 70703, 3, "term_3"),
+//    TERM4(submenuTermSlectGroupId, 70704, 4, "term_4"),
+    TERM_REFRESH("term_refresh", R.drawable.icons8_refresh),
+    KILL("kill", R.drawable.cancel),
+    NO_SCROLL_SAVE_URL("no_scroll_save_url", R.drawable.icons8_check_ok),
+    SETTING("setting", R.drawable.icons8_setting),
+//    FORWARD(mainMenuGroupId, 71000, 10, "forward"),
 }

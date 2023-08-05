@@ -21,13 +21,13 @@ import com.puutaro.commandclick.util.*
 
 object FannelNameClickListenerSetter {
     fun set(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
-        val activity = cmdIndexFragment.activity
+        val activity = cmdIndexCommandIndexFragment.activity
         val sharedPref =  activity?.getPreferences(Context.MODE_PRIVATE)
-        val binding = cmdIndexFragment.binding
+        val binding = cmdIndexCommandIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
 
@@ -46,7 +46,7 @@ object FannelNameClickListenerSetter {
                 )
                 cmdSearchEditText.setText(String())
                 CmdIndexToolbarSwitcher.switch(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     false
                 )
                 if(
@@ -55,7 +55,7 @@ object FannelNameClickListenerSetter {
                     )
                 ) {
                     BroadCastIntent.send(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         "${currentAppDirPath}/$selectedShellFileName"
                     )
                     updateLastModifiedListView(
@@ -72,14 +72,14 @@ object FannelNameClickListenerSetter {
                     )
                 ) return
                 val currentFragmentTag =
-                    cmdIndexFragment.tag ?: String()
+                    cmdIndexCommandIndexFragment.tag ?: String()
 
                 val shellContentsList = ReadText(
                     currentAppDirPath,
                     selectedShellFileName
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     shellContentsList,
                     selectedShellFileName
                 )
@@ -87,7 +87,7 @@ object FannelNameClickListenerSetter {
                     val shellScriptPath =
                         "${currentAppDirPath}/${selectedShellFileName}"
                     VaridateionErrDialog.show(
-                        cmdIndexFragment,
+                        cmdIndexCommandIndexFragment,
                         shellScriptPath,
                         validateErrMessage
                     )
@@ -126,7 +126,7 @@ object FannelNameClickListenerSetter {
                         ).decide()
                             ?: return
                         OnOnceEditExecuteEvent.invoke(
-                            cmdIndexFragment,
+                            cmdIndexCommandIndexFragment,
                             sharedPref,
                             selectedShellFileName,
                             editFragmentTag,
@@ -141,7 +141,7 @@ object FannelNameClickListenerSetter {
                         ).decide() ?: return
 
                         OnEditExecuteEvent.invoke(
-                            cmdIndexFragment,
+                            cmdIndexCommandIndexFragment,
                             editFragmentTag,
                             sharedPref,
                             selectedShellFileName,
@@ -150,7 +150,7 @@ object FannelNameClickListenerSetter {
                     }
                 }
                 ExecJsOrSellHandler.handle(
-                    cmdIndexFragment,
+                    cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     selectedShellFileName,
                 )
@@ -159,7 +159,7 @@ object FannelNameClickListenerSetter {
                     cmdListView,
                 )
 
-                val listener = cmdIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
+                val listener = cmdIndexCommandIndexFragment.context as? CommandIndexFragment.OnListItemClickListener
                 listener?.onListItemClicked(
                     currentFragmentTag
                 )

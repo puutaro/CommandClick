@@ -9,7 +9,9 @@ import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
 import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCmdListAjustForKeyboard
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoBack
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
+import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecReload
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -96,6 +98,16 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                 activity.finish()
                 activity.startActivity(execIntent)
+            }
+            ToolbarMenuCategoriesVariantForCmdIndex.BACK -> {
+                ExecGoBack.execGoBack(
+                    activity
+                )
+            }
+            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD -> {
+                ExecReload.execReload(
+                    activity
+                )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.FORWARD -> {
                 ExecGoForword.execGoForword(

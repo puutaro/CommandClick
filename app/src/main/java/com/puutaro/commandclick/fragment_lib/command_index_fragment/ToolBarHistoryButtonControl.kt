@@ -11,16 +11,16 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 class ToolBarHistoryButtonControl(
-    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
+    private val cmdIndexFragment: CommandIndexFragment,
     private val readSharePreffernceMap: Map<String, String>,
 ){
 
-    private val binding = cmdIndexCommandIndexFragment.binding
-    val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+    private val binding = cmdIndexFragment.binding
+    val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val historyButtonView = binding.cmdindexHistoryButton
-    private val sharedPref =  cmdIndexCommandIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+    private val sharedPref =  cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
-        cmdIndexCommandIndexFragment,
+        cmdIndexFragment,
         readSharePreffernceMap,
     )
 
@@ -29,13 +29,13 @@ class ToolBarHistoryButtonControl(
         historyButtonView.setOnClickListener {
             historyButtonInnerView ->
             HistoryBottunSwitcher.switch(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 historyButtonInnerView,
-                cmdIndexCommandIndexFragment.context?.getString(
+                cmdIndexFragment.context?.getString(
                     R.string.index_terminal_fragment
                 ),
                 readSharePreffernceMap,
-                cmdIndexCommandIndexFragment.historySwitch,
+                cmdIndexFragment.historySwitch,
                 urlHistoryButtonEvent,
                 sharedPref,
                 CLICLTYPE.SHORT
@@ -45,13 +45,13 @@ class ToolBarHistoryButtonControl(
         historyButtonView.setOnLongClickListener {
                 historyButtonInnerView ->
             HistoryBottunSwitcher.switch(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 historyButtonInnerView,
-                cmdIndexCommandIndexFragment.context?.getString(
+                cmdIndexFragment.context?.getString(
                     R.string.index_terminal_fragment
                 ),
                 readSharePreffernceMap,
-                cmdIndexCommandIndexFragment.historySwitch,
+                cmdIndexFragment.historySwitch,
                 urlHistoryButtonEvent,
                 sharedPref,
                 CLICLTYPE.LONG

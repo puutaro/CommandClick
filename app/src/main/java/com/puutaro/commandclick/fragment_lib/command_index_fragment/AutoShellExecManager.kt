@@ -13,14 +13,14 @@ import com.puutaro.commandclick.util.*
 class AutoShellExecManager {
     companion object {
         fun fire(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
+            cmdIndexFragment: CommandIndexFragment,
             cmdclickStartupOrEndShellName: String,
         ){
             if(
-                cmdIndexCommandIndexFragment.onUrlLaunchIntent
+                cmdIndexFragment.onUrlLaunchIntent
             ) return
 
-            val readSharePreffernceMap = cmdIndexCommandIndexFragment.readSharePreffernceMap
+            val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
             if(
                 readSharePreffernceMap.isEmpty()
             ) return
@@ -29,7 +29,7 @@ class AutoShellExecManager {
                 SharePrefferenceSetting.current_app_dir
             )
 
-            val activity = cmdIndexCommandIndexFragment.activity
+            val activity = cmdIndexFragment.activity
 
             TargetFragmentInstance()
                 .getFromFragment<TerminalFragment>(
@@ -68,7 +68,7 @@ class AutoShellExecManager {
                 SettingVariableSelects.AutoExecSelects.ON.name
             ) return
             ExecJsLoad.execJsLoad(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 currentAppDirPath,
                 cmdclickStartupOrEndShellName,
                 jsContentsList

@@ -14,13 +14,13 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ToolBarInternetButtonControl(
-    private val cmdIndexCommandIndexFragment: CommandIndexFragment,
+    private val cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
-    private val context = cmdIndexCommandIndexFragment.context
-    private val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
-    private val binding = cmdIndexCommandIndexFragment.binding
-    private val cmdclickToolBar = cmdIndexCommandIndexFragment.binding.cmdclickToolBar
+    private val context = cmdIndexFragment.context
+    private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+    private val binding = cmdIndexFragment.binding
+    private val cmdclickToolBar = cmdIndexFragment.binding.cmdclickToolBar
     private val cmdindexInternet = binding.cmdindexInternetButton
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
@@ -33,10 +33,10 @@ class ToolBarInternetButtonControl(
         val grayStateList = context?.getColorStateList(R.color.icon_selected_color)
         cmdindexInternet.setOnClickListener {
                 buttonView ->
-            if(!cmdIndexCommandIndexFragment.isVisible) return@setOnClickListener
+            if(!cmdIndexFragment.isVisible) return@setOnClickListener
             if(!cmdclickToolBar.isVisible) return@setOnClickListener
             try {
-                cmdIndexCommandIndexFragment.activity?.supportFragmentManager?.findFragmentByTag(
+                cmdIndexFragment.activity?.supportFragmentManager?.findFragmentByTag(
                     context?.getString(R.string.index_terminal_fragment)
                 ) as TerminalFragment
             } catch(e: Exception){
@@ -50,33 +50,33 @@ class ToolBarInternetButtonControl(
             val enableExecInternetButtonJs =
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
                         && terminalViewModel.onExecInternetButtonShell
-                        && cmdIndexCommandIndexFragment.WebSearchSwitch
+                        && cmdIndexFragment.WebSearchSwitch
             if(
                 enableExecInternetButtonJs
             ) {
                 ExecJsLoad.execJsLoad(
-                    cmdIndexCommandIndexFragment,
+                    cmdIndexFragment,
                     currentAppDirPath,
                     UsePath.cmdclickInternetButtonExecJsFileName,
                 )
                 return@setOnClickListener
             }
 
-            if(cmdIndexCommandIndexFragment.WebSearchSwitch){
+            if(cmdIndexFragment.WebSearchSwitch){
                 cmdindexInternet.imageTintList = terminalStateList
                 cmdindexInternet.backgroundTintList = whiteStateList;
-                cmdIndexCommandIndexFragment.WebSearchSwitch = !cmdIndexCommandIndexFragment.WebSearchSwitch
+                cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
                 return@setOnClickListener
             }
             cmdindexInternet.imageTintList = terminalStateList
             cmdindexInternet.backgroundTintList = grayStateList
-            cmdIndexCommandIndexFragment.WebSearchSwitch = !cmdIndexCommandIndexFragment.WebSearchSwitch
+            cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
         }
 
         cmdindexInternet.setOnLongClickListener {
             view ->
             CmdIndexToolbarSwitcher.switch(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 true
             )
             false

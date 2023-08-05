@@ -6,27 +6,25 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
-class OnOnceEditExecuteEvent {
-    companion object {
-        fun invoke(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            sharedPref: SharedPreferences?,
-            selectedShellFileName: String,
-            editFragmentTag: String,
-        ) {
-            SharePreffrenceMethod.putSharePreffrence(
-                sharedPref,
-                mapOf(
-                    SharePrefferenceSetting.current_script_file_name.name
-                            to selectedShellFileName,
-                )
+object OnOnceEditExecuteEvent {
+    fun invoke(
+        cmdIndexFragment: CommandIndexFragment,
+        sharedPref: SharedPreferences?,
+        selectedShellFileName: String,
+        editFragmentTag: String,
+    ) {
+        SharePreffrenceMethod.putSharePreffrence(
+            sharedPref,
+            mapOf(
+                SharePrefferenceSetting.current_script_file_name.name
+                        to selectedShellFileName,
             )
-            val listener = cmdIndexCommandIndexFragment.context
-                    as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-            listener?.onLongClickMenuItemsforCmdIndex(
-                LongClickMenuItemsforCmdIndex.EDIT,
-                editFragmentTag
-            )
-        }
+        )
+        val listener = cmdIndexFragment.context
+                as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
+        listener?.onLongClickMenuItemsforCmdIndex(
+            LongClickMenuItemsforCmdIndex.EDIT,
+            editFragmentTag
+        )
     }
 }

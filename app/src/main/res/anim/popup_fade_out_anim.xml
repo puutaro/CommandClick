@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<set xmlns:android="http://schemas.android.com/apk/res/android">
-
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <!--   ref link https://gadgegy.com/popupwindow-animation/-->
+    <alpha
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:fromAlpha="1" android:toAlpha="0"
+        android:duration="125" />
+    <translate
+        android:interpolator="@android:interpolator/accelerate_quad"
+        android:fromYDelta="0%" android:toYDelta="7%"
+        android:duration="125"/>
 </set>

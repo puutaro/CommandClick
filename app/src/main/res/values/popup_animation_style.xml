@@ -1,3 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="popup_window_animation_phone">
+        <item name="android:windowEnterAnimation">@anim/popup_fade_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/popup_fade_out_anim</item>
+    </style>
 </resources>

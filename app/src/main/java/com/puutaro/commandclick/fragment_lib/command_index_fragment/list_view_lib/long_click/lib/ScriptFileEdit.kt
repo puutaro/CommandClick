@@ -12,11 +12,11 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object ScriptFileEdit {
     fun edit(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         shellScriptName: String,
     ){
-        val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = cmdIndexCommandIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharedPref,
             mapOf(
@@ -29,14 +29,14 @@ object ScriptFileEdit {
             shellScriptName
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
-            cmdIndexFragment,
+            cmdIndexCommandIndexFragment,
             shellContentsList,
             shellScriptName
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
             VaridateionErrDialog.show(
-                cmdIndexFragment,
+                cmdIndexCommandIndexFragment,
                 shellScriptPath,
                 validateErrMessage
             )
@@ -47,7 +47,7 @@ object ScriptFileEdit {
             currentAppDirPath,
             shellScriptName
         ).decideForEdit()
-        val listener = cmdIndexFragment.context
+        val listener = cmdIndexCommandIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,

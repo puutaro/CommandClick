@@ -12,49 +12,47 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class StartupOrEditExecuteOnceShell {
+object StartupOrEditExecuteOnceShell {
 
-    companion object {
-        fun invoke(
-            cmdIndexCommandIndexFragment: CommandIndexFragment,
-            readSharePreffernceMap: Map<String, String>
+    fun invoke(
+        cmdIndexFragment: CommandIndexFragment,
+        readSharePreffernceMap: Map<String, String>
+    ) {
+
+        val context = cmdIndexFragment.context
+
+        val activity = cmdIndexFragment.activity
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+
+        val editExecuteOnceCurrentShellFileName =
+            terminalViewModel.editExecuteOnceCurrentShellFileName
+        if (
+            editExecuteOnceCurrentShellFileName.isNullOrEmpty()
         ) {
-
-            val context = cmdIndexCommandIndexFragment.context
-
-            val activity = cmdIndexCommandIndexFragment.activity
-            val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
+            WebUrlVariables.makeUrlHistoryFile(
+                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             )
-            val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
-
-            val editExecuteOnceCurrentShellFileName =
-                terminalViewModel.editExecuteOnceCurrentShellFileName
-            if (
-                editExecuteOnceCurrentShellFileName.isNullOrEmpty()
-            ) {
-                WebUrlVariables.makeUrlHistoryFile(
-                    "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-                )
-                AutoShellExecManager.fire(
-                    cmdIndexCommandIndexFragment,
-                    UsePath.cmdclickStartupJsName,
-                )
-            } else {
-                TargetFragmentInstance()
-                    .getFromFragment<TerminalFragment>(
-                        activity,
-                        activity?.getString(R.string.index_terminal_fragment)
-                    ) ?: return
-                ExecJsOrSellHandler.handle(
-                    cmdIndexCommandIndexFragment,
-                    currentAppDirPath,
-                    editExecuteOnceCurrentShellFileName,
-                )
-                terminalViewModel.editExecuteOnceCurrentShellFileName = null
-            }
-
+            AutoShellExecManager.fire(
+                cmdIndexFragment,
+                UsePath.cmdclickStartupJsName,
+            )
+        } else {
+            TargetFragmentInstance()
+                .getFromFragment<TerminalFragment>(
+                    activity,
+                    activity?.getString(R.string.index_terminal_fragment)
+                ) ?: return
+            ExecJsOrSellHandler.handle(
+                cmdIndexFragment,
+                currentAppDirPath,
+                editExecuteOnceCurrentShellFileName,
+            )
+            terminalViewModel.editExecuteOnceCurrentShellFileName = null
         }
+
     }
 }

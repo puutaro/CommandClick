@@ -10,14 +10,14 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object SystemFannelLauncher {
     fun launch(
-        cmdIndexFragment: CommandIndexFragment,
+        cmdIndexCommandIndexFragment: CommandIndexFragment,
         parentDirPath: String,
         fannelScriptName: String,
     ) {
 
-        val context = cmdIndexFragment.context
+        val context = cmdIndexCommandIndexFragment.context
         val sharedPref =
-            cmdIndexFragment.activity?.getPreferences(
+            cmdIndexCommandIndexFragment.activity?.getPreferences(
                 Context.MODE_PRIVATE
             )
         val shellContentsList = ReadText(
@@ -38,7 +38,7 @@ object SystemFannelLauncher {
             )
         )
         OnEditExecuteEvent.invoke(
-            cmdIndexFragment,
+            cmdIndexCommandIndexFragment,
             editFragmentTag,
             sharedPref,
             fannelScriptName,

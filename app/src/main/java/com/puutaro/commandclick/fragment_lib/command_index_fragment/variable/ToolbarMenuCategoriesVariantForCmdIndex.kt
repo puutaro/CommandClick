@@ -13,6 +13,8 @@ enum class ToolbarMenuCategoriesVariantForCmdIndex(
     TERMMAX_KEYBOARD_OPEN,
     TERMMAX_KEYBOARD_CLOSE,
     CONFIG,
+    BACK,
+    RELOAD,
     FORWARD,
     INSTALL_FANNEL
 }

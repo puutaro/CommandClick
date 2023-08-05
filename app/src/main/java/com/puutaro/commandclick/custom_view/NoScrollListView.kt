@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.custtom_view
+package com.puutaro.commandclick.custom_view
 
 import android.content.Context
 import android.util.AttributeSet

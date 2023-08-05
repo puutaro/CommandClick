@@ -1,36 +1,34 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import android.content.Context
+
 import android.content.SharedPreferences
-import android.widget.PopupMenu
-import androidx.fragment.app.activityViewModels
+import android.util.Size
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.MeasureSpec
+import android.widget.ListView
+import android.widget.PopupWindow
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.EnableGoForwardForWebVeiw
+import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
-import com.puutaro.commandclick.proccess.TermRefresh
-import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 
-private val mainMenuGroupId = 1
-private val submenuTermSlectGroupId = 2
-private val submenuSettingGroupId = 3
 
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,
@@ -43,22 +41,25 @@ class ToolBarSettingButtonControl(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
     private val settingButtonView = binding.cmdindexSettingButton
-    private val popup = PopupMenu(context, settingButtonView)
+//    private val popup = PopupMenu(context, settingButtonView)
     private val installFromFannelRepo = InstallFromFannelRepo(
         cmdIndexFragment,
         currentAppDirPath,
     )
-
-
-    fun inflate(){
-        popup.menuInflater.inflate(
-            R.menu.cmd_index_menu,
-            popup.menu
-        )
+    private val menuListMap = MenuEnums.values().toList().map{
+        it.itemName to it.imageId
     }
+    private var menuPopupWindow: PopupWindow? = null
+
+
+//    fun inflate(){
+//        popup.menuInflater.inflate(
+//            R.menu.cmd_index_menu,
+//            popup.menu
+//        )
+//    }
 
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
@@ -69,288 +70,181 @@ class ToolBarSettingButtonControl(
     }
 
     fun toolbarSettingButtonOnClick(){
+        var listViewHeight = 0
         settingButtonView.setOnLongClickListener {
-            _ ->
-            popup.menu.clear()
-            popup.menu.add(
-                MenuEnums.INSTALL_FANNEL.groupId,
-                MenuEnums.INSTALL_FANNEL.itemId,
-                MenuEnums.INSTALL_FANNEL.order,
-                MenuEnums.INSTALL_FANNEL.itemName
-            )
-            popup.menu.add(
-                MenuEnums.NO_SCROLL_SAVE_URL.groupId,
-                MenuEnums.NO_SCROLL_SAVE_URL.itemId,
-                MenuEnums.NO_SCROLL_SAVE_URL.order,
-                MenuEnums.NO_SCROLL_SAVE_URL.itemName
-            )
-            popup.menu.add(
-                MenuEnums.EDIT_STARTUP.groupId,
-                MenuEnums.EDIT_STARTUP.itemId,
-                MenuEnums.EDIT_STARTUP.order,
-                MenuEnums.EDIT_STARTUP.itemName
-            )
-            popup.menu.add(
-                MenuEnums.FORWARD.groupId,
-                MenuEnums.FORWARD.itemId,
-                MenuEnums.FORWARD.order,
-                MenuEnums.FORWARD.itemName
-            ).setEnabled(
-                EnableGoForwardForWebVeiw.check(cmdIndexFragment)
-            )
-//            val sub = popup.menu.addSubMenu(
-//                MenuEnums.SELECTTERM.groupId,
-//                MenuEnums.SELECTTERM.itemId,
-//                MenuEnums.SELECTTERM.order,
-//                MenuEnums.SELECTTERM.itemName
-//            )
-//            val currentMonitorFileName = terminalViewModel.currentMonitorFileName
-//            (MenuEnums.values()).forEach{
-//                val groupId = it.groupId
-//                if( groupId != submenuTermSlectGroupId) return@forEach
-//                val itemId = it.itemId
-//                val checked = it.itemName == currentMonitorFileName
-//                sub.add(
-//                    groupId,
-//                    itemId,
-//                    it.order,
-//                    it.itemName
-//                ).setCheckable(true).setChecked(checked)
-//            }
-            popup.menu.add(
-                MenuEnums.ADD.groupId,
-                MenuEnums.ADD.itemId,
-                MenuEnums.ADD.order,
-                MenuEnums.ADD.itemName
-            )
-            execAddSettingSubMenu(
-                popup,
-                MenuEnums.SETTING,
-                submenuSettingGroupId
-            )
-            popup.show()
+            settingButtonInnerView ->
+            val settingButtonViewContext = settingButtonInnerView.context
+            menuPopupWindow = PopupWindow(
+                settingButtonView.context,
+            ).apply {
+                elevation = 5f
+                isFocusable = true
+                isOutsideTouchable = true
+                setBackgroundDrawable(null)
+                animationStyle = R.style.popup_window_animation_phone
+                val inflater = LayoutInflater.from(settingButtonView.context)
+                contentView = inflater.inflate(
+                    R.layout.setting_popup_for_index,
+                    LinearLayoutCompat(settingButtonViewContext),
+                false
+                ).apply {
+                    val menuListView =
+                        this.findViewById<NoScrollListView>(
+                            R.id.setting_menu_list_view
+                        )
+                    val menuListAdapter = MenuListAdapter(
+                        settingButtonViewContext,
+                        menuListMap.toMutableList()
+                    )
+                    menuListView.adapter = menuListAdapter
+                    menuListViewSetOnItemClickListener(menuListView)
+                    navButtonsSeter(this)
+                    measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    )
+                }
+            }.also { popupWindow ->
+                // Absolute location of the anchor view
+                val location = IntArray(2).apply {
+                    settingButtonView.getLocationOnScreen(this)
+                }
+                val size = Size(
+                    popupWindow.contentView.measuredWidth,
+                    popupWindow.contentView.measuredHeight
+                )
+                popupWindow.showAtLocation(
+                    settingButtonView,
+                    Gravity.TOP or Gravity.START,
+                    location[0] - (size.width - settingButtonView.width) / 2,
+                    location[1] - size.height
+                )
+            }
             true
         }
     }
 
-
-    fun popupMenuItemSelected(
-        cmdIndexFragment: CommandIndexFragment
+    private fun navButtonsSeter(
+        settingButtonInnerView: View
     ){
-        popup.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                MenuEnums.ADD.itemId -> {
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_back_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.BACK,
+            EnableNavForWebView.checkForGoBack(cmdIndexFragment)
+        )
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_reload_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
+            EnableNavForWebView.checkForReload(cmdIndexFragment),
+        )
+        execSetNavImageButton(
+            settingButtonInnerView,
+            R.id.setting_menu_nav_forward_iamge_view,
+            ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
+            EnableNavForWebView.checkForGoForward(cmdIndexFragment)
+        )
+    }
+
+    private fun execSetNavImageButton (
+        settingButtonInnerView: View,
+        buttonId: Int,
+        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+        buttonEnable: Boolean
+    ){
+        val navImageButton =
+            settingButtonInnerView.findViewById<AppCompatImageButton>(
+                buttonId
+            )
+        navImageButton.setOnClickListener {
+            menuPopupWindow?.dismiss()
+            val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+            listener?.onToolbarMenuCategories(
+                toolbarMenuCategoriesVariantForCmdIndex
+            )
+        }
+        navImageButton.isEnabled = buttonEnable
+        val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
+        navImageButton.imageTintList = context?.getColorStateList(colorId)
+    }
+
+    private fun menuListViewSetOnItemClickListener(
+        menuListView: NoScrollListView
+    ){
+        menuListView.setOnItemClickListener {
+                parent, View, pos, id ->
+            menuPopupWindow?.dismiss()
+            val menuListAdapter = menuListView.adapter as MenuListAdapter
+            when(menuListAdapter.getItem(pos)){
+                MenuEnums.ADD.itemName -> {
                     AddScriptHandler(
                         cmdIndexFragment,
                         sharedPref,
                         currentAppDirPath,
                     ).handle()
                 }
-                MenuEnums.SETTING.itemId -> {
-                    print("pass")
+                MenuEnums.SETTING.itemName -> {
+                    SubMenuDialog.launch(cmdIndexFragment)
                 }
-                MenuEnums.CHDIR.itemId -> {
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
-                        UsePath.appDirManagerFannelName
-                    )
-                }
-                MenuEnums.CONFIG.itemId -> {
-                    configEdit()
-                }
-                MenuEnums.CC_IMPORT.itemId -> {
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
-                        UsePath.ccImportManagerFannelName
-                    )
-                }
-                MenuEnums.TERMUX_SETUP.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
-                    )
-                }
-                MenuEnums.SHORTCUT.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
-                    )
-                }
-                MenuEnums.INSTALL_FANNEL.itemId -> {
+                MenuEnums.INSTALL_FANNEL.itemName -> {
                     InstallFannelHandler.handle(
                         cmdIndexFragment,
                         installFromFannelRepo
                     )
                 }
-                MenuEnums.NO_SCROLL_SAVE_URL.itemId -> {
+                MenuEnums.NO_SCROLL_SAVE_URL.itemName -> {
                     NoScrollUrlSaver.save(
                         cmdIndexFragment,
                         currentAppDirPath,
                         String()
                     )
                 }
-                MenuEnums.SELECTTERM.itemId  -> {
-                    println("pass")
-                }
-                MenuEnums.TERM1.itemId  -> {
-                    FileSystems.updateLastModified(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1
-                    )
-                    terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_1
-                }
-                MenuEnums.TERM2.itemId  -> {
-                    FileSystems.updateLastModified(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_2
-                    )
-                    terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
-                }
-                MenuEnums.TERM3.itemId  -> {
-                    FileSystems.updateLastModified(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_3
-                    )
-                    terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_3
-                }
-                MenuEnums.TERM4.itemId  -> {
-                    FileSystems.updateLastModified(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_4
-                    )
-                    terminalViewModel.currentMonitorFileName = UsePath.cmdClickMonitorFileName_4
-                }
-                MenuEnums.EDIT_STARTUP.itemId -> {
+
+                MenuEnums.EDIT_STARTUP.itemName -> {
                     ScriptFileEdit.edit(
                         cmdIndexFragment,
                         currentAppDirPath,
                         UsePath.cmdclickStartupJsName,
                     )
                 }
-                MenuEnums.TERM_REFRESH.itemId -> {
-                    TermRefresh.refresh(
-                        terminalViewModel.currentMonitorFileName
-                    )
-                }
-                MenuEnums.FORWARD.itemId -> {
-                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        ToolbarMenuCategoriesVariantForCmdIndex.FORWARD
-                    )
-                }
-                else -> {
-                    print("pass")
-                }
-            }.checkAllMatched
-            true
+            }
         }
     }
-
-
-    private fun configEdit(){
-        val configDirPath = UsePath.cmdclickSystemAppDirPath
-        val configShellName = UsePath.cmdclickConfigFileName
-        CommandClickScriptVariable.makeConfigJsFile(
-            configDirPath,
-            configShellName
-        )
-        val shellContentsList = ReadText(
-            configDirPath,
-            configShellName
-        ).textToList()
-        val validateErrMessage = ValidateShell.correct(
-            cmdIndexFragment,
-            shellContentsList,
-            configShellName
-        )
-        if(validateErrMessage.isNotEmpty()){
-            val shellScriptPath = "${configDirPath}/${configShellName}"
-            VaridateionErrDialog.show(
-                cmdIndexFragment,
-                shellScriptPath,
-                validateErrMessage
+    private fun calculateHeight(list: ListView): Int {
+        var height = 0
+        for (i in 0 until list.count) {
+            val childView = list.adapter.getView(i, null, list)
+            childView.measure(
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
             )
-            return
+            height += childView.measuredHeight
         }
-        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreffrenceMethod.putSharePreffrence(
-            sharedPref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name
-                        to UsePath.cmdclickSystemAppDirPath,
-                SharePrefferenceSetting.current_script_file_name.name
-                        to cmdclickConfigFileName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to FragmentTagManager.Suffix.ON.name
-            )
-        )
-        val cmdEditFragmentTag = FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
-            UsePath.cmdclickSystemAppDirPath,
-            cmdclickConfigFileName,
-            FragmentTagManager.Suffix.ON.name
-        )
-        val listener = cmdIndexFragment.context
-                as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-        listener?.onLongClickMenuItemsforCmdIndex(
-            LongClickMenuItemsforCmdIndex.EDIT,
-            cmdEditFragmentTag
-        )
+
+        //dividers height
+        height += list.dividerHeight * list.count
+        return height
     }
 }
+
 
 internal val <T> T.checkAllMatched: T
     get() = this
 
-
-internal enum class MenuEnums(
-    val groupId: Int,
-    val itemId: Int,
-    val order: Int,
-    val itemName: String
+private enum class MenuEnums(
+    val itemName: String,
+    val imageId: Int,
 ) {
-    ADD(mainMenuGroupId, 60100, 1, "add"),
-    SETTING(mainMenuGroupId, 60300, 3, "setting"),
-    CHDIR(submenuSettingGroupId, 60301, 1, "change_app_dir"),
-    CC_IMPORT(submenuSettingGroupId, 60302, 2, "cc_import_manager"),
-    SHORTCUT(submenuSettingGroupId, 60303, 3, "create_short_cut"),
-    TERM_REFRESH(submenuSettingGroupId, 60304, 4, "term_refresh"),
-    TERMUX_SETUP(submenuSettingGroupId, 60305, 5, "termux_setup"),
-    CONFIG(submenuSettingGroupId, 60306, 6, "config"),
-    SELECTTERM(mainMenuGroupId, 60400, 4, "select_term"),
-    TERM1(submenuTermSlectGroupId, 60401, 1, "term_1"),
-    TERM2(submenuTermSlectGroupId, 60402, 2, "term_2"),
-    TERM3(submenuTermSlectGroupId, 60403, 3, "term_3"),
-    TERM4(submenuTermSlectGroupId, 60404, 4, "term_4"),
-    EDIT_STARTUP(mainMenuGroupId, 60600, 6, "edit_startup"),
-    NO_SCROLL_SAVE_URL(mainMenuGroupId, 60700, 7, "no_scroll_save_url"),
-    INSTALL_FANNEL(mainMenuGroupId, 60800, 8, "install_fannel"),
-    FORWARD(mainMenuGroupId, 60900, 9, "forward")
+    ADD("add", R.drawable.icons8_plus),
+//    SELECTTERM("select_term"),
+//    TERM1("term_1"),
+//    TERM2("term_2"),
+//    TERM3("term_3"),
+//    TERM4("term_4"),
+    EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
+    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
+    INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
+    SETTING("setting",R.drawable.icons8_setting),
 }
 
-
-private fun execAddSettingSubMenu(
-    popup: PopupMenu,
-    addMenuEnums: MenuEnums,
-    submenuGroupId: Int
-){
-    val sub = popup.menu.addSubMenu(
-        addMenuEnums.groupId,
-        addMenuEnums.itemId,
-        addMenuEnums.order,
-        addMenuEnums.itemName
-    )
-    (MenuEnums.values()).forEach{
-        val groupId = it.groupId
-        if( groupId != submenuGroupId) return@forEach
-        sub.add(
-            groupId,
-            it.itemId,
-            it.order,
-            it.itemName
-        )
-    }
-}
