@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
+import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
@@ -148,10 +149,8 @@ class CommandIndexFragment: Fragment() {
         )
         makeListView.cmdListSwipeToRefresh()
         cmdListView.adapter = fannelIndexListAdapter
-        cmdListView.layoutManager = LinearLayoutManager(
+        cmdListView.layoutManager = PreLoadLayoutManager(
             context,
-            LinearLayoutManager.VERTICAL,
-            false
         )
         cmdListView.layoutManager?.scrollToPosition(
             fannelIndexListAdapter.itemCount - 1
