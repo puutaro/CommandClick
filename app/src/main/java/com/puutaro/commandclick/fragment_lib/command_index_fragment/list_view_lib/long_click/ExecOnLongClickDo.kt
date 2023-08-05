@@ -75,7 +75,7 @@ object ExecOnLongClickDo {
                 return contextItemSelected
             }
             R.id.shell_script_menu_kill  -> {
-                ConfirmDialogforKill.show(
+                ConfirmDialogForKill.show(
                     cmdIndexCommandIndexFragment,
                     currentAppDirPath,
                     shellScriptName,

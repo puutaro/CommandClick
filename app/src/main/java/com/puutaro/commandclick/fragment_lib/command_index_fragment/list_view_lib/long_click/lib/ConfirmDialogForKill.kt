@@ -15,7 +15,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-object ConfirmDialogforKill {
+object ConfirmDialogForKill {
 
     fun show(
         cmdIndexFragment: CommandIndexFragment,
