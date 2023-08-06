@@ -24,7 +24,7 @@ import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.*
+import java.io.File
 
 
 class InstallFromFannelRepo(
@@ -38,7 +38,6 @@ class InstallFromFannelRepo(
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val blankListMark = InstallFannelList.blankListMark
     private val fannelDirSuffix = UsePath.fannelDirSuffix
-    private var fannelListUpdateJob: Job? = null
     val languageType = LanguageTypeSelects.JAVA_SCRIPT
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -87,7 +86,6 @@ class InstallFromFannelRepo(
         cmdIndexFragment.installFannelDialog?.setOnCancelListener {
             cmdIndexFragment.installFannelDialog?.dismiss()
             terminalViewModel.onDialog = false
-            fannelListUpdateJob?.cancel()
         }
         cmdIndexFragment.installFannelDialog?.show()
     }
@@ -100,7 +98,6 @@ class InstallFromFannelRepo(
         cancelImageButton?.setOnClickListener {
             cmdIndexFragment.installFannelDialog?.dismiss()
             terminalViewModel.onDialog = false
-            fannelListUpdateJob?.cancel()
         }
     }
 
@@ -185,16 +182,24 @@ class InstallFromFannelRepo(
                     itemView: View,
                     holder: InstallFannelListAdapter.FannelInstallerListViewHolder
                 ) {
-                    cmdIndexFragment.repoCloneJob?.cancel()
-                    cmdIndexFragment.repoCloneProgressJob?.cancel()
-                    fannelListUpdateJob?.cancel()
+                    itemView.context.stopService(
+                        Intent(
+                            cmdIndexFragment.activity,
+                            GitCloneService::class.java
+                        )
+                    )
                     val fannelNameTextView = holder.fannelNameTextView
                     val selectedFannel = fannelNameTextView.text.toString()
                     if(
                         selectedFannel == blankListMark
                     ) return
+                    val selectedFannelPath =
+                        "${UsePath.cmdclickFannelItselfDirPath}/${selectedFannel}"
+                    if(
+                        !File(selectedFannelPath).isFile
+                    ) return
                     FileSystems.copyFile(
-                        "${UsePath.cmdclickFannelItselfDirPath}/${selectedFannel}",
+                        selectedFannelPath,
                         "${currentAppDirPath}/${selectedFannel}"
                     )
                     val selectedFannelName =
@@ -202,6 +207,11 @@ class InstallFromFannelRepo(
                             .removeSuffix(UsePath.JS_FILE_SUFFIX)
                             .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
                     val fannelDir = selectedFannelName + fannelDirSuffix
+                    val selectedFannelDirPath =
+                        "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}"
+                    if(
+                        !File(selectedFannelDirPath).isDirectory
+                    ) return
                     FileSystems.copyDirectory(
                         "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
                         "${currentAppDirPath}/${fannelDir}"
