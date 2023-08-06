@@ -223,39 +223,6 @@ class InstallFromFannelRepo(
             }
     }
 
-
-    private fun updateRealTimeFannelList(
-        installFannelListView: RecyclerView?
-    ){
-        var firstFannelListSource =  ReadText(
-            UsePath.cmdclickFannelListDirPath,
-            UsePath.fannelListMemoryName,
-        ).readText()
-        var secondFannelListSource: String
-        fannelListUpdateJob?.cancel()
-        fannelListUpdateJob = CoroutineScope(Dispatchers.IO).launch {
-            while(true) {
-                secondFannelListSource = withContext(Dispatchers.IO) {
-                    delay(100)
-                    ReadText(
-                        UsePath.cmdclickFannelListDirPath,
-                        UsePath.fannelListMemoryName,
-                    ).readText()
-                }
-                if (
-                    firstFannelListSource == secondFannelListSource
-                ) continue
-                firstFannelListSource = secondFannelListSource
-                withContext(Dispatchers.Main) {
-                    InstallFannelList.updateInstallFannelList(
-                        installFannelListView,
-                        InstallFannelList.makeFannelListForListView(),
-                    )
-                }
-            }
-        }
-    }
-
     private fun gitCloneAndMakeFannelList(){
         if(context == null) return
         val intent = Intent(
@@ -269,7 +236,7 @@ class InstallFromFannelRepo(
 object InstallFannelList {
 
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-    val blankListMark = "Let's sync by sync button at left bellow"
+    val blankListMark = "Let's press sync button at left bellow"
     fun updateInstallFannelList(
         fannelRecyclerView: RecyclerView?,
         updatedFannelList: List<String>
