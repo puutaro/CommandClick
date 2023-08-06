@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 
 
@@ -42,7 +42,7 @@ class MenuListAdapter(
         menuThumbnailImageView.setImageResource(thumbnailId)
         menuThumbnailImageView.imageTintList =
             context.getColorStateList(R.color.cmdclick_text_black)
-        val menuTextView = view.findViewById<TextView>(
+        val menuTextView = view.findViewById<AppCompatTextView>(
             R.id.menu_list_title
         )
         menuTextView.text = title

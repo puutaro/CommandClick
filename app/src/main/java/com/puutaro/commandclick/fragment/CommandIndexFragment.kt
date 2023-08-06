@@ -1,7 +1,9 @@
 package com.puutaro.commandclick.fragment
 
-import android.app.AlertDialog
+import android.app.Dialog
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
@@ -15,8 +17,10 @@ import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
+import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -45,10 +49,19 @@ class CommandIndexFragment: Fragment() {
     var repoCloneJob: Job? = null
     var repoCloneProgressJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
-    var fannelInstallDialog: AlertDialog? = null
+    var installFannelDialog: Dialog? = null
     var savedEditTextContents = String()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
+
+    private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            BroadcastReceiveHandlerForCmdIndex.handle(
+                this@CommandIndexFragment,
+                intent,
+            )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -202,7 +215,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        fannelInstallDialog = FannelInstallDialog.create(this)
+        installFannelDialog = FannelInstallDialog.create(this)
 
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
@@ -241,8 +254,12 @@ class CommandIndexFragment: Fragment() {
         savedEditTextContents = binding.cmdSearchEditText.text.toString()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
-        fannelInstallDialog?.dismiss()
+        installFannelDialog?.dismiss()
         showTerminalJobWhenReuse?.cancel()
+        BroadcastManager.unregisterBroadcastReceiver(
+            this,
+            broadcastReceiverForCmdIndex,
+        )
         super.onPause()
     }
 
@@ -250,8 +267,13 @@ class CommandIndexFragment: Fragment() {
         super.onResume()
         TerminalShower.show(this)
         EditTextWhenReuse.focus(this)
-        fannelInstallDialog?.dismiss()
+        installFannelDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
+        BroadcastManager.registerBroadcastReceiver(
+            this,
+            broadcastReceiverForCmdIndex,
+            BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
+        )
     }
 
 

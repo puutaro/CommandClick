@@ -17,7 +17,7 @@
         android:background="@android:color/white"
         android:orientation="horizontal">
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fannel_index_list_adapter_contents"
             android:layout_width="60dp"
             android:layout_height="70dp"
@@ -34,7 +34,7 @@
             android:background="?android:attr/selectableItemBackground"
             />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fannel_index_list_adapter_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

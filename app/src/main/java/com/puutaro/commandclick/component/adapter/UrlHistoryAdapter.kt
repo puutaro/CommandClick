@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
-import android.widget.TextView
+import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import java.io.File
@@ -60,7 +60,7 @@ class UrlHistoryAdapter(
             title,
             urlStr
         )
-        val titleTextView = view.findViewById<TextView>(
+        val titleTextView = view.findViewById<AppCompatTextView>(
             R.id.url_history_title
         )
         titleTextView.text = title

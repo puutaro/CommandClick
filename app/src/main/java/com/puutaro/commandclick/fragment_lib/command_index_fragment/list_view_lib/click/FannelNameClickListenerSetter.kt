@@ -54,7 +54,7 @@ object FannelNameClickListenerSetter {
                         UsePath.HTML_FILE_SUFFIX
                     )
                 ) {
-                    BroadCastIntent.send(
+                    BroadCastIntent.sendUrlCon(
                         cmdIndexCommandIndexFragment,
                         "${currentAppDirPath}/$selectedShellFileName"
                     )

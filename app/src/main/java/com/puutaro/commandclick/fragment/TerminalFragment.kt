@@ -161,11 +161,11 @@ class   TerminalFragment: Fragment() {
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
-        BroadcastManager.unregisterBroadcastReceiver(
+        BroadcastManager.unregisterBroadcastReceiverForTerm(
             this,
             broadcastReceiverForUrl
         )
-        BroadcastManager.unregisterBroadcastReceiver(
+        BroadcastManager.unregisterBroadcastReceiverForTerm(
             this,
             broadcastReceiverForHtml
         )

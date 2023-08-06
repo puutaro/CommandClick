@@ -23,7 +23,7 @@ class JsUrl(
     fun loadUrl(
         urlStr: String
     ) {
-        BroadCastIntent.send(
+        BroadCastIntent.sendUrlCon(
             terminalFragment,
             urlStr
         )
@@ -33,7 +33,7 @@ class JsUrl(
     fun sLoadUrl(
         urlStr: String
     ) {
-        BroadCastIntent.send(
+        BroadCastIntent.sendUrlCon(
             terminalFragment,
             urlStr
         )

@@ -11,7 +11,6 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
 import android.util.Log
-import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
@@ -22,9 +21,10 @@ import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.*
-import kotlinx.coroutines.selects.select
 import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
+import java.util.concurrent.TimeUnit
+import kotlin.math.ln
 
 
 class GitCloneService: Service() {
@@ -106,12 +106,31 @@ class GitCloneService: Service() {
                 )
             }
             withContext(Dispatchers.IO){
+                notificationBuilder.setContentTitle("Update fannel list")
+                notificationBuilder.setContentText("Update fannel list")
+                notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
+                notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
+                notificationBuilder.setProgress(100, 100, false)
+                notificationBuilder.setAutoCancel(true)
+                notificationBuilder.clearActions()
+                val notification = notificationBuilder.build()
+                notificationManager?.notify(notificationId, notification)
+            }
+            withContext(Dispatchers.IO){
                 FileSystems.writeFile(
                     UsePath.cmdclickFannelListDirPath,
                     UsePath.fannelListMemoryName,
                     makeFannelListMemoryContents().joinToString(cmdclickFannelListSeparator)
                 )
                 isProgressCancel = true
+            }
+            withContext(Dispatchers.IO){
+                val updateInstallFannelListIntent = Intent()
+                updateInstallFannelListIntent.action =
+                    BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
+                sendBroadcast(
+                    updateInstallFannelListIntent
+                )
             }
             withContext(Dispatchers.IO){
                 notificationManager?.cancel(notificationId)
@@ -214,7 +233,9 @@ class GitCloneService: Service() {
             setURI(WebUrlVariables.commandClickRepositoryUrl)
             setDirectory(repoFileObj)
             setProgressMonitor(object : ProgressMonitor {
-                var lastWorked = 0
+                var initWorkedTime = TimeUnit.MILLISECONDS.toSeconds(System.currentTimeMillis())
+
+                var displayTimesForUpdate = 0
                 override fun start(totalTasks: Int) {}
                 override fun beginTask(title: String?, totalWork: Int) {
                     if(isProgressCancel) return
@@ -224,33 +245,44 @@ class GitCloneService: Service() {
                     notificationBuilder.setProgress(100, 0, true)
                     val notification = notificationBuilder.build()
                     notificationManager.notify(notificationId, notification)
-                    lastWorked = 0
                 }
 
                 override fun update(completed: Int) {
                     if(isProgressCancel) return
-                    val percentComplete = (completed.toFloat() / lastWorked * 100).toInt()
-                    notificationBuilder.setContentTitle("$cloneDisplayStr $percentComplete%")
-                    notificationBuilder.setContentText("$cloneDisplayStr $percentComplete%")
+                    if(
+                        displayTimesForUpdate % 10000 != 0
+                    ) return
+                    val secondsDiff =
+                        TimeUnit.MILLISECONDS.toSeconds(
+                            System.currentTimeMillis()
+                        ) - initWorkedTime
+                    val displayPercentComplete = log105(secondsDiff.toInt()).toInt()
+                    notificationBuilder
+                        .setContentTitle(
+                            "$cloneDisplayStr $displayPercentComplete% / 120s"
+                        )
+                    notificationBuilder
+                        .setContentText(
+                            "$cloneDisplayStr $displayPercentComplete% / 120s"
+                        )
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                    notificationBuilder.setProgress(100, percentComplete, false)
+                    notificationBuilder.setProgress(100, displayPercentComplete, false)
                     val notification = notificationBuilder.build()
                     notificationManager.notify(notificationId, notification)
-                    lastWorked = completed
                 }
 
                 override fun endTask() {
                     if(isProgressCancel) return
-                    notificationBuilder.setContentTitle("Cloned 100%")
-                    notificationBuilder.setContentText("cloned 100%")
-                    notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
-                    notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                    notificationBuilder.setProgress(100, 100, false)
-                    notificationBuilder.setAutoCancel(true)
-                    notificationBuilder.clearActions()
-                    val notification = notificationBuilder.build()
-                    notificationManager.notify(notificationId, notification)
+//                    notificationBuilder.setContentTitle("Cloned 100%")
+//                    notificationBuilder.setContentText("cloned 100%")
+//                    notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
+//                    notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
+//                    notificationBuilder.setProgress(100, 100, false)
+//                    notificationBuilder.setAutoCancel(true)
+//                    notificationBuilder.clearActions()
+//                    val notification = notificationBuilder.build()
+//                    notificationManager.notify(notificationId, notification)
                     isProgressCancel = true
                 }
                 override fun isCancelled(): Boolean {
@@ -260,3 +292,10 @@ class GitCloneService: Service() {
         }
     }
 }
+
+// my intend to log2 120 = 100%?
+private fun log105(n: Int): Double {
+    return ln(n.toDouble()) / ln(1.049)
+}
+
+

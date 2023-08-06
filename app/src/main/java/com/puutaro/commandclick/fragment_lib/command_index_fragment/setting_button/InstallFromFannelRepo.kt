@@ -1,31 +1,25 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
-import android.R
-import android.app.AlertDialog
-import android.content.Context
-import android.content.DialogInterface
+import android.app.Dialog
 import android.content.Intent
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import androidx.recyclerview.widget.RecyclerView
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.FannelListVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.LoggerTag
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.component.adapter.InstallFannelListAdapter
+import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -37,22 +31,14 @@ class InstallFromFannelRepo(
     private val cmdIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
 ) {
-
+    private val cmdclickFannelDirPath = UsePath.cmdclickFannelDirPath
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
     private val cmdListView = binding.cmdList
-    private val searchTextLinearWeight = SearchTextLinearWeight.calculate(cmdIndexFragment)
-    private val listLinearWeight = 1F - searchTextLinearWeight
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-    private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-    private val blankListMark = "let's sync by long click"
+    private val blankListMark = InstallFannelList.blankListMark
     private val fannelDirSuffix = UsePath.fannelDirSuffix
     private var fannelListUpdateJob: Job? = null
-    private val fannelListAdapter = ArrayAdapter(
-        (context as Context),
-        R.layout.simple_list_item_1,
-        makeFannelListForListView()
-    )
     val languageType = LanguageTypeSelects.JAVA_SCRIPT
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -62,65 +48,184 @@ class InstallFromFannelRepo(
     fun install(){
         if(context == null) return
         FileSystems.createDirs(UsePath.cmdclickFannelListDirPath)
-        val linearLayoutForTotal = LinearLayoutForTotal.make(
-            context
+        cmdIndexFragment.installFannelDialog = Dialog(context)
+        cmdIndexFragment.installFannelDialog?.setContentView(
+            R.layout.install_fannel_dialog_layout
         )
-        val linearLayoutForListView = NestLinearLayout.make(
+        val installFannelRecyclerView = cmdIndexFragment.installFannelDialog?.findViewById<RecyclerView>(
+            R.id.install_fannel_recycler
+        )
+        val installFannelListAdapter = InstallFannelListAdapter(
+            cmdIndexFragment,
+            InstallFannelList.makeFannelListForListView().toMutableList()
+        )
+        cancelButtonSetOnClickListener()
+        installFannelRecyclerView?.adapter = installFannelListAdapter
+        installFannelRecyclerView?.layoutManager = PreLoadLayoutManager(
             context,
-            listLinearWeight
         )
-        val linearLayoutForSearch = NestLinearLayout.make(
-            context,
-            searchTextLinearWeight
+        installFannelRecyclerView?.scrollToPosition(
+        installFannelListAdapter.itemCount - 1
         )
+        setFannelContentsClickListener(
+            installFannelRecyclerView
+        )
+        setFannelItemClickListener(
+            installFannelRecyclerView
+        )
+        syncButtonSetOnClickListener()
+        searchByEditText(
+            installFannelRecyclerView
+        )
+        cmdIndexFragment.installFannelDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        cmdIndexFragment.installFannelDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        cmdIndexFragment.installFannelDialog?.setOnCancelListener {
+            cmdIndexFragment.installFannelDialog?.dismiss()
+            terminalViewModel.onDialog = false
+            fannelListUpdateJob?.cancel()
+        }
+        cmdIndexFragment.installFannelDialog?.show()
+    }
 
-        val fannelListView = ListView(context)
-        val searchText = EditText(context)
-        fannelListAdapter.clear()
-        fannelListAdapter.addAll(makeFannelListForListView().toMutableList())
-        fannelListAdapter.notifyDataSetChanged()
-        fannelListView.adapter = fannelListAdapter
-        fannelListView.setSelection(
-            fannelListAdapter.count
+    private fun cancelButtonSetOnClickListener(
+    ){
+        val cancelImageButton = cmdIndexFragment.installFannelDialog?.findViewById<ImageButton>(
+            R.id.install_fannel_cancel_button
         )
-        makeSearchEditText(
-            fannelListView,
-            fannelListAdapter,
-            searchText
-        )
+        cancelImageButton?.setOnClickListener {
+            cmdIndexFragment.installFannelDialog?.dismiss()
+            terminalViewModel.onDialog = false
+            fannelListUpdateJob?.cancel()
+        }
+    }
 
-        linearLayoutForListView.addView(fannelListView)
-        linearLayoutForSearch.addView(searchText)
-        linearLayoutForTotal.addView(linearLayoutForListView)
-        linearLayoutForTotal.addView(linearLayoutForSearch)
 
-        val alertDialog = cmdIndexFragment.fannelInstallDialog
-            ?: return
-        alertDialog.setView(linearLayoutForTotal)
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
-                fannelListUpdateJob?.cancel()
+    private fun searchByEditText(
+        fannelRecyclerView: RecyclerView?,
+    ){
+        val searchEditText = cmdIndexFragment.installFannelDialog?.findViewById<EditText>(
+            R.id.install_fannel_search_edit_text
+        ) ?: return
+        searchEditText.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                if(!searchEditText.hasFocus()) return
+                val updateFannelList = InstallFannelList.makeFannelListForListView()
+
+                val filteredFannelList = updateFannelList.filter {
+                    Regex(
+                        s.toString()
+                            .lowercase()
+                            .replace("\n", "")
+                    ).containsMatchIn(
+                        it.lowercase()
+                    )
+                }
+                InstallFannelList.updateInstallFannelList(
+                    fannelRecyclerView,
+                    filteredFannelList
+                )
             }
         })
-        alertDialog.window?.setGravity(Gravity.BOTTOM);
-        alertDialog.show()
-        invokeItemSetClickListenerForFannel(
-            alertDialog,
-            fannelListView,
-            searchText
-        )
+    }
 
-        invokeItemSetLongClickListenerForFannel(
-            fannelListView,
+    private fun syncButtonSetOnClickListener(
+    ){
+        val syncImageButton = cmdIndexFragment.installFannelDialog?.findViewById<ImageButton>(
+            R.id.install_fannel_sync_button
         )
+        syncImageButton?.setOnClickListener {
+            gitCloneAndMakeFannelList()
+        }
+    }
 
-        updateRealTimeFannelList(fannelListView)
+    private fun setFannelContentsClickListener(
+        fannelRecyclerView: RecyclerView?,
+    ){
+        val installFannelListAdapter =
+            fannelRecyclerView?.adapter as? InstallFannelListAdapter
+                ?: return
+        installFannelListAdapter.fannelContentsClickListener =
+            object : InstallFannelListAdapter.OnFannelContentsItemClickListener {
+                override fun onFannelContentsClick(
+                    itemView: View,
+                    holder: InstallFannelListAdapter.FannelInstallerListViewHolder
+                ) {
+                    val fannelNameTextView = holder.fannelNameTextView
+                    val itemContext = itemView.context
+                    val fannelName = fannelNameTextView.text.toString()
+                    ScriptFileDescription.show(
+                        itemContext,
+                        ReadText(
+                            cmdclickFannelDirPath,
+                            fannelName,
+                        ).textToList(),
+                        fannelName
+                    )
+                }
+            }
+    }
+
+    private fun setFannelItemClickListener(
+        fannelRecyclerView: RecyclerView?,
+    ){
+        val installFannelListAdapter =
+            fannelRecyclerView?.adapter as? InstallFannelListAdapter
+                ?: return
+        installFannelListAdapter.fannelItemClickListener =
+            object : InstallFannelListAdapter.OnFannelItemClickListener {
+                override fun onFannelItemClick(
+                    itemView: View,
+                    holder: InstallFannelListAdapter.FannelInstallerListViewHolder
+                ) {
+                    cmdIndexFragment.repoCloneJob?.cancel()
+                    cmdIndexFragment.repoCloneProgressJob?.cancel()
+                    fannelListUpdateJob?.cancel()
+                    val fannelNameTextView = holder.fannelNameTextView
+                    val selectedFannel = fannelNameTextView.text.toString()
+                    if(
+                        selectedFannel == blankListMark
+                    ) return
+                    FileSystems.copyFile(
+                        "${UsePath.cmdclickFannelItselfDirPath}/${selectedFannel}",
+                        "${currentAppDirPath}/${selectedFannel}"
+                    )
+                    val selectedFannelName =
+                        selectedFannel
+                            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                            .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
+                    val fannelDir = selectedFannelName + fannelDirSuffix
+                    FileSystems.copyDirectory(
+                        "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
+                        "${currentAppDirPath}/${fannelDir}"
+                    )
+                    val searchEditText = cmdIndexFragment.installFannelDialog?.findViewById<EditText>(
+                        R.id.install_fannel_search_edit_text
+                    ) ?: return
+                    searchEditText.setText(String())
+                    CommandListManager.execListUpdateForCmdIndex(
+                        currentAppDirPath,
+                        cmdListView,
+                    )
+                    Toast.makeText(
+                        cmdIndexFragment.context,
+                        "install ok: ${selectedFannelName}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
     }
 
 
     private fun updateRealTimeFannelList(
-        fannelListView: ListView
+        installFannelListView: RecyclerView?
     ){
         var firstFannelListSource =  ReadText(
             UsePath.cmdclickFannelListDirPath,
@@ -142,134 +247,13 @@ class InstallFromFannelRepo(
                 ) continue
                 firstFannelListSource = secondFannelListSource
                 withContext(Dispatchers.Main) {
-                    updateFannelListView(
-                        fannelListView,
-                        makeFannelListForListView(),
-                        fannelListAdapter
+                    InstallFannelList.updateInstallFannelList(
+                        installFannelListView,
+                        InstallFannelList.makeFannelListForListView(),
                     )
                 }
             }
         }
-    }
-
-    private fun invokeItemSetClickListenerForFannel(
-        alertDialog: AlertDialog,
-        fannelListView: ListView,
-        searchText: EditText,
-    ) {
-        fannelListView.setOnItemClickListener {
-                parent, View, pos, id
-            ->
-            alertDialog.dismiss()
-            cmdIndexFragment.repoCloneJob?.cancel()
-            cmdIndexFragment.repoCloneProgressJob?.cancel()
-            terminalViewModel.onDialog = false
-            fannelListUpdateJob?.cancel()
-            val updateFannelsList = makeFannelListForListView()
-            val selectedFannel = updateFannelsList.filter {
-                Regex(
-                    searchText.text
-                        .toString()
-                        .lowercase()
-                ).containsMatchIn(
-                    it.lowercase()
-                )
-            }
-                .getOrNull(pos)
-                ?.split("\n")
-                ?.firstOrNull()
-                ?: return@setOnItemClickListener
-            if(selectedFannel == blankListMark) return@setOnItemClickListener
-            FileSystems.copyFile(
-                "${UsePath.cmdclickFannelItselfDirPath}/${selectedFannel}",
-                "${currentAppDirPath}/${selectedFannel}"
-            )
-            val selectedFannelName =
-                selectedFannel
-                    .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                    .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-            val fannelDir = selectedFannelName + fannelDirSuffix
-            FileSystems.copyDirectory(
-                "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
-                "${currentAppDirPath}/${fannelDir}"
-            )
-            CommandListManager.execListUpdateForCmdIndex(
-                currentAppDirPath,
-                cmdListView,
-            )
-            Toast.makeText(
-                cmdIndexFragment.context,
-                "install ok: ${selectedFannelName}",
-                Toast.LENGTH_LONG
-            ).show()
-        }
-    }
-
-    private fun invokeItemSetLongClickListenerForFannel(
-        fannelListView: ListView,
-    ) {
-        fannelListView.setOnItemLongClickListener {
-                parent, listSelectedView, pos, id
-            ->
-            val selectedContents = fannelListAdapter.getItem(pos)
-                ?: return@setOnItemLongClickListener true
-
-            val popup = makePopup(
-                listSelectedView
-            )
-            setPopupMenuItemClickListener(
-                popup,
-                listSelectedView,
-                selectedContents
-            )
-            popup.show()
-            true
-        }
-    }
-
-    private fun makeSearchEditText(
-        fannelListView: ListView,
-        fannelListAdapter: ArrayAdapter<String>,
-        searchText: EditText
-    ){
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.background = null
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
-        searchText.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
-            override fun afterTextChanged(s: Editable?) {
-                if(!searchText.hasFocus()) return
-                val updateFannelList = makeFannelListForListView()
-
-                val filteredFannelList = updateFannelList.filter {
-                    Regex(
-                        s.toString()
-                            .lowercase()
-                            .replace("\n", "")
-                    ).containsMatchIn(
-                        it.lowercase()
-                    )
-                }
-                CommandListManager.execListUpdateByEditText(
-                    filteredFannelList,
-                    fannelListAdapter,
-                    fannelListView
-                )
-                fannelListView.setSelection(
-                    fannelListAdapter.count
-                )
-            }
-        })
     }
 
     private fun gitCloneAndMakeFannelList(){
@@ -280,38 +264,31 @@ class InstallFromFannelRepo(
         )
         context.startForegroundService(intent)
     }
+}
 
-    private fun updateFannelListView(
-        fannelListView: ListView,
-        updatedFannelList: List<String>,
-        fannelListAdapter: ArrayAdapter<String>
-    ){
-        try {
-            if (
-                !fannelListView.isVisible
-            ) return
-            CommandListManager.execListUpdateByEditText(
-                updatedFannelList,
-                fannelListAdapter,
-                fannelListView
-            )
-            if (
-                !fannelListView.isVisible
-            ) return
-            fannelListView.setSelection(
-                fannelListAdapter.count
-            )
-        } catch (e: Exception){
-            Log.e(LoggerTag.fannnelListUpdateErr,"cannot update fannel list view")
-        }
+object InstallFannelList {
+
+    private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
+    val blankListMark = "Let's sync by sync button at left bellow"
+    fun updateInstallFannelList(
+        fannelRecyclerView: RecyclerView?,
+        updatedFannelList: List<String>
+    ) {
+        val installFannelListAdapter = fannelRecyclerView?.adapter as? InstallFannelListAdapter
+            ?: return
+        installFannelListAdapter.fannelInstallerList.clear()
+        installFannelListAdapter.fannelInstallerList.addAll(updatedFannelList)
+        installFannelListAdapter.notifyDataSetChanged()
+        fannelRecyclerView.scrollToPosition(installFannelListAdapter.itemCount - 1)
+
     }
 
-    private fun makeFannelListForListView(): List<String> {
-        val fannelListSource =  ReadText(
+    fun makeFannelListForListView(): List<String> {
+        val fannelListSource = ReadText(
             UsePath.cmdclickFannelListDirPath,
             UsePath.fannelListMemoryName,
         ).readText().split(cmdclickFannelListSeparator)
-        return if(
+        return if (
             fannelListSource.isNotEmpty()
             && !fannelListSource
                 .firstOrNull()
@@ -321,69 +298,5 @@ class InstallFromFannelRepo(
             fannelListSource
         } else mutableListOf(blankListMark)
     }
-
-    private fun setPopupMenuItemClickListener(
-        popup: PopupMenu,
-        listSelectedView: View,
-        selectedContents: String
-    ){
-        popup.setOnMenuItemClickListener {
-                menuItem ->
-            val listSelectedViewContext = listSelectedView.context
-            when(menuItem.itemId){
-                FannelMenuEnums.SYNC.itemId -> {
-                    gitCloneAndMakeFannelList()
-                }
-                FannelMenuEnums.DESC.itemId -> {
-                    val selectedFannel =
-                        selectedContents
-                            .split("\n")
-                            .firstOrNull()
-                            ?: return@setOnMenuItemClickListener true
-                    val currentScriptContentsList = ReadText(
-                        UsePath.cmdclickFannelDirPath,
-                        selectedFannel
-                    ).textToList()
-                    ScriptFileDescription.show(
-                        listSelectedViewContext,
-                        currentScriptContentsList,
-                        selectedFannel
-                    )
-                }
-            }
-            true
-        }
-    }
-
-    private fun makePopup(
-        listSelectedView: View
-    ): PopupMenu {
-        val popup = PopupMenu(context, listSelectedView)
-        val inflater = popup.menuInflater
-        inflater.inflate(
-            com.puutaro.commandclick.R.menu.history_admin_menu,
-            popup.menu
-        )
-        FannelMenuEnums.values().forEach {
-            popup.menu.add(
-                it.groupId,
-                it.itemId,
-                it.order,
-                it.itemName,
-            )
-        }
-        return popup
-    }
 }
 
-private const val mainMenuGroupId = 100000
-
-private enum class FannelMenuEnums(
-    val groupId: Int,
-    val itemId: Int,
-    val order: Int,
-    val itemName: String
-) {
-    SYNC(mainMenuGroupId, 100100, 1, "sync"),
-    DESC(mainMenuGroupId, 100200, 2, "desc"),
-}

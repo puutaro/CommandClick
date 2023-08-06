@@ -521,7 +521,7 @@ class WithIndexListView(
                         UsePath.HTM_FILE_SUFFIX
                     )
         ){
-            BroadCastIntent.send(
+            BroadCastIntent.sendUrlCon(
                 editFragment,
                 "${currentAppDirPath}/$selectedItem"
             )

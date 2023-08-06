@@ -1,15 +1,14 @@
 package com.puutaro.commandclick.component.adapter
 
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
@@ -20,45 +19,35 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-
-class FannelIndexListAdapter(
+class InstallFannelListAdapter(
     val cmdIndexFragment: CommandIndexFragment,
-    val currentAppDirPath: String,
-    var fannelIndexList: MutableList<String>
-): RecyclerView.Adapter<FannelIndexListAdapter.FannelIndexListViewHolder>()
+    var fannelInstallerList: MutableList<String>
+): RecyclerView.Adapter<InstallFannelListAdapter.FannelInstallerListViewHolder>()
 {
     val context = cmdIndexFragment.context
     val activity = cmdIndexFragment.activity
     private val shortSizeThreshold = 50
     private val middleSizeThreshold = 100
-    private val maxTakeSize = 150
+    private val maxTakeSize = 200
 
 
-    class FannelIndexListViewHolder(
+    class FannelInstallerListViewHolder(
         val activity: FragmentActivity?,
         val view: View
-        ): RecyclerView.ViewHolder(view),
-        OnCreateContextMenuListener {
+    ): RecyclerView.ViewHolder(view) {
 
         val fannelContentsTextView =
             view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_adapter_contents
+                com.puutaro.commandclick.R.id.install_fannel_adapter_contents
             )
         val fannelNameTextView =
             view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_adapter_name
+                com.puutaro.commandclick.R.id.install_fannel_adapter_fannel_name
             )
-        init {
-            view.setOnCreateContextMenuListener(this)
-        }
-        override fun onCreateContextMenu(
-            menu: ContextMenu?,
-            v: View?,
-            menuInfo: ContextMenu.ContextMenuInfo?
-        ) {
-            val inflater = activity?.menuInflater
-            inflater?.inflate(com.puutaro.commandclick.R.menu.cmd_index_list_menu, menu)
-        }
+        val fannelSummaryTextView =
+            view.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.fannel_index_list_adapter_fannel_summary
+            )
     }
 
     override fun getItemId(position: Int): Long {
@@ -69,14 +58,14 @@ class FannelIndexListAdapter(
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
-    ): FannelIndexListViewHolder {
+    ): FannelInstallerListViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(
-            com.puutaro.commandclick.R.layout.fannel_index_list_adapter_layout,
+            com.puutaro.commandclick.R.layout.install_fannel_adapter_layout,
             parent,
             false
         )
-        val fannelIndexListViewHolder = FannelIndexListViewHolder(
+        val fannelInstallerListViewHolder = FannelInstallerListViewHolder(
             activity,
             itemView
         )
@@ -99,24 +88,36 @@ class FannelIndexListAdapter(
 //                fannelIndexListViewHolder
 //            )
 //        }
-        return fannelIndexListViewHolder
+        return fannelInstallerListViewHolder
     }
 
-    override fun getItemCount(): Int = fannelIndexList.size
+    override fun getItemCount(): Int = fannelInstallerList.size
 
 
     override fun onBindViewHolder(
-        holder: FannelIndexListViewHolder,
+        holder: FannelInstallerListViewHolder,
         position: Int
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val fannelName = fannelIndexList[position]
+            val fannelInstallerLineList =
+                fannelInstallerList.getOrNull(position)?.split("\n")
+            val fannelName = fannelInstallerLineList?.firstOrNull()
+                ?: String()
             withContext(Dispatchers.Main) {
                 holder.fannelNameTextView.text = fannelName
             }
+            val fannelSumamry = fannelInstallerLineList?.getOrNull(1)
+                ?: String()
+            withContext(Dispatchers.Main) {
+                holder.fannelSummaryTextView.text =
+                    fannelSumamry
+                        .trim()
+                        .removePrefix("-")
+                        .trim()
+            }
             val fannelConList = withContext(Dispatchers.IO) {
                 ReadText(
-                    currentAppDirPath,
+                    UsePath.cmdclickFannelDirPath,
                     fannelName
                 ).textToList().take(maxTakeSize)
             }
@@ -132,38 +133,38 @@ class FannelIndexListAdapter(
             withContext(Dispatchers.Main) {
                 holder.fannelContentsTextView.textSize = textSize
             }
-             val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
-                 setFannelContentsBackColor(
-                     fannelConList,
-                     fannelName,
-                 )
-             }
+            val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
+                setFannelContentsBackColor(
+                    fannelConList,
+                    fannelName,
+                )
+            }
             withContext(Dispatchers.Main){
                 holder.fannelContentsTextView.setBackgroundColor(
-                context?.getColor(fannelConBackGroundColorInt) as Int
-            )
+                    context?.getColor(fannelConBackGroundColorInt) as Int
+                )
                 withContext(Dispatchers.Main) {
                     val itemView = holder.itemView
-                    this@FannelIndexListAdapter.itemLongClickListener =
-                        object : OnItemLongClickListener {
-                            override fun onItemLongClick(
-                                itemView: View,
-                                holder: FannelIndexListViewHolder,
-                                position: Int
-                            ) {
-                                cmdIndexFragment.recyclerViewIndex = position
-                            }
-                        }
-                    itemView.setOnLongClickListener {
-                        itemLongClickListener?.onItemLongClick(
-                            itemView,
-                            holder,
-                            position
-                        )
-                        false
-                    }
+//                    this@FannelInstalListAdapter.itemLongClickListener =
+//                        object : OnItemLongClickListener {
+//                            override fun onItemLongClick(
+//                                itemView: View,
+//                                holder: FannelInstallerListViewHolder,
+//                                position: Int
+//                            ) {
+//                                cmdIndexFragment.recyclerViewIndex = position
+//                            }
+//                        }
+//                    itemView.setOnLongClickListener {
+//                        itemLongClickListener?.onItemLongClick(
+//                            itemView,
+//                            holder,
+//                            position
+//                        )
+//                        false
+//                    }
                     itemView.setOnClickListener {
-                        fannelNameClickListener?.onFannelNameClick(
+                        fannelItemClickListener?.onFannelItemClick(
                             itemView,
                             holder
                         )
@@ -179,30 +180,31 @@ class FannelIndexListAdapter(
         }
     }
 
-    var fannelNameClickListener: OnFannelNameItemClickListener? = null
-    interface OnFannelNameItemClickListener {
-        fun onFannelNameClick(
+    var fannelItemClickListener: OnFannelItemClickListener? = null
+    interface OnFannelItemClickListener {
+        fun onFannelItemClick(
             itemView: View,
-            holder: FannelIndexListViewHolder
+            holder: FannelInstallerListViewHolder
         )
     }
+
 
     var fannelContentsClickListener: OnFannelContentsItemClickListener? = null
     interface OnFannelContentsItemClickListener {
         fun onFannelContentsClick(
             itemView: View,
-            holder: FannelIndexListViewHolder
+            holder: FannelInstallerListViewHolder
         )
     }
 
-    var itemLongClickListener: OnItemLongClickListener? = null
-    interface OnItemLongClickListener {
-        fun onItemLongClick(
-            itemView: View,
-            holder: FannelIndexListViewHolder,
-            position: Int
-        )
-    }
+//    var itemLongClickListener: OnItemLongClickListener? = null
+//    interface OnItemLongClickListener {
+//        fun onItemLongClick(
+//            itemView: View,
+//            holder: FannelInstallerListViewHolder,
+//            position: Int
+//        )
+//    }
 
 //    var fannelNameLongClickListener: OnFannelNameLongClickListener? = null
 //    interface OnFannelNameLongClickListener {

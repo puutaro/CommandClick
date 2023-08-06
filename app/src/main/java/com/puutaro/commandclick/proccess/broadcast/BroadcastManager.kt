@@ -23,7 +23,7 @@ object BroadcastManager {
         }
     }
 
-    fun unregisterBroadcastReceiver(
+    fun unregisterBroadcastReceiverForTerm(
         terminalFragment: TerminalFragment,
         broadcastReceiver: BroadcastReceiver
     ){
@@ -32,6 +32,19 @@ object BroadcastManager {
                 null
             )
             terminalFragment.activity?.unregisterReceiver(
+                broadcastReceiver
+            )
+        } catch(e: Exception){
+            return
+        }
+    }
+
+    fun unregisterBroadcastReceiver(
+        fragment: Fragment,
+        broadcastReceiver: BroadcastReceiver
+    ){
+        try {
+            fragment.activity?.unregisterReceiver(
                 broadcastReceiver
             )
         } catch(e: Exception){
