@@ -46,7 +46,6 @@ class CommandIndexFragment: Fragment() {
     var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
-    var enableFannel = true
     var showTerminalJobWhenReuse: Job? = null
     var installFannelDialog: Dialog? = null
     var savedEditTextContents = String()
