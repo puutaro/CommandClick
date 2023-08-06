@@ -42,7 +42,7 @@
             android:scrollbarThumbVertical="@android:color/darker_gray"
             android:layout_above="@+id/text_simple_dialog_scroll_view"
             android:paddingTop="0dp"
-            android:paddingBottom="10dp"
+            android:paddingBottom="15dp"
             android:paddingStart="15dp"
             android:paddingEnd="15dp"
             >
