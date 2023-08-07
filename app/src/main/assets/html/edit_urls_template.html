@@ -316,7 +316,6 @@
    }
 
    function removeBookmark(thisItem){
-
       let arrayItems = [],
       index,
       item = thisItem.parentNode,
@@ -326,9 +325,9 @@
             ).href
          ).replace("javascript:onLinkClick\(\'", "")
             .replace(/\'\)$/, "")
-            .replace(/^file:\/\//, '');
+            .replace(/^file:\/\//, '')
+            .replace(/^\/\/*/, '/');
       itemTitle = item.querySelector(".url-launch").textContent
-
       var result = window.confirm("delete ok?\n\t" + itemTitle);
       if(!result) {
          location.reload()
