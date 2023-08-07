@@ -1,16 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.view.Gravity
-import android.widget.ArrayAdapter
 import android.widget.ListView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
 
@@ -23,6 +24,8 @@ class LongPressForSrcAnchor(
     private val srcAnchorLongPressMenuFilePathObj = File(srcAnchorMenuFilePath)
     private val srcAnchorLongPressMenuDirPath = srcAnchorLongPressMenuFilePathObj.parent
     private val srcAnchorLongPressMenuFileName = srcAnchorLongPressMenuFilePathObj.name
+    private var longPressSrcAnchorDialog: Dialog? = null
+    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
 
     fun launch(
@@ -42,54 +45,75 @@ class LongPressForSrcAnchor(
         val menuList = ReadText(
             srcAnchorLongPressMenuDirPath,
             srcAnchorLongPressMenuFileName
-        ).textToList()
+        ).textToList().map {
+            it to icons8Wheel
+        }
         if(
             menuList.size == 1
         ){
             menuScriptHandler(
-                menuList.first(),
+                menuList.first().first,
                 longPressLinkUrl,
                 currentUrl,
             )
             return
         }
 
-        val dialogListView = ListView(context)
-        val dialogListAdapter = ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            menuList.toMutableList(),
-        )
-        dialogListView.adapter = dialogListAdapter
-        dialogListView.setSelection(
-            dialogListAdapter.count
-        )
-        val linearLayoutForTotal = LinearLayoutForTotal.make(
+        longPressSrcAnchorDialog = Dialog(
             context
         )
-        linearLayoutForTotal.addView(dialogListView)
-        val alertDialog = AlertDialog.Builder(
-            context
+        longPressSrcAnchorDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.list_dialog_layout
         )
-            .setTitle(title)
-            .setView(linearLayoutForTotal)
-            .create()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
+        val listDialogTitle = longPressSrcAnchorDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_title
+        )
+        listDialogTitle?.text = title
+        val listDialogMessage = longPressSrcAnchorDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_message
+        )
+        listDialogMessage?.isVisible = false
+        val listDialogSearchEditText = longPressSrcAnchorDialog?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
+        )
+        listDialogSearchEditText?.isVisible = false
+        val cancelButton = longPressSrcAnchorDialog?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            longPressSrcAnchorDialog?.dismiss()
+        }
 
-        alertDialog.setOnCancelListener(
-            object : DialogInterface.OnCancelListener {
-                override fun onCancel(
-                    dialog: DialogInterface?
-                ) {
-                    alertDialog.dismiss()
-                }
-            })
-
-        invokeListItemSetClickListenerForListDialog(
-            dialogListView,
+        setListView(
             menuList,
-            alertDialog,
+            longPressLinkUrl,
+            currentUrl,
+        )
+        longPressSrcAnchorDialog?.setOnCancelListener {
+            longPressSrcAnchorDialog?.dismiss()
+        }
+        longPressSrcAnchorDialog?.window?.setGravity(Gravity.BOTTOM)
+        longPressSrcAnchorDialog?.show()
+    }
+
+    private fun setListView(
+        menuList: List<Pair<String, Int>>,
+        longPressLinkUrl: String,
+        currentUrl: String,
+    ) {
+        val context = terminalFragment.context
+            ?: return
+        val subMenuListView =
+            longPressSrcAnchorDialog?.findViewById<ListView>(
+                com.puutaro.commandclick.R.id.list_dialog_list_view
+            ) ?: return
+        val subMenuAdapter = MenuListAdapter(
+            context,
+            menuList.toMutableList()
+        )
+        subMenuListView.adapter = subMenuAdapter
+        invokeListItemSetClickListenerForListDialog(
+            subMenuListView,
             longPressLinkUrl,
             currentUrl,
         )
@@ -97,8 +121,6 @@ class LongPressForSrcAnchor(
 
     private fun invokeListItemSetClickListenerForListDialog(
         dialogListView: ListView,
-        dialogList: List<String>,
-        alertDialog: AlertDialog,
         longPressLinkUrl: String,
         currentUrl: String,
     ) {
@@ -106,11 +128,9 @@ class LongPressForSrcAnchor(
         dialogListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
-            val selectedScript = dialogList
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
+            longPressSrcAnchorDialog?.dismiss()
+            val menuListAdapter = dialogListView.adapter as MenuListAdapter
+            val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             menuScriptHandler(
                 selectedScript,

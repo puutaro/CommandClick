@@ -1,16 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.view.Gravity
-import android.widget.ArrayAdapter
+import android.view.ViewGroup
 import android.widget.ListView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
 
@@ -23,6 +25,8 @@ class LongPressForImage(
     private val imageLongPressMenuFilePathObj = File(imageMenuFilePath)
     private val imageLongPressMenuDirPath = imageLongPressMenuFilePathObj.parent
     private val imageLongPressMenuFileName = imageLongPressMenuFilePathObj.name
+    private var longPressImageDialog: Dialog? = null
+    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
 
     fun launch(
@@ -42,63 +46,64 @@ class LongPressForImage(
         val menuList = ReadText(
             imageLongPressMenuDirPath,
             imageLongPressMenuFileName
-        ).textToList()
+        ).textToList().map {
+            it to icons8Wheel
+        }
         if(
             menuList.size == 1
         ){
             menuScriptHandler(
-                menuList.first(),
+                menuList.first().first,
                 longPressImageUrl,
                 currentUrl,
             )
             return
         }
 
-        val dialogListView = ListView(context)
-        val dialogListAdapter = ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            menuList.toMutableList(),
-        )
-        dialogListView.adapter = dialogListAdapter
-        dialogListView.setSelection(
-            dialogListAdapter.count
-        )
-        val linearLayoutForTotal = LinearLayoutForTotal.make(
+        longPressImageDialog = Dialog(
             context
         )
-        linearLayoutForTotal.addView(dialogListView)
-        val alertDialog = AlertDialog.Builder(
-            context
+        longPressImageDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.list_dialog_layout
         )
-            .setTitle(title)
-            .setView(linearLayoutForTotal)
-            .create()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
+        val listDialogTitle = longPressImageDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_title
+        )
+        listDialogTitle?.text = title
+        val listDialogMessage = longPressImageDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_message
+        )
+        listDialogMessage?.isVisible = false
+        val listDialogSearchEditText = longPressImageDialog?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
+        )
+        listDialogSearchEditText?.isVisible = false
+        val cancelButton = longPressImageDialog?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            longPressImageDialog?.dismiss()
+        }
 
-        alertDialog.setOnCancelListener(
-            object : DialogInterface.OnCancelListener {
-                override fun onCancel(
-                    dialog: DialogInterface?
-                ) {
-                    alertDialog.dismiss()
-                }
-            })
-
-        invokeListItemSetClickListenerForListDialog(
-            dialogListView,
+        setListView(
             menuList,
-            alertDialog,
             longPressImageUrl,
             currentUrl,
         )
+        longPressImageDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        longPressImageDialog?.window?.setGravity(Gravity.BOTTOM)
+        longPressImageDialog?.show()
+
+        longPressImageDialog?.setOnCancelListener{
+            longPressImageDialog?.dismiss()
+        }
     }
 
     private fun invokeListItemSetClickListenerForListDialog(
         dialogListView: ListView,
-        dialogList: List<String>,
-        alertDialog: AlertDialog,
         longPressImageUrl: String,
         currentUrl: String,
     ) {
@@ -106,11 +111,9 @@ class LongPressForImage(
         dialogListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
-            val selectedScript = dialogList
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
+            longPressImageDialog?.dismiss()
+            val menuListAdapter = dialogListView.adapter as MenuListAdapter
+            val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             menuScriptHandler(
                 selectedScript,
@@ -119,6 +122,29 @@ class LongPressForImage(
             )
             return@setOnItemClickListener
         }
+    }
+
+    private fun setListView(
+        menuList: List<Pair<String, Int>>,
+        longPressImageUrl: String,
+        currentUrl: String,
+    ) {
+        val context = terminalFragment.context
+            ?: return
+        val subMenuListView =
+            longPressImageDialog?.findViewById<ListView>(
+                com.puutaro.commandclick.R.id.list_dialog_list_view
+            ) ?: return
+        val subMenuAdapter = MenuListAdapter(
+            context,
+            menuList.toMutableList()
+        )
+        subMenuListView.adapter = subMenuAdapter
+        invokeListItemSetClickListenerForListDialog(
+            subMenuListView,
+            longPressImageUrl,
+            currentUrl,
+        )
     }
 
     private fun menuScriptHandler(

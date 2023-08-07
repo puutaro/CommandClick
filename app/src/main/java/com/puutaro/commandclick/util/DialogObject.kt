@@ -11,7 +11,7 @@ import com.puutaro.commandclick.R
 
 object DialogObject {
 
-    private var simpleTextDialog: Dialog? = null
+    private var simpleTextDialogObj: Dialog? = null
 
     fun simpleTextShow(
             contextSrc: Context?,
@@ -20,14 +20,14 @@ object DialogObject {
     ) {
         val context = contextSrc
             ?: return
-        simpleTextDialog = Dialog(
+        simpleTextDialogObj = Dialog(
                 context
             )
-        simpleTextDialog?.setContentView(
+        simpleTextDialogObj?.setContentView(
                 R.layout.text_simple_dialog_layout
             )
         val titleTextView =
-            simpleTextDialog?.findViewById<AppCompatTextView>(
+            simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_title
             )
         if(
@@ -35,29 +35,28 @@ object DialogObject {
         ) titleTextView?.text = title
         else titleTextView?.isVisible = false
         val descriptionTextView =
-            simpleTextDialog?.findViewById<AppCompatTextView>(
+            simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_text_view
             )
         descriptionTextView?.text = content
 
         val cancelImageButton =
-            simpleTextDialog?.findViewById<AppCompatImageButton>(
+            simpleTextDialogObj?.findViewById<AppCompatImageButton>(
                 R.id.text_simple_dialog_cancel
             )
         cancelImageButton?.setOnClickListener {
-            simpleTextDialog?.dismiss()
+            simpleTextDialogObj?.dismiss()
         }
-        simpleTextDialog?.setOnCancelListener {
-            simpleTextDialog?.dismiss()
+        simpleTextDialogObj?.setOnCancelListener {
+            simpleTextDialogObj?.dismiss()
             }
-        simpleTextDialog?.window?.setLayout(
+        simpleTextDialogObj?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        simpleTextDialog?.window?.setGravity(
+        simpleTextDialogObj?.window?.setGravity(
                 Gravity.BOTTOM
             )
-        simpleTextDialog?.show()
-
+        simpleTextDialogObj?.show()
     }
 }
