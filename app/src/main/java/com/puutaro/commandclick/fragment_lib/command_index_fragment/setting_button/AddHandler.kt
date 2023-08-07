@@ -1,14 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
-import android.R
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.content.SharedPreferences
 import android.view.Gravity
-import android.widget.ArrayAdapter
 import android.widget.ListView
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 class AddScriptHandler(
@@ -18,54 +20,81 @@ class AddScriptHandler(
 ) {
     val context = cmdIndexFragment.context
     val binding = cmdIndexFragment.binding
+    private var languageSelectDialog: Dialog? = null
+    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
     fun handle(){
         if(context == null)  return
 
         val languageSelectList = LanguageTypeSelects.values().map {
             it.str
+        }.map {
+            it to icons8Wheel
         }
-        val languageSelectListView = ListView(cmdIndexFragment.context)
-        val languageSelectListAdapter = ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            languageSelectList
-        )
-        languageSelectListView.adapter = languageSelectListAdapter
-        languageSelectListView.setSelection(languageSelectListAdapter.count)
-        val alertDialog = AlertDialog.Builder(
+
+        languageSelectDialog = Dialog(
             context
         )
-            .setTitle("Select add script language")
-            .setView(languageSelectListView)
-            .setNegativeButton("NO", null)
-            .create()
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black)
+        languageSelectDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.list_dialog_layout
+        )
+        val listDialogTitle = languageSelectDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_title
+        )
+        listDialogTitle?.text = "Select add script language"
+        val listDialogMessage = languageSelectDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_message
+        )
+        listDialogMessage?.isVisible = false
+        val listDialogSearchEditText = languageSelectDialog?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
+        )
+        listDialogSearchEditText?.isVisible = false
+        val cancelButton = languageSelectDialog?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            languageSelectDialog?.dismiss()
+        }
+        setListView(
+            languageSelectList
         )
 
+        languageSelectDialog?.setOnCancelListener {
+            languageSelectDialog?.dismiss()
+        }
+        languageSelectDialog?.window?.setGravity(Gravity.BOTTOM)
+        languageSelectDialog?.show()
+    }
+
+    private fun setListView(
+        languageSelectList: List<Pair<String, Int>>,
+    ) {
+        val context = cmdIndexFragment.context
+            ?: return
+        val subMenuListView =
+            languageSelectDialog?.findViewById<ListView>(
+                com.puutaro.commandclick.R.id.list_dialog_list_view
+            ) ?: return
+        val subMenuAdapter = MenuListAdapter(
+            context,
+            languageSelectList.toMutableList()
+        )
+        subMenuListView.adapter = subMenuAdapter
         invokeItemSetClickListenerForLanguageType(
-            languageSelectListView,
-            languageSelectList,
-            alertDialog,
+            subMenuListView,
         )
     }
 
     private fun invokeItemSetClickListenerForLanguageType(
-        languageSelectListView: ListView,
-        languageSelectList: List<String>,
-        alertDialog: AlertDialog,
+        subMenuListView: ListView,
     ){
-        languageSelectListView.setOnItemClickListener {
+        subMenuListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
-            val selectedLanguage = languageSelectList
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
+            languageSelectDialog?.dismiss()
+            val menuListAdapter = subMenuListView.adapter as MenuListAdapter
+            val selectedLanguage = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             val languageTypeSelects = when(
                 selectedLanguage
@@ -89,7 +118,6 @@ class AddScriptHandler(
             )
             AddConfirmDialogForSettingButton.invoke(
                 cmdIndexFragment,
-                binding,
                 currentAppDirPath,
                 shellScriptName,
                 languageTypeSelects

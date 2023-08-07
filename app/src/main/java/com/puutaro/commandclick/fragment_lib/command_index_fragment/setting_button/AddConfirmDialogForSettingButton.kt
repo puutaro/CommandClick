@@ -1,7 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
+import android.view.Gravity
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.UsePath
@@ -14,88 +17,160 @@ import com.puutaro.commandclick.util.*
 
 
 object AddConfirmDialogForSettingButton {
+
+    private var deleteConfirmDialog: Dialog? = null
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
-        binding: CommandIndexFragmentBinding,
         currentAppDirPath: String,
         shellScriptName: String,
         languageTypeSelects: LanguageTypeSelects
     ){
         val context = cmdIndexFragment.context
+            ?: return
+        val binding = cmdIndexFragment.binding
         val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
                 .get(languageTypeSelects)
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Add bellow contents, ok?"
-            )
-            .setMessage(
-                "\tpath: path: ${shellScriptPath}"
-            )
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                val shellContentsList = ReadText(
-                    currentAppDirPath,
-                    shellScriptName
-                ).textToList()
 
 
-                val newShellScriptName = makeNewShellName(
-                    shellContentsList,
-                    shellScriptName,
-                    languageTypeSelects,
-                    languageTypeToSectionHolderMap
-                )
-
-                val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
-                    shellContentsList,
-                    shellScriptName
-                )
-                val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
-                    shellScriptContentsLabelCommentOut,
-                    newShellScriptName,
-                    languageTypeToSectionHolderMap
-                )
-                if(newShellScriptName != shellScriptName){
-                    FileSystems.writeFile(
-                        currentAppDirPath,
-                        newShellScriptName,
-                        shellScriptContentsQuoteComp
-                    )
-                    FileSystems.removeFiles(
-                        currentAppDirPath,
-                        shellScriptName
-                    )
-                } else {
-                    FileSystems.writeFile(
-                        currentAppDirPath,
-                        shellScriptName,
-                        shellScriptContentsQuoteComp
-                    )
-                }
-                CommandListManager.execListUpdateForCmdIndex(
-                    currentAppDirPath,
-                    binding.cmdList,
-                )
-            })
-            .setNegativeButton("NO", DialogInterface.OnClickListener {
-                    dialog, which ->
-                FileSystems.removeFiles(
-                    currentAppDirPath,
-                    shellScriptName,
-                )
-                CommandListManager.execListUpdateForCmdIndex(
-                    currentAppDirPath,
-                    binding.cmdList,
-                )
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(android.R.color.black) as Int
+        deleteConfirmDialog = Dialog(
+            context
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black)
+        deleteConfirmDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.confirm_text_dialog
+        )
+        val confirmTitleTextView =
+            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_title
+            )
+        confirmTitleTextView?.text = "Add bellow contents, ok?"
+        val confirmContentTextView =
+            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            )
+        confirmContentTextView?.text = "\tpath: path: ${shellScriptPath}"
+        cancelButtonListener(
+            binding,
+            currentAppDirPath,
+            shellScriptName
+        )
+        okButtonListener(
+            binding,
+            languageTypeSelects,
+            languageTypeToSectionHolderMap,
+            currentAppDirPath,
+            shellScriptName,
+        )
+        deleteConfirmDialog?.setOnCancelListener {
+            deleteConfirmDialog?.dismiss()
+        }
+        deleteConfirmDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        deleteConfirmDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        deleteConfirmDialog?.show()
+    }
+
+    private fun cancelButtonListener(
+        binding: CommandIndexFragmentBinding,
+        currentAppDirPath: String,
+        shellScriptName: String
+    ){
+        val confirmCancelButton =
+            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            deleteConfirmDialog?.dismiss()
+            FileSystems.removeFiles(
+                currentAppDirPath,
+                shellScriptName,
+            )
+            CommandListManager.execListUpdateForCmdIndex(
+                currentAppDirPath,
+                binding.cmdList,
+            )
+        }
+    }
+
+    private fun okButtonListener(
+        binding: CommandIndexFragmentBinding,
+        languageTypeSelects: LanguageTypeSelects,
+        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
+        currentAppDirPath: String,
+        shellScriptName: String,
+    ){
+        val confirmOkButton =
+            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            deleteConfirmDialog?.dismiss()
+            confirmOkExecutor(
+                binding,
+                languageTypeSelects,
+                languageTypeToSectionHolderMap,
+                currentAppDirPath,
+                shellScriptName,
+            )
+        }
+    }
+
+    private fun confirmOkExecutor(
+        binding: CommandIndexFragmentBinding,
+        languageTypeSelects: LanguageTypeSelects,
+        languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?,
+        currentAppDirPath: String,
+        shellScriptName: String,
+    ){
+        val shellContentsList = ReadText(
+            currentAppDirPath,
+            shellScriptName
+        ).textToList()
+
+
+        val newShellScriptName = makeNewShellName(
+            shellContentsList,
+            shellScriptName,
+            languageTypeSelects,
+            languageTypeToSectionHolderMap
+        )
+
+        val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
+            shellContentsList,
+            shellScriptName
+        )
+        val shellScriptContentsQuoteComp = makeShellScriptContentsQuoteComp(
+            shellScriptContentsLabelCommentOut,
+            newShellScriptName,
+            languageTypeToSectionHolderMap
+        )
+        if(
+            newShellScriptName != shellScriptName
+        ){
+            FileSystems.writeFile(
+                currentAppDirPath,
+                newShellScriptName,
+                shellScriptContentsQuoteComp
+            )
+            FileSystems.removeFiles(
+                currentAppDirPath,
+                shellScriptName
+            )
+        } else {
+            FileSystems.writeFile(
+                currentAppDirPath,
+                shellScriptName,
+                shellScriptContentsQuoteComp
+            )
+        }
+        CommandListManager.execListUpdateForCmdIndex(
+            currentAppDirPath,
+            binding.cmdList,
         )
     }
 }
@@ -106,7 +181,6 @@ private fun makeNewShellName(
     shellScriptName: String,
     languageTypeSelects: LanguageTypeSelects,
     languageTypeToSectionHolderMap: Map<CommandClickScriptVariable.HolderTypeName, String>?
-
 ): String {
     if(languageTypeToSectionHolderMap.isNullOrEmpty()) return shellScriptName
     val substituteSettingVariableList =
@@ -176,7 +250,7 @@ private fun makeShellScriptContentsQuoteComp(
 
 
 
-internal fun quoteCompShellScriptListVariables(
+private fun quoteCompShellScriptListVariables(
     shellContentsList: List<String>,
     recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?
 ): List<String> {
