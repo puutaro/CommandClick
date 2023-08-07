@@ -1,21 +1,28 @@
 package com.puutaro.commandclick.activity_lib.permission
 
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.termux.shared.termux.TermuxConstants
 
 object RunCommandSetter {
+
+
+    private var termuxSetupDialogObj: Dialog? = null
 
     fun getPermissionAndSet(
         activity: MainActivity
@@ -88,37 +95,61 @@ object RunCommandSetter {
                 "&& pkg install -y termux-api \\\n" +
                 "&& sed -r 's/^\\#\\s(allow-external-apps.*)/\\1/' \\\n" +
                 "-i \"\$HOME/.termux/termux.properties\" \n"
-
+        val refContents =
+            "\n\n( clipboard contents:\n\n${termuxSetUpCommand} )"
+                .replace(
+            "\n",
+            "\t\n"
+                )
         val clipboard =
             activity.applicationContext.getSystemService(Context.CLIPBOARD_SERVICE)
                     as ClipboardManager
-        val clipData = ClipData.newPlainText("termux_setup", termuxSetUpCommand)
+        val clipData = ClipData.newPlainText(
+            "termux_setup",
+            termuxSetUpCommand
+        )
         clipboard.setPrimaryClip(clipData)
 
-        val dialogLinearLayout = LinearLayoutAdderForDialog.add(
-            activity,
-            "\n\n( clipboard contents:\n\n${termuxSetUpCommand} )"
+        termuxSetupDialogObj = Dialog(
+            activity
         )
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(
-                "To setup termux"
+        termuxSetupDialogObj?.setContentView(
+            R.layout.text_simple_dialog_layout
+        )
+        val titleTextView =
+            termuxSetupDialogObj?.findViewById<AppCompatTextView>(
+                R.id.text_simple_dialog_title
             )
-            .setMessage("\n1. Long press on termux \n2. Click paste popup on termux\n" +
-                    "3. Continue pressing Enter on termux")
-            .setView(dialogLinearLayout)
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
-            })
-            .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
-                }
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
+        titleTextView?.text = "To setup termux"
+        val descriptionTextView =
+            termuxSetupDialogObj?.findViewById<AppCompatTextView>(
+                R.id.text_simple_dialog_text_view
+            )
+        descriptionTextView?.text =
+            "\n1. Long press on termux \n2. Click paste popup on termux\n" +
+                "3. Continue pressing Enter on termux" + "\n\n" + refContents
+
+        val cancelImageButton =
+            termuxSetupDialogObj?.findViewById<AppCompatImageButton>(
+                R.id.text_simple_dialog_cancel
+            )
+        cancelImageButton?.setOnClickListener {
+            termuxSetupDialogObj?.dismiss()
+            execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
+        }
+        cancelImageButton?.setImageResource(R.drawable.icons8_check_ok)
+        termuxSetupDialogObj?.setOnCancelListener {
+            termuxSetupDialogObj?.dismiss()
+            execTermuxSetupAndStorageAccessPermissionProcessLauncher(activity)
+        }
+        termuxSetupDialogObj?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
+        termuxSetupDialogObj?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        termuxSetupDialogObj?.show()
     }
 
 
