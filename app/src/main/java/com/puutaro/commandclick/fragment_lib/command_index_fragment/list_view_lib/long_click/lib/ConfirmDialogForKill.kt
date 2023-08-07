@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
-import android.R
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
+import android.content.Context
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -17,6 +19,9 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object ConfirmDialogForKill {
 
+
+    private var addConfirmDialog: Dialog? = null
+
     fun show(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
@@ -25,6 +30,7 @@ object ConfirmDialogForKill {
         cmdListView: RecyclerView
     ){
         val context = cmdIndexFragment.context
+            ?: return
         if(
             !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
         ){
@@ -37,38 +43,82 @@ object ConfirmDialogForKill {
         }
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         terminalViewModel.onDisplayUpdate = true
-        val alertDialog = AlertDialog.Builder(cmdIndexFragment.context)
-            .setTitle(
-                "Kill bellow shell path process, ok?"
-            )
-            .setMessage("\tpath: ${shellScriptName}")
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                val factExecCmd =
-                    "ps aux | grep \"${shellScriptName}\" " +
-                            " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
-                val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
-                val execCmd = " touch \"${shellScriptName}\"; " +
-                        "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
-                        ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
-                ExecBashScriptIntent.ToTermux(
-                    CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
-                    context,
-                    execCmd
-                )
 
-                CommandListManager.execListUpdateForCmdIndex(
-                    currentAppDirPath,
-                    cmdListView,
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+
+        addConfirmDialog = Dialog(
+            context
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        addConfirmDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.confirm_text_dialog
         )
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
+        val confirmTitleTextView =
+            addConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_title
+            )
+        confirmTitleTextView?.text =  "Kill bellow shell path process, ok?"
+        val confirmContentTextView =
+            addConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            )
+        confirmContentTextView?.text = "\tpath: ${shellScriptName}"
+        val confirmCancelButton =
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            addConfirmDialog?.dismiss()
+        }
+
+        setOkButton(
+            context,
+            currentAppDirPath,
+            shellScriptName,
+            currentMonitorFileName,
+            cmdListView
+        )
+        addConfirmDialog?.setOnCancelListener {
+            addConfirmDialog?.dismiss()
+        }
+        addConfirmDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        addConfirmDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        addConfirmDialog?.show()
+    }
+
+    private fun setOkButton(
+        context: Context,
+        currentAppDirPath: String,
+        shellScriptName: String,
+        currentMonitorFileName: String,
+        cmdListView: RecyclerView
+    ){
+        val confirmOkButton =
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            addConfirmDialog?.dismiss()
+            val factExecCmd =
+                "ps aux | grep \"${shellScriptName}\" " +
+                        " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
+            val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
+            val execCmd = " touch \"${shellScriptName}\"; " +
+                    "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
+                    ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
+            ExecBashScriptIntent.ToTermux(
+                CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
+                context,
+                execCmd
+            )
+
+            CommandListManager.execListUpdateForCmdIndex(
+                currentAppDirPath,
+                cmdListView,
+            )
+        }
     }
 }
