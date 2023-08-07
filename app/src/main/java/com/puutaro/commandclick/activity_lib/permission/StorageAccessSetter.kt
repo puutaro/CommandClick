@@ -1,27 +1,32 @@
 package com.puutaro.commandclick.activity_lib.permission
 
 import android.Manifest
-import android.app.ActivityManager
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import android.view.Gravity
+import android.view.ViewGroup
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecRestartIntent
 import com.puutaro.commandclick.activity_lib.init.ActivityFinisher
 
 object StorageAccessSetter {
+
+    private var getPermissionConfirmDialog: Dialog? = null
 
     fun storageAccessProcess(
         activity: MainActivity
@@ -109,36 +114,53 @@ object StorageAccessSetter {
     private fun getManagedFullStorageGrantedHandler(
         activity: MainActivity
     ){
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(
-                "Enable manage all storage permission, ok?"
+        getPermissionConfirmDialog = Dialog(
+            activity
+        )
+        getPermissionConfirmDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.confirm_text_dialog
+        )
+        val confirmTitleTextView =
+            getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
-                activity.manageFullStoragePermissionResultLauncher.launch(
-                    Intent(
-                        Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
-                        uri
-                    )
+        confirmTitleTextView?.text =
+            "Enable manage all storage permission, ok?"
+        val confirmContentTextView =
+            getPermissionConfirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            )
+        confirmContentTextView?.isVisible = false
+        val confirmCancelButton =
+            getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            getPermissionConfirmDialog?.dismiss()
+            ActivityFinisher.finish(activity)
+        }
+        val confirmOkButton =
+            getPermissionConfirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            getPermissionConfirmDialog?.dismiss()
+            val uri = Uri.parse("package:${BuildConfig.APPLICATION_ID}")
+            activity.manageFullStoragePermissionResultLauncher.launch(
+                Intent(
+                    Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION,
+                    uri
                 )
-            })
-            .setNegativeButton("NO", DialogInterface.OnClickListener {
-                    dialog, which ->
-                ActivityFinisher.finish(activity)
-            })
-            .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    ActivityFinisher.finish(activity)
-                }
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
+            )
+        }
+        getPermissionConfirmDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            activity.getColor(android.R.color.black)
+        getPermissionConfirmDialog?.window?.setGravity(
+            Gravity.CENTER
         )
+        getPermissionConfirmDialog?.show()
     }
 
 

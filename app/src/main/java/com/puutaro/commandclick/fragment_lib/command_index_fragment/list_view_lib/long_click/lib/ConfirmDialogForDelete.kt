@@ -5,7 +5,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -16,7 +15,7 @@ import com.puutaro.commandclick.util.ReadText
 
 object ConfirmDialogForDelete {
 
-    private var deleteConfirmDialog: Dialog? = null
+    private var addConfirmDialog: Dialog? = null
     fun show(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
@@ -34,45 +33,45 @@ object ConfirmDialogForDelete {
         ).readText()
         val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
                 "\n---\n${shellContents}"
-        deleteConfirmDialog = Dialog(
+        addConfirmDialog = Dialog(
             context
         )
-        deleteConfirmDialog?.setContentView(
+        addConfirmDialog?.setContentView(
             com.puutaro.commandclick.R.layout.confirm_text_dialog
         )
         val confirmTitleTextView =
-            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+            addConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
         confirmTitleTextView?.text = "Delete bellow contents, ok?"
         val confirmContentTextView =
-            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+            addConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
         confirmContentTextView?.text = displayContents
         val confirmCancelButton =
-            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
-            deleteConfirmDialog?.dismiss()
+            addConfirmDialog?.dismiss()
         }
         deleteOkListener(
             currentAppDirPath,
             scriptFileName,
             cmdListView
         )
-        deleteConfirmDialog?.setOnCancelListener {
-            deleteConfirmDialog?.dismiss()
+        addConfirmDialog?.setOnCancelListener {
+            addConfirmDialog?.dismiss()
         }
-        deleteConfirmDialog?.window?.setLayout(
+        addConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        deleteConfirmDialog?.window?.setGravity(
+        addConfirmDialog?.window?.setGravity(
             Gravity.BOTTOM
         )
-        deleteConfirmDialog?.show()
+        addConfirmDialog?.show()
     }
 
     private fun deleteOkListener(
@@ -81,11 +80,11 @@ object ConfirmDialogForDelete {
         cmdListView: RecyclerView
     ){
         val confirmOkButtonView =
-            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
             )
         confirmOkButtonView?.setOnClickListener {
-            deleteConfirmDialog?.dismiss()
+            addConfirmDialog?.dismiss()
             FileSystems.removeFiles(
                 currentAppDirPath,
                 scriptFileName,
