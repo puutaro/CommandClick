@@ -1,13 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
 
-import android.R
-import android.app.AlertDialog
-import android.content.DialogInterface
-import android.text.InputType
-import android.view.Gravity
 import android.widget.EditText
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
