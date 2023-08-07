@@ -1,14 +1,17 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.util.FileSystems
@@ -16,65 +19,95 @@ import java.io.File
 
 
 class CopyFileEvent(
-    cmdIndexCommandIndexFragment: CommandIndexFragment,
+    cmdIndexFragment: CommandIndexFragment,
     private val sourceAppDirPath: String,
     private val sourceShellFileName:String,
 ) {
 
-    private val context = cmdIndexCommandIndexFragment.context
-    private val binding = cmdIndexCommandIndexFragment.binding
+    private val context = cmdIndexFragment.context
+    private val binding = cmdIndexFragment.binding
     private val cmdListView = binding.cmdList
     val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+    private var longPressSrcImageAnchorDialog: Dialog? = null
+    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
     fun invoke(){
-        val appDirList = FileSystems.filterSuffixJsFiles(
-            cmdclickAppDirAdminPath
+        if(
+            context == null
+        ) return
+
+
+        longPressSrcImageAnchorDialog = Dialog(
+            context
         )
-        val appDirListView = ListView(context)
-        val appDirListAdapter = context?.let {
-            ArrayAdapter(
-                it,
-                R.layout.simple_list_item_1,
-                appDirList
-            )
-        } ?: return
-        appDirListView.adapter = appDirListAdapter
-        appDirListView.setSelection(appDirListAdapter.count)
-        val alertDialogBuilder = AlertDialog.Builder(
-            context,
+        longPressSrcImageAnchorDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.list_dialog_layout
         )
-
-        val alertDialog = alertDialogBuilder
-            .setTitle("Select app dirctory name")
-            .setView(appDirListView)
-        val alertdialog = alertDialog.create()
-        alertdialog.window?.setGravity(Gravity.BOTTOM)
-        alertdialog.show()
-
-
-        invokeItemSetClickListnerForCopyFile(
-            appDirListView,
-            appDirList,
-            alertdialog
+        val listDialogTitle = longPressSrcImageAnchorDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_title
         )
+        listDialogTitle?.text = "Select app dirctory name"
+        val listDialogMessage = longPressSrcImageAnchorDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_message
+        )
+        listDialogMessage?.isVisible = false
+        val listDialogSearchEditText = longPressSrcImageAnchorDialog?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
+        )
+        listDialogSearchEditText?.isVisible = false
+        val cancelButton = longPressSrcImageAnchorDialog?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            longPressSrcImageAnchorDialog?.dismiss()
+        }
 
-
+        setListView()
+        longPressSrcImageAnchorDialog?.setOnCancelListener {
+            longPressSrcImageAnchorDialog?.dismiss()
+        }
+        longPressSrcImageAnchorDialog?.window?.setGravity(Gravity.BOTTOM)
+        longPressSrcImageAnchorDialog?.show()
     }
 
+    private fun setListView() {
+        if(
+            context == null
+        ) return
+        val appDirList = FileSystems.filterSuffixJsFiles(
+            cmdclickAppDirAdminPath
+        ).map {
+            it to icons8Wheel
+        }
+        val subMenuListView =
+            longPressSrcImageAnchorDialog?.findViewById<ListView>(
+                com.puutaro.commandclick.R.id.list_dialog_list_view
+            ) ?: return
+        val subMenuAdapter = MenuListAdapter(
+            context,
+            appDirList.toMutableList()
+        )
+        subMenuListView.adapter = subMenuAdapter
+        invokeItemSetClickListnerForCopyFile(
+            subMenuListView,
+        )
+    }
+
+
     private fun invokeItemSetClickListnerForCopyFile(
-        AppDirListView: ListView,
-        AppDirList: List<String>,
-        alertDialog: AlertDialog
+        appDirListView: ListView,
     ) {
-        AppDirListView.setOnItemClickListener { parent, View, pos, id
-            ->
-            val selectedShellFileName = AppDirList.get(pos)
+        appDirListView.setOnItemClickListener {
+                parent, View, pos, id ->
+            val menuListAdapter = appDirListView.adapter as MenuListAdapter
+            val selectedScript = menuListAdapter.getItem(pos)
+                ?: return@setOnItemClickListener
             execInvokeItemSetClickListnerForCopyFile(
                 sourceAppDirPath,
                 sourceShellFileName,
-                selectedShellFileName
+                selectedScript
             )
-            alertDialog.dismiss()
+            longPressSrcImageAnchorDialog?.dismiss()
             return@setOnItemClickListener
         }
     }
