@@ -16,7 +16,7 @@ class MenuListAdapter(
 ) : ArrayAdapter<String>(
     context,
     R.layout.menu_list_adapter_layout,
-    menuMapList.map{it.first}
+    menuMapList.map { it.first }
 ) {
     private val mInflater =
         context.getSystemService(

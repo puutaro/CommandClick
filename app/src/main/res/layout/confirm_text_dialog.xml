@@ -17,7 +17,7 @@
         android:paddingTop="15dp"
         >
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/text_simple_dialog_title"
+            android:id="@+id/confirm_text_dialog_title"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -32,7 +32,7 @@
             android:textColor="@color/cmdclick_text_black"
             />
         <ScrollView
-            android:id="@+id/text_simple_dialog_scroll"
+            android:id="@+id/confirm_text_dialog_scroll"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:scrollbars="vertical"
@@ -47,7 +47,7 @@
             android:paddingEnd="15dp"
             >
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/text_simple_dialog_text_view"
+                android:id="@+id/confirm_text_dialog_text_view"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:transcriptMode="alwaysScroll"
@@ -67,14 +67,24 @@
         android:background="@color/setting_menu_footer"
         >
         <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/text_simple_dialog_cancel"
+            android:id="@+id/confirm_text_dialog_cancel"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:src="@drawable/icons8_cancel"
             app:tint="@color/cmdclick_text_black"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
+            />
+        <androidx.appcompat.widget.AppCompatImageButton
+            android:id="@+id/confirm_text_dialog_ok"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/icons8_check_ok"
+            app:tint="@color/cmdclick_text_black"
+            android:backgroundTint="@color/setting_menu_footer"
+            android:layout_gravity="center"
+            android:layout_weight="0.5"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.appcompat.widget.LinearLayoutCompat>

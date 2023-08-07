@@ -1,20 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
+import android.content.Context
 import android.content.DialogInterface
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
-import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 
@@ -26,6 +25,8 @@ class ListJsDialog(
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
     private val searchSwitchThreshold = 5
+    private var listDialog: Dialog? = null
+    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
     fun create(
         title: String,
@@ -59,20 +60,30 @@ class ListJsDialog(
         listSource: String,
     ) {
         val context = context ?: return
-
-        val dialogListView = ListView(context)
-        val dialogList = listSource.split("\t")
-        val dialogListAdapter = ArrayAdapter(
-            context,
-            R.layout.simple_list_item_1,
-            dialogList,
+        listDialog = Dialog(
+            context
         )
-        dialogListView.adapter = dialogListAdapter
-        dialogListView.setSelection(
+        listDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.list_dialog_layout
+        )
+        val dialogListView =  listDialog?.findViewById<ListView>(
+            com.puutaro.commandclick.R.id.list_dialog_list_view
+        )
+        val dialogList = listSource.split("\t").map {
+            it to icons8Wheel
+        }
+        val dialogListAdapter = MenuListAdapter(
+            terminalFragment.context as Context,
+            dialogList.toMutableList()
+        )
+        dialogListView?.adapter = dialogListAdapter
+        dialogListView?.setSelection(
             dialogListAdapter.count
         )
 
-        val searchText = EditText(context)
+        val searchText = listDialog?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.list_dialog_search_edit_text
+        )
         makeSearchEditText(
             dialogListView,
             dialogListAdapter,
@@ -80,84 +91,62 @@ class ListJsDialog(
             listSource,
         )
 
-        val linearLayoutForTotal = LinearLayoutForTotal.make(
-            context
-        )
-        val searchTextWeight = SearchTextLinearWeight.calculate(terminalFragment)
-        val listWeight = 1F - searchTextWeight
-        val linearLayoutForListView = NestLinearLayout.make(
-            context,
-            listWeight
-        )
-        val linearLayoutForSearch = NestLinearLayout.make(
-            context,
-            searchTextWeight
-        )
+        if(
+            dialogList.size <= searchSwitchThreshold
+        ) searchText?.isVisible = false
 
-        val addView = if(
-            dialogList.size > searchSwitchThreshold
-        ) {
-            linearLayoutForListView.addView(dialogListView)
-            linearLayoutForSearch.addView(searchText)
-            linearLayoutForTotal.addView(linearLayoutForListView)
-            linearLayoutForTotal.addView(linearLayoutForSearch)
-            linearLayoutForTotal
-        } else dialogListView
-
-        val titleString = if(title.isNotEmpty()){
-            title
-        } else "Select bellow list"
-        val alertDialog = if(
+        val titleTextView = listDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_title
+        )
+        val messageTextView = listDialog?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.list_dialog_message
+        )
+        if(
+            title.isNotEmpty()
+        ) titleTextView?.text = title
+        else titleTextView?.isVisible = false
+        if(
             message.isNotEmpty()
-        ) {
-            AlertDialog.Builder(
-                context
-            )
-                .setTitle(titleString)
-                .setMessage(message)
-                .setView(addView)
-                .create()
-        } else {
-            AlertDialog.Builder(
-                context
-            )
-                .setTitle(titleString)
-                .setView(addView)
-                .create()
+        ) messageTextView?.text = message
+        else messageTextView?.isVisible = false
+        val cancelButton =  listDialog?.findViewById<AppCompatImageButton>(
+            com.puutaro.commandclick.R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            listDialog?.dismiss()
+            terminalViewModel.onDialog = false
         }
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        alertDialog.show()
+        listDialog?.window?.setGravity(Gravity.BOTTOM)
+        listDialog?.show()
 
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        listDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
+                listDialog?.dismiss()
                 terminalViewModel.onDialog = false
             }
         })
 
         invokeListItemSetClickListenerForListDialog(
             dialogListView,
-            dialogList,
-            alertDialog,
+            listDialog,
         )
 
     }
 
 
     private fun invokeListItemSetClickListenerForListDialog(
-        dialogListView: ListView,
-        dialogList: List<String>,
-        alertDialog: AlertDialog,
+        dialogListView: ListView?,
+        alertDialog: Dialog?,
     ) {
 
-        dialogListView.setOnItemClickListener {
+        dialogListView?.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog.dismiss()
-            val selectedElement = dialogList
-                .get(pos)
-                .split("\n")
-                .firstOrNull()
-                ?: return@setOnItemClickListener
+            alertDialog?.dismiss()
+            val menuListAdapter = dialogListView.adapter as MenuListAdapter
+            val selectedElement =
+                menuListAdapter.getItem(pos)
+                    ?: return@setOnItemClickListener
             terminalViewModel.onDialog = false
             returnValue = selectedElement
             return@setOnItemClickListener
@@ -165,23 +154,14 @@ class ListJsDialog(
     }
 
     private fun makeSearchEditText(
-        dialogListView: ListView,
+        dialogListViewSrc: ListView?,
         dialogListAdapter: ArrayAdapter<String>,
-        searchText: EditText,
+        searchText: AppCompatEditText?,
         listSource: String,
     ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
-        searchText.addTextChangedListener(object : TextWatcher {
+        val dialogListView = dialogListViewSrc
+            ?: return
+        searchText?.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
@@ -196,17 +176,26 @@ class ListJsDialog(
                     ).containsMatchIn(
                         it.lowercase()
                     )
+                }.map {
+                    it to icons8Wheel
                 }
-
-                CommandListManager.execListUpdateByEditText(
-                    filteredList,
-                    dialogListAdapter,
-                    dialogListView
+                updateList(
+                    dialogListView,
+                    filteredList
                 )
                 dialogListView.setSelection(
                     dialogListAdapter.count
                 )
             }
         })
+    }
+    private fun updateList(
+        dialogListView: ListView?,
+        filteredList: List<Pair<String, Int>>
+    ){
+        val menuListAdapter = dialogListView?.adapter as MenuListAdapter
+        menuListAdapter.clear()
+        menuListAdapter.addAll(filteredList)
+        menuListAdapter.notifyDataSetChanged()
     }
 }

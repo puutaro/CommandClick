@@ -211,9 +211,16 @@ class InstallFromFannelRepo(
                         "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}"
                     if(
                         !File(selectedFannelDirPath).isDirectory
-                    ) return
+                    ) {
+                        Toast.makeText(
+                            cmdIndexFragment.context,
+                            "install ok: ${selectedFannelName}",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        return
+                    }
                     FileSystems.copyDirectory(
-                        "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}",
+                        selectedFannelDirPath,
                         "${currentAppDirPath}/${fannelDir}"
                     )
                     val searchEditText = cmdIndexFragment.installFannelDialog?.findViewById<EditText>(

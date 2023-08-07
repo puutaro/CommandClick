@@ -305,7 +305,8 @@
             item.href
          ).replace("javascript:onLinkClick\(\'", "")
             .replace(/\'\)$/, "")
-            .replace(/^file:\/\//, '');
+            .replace(/^file:\/\//, '')
+            .replace(/^\/\/*/, '/');
       }).join("\n")
 
       jsFileSystem.writeLocalFile(
