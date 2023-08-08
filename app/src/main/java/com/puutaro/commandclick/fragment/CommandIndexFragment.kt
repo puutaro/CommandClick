@@ -33,8 +33,6 @@ class CommandIndexFragment: Fragment() {
     private var isKeyboardShowing: Boolean = false
     private var _binding: CommandIndexFragmentBinding? = null
     val binding get() = _binding!!
-    var mParentContextMenuListIndex: Int = 0
-    var recyclerViewIndex = 0
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
@@ -303,14 +301,9 @@ class CommandIndexFragment: Fragment() {
             this,
             readSharePreffernceMap
         )
-
-        val fannelIndexListAdapter = makeListView.makeList(
-            requireContext()
-        )
         return makeListView.onLongClickDo (
             item,
             super.onContextItemSelected(item),
-            fannelIndexListAdapter
         )
     }
 

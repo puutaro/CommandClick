@@ -33,6 +33,9 @@ class FannelIndexListAdapter(
     private val middleSizeThreshold = 100
     private val maxTakeSize = 150
 
+    companion object {
+        var recyclerViewIndex = String()
+    }
 
     class FannelIndexListViewHolder(
         val activity: FragmentActivity?,
@@ -80,25 +83,6 @@ class FannelIndexListAdapter(
             activity,
             itemView
         )
-//        fannelIndexListViewHolder.fannelNameTextView.setOnClickListener {
-//            fannelNameClickListener?.onFannelNameClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//        }
-//        fannelIndexListViewHolder.fannelNameTextView.setOnLongClickListener {
-//            fannelNameLongClickListener?.onFannelNameLongClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//            true
-//        }
-//        fannelIndexListViewHolder.fannelContentsTextView.setOnClickListener {
-//            fannelContentsClickListener?.onFannelContentsClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//        }
         return fannelIndexListViewHolder
     }
 
@@ -151,7 +135,7 @@ class FannelIndexListAdapter(
                                 holder: FannelIndexListViewHolder,
                                 position: Int
                             ) {
-                                cmdIndexFragment.recyclerViewIndex = position
+                                recyclerViewIndex = holder.fannelNameTextView.text.toString()
                             }
                         }
                     itemView.setOnLongClickListener {
@@ -203,14 +187,6 @@ class FannelIndexListAdapter(
             position: Int
         )
     }
-
-//    var fannelNameLongClickListener: OnFannelNameLongClickListener? = null
-//    interface OnFannelNameLongClickListener {
-//        fun onFannelNameLongClick(
-//            itemView: View,
-//            holder: FannelIndexListViewHolder
-//        )
-//    }
 
     private fun culCTextSize(
         fannelConList: List<String>
