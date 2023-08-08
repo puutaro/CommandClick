@@ -30,7 +30,7 @@
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:background="#00000000"
-        android:hint="search"
+        android:hint="install fannel search"
         android:textSize="20sp"
         android:autofillHints=""
         android:inputType="text" />

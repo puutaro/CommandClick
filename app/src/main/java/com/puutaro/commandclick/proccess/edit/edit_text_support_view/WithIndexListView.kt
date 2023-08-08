@@ -12,14 +12,11 @@ import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ArrayAdapter
 import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -32,7 +29,6 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
@@ -50,7 +46,6 @@ import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -68,12 +63,14 @@ class WithIndexListView(
     private val context = editFragment.context
     private val binding = editFragment.binding
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val noExtend = "NoExtend"
     private val throughMark = "-"
     private var currentSetVariableMap: Map<String, String>? = mapOf()
     private var currentAppDirPath = String()
     private var currentScriptName = String()
     private val editListRecyclerView = binding.editListRecyclerView
+    private val editListSearchEditText = binding.editListSearchEditText
     private var filterDir = String()
     private var filterPrefix = String()
     private var filterSuffix = String()
@@ -131,7 +128,9 @@ class WithIndexListView(
             "${filterDir}/${sourceFannelDir}",
             "${targetDirectoryPath}/${targetFannelDir}"
         )
-        updateFileList()
+        updateFileList(
+            makeFileList()
+        )
         Toast.makeText(
             context,
             "copy file ok",
@@ -173,7 +172,9 @@ class WithIndexListView(
             "${sourceDirPath}/${sourceFannelDir}",
             "${filterDir}/${sourceFannelDir}"
         )
-        updateFileList()
+        updateFileList(
+            makeFileList()
+        )
         Toast.makeText(
             context,
             "get file ok",
@@ -268,6 +269,10 @@ class WithIndexListView(
         invokeItemSetLongTimeClickListenerForHistory(
             menuList
         )
+        makeSearchEditText(
+            editListSearchEditText,
+            readSharePreffernceMap
+        )
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
             editListRecyclerView.layoutManager?.scrollToPosition(
@@ -290,6 +295,7 @@ class WithIndexListView(
                     clickDirPath,
                     selectedItem,
                 )
+                editListSearchEditText.setText(String())
             }
         }
     }
@@ -319,25 +325,15 @@ class WithIndexListView(
                 clickUpdateFileList(
                     selectedItem
                 )
+                editListSearchEditText.setText(String())
             }
         }
     }
 
     private fun makeSearchEditText(
-        urlHistoryListView: ListView,
-        urlHistoryListAdapter: ArrayAdapter<String>?,
-        searchText: EditText,
+        searchText: AppCompatEditText,
         readSharePreffernceMap: Map<String, String>
     ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
         searchText.hint = EditFragmentTitle.make(
             editFragment,
             SharePreffrenceMethod.getReadSharePreffernceMap(
@@ -349,21 +345,13 @@ class WithIndexListView(
                 SharePrefferenceSetting.current_script_file_name,
             )
         )
-        searchText.setPadding(30, 10, 20, 10)
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
-                val filteredUrlHistoryList = makeFileList().map {
-                    val urlTitleSource =
-                        it.split("\t")
-                            .firstOrNull() ?:String()
-                    UrlTool.trimTitle(
-                        urlTitleSource
-                    )
-                }.filter {
+                val filteredUrlHistoryList = makeFileList().filter {
                     Regex(
                         searchText.text.toString()
                             .lowercase()
@@ -372,14 +360,15 @@ class WithIndexListView(
                         it.lowercase()
                     )
                 }
-                CommandListManager.execListUpdateByEditText(
-                    filteredUrlHistoryList,
-                    urlHistoryListAdapter as ArrayAdapter<String>,
-                    urlHistoryListView
-                )
-                urlHistoryListView.setSelection(
-                    urlHistoryListAdapter.count
-                )
+                updateFileList(filteredUrlHistoryList)
+                val indexForEditAdapter = editListRecyclerView.adapter
+                    ?: return
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(100)
+                    editListRecyclerView.scrollToPosition(
+                        indexForEditAdapter.itemCount - 1
+                    )
+                }
             }
         })
     }
@@ -394,11 +383,6 @@ class WithIndexListView(
                 holder: ListIndexForEditAdapter.ListIndexListViewHolder,
                 position: Int
             ) {
-                Toast.makeText(
-                    itemView.context,
-                    "show",
-                    Toast.LENGTH_SHORT
-                ).show()
                 val selectedItem =
                     indexForEditAdapter.listIndexList[position]
                 val popup = PopupMenu(
@@ -449,6 +433,7 @@ class WithIndexListView(
                     Toast.LENGTH_SHORT
                 ).show()
                 popup.show()
+                editListSearchEditText.setText(String())
             }
         }
     }
@@ -586,7 +571,9 @@ class WithIndexListView(
     ){
         when(menuName){
             preMenuType.sync.name -> {
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
                 return
             }
             preMenuType.delete.name -> {
@@ -641,7 +628,9 @@ class WithIndexListView(
                 execRenameForAppDirAdmin(
                     selectedItem
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
                 return
             }
             preMenuType.get.name -> {
@@ -674,7 +663,9 @@ class WithIndexListView(
                         }
                     }
                     withContext(Dispatchers.Main){
-                        updateFileList()
+                        updateFileList(
+                            makeFileList()
+                        )
                     }
                 }
             }
@@ -698,7 +689,9 @@ class WithIndexListView(
                         }
                     }
                     withContext(Dispatchers.Main){
-                        updateFileList()
+                        updateFileList(
+                            makeFileList()
+                        )
                     }
                 }
             }
@@ -738,7 +731,9 @@ class WithIndexListView(
                     UsePath.cmdclickAppDirAdminPath,
                     scriptFileName
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
                 val createAppDirName = if (
                     isJsSuffix
                 ) {
@@ -785,7 +780,9 @@ class WithIndexListView(
                     selectedItem,
                     editText
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
             })
             .setNegativeButton("NO", null)
             .show()
@@ -852,7 +849,9 @@ class WithIndexListView(
                     beforeMoveDirPath,
                     afterMoveDirPath,
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
             })
             .setNegativeButton("NO", null)
             .show()
@@ -957,7 +956,9 @@ class WithIndexListView(
                     editText.text.toString(),
                     String()
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
             })
             .setNegativeButton("NO", null)
             .show()
@@ -1004,7 +1005,9 @@ class WithIndexListView(
                 FileSystems.removeDir(
                     "${filterDir}/${deleteFannelDir}"
                 )
-                updateFileList()
+                updateFileList(
+                    makeFileList()
+                )
                 if(
                     filterDir.removeSuffix("/")
                     == UsePath.cmdclickAppDirAdminPath
@@ -1180,13 +1183,16 @@ class WithIndexListView(
             filterDir,
             selectedItem
         )
-        updateFileList()
+        updateFileList(
+           makeFileList()
+        )
     }
-    private fun updateFileList(){
+    private fun updateFileList(
+        updateList: List<String>
+    ){
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
         listIndexForEditAdapter.listIndexList.clear()
-        val updateList = makeFileList()
         listIndexForEditAdapter.listIndexList.addAll(updateList)
         listIndexForEditAdapter.notifyDataSetChanged()
     }
