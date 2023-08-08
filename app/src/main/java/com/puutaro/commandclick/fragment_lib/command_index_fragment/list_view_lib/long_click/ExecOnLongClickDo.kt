@@ -35,7 +35,7 @@ object ExecOnLongClickDo {
 //        } catch (e: ClassCastException) {
 //            return false
 //        }
-        val shellScriptName = FannelIndexListAdapter.recyclerViewIndex
+        val shellScriptName = FannelIndexListAdapter.selectedFannelName
 //            info
 //            ?.position
 //            ?: cmdIndexFragment.mParentContextMenuListIndex

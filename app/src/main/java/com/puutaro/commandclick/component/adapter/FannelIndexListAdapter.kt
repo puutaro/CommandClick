@@ -34,7 +34,7 @@ class FannelIndexListAdapter(
     private val maxTakeSize = 150
 
     companion object {
-        var recyclerViewIndex = String()
+        var selectedFannelName = String()
     }
 
     class FannelIndexListViewHolder(
@@ -135,7 +135,7 @@ class FannelIndexListAdapter(
                                 holder: FannelIndexListViewHolder,
                                 position: Int
                             ) {
-                                recyclerViewIndex = holder.fannelNameTextView.text.toString()
+                                selectedFannelName = holder.fannelNameTextView.text.toString()
                             }
                         }
                     itemView.setOnLongClickListener {
