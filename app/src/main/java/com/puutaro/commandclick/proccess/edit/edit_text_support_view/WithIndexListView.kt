@@ -284,19 +284,20 @@ class WithIndexListView(
     private fun invokeItemSetClickListenerForFileList() {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.fannelNameClickListener = object: ListIndexForEditAdapter.OnFannelNameItemClickListener {
-            override fun onFannelNameClick(
-                itemView: View,
-                holder: ListIndexForEditAdapter.ListIndexListViewHolder
-            ) {
-                val selectedItem =
-                    holder.fannelNameTextView.text.toString()
-                execItemClickJs(
-                    clickDirPath,
-                    selectedItem,
-                )
-                editListSearchEditText.setText(String())
-            }
+        listIndexForEditAdapter.fannelNameClickListener =
+            object: ListIndexForEditAdapter.OnFannelNameItemClickListener {
+                override fun onFannelNameClick(
+                    itemView: View,
+                    holder: ListIndexForEditAdapter.ListIndexListViewHolder
+                ) {
+                    val selectedItem =
+                        holder.fannelNameTextView.text.toString()
+                    execItemClickJs(
+                        clickDirPath,
+                        selectedItem,
+                    )
+                    editListSearchEditText.setText(String())
+                }
         }
     }
 
@@ -321,9 +322,6 @@ class WithIndexListView(
                     itemView.context,
                     "file contents: $selectedItem",
                     contents
-                )
-                clickUpdateFileList(
-                    selectedItem
                 )
                 editListSearchEditText.setText(String())
             }
