@@ -182,10 +182,9 @@ class EditTextProducerForEdit(
             )
             when(isListIndex) {
                 true -> {
-                    val listIndexLayout = withIndexListView.create(
+                    withIndexListView.create(
                         editParameters
                     )
-                    binding.editListLinearLayout.addView(listIndexLayout)
                 }
                 else -> {
                     val horizontalLinearLayout = withEditComponent.insert(

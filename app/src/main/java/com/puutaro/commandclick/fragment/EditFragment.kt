@@ -106,6 +106,7 @@ class EditFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         binding.webSearch.webSearchToolbar.isVisible = false
+        binding.editListLinearLayout.isVisible = false
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         Keyboard.hiddenKeyboardForFragment(
             this

@@ -264,7 +264,6 @@ class CmdClickHistoryButtonEvent (
                 .split("\n")
                 .firstOrNull()
                 ?: return
-
         FileSystems.removeFiles(
             cmdclickAppHistoryDirAdminPath,
             selectedDeleteFile,

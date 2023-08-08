@@ -30,12 +30,16 @@ object AppHistoryManager {
     fun getScriptFileNameFromAppHistoryFileName(
         currentAppHistoryFileName: String
     ): String {
-        val appHistoryList = currentAppHistoryFileName.split("__")
+        val appHistoryList =
+            currentAppHistoryFileName.split("__")
         val appHistoryListLength = appHistoryList.size
-        if(appHistoryListLength <= 1) return CommandClickScriptVariable.EMPTY_STRING
-        if(appHistoryListLength == 2 && appHistoryList.last().isEmpty()) {
-            return CommandClickScriptVariable.EMPTY_STRING
-        }
+        if(
+            appHistoryListLength <= 1
+        ) return CommandClickScriptVariable.EMPTY_STRING
+        if(
+            appHistoryListLength == 2
+            && appHistoryList.last().isEmpty()
+        ) return CommandClickScriptVariable.EMPTY_STRING
         return appHistoryList.slice(
             1..appHistoryListLength - 1
         ).joinToString().let {

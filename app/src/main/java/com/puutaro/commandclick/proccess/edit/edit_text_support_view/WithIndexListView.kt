@@ -7,14 +7,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.os.Build
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
-import android.util.DisplayMetrics
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -22,6 +20,7 @@ import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
@@ -30,6 +29,8 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
@@ -38,11 +39,10 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.lis
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
@@ -65,20 +65,15 @@ import java.net.URLDecoder
 class WithIndexListView(
     private val editFragment: EditFragment
 ) {
-    companion object {
-        val pxHeightNoTerminal = 85
-        val pxHeightOnTerminal = 49
-        val pxHeightOnKeyboard = 48
-    }
     private val context = editFragment.context
+    private val binding = editFragment.binding
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val noExtend = "NoExtend"
     private val throughMark = "-"
     private var currentSetVariableMap: Map<String, String>? = mapOf()
     private var currentAppDirPath = String()
     private var currentScriptName = String()
-    private val fileListView = ListView(context)
-    private var fileDisplayListAdapter: ArrayAdapter<String>? = null
+    private val editListRecyclerView = binding.editListRecyclerView
     private var filterDir = String()
     private var filterPrefix = String()
     private var filterSuffix = String()
@@ -208,10 +203,11 @@ class WithIndexListView(
 
     fun create(
         editParameters: EditParameters,
-    ): LinearLayout {
+    ) {
+        binding.editListLinearLayout.isVisible = true
+        binding.editTextScroll.isVisible = false
         val context = editParameters.context
         currentSetVariableMap = editParameters.setVariableMap
-        val readSharePreffernceMap = editParameters.readSharePreffernceMap
         currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -225,12 +221,6 @@ class WithIndexListView(
             .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
                 "Dir"
         fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
-
-        fileListView.layoutParams = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        fileListView.isStackFromBottom = true
 
         val indexListMap = getIndexListMap(
             editParameters
@@ -258,85 +248,78 @@ class WithIndexListView(
             ?: emptyList()
 
         val fileList = makeFileList()
-        val linearLayoutForTotal = LinearLayout(context)
-        linearLayoutForTotal.tag = editFragment.indexListLinearLayoutTagName
-        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            PxHeightCalculateForIndexList.culc(
-                editFragment,
-                editFragment.terminalOn
-            )
-        )
 
-        linearLayoutForTotal.layoutParams = linearLayoutParamForTotal
-        linearLayoutForTotal.orientation =  LinearLayout.VERTICAL
 
-        val searchTextLinearWeight = SearchTextLinearWeight.calculate(
-            editFragment
-        )
-        val listLinearWeight = 1F - searchTextLinearWeight
-        val linearLayoutForListView = NestLinearLayout.make(
-            context,
-            listLinearWeight
-        )
-        linearLayoutForListView.addView(fileListView)
-
-        val linearLayoutForSearch = NestLinearLayout.make(
-            context,
-            searchTextLinearWeight
-        )
-
-        val searchText = EditText(context)
-        linearLayoutForSearch.addView(searchText)
-        linearLayoutForTotal.addView(linearLayoutForListView)
-        linearLayoutForTotal.addView(linearLayoutForSearch)
-
-        fileDisplayListAdapter?.clear()
-        fileDisplayListAdapter = ArrayAdapter(
-            context as Context,
-            R.layout.simple_list_item_1,
+        val editListRecyclerView =
+            binding.editListRecyclerView
+        val listIndexForEditAdapter = ListIndexForEditAdapter(
+            editFragment,
+            filterDir,
             fileList
         )
-        fileListView.adapter = fileDisplayListAdapter
-        fileListView.setSelection(
-            fileDisplayListAdapter?.count ?: 0
+        editListRecyclerView.adapter = listIndexForEditAdapter
+        val preLoadLayoutManager = PreLoadLayoutManager(
+            context,
         )
-
-        invokeItemSetClickListenerForFileList(
-            fileListView,
-        )
-
+        preLoadLayoutManager.stackFromEnd = true
+        editListRecyclerView.layoutManager = preLoadLayoutManager
+        invokeItemSetClickListenerForFileList()
+        invokeContentsSetClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForHistory(
-            fileListView,
             menuList
         )
-
-        makeSearchEditText(
-            fileListView,
-            fileDisplayListAdapter,
-            searchText,
-            readSharePreffernceMap
-        )
-
-        return linearLayoutForTotal
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(100)
+            editListRecyclerView.layoutManager?.scrollToPosition(
+                listIndexForEditAdapter.itemCount - 1
+            )
+        }
     }
 
-    private fun invokeItemSetClickListenerForFileList(
-        fileListView: ListView,
-    ) {
-        fileListView.setOnItemClickListener {
-                parent, View, pos, id
-            ->
-            val selectedItem =
-                fileListView
-                    .adapter
-                    .getItem(pos)
-                        as String
-            execItemClickJs(
-                clickDirPath,
-                selectedItem,
-            )
-            return@setOnItemClickListener
+    private fun invokeItemSetClickListenerForFileList() {
+        val listIndexForEditAdapter =
+            editListRecyclerView.adapter as ListIndexForEditAdapter
+        listIndexForEditAdapter.fannelNameClickListener = object: ListIndexForEditAdapter.OnFannelNameItemClickListener {
+            override fun onFannelNameClick(
+                itemView: View,
+                holder: ListIndexForEditAdapter.ListIndexListViewHolder
+            ) {
+                val selectedItem =
+                    holder.fannelNameTextView.text.toString()
+                execItemClickJs(
+                    clickDirPath,
+                    selectedItem,
+                )
+            }
+        }
+    }
+
+    private fun invokeContentsSetClickListenerForFileList() {
+        val listIndexForEditAdapter =
+            editListRecyclerView.adapter as ListIndexForEditAdapter
+        listIndexForEditAdapter.fannelContentsClickListener = object: ListIndexForEditAdapter.OnFannelContentsItemClickListener {
+            override fun onFannelContentsClick(
+                itemView: View,
+                holder: ListIndexForEditAdapter.ListIndexListViewHolder
+            ) {
+                val selectedItem =
+                    holder.fannelNameTextView.text.toString()
+                val contents = if(
+                    File("${filterDir}/${selectedItem}").isFile
+                ) ReadText(
+                    filterDir,
+                    selectedItem
+                ).readText()
+                else "no file"
+                DialogObject.simpleTextShow(
+                    itemView.context,
+                    "file contents: $selectedItem",
+                    contents
+                )
+                clickUpdateFileList(
+                    selectedItem
+                )
+            }
         }
     }
 
@@ -402,17 +385,25 @@ class WithIndexListView(
     }
 
     private fun invokeItemSetLongTimeClickListenerForHistory(
-        fileListView: ListView,
         menuList: List<String>,
     ){
-        fileListView.onItemLongClickListener =
-            AdapterView.OnItemLongClickListener {
-                    parent, listSelectedView, pos, id ->
+        val indexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
+        indexForEditAdapter.itemLongClickListener = object : ListIndexForEditAdapter.OnItemLongClickListener {
+            override fun onItemLongClick(
+                itemView: View,
+                holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+                position: Int
+            ) {
+                Toast.makeText(
+                    itemView.context,
+                    "show",
+                    Toast.LENGTH_SHORT
+                ).show()
                 val selectedItem =
-                    fileListView.adapter.getItem(pos) as String
+                    indexForEditAdapter.listIndexList[position]
                 val popup = PopupMenu(
                     context,
-                    listSelectedView,
+                    itemView,
                     Gravity.BOTTOM
                 )
                 popup.menu.clear()
@@ -458,8 +449,8 @@ class WithIndexListView(
                     Toast.LENGTH_SHORT
                 ).show()
                 popup.show()
-                true
             }
+        }
     }
 
     private fun popupMenuItemSelected(
@@ -1047,7 +1038,7 @@ class WithIndexListView(
                         context?.getColor(R.color.black) as Int
                     )
                     alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                        context.getColor(R.color.black) as Int
+                        context.getColor(R.color.black)
                     )
 
                 }
@@ -1121,7 +1112,7 @@ class WithIndexListView(
         return !Regex("\\..*$").containsMatchIn(targetStr)
     }
 
-    fun getIndexListMap(
+    private fun getIndexListMap(
         editParameters: EditParameters
     ): Map<String, String>? {
         return currentSetVariableMap?.get(
@@ -1148,7 +1139,7 @@ class WithIndexListView(
             }?.toMap()
     }
 
-    fun getMenuMap(
+    private fun getMenuMap(
         editParameters: EditParameters
     ): Map<String, List<String>>? {
         val menuListSource = currentSetVariableMap?.get(
@@ -1192,11 +1183,12 @@ class WithIndexListView(
         updateFileList()
     }
     private fun updateFileList(){
-        fileDisplayListAdapter?.clear()
+        val listIndexForEditAdapter =
+            editListRecyclerView.adapter as ListIndexForEditAdapter
+        listIndexForEditAdapter.listIndexList.clear()
         val updateList = makeFileList()
-        fileDisplayListAdapter?.addAll(updateList)
-        fileListView.adapter = fileDisplayListAdapter
-        fileDisplayListAdapter?.notifyDataSetChanged();
+        listIndexForEditAdapter.listIndexList.addAll(updateList)
+        listIndexForEditAdapter.notifyDataSetChanged()
     }
 }
 
@@ -1269,34 +1261,6 @@ private fun execAddSettingSubMenu(
     }
 }
 
-private object PxHeightCalculateForIndexList {
-    fun culc(
-        editFragment: EditFragment,
-        terminalOn: String
-    ): Int
-    {
-        val defaultPxHeight = 300
-        val pxHeight = if (
-            Build.VERSION.SDK_INT > 30
-        ) {
-            val windowMetrics =
-                editFragment.activity?.windowManager?.currentWindowMetrics
-                    ?: return defaultPxHeight
-            windowMetrics.bounds.height()
-        } else {
-            val display = editFragment.activity?.windowManager?.getDefaultDisplay()
-            val outMetrics = DisplayMetrics()
-            display?.getMetrics(outMetrics)
-            outMetrics.heightPixels
-        }
-        val heightRate = if (
-            terminalOn
-            != SettingVariableSelects.TerminalDoSelects.OFF.name
-        ) WithIndexListView.pxHeightOnTerminal
-        else WithIndexListView.pxHeightNoTerminal
-        return (pxHeight * heightRate) / 100
-    }
-}
 enum class preMenuType {
     sync,
     delete,

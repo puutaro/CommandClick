@@ -1,15 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import android.os.Build
-import android.util.DisplayMetrics
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import android.widget.RelativeLayout
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 object ListIndexSizingToKeyboard {
     fun handle(
@@ -19,60 +15,21 @@ object ListIndexSizingToKeyboard {
         if(
             !editFragment.existIndexList
         ) return
-        val activity = editFragment.activity
-        val context = editFragment.context
         val binding = editFragment.binding
-        val indexListLinearLayoutTagName = editFragment.indexListLinearLayoutTagName
-        TargetFragmentInstance().getFromFragment<TerminalFragment>(
-            activity,
-            context?.getString(R.string.edit_execute_terminal_fragment)
-        ) ?: return
-        val listIndexInnerLinearLayout =
-            binding.editListLinearLayout.findViewWithTag<LinearLayout>(
-                indexListLinearLayoutTagName
-            )
-        val pxHeight = PxHeightCalculateForIndexList.culc(
-            editFragment,
-            editFragment.terminalOn,
+        val editListRecyclerView = binding.editListRecyclerView
+        val listIndexForEditAdapter = editListRecyclerView.adapter
+            ?: return
+        val editListLinearLayout = binding.editListLinearLayout
+        val layoutParams = editListLinearLayout.layoutParams as RelativeLayout.LayoutParams
+        if(
             isOpen
-        )
-        val linearLayoutParamForTotal = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            pxHeight
-        )
-        listIndexInnerLinearLayout.layoutParams = linearLayoutParamForTotal
-    }
-}
-
-private object PxHeightCalculateForIndexList {
-    fun culc(
-        editFragment: EditFragment,
-        terminalOn: String,
-        isOpen: Boolean
-    ): Int
-    {
-        val defaultPxHeight = 300
-        val pxHeight = if (
-            Build.VERSION.SDK_INT > 30
-        ) {
-            val windowMetrics =
-                editFragment.activity?.windowManager?.currentWindowMetrics
-                    ?: return defaultPxHeight
-            windowMetrics.bounds.height()
-        } else {
-            val display = editFragment.activity?.windowManager?.getDefaultDisplay()
-            val outMetrics = DisplayMetrics()
-            display?.getMetrics(outMetrics)
-            outMetrics.heightPixels
+        ) layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        else layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(100)
+            editListRecyclerView.scrollToPosition(
+                listIndexForEditAdapter.itemCount - 1
+            )
         }
-        if(isOpen){
-            return (pxHeight * WithIndexListView.pxHeightOnKeyboard) / 100
-        }
-        val heightRate = if (
-            terminalOn
-            != SettingVariableSelects.TerminalDoSelects.OFF.name
-        ) WithIndexListView.pxHeightOnTerminal
-        else WithIndexListView.pxHeightNoTerminal
-        return (pxHeight * heightRate) / 100
     }
 }

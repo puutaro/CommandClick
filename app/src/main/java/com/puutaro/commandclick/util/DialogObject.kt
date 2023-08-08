@@ -14,9 +14,9 @@ object DialogObject {
     private var simpleTextDialogObj: Dialog? = null
 
     fun simpleTextShow(
-            contextSrc: Context?,
-            title: String,
-            content: String
+        contextSrc: Context?,
+        title: String,
+        contents: String
     ) {
         val context = contextSrc
             ?: return
@@ -38,7 +38,7 @@ object DialogObject {
             simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_text_view
             )
-        descriptionTextView?.text = content
+        descriptionTextView?.text = contents
 
         val cancelImageButton =
             simpleTextDialogObj?.findViewById<AppCompatImageButton>(

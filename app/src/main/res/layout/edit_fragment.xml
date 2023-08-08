@@ -60,7 +60,34 @@
             android:descendantFocusability="beforeDescendants"
             android:focusableInTouchMode="true"
             android:background="@color/white"
+            android:layout_above="@+id/edit_tool_bar_linear_layout"
+            android:weightSum="1"
             >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/edit_list_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:textIsSelectable="true"
+                android:scrollbars="vertical"
+                android:fadeScrollbars="false"
+                android:background="@color/fannel_icon_color"
+                android:layout_weight="1"
+                />
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/edit_list_search_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:imeOptions="actionDone"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:background="#00000000"
+                android:hint="search"
+                android:textSize="20sp"
+                android:autofillHints=""
+                android:inputType="text"
+                />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/edit_tool_bar_linear_layout"
