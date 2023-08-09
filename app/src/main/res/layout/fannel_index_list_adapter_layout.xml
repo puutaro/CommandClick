@@ -21,7 +21,7 @@
             android:id="@+id/fannel_index_list_adapter_contents"
             android:layout_width="60dp"
             android:layout_height="70dp"
-            android:layout_gravity="left"
+            android:layout_gravity="center_vertical"
             android:paddingStart="5dp"
             android:paddingEnd="5dp"
             android:fontFamily="serif"
