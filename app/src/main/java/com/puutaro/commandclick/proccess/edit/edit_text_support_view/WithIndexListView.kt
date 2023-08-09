@@ -1,22 +1,21 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
-import android.widget.EditText
+import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -42,7 +41,6 @@ import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -64,18 +62,14 @@ class WithIndexListView(
     private val binding = editFragment.binding
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
-    private val noExtend = "NoExtend"
-    private val throughMark = "-"
     private var currentSetVariableMap: Map<String, String>? = mapOf()
     private var currentAppDirPath = String()
     private var currentScriptName = String()
     private val editListRecyclerView = binding.editListRecyclerView
     private val editListSearchEditText = binding.editListSearchEditText
-    private var filterDir = String()
-    private var filterPrefix = String()
-    private var filterSuffix = String()
-    private var fannelDirName = String()
-    private var fannelDirPath = String()
+    private var promptDialog: Dialog? = null
+    private var confirmDialog: Dialog? = null
+    private var confirmDialog2: Dialog? = null
     private var clickDirPath = String()
     private val clickDirName = "click"
     private val itemClickJsName = "itemClick.js"
@@ -128,7 +122,8 @@ class WithIndexListView(
             "${filterDir}/${sourceFannelDir}",
             "${targetDirectoryPath}/${targetFannelDir}"
         )
-        updateFileList(
+        listIndexListUpdateFileList(
+            editFragment,
             makeFileList()
         )
         Toast.makeText(
@@ -172,7 +167,8 @@ class WithIndexListView(
             "${sourceDirPath}/${sourceFannelDir}",
             "${filterDir}/${sourceFannelDir}"
         )
-        updateFileList(
+        listIndexListUpdateFileList(
+            editFragment,
             makeFileList()
         )
         Toast.makeText(
@@ -180,6 +176,61 @@ class WithIndexListView(
             "get file ok",
             Toast.LENGTH_LONG
         ).show()
+    }
+
+    companion object {
+        private val throughMark = "-"
+        private val noExtend = "NoExtend"
+
+        private var filterDir = String()
+        private var filterPrefix = String()
+        private var filterSuffix = String()
+        private var fannelDirName = String()
+        private var fannelDirPath = String()
+
+        fun makeFileList(): MutableList<String> {
+            val fileListSource = FileSystems.sortedFiles(
+                filterDir,
+            ).filter {
+                it.startsWith(filterPrefix)
+                        && judgeBySuffixForIndex(it, filterSuffix)
+                        && File("$filterDir/$it").isFile
+            }
+            if(
+                fileListSource.isEmpty()
+            ) return mutableListOf(throughMark)
+            return fileListSource.toMutableList()
+        }
+
+        fun listIndexListUpdateFileList(
+            editFragment: EditFragment,
+            updateList: List<String>,
+        ){
+            val editListRecyclerView = editFragment.binding.editListRecyclerView
+            val listIndexForEditAdapter =
+                editListRecyclerView.adapter as ListIndexForEditAdapter
+            listIndexForEditAdapter.listIndexList.clear()
+            listIndexForEditAdapter.listIndexList.addAll(updateList)
+            listIndexForEditAdapter.notifyDataSetChanged()
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(200)
+                editListRecyclerView.layoutManager?.scrollToPosition(
+                    listIndexForEditAdapter.itemCount - 1
+                )
+            }
+        }
+
+        private fun judgeBySuffixForIndex(
+            targetStr: String,
+            filterSuffix: String,
+        ): Boolean {
+            if(filterSuffix != noExtend) {
+                return filterSuffix.split("&").any {
+                    targetStr.endsWith(it)
+                }
+            }
+            return !Regex("\\..*$").containsMatchIn(targetStr)
+        }
     }
 
     var languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -273,12 +324,13 @@ class WithIndexListView(
             editListSearchEditText,
             readSharePreffernceMap
         )
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(100)
-            editListRecyclerView.layoutManager?.scrollToPosition(
-                listIndexForEditAdapter.itemCount - 1
-            )
-        }
+//        TODO remove to confirm normal scroll to bottom
+//        CoroutineScope(Dispatchers.Main).launch {
+//            delay(100)
+//            editListRecyclerView.layoutManager?.scrollToPosition(
+//                listIndexForEditAdapter.itemCount - 1
+//            )
+//        }
     }
 
     private fun invokeItemSetClickListenerForFileList() {
@@ -358,15 +410,10 @@ class WithIndexListView(
                         it.lowercase()
                     )
                 }
-                updateFileList(filteredUrlHistoryList)
-                val indexForEditAdapter = editListRecyclerView.adapter
-                    ?: return
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(100)
-                    editListRecyclerView.scrollToPosition(
-                        indexForEditAdapter.itemCount - 1
-                    )
-                }
+                listIndexListUpdateFileList(
+                    editFragment,
+                    filteredUrlHistoryList
+                )
             }
         })
     }
@@ -431,7 +478,6 @@ class WithIndexListView(
                     Toast.LENGTH_SHORT
                 ).show()
                 popup.show()
-                editListSearchEditText.setText(String())
             }
         }
     }
@@ -569,7 +615,8 @@ class WithIndexListView(
     ){
         when(menuName){
             preMenuType.sync.name -> {
-                updateFileList(
+                listIndexListUpdateFileList(
+                    editFragment,
                     makeFileList()
                 )
                 return
@@ -626,7 +673,8 @@ class WithIndexListView(
                 execRenameForAppDirAdmin(
                     selectedItem
                 )
-                updateFileList(
+                listIndexListUpdateFileList(
+                    editFragment,
                     makeFileList()
                 )
                 return
@@ -651,21 +699,30 @@ class WithIndexListView(
                     selectedItem,
                     String()
                 )
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.IO) {
-                        for (i in 0..3000) {
-                            delay(200)
-                            if(
-                                !terminalViewModel.onDialog
-                            ) break
-                        }
-                    }
-                    withContext(Dispatchers.Main){
-                        updateFileList(
-                            makeFileList()
-                        )
-                    }
-                }
+//                TODO delete scroll because of recycler view update speed depending on edge
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    withContext(Dispatchers.IO) {
+//                        for (i in 0..3000) {
+//                            delay(200)
+//                            if(
+//                                !terminalViewModel.onDialog
+//                            ) break
+//                        }
+//                    }
+//                    withContext(Dispatchers.Main){
+//                        listIndexListUpdateFileList(
+//                            editFragment,
+//                            makeFileList(),
+//                            false
+//                        )
+//                        delay(100)
+//                        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
+//                        editListRecyclerView.layoutManager?.scrollToPosition(
+//                            listIndexForEditAdapter.itemCount - 1
+//                        )
+//                    }
+//                }
+                return
             }
             preMenuType.editS.name -> {
                 if(
@@ -677,21 +734,23 @@ class WithIndexListView(
                     selectedItem,
                     "setting"
                 )
-                CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.IO) {
-                        for (i in 0..3000) {
-                            delay(200)
-                            if(
-                                !terminalViewModel.onDialog
-                            ) break
-                        }
-                    }
-                    withContext(Dispatchers.Main){
-                        updateFileList(
-                            makeFileList()
-                        )
-                    }
-                }
+//                TODO delete scroll because of recycler view update speed depending on edge
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    withContext(Dispatchers.IO) {
+//                        for (i in 0..3000) {
+//                            delay(200)
+//                            if(
+//                                !terminalViewModel.onDialog
+//                            ) break
+//                        }
+//                    }
+//                    withContext(Dispatchers.Main){
+//                        listIndexListUpdateFileList(
+//                            editFragment,
+//                            makeFileList()
+//                        )
+//                    }
+//                }
             }
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
@@ -708,158 +767,249 @@ class WithIndexListView(
     }
 
     private fun execAddAppDir(){
-        val context = editFragment.context
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Input create app directory name"
-            )
-            .setView(editText)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                val inputScriptFileName = editText.text.toString()
-                val jsFileSuffix = UsePath.JS_FILE_SUFFIX
-                val isJsSuffix = inputScriptFileName.endsWith(jsFileSuffix)
-                val scriptFileName = if (
-                    isJsSuffix
-                ) inputScriptFileName
-                else inputScriptFileName + jsFileSuffix
+        if(
+            context == null
+        ) return
 
-                CommandClickScriptVariable.makeAppDirAdminFile(
-                    UsePath.cmdclickAppDirAdminPath,
-                    scriptFileName
-                )
-                updateFileList(
-                    makeFileList()
-                )
-                val createAppDirName = if (
-                    isJsSuffix
-                ) {
-                    inputScriptFileName.removeSuffix(jsFileSuffix)
-                } else {
-                    inputScriptFileName
-                }
-                val createAppDirPath = "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
-                FileSystems.createDirs(
-                    createAppDirPath
-                )
-                FileSystems.createDirs(
-                    "${createAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+        promptDialog = Dialog(
+            context
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        promptDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.prompt_dialog_layout
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        val promptTitleTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_title
+            )
+        promptTitleTextView?.text = "Input create app directory name"
+        val promptMessageTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_message
+            )
+        promptMessageTextView?.isVisible = false
+        val promptEditText =
+            promptDialog?.findViewById<AppCompatEditText>(
+                com.puutaro.commandclick.R.id.prompt_dialog_input
+            )
+        val promptCancelButton =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+            )
+        promptCancelButton?.setOnClickListener {
+            promptDialog?.dismiss()
+        }
+        val promptOkButtonView =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_ok
+            )
+        promptOkButtonView?.setOnClickListener {
+            promptDialog?.dismiss()
+            val inputScriptFileName = promptEditText?.text.toString()
+            val jsFileSuffix = UsePath.JS_FILE_SUFFIX
+            val isJsSuffix = inputScriptFileName.endsWith(jsFileSuffix)
+            val scriptFileName = if (
+                isJsSuffix
+            ) inputScriptFileName
+            else inputScriptFileName + jsFileSuffix
+
+            CommandClickScriptVariable.makeAppDirAdminFile(
+                UsePath.cmdclickAppDirAdminPath,
+                scriptFileName
+            )
+            listIndexListUpdateFileList(
+                editFragment,
+                makeFileList()
+            )
+            val createAppDirName = if (
+                isJsSuffix
+            ) {
+                inputScriptFileName.removeSuffix(jsFileSuffix)
+            } else {
+                inputScriptFileName
+            }
+            val createAppDirPath = "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
+            FileSystems.createDirs(
+                createAppDirPath
+            )
+            FileSystems.createDirs(
+                "${createAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+            )
+        }
+        promptDialog?.setOnCancelListener {
+            promptDialog?.dismiss()
+        }
+        promptDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        promptDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        promptDialog?.show()
     }
 
     private fun execCopyAppDir(
         selectedItem: String
     ){
-        val context = editFragment.context
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-        editText.inputType = InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Input, destination App dir name"
+        if(
+            context == null
+        ) return
+        promptDialog = Dialog(
+            context
+        )
+        promptDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+        )
+        val promptTitleTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_title
             )
-            .setMessage("\tcurrent app dir name: ${selectedItem}")
-            .setView(editText)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                CopyAppDirEventForEdit.execCopyAppDir(
-                    editFragment,
-                    UsePath.cmdclickAppDirAdminPath,
-                    selectedItem,
-                    editText
-                )
-                updateFileList(
-                    makeFileList()
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+        promptTitleTextView?.text = "Input, destination App dir name"
+        val promptMessageTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_message
+            )
+        promptMessageTextView?.text = "current app dir name: ${selectedItem}"
+        val promptEditText =
+            promptDialog?.findViewById<AppCompatEditText>(
+                com.puutaro.commandclick.R.id.prompt_dialog_input
+            ) ?: return
+        val promptCancelButton =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+            )
+        promptCancelButton?.setOnClickListener {
+            promptDialog?.dismiss()
+        }
+        val promptOkButtonView =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_ok
+            )
+        promptOkButtonView?.setOnClickListener {
+            promptDialog?.dismiss()
+            CopyAppDirEventForEdit.execCopyAppDir(
+                editFragment,
+                UsePath.cmdclickAppDirAdminPath,
+                selectedItem,
+                promptEditText
+            )
+            listIndexListUpdateFileList(
+                editFragment,
+                makeFileList()
+            )
+        }
+        promptDialog?.setOnCancelListener {
+            promptDialog?.dismiss()
+        }
+        promptDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        promptDialog?.window?.setGravity(
+            Gravity.BOTTOM
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        promptDialog?.show()
     }
 
     private fun execRenameForAppDirAdmin(
         selectedItem: String,
     ){
-        val editTextForRenameAppDir = EditText(context)
+        if(
+            context == null
+        ) return
         val jsSuffix = UsePath.JS_FILE_SUFFIX
-        editTextForRenameAppDir.setText(
+        promptDialog = Dialog(
+            context
+        )
+        promptDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+        )
+        val promptTitleTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_title
+            )
+        promptTitleTextView?.text = "Rename app dir"
+        val promptMessageTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_message
+            )
+        promptMessageTextView?.isVisible = false
+        val promptEditText =
+            promptDialog?.findViewById<AppCompatEditText>(
+                com.puutaro.commandclick.R.id.prompt_dialog_input
+            )
+        promptEditText?.setText(
             selectedItem.removeSuffix(jsSuffix)
         )
-        editTextForRenameAppDir.inputType = InputType.TYPE_CLASS_TEXT
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Rename app dir"
+        val promptCancelButton =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_cancel
             )
-            .setView(editTextForRenameAppDir)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                if(
-                    editTextForRenameAppDir.text.isNullOrEmpty()
-                ) {
-                    Toast.makeText(
-                        context,
-                        "No type item name",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@OnClickListener
-                }
-                val renamedAppDirNameSource = editTextForRenameAppDir.text.toString()
-                val renamedAppDirName = if(
-                    renamedAppDirNameSource.endsWith(jsSuffix)
-                ) renamedAppDirNameSource
-                else "${renamedAppDirNameSource}${jsSuffix}"
-                if(
-                    selectedItem == renamedAppDirName
-                ) return@OnClickListener
-                CommandClickScriptVariable.makeAppDirAdminFile(
-                    UsePath.cmdclickAppDirAdminPath,
-                    renamedAppDirName
-                )
-                FileSystems.removeFiles(
-                    UsePath.cmdclickAppDirAdminPath,
-                    selectedItem
-                )
-                val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                val beforeMoveDirPath = cmdclickAppDirPath + '/' +
-                        selectedItem.removeSuffix(
-                            UsePath.JS_FILE_SUFFIX
-                        )
-                val afterMoveDirPath = cmdclickAppDirPath + '/' +
-                        renamedAppDirName.removeSuffix(
-                            UsePath.JS_FILE_SUFFIX
-                        )
-                FileSystems.moveDirectory(
-                    beforeMoveDirPath,
-                    afterMoveDirPath,
-                )
-                updateFileList(
-                    makeFileList()
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+        promptCancelButton?.setOnClickListener {
+            promptDialog?.dismiss()
+        }
+        val promptOkButtonView =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_ok
+            )
+        promptOkButtonView?.setOnClickListener {
+            promptDialog?.dismiss()
+            val inputEditable = promptEditText?.text
+            if(
+                inputEditable.isNullOrEmpty()
+            ) {
+                Toast.makeText(
+                    context,
+                    "No type item name",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            val renamedAppDirNameSource = inputEditable.toString()
+            val renamedAppDirName = if(
+                renamedAppDirNameSource.endsWith(jsSuffix)
+            ) renamedAppDirNameSource
+            else "${renamedAppDirNameSource}${jsSuffix}"
+            if(
+                selectedItem == renamedAppDirName
+            ) return@setOnClickListener
+            CommandClickScriptVariable.makeAppDirAdminFile(
+                UsePath.cmdclickAppDirAdminPath,
+                renamedAppDirName
+            )
+            FileSystems.removeFiles(
+                UsePath.cmdclickAppDirAdminPath,
+                selectedItem
+            )
+            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+            val beforeMoveDirPath = cmdclickAppDirPath + '/' +
+                    selectedItem.removeSuffix(
+                        UsePath.JS_FILE_SUFFIX
+                    )
+            val afterMoveDirPath = cmdclickAppDirPath + '/' +
+                    renamedAppDirName.removeSuffix(
+                        UsePath.JS_FILE_SUFFIX
+                    )
+            FileSystems.moveDirectory(
+                beforeMoveDirPath,
+                afterMoveDirPath,
+            )
+            listIndexListUpdateFileList(
+                editFragment,
+                makeFileList()
+            )
+        }
+        promptDialog?.setOnCancelListener {
+            promptDialog?.dismiss()
+        }
+        promptDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        promptDialog?.window?.setGravity(
+            Gravity.BOTTOM
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        promptDialog?.show()
     }
 
     private fun execShowDescription(
@@ -931,47 +1081,82 @@ class WithIndexListView(
     }
 
     private fun execAddItem(){
-        val editText = EditText(context)
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Type item name"
+        if(
+            context == null
+        ) return
+        promptDialog = Dialog(
+            context
+        )
+        promptDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+        )
+        val promptTitleTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_title
             )
-            .setView(editText)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                if(
-                    editText.text.isNullOrEmpty()
-                ) {
-                    Toast.makeText(
-                        context,
-                        "No type item name",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return@OnClickListener
-                }
-                FileSystems.writeFile(
-                    filterDir,
-                    editText.text.toString(),
-                    String()
-                )
-                updateFileList(
-                    makeFileList()
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+        promptTitleTextView?.text = "Type item name"
+        val promptMessageTextView =
+            promptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_message
+            )
+        promptMessageTextView?.isVisible = false
+        val promptEditText =
+            promptDialog?.findViewById<AppCompatEditText>(
+                com.puutaro.commandclick.R.id.prompt_dialog_input
+            )
+        val promptCancelButton =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+            )
+        promptCancelButton?.setOnClickListener {
+            promptDialog?.dismiss()
+        }
+        val promptOkButtonView =
+            promptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_ok
+            )
+        promptOkButtonView?.setOnClickListener {
+            promptDialog?.dismiss()
+            val inputEditable = promptEditText?.text
+            if(
+                inputEditable.isNullOrEmpty()
+            ) {
+                Toast.makeText(
+                    context,
+                    "No type item name",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+            FileSystems.writeFile(
+                filterDir,
+                inputEditable.toString(),
+                String()
+            )
+            listIndexListUpdateFileList(
+                editFragment,
+                makeFileList()
+            )
+        }
+        promptDialog?.setOnCancelListener {
+            promptDialog?.dismiss()
+        }
+        promptDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        promptDialog?.window?.setGravity(
+            Gravity.BOTTOM
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        promptDialog?.show()
     }
 
     private fun execItemDelete(
         selectedItem: String,
     ){
+        if(
+            context == null
+        ) return
         if(
             selectedItem == throughMark
         ) return
@@ -981,78 +1166,135 @@ class WithIndexListView(
         ).readText()
         val displayContents = "\tpath: ${filterDir}/${selectedItem}" +
                 "\n---\n${scriptContents}"
-        val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
-            context,
-            displayContents
-        )
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Delete bellow contents, ok?"
-            )
-            .setView(linearLayoutForDialog)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                FileSystems.removeFiles(
-                    filterDir,
-                    selectedItem
-                )
-                val deleteFannelName =
-                    selectedItem
-                        .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                        .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-                val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
-                FileSystems.removeDir(
-                    "${filterDir}/${deleteFannelDir}"
-                )
-                updateFileList(
-                    makeFileList()
-                )
-                if(
-                    filterDir.removeSuffix("/")
-                    == UsePath.cmdclickAppDirAdminPath
-                ){
-                    val deleteAppDirName = selectedItem.removeSuffix(
-                        UsePath.JS_FILE_SUFFIX
-                    )
-                    val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                    val displayDeleteAppDirPath =
-                        "${
-                            UsePath.makeTermuxPathByReplace(
-                                cmdclickAppDirPath
-                            )}/${deleteAppDirName}"
-                    val alertDialogForAppDirAdmin = AlertDialog.Builder(context)
-                        .setTitle(
-                            "Delete bellow App dir, ok?"
-                        )
-                        .setMessage(
-                            "\tpath: ${displayDeleteAppDirPath}"
-                        )
-                        .setPositiveButton("OK", DialogInterface.OnClickListener {
-                                dialogForAppDirAdmin, whichForAppDirAdmin ->
-                            val deleteAppDirPath = "${cmdclickAppDirPath}/${deleteAppDirName}"
-                            FileSystems.removeDir(
-                                deleteAppDirPath
-                            )
-                        })
-                        .setNegativeButton("NO", null)
-                        .show()
-                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                        context?.getColor(R.color.black) as Int
-                    )
-                    alertDialogForAppDirAdmin.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                        context.getColor(R.color.black)
-                    )
 
+
+
+        confirmDialog = Dialog(
+            context
+        )
+        confirmDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.confirm_text_dialog
+        )
+        val confirmTitleTextView =
+            confirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_title
+            )
+        confirmTitleTextView?.text = "Delete bellow contents, ok?"
+        val confirmContentTextView =
+            confirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            )
+        confirmContentTextView?.text = displayContents
+        val confirmCancelButton =
+            confirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            confirmDialog?.dismiss()
+        }
+        val confirmOkButton =
+            confirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            confirmDialog?.dismiss()
+            FileSystems.removeFiles(
+                filterDir,
+                selectedItem
+            )
+            val deleteFannelName =
+                selectedItem
+                    .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                    .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
+            val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
+            FileSystems.removeDir(
+                "${filterDir}/${deleteFannelDir}"
+            )
+            listIndexListUpdateFileList(
+                editFragment,
+                makeFileList()
+            )
+            if (
+                filterDir.removeSuffix("/")
+                == UsePath.cmdclickAppDirAdminPath
+            ) {
+                val deleteAppDirName = selectedItem.removeSuffix(
+                    UsePath.JS_FILE_SUFFIX
+                )
+                val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+                val displayDeleteAppDirPath =
+                    "${
+                        UsePath.makeTermuxPathByReplace(
+                            cmdclickAppDirPath
+                        )
+                    }/${deleteAppDirName}"
+
+
+                confirmDialog2 = Dialog(
+                    context
+                )
+                confirmDialog2?.setContentView(
+                    com.puutaro.commandclick.R.layout.confirm_text_dialog
+                )
+                val confirmTitleForDeleteAppDirTextView =
+                    confirmDialog2?.findViewById<AppCompatTextView>(
+                        com.puutaro.commandclick.R.id.confirm_text_dialog_title
+                    )
+                confirmTitleForDeleteAppDirTextView?.text =
+                    "Delete bellow App dir, ok?"
+                val confirmContentTextViewForDeleteAppDir =
+                    confirmDialog2?.findViewById<AppCompatTextView>(
+                        com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+                    )
+                confirmContentTextViewForDeleteAppDir?.text =
+                    "\tpath: ${displayDeleteAppDirPath}"
+                val confirmCancelButtonForDeleteAppDir =
+                    confirmDialog2?.findViewById<AppCompatImageButton>(
+                        com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+                    )
+                confirmCancelButtonForDeleteAppDir?.setOnClickListener {
+                    confirmDialog2?.dismiss()
                 }
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+                val confirmOkButtonForDeleteAppDir =
+                    confirmDialog2?.findViewById<AppCompatImageButton>(
+                        com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+                    )
+                confirmOkButtonForDeleteAppDir?.setOnClickListener {
+                    confirmDialog2?.dismiss()
+                    val deleteAppDirPath =
+                        "${cmdclickAppDirPath}/${deleteAppDirName}"
+                    FileSystems.removeDir(
+                        deleteAppDirPath
+                    )
+                    listIndexListUpdateFileList(
+                        editFragment,
+                        makeFileList()
+                    )
+                }
+                confirmDialog2?.setOnCancelListener {
+                    confirmDialog2?.dismiss()
+                }
+                confirmDialog2?.window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                confirmDialog2?.window?.setGravity(
+                    Gravity.BOTTOM
+                )
+                confirmDialog2?.show()
+            }
+        }
+        confirmDialog?.setOnCancelListener {
+            confirmDialog?.dismiss()
+        }
+        confirmDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        confirmDialog?.window?.setGravity(
+            Gravity.BOTTOM
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
+        confirmDialog?.show()
     }
 
     private fun execItemCat(
@@ -1067,50 +1309,11 @@ class WithIndexListView(
         ).readText()
         val displayContents = "\tpath: ${filterDir}/${selectedItem}" +
                 "\n---\n${scriptContents}"
-        val linearLayoutForDialog = LinearLayoutAdderForDialog.add(
+        DialogObject.simpleTextShow(
             context,
+            "Show contents",
             displayContents
         )
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "Show contents"
-            )
-            .setView(linearLayoutForDialog)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
-        )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-    }
-    private fun makeFileList(): MutableList<String> {
-        val fileListSource = FileSystems.sortedFiles(
-            filterDir,
-        ).filter {
-            it.startsWith(filterPrefix)
-                    && judgeBySuffixForIndex(it, filterSuffix)
-                    && File("$filterDir/$it").isFile
-        }
-        if(
-            fileListSource.isEmpty()
-        ) return mutableListOf(throughMark)
-        return fileListSource.toMutableList()
-    }
-
-    private fun judgeBySuffixForIndex(
-        targetStr: String,
-        filterSuffix: String,
-    ): Boolean {
-        if(filterSuffix != noExtend) {
-            return filterSuffix.split("&").any {
-                targetStr.endsWith(it)
-            }
-        }
-        return !Regex("\\..*$").containsMatchIn(targetStr)
     }
 
     private fun getIndexListMap(
@@ -1181,18 +1384,10 @@ class WithIndexListView(
             filterDir,
             selectedItem
         )
-        updateFileList(
+        listIndexListUpdateFileList(
+            editFragment,
            makeFileList()
         )
-    }
-    private fun updateFileList(
-        updateList: List<String>
-    ){
-        val listIndexForEditAdapter =
-            editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.listIndexList.clear()
-        listIndexForEditAdapter.listIndexList.addAll(updateList)
-        listIndexForEditAdapter.notifyDataSetChanged()
     }
 }
 

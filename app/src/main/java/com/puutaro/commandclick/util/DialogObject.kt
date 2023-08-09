@@ -38,7 +38,10 @@ object DialogObject {
             simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_text_view
             )
-        descriptionTextView?.text = contents
+        if(
+            contents.isNotEmpty()
+        ) descriptionTextView?.text = contents
+        else descriptionTextView?.isVisible = false
 
         val cancelImageButton =
             simpleTextDialogObj?.findViewById<AppCompatImageButton>(

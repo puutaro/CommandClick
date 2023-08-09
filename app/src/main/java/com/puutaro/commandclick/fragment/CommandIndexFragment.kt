@@ -211,8 +211,6 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        installFannelDialog = FannelInstallDialog.create(this)
-
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
             this,

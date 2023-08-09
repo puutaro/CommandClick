@@ -13,19 +13,18 @@ import android.view.ViewGroup
 import android.webkit.*
 import android.widget.EditText
 import android.widget.ProgressBar
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ConfirmDialogForDelete
-import com.puutaro.commandclick.util.DialogObject
-import com.puutaro.commandclick.util.LinearLayoutAdderForDialog
 
 
 object WebChromeClientSetter {
 
     private var alertDialogObj: Dialog? = null
     private var confirmDialogObj: Dialog? = null
+    private var promptDialogObj: Dialog? = null
 
     fun set(
         terminalFragment: TerminalFragment,
@@ -194,37 +193,67 @@ object WebChromeClientSetter {
                 result: JsPromptResult
             ): Boolean {
                 val context = terminalFragment.context
-                val input = EditText(context)
-                input.inputType = InputType.TYPE_CLASS_TEXT
-                input.setText(defaultValue)
-                val alertDialog = AlertDialog.Builder(context)
-                    .setTitle(
-                        makeTitle(
-                            view,
-                            url
-                        )
+                    ?: return true
+
+
+                promptDialogObj = Dialog(
+                    context
+                )
+                promptDialogObj?.setContentView(
+                    com.puutaro.commandclick.R.layout.prompt_dialog_layout
+                )
+                val promptTitleTextView =
+                    promptDialogObj?.findViewById<AppCompatTextView>(
+                        com.puutaro.commandclick.R.id.prompt_dialog_title
                     )
-                    .setView(input)
-                    .setMessage(message)
-                    .setPositiveButton(
-                        R.string.ok
-                    ) { dialog, which -> result.confirm(input.text.toString()) }
-                    .setNegativeButton(
-                        R.string.cancel
-                    ) { dialog, which -> result.cancel() }
-                    .setOnCancelListener(object : DialogInterface.OnCancelListener {
-                        override fun onCancel(dialog: DialogInterface?) {
-                            result.cancel()
-                        }
-                    })
-                    .show()
-                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-                    context?.getColor(R.color.black) as Int
+                promptTitleTextView?.text =
+                    makeTitle(
+                        view,
+                        url
+                    )
+                val promptMessageTextView =
+                    promptDialogObj?.findViewById<AppCompatTextView>(
+                        com.puutaro.commandclick.R.id.prompt_dialog_message
+                    )
+                promptMessageTextView?.text = message
+                val promptEditText =
+                    promptDialogObj?.findViewById<AppCompatEditText>(
+                        com.puutaro.commandclick.R.id.prompt_dialog_input
+                    )
+                val promptCancelButton =
+                    promptDialogObj?.findViewById<AppCompatImageButton>(
+                        com.puutaro.commandclick.R.id.prompt_dialog_cancel
+                    )
+                promptCancelButton?.setOnClickListener {
+                    promptDialogObj?.dismiss()
+                    result.cancel()
+                }
+                val promptOkButtonView =
+                    promptDialogObj?.findViewById<AppCompatImageButton>(
+                        com.puutaro.commandclick.R.id.prompt_dialog_ok
+                    )
+                promptOkButtonView?.setOnClickListener {
+                    promptDialogObj?.dismiss()
+                    val inputEditable = promptEditText?.text
+                    if(
+                        inputEditable.isNullOrEmpty()
+                    ) result.cancel()
+                    else result.confirm(
+                        inputEditable.toString()
+                    )
+                }
+                promptDialogObj?.setOnCancelListener {
+                    promptDialogObj?.dismiss()
+                    result.cancel()
+                }
+                promptDialogObj?.window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
                 )
-                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-                    context.getColor(R.color.black)
+                promptDialogObj?.window?.setGravity(
+                    Gravity.BOTTOM
                 )
-                alertDialog.window?.setGravity(Gravity.BOTTOM)
+                promptDialogObj?.show()
                 return true
             }
         }

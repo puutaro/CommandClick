@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
+import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.*
 
 
@@ -86,7 +86,7 @@ object FannelNameClickListenerSetter {
                 if (validateErrMessage.isNotEmpty()) {
                     val shellScriptPath =
                         "${currentAppDirPath}/${selectedShellFileName}"
-                    VaridateionErrDialog.show(
+                    VariationErrDialog.show(
                         cmdIndexCommandIndexFragment,
                         shellScriptPath,
                         validateErrMessage

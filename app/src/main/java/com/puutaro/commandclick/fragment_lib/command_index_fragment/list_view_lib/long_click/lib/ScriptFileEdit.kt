@@ -6,7 +6,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
+import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -35,7 +35,7 @@ object ScriptFileEdit {
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
-            VaridateionErrDialog.show(
+            VariationErrDialog.show(
                 cmdIndexCommandIndexFragment,
                 shellScriptPath,
                 validateErrMessage

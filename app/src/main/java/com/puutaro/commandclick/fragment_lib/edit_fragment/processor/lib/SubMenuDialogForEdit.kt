@@ -16,7 +16,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.lib.VaridateionErrDialog
+import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -149,7 +149,7 @@ object SubMenuDialogForEdit {
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${configDirPath}/${configShellName}"
-            VaridateionErrDialog.show(
+            VariationErrDialog.show(
                 editFragment,
                 shellScriptPath,
                 validateErrMessage

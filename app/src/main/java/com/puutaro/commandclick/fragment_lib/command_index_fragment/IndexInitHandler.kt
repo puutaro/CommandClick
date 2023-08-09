@@ -94,6 +94,7 @@ object IndexInitHandler {
                 currentAppDirPath,
             )
         )
+
         CoroutineScope(Dispatchers.IO).launch {
             StartFileMaker.makeForConfig(
                 cmdIndexFragment

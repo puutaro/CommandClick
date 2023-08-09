@@ -70,7 +70,6 @@
                 android:textIsSelectable="true"
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
-                android:background="@color/fannel_icon_color"
                 android:layout_weight="1"
                 />
             <androidx.appcompat.widget.AppCompatEditText

@@ -1,16 +1,17 @@
 package com.puutaro.commandclick.util
 
-import android.R
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ShortcutInfo
 import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
-import android.text.InputType
 import android.view.Gravity
-import android.widget.EditText
+import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 
@@ -19,6 +20,7 @@ class ShortCutManager(
     private val activity: MainActivity,
 ) {
     val context = activity.applicationContext
+    var shortcutNamePromptDialog: Dialog? = null
 
         fun createShortCut() {
 
@@ -87,29 +89,60 @@ class ShortCutManager(
     private fun createShortcutDialog(
         execIntent: Intent
     ){
-        val editText = EditText(activity)
-        editText.inputType = InputType.TYPE_CLASS_TEXT
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(
-                "Input shortcut label"
+        shortcutNamePromptDialog = Dialog(
+            activity
+        )
+        shortcutNamePromptDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+        )
+        val promptTitleTextView =
+            shortcutNamePromptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_title
             )
-            .setView(editText)
-            .setPositiveButton("OK", DialogInterface.OnClickListener { dialog, which ->
-                val inputLabelName = editText.text.toString()
-                execCreateShortcut(
-                    execIntent,
-                    inputLabelName
-                )
-            })
-            .setNegativeButton("NO", null)
-            .show()
-        alertDialog.getWindow()?.setGravity(Gravity.BOTTOM)
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(R.color.black)
-        );
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            activity.getColor(R.color.black)
-        );
+        promptTitleTextView?.text = "Input shortcut label"
+        val promptMessageTextView =
+            shortcutNamePromptDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.prompt_dialog_message
+            )
+        promptMessageTextView?.isVisible = false
+        val promptEditText =
+            shortcutNamePromptDialog?.findViewById<AppCompatEditText>(
+                com.puutaro.commandclick.R.id.prompt_dialog_input
+            )
+        val promptCancelButton =
+            shortcutNamePromptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+            )
+        promptCancelButton?.setOnClickListener {
+            shortcutNamePromptDialog?.dismiss()
+        }
+        val promptOkButtonView =
+            shortcutNamePromptDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.prompt_dialog_ok
+            )
+        promptOkButtonView?.setOnClickListener {
+            shortcutNamePromptDialog?.dismiss()
+            val shortcutNameEditable = promptEditText?.text
+            if(
+                shortcutNameEditable.isNullOrEmpty()
+            ) return@setOnClickListener
+            val inputLabelName = shortcutNameEditable.toString()
+            execCreateShortcut(
+                execIntent,
+                inputLabelName
+            )
+        }
+        shortcutNamePromptDialog?.setOnCancelListener {
+            shortcutNamePromptDialog?.dismiss()
+        }
+        shortcutNamePromptDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        shortcutNamePromptDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        shortcutNamePromptDialog?.show()
     }
 
 }

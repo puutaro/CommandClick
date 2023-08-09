@@ -30,10 +30,15 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchTo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.io.File
 
@@ -288,6 +293,19 @@ class EditFragment: Fragment() {
             this,
             shellScriptContentsList
         )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if(existIndexList){
+            CoroutineScope(Dispatchers.Main).launch {
+                delay(100)
+                WithIndexListView.listIndexListUpdateFileList(
+                    this@EditFragment,
+                    WithIndexListView.makeFileList()
+                )
+            }
+        }
     }
 
 
