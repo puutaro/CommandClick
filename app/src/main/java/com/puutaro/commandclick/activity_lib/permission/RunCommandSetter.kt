@@ -17,6 +17,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.util.DialogObject
 import com.termux.shared.termux.TermuxConstants
 
 object RunCommandSetter {
@@ -156,13 +157,10 @@ object RunCommandSetter {
     private fun startFragmentWithAlert(
         activity: MainActivity
     ){
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle("not exist run_command permission or termux app")
-            .setPositiveButton("OK", null)
-            .show()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
+        DialogObject.simpleTextShow(
+            activity,
+            "not exist run_command permission or termux app",
+            String()
         )
     }
 
