@@ -179,8 +179,8 @@ class WithIndexListView(
     }
 
     companion object {
-        private val throughMark = "-"
-        private val noExtend = "NoExtend"
+        private const val throughMark = "-"
+        private const val noExtend = "NoExtend"
 
         private var filterDir = String()
         private var filterPrefix = String()
@@ -244,13 +244,6 @@ class WithIndexListView(
 
     var settingSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-    ) as String
-
-    var commandSectionStart = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-    ) as String
-    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
-        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
 
     fun create(
