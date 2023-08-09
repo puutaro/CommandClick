@@ -20,7 +20,9 @@ object ExecSetTermSizeForCmdIndexFragment {
         val binding = cmdIndexFragment.binding
         val cmdindexInternetButton = binding.cmdindexInternetButton
         val cmdListSwipeToRefresh = binding.cmdListSwipeToRefresh
-        if(terminalViewModel.readlinesNum != ReadLines.SHORTH) {
+        if(
+            terminalViewModel.readlinesNum != ReadLines.SHORTH
+        ) {
             cmdListSwipeToRefresh.isVisible = true
             binding.cmdSearchEditText.setText("")
             cmdindexInternetButton.setImageResource(
@@ -29,7 +31,8 @@ object ExecSetTermSizeForCmdIndexFragment {
             context?.let {
                 cmdindexInternetButton.imageTintList =
                     it.getColorStateList(R.color.terminal_color)
-                cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.icon_selected_color)
+                cmdindexInternetButton.backgroundTintList =
+                    it.getColorStateList(R.color.icon_selected_color)
             }
         } else {
             cmdListSwipeToRefresh.isVisible = false
@@ -37,9 +40,10 @@ object ExecSetTermSizeForCmdIndexFragment {
                 SearchSwichImage.WEB.image
             )
             context?.let {
-                cmdindexInternetButton.imageTintList = it.getColorStateList(R.color.terminal_color)
-                cmdindexInternetButton.backgroundTintList = it.getColorStateList(R.color.icon_selected_color);
-                (it.getColor(R.color.white))
+                cmdindexInternetButton.imageTintList =
+                    it.getColorStateList(R.color.terminal_color)
+                cmdindexInternetButton.backgroundTintList =
+                    it.getColorStateList(R.color.icon_selected_color)
             }
         }
         cmdIndexFragment.WebSearchSwitch = true

@@ -169,8 +169,12 @@ class CommandIndexFragment: Fragment() {
         val cmdindexInternetButton = binding.cmdindexInternetButton
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
-            if(!this.isVisible) return@setEventListener
-            if(terminalViewModel.onDialog) return@setEventListener
+            if(
+                !this.isVisible
+            ) return@setEventListener
+            if(
+                terminalViewModel.onDialog
+            ) return@setEventListener
             val enableInternetButton = (
                     !isOpen
                     || terminalViewModel.readlinesNum != ReadLines.SHORTH
@@ -199,7 +203,8 @@ class CommandIndexFragment: Fragment() {
                 this.isVisible,
                 this.WebSearchSwitch
             )
-            if(!isOpen
+            if(
+                !isOpen
                 && binding.cmdListSwipeToRefresh.isVisible
             ){
                 CoroutineScope(Dispatchers.Main).launch {

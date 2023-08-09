@@ -175,7 +175,8 @@ class ToolBarSettingButtonControl(
         menuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
-            val menuListAdapter = menuListView.adapter as MenuListAdapter
+            val menuListAdapter =
+                menuListView.adapter as MenuListAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnums.ADD.itemName -> {
                     AddScriptHandler(

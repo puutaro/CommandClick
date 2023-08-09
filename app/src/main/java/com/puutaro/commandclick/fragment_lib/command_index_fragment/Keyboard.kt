@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import androidx.core.view.isVisible
+import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarWidgetWeightForLinearLayout
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object KeyboardForCmdIndex {
@@ -32,10 +35,11 @@ object KeyboardForCmdIndex {
 
     fun ajustCmdIndexFragmentWhenTermLong(
         isOpen: Boolean,
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
     ){
-        val binding = cmdIndexCommandIndexFragment.binding
-        val context = cmdIndexCommandIndexFragment.context
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val binding = cmdIndexFragment.binding
+        val context = cmdIndexFragment.context
         val cmdIndexSwipToRefreshLayout = binding.cmdListSwipeToRefresh
         val cmdIndexHistory = binding.cmdindexHistoryButton
         val cmdIndexSetting = binding.cmdindexSettingButton
@@ -58,9 +62,10 @@ object KeyboardForCmdIndex {
         cmdIndexHistory.layoutParams = linearLayoutParamForButtonWideWeight
         cmdIndexSetting.layoutParams = linearLayoutParamForButtonWideWeight
         cmdSearchEditText.layoutParams = linearLayoutParamShrinkForSearchTextShrinkWeight
-        if(!cmdIndexCommandIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
+        if(!cmdIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
         cmdSearchEditText.clearFocus()
-        cmdIndexSwipToRefreshLayout.isVisible = true
+        cmdIndexSwipToRefreshLayout.isVisible =
+            terminalViewModel.readlinesNum == ReadLines.SHORTH
         val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE
