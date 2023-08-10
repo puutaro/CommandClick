@@ -57,9 +57,10 @@ Table of Contents
     * [Startup script](#startup-script)
   * [Internet Button exec script](#internet-button-exec-script)
   * [Button exec script](#button-exec-script)
-  * [Generally TroubleShooting](#generally-troubleshooting)  
-  * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
-  * [CommandClick repository](#commandclick-repository)
+* [Developer page](#developer-page)
+* [CommandClick repository](#commandclick-repository)
+* [Generally TroubleShooting](#generally-troubleshooting)
+* [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 
 
@@ -102,13 +103,14 @@ Click toolbar right setting button, and terminal size change.
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
 At the same time, if you installed code editor, edit new file.
 
+More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+
 
 #### Run
 
 Run script by click list item in index mode or play button edit mode (editExecute variable is `Always`)
 Or run javascript file.
 
-detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
 #### Edit
 
@@ -295,6 +297,26 @@ This script is executed when history buton click or long click, if you select  `
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
 
 
+### Developer page
+
+`CommandClick` is powered by javascript mainly. For that, This has many javascript interface and option.
+These enforce browser feature like addon. If you had made nice script, `Commandclick` is more suitable browser for you. 
+I mean, `CommandClick` is customize browser.
+And, `CommandClick` is multi application. Beyond addon field, `CommandClick` is multiple standalone application(I call `fannel`).  
+I mean, `CommandClick` is low code tool. You can make andorid application by less effort.  
+Welcome to the world that expands depending on you [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+
+
+### Commandclick-repository
+
+CommandClick's fannel repository
+
+`fannel` is ComamndClick using script (javascript, and shellscript)
+For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
+  
+[link](https://github.com/puutaro/commandclick-repository)  
+
+
 
 ### Generally TroubleShooting  
 
@@ -317,18 +339,9 @@ Crashes easily when memory is low
 
 
 
+
 ### Ubuntu debian or widnows version
 
 Reference to [url](https://github.com/puutaro/cmdclick)
-
-
-### Commandclick-repository
-
-CommandClick's fannel repository
-
-`fannel` is ComamndClick using script (javascript, and shellscript)
-For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
-  
-[link](https://github.com/puutaro/commandclick-repository)  
 
 
