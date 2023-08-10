@@ -53,7 +53,6 @@ Table of Contents
     * [Terminal search](#terminal-search)
     * [Launch web menu](#launch-web-menu)
     * [Highlight search](#highlight-search)
-    * [Web search](#web-search)
   * [Auto exec script](#auto-exec-script)
     * [Startup script](#startup-script)
   * [Internet Button exec script](#internet-button-exec-script)
