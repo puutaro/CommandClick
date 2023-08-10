@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_but
 import android.app.Dialog
 import android.content.SharedPreferences
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -12,6 +13,7 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 
 class AddScriptHandler(
     private val cmdIndexFragment: CommandIndexFragment,
@@ -63,6 +65,10 @@ class AddScriptHandler(
         languageSelectDialog?.setOnCancelListener {
             languageSelectDialog?.dismiss()
         }
+        languageSelectDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         languageSelectDialog?.window?.setGravity(Gravity.BOTTOM)
         languageSelectDialog?.show()
     }
