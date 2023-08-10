@@ -69,7 +69,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
         ) ?: return
         if(
             title.isNotEmpty()
-        ) titleTextView.text = "Select bellow list"
+        ) titleTextView.text = title
         else titleTextView.isVisible = false
         val messageTextView = gridDialogObj?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.multi_select_grid_dialog_message
@@ -99,6 +99,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
         gridDialogObj?.setOnCancelListener {
             gridDialogObj?.dismiss()
             terminalViewModel.onDialog = false
+            returnValue = String()
         }
         gridDialogObj?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
