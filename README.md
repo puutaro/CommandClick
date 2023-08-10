@@ -309,22 +309,23 @@ Also whether click or long click torigger, due to `historySwitch` setting  (refe
 
 ### Developer page
 
+-> [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
+
 `CommandClick` is powered by javascript mainly. For that, This has many javascript interface and option.
 These enforce browser feature like addon. If you had made nice script, `Commandclick` is more suitable browser for you. 
 I mean, `CommandClick` is customize browser.
 And, `CommandClick` is multi application. Beyond addon field, `CommandClick` is multiple standalone application(I call `fannel`).  
 I mean, `CommandClick` is low code tool. You can make andorid application by less effort.  
-Welcome to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md) that expands depending on you.  
+Welcome to above developer page that expands depending on you.  
 
 
 ### Commandclick-repository
 
-CommandClick's fannel repository
+-> [CommandClick's fannel repository](https://github.com/puutaro/commandclick-repository)
 
 `fannel` is ComamndClick using script (javascript, and shellscript)
 For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
-  
-[link](https://github.com/puutaro/commandclick-repository)  
+
 
 
 
