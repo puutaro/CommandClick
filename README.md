@@ -83,7 +83,7 @@ Usage
 This mode is main mode. Top is `web terminal view`, down is `script name list`, bottom is toolbar.
 Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.
 
-![image](https://github.com/puutaro/CommandClick/assets/55217593/12ebcad4-b447-4c5f-ad4c-3ad1a685d606)
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/12ebcad4-b447-4c5f-ad4c-3ad1a685d606" width="600">  
 
 
 
@@ -183,8 +183,7 @@ Bellow, how to install `fannel`
 
 When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by left bottom sync button  and wait until `fannel` list update.   
   
-
-![image](https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca)
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca" width="600">  
 
 
 #### Config
