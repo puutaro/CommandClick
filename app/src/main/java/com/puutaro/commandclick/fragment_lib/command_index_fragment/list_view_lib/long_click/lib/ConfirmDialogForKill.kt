@@ -20,7 +20,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 object ConfirmDialogForKill {
 
 
-    private var addConfirmDialog: Dialog? = null
+    private var killConfirmDialog: Dialog? = null
 
     fun show(
         cmdIndexFragment: CommandIndexFragment,
@@ -45,28 +45,28 @@ object ConfirmDialogForKill {
         terminalViewModel.onDisplayUpdate = true
 
 
-        addConfirmDialog = Dialog(
+        killConfirmDialog = Dialog(
             context
         )
-        addConfirmDialog?.setContentView(
+        killConfirmDialog?.setContentView(
             com.puutaro.commandclick.R.layout.confirm_text_dialog
         )
         val confirmTitleTextView =
-            addConfirmDialog?.findViewById<AppCompatTextView>(
+            killConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
         confirmTitleTextView?.text =  "Kill bellow shell path process, ok?"
         val confirmContentTextView =
-            addConfirmDialog?.findViewById<AppCompatTextView>(
+            killConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
         confirmContentTextView?.text = "\tpath: ${shellScriptName}"
         val confirmCancelButton =
-            addConfirmDialog?.findViewById<AppCompatImageButton>(
+            killConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
-            addConfirmDialog?.dismiss()
+            killConfirmDialog?.dismiss()
         }
 
         setOkButton(
@@ -76,17 +76,17 @@ object ConfirmDialogForKill {
             currentMonitorFileName,
             cmdListView
         )
-        addConfirmDialog?.setOnCancelListener {
-            addConfirmDialog?.dismiss()
+        killConfirmDialog?.setOnCancelListener {
+            killConfirmDialog?.dismiss()
         }
-        addConfirmDialog?.window?.setLayout(
+        killConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        addConfirmDialog?.window?.setGravity(
+        killConfirmDialog?.window?.setGravity(
             Gravity.BOTTOM
         )
-        addConfirmDialog?.show()
+        killConfirmDialog?.show()
     }
 
     private fun setOkButton(
@@ -97,11 +97,11 @@ object ConfirmDialogForKill {
         cmdListView: RecyclerView
     ){
         val confirmOkButton =
-            addConfirmDialog?.findViewById<AppCompatImageButton>(
+            killConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
-            addConfirmDialog?.dismiss()
+            killConfirmDialog?.dismiss()
             val factExecCmd =
                 "ps aux | grep \"${shellScriptName}\" " +
                         " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "

@@ -1,11 +1,9 @@
 package com.puutaro.commandclick.activity_lib.permission
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
-import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.view.Gravity
 import android.view.ViewGroup
@@ -60,15 +58,10 @@ object RunCommandSetter {
         activity: MainActivity,
         title: String
     ){
-        val alertDialog = AlertDialog.Builder(activity)
-            .setTitle(title)
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            activity.getColor(android.R.color.black)
+        DialogObject.simpleTextShow(
+            activity,
+            title,
+            String()
         )
     }
 

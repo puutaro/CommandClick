@@ -1,21 +1,23 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
-import android.app.AlertDialog
+import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.graphics.Canvas
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.DragSortRecyclerAdapter
+import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
@@ -26,9 +28,8 @@ import java.io.File
 
 object DragSortListViewProducer {
 
-    private val dataset: MutableList<String> = mutableListOf()
-    private var alertDialog: AlertDialog? = null
-    private val dragSortButtonLabel = "DST"
+    private var dragSortDialogObj: Dialog? = null
+    private const val dragSortButtonLabel = "DST"
 
     fun make(
         editFragment: EditFragment,
@@ -70,74 +71,80 @@ object DragSortListViewProducer {
         dragSortListViewButtonView.setOnClickListener {
                 buttonView ->
             val buttonContext = buttonView.context
-            val dragSortList = ReadText(
-                parentDir,
-                listFileName
-            ).textToList().filter {
-                it.trim().isNotEmpty()
-            }
-            val dragSortListView = createListView(
-                buttonContext,
-                dragSortList
-            )
-            alertDialog = AlertDialog.Builder(
+            dragSortDialogObj = Dialog(
                 buttonContext
             )
-                .setTitle("Sort by drag, or remove by swipe")
-                .setView(dragSortListView)
-                .setPositiveButton("OK", DialogInterface.OnClickListener {
-                        dialog, which ->
+            dragSortDialogObj?.setContentView(
+                R.layout.drag_sort_dialog_layout
+            )
+            val titleTextView =
+                dragSortDialogObj?.findViewById<AppCompatTextView>(
+                    R.id.drag_sort_dialog_title
+                )
+            titleTextView?.text = "Sort by drag, or remove by swipe"
+            setDragSortRecyclerView(
+                currentFragment,
+                listContentsFilePath,
+            )
+            dragSortDialogObj?.setOnCancelListener {
+                dragSortDialogObj?.dismiss()
+            }
+            val cancelButton =
+                dragSortDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.drag_sort_dialog_cancel
+                )
+            cancelButton?.setOnClickListener {
+                dragSortDialogObj?.dismiss()
+            }
+            val okButton =
+                dragSortDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.drag_sort_dialog_ok
+                )
+            okButton?.setOnClickListener {
+                val dragSortRecyclerView = dragSortDialogObj?.findViewById<RecyclerView>(
+                    R.id.drag_sort_dialog_recycler_view
+                )
+                val dragSortAdapter =
+                    dragSortRecyclerView?.adapter as? DragSortRecyclerAdapter
+                dragSortDialogObj?.dismiss()
+                dragSortAdapter?.let {
                     FileSystems.writeFile(
                         parentDir,
                         listFileName,
-                        dataset.joinToString("\n")
+                        dragSortAdapter.dratSortList.joinToString("\n")
                     )
-                })
-                .setNegativeButton("NO", null)
-                .show()
-            alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
-                context?.getColor(android.R.color.black) as Int
-            )
-            alertDialog?.getButton(DialogInterface.BUTTON_NEGATIVE)?.setTextColor(
-                context?.getColor(android.R.color.black) as Int
-            )
-            alertDialog?.window?.setGravity(Gravity.BOTTOM)
-            alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    alertDialog?.dismiss()
                 }
-            })
-
+            }
+            dragSortDialogObj?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            dragSortDialogObj?.window?.setGravity(Gravity.BOTTOM)
+            dragSortDialogObj?.show()
         }
         return dragSortListViewButtonView
     }
 
-    private fun createListView(
-        context: Context,
-        dragSortList: List<String>,
-    ): RecyclerView {
-        val recyclerView = RecyclerView(context)
+    private fun setDragSortRecyclerView(
+        currentFragment: Fragment,
+        listContentsFilePath: String,
+    ) {
+        val context = currentFragment.context
+            ?: return
+        val dragSortList =
+            makeDragSortList(
+                listContentsFilePath
+            )
+        val recyclerView = dragSortDialogObj?.findViewById<RecyclerView>(
+            R.id.drag_sort_dialog_recycler_view
+        ) ?: return
         recyclerView.setHasFixedSize(true)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
+        val layoutManager: RecyclerView.LayoutManager
+            = PreLoadLayoutManager(context)
         recyclerView.layoutManager = layoutManager
-        dataset.clear()
-        dataset.addAll(dragSortList.toMutableList())
         val dragSortRecyclerAdapter = DragSortRecyclerAdapter(
-            dataset
+            dragSortList.toMutableList()
         )
-//        dragSortRecyclerAdapter.itemClickListener = object : DragSortRecyclerAdapter.OnItemClickListener{
-//            override fun onItemClick(holder: DragSortRecyclerAdapter.ViewHolder) {
-//                alertDialog?.dismiss()
-//                val _mesg = holder.textView.text
-//                val _position = dataset.indexOf(_mesg)
-//                Toast.makeText(
-//                    context,
-//                    "LongClick Pos=${_position} Mesg=\"${_mesg}\"",
-//                    Toast.LENGTH_LONG
-//                ).show()
-//            }
-//        }
-
         recyclerView.adapter = dragSortRecyclerAdapter
 
         val itemDecoration: ItemDecoration =
@@ -151,7 +158,22 @@ object DragSortListViewProducer {
             recyclerView,
             dragSortRecyclerAdapter,
         )
-        return recyclerView
+
+    }
+
+    private fun makeDragSortList(
+        listContentsFilePath: String,
+    ): List<String> {
+        val fileObj = File(listContentsFilePath)
+        val parentDir = fileObj.parent ?: String()
+        val listFileName = fileObj.name
+        FileSystems.createDirs(parentDir)
+        return ReadText(
+            parentDir,
+            listFileName
+        ).textToList().filter {
+            it.trim().isNotEmpty()
+        }
     }
 
     private fun setItemTouchHelper(
@@ -178,17 +200,6 @@ object DragSortListViewProducer {
                     actionState: Int,
                     isCurrentlyActive: Boolean
                 ) {
-                    when (isCurrentlyActive) {
-                        true -> viewHolder.itemView.setBackgroundColor(
-                            context.getColor(R.color.gray_out)
-                        )
-                        else -> {
-                            activeStateFinishedHandler(
-                                context,
-                                viewHolder
-                            )
-                        }
-                    }
                     super.onChildDraw(
                         c,
                         recyclerView,
@@ -198,6 +209,18 @@ object DragSortListViewProducer {
                         actionState,
                         isCurrentlyActive
                     )
+                    when (isCurrentlyActive) {
+                        true -> viewHolder.itemView.setBackgroundColor(
+                            context.getColor(R.color.gray_out)
+                        )
+                        else -> {
+                            activeStateFinishedHandler(
+                                context,
+                                viewHolder,
+                                dY,
+                            )
+                        }
+                    }
                 }
                 override fun onMove(
                     recyclerView: RecyclerView,
@@ -208,7 +231,7 @@ object DragSortListViewProducer {
                         moveTimes == 0
                     ) {
                         fromPos = viewHolder.bindingAdapterPosition
-                        insertItem = dataset[fromPos]
+                        insertItem = dragSortRecyclerAdapter.dratSortList[fromPos]
                     }
                     toPos = target.bindingAdapterPosition
                     moveTimes++
@@ -222,22 +245,26 @@ object DragSortListViewProducer {
                     if(
                         direction != ItemTouchHelper.LEFT
                     ) return
-                    val position = viewHolder.absoluteAdapterPosition
-                    dataset.removeAt(position)
+                    val position = viewHolder.layoutPosition
+                    dragSortRecyclerAdapter.dratSortList.removeAt(position)
                     dragSortRecyclerAdapter.notifyDataSetChanged()
-
                 }
+
 
                 private fun activeStateFinishedHandler(
                     context: Context,
                     viewHolder: RecyclerView.ViewHolder,
+                    dY: Float,
                 ){
                     viewHolder.itemView.setBackgroundColor(
                         context.getColor(R.color.white)
                     )
+                    if(
+                        -50 < dY && dY < 50
+                    ) return
                     if(moveTimes > 0){
-                        dataset.removeAt(fromPos)
-                        dataset.add(toPos, insertItem)
+                        dragSortRecyclerAdapter.dratSortList.removeAt(fromPos)
+                        dragSortRecyclerAdapter.dratSortList.add(toPos, insertItem)
                     }
                     moveTimes = 0
                     dragSortRecyclerAdapter.notifyDataSetChanged()

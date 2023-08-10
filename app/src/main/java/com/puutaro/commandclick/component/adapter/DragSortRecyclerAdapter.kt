@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class DragSortRecyclerAdapter(
-    private val iNames: List<String>,
+    val dratSortList: MutableList<String>
 ) :
     RecyclerView.Adapter<DragSortRecyclerAdapter.ViewHolder>() {
     // Provide a reference to the views for each data item
@@ -62,12 +62,12 @@ class DragSortRecyclerAdapter(
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 //        holder.imageView.setImageResource(iImages[position])
-        holder.textView.text = iNames[position]
+        holder.textView.text = dratSortList[position]
 //        holder?.emailView.text = iEmails[position]
     }
 
     // Return the size of your dataset (invoked by the layout manager)
     override fun getItemCount(): Int {
-        return iNames.size
+        return dratSortList.size
     }
 }
