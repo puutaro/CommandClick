@@ -169,12 +169,20 @@ You can create shortcut for current `App directory` or `script` in only `index m
 
 #### Install fannel
 
+`fannel` is bellow meaning  
+
+>  fannel is ComamndClick using script (javascript, and shellscript)
+> For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application fannel.
+ [detail](https://github.com/puutaro/commandclick-repository#desire) 
+
+Bellow, how to install `fannel`  
+
 1. long press right bottom setting button  
 2. click `install_fannel`   
 3. You can install `fannel` by clicking.   
 
-When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by long press and "sync ok" and wait until "sync ok" toast.   
-	- `fannel` [detail](https://github.com/puutaro/commandclick-repository#desire)  
+When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by left bottom sync button  and wait until `fannel` list update.   
+  
 	  
 ![image](https://user-images.githubusercontent.com/55217593/226502372-ab8ad71e-bddb-4b72-8e9e-9bda2e9aff09.png)   
 
