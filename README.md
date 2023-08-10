@@ -103,7 +103,7 @@ Click toolbar right setting button, and terminal size change.
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
 At the same time, if you installed code editor, edit new file.
 
-More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
 
 #### Run
@@ -182,7 +182,8 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 #### Config
 
 You can setting `CommandClick` Configration
-- detail setting reference [Add](#add)
+- detail setting reference [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+
 
 
 #### Termux Setting
@@ -280,7 +281,8 @@ When you look website, highlight text and click internet button..
 
 #### Startup script
 1. This script is automaticaly executed when `index mode` startup.
-But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add](#add)).
+But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+).
 
 2. Override `config setting variable`, if you are change default value with your set value.
 
@@ -294,7 +296,8 @@ This script is executed, click when internet buton is grey globle mark and long 
 ### Button exec script
 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
-Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add](#add)).
+Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+).
 
 
 ### Developer page
@@ -304,7 +307,7 @@ These enforce browser feature like addon. If you had made nice script, `Commandc
 I mean, `CommandClick` is customize browser.
 And, `CommandClick` is multi application. Beyond addon field, `CommandClick` is multiple standalone application(I call `fannel`).  
 I mean, `CommandClick` is low code tool. You can make andorid application by less effort.  
-Welcome to the world that expands depending on you [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+Welcome to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md) that expands depending on you.  
 
 
 ### Commandclick-repository
