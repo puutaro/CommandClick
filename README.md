@@ -183,8 +183,8 @@ Bellow, how to install `fannel`
 
 When you wont to sync [git repository](https://github.com/puutaro/commandclick-repository), `sync` by left bottom sync button  and wait until `fannel` list update.   
   
-	  
-![image](https://user-images.githubusercontent.com/55217593/226502372-ab8ad71e-bddb-4b72-8e9e-9bda2e9aff09.png)   
+
+![image](https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca)
 
 
 #### Config
