@@ -50,6 +50,11 @@ Pros
 ----
 
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
+[![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
+![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
+![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
+<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 - Current web browser mainly interact with web. But, `CommandClick` interact with not only web but also android os. Threfore, This has wide spread usage  
 - Current web browser mainly has tab feature. But `CommandClick`'core is  hisotry search. Threafore, you easly restore, load, and check my history.
 - Current web browser support normal javascript. But `CommandClick` enforce javascript, and lead you to more wide spread usage.
