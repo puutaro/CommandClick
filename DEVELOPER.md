@@ -12,29 +12,28 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Usage](#usage)
-  * [Add](#add)
-  * [Edit execute once](#edit-execute-once)
-  * [Edit execute always](#edit-execute-always)
-  * [Import library](#import-library)
-     * [Local path import](#local-path-import)
-     * [Assets import](#assets-import)
-     * [WEB import](#web-import)
-  * [Url command](#url-command)
-  * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
-  * [File api](#file-api)
-  * [JavaScript interface](#javascript-interface)
-  * [Javascript pre order word](#javascript-pre-order-word)
-  * [Include Javascript Library](#include-javascript-library)
-  * [Include css Library](#include-css-library)
-  * [Html tag output](#html-tag-output)
-  * [Html tag output](#html-tag-output)
-  * [Javascript TroubleShooting](#javascript-troubleshooting)
-  * [CommandClick repository](#commandclick-repository)
+* [Add](#add)
+* [Edit execute once](#edit-execute-once)
+* [Edit execute always](#edit-execute-always)
+* [Import library](#import-library)
+	* [Local path import](#local-path-import)
+	* [Assets import](#assets-import)
+	* [WEB import](#web-import)
+* [Url command](#url-command)
+* [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
+* [File api](#file-api)
+* [JavaScript interface](#javascript-interface)
+* [Javascript pre order word](#javascript-pre-order-word)
+* [Include Javascript Library](#include-javascript-library)
+* [Include css Library](#include-css-library)
+* [Html tag output](#html-tag-output)
+* [Html tag output](#html-tag-output)
+* [Javascript TroubleShooting](#javascript-troubleshooting)
+* [CommandClick repository](#commandclick-repository)
 
 
 
-#### Add
+### Add
 
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
 At the same time, if you installed code editor, edit new file.
@@ -1222,6 +1221,7 @@ This, so colled, android app row code library.
 
 
 ### Javascript pre order word
+
 - `${0}` -> current file path  
 - `${00}` -> cmdcclik root dirctory path macro  
 - `${01}` -> parent directory path  
