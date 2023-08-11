@@ -12,8 +12,10 @@ class WebUrlVariables {
         val filePrefix = "file:"
         val slashPrefix = "/"
         val jsPrefix = "javascript:"
-        val commandClickGitUrl = "https://github.com/puutaro/CommandClick#readme"
-        val commandClickRepositoryUrl = "https://github.com/puutaro/commandclick-repository.git"
+        val commandClickGitUrl =
+            "https://github.com/puutaro/CommandClick/blob/master/USAGE.md#command-click"
+        val commandClickRepositoryUrl =
+            "https://github.com/puutaro/commandclick-repository.git"
         val base64Prefix = "data:image/"
         val base64JpegPrefix = "${base64Prefix}jpeg;base64"
         val base64PngPrefix = "${base64Prefix}png;base64"
