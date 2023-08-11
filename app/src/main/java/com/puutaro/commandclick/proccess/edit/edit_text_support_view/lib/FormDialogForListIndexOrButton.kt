@@ -1,12 +1,13 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
@@ -38,6 +39,7 @@ class FormDialogForListIndexOrButton(
     private val editFragment: EditFragment
 ) {
 
+    private var formDialog: Dialog? = null
     private var returnValue = String()
     private val variableTypeDefineListForMiniEdit
             = TypeVariable.variableTypeDefineListForMiniEdit
@@ -106,24 +108,33 @@ class FormDialogForListIndexOrButton(
         scriptContentsList: List<String>,
         onSetting: String
     ) {
+        if(
+            context == null
+        ) {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            return
+        }
 
-        val scrollView = ScrollView(context)
-        val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
+        formDialog = Dialog(
+            context
         )
-        scrollView.layoutParams = linearLayoutForScrollViewParam
+        formDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.form_dialog_laytout
+        )
+        val confirmTitleTextView =
+            formDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.form_dialog_title
+            )
+        if(
+            title.isNotEmpty()
+        ) confirmTitleTextView?.text = title
+        else confirmTitleTextView?.isVisible = false
+        val linearLayout =
+            formDialog?.findViewById<LinearLayout>(
+                com.puutaro.commandclick.R.id.form_dialog_contents_linear
+            ) ?: return
 
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation =  LinearLayout.VERTICAL
-        linearLayout.weightSum = 1F
-        val linearLayoutParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParam.marginStart = 20
-        linearLayoutParam.marginEnd = 20
-        linearLayout.layoutParams = linearLayoutParam
 
         val virtualReadPreffrenceMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name
@@ -221,83 +232,81 @@ class FormDialogForListIndexOrButton(
             exitTextStartId,
             linearLayout
         )
-
-        scrollView.addView(linearLayout)
         terminalViewModel.onDialog = true
         returnValue = String()
 
-        val alertDialog = AlertDialog.Builder(
-            context
-        )
-            .setTitle(title)
-            .setView(scrollView)
-            .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                val recordNumToMapNameValueInHolder = if(
-                    onSetting.isEmpty()
-                ) recordNumToMapNameValueInCommandHolder
-                else recordNumToMapNameValueInSettingHolder
-                val updateVirtualJsContentsList = if(
-                    recordNumToMapNameValueInHolder.isNullOrEmpty()
-                ) scriptContentsList
-                else {
-                    ScriptContentsLister(
-                        linearLayout
-                    ).update(
-                        recordNumToMapNameValueInHolder,
-                        scriptContentsList,
-                        exitTextStartId
-                    )
-                }
-                FileSystems.writeFile(
-                    parentDirPath,
-                    selectedScriptName,
-                    updateVirtualJsContentsList.joinToString("\n")
-                )
-                val updateScriptFileName = CommandClickVariables.substituteCmdClickVariable(
-                    updateVirtualJsContentsList,
-                    CommandClickScriptVariable.SCRIPT_FILE_NAME
-                )
-                if(
-                    updateScriptFileName == selectedScriptName
-                ) {
-                    terminalViewModel.onDialog = false
-                    return@OnClickListener
-                }
-                FileSystems.copyFile(
-                    "${parentDirPath}/${selectedScriptName}",
-                    "${parentDirPath}/${updateScriptFileName}",
-                )
-                FileSystems.removeFiles(
-                    parentDirPath,
-                    selectedScriptName,
-                )
-                terminalViewModel.onDialog = false
-            })
-            .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                terminalViewModel.onDialog = false
-                returnValue = String()
-            })
-            .show()
 
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
+
+        val confirmCancelButton =
+            formDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.form_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            formDialog?.dismiss()
+        }
+        val confirmOkButton =
+            formDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.form_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            formDialog?.dismiss()
+            val recordNumToMapNameValueInHolder = if(
+                onSetting.isEmpty()
+            ) recordNumToMapNameValueInCommandHolder
+            else recordNumToMapNameValueInSettingHolder
+            val updateVirtualJsContentsList = if(
+                recordNumToMapNameValueInHolder.isNullOrEmpty()
+            ) scriptContentsList
+            else {
+                ScriptContentsLister(
+                    linearLayout
+                ).update(
+                    recordNumToMapNameValueInHolder,
+                    scriptContentsList,
+                    exitTextStartId
+                )
             }
-        })
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(android.R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black)
-        )
-
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
+            FileSystems.writeFile(
+                parentDirPath,
+                selectedScriptName,
+                updateVirtualJsContentsList.joinToString("\n")
+            )
+            val updateScriptFileName = CommandClickVariables.substituteCmdClickVariable(
+                updateVirtualJsContentsList,
+                CommandClickScriptVariable.SCRIPT_FILE_NAME
+            )
+            if(
+                updateScriptFileName == selectedScriptName
+            ) {
                 terminalViewModel.onDialog = false
+                return@setOnClickListener
             }
-        })
+            FileSystems.copyFile(
+                "${parentDirPath}/${selectedScriptName}",
+                "${parentDirPath}/${updateScriptFileName}",
+            )
+            FileSystems.removeFiles(
+                parentDirPath,
+                selectedScriptName,
+            )
+            terminalViewModel.onDialog = false
+        }
 
+        formDialog?.setOnCancelListener {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            formDialog?.dismiss()
+        }
+        formDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        formDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        formDialog?.show()
     }
 
 
@@ -335,7 +344,6 @@ class FormDialogForListIndexOrButton(
             linearLayout.addView(insertTextView)
             val currentRecordNum =
                 currentRecordNumToMapNameValueInHolder.key
-
             editParameters.currentId = currentId
             editParameters.currentVariableName = currentVariableName
             editParameters.currentVariableValue = currentVariableValue

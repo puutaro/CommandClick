@@ -1,12 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
@@ -25,7 +27,7 @@ import kotlinx.coroutines.*
 class FormJsDialog(
     private val terminalFragment: TerminalFragment
 ) {
-
+    private var formDialog: Dialog? = null
     private var returnValue = String()
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
@@ -85,10 +87,17 @@ class FormJsDialog(
         formSettingVariables: String,
         formCommandVariables: String
     ) {
+        if(
+            context == null
+        ) {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            return
+        }
         val virtualJsContentsList =  makeVirtualJsContentsList(
             formSettingVariables,
             formCommandVariables
-        ) ?: return
+        )
 
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
@@ -122,24 +131,26 @@ class FormJsDialog(
             String()
         )
 
-        val scrollView = ScrollView(context)
-        val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        scrollView.layoutParams = linearLayoutForScrollViewParam
 
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation =  LinearLayout.VERTICAL
-        linearLayout.weightSum = 1F
-        val linearLayoutParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParam.marginStart = 20
-        linearLayoutParam.marginEnd = 20
-        linearLayout.layoutParams = linearLayoutParam
 
+        formDialog = Dialog(
+            context
+        )
+        formDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.form_dialog_laytout
+        )
+        val confirmTitleTextView =
+            formDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.form_dialog_title
+            )
+        if(
+            title.isNotEmpty()
+        ) confirmTitleTextView?.text = title
+        else confirmTitleTextView?.isVisible = false
+        val linearLayout =
+            formDialog?.findViewById<LinearLayout>(
+                com.puutaro.commandclick.R.id.form_dialog_contents_linear
+            ) ?: return
         val virtualReadPreffrenceMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name
                 to terminalFragment.currentAppDirPath
@@ -161,65 +172,61 @@ class FormJsDialog(
             linearLayout
         )
 
-        scrollView.addView(linearLayout)
-
         terminalViewModel.onDialog = true
         returnValue = String()
 
-        val alertDialog = AlertDialog.Builder(
-            context
-        )
-            .setTitle(title)
-            .setView(scrollView)
-            .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                val updateVirtualJsContentsList = if(
-                    recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
-                ) virtualJsContentsList
-                else {
-                    ScriptContentsLister(
-                        linearLayout
-                    ).update(
-                        recordNumToMapNameValueInCommandHolder,
-                        virtualJsContentsList,
-                        exitTextStartId
-                    )
-                }
-                terminalViewModel.onDialog = false
-                val dialogReturnStringListSource = CommandClickVariables.substituteVariableListFromHolder(
-                    updateVirtualJsContentsList,
-                    commandSectionStart,
-                    commandSectionEnd
+        val confirmCancelButton =
+            formDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.form_dialog_cancel
+            )
+        confirmCancelButton?.setOnClickListener {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            formDialog?.dismiss()
+        }
+        val confirmOkButton =
+            formDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.form_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            formDialog?.dismiss()
+            val updateVirtualJsContentsList = if(
+                recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
+            ) virtualJsContentsList
+            else {
+                ScriptContentsLister(
+                    linearLayout
+                ).update(
+                    recordNumToMapNameValueInCommandHolder,
+                    virtualJsContentsList,
+                    exitTextStartId
                 )
-                returnValue =
-                    dialogReturnStringListSource?.slice(
-                        1 until dialogReturnStringListSource.size-1
-                    )?.joinToString("\n") ?: String()
-            })
-            .setNegativeButton("NO", DialogInterface.OnClickListener{ dialog, which ->
-                terminalViewModel.onDialog = false
-                returnValue = String()
-            })
-            .show()
-
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
             }
-        })
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(android.R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black)
-        )
+            val dialogReturnStringListSource = CommandClickVariables.substituteVariableListFromHolder(
+                updateVirtualJsContentsList,
+                commandSectionStart,
+                commandSectionEnd
+            )
+            returnValue =
+                dialogReturnStringListSource?.slice(
+                    1 until dialogReturnStringListSource.size-1
+                )?.joinToString("\n") ?: String()
+            terminalViewModel.onDialog = false
+        }
 
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
-            }
-        })
-
+        formDialog?.setOnCancelListener {
+            terminalViewModel.onDialog = false
+            returnValue = String()
+            formDialog?.dismiss()
+        }
+        formDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        formDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        formDialog?.show()
     }
 
 
