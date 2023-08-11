@@ -1,9 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.R
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
@@ -157,68 +154,6 @@ class JsDirSelect(
             Gravity.BOTTOM
         )
         confirmDialog?.show()
-
-
-
-
-
-
-
-//        val alertDialog = AlertDialog.Builder(context)
-//            .setTitle(
-//                "delete ok?"
-//            )
-//            .setMessage(" ${editDirNameForDialog}")
-//            .setPositiveButton("OK", DialogInterface.OnClickListener {
-//                    dialog, which ->
-//                val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
-//                val removeDirPathObj = File(removeDirPath)
-//                if(
-//                    !removeDirPathObj.isDirectory
-//                ){
-//                    Toast.makeText(
-//                        context,
-//                        "not exist editDirNameForDialog ${removeDirPath}",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                    terminalViewModel.onDialog = false
-//                    return@OnClickListener
-//                }
-//                FileSystems.removeDir(
-//                    removeDirPath
-//                )
-//                terminalViewModel.onDialog = false
-//                val recentDirName = FileSystems.showDirList(targetDirPath).filter {
-//                    File(it).isDirectory
-//                }.lastOrNull() ?: return@OnClickListener
-//                updateScriptFile(
-//                    parentDirPath,
-//                    scriptFileName,
-//                    "${targetVariable}=\"${recentDirName}\""
-//                )
-//                JsEdit(terminalFragment).updateEditText(
-//                    targetVariable,
-//                    recentDirName
-//                )
-//                terminalViewModel.onDialog = false
-//            })
-//            .setNegativeButton("NO", DialogInterface.OnClickListener {
-//                    dialog, which ->
-//                terminalViewModel.onDialog = false
-//            })
-//            .show()
-//        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-//            context?.getColor(R.color.black) as Int
-//        )
-//        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-//            context.getColor(R.color.black)
-//        )
-//        alertDialog.window?.setGravity(Gravity.BOTTOM)
-//        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
-//            override fun onCancel(dialog: DialogInterface?) {
-//                terminalViewModel.onDialog = false
-//            }
-//        })
     }
 
     private fun setOkButton(
