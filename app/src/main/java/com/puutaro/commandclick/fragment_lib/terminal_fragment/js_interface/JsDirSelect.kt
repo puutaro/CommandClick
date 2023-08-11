@@ -2,10 +2,14 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.R
 import android.app.AlertDialog
+import android.app.Dialog
 import android.content.DialogInterface
 import android.view.Gravity
+import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
@@ -23,6 +27,7 @@ class JsDirSelect(
 ) {
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private var confirmDialog: Dialog? = null
 
     @JavascriptInterface
     fun execEditDirName(
@@ -102,61 +107,169 @@ class JsDirSelect(
         targetVariable: String,
     ){
         val context = terminalFragment.context
-        val alertDialog = AlertDialog.Builder(context)
-            .setTitle(
-                "delete ok?"
+        if(
+            context == null
+        ) {
+            terminalViewModel.onDialog = false
+            return
+        }
+
+        confirmDialog = Dialog(
+            context
+        )
+        confirmDialog?.setContentView(
+            com.puutaro.commandclick.R.layout.confirm_text_dialog
+        )
+        val confirmTitleTextView =
+            confirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
-            .setMessage(" ${editDirNameForDialog}")
-            .setPositiveButton("OK", DialogInterface.OnClickListener {
-                    dialog, which ->
-                val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
-                val removeDirPathObj = File(removeDirPath)
-                if(
-                    !removeDirPathObj.isDirectory
-                ){
-                    Toast.makeText(
-                        context,
-                        "not exist editDirNameForDialog ${removeDirPath}",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    terminalViewModel.onDialog = false
-                    return@OnClickListener
-                }
-                FileSystems.removeDir(
-                    removeDirPath
-                )
-                terminalViewModel.onDialog = false
-                val recentDirName = FileSystems.showDirList(targetDirPath).filter {
-                    File(it).isDirectory
-                }.lastOrNull() ?: return@OnClickListener
-                updateScriptFile(
-                    parentDirPath,
-                    scriptFileName,
-                    "${targetVariable}=\"${recentDirName}\""
-                )
-                JsEdit(terminalFragment).updateEditText(
-                    targetVariable,
-                    recentDirName
-                )
-                terminalViewModel.onDialog = false
-            })
-            .setNegativeButton("NO", DialogInterface.OnClickListener {
-                    dialog, which ->
-                terminalViewModel.onDialog = false
-            })
-            .show()
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(R.color.black) as Int
+        confirmTitleTextView?.text = "delete ok?"
+        val confirmContentTextView =
+            confirmDialog?.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+            )
+        confirmContentTextView?.text = editDirNameForDialog
+        val confirmCancelButton =
+            confirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+            )
+        setOkButton(
+            targetVariable,
+            targetDirPath,
+            editDirNameForDialog,
+            parentDirPath,
+            scriptFileName,
         )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(R.color.black)
+        confirmCancelButton?.setOnClickListener {
+            confirmDialog?.dismiss()
+            terminalViewModel.onDialog = false
+        }
+        confirmDialog?.setOnCancelListener {
+            confirmDialog?.dismiss()
+            terminalViewModel.onDialog = false
+        }
+        confirmDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
+        confirmDialog?.window?.setGravity(
+            Gravity.BOTTOM
+        )
+        confirmDialog?.show()
+
+
+
+
+
+
+
+//        val alertDialog = AlertDialog.Builder(context)
+//            .setTitle(
+//                "delete ok?"
+//            )
+//            .setMessage(" ${editDirNameForDialog}")
+//            .setPositiveButton("OK", DialogInterface.OnClickListener {
+//                    dialog, which ->
+//                val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
+//                val removeDirPathObj = File(removeDirPath)
+//                if(
+//                    !removeDirPathObj.isDirectory
+//                ){
+//                    Toast.makeText(
+//                        context,
+//                        "not exist editDirNameForDialog ${removeDirPath}",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                    terminalViewModel.onDialog = false
+//                    return@OnClickListener
+//                }
+//                FileSystems.removeDir(
+//                    removeDirPath
+//                )
+//                terminalViewModel.onDialog = false
+//                val recentDirName = FileSystems.showDirList(targetDirPath).filter {
+//                    File(it).isDirectory
+//                }.lastOrNull() ?: return@OnClickListener
+//                updateScriptFile(
+//                    parentDirPath,
+//                    scriptFileName,
+//                    "${targetVariable}=\"${recentDirName}\""
+//                )
+//                JsEdit(terminalFragment).updateEditText(
+//                    targetVariable,
+//                    recentDirName
+//                )
+//                terminalViewModel.onDialog = false
+//            })
+//            .setNegativeButton("NO", DialogInterface.OnClickListener {
+//                    dialog, which ->
+//                terminalViewModel.onDialog = false
+//            })
+//            .show()
+//        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
+//            context?.getColor(R.color.black) as Int
+//        )
+//        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
+//            context.getColor(R.color.black)
+//        )
+//        alertDialog.window?.setGravity(Gravity.BOTTOM)
+//        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
+//            override fun onCancel(dialog: DialogInterface?) {
+//                terminalViewModel.onDialog = false
+//            }
+//        })
+    }
+
+    private fun setOkButton(
+        targetVariable: String,
+        targetDirPath: String,
+        editDirNameForDialog: String,
+        parentDirPath: String,
+        scriptFileName: String,
+    ){
+        val confirmOkButton =
+            confirmDialog?.findViewById<AppCompatImageButton>(
+                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+            )
+        confirmOkButton?.setOnClickListener {
+            confirmDialog?.dismiss()
+            val removeDirPath = "${targetDirPath}/${editDirNameForDialog}"
+            val removeDirPathObj = File(removeDirPath)
+            if(
+                !removeDirPathObj.isDirectory
+            ){
+                Toast.makeText(
+                    context,
+                    "not exist editDirNameForDialog ${removeDirPath}",
+                    Toast.LENGTH_LONG
+                ).show()
                 terminalViewModel.onDialog = false
+                return@setOnClickListener
             }
-        })
+            FileSystems.removeDir(
+                removeDirPath
+            )
+            Toast.makeText(
+                context,
+                "delete ok",
+                Toast.LENGTH_SHORT
+            ).show()
+            terminalViewModel.onDialog = false
+            val recentDirName = FileSystems.showDirList(targetDirPath).filter {
+                File(it).isDirectory
+            }.lastOrNull() ?: return@setOnClickListener
+            updateScriptFile(
+                parentDirPath,
+                scriptFileName,
+                "${targetVariable}=\"${recentDirName}\""
+            )
+            JsEdit(terminalFragment).updateEditText(
+                targetVariable,
+                recentDirName
+            )
+            terminalViewModel.onDialog = false
+        }
     }
 
     private fun renameFilePath(

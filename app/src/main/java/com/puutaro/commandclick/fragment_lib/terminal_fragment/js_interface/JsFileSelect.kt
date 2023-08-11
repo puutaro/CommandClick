@@ -204,6 +204,11 @@ class JsFileSelect(
                 targetDirPath,
                 editFileNameForDialog
             )
+            Toast.makeText(
+                context,
+                "delete ok",
+                Toast.LENGTH_SHORT
+            ).show()
             terminalViewModel.onDialog = false
             val recentLogFile = FileSystems.sortedFiles(
                 targetDirPath
