@@ -46,7 +46,7 @@ Are you satisfied current web browser life ?
 <br>
 <br>
 
-Pros
+CommandClick
 ----
 
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
