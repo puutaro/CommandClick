@@ -7,7 +7,9 @@
 <br>
 <br>
 <br>
+
 `CommandClick` is revolution browser.
+
 <br>
 <br>
 <br>
@@ -15,7 +17,9 @@ Are you satisfied current web browser life ?
 <br>
 <br>
 <br>
+
 `CommandClick` provide you with new browser world.  
+
 <br>
 <br>
 <br>
