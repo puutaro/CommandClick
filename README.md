@@ -8,8 +8,7 @@
 <br>
 <br>
 
-`CommandClick` is another browser.
-
+`CommandClick` is another browser.  
 <br>
 <br>
 <br>
