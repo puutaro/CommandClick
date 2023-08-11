@@ -51,7 +51,7 @@ Pros
 
 ![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
 - Current web browser mainly interact with web. But, `CommandClick` interact with not only web but also android os. Threfore, This has wide spread usage  
-- Current web browser mainly has tab feature. But `CommandClick`'core is  hisotry search. Threafore, you easly restore, load, and check my hisotry.
+- Current web browser mainly has tab feature. But `CommandClick`'core is  hisotry search. Threafore, you easly restore, load, and check my history.
 - Current web browser support normal javascript. But `CommandClick` enforce javascript, and lead you to more wide spread usage.
 - Current web browser cannot create original android aplication. But `CommandClick` can create aplication just for you as low code tool. 
 - Current web browser cannot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
