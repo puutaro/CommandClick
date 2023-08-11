@@ -1217,7 +1217,7 @@ This, so colled, android app row code library.
   		path: pdf path string  
   	   )
 		-> extracted text
-
+```
 
 
 ### Javascript pre order word
