@@ -1,14 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
-import android.content.DialogInterface
+import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -30,6 +31,7 @@ class ImageJsDialog(
     val context = terminalFragment.context
     val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private var imageDialogObj: Dialog? = null
 
     fun create(
         title: String,
@@ -66,91 +68,83 @@ class ImageJsDialog(
         title: String,
         imageSrcFilePath: String
     ){
-        val imageView = ImageView(context)
-        imageView.setPadding(10, 20, 20, 10)
+
+        if(
+            context == null
+        ){
+            terminalViewModel.onDialog = false
+            return
+        }
+        imageDialogObj = Dialog(
+            context
+        )
+        imageDialogObj?.setContentView(
+            com.puutaro.commandclick.R.layout.image_dialog_layout
+        )
+        val titleTextView = imageDialogObj?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.image_dialog_title
+        )
+        if(
+            title.isNotEmpty()
+        ) titleTextView?.text = title
+        else titleTextView?.isVisible = false
+        val imageContentsView = imageDialogObj?.findViewById<AppCompatImageView>(
+            com.puutaro.commandclick.R.id.image_dialog_image
+        )
         val myBitmap: Bitmap = BitmapFactory.decodeFile(
             imageSrcFilePath
         )
-        imageView.setImageBitmap(myBitmap)
-        val scrollView = makeScrollView()
-        val linearLayout = makeLinearLayout()
-        linearLayout.addView(imageView)
-        scrollView.addView(linearLayout)
-
-        val alertDialog = android.app.AlertDialog.Builder(
-            context
+        imageContentsView
+            ?.setImageBitmap(myBitmap)
+        setShareButton(
+            myBitmap
         )
-            .setTitle(title)
-            .setView(scrollView)
-            .setNegativeButton("SHARE", DialogInterface.OnClickListener{
-                    dialog, which ->
-                terminalViewModel.onDialog = false
-                FileSystems.removeDir(
-                    UsePath.cmdclickTempCreateDirPath
-                )
-                FileSystems.createDirs(
-                    UsePath.cmdclickTempCreateDirPath
-                )
-                val bitmap = BitmapTool.getScreenShotFromView(scrollView)
-                    ?: return@OnClickListener
-                val imageName = BitmapTool.hash(
-                    bitmap
-                ) + ".png"
-                val file = File(
-                    UsePath.cmdclickTempCreateDirPath,
-                    imageName
-                )
-                // ③
-                FileOutputStream(file).use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                }
-                IntentVarient.sharePngImage(
-                    file,
-                    activity
-                )
-            })
-            .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                terminalViewModel.onDialog = false
-            })
-            .create()
-        alertDialog.show()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
+        val cancelButton = imageDialogObj?.findViewById<ImageButton>(
+            com.puutaro.commandclick.R.id.image_dialog_ok
+        )
+        cancelButton?.setOnClickListener {
+            terminalViewModel.onDialog = false
+            imageDialogObj?.dismiss()
+        }
+        imageDialogObj?.setOnCancelListener {
+            terminalViewModel.onDialog = false
+            imageDialogObj?.dismiss()
+        }
+        imageDialogObj?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        imageDialogObj?.window?.setGravity(Gravity.BOTTOM)
+        imageDialogObj?.show()
+    }
+
+    private fun setShareButton(
+        myBitmap: Bitmap
+    ){
+        val shareButton = imageDialogObj?.findViewById<ImageButton>(
+            com.puutaro.commandclick.R.id.image_dialog_share
+        )
+        shareButton?.setOnClickListener {
+            FileSystems.removeDir(
+                UsePath.cmdclickTempCreateDirPath
+            )
+            FileSystems.createDirs(
+                UsePath.cmdclickTempCreateDirPath
+            )
+            val imageName = BitmapTool.hash(
+                myBitmap
+            ) + ".png"
+            val file = File(
+                UsePath.cmdclickTempCreateDirPath,
+                imageName
+            )
+            FileOutputStream(file).use { stream ->
+                myBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             }
-        })
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(android.R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black) as Int
-        )
-    }
-
-    private fun makeLinearLayout(
-    ): LinearLayout {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation =  LinearLayout.VERTICAL
-        linearLayout.weightSum = 1F
-        val linearLayoutParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParam.marginStart = 20
-        linearLayoutParam.marginEnd = 20
-        linearLayout.layoutParams = linearLayoutParam
-        return linearLayout
-    }
-
-    private fun makeScrollView(
-    ): ScrollView {
-        val scrollView = ScrollView(context)
-        val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        scrollView.layoutParams = linearLayoutForScrollViewParam
-        return scrollView
+            IntentVarient.sharePngImage(
+                file,
+                activity
+            )
+        }
     }
 }

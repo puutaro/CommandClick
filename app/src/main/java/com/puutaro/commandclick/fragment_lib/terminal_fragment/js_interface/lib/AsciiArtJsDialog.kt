@@ -1,14 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
-import android.content.DialogInterface
+import android.app.Dialog
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.text.Spannable
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.ScrollView
-import android.widget.TextView
+import android.widget.ImageButton
+import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bachors.img2ascii.Img2Ascii
 import com.puutaro.commandclick.common.variable.UsePath
@@ -32,6 +32,7 @@ class AsciiArtJsDialog(
     val context = terminalFragment.context
     val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private var spannableDialogObj: Dialog? = null
 
     fun create(
         title: String,
@@ -63,85 +64,84 @@ class AsciiArtJsDialog(
         title: String,
         spannable: Spannable?,
     ){
-        val asciiText = TextView(context)
+        if(
+            context == null
+        ){
+            terminalViewModel.onDialog = false
+            return
+        }
 
-        asciiText.text = spannable
-        val scrollView = makeScrollView()
-        val linearLayout = makeLinearLayout()
-        linearLayout.addView(asciiText)
-        scrollView.addView(linearLayout)
-
-        val alertDialog = android.app.AlertDialog.Builder(
+        spannableDialogObj = Dialog(
             context
         )
-            .setTitle(title)
-            .setView(scrollView)
-            .setNegativeButton("SHARE", DialogInterface.OnClickListener{
-                    dialog, which ->
-                terminalViewModel.onDialog = false
-                FileSystems.removeAndCreateDir(
-                    UsePath.cmdclickTempCreateDirPath
+        spannableDialogObj?.setContentView(
+            com.puutaro.commandclick.R.layout.spannable_grid_dialog_layout
+        )
+        val titleTextView = spannableDialogObj?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.spannable_dialog_title
+        )
+        if(
+            title.isNotEmpty()
+        ) titleTextView?.text = title
+        else titleTextView?.isVisible = false
+        val spannableTextView = spannableDialogObj?.findViewById<AppCompatTextView>(
+            com.puutaro.commandclick.R.id.spannable_dialog_contents
+        )
+        spannableTextView?.text = spannable
+        setShareButton()
+        val cancelButton = spannableDialogObj?.findViewById<ImageButton>(
+            com.puutaro.commandclick.R.id.spannable_dialog_ok
+        )
+        cancelButton?.setOnClickListener {
+            terminalViewModel.onDialog = false
+            spannableDialogObj?.dismiss()
+        }
+        spannableDialogObj?.setOnCancelListener {
+            terminalViewModel.onDialog = false
+            spannableDialogObj?.dismiss()
+        }
+        spannableDialogObj?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        spannableDialogObj?.window?.setGravity(Gravity.BOTTOM)
+        spannableDialogObj?.show()
+    }
+
+    private fun setShareButton(){
+        val shareButton = spannableDialogObj?.findViewById<ImageButton>(
+            com.puutaro.commandclick.R.id.spannable_dialog_share
+        )
+        shareButton?.setOnClickListener {
+            FileSystems.removeAndCreateDir(
+                UsePath.cmdclickTempCreateDirPath
+            )
+            val spannableContents =
+                spannableDialogObj?.findViewById<AppCompatTextView>(
+                    com.puutaro.commandclick.R.id.spannable_dialog_contents
+                ) ?: return@setOnClickListener
+            val bitmap =
+                BitmapTool.getScreenShotFromView(spannableContents)
+                    ?: return@setOnClickListener
+            val imageName = BitmapTool.hash(
+                bitmap
+            ) + ".png"
+            val file = File(
+                UsePath.cmdclickTempCreateDirPath,
+                imageName
+            )
+            FileOutputStream(file).use { stream ->
+                bitmap.compress(
+                    Bitmap.CompressFormat.PNG,
+                    100,
+                    stream
                 )
-                val bitmap = BitmapTool.getScreenShotFromView(scrollView)
-                    ?: return@OnClickListener
-                val imageName = BitmapTool.hash(
-                    bitmap
-                ) + ".png"
-                val file = File(
-                    UsePath.cmdclickTempCreateDirPath,
-                    imageName
-                )
-                // ③
-                FileOutputStream(file).use { stream ->
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-                }
-                IntentVarient.sharePngImage(
-                    file,
-                    activity
-                )
-            })
-            .setPositiveButton("OK", DialogInterface.OnClickListener{ dialog, which ->
-                terminalViewModel.onDialog = false
-            })
-            .show()
-        alertDialog.window?.setGravity(Gravity.BOTTOM)
-        alertDialog.setOnCancelListener(object : DialogInterface.OnCancelListener {
-            override fun onCancel(dialog: DialogInterface?) {
-                terminalViewModel.onDialog = false
             }
-        })
-        alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(
-            context?.getColor(android.R.color.black) as Int
-        )
-        alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(
-            context.getColor(android.R.color.black)
-        )
-    }
-
-    private fun makeLinearLayout(
-    ): LinearLayout {
-        val linearLayout = LinearLayout(context)
-        linearLayout.orientation =  LinearLayout.VERTICAL
-        linearLayout.weightSum = 1F
-        val linearLayoutParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParam.marginStart = 20
-        linearLayoutParam.marginEnd = 20
-        linearLayout.layoutParams = linearLayoutParam
-        return linearLayout
-    }
-
-    private fun makeScrollView(
-    ): ScrollView {
-        val scrollView = ScrollView(context)
-        val linearLayoutForScrollViewParam = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        scrollView.layoutParams = linearLayoutForScrollViewParam
-        return scrollView
+            IntentVarient.sharePngImage(
+                file,
+                activity
+            )
+        }
     }
 
     private suspend fun makeAsciiArt(

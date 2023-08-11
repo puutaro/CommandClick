@@ -128,7 +128,6 @@ class ListJsDialog(
 
         invokeListItemSetClickListenerForListDialog(
             dialogListView,
-            listDialog,
         )
 
     }
@@ -136,13 +135,12 @@ class ListJsDialog(
 
     private fun invokeListItemSetClickListenerForListDialog(
         dialogListView: ListView?,
-        alertDialog: Dialog?,
     ) {
 
         dialogListView?.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog?.dismiss()
+            listDialog?.dismiss()
             val menuListAdapter = dialogListView.adapter as MenuListAdapter
             val selectedElement =
                 menuListAdapter.getItem(pos)
