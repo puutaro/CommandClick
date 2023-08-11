@@ -15,11 +15,11 @@ Also, it is termux gui client .
 Pros
 ----
 - Web browser powerd by javascript and shellscript(termux)
+- history oriented web browser.
 - Javascript engine and framework.    
 - Row code tool for android application development.  
-- Easily turn javascript and shellscript into a GUI application in android.
-- Versatile usage for Terminal, Chrome, OS setting, etc.
 - Not only web browser but also termux gui client.
+- Easily turn javascript and shellscript into a GUI application in android.
 
 
 Table of Contents
