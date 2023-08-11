@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
-import android.app.AlertDialog
-import android.content.DialogInterface
+import android.app.Dialog
 import android.text.Editable
-import android.text.InputType
 import android.text.TextWatcher
 import android.view.Gravity
 import android.view.ViewGroup
@@ -11,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
@@ -22,9 +21,6 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSel
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFilterType
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
-import com.puutaro.commandclick.proccess.lib.NestLinearLayout
-import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Keyboard
@@ -32,10 +28,10 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
 
 object FileSelectGridViewProducer {
-    private val noExtend = "NoExtend"
-    private val gridButtonLabel = "GSL"
+    private const val noExtend = "NoExtend"
+    private const val gridButtonLabel = "GSL"
 
-    private var alertDialog: AlertDialog? = null
+    private var gridDialogObj: Dialog? = null
 
     fun make (
         insertEditText: EditText,
@@ -55,6 +51,52 @@ object FileSelectGridViewProducer {
             editParameters,
             currentComponentIndex
         )
+        val gridButtonView = Button(context)
+        gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
+        gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
+        gridButtonView.text = gridButtonLabel
+        ButtonSetter.set(
+            context,
+            gridButtonView
+        )
+
+        gridButtonView.setOnClickListener {
+                buttonView ->
+            val buttonContext = buttonView.context
+            gridDialogObj = Dialog(
+                buttonContext
+            )
+            gridDialogObj?.setContentView(
+                com.puutaro.commandclick.R.layout.grid_dialog_layout
+            )
+            setGridListView(
+                editFragment,
+                editParameters,
+                insertEditText,
+                fcbMap
+            )
+            gridDialogObj?.setOnCancelListener {
+                gridDialogObj?.dismiss()
+            }
+            gridDialogObj?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            gridDialogObj?.window?.setGravity(Gravity.BOTTOM)
+            gridDialogObj?.show()
+        }
+        gridButtonView.layoutParams = linearParamsForGrid
+        return gridButtonView
+    }
+
+    private fun setGridListView(
+        currentFragment: EditFragment,
+        editParameters: EditParameters,
+        insertEditText: EditText,
+        fcbMap: Map<String, String>?
+    ) {
+        val context = currentFragment.context
+            ?: return
         val filterDir = getSelectDirPath(
             fcbMap,
             editParameters,
@@ -68,87 +110,42 @@ object FileSelectGridViewProducer {
         val filterType = getFilterType(
             fcbMap,
         )
-
-        val gridButtonView = Button(context)
-        gridButtonView.id = currentId + EditTextSupportViewId.EDITABLE_GRID.id
-        gridButtonView.tag = "gridEdit${currentId + EditTextSupportViewId.EDITABLE_GRID.id}"
-        gridButtonView.text = gridButtonLabel
-        ButtonSetter.set(
-            context,
-            gridButtonView
-        )
-
-        gridButtonView.setOnClickListener {
-                buttonView ->
-            val buttonContext = buttonView.context
-            val currentGridList = makeGridList(
+        val listDialogSearchEditText = gridDialogObj?.findViewById<AppCompatEditText>(
+            com.puutaro.commandclick.R.id.grid_dialog_search_edit_text
+        ) ?: return
+        listDialogSearchEditText.hint = "search selectable list"
+        val editableSpinnerList =
+            makeGridList(
                 filterDir,
                 filterPrefix,
                 filterSuffix,
                 filterType
             )
-
-            val gridView =
-                GridView(buttonContext)
-            gridView.numColumns = 2
-            val adapter = ImageAdapter(
-                buttonContext,
-            )
-            adapter.addAll(
-                currentGridList.toMutableList()
-            )
-            gridView.adapter = adapter
-
-            val searchText = EditText(context)
-            makeSearchEditText(
-                adapter,
-                searchText,
-                currentGridList.joinToString("\n"),
-            )
-            val linearLayoutForTotal = LinearLayoutForTotal.make(
-                context
-            )
-            val searchTextWeight = SearchTextLinearWeight.calculate(editFragment)
-            val listWeight = 1F - searchTextWeight
-            val linearLayoutForListView = NestLinearLayout.make(
-                context,
-                listWeight
-            )
-            val linearLayoutForSearch = NestLinearLayout.make(
-                context,
-                searchTextWeight
-            )
-            linearLayoutForListView.addView(gridView)
-            linearLayoutForSearch.addView(searchText)
-            linearLayoutForTotal.addView(linearLayoutForListView)
-            linearLayoutForTotal.addView(linearLayoutForSearch)
-
-            setGridViewItemClickListener(
-                editFragment,
-                insertEditText,
-                searchText,
-                gridView,
-                adapter,
-                editParameters,
-                fcbMap,
-            )
-
-            alertDialog = AlertDialog.Builder(
-                buttonContext
-            )
-                .setView(linearLayoutForTotal)
-                .create()
-            alertDialog?.window?.setGravity(Gravity.BOTTOM)
-            alertDialog?.show()
-
-            alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
-                override fun onCancel(dialog: DialogInterface?) {
-                    alertDialog?.dismiss()
-                }
-            })
-        }
-        gridButtonView.layoutParams = linearParamsForGrid
-        return gridButtonView
+        val gridView =
+            gridDialogObj?.findViewById<GridView>(
+                com.puutaro.commandclick.R.id.grid_dialog_grid_view
+            ) ?: return
+        val imageAdapter = ImageAdapter(
+            context,
+        )
+        imageAdapter.clear()
+        imageAdapter.addAll(
+            editableSpinnerList.toMutableList()
+        )
+        gridView.adapter = imageAdapter
+        makeSearchEditText(
+            gridView,
+            listDialogSearchEditText,
+            editableSpinnerList.joinToString("\n"),
+        )
+        setGridViewItemClickListener(
+            currentFragment,
+            insertEditText,
+            listDialogSearchEditText,
+            gridView,
+            editParameters,
+            fcbMap,
+        )
     }
 
     private fun setGridViewItemClickListener(
@@ -156,7 +153,6 @@ object FileSelectGridViewProducer {
         insertEditText: EditText,
         searchText: EditText,
         gridView: GridView,
-        adapter: ImageAdapter,
         editParameters: EditParameters,
         fcbMap: Map<String, String>?
     ){
@@ -186,7 +182,7 @@ object FileSelectGridViewProducer {
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog?.dismiss()
+            gridDialogObj?.dismiss()
             val currentGridList = makeGridList(
                 filterDir,
                 filterPrefix,
@@ -216,9 +212,11 @@ object FileSelectGridViewProducer {
             ) + currentGridList.filter {
                 it != selectedItem
             }
-            adapter.clear()
-            adapter.addAll(selectUpdatedGridList.toMutableList())
-            adapter.notifyDataSetChanged()
+            val imageAdapter =
+                gridView.adapter as ImageAdapter
+            imageAdapter.clear()
+            imageAdapter.addAll(selectUpdatedGridList.toMutableList())
+            imageAdapter.notifyDataSetChanged()
             gridView.setSelection(0)
             insertEditText.setText(selectedFileName)
             SelectJsExecutor.exec(
@@ -273,21 +271,10 @@ object FileSelectGridViewProducer {
     }
 
     private fun makeSearchEditText(
-        imageAdapter:  ImageAdapter,
+        gridView:  GridView,
         searchText: EditText,
         listCon: String,
     ) {
-        val linearLayoutParamForSearchText = LinearLayout.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        linearLayoutParamForSearchText.topMargin = 20
-        linearLayoutParamForSearchText.bottomMargin = 20
-        searchText.layoutParams = linearLayoutParamForSearchText
-        searchText.inputType = InputType.TYPE_CLASS_TEXT
-        searchText.background = null
-        searchText.hint = "search"
-        searchText.setPadding(30, 10, 20, 10)
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -303,7 +290,7 @@ object FileSelectGridViewProducer {
                         it.lowercase()
                     )
                 }
-
+                val imageAdapter = gridView.adapter as ImageAdapter
                 imageAdapter.clear()
                 imageAdapter.addAll(filteredList.toMutableList())
                 imageAdapter.notifyDataSetChanged()
