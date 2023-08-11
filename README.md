@@ -58,6 +58,18 @@ Pros
 - Current web browser cannnot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
 
 
+App installation
+-----  
+- Android 8+
+
+get it on belllow link  
+  
+<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
+
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
+
+
+
 Usage
 ------
 
