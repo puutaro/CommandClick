@@ -54,7 +54,7 @@ Pros
 - Current web browser mainly has tab feature. But `CommandClick`'core is  hisotry search. Threafore, you easly restore, load, and check my hisotry.
 - Current web browser suport normal javascript. But `CommandClick` enforce javascript, and lead you to more wide spread usage.
 - Current web browser cannot create original android aplication. But `CommandClick` can create aplication just for you as low code tool. 
-- Current web browser cannnot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
+- Current web browser cannot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
 
 
 App installation
