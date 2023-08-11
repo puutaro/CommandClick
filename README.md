@@ -55,7 +55,7 @@ Pros
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
-- Current web browser mainly interact with web. But, `CommandClick` interact with not only web but also android os. Therefore, This has wide spread usage  
+- Current web browser mainly interact with web. But, `CommandClick` interact with not only web but also android os. Therefore, this has wide spread usage  
 - Current web browser mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
 - Current web browser support normal javascript. But `CommandClick` enforce javascript, and lead you to more wide spread usage.
 - Current web browser cannot create original android application. But `CommandClick` can create application just for you as low code tool. 
