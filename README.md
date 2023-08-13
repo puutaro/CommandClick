@@ -49,7 +49,10 @@ Are you satisfied with current web browser life ?
 CommandClick
 ----
 
-![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png)  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117" width="500">  
+
+[](![cmdclick_git_log](https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117))
+[](![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png))   
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
@@ -66,7 +69,7 @@ App installation
 - Android 8+
 
 get it on belllow link  
-  
+
 <a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
 
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
