@@ -1,24 +1,57 @@
-<strong>Command Click</strong> allow you change shellscript to Gui App.
 
-<strong><font color="#339933">[Feature]</font></strong>
 
-* Web browser powerd by javascript and shellscript(termux)
-* Javascript engine.
-* Easily turn javascript and shellscript into a GUI application in android.
-* Versatile usage for Terminal, Chrome, OS setting, etc.
-* Not only web browser but also termux gui client.
 
-<strong><font color="#339933">[Objective]</font></strong>
 
-* You can extend Browser capacity by javascript and shellscript
-* Execute javascript and shellscript by one click.
-* Handling termux command line by GUI.
-* Not only browser, but also independent appication by javascript and shellscript
+
+
+
+Are you satisfied with existing web browsers life ?
+
+
+
+<strong>CommandClick</strong> can do things that existing browsers can't do
+
+
+
+<strong>CommandClick</strong> provide you with new browser world.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<strong><font color="#339933">[About]</font></strong>
+
+* Existing web browsers mainly has tab feature. But CommandClick'core is history search. Therefore, you easly restore, load, and check my history.
+* Existing web browsers support normal javascript. But CommandClick enforce javascript, and interact with not only web but also android os. Therefore, this has wide spread usage
+* Existing web browsers cannot support shellscript. But CommandClick can support shellscript via termux. You can take advantage of the shell's wealth of assets.
+* Existing web browsers cannot create original android application. But CommandClick can create application just for you as low code tool.
 
 <strong><font color="#339933">[How to use]</font></strong>
 
 See the following page.
-https://github.com/puutaro/CommandClick/blob/master/README.md
+https://github.com/puutaro/CommandClick/blob/master/USAGE.md
 
 <strong><font color="#339933">[Source]</font></strong>
 

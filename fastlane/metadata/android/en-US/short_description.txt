@@ -1,1 +1,1 @@
-So called Sell2Gui. Command Click allow you change shellscript to Gui App.
+"Another browser" powered by javascript and shellscript(termux).
