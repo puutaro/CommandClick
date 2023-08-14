@@ -1,6 +1,6 @@
 
 # Command Click
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500"> 
 
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
