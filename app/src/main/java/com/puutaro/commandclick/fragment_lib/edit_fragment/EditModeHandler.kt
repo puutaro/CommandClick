@@ -33,7 +33,7 @@ class EditModeHandler(
         editFragment.disableSettingButton ==
                 SettingVariableSelects.disableSettingButtonSelects.ON.name
     private val onDisableEditButton =
-        editFragment.disableSettingButton ==
+        editFragment.disableEditButton ==
                 SettingVariableSelects.disableEditButtonSelects.ON.name
     private val onDisablePlayButton =
         editFragment.disablePlayButton ==

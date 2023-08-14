@@ -15,7 +15,6 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
-import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -90,7 +89,6 @@ class EditFragment: Fragment() {
     var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
-    val indexListLinearLayoutTagName = "indexListLinearLayoutTagName"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -231,13 +229,6 @@ class EditFragment: Fragment() {
             currentAppDirPath,
             currentShellFileName
         ).textToList()
-        existIndexList = CommandClickVariables.substituteCmdClickVariableList(
-            currentShellContentsList,
-            CommandClickScriptVariable.SET_VARIABLE_TYPE
-        )?.any {
-            it.contains(":${EditTextSupportViewName.LIST_INDEX.str}=")
-        } ?: false
-
         val editModeHandler = EditModeHandler(
             this,
             binding,

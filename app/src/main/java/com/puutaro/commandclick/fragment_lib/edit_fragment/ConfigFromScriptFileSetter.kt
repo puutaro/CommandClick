@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
@@ -16,10 +16,6 @@ object ConfigFromScriptFileSetter {
             readSharePreffernceMap,
             SharePrefferenceSetting.on_shortcut
         )
-        if (
-            onShortcut != FragmentTagManager.Suffix.ON.name
-        ) return
-
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -28,15 +24,23 @@ object ConfigFromScriptFileSetter {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-        val fannelDirName = currentScriptFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
-
         val currentShellContentsList = ReadText(
             currentAppDirPath,
             currentScriptFileName
         ).textToList()
+        editFragment.existIndexList =
+            judgeExistListIndex(
+                editFragment,
+                currentShellContentsList
+            )
+        if (
+            onShortcut != FragmentTagManager.Suffix.ON.name
+        ) return
+
+        val fannelDirName = currentScriptFileName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             currentShellContentsList,
@@ -203,5 +207,28 @@ object ConfigFromScriptFileSetter {
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
                 ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
                 )
+    }
+
+    private fun judgeExistListIndex(
+        editFragment: EditFragment,
+        currentShellContentsList: List<String>
+    ): Boolean {
+        val prefixDirScriptSuffixList = FragmentTagManager.makeListFromTag(
+            editFragment.tag as String,
+        )
+        val isSetting = prefixDirScriptSuffixList.get(
+            FragmentTagManager.prefixIndex
+        ) == FragmentTagManager.Prefix.settingEditPrefix.str
+        if(
+            isSetting
+        ) return false
+        return CommandClickVariables.substituteCmdClickVariableList(
+            currentShellContentsList,
+            CommandClickScriptVariable.SET_VARIABLE_TYPE
+        )?.any {
+            it.contains(
+                ":${EditTextSupportViewName.LIST_INDEX.str}="
+            )
+        } ?: false
     }
 }
