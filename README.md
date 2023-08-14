@@ -49,8 +49,11 @@ Are you satisfied with existing web browsers life ?
 CommandClick
 ----
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500">  
 
+
+[](<img src="https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117" width="500">)  
+[](<img src="https://github.com/puutaro/CommandClick/assets/55217593/bf05dcc5-4f91-4660-8961-fe915801142f" width="500">  )
 [](![cmdclick_git_log](https://github.com/puutaro/CommandClick/assets/55217593/30c5beb5-b55d-4261-a4d4-2ef9906b3117))
 [](![cmdclick_image](https://user-images.githubusercontent.com/55217593/199425521-3f088fcc-93b0-4a84-a9fd-c75418f40654.png))   
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
