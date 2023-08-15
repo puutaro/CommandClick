@@ -483,16 +483,27 @@ But, it is limited. at least the menu can't be manipulated.
 
 ### Internet Button exec script
 
-This script is executed, click when internet buton is grey globle mark and long terminal mode is active.
+Sorry, This is not script, but setting file.　　
+But, this file almost untouchable. 
+This may be more suitable for adventures of those who want to tinker.  
+  
+This file is executed, click when internet buton is grey globle mark and long terminal mode is active.  
+Therefore, it has to do with the behavior of the internet button.  
+If you interest in how to internet button, it might be nice to play.  
+
 
 
 ### Button exec script
 
-This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
+Uhn.., sorry for repeating, this is not script, but setting file.　　
+Additionaly, this file almost untouchable. 
+Those who want to explore should refer to the following.  
+  
+This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.  
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
-).
-
-
+).  
+  
+  
 ### Developer page
 
 -> [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
