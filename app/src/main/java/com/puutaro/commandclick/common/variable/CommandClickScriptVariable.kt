@@ -330,17 +330,7 @@ object CommandClickScriptVariable {
 
     fun makeDescription(): String {
         return """
-            # * ${TERMINAL_DO} 
-            |#   -> terminal screen select option (only shellScript)
-            |#  - ${terminalOn}cmdclick terminal (default)
-            |#  - ${terminalTermux}: termux terminal,
-            |#  - ${terminalOff}: no terminal(backend exec)
-            |# * ${EDIT_EXECUTE}
-            |#   -> is edit mode change
-            |#  - ${editExecuteNo} is normal edit
-            |#  - ${editExecuteOnce} is one time edit and execute
-            |#  - ${editExecuteAlways} is always edit and execute
-            |# * ${TERMINAL_SIZE_TYPE}
+            # * ${TERMINAL_SIZE_TYPE}
             |#   -> cmdclick terminal size option
             |#  - ${terminalSizeTypeOff}: no adjust (default)
             |#  - ${terminalSizeTypeLong}: LongSize
@@ -422,18 +412,6 @@ object CommandClickScriptVariable {
             |#   -> url history update signal
             |#  - ${onUrlHistoryRegisterOn}: update
             |#  - ${onUrlHistoryRegisterOff}: no update
-            |# * ${DISABLE_SETTING_BUTTON}
-            |#   -> setting button diable
-            |#  - ${disableSettingButtonOn}: on
-            |#  - ${disableSettingButtonOff}: off
-            |# * ${DISABLE_EDIT_BUTTON}
-            |#   -> edit button diable
-            |#  - ${disableEditButtonOn}: on
-            |#  - ${disableEditButtonOff}: off
-            |# * ${DISABLE_PLAY_BUTTON}
-            |#   -> play button diable
-            |#  - ${disablePlayButtonOn}: on
-            |#  - ${disablePlayButtonOff}: off
             |# * ${EXEC_JS_OR_HTML_PATH}
             |#   -> execute javascript or html file path
             |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
@@ -455,6 +433,13 @@ object CommandClickScriptVariable {
             |#    - js file path: execute js file
             |# * ${SCRIPT_FILE_NAME}
             |#   -> your shell file name
+            |#
+            |#
+            |#
+            |#  Access bellow url about more detail
+            |#   https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md
+            |#
+            |#
             |#
         """.trimIndent().replace("EX_INDENT_BLANK", "        ")
     }
