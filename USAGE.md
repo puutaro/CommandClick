@@ -1,5 +1,5 @@
 
-# Command Click Usage 
+# CommandClick Usage 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500"> 
 
 [![Android: 8+](https://img.shields.io/badge/Android-8+-blueviolet.svg?style=popout&logo=android)]((https://opensource.org/licenses/MIT))
@@ -79,7 +79,7 @@ Threfore I equipped new world transformation here.
 
 ### History
 
-This feature is basic and great feature in `Command Click`.   
+This feature is basic and great feature in `CommandClick`.   
 This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.  
 Existing browser cannot look in history with one touch and other andorid application cannnot.  
 Thanks to this feature, in spite of `CommandClick` multiple feature, `CommandClick` don't let you enter the labyrinth.
@@ -288,7 +288,7 @@ You can setting `CommandClick` Configration
 
 ### Termux Setting
 
-Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
+`CommandClick` is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
 and, require termux storage setting.
 You can set by onley this menu press.
 
@@ -433,7 +433,7 @@ More precisely, thanks to shortcut button power.
 
 ### Auto exec script
 
-`Command Click` have auto exec script. This is used when `index mode` startup or end.
+`CommandClick` have auto exec script. This is used when `index mode` startup or end.
 
 ### Startup script
 1. This script is automaticaly executed when `index mode` startup.
