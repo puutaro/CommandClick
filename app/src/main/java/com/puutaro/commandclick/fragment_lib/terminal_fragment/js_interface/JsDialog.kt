@@ -14,6 +14,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectSpannableJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlyImageGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlySpannableGridJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
 import com.puutaro.commandclick.util.QuoteTool
 
@@ -21,6 +22,10 @@ class JsDialog(
     terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
+
+    private val promptJsDialog = PromptJsDialog(
+        terminalFragment
+    )
 
     private val listJsDialog = ListJsDialog(
         terminalFragment,
@@ -80,6 +85,17 @@ class JsDialog(
             title,
             message,
             listSource
+        )
+    }
+
+    @JavascriptInterface
+    fun prompt(
+        title: String,
+        message: String
+    ): String {
+        return promptJsDialog.create(
+            title,
+            message
         )
     }
 
