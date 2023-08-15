@@ -101,35 +101,50 @@ Run script or launch app mode (when editExecute variable is `Always`)
 
 #### Edit
 
-Edit script by form when long click list item in index mode 
+Edit script in index mode 
+
+1. Long press list item
+2. Click `edit` in menu
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e5ac7e04-a506-4c3d-b7f7-5505ac6f7b03" width="400">  
 
 #### Write
 
-Edit script by editor when long click list item in index mode 
+Edit script by editor in index mode 
+
+1. Long press list item
+2. Click `write` in menu
 
 #### Delete
 
-Delete script by `utility` -> `delete`  when long click list item in index mode   
+Delete script  
 At the same time, remove `fannel` direcotry (raw filename + `Dir`)  
+
+1. Long press list item
+2. Click `utility` -> `delete` in menu
 
 
 #### Kill
 
-(Shell only) Kill shellscript proccess by `utility` -> `kill`  when long click list item in index mode 
+(Shell only) Kill shellscript proccess in index mode 
 
+1. Long press list item
+2. Click `utility` -> `kill` in menu
 
 #### Description
 
 Display description for script 
+  
+1. Long press list item
+2. Click `utility` -> `description` in menu 
+
+or
+
 
 1. Click thumbnail
-1. `utility` -> `description`  when long click list item in index mode
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
-
-
+  
 
 #### Copy file
 
