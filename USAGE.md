@@ -39,8 +39,8 @@ Table of Contents
     * [Launch web menu](#launch-web-menu)
     * [Highlight search](#highlight-search)
     * [Highlight search dialog feature](#highlight-search-dialog-feature)
-  * [Auto exec script](#auto-exec-script)
-    * [Startup script](#startup-script)
+  * [Startup script](#startup-script)
+  * [Select menu](#select-menu)
   * [Internet Button exec script](#internet-button-exec-script)
   * [Button exec script](#button-exec-script)
 * [Developer page](#developer-page)
@@ -438,11 +438,6 @@ More precisely, thanks to shortcut button power.
 
 
 
-
-### Auto exec script
-
-`CommandClick` have auto exec script. This is used when `index mode` startup or end.
-
 ### Startup script
 
 This script is not script, but setting file.  
@@ -462,6 +457,27 @@ Shortly, you add `fannel` to long press menu.
 I aim to make it possible to rework most of CommandClick's functionality if you feel like it.　　
 `CommandClick` is "open browser" in that sense.  
 With a view to that point, this startup setting file (no script) express `CommandClick`' customize power.   
+
+
+### Select menu  
+
+This feature is `fannel`.  
+I aim that `CommandClick` is  user customize brower.  
+I dislike forced browser.  
+I think it is desirable that web browser feature is open becuase web browser is daily necessities.  
+I personality like linux, becuase of enabling customize due to pick up package.  
+Depending on doing, consistent UI and functionality in diffrent version.  
+About browser, above same.  
+Of course, thanks to addon, we can be customized to some extent.
+But, it is limited. at least the menu can't be manipulated.  
+`CommandClick` enable this.  
+
+1. With long term mode, Click right bottom gear button in order short mode.
+2. Type "select" to search box.
+`selectMenu.js` `fannel` apear.
+4. Long press `selectMenu.js`
+5. Click `edit` in context menu
+6. Set "Edit menu" clicking to description button to refer to.   
 
 
 
