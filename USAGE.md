@@ -72,7 +72,7 @@ Trigger by left bottom history button clicked.
 
 #### Url history
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/373d5d55-6eda-44e0-b3b6-9bcef44dafdc" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/25ae02ea-69ad-4e55-8536-e4a99826940c" width="400">  
 
 You look in url history by long press where you visited url 
 (Afterward noting, switchable url history with history, or url history with button script exec)  
