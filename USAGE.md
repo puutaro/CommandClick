@@ -62,40 +62,48 @@ Main usage is executoin script by net surfing and list script clicking, other us
 
 #### History
 
+This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
+
+1. Click left bottom history button.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/3814775f-0eaf-4163-8e14-3d358b7dff4e" width="400">  
-
-This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
-Trigger by left bottom history button clicked.
-
 
 #### Url history
 
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
-
-You look in url history by long press where you visited url 
+This feature is basic and great feature in `Command Click`. This always allow you to select url which you visited.
 (Afterward noting, switchable url history with history, or url history with button script exec)  
 
+
+1. Long press left bottom history button.
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
 
 
 #### Change term size
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
+Terminal size change.
 
-Click toolbar right setting button, and terminal size change.
+1. Click toolbar right setting button
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
 
 
 #### Run
 
-Run script by click list item in index mode or play button edit mode (editExecute variable is `Always`)
-Or run javascript file.
+
+Run script or launch app mode (when editExecute variable is `Always`)
+
+1. Click script item
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/bfa4ba53-faa8-4b3b-88ef-1c978e8495f5" width="400">  
 
 
 #### Edit
 
 Edit script by form when long click list item in index mode 
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e5ac7e04-a506-4c3d-b7f7-5505ac6f7b03" width="400">  
 
 #### Write
 
