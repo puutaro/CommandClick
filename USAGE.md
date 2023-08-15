@@ -88,6 +88,9 @@ Click toolbar right setting button, and terminal size change.
 
 #### Add
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
+
+
 This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
 At the same time, if you installed code editor, edit new file.
 
