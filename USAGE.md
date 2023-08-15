@@ -279,7 +279,15 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 
 ### Config
 
-You can setting `CommandClick` Configration
+You can setting `CommandClick` Configration.
+This feature is set global. 
+Shotly, if only you set config, it's setting share `app direcoty`s.   
+Of course, enable override setttings by `startupScript` in `app directory`.  
+But, You set in this, you are released duplication setting.  
+For example, if you set `onAdBlock` setting,  no need to set each `app direcotry`.
+We would like you to experience the joy of using the app in a unified way.　　
+
+
 - detail setting reference [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
 1. Long press right buttom gear button  
@@ -436,11 +444,24 @@ More precisely, thanks to shortcut button power.
 `CommandClick` have auto exec script. This is used when `index mode` startup or end.
 
 ### Startup script
-1. This script is automaticaly executed when `index mode` startup.
-But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
-).
 
-2. Override `config setting variable`, if you are change default value with your set value.
+This script is not script, but setting file.  
+`CommandClick` is setting file each `app directory`.  
+That is this "`setting file`.  
+If you want to set to be diffrent from config setting, recomend override this setting.  
+Additionaly, I recomend set billow setting   
+
+- `srcImageAnchorLongPressMenuFilePath`  
+- `srcAnchorLongPressMenuFilePath`  
+- `imageLongPressMenuFilePath`  
+
+Above setting item is not variable, but setting name.  
+Some `CommandClick`'s `fannel` support long press menu.  
+Shortly, you add `fannel` to long press menu.  
+`CommandClick` is not a forced browser, but user customise oriented browser.  
+I aim to make it possible to rework most of CommandClick's functionality if you feel like it.　　
+`CommandClick` is "open browser" in that sense.  
+With a view to that point, this startup setting file (no script) express `CommandClick`' customize power.   
 
 
 
