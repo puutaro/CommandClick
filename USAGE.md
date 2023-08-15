@@ -8,26 +8,10 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 
-So called `Script browser`.  
-It's a enforced browser by javascript and shellscript.   
-Also, it is termux gui client .  
-
-
-Pros
-----
-- Web browser powerd by javascript and shellscript(termux)
-- history oriented web browser.
-- Javascript engine and framework.    
-- Row code tool for android application development.  
-- Not only web browser but also termux gui client.
-- Easily turn javascript and shellscript into a GUI application in android.
-
-
 Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [App installation](#app-installation)
 * [Usage](#usage)
   * [History](#history)
   * [Change term size](#change-term-size)
@@ -62,18 +46,6 @@ Table of Contents
 * [CommandClick repository](#commandclick-repository)
 * [Generally TroubleShooting](#generally-troubleshooting)
 * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
-
-
-
-App installation
------  
-- Android 8+
-
-get it on belllow link  
-  
-<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
-
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
 
 
