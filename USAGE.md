@@ -413,7 +413,7 @@ When you look website, press internet button no highlight, launch menu by inerne
 
 #### Highlight search
 
-This mode is web browser search revolution.
+This mode is web browser search revolution.  
 Existing browser don't have this feature.  
 This mode is `CommmandClick`'s web search big advantage.
 This mode enable speedy search and derailment search.  
@@ -426,13 +426,15 @@ This mode enable speedy search and derailment search.
 
 #### Highlight search dialog feature
 
-Highlight search inpact source is this feature. 
+Highlight search inpact source is this feature.   
 More precisely, thanks to shortcut button power. 
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/4f2e2ef7-3749-4c86-a950-744094c488f0" width="400">  
+**click** 
 
---    
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/a2c2cf37-fbeb-49d4-8c5b-80324d2ffffc" width="400">  
 
+    
+**long press**  
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/b8a9dc77-f533-469a-8d63-59cb5b4ecfd1" width="400">  
 
@@ -495,8 +497,8 @@ If you interest in how to internet button, it might be nice to play.
 
 ### Button exec script
 
-Uhn.., sorry for repeating, this is not script, but setting file.　　
-Additionaly, this file almost untouchable. 
+Uhn.., sorry for repeating, this is not script, but setting file.  
+Additionaly, this file almost untouchable.  
 Those who want to explore should refer to the following.  
   
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.  
