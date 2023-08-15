@@ -63,7 +63,7 @@ Main usage is executoin script by net surfing and list script clicking, other us
 
 #### History
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/e561bd88-167c-4acb-8cf9-991185c18be0" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/91e876ee-a6d7-4219-82ad-f60585eaaf2a" width="400">  
 
 
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
