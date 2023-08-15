@@ -16,7 +16,6 @@ Table of Contents
   * [History](#history)
   * [Url history](#url-history)
   * [Change term size](#change-term-size)
-  * [Add](#add)
   * [Run](#run)
   * [Edit](#edit)
   * [Write](#write)
@@ -86,16 +85,6 @@ You look in url history by long press where you visited url
 
 Click toolbar right setting button, and terminal size change.
 
-#### Add
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
-
-
-This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
-At the same time, if you installed code editor, edit new file.
-
-More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
-
 
 #### Run
 
@@ -139,7 +128,12 @@ Copy file path for script by `copy` -> `copy file path`  when long click list it
 
 #### Add
 
-Add new script by `add`   when long click setting button(toolbar right) in index mode
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
+
+This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
+At the same time, if you installed code editor, edit new file.
+
+More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
 
 #### Change app dir
