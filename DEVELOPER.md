@@ -720,6 +720,12 @@ This, so colled, android app row code library.
 
  - JsDialog
 
+	- jsDialog.prompt(
+		title: String,
+		message: String,
+	  )
+		-> input text string
+
  	- jsDialog.listJsDialog(
 		listSource: String(tab sepalate)
 	   )
