@@ -329,8 +329,6 @@ object CommandClickScriptVariable {
     private val colons = "::"
 
     fun makeDescription(): String {
-        val backstackMacroSignal = colons + SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name + colons
-        val termOutMacroSignal = colons + SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name + colons
         return """
             # * ${TERMINAL_DO} 
             |#   -> terminal screen select option (only shellScript)
@@ -405,11 +403,6 @@ object CommandClickScriptVariable {
             |#          - drag and sort home fannels list
             |#      ADD button
             |#          - Add fannel to home fannel list
-            |# * ${HIDE_SETTING_VARIABLES}
-            |#   -> specified setting varialle you want to hidden when edit
-            |#     ex) ${HIDE_SETTING_VARIABLES}="${EDIT_EXECUTE}"
-            |#     ex) ${HIDE_SETTING_VARIABLES}="${CMDCLICK_HISTORY_SWITCH}"
-            |#     ex) ${HIDE_SETTING_VARIABLES}=..
             |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
             |#   -> switch url history or button script exec
             |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
@@ -460,47 +453,8 @@ object CommandClickScriptVariable {
             |#    - WEB_SEARCH: apear web search bar
             |#    - PAGE_SEARCH: apear page search bar
             |#    - js file path: execute js file
-            |# * ${SET_REPLACE_VARIABLE}
-            |#   -> string replaced with certain string
-            |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle1}={repalce string1}"
-            |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle2}={repalce string2}"
-            |#  - ex) ${SET_REPLACE_VARIABLE}="{replaceVariablle3}={repalce string3}"
-            |#  - ex) ${SET_REPLACE_VARIABLE}="..."
-            |# * ${SET_VARIABLE_TYPE}
-            |#   -> cmdsection gui edit mini program, reference to github for detail (like gtk yad)
-            |#  - ex) spinner: {cmdVariable}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF  
-            |#  - ex) num crementer: {cmdVariable}:${EditTextSupportViewName.NUM_INDE_CREMENTER.str}=1!1..100!1 (({init})!{min}..{max}!{step})
-            |#  - ex) file selector: {cmdVariable}:${EditTextSupportViewName.FILE_PICKER.str}=
-            |#  - ex) button: {cmdVariable}:${EditTextSupportViewName.BUTTON.str}=
-            |#    - button execute command 
-            |#      ex) echo $0  
-            |#             ("$0" is current shell path
-            |#      ex) ${backstackMacroSignal} ls
-            |#             ("${backstackMacroSignal}" is backstack, only work when prefix
-            |#      ex) ${termOutMacroSignal} ls
-            |#             ("${termOutMacroSignal}" enable terminal output
-            |#      ex) top -n 1 > /dev/null  
-            |#             (when suffix is "> /dev/null" or "> /dev/null 2>&1", no output
-            |#  - ex) dir selector: {cmdVariable}:${EditTextSupportViewName.DIRECTORY_PICKER.str}=
-            |#  - ex) read only: {cmdVariable}:${EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str}=
-            |#  - ex) password: {cmdVariable}:${EditTextSupportViewName.PASSWORD.str}=
-            |#  - enable multiple specification
-            |#  - ex) 
-            |#  ${SET_VARIABLE_TYPE}="{cmdVar1}:${EditTextSupportViewName.CHECK_BOX.str}=ON!OFF"
-            |#  ${SET_VARIABLE_TYPE}="{cmdVar2}:${EditTextSupportViewName.FILE_PICKER.str}="
-            |#  ${SET_VARIABLE_TYPE}="..."
-            |# * ${BEFORE_COMMAND}
-            |#   -> before shell script execute, run command
-            |# * ${AFTER_COMMAND}
-            |#   -> after shell script execute, run command
             |# * ${SCRIPT_FILE_NAME}
             |#   -> your shell file name
-            |# * ${OVERRIDE_ITEM_CLICK_EXEC}
-            |#   -> about whether to exc js and shell script item on click
-            |#    - ${overrideItemClickExecSelectsOff}: no exec
-            |#    - ${overrideItemClickExecSelectsOn}: exec (default)
-            |#    - ${PASS_CMDVARIABLE_EDIT}
-            |#   -> ON: pass cmd variable edit
             |#
         """.trimIndent().replace("EX_INDENT_BLANK", "        ")
     }
