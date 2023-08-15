@@ -77,7 +77,7 @@ Threfore I equipped new world transformation here.
 
 
 
-#### History
+### History
 
 This feature is basic and great feature in `Command Click`.   
 This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.  
@@ -92,7 +92,7 @@ Whether it's web or app history, it doesn't matter. It is a function that guaran
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/3814775f-0eaf-4163-8e14-3d358b7dff4e" width="400">  
 
-#### Url history
+### Url history
 
 Above same.
 
@@ -102,7 +102,7 @@ Above same.
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
 
 
-#### Change term size
+### Change term size
 
 I design to change terminal size. Have you ever heard of an app that resizes the terminal?　  
 Have you ever heard of a web browser that allows you to change its size?  
@@ -118,7 +118,7 @@ Thanks to changing web terminal size, `CommandClick` lead you to enter a functio
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
 
 
-#### Run
+### Run
 
 This feature run script by one click.  
 At the same time, this script is `CommandClick` extension written by javascript and shellscript.  
@@ -147,14 +147,14 @@ If you customize application by no code, this feature is enforde your hands.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e5ac7e04-a506-4c3d-b7f7-5505ac6f7b03" width="400">  
 
-#### Write
+### Write
 
 Edit script by editor  
 
 1. Long press list item
 2. Click `write` in menu
 
-#### Delete
+### Delete
 
 Delete script  
 
@@ -162,14 +162,14 @@ Delete script
 2. Click `utility` -> `delete` in menu
 
 
-#### Kill
+### Kill
 
 (Shell only) Kill shellscript proccess  
 
 1. Long press list item
 2. Click `utility` -> `kill` in menu
 
-#### Description
+### Description
 
 Display description for script 
   
@@ -184,7 +184,7 @@ or
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
   
 
-#### Copy file
+### Copy file
 
 Copy file for script   
 
@@ -192,7 +192,7 @@ Copy file for script
 2. Click `copy` -> `copy file` in menu 
 
 
-#### Copy file path
+### Copy file path
 
 Copy file path for script 
 
@@ -200,7 +200,7 @@ Copy file path for script
 2. Click `copy` -> `copy file path` in menu
 
 
-#### Add
+### Add
 
 This featue's direction is for developer.    
 `CommandClick` is low code tool.   
@@ -218,7 +218,7 @@ More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
 
-#### Change app dir
+### Change app dir
 
 In here, talk `CommandClick`'s mechanizm.  
 `CommandClick`'s adopt file system.   
@@ -241,7 +241,7 @@ Bigginer may not edit `app directory`, but, this feature may be important for so
     - `copy`: copy `App directory`
 
 
-#### Create shortcut
+### Create shortcut
  
 You can create shortcut for current `App directory` or `script`  
 
@@ -249,7 +249,7 @@ You can create shortcut for current `App directory` or `script`
 2. Click `setting` -> "create_short_cut" in popup menu
    
 
-#### Install fannel
+### Install fannel
 
 `fannel` is bellow meaning    
 
@@ -277,7 +277,7 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca" width="600">  
 
 
-#### Config
+### Config
 
 You can setting `CommandClick` Configration
 - detail setting reference [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
@@ -286,7 +286,7 @@ You can setting `CommandClick` Configration
 2. Click `setting` -> "config" in popup menu
 
 
-#### Termux Setting
+### Termux Setting
 
 Command Click is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
 and, require termux storage setting.
@@ -332,7 +332,7 @@ You can set by onley this menu press.
 
 - When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
-#### Edit startup
+### Edit startup
 
 Edit `statup script` contenst.  
 `statup script` is setting script for `current app directory`. So this setting directly link to usability.    
@@ -341,7 +341,7 @@ Edit `statup script` contenst.
 1. Long press right buttom gear button  
 2. Click `edit_startup` in popup menu
 
-#### No scroll save url
+### No scroll save url
 
 Register scroll y position ignore domain 
 
@@ -349,7 +349,7 @@ Register scroll y position ignore domain
 2. Click `no scroll save url` in popup menu
 
 
-#### Term reflesh
+### Term reflesh
 
 You can reflesh `web terminal view`.
 
@@ -357,7 +357,7 @@ You can reflesh `web terminal view`.
 2. Click `setting` -> "term_reflesh" in popup menu
 
 
-#### Forward
+### Forward
 
 You can forward `web terminal view` history.
 
@@ -365,7 +365,7 @@ You can forward `web terminal view` history.
 2. Click `left allow button`
    
 
-#### Search mode
+### Search mode
 
 You can search `web terminal view` by toolbar search item.
 
@@ -375,7 +375,7 @@ You can search `web terminal view` by toolbar search item.
 
 
 
-##### Terminal filter
+#### Terminal filter
 
 It's default setting in terminal short size. If you type string, realtime filter start.
 
@@ -383,7 +383,7 @@ It's default setting in terminal short size. If you type string, realtime filter
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/d468feac-62c9-43c4-a15b-b44282467c60" width="400">  
 
 
-##### Terminal search
+#### Terminal search
 
 Search typing word.
 
@@ -393,7 +393,7 @@ Search typing word.
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/7919ebe1-12d2-4955-b5ec-debfa73da564" width="400">  
 
 
-##### Launch web menu
+#### Launch web menu
 
 This is shortcut menu with internet button.
 When you look website, press internet button no highlight, launch menu by inernet button script
@@ -416,7 +416,7 @@ This mode enable speedy search and derailment search.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/bb4824ea-da17-43a8-bfc9-c1443d031b92" width="400">  
 
-##### Highlight search dialog feature
+#### Highlight search dialog feature
 
 Highlight search inpact source is this feature. 
 More precisely, thanks to shortcut button power. 
@@ -435,7 +435,7 @@ More precisely, thanks to shortcut button power.
 
 `Command Click` have auto exec script. This is used when `index mode` startup or end.
 
-#### Startup script
+### Startup script
 1. This script is automaticaly executed when `index mode` startup.
 But, in default, `onAutoExec` in setting variable is `OFF` so, if you enable this, you must be `ON` (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).
