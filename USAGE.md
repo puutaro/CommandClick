@@ -122,7 +122,13 @@ At the same time, remove `fannel` direcotry (raw filename + `Dir`)
 
 #### Description
 
-Display description for script by `utility` -> `description`  when long click list item in index mode
+Display description for script 
+
+1. Click thumbnail
+1. `utility` -> `description`  when long click list item in index mode
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
+
 
 
 #### Copy file
