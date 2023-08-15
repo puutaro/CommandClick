@@ -101,7 +101,7 @@ Run script or launch app mode (when editExecute variable is `Always`)
 
 #### Edit
 
-Edit script in index mode 
+Edit script  
 
 1. Long press list item
 2. Click `edit` in menu
@@ -110,7 +110,7 @@ Edit script in index mode
 
 #### Write
 
-Edit script by editor in index mode 
+Edit script by editor  
 
 1. Long press list item
 2. Click `write` in menu
@@ -118,7 +118,6 @@ Edit script by editor in index mode
 #### Delete
 
 Delete script  
-At the same time, remove `fannel` direcotry (raw filename + `Dir`)  
 
 1. Long press list item
 2. Click `utility` -> `delete` in menu
@@ -126,7 +125,7 @@ At the same time, remove `fannel` direcotry (raw filename + `Dir`)
 
 #### Kill
 
-(Shell only) Kill shellscript proccess in index mode 
+(Shell only) Kill shellscript proccess  
 
 1. Long press list item
 2. Click `utility` -> `kill` in menu
@@ -148,38 +147,56 @@ or
 
 #### Copy file
 
-Copy file for script by `copy` -> `copy file`  when long click list item in index mode  
-At the same time, copy `fannel` direcotry (raw filename + `Dir`)  
+Copy file for script   
+
+1. Long press list item
+2. Click `copy` -> `copy file` in menu 
+
 
 #### Copy file path
 
-Copy file path for script by `copy` -> `copy file path`  when long click list item in index mode
+Copy file path for script 
+
+1. Long press list item
+2. Click `copy` -> `copy file path` in menu
+
 
 #### Add
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
 
-This feature display when toolbar right setting button long pressed. Then, click `add`, so new script adding.
+Add new script.  
 At the same time, if you installed code editor, edit new file.
 
 More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
+1. Long press right buttom gear button  
+2. Click `add` in popup menu 
+
 
 #### Change app dir
 
+Start `App directory` Manager 
 
-Start `App directory` Manager by `setting` -> `change_app_dir` when long click setting button(toolbar right) in index mode
+
+1. Long press right buttom gear button  
+2. Click `setting` -> "change_app_dir" in popup menu
+
 `App directory` is directory which index mode retreive
-- when item long press, poupu `add`, `delete` and `edit` menu 
+- when item long press, poupu `add`, `delete`, `copy` and `rename` menu 
     - `add`: add `App directory` 
     - `delete`: delete `App directory`
-    - `edit`: edit `App directory` name
-   
+    - `rename`: rename `App directory` name
+    - `copy`: copy `App directory`
 
 
 #### Create shortcut
  
-You can create shortcut for current `App directory` or `script` in only `index mode` or `edit execute Always`
+You can create shortcut for current `App directory` or `script`
+
+1. Long press right buttom gear button  
+2. Click `setting` -> "create_short_cut" in popup menu
+   
 
 #### Install fannel
 
@@ -191,7 +208,7 @@ You can create shortcut for current `App directory` or `script` in only `index m
 
 Bellow, how to install `fannel`  
 
-1. long press right bottom setting button  
+1. Long press right bottom gear button  
 2. click `install_fannel`   
 3. You can install `fannel` by clicking.   
 
@@ -205,6 +222,8 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 You can setting `CommandClick` Configration
 - detail setting reference [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
+1. Long press right buttom gear button  
+2. Click `setting` -> "config" in popup menu
 
 
 #### Termux Setting
@@ -259,34 +278,69 @@ Edit `statup script` contenst.
 `statup script` is setting script for `current app directory`. So this setting directly link to usability.    
 [ref](#startup-script)
 
+1. Long press right buttom gear button  
+2. Click `edit_startup` in popup menu
+
 #### No scroll save url
 
 Register scroll y position ignore domain 
+
+1. Long press right buttom gear button  
+2. Click `no scroll save url` in popup menu
+
 
 #### Term reflesh
 
 You can reflesh `web terminal view`.
 
+1. Long press right buttom gear button  
+2. Click `setting` -> "term_reflesh" in popup menu
+
+
 #### Forward
 
 You can forward `web terminal view` history.
+
+1. Long press right buttom gear button  
+2. Click `left allow button`
+   
 
 #### Search mode
 
 You can search `web terminal view` by toolbar search item.
 
+1. Input bottom search bar.
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/0fe0a998-ae2d-4c8e-bff5-ceddd49a7988" width="400">  
+
+
+
 ##### Terminal filter
 
 It's default setting in terminal short size. If you type string, realtime filter start.
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/944434ae-ec25-4bcf-a99a-c1bc6797ee10" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/d468feac-62c9-43c4-a15b-b44282467c60" width="400">  
+
+
 ##### Terminal search
 
-When terminal mark or web mark long press, you can search typing word.
+Search typing word.
+
+1. Long press terminal mark or web mark long press
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/ac7ec457-005e-48ac-83d5-872bce60c269" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/7919ebe1-12d2-4955-b5ec-debfa73da564" width="400">  
+
 
 ##### Launch web menu
 
 This is shortcut menu with internet button.
 When you look website, press internet button no highlight, launch menu by inernet button script
+
+1. Click internet button.
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/c6e61be7-bfb2-4b8d-a13f-3d985d42d052" width="400">  
 
 
 #### Highlight search
