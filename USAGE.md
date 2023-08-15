@@ -133,7 +133,7 @@ In other word, though you don't anything, if you got script from internet, you b
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/bfa4ba53-faa8-4b3b-88ef-1c978e8495f5" width="400">  
 
 
-#### Edit
+### Edit
 
 If you were not developer, this feature is rarely use.  
 In othre words This feature main target is developer.  
