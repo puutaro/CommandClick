@@ -63,8 +63,8 @@ Main usage is executoin script by net surfing and list script clicking, other us
 
 #### History
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/91e876ee-a6d7-4219-82ad-f60585eaaf2a" width="400">  
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/3814775f-0eaf-4163-8e14-3d358b7dff4e" width="400">  
 
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
 Trigger by left bottom history button clicked.
@@ -72,7 +72,8 @@ Trigger by left bottom history button clicked.
 
 #### Url history
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/7068797d-57d8-45fa-a16e-71c9c7c1293c" width="400">  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
 
 You look in url history by long press where you visited url 
 (Afterward noting, switchable url history with history, or url history with button script exec)  
