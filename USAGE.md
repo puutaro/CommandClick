@@ -14,6 +14,7 @@ Table of Contents
 
 * [Usage](#usage)
   * [History](#history)
+  * [Url history](#url-history)
   * [Change term size](#change-term-size)
   * [Add](#add)
   * [Run](#run)
@@ -62,10 +63,21 @@ Main usage is executoin script by net surfing and list script clicking, other us
 
 #### History
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e561bd88-167c-4acb-8cf9-991185c18be0" width="400">  
+
+
 This feature is basic and great feature in `Command Click`. This always allow you to select current directory and mode which used, as if you look in Android's backstack feature's history.
-Torigger by left bottom history button clicked.
-And more you look in url history by long press where you visited url (Afterward noting, switchable url history with history, or url history with button script exec)
-* history item display mechanism {current_app_dir}__({current_script}) (when exist current script, edit execute is `Always`)
+Trigger by left bottom history button clicked.
+
+
+#### Url history
+
+
+
+You look in url history by long press where you visited url 
+(Afterward noting, switchable url history with history, or url history with button script exec)  
+
+
 
 #### Change term size
 
