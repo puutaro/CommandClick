@@ -345,8 +345,13 @@ When you look website, press internet button no highlight, launch menu by inerne
 
 #### Highlight search
 
-This is speed search mode.  
-When you look website, highlight text and click internet button..
+This is speed search enable.  
+
+1. Highlight text in website
+2. Click internet button
+
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/bb4824ea-da17-43a8-bfc9-c1443d031b92" width="400">  
 
 
 
