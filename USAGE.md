@@ -55,7 +55,7 @@ Usage
 
 ### Index mode
 
-This mode is owned existing browser. Only `CommandClick` have special feature.   
+This mode is not owned existing browser. Only `CommandClick` have special feature.   
 `CommandClick` advantage start from this feature.  
 Thanks to this index mode, `CommandClick` have wide spread multiple feature.  
 So called `main mode` for `CommandClick`. 
