@@ -86,7 +86,8 @@ Above same.
 ### Change term size
 
 Terminal size change.  
-
+  
+[Procedure]  
 1. Click toolbar right setting button
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
