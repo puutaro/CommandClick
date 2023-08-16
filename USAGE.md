@@ -469,9 +469,9 @@ This mode enable speedy search and derailment search.
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/bb4824ea-da17-43a8-bfc9-c1443d031b92" width="400">  
 
 #### Highlight search dialog feature
-
+  
 Highlight search inpact source is this feature.   
-More precisely, thanks to shortcut button power. 
+More precisely, thanks to shortcut button power.   
 
 **click** 
 
@@ -500,7 +500,7 @@ Above setting item is not variable, but setting name.
 Some `CommandClick`'s `fannel` support long press menu.  
 Shortly, you add `fannel` to long press menu.  
 `CommandClick` is not a forced browser, but user customise oriented browser.  
-I aim to make it possible to rework most of CommandClick's functionality if you feel like it.　　
+I aim to make it possible to rework most of CommandClick's functionality if you feel like it.  
 `CommandClick` is "open browser" in that sense.  
 With a view to that point, this startup setting file (no script) express `CommandClick`' customize power.   
 
@@ -514,7 +514,7 @@ I think it is desirable that web browser feature is open becuase web browser is 
 I personality like linux, becuase of enabling customize due to pick up package.  
 Depending on doing, consistent UI and functionality in diffrent version.  
 About browser, above same.  
-Of course, thanks to addon, we can be customized to some extent.
+Of course, thanks to addon, we can be customized to some extent.  
 But, it is limited. at least the menu can't be manipulated.  
 `CommandClick` enable this.  
 
@@ -545,7 +545,7 @@ Uhn.., sorry for repeating, this is not script, but setting file.
 Additionaly, this file almost untouchable.  
 Those who want to explore should refer to the following.  
   
-This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.  
+This script is executed when history buton click or long click, if you select `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.  
 Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).  
   
