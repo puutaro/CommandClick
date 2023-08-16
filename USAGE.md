@@ -596,6 +596,8 @@ Crashes easily when memory is low
 
 ### Ubuntu debian or widnows version
 
+-> [cmdclick](https://github.com/puutaro/cmdclick)
+
 As previously mentioned, `CommandClick` root is this.
 `CommandClick`'s all start from here.  
 And ubntu & windows version is critical engneer tool.  
@@ -608,7 +610,5 @@ Becuase `cmdclick` can controll os by shell, Control virtually everything on you
 We can promise to make a "second impact" on your engineer life.  
 Of course, in a happy way.  
 
-
-Reference to [url](https://github.com/puutaro/cmdclick)
 
 
