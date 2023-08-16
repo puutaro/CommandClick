@@ -244,6 +244,15 @@ Bigginer may not edit `app directory`, but, this feature may be important for so
 ### Create shortcut
  
 You can create shortcut for current `App directory` or `script`  
+This feature is not simple shortcut like existing web browser.  
+This is different from Web browser's shortcut. Than existing one, this is more thick disposition as app maker feature.　  
+`ComamndClick` is app maker. `CommandClick` produce `fannel`.   
+As previously mentioned, `fannel` is `CommandClick` support android aplication made by javascript and shellscript.  
+So, `Create shortcut` feature is shortcut for `fannel`.  
+In `CommandClick`, even `index mode` is `fannel`. In fact, `index mode` is android application made by `CommandClick`.  
+Also, `Create shortcut` itself  is apeared in othre area. It's is　that you will notice as you use.  
+Shortly, `Create shortcut` feature is `CommandClick`'s nature as an app maker comes to the fore.
+
 
 1. Long press right buttom gear button  
 2. Click `setting` -> "create_short_cut" in popup menu
@@ -296,11 +305,20 @@ We would like you to experience the joy of using the app in a unified way.　　
 
 ### Termux Setting
 
-`CommandClick` is use [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent) in termux  
-and, require termux storage setting.
-You can set by onley this menu press.
+As a matter of fact, `CommandClick` start from shellscript client.  
+You can see that by looking at the [cmdclick](https://github.com/puutaro/cmdclick)  
+Therefore, conbination with `termux` may be said `CommandClick` native ability.  
+As you use it, you will understand that `CommandClick` has golden conbination with `termux`.  
+That's why CommandClick and termux are so compatible.  
+Although currently `CommandClck` development stream main area is around javascript, historycaly `CommandClick` is developed for `termux`.  　　
+Do you know termux gui client application?
+This question is answer.  
+`CommandClick` is few `termux gui client` in android application, and this feature is existing browser absolutly no having.  
+Combining `CommandClick` and `termux` would have unimaginable versatility. In fact, the scale is too big for me to imagine.  
+`termux` has a wealth of shell assets and an overview of each programming language.   
+`CommandClick` has enforced javascript interface. 
+These combinations will create endless apps for you.  
 
-* Below is a supplement.
 
 1. long press right bottom setting button  
 2. `setting` -> `termux setup`   
@@ -315,11 +333,12 @@ You can set by onley this menu press.
    ```
 
    - reference
+      - [`RUN_COMMAND` Intent](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent)  
       - Enable `allow-external-apps` [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#allow-external-apps-property-mandatory)
       - Add Storage permission. [detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent#storage-permission-optional)
       - Execute `termux-setup-storage` on termux
 
-4. Set strage access again in `android 11` (Optional)
+4. Set storage access again in `android 11` (Optional)
 
 > You may get "Permission denied" error when trying to access shared storage, even though the permission has been granted.
 >  
@@ -340,14 +359,22 @@ You can set by onley this menu press.
 
 - When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
 
+
 ### Edit startup
 
-Edit `statup script` contenst.  
-`statup script` is setting script for `current app directory`. So this setting directly link to usability.    
-[ref](#startup-script)
+This feature can be replaced that just edit startup script file by `edit feature`.    
+However, the startup script is buried. CommandClick automatically places frequently used scripts at the bottom position where it is easy for users to see them, but startupScripts themselves are rarely used directly, so they are buried deep inside.　　
+You don't need it unless you don't mind searching, but apps are there to make life easier. That's why I prepared this function.　　
+With this feature, you can trigger a specific visible position at any time to edit your `startupScript`.  
+This is more easy.    
+`sttartup script` is important setting item in `app directory`.    
+So this feature is even more useful.   
+Details of the `startup scrpt` can be found [here](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#startup-script), so please take advantage of it.  
+
 
 1. Long press right buttom gear button  
 2. Click `edit_startup` in popup menu
+
 
 ### No scroll save url
 
