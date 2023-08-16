@@ -529,14 +529,14 @@ But, it is limited. at least the menu can't be manipulated.
 
 ### Internet Button exec script
 
-Sorry, This is not script, but setting file.　　
-But, this file almost untouchable. 
+Sorry, This is not script, but setting file.  
+But, this file almost untouchable.  
 This may be more suitable for adventures of those who want to tinker.  
   
 This file is executed, click when internet buton is grey globle mark and long terminal mode is active.  
 Therefore, it has to do with the behavior of the internet button.  
 If you interest in how to internet button, it might be nice to play.  
-
+  
 
 
 ### Button exec script
