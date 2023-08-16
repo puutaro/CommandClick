@@ -606,7 +606,7 @@ I can't help but be convenient.
 By `cmdclick` power, I was released current directory chaning type, sql table check query, git command typing, scattered url bookmark, scattered important thing's memo, and　Wandering the web in search of development tools　and more.  
 Becuase `cmdclick` can controll os by shell, Control virtually everything on your PC.  
 We can promise to make a "second impact" on your engineer life.  
-But in a happy way.  
+Of course, in a happy way.  
 
 
 Reference to [url](https://github.com/puutaro/cmdclick)
