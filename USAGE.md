@@ -378,7 +378,15 @@ Details of the `startup scrpt` can be found [here](https://github.com/puutaro/Co
 
 ### No scroll save url
 
-Register scroll y position ignore domain 
+`ComamndClick` memory scroll y position.  
+Different from existing browsers,　It is saved for a certain period of time.  
+I mean, `CommandClick` can restore not only url history but also scroll position. 
+Threfore, even if you closed url, `CommandClick` resotre past state.  
+In fact, this enable up to 50 domain possible.  
+Aside from whether there are many or few of them, it was not good to be remembered by amazon, news sites, etc., so I prepared this function.  
+We recommend that you register the site where the scroll position is remembered badly.  
+By the way, the acquisition of the domain is done automatically on the `CommndClick` side, so feel free to use it.  
+
 
 1. Long press right buttom gear button  
 2. Click `no scroll save url` in popup menu
@@ -402,7 +410,16 @@ You can forward `web terminal view` history.
 
 ### Search mode
 
-You can search `web terminal view` by toolbar search item.
+This feature is `CommandClick` special feature.  
+ `CommandClick` can search regardless of web or terminal.  
+ Shortly you can search `web terminal` freely.  
+ You can search web site text, terminal text, and `fannel`.  
+Moreover, you can switch between them depending on the situation.   
+Moreover, it enable by one button.  
+So, by only one button, you can controll versatile search system.  
+This is `internet button`  
+This corner descript about this.  
+
 
 1. Input bottom search bar.
 
@@ -578,6 +595,19 @@ Crashes easily when memory is low
 
 
 ### Ubuntu debian or widnows version
+
+As previously mentioned, `CommandClick` root is this.
+`CommandClick`'s all start from here.  
+And ubntu & windows version is critical engneer tool.  
+Once you use this version, you cannot escape convenience provided by this tool.   
+That's all this tool has a destructive impact.  
+In fact I cannot escape, I become slave for this pc version.  
+I can't help but be convenient.  
+By `cmdclick` power, I was released current directory chaning type, sql table check query, git command typing, scattered url bookmark, scattered important thing's memo, and　Wandering the web in search of development tools　and more.  
+Becuase `cmdclick` can controll os by shell, Control virtually everything on your PC.  
+We can promise to make a "second impact" on your engineer life.  
+But in a happy way.  
+
 
 Reference to [url](https://github.com/puutaro/cmdclick)
 
