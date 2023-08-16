@@ -110,7 +110,7 @@ I have heared that.
 It is `CommandClick`.  
 By changing the size with a web browser and terminal, `ComamndClick` literally transform into various form.  
 I said that `CommandClick` is multiple browser, more speaking, versatile android application.  
-Thanks to changing web terminal size, `CommandClick` lead you to enter a functional world like you've never seen before.  
+Thanks to changing `web terminal view` size, `CommandClick` lead you to enter a functional world like you've never seen before.  
 
 
 1. Click toolbar right setting button
@@ -412,7 +412,7 @@ You can forward `web terminal view` history.
 
 This feature is `CommandClick` special feature.  
  `CommandClick` can search regardless of web or terminal.  
- Shortly you can search `web terminal` freely.  
+ Shortly you can search `web terminal view` freely.  
  You can search web site text, terminal text, and `fannel`.  
 Moreover, you can switch between them depending on the situation.   
 Moreover, it enable by one button.  
