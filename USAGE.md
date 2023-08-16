@@ -605,7 +605,7 @@ Once you use this version, you cannot escape convenience provided by this tool.
 That's all this tool has a destructive impact.  
 In fact I cannot escape, I become slave for this pc version.  
 I can't help but be convenient.  
-By `cmdclick` power, I decreased current directory chaning type, sql table check query, git command typing, scattered url bookmark, scattered important thing's memo, and　Wandering the web in search of development tools　and more.  
+By `cmdclick` power, I have decreased current directory chaning type, sql table check query, git command typing, scattered url bookmark, scattered important thing's memo, and　Wandering the web in search of development tools　and more.  
 Becuase `cmdclick` can controll os by shell, Control virtually everything on your PC.  
 We can wish to make a "second impact" on your engineer life.  
 Of course, in a happy way.  
