@@ -14,7 +14,7 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Structure](#structure)
-* [Fannel structure](#funnel-structure)
+* [Fannel structure](#fannel-structure)
 * [Setting variable](#setting-variable)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
@@ -48,7 +48,7 @@ Table of Contents
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
 
 - setting variable contents  
-  -> [setting variable](https://github.com/puutaro/CommandClick/edit/master/DEVELOPER.md#setting-variable)
+  -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#setting-variable)
 
 - cmd variable contents  
   user difinition setting variables  
@@ -57,11 +57,11 @@ Table of Contents
   `javascript`' or `shellscript`' contents
 
 
-### setting variable 
+### Setting variable 
 
   `CommandClick`'s system setting variables  
-
-  -> detail
+  
+  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/setting_variables.md)
 
 
 ### Add
