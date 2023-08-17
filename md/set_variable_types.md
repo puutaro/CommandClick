@@ -1,6 +1,6 @@
 
-setVariableTypes
------------------
+# setVariableTypes
+
 
 Table of setVariableTypes
 -----------------
