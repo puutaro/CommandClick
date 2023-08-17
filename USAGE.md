@@ -464,6 +464,8 @@ Crashes easily when memory is low
 
 ### Ubuntu debian or widnows version
 
-Reference to [url](https://github.com/puutaro/cmdclick)
+-> [ubuntu, debian or windows version](https://github.com/puutaro/cmdclick)  
+
+
 
 
