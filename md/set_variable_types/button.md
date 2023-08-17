@@ -32,7 +32,7 @@ setVariableTypes={variableName}:BTN=cmd={command string}(!label={button label})
 
 ## Macro 
 
-trigger when adding as prefix  
+Trigger when adding as prefix  
 
 ex)
 
