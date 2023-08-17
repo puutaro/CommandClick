@@ -76,7 +76,7 @@ ccimport {path}
 
 * current directory -> `./`  
 * move parent direcoty -> ../  
-* other check [Javascript pre order word](#javascript-pre-order-word)   
+* other check [Javascript pre order word](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#javascript-pre-order-word)   
 
 #### Assets import
 
