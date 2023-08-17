@@ -1,5 +1,5 @@
 
-# ignoreHistoryPaths
+# Button option
 
 
 Table
