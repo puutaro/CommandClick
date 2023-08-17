@@ -37,7 +37,7 @@ Table of Contents
 ### Structure
 
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/bf1e6e54-7352-47fb-8efb-9e4ff424e58b" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/8472da75-a534-4e51-96ce-abb69364fde4" width="500">  
 
 
 
