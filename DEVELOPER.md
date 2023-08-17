@@ -13,6 +13,7 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [Structure](#structure)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
 * [Edit execute always](#edit-execute-always)
@@ -31,6 +32,12 @@ Table of Contents
 * [Html tag output](#html-tag-output)
 * [Javascript TroubleShooting](#javascript-troubleshooting)
 * [CommandClick repository](#commandclick-repository)
+
+
+### Structure
+
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/7dd4afb5-49e3-41e6-9fb4-2f136101dd70" width="500">  
 
 
 
