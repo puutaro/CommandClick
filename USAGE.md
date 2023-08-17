@@ -186,14 +186,8 @@ More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
 
 ### Change app dir
-
-In here, talk `CommandClick`'s mechanizm.  
-`CommandClick`'s adopt file system.   
-You first locate `document`/`cmdclick`/`appDir`/`default`.   
-In this, directory bellow `appDir` is `app directory`    
-Origin is that this directory have many android aplication (`fannel`) made by `CommandClick`.  
-Threfore, `CommandClick` mangage this `app directory`.  
-More precisely, `app directory` manager can do CRUD about `app directory`    
+  
+Start `App directory` Manager 
   
 
 [Procedure]  
