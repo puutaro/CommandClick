@@ -27,7 +27,8 @@
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
     | `setReplaceVariables`  | `string` | string replaced with certain string. You also have multiple specifing this. ex) setReplaceVariables="{replaceVariablle1}={repalce string1} or setReplaceVariables="file://{file path}"  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/set_replace_variables.md) 
     | `setVariableTypes` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types.md) |
-    | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) ${setting variable name}="..." or hideSettingVariables="file://{file path} |
+    | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) ${setting variable name}="..." or hideSettingVariables="file://{file path} [detail](https://github.com/puutaro/CommandClick/blob/master/md/hide_setting_variables.md) |
+   | `ignoreHistoryPaths` | `string` |  ignore history path like grep -v ${setting variable name}="..." or ignoreHistoryPaths="file://{file path} [detail](https://github.com/puutaro/CommandClick/blob/master/md/ignore_history_paths.md) |
     | `homeScriptUrlsPath`  | `path strings` | specified `script`, url and html put always bottom in url history |
     | `homeFannelsPath` | `path strings` | specified `fannel` put always bottom in app history |
     | `srcImageAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
