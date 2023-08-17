@@ -6,29 +6,11 @@ Table of setVariableTypes
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Overview](#Overview)
+* [Overview](#overview)
 * [setVariableTypes options table](#setvariabletypes-options-table)
 * [Usage](#usage)
 	* [This option can be combined](#this-option-can-be-combined)
 	* [Specify-file-path](#specify-file-path)
-* [Add](#add)
-* [Edit execute once](#edit-execute-once)
-* [Edit execute always](#edit-execute-always)
-* [Import library](#import-library)
-	* [Local path import](#local-path-import)
-	* [Assets import](#assets-import)
-	* [WEB import](#web-import)
-* [Url command](#url-command)
-* [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
-* [File api](#file-api)
-* [JavaScript interface](#javascript-interface)
-* [Javascript pre order word](#javascript-pre-order-word)
-* [Include Javascript Library](#include-javascript-library)
-* [Include css Library](#include-css-library)
-* [Html tag output](#html-tag-output)
-* [Html tag output](#html-tag-output)
-* [Javascript TroubleShooting](#javascript-troubleshooting)
-* [CommandClick repository](#commandclick-repository)
 
 
 ## Overview
@@ -78,7 +60,7 @@ ex) Transform `editText` command variable into select box
 | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
 
 
-## usage  
+## Usage  
 
 - This setting is applied to command variable
 - This setting can be specify multiply.
@@ -104,7 +86,7 @@ TTS_PLAY=""
 .
 .
 /// CMD_VARIABLE_SECTION_END
-
+```
 
 ### This option can be combined
 
@@ -141,7 +123,6 @@ setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}'
 
 ### Specify file path
 
-**[Recommend]**   
 `setVariableType` can specify file path like bellow. 
   
 ```js.js
