@@ -57,7 +57,7 @@ ex) Transform `editText` command variable into select box
 | `DT`  | get date button | {variableName}:DT=  |
 | `TM`  | get time button | {variableName}:TM=  |
 | `CLR` | select color button  | {variableName}:CLR= |
-| `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
+| `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) [detail](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types/list_index.md) |..   |
 
 
 ## Usage  
