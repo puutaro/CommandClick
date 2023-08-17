@@ -50,7 +50,7 @@ ex) Transform `editText` command variable into select box
 | `FL` | file select button | {variableName}:FL=  |
 | `DIR`  | directory select button | {variableName}:DIR= |
 | `NUM` | increment or decrement number | {variableName}:NUM={init_value}!{min}..{max}!{step}(!{number of decimal places}) |
-| `BTN` | botton  | {variableName}:BTN=cmd={command string}(!label={button label})    |
+| `BTN` | botton  | {variableName}:BTN=cmd={command string}(!label={button label}) [detail](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types/button.md)   |
 | `RO` | read only | {variableName}:RO= |
 | `H` | password input | {variableName}:H={password ..etc}   |
 | `HL` | label hidden | {variableName}:HL=   |
