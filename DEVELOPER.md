@@ -27,7 +27,7 @@ Table of Contents
 * [Html automaticaly creation command to edit target edit file](#html-automaticaly-creation-command-to-edit-target-edit-file)
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
-* [Javascript pre order word](#javascript-pre-order-word)
+* [Javascript pre reserved word](#javascript-pre-reserved-word)
 * [Include Javascript Library](#include-javascript-library)
 * [Include css Library](#include-css-library)
 * [Html tag output](#html-tag-output)
@@ -1014,7 +1014,7 @@ This, so colled, android app row code library.
 ```
 
 
-### Javascript pre order word
+### Javascript pre reserved word
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/js_pre_reserved_word.md) 
 
