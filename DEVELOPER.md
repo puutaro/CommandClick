@@ -14,7 +14,7 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Structure](#structure)
-* [Fannel structure](#funnel-structure)
+* [Fannel structure](#fannel-structure)
 * [Setting variable](#setting-variable)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
