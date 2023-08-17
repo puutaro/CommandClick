@@ -388,11 +388,13 @@ This mode enable speedy search and derailment search.
 Highlight search inpact source is this feature. 
 More precisely, thanks to shortcut button power. 
 
+  
+- click
+  
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/a2c2cf37-fbeb-49d4-8c5b-80324d2ffffc" width="400">  
 
---    
-
-
+- long press
+  
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/b8a9dc77-f533-469a-8d63-59cb5b4ecfd1" width="400">  
 
 
