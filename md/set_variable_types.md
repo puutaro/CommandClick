@@ -2,7 +2,7 @@
 # setVariableTypes
 
 
-Table of setVariableTypes
+Table
 -----------------
 <!-- vim-markdown-toc GFM -->
 
