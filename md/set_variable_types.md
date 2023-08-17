@@ -10,7 +10,7 @@ Table
 * [setVariableTypes options table](#setvariabletypes-options-table)
 * [Usage](#usage)
 	* [This option can be combined](#this-option-can-be-combined)
-	* [Specify-file-path](#specify-file-path)
+	* [Specify file path](#specify-file-path)
 
 
 ## Overview
