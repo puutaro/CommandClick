@@ -1,13 +1,13 @@
 
-# Button option
+# List index option
 
 
 Table
 -----------------
 * [Overview](#overview)
 * [Usage](#usage)
-* [Macro](#macro)
-  * [Macro table](#macro-table)
+* [Directory structrue](#directory-structrue)
+* [Pre reserved menu name](#pre-reserved-menu-name)
 
 
 ## Overview
@@ -25,11 +25,38 @@ setVariableTypes={variableName}:LI=listDir={target list dir path}|menu={menuName
   
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/7a73a987-a71a-461a-8f54-12eea684b162" width="500">  
 
-- enable only one specifing in `setVariableTypes`
-- this list is script
+- This option must be one and other component is exclude by this.  
+- Above list is script name in `{target list dir path}`  
 
 
-## pre reserved menu name  
+## Directory structrue  
+
+```
+${target fannel dirctory}
+└── click
+    ├── itemClick.js
+    ├── menuClick.js
+    └── subMenuClick.js
+```
+
+- `itemClick.js` is trigger when item click  
+- `menuClick.js` is trigger when menu click  
+- `subMenuClick.js` is trigger when subMenu click  
+- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:
+   
+```js.js 
+	     let args = jsArgs.get().split("\t");   
+	     var PARENT_DIR = args.at(0);  
+	     var LIST_VIEW_DIR = args.at(1);  
+	     var ITEM_NAME = args.at(2);  
+	     var MENU_NAME = args.at(3);
+```
+
+- `itemclick.js` option  
+`const override = true;` -> when click, your handling when js and shell don't execute.  
+
+
+## Pre reserved menu name  
 
 | name| description  |
 | --------- | --------- |
@@ -43,55 +70,4 @@ setVariableTypes={variableName}:LI=listDir={target list dir path}|menu={menuName
 | `copy_file` | copy item file to other directory |
 | `editC` | edit command variables |
 | `editS` | edit setting variables |
-
-
-ex)
-
-```js.js
-::TermLong:: jsf '${0}'
-```
-
-
-### Macro table
-
-| name|  description  |
-| --------- | --------- |
-| `::NoJsTermOut::` | disable terminal output when only javascript  |
-| `::TermLong::` | `web terminal view` size into long   |
-| `::TermOut::`  | force terminal output
-| `> /dev/null`  | no output about stdout when only shellscript
-| `> /dev/null 2>&1`  | no output when only shellscript
-| `::BackStack::`  | backstack, only work when prefix when only shellscript
-
-- example
-
-```js.js
-	 ::NoJsTermOut:: jsf '${0}'
-	```
-	
-	ex)
-	 
-	```sh.sh
-	echo ${0}
-	```
-	
-	  
-	ex)
-	
-	```sh.sh
-	 ::BackStack:: ls    
-	```
-	
-	
-	ex)
-	
-	```sh.sh
-	 ::TermOut:: ls
-	```
-	
-	
-	ex)
-	
-	```sh.sh
-	 top -n 1 > /dev/null  
 
