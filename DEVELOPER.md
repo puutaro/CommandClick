@@ -42,6 +42,7 @@ Table of Contents
 
 ### Fannel structure
 
+`fannel` is `ComamndClick` using script  
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/05aef15c-1408-4883-9d58-7f80c914c20e" width="400">  
 
