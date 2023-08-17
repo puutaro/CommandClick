@@ -26,7 +26,7 @@
     | `execEditBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when edit button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
     | `setReplaceVariables`  | `string` | string replaced with certain string. You also have multiple specifing this. ex) setReplaceVariables="{replaceVariablle1}={repalce string1} or setReplaceVariables="file://{file path}"  
-    | `setVariableTypes` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. In detail, follow bellow. |
+    | `setVariableTypes` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types.md) |
     | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) ${setting variable name}="..." or hideSettingVariables="file://{file path} |
     | `homeScriptUrlsPath`  | `path strings` | specified `script`, url and html put always bottom in url history |
     | `homeFannelsPath` | `path strings` | specified `fannel` put always bottom in app history |
