@@ -175,7 +175,7 @@ Copy file path for script
 ### Add
 
 Add new script.  
--At the same time, if you installed code editor, edit new file.    
+At the same time, if you installed code editor, edit new file.    
   
 More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
   
