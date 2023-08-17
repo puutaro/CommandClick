@@ -25,6 +25,8 @@ setVariableTypes={variableName}:BTN=cmd={command string}(!label={button label})
   
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/52b84839-b7e5-41f9-a8ea-41639bac4dec" width="500">  
 
+- `jsf` is command for js file executing
+- '${0}' -> [javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/js_pre_reserved_word.md)  
 - enable `termux` shell command
 
 
@@ -56,23 +58,12 @@ ex)
 	 ::NoJsTermOut:: jsf '${0}'
 	```
 	
-	- `::NoJsTermOut::` disable terminal output when only javascript
-	
-	ex)
-	 
-	```js.js
-	 ::TermLong:: jsf '${0}'
-	```
-	
-	 - `::TermLong::` terminal size to long
-	
 	ex)
 	 
 	```sh.sh
 	echo ${0}
 	```
 	
-	- `${0}` is current script path
 	  
 	ex)
 	
@@ -80,7 +71,6 @@ ex)
 	 ::BackStack:: ls    
 	```
 	
-	- `::BackStack::` is backstack, only work when prefix when only shellscript
 	
 	ex)
 	
@@ -88,78 +78,9 @@ ex)
 	 ::TermOut:: ls
 	```
 	
-	- `::TermOut::` enable terminal output
 	
 	ex)
 	
 	```sh.sh
 	 top -n 1 > /dev/null  
-	 - when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)
 
-
-## Specify file path  
-
-- button option usage
-
-	ex)
-	
-	```js.js
-	jsf '${0}' 
-	```
- 	- `jsf` execute javascript file path
-    
-	
-	ex)
-	 
-	```js.js
-	 jsf '${01}/${02}'
-	```
-	
-	- `jsf` execute javascript parrent directory path, `${01}` is parent dir (`${02}` is current script name)
-  	- [ref pre order word](#javascript-pre-order-word)  
-   
-	ex)
-	
-	```js.js
-	 ::NoJsTermOut:: jsf '${0}'
-	```
-	
-	- `::NoJsTermOut::` disable terminal output when only javascript
-	
-	ex)
-	 
-	```js.js
-	 ::TermLong:: jsf '${0}'
-	```
-	
-	 - `::TermLong::` terminal size to long
-	
-	ex)
-	 
-	```sh.sh
-	echo ${0}
-	```
-	
-	- `${0}` is current script path
-	  
-	ex)
-	
-	```sh.sh
-	 ::BackStack:: ls    
-	```
-	
-	- `::BackStack::` is backstack, only work when prefix when only shellscript
-	
-	ex)
-	
-	```sh.sh
-	 ::TermOut:: ls
-	```
-	
-	- `::TermOut::` enable terminal output
-	
-	ex)
-	
-	```sh.sh
-	 top -n 1 > /dev/null  
-	 - when suffix is `> /dev/null` or `> /dev/null 2>&1`, no output)
