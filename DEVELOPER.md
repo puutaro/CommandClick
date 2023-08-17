@@ -15,6 +15,7 @@ Table of Contents
 
 * [Structure](#structure)
 * [Fannel structure](#funnel-structure)
+* [Setting variable](#setting-variable)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
 * [Edit execute always](#edit-execute-always)
@@ -44,16 +45,23 @@ Table of Contents
 
 `fannel` is `ComamndClick` using script  
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/05aef15c-1408-4883-9d58-7f80c914c20e" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
 
-- setting contents  
-  `CommandClick`'s system setting contents
+- setting variable contents  
+  -> [setting variable](https://github.com/puutaro/CommandClick/edit/master/DEVELOPER.md#setting-variable)
 
-- command contents  
-  user difinition setting contents
+- cmd variable contents  
+  user difinition setting variables  
 
 - script contents  
   `javascript`' or `shellscript`' contents
+
+
+### setting variable 
+
+  `CommandClick`'s system setting variables  
+
+  -> detail
 
 
 ### Add
