@@ -7,16 +7,16 @@ Mainly, this interface is used with button `setVariable` option.
 
 
 ```js.js
-	jsArgs.get()
-		-> tabsepalete string  
-			jsArgs soruce is jsf argument in edit  
-			ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
-				-> `fristargment`\t`secondargument 2`  
+jsArgs.get()
+	-> tabsepalete string  
+		jsArgs soruce is jsf argument in edit  
+		ex) setVariableType="jsf $0 fristargment 'secondargument 2'" 
+			-> `fristargment`\t`secondargument 2`  
 
-	jsArgs.set(
-		tabsepalete string
-	    )
-		-> argment set (ex "{arg1}\t{arg2}\t..")  
+jsArgs.set(
+	tabsepalete string
+    )
+	-> argment set (ex "{arg1}\t{arg2}\t..")  
 
 ```
 
