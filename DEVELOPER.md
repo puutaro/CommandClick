@@ -61,7 +61,7 @@ Table of Contents
 
   `CommandClick`'s system setting variables  
 
-  -> detail
+  -> [setting_variable.md](https://github.com/puutaro/CommandClick/blob/master/md/setting_variables.md)
 
 
 ### Add
