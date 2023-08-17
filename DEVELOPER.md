@@ -1,6 +1,6 @@
 
 # Command Click Developer page
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="700">  
 
   
 This page is for developer. CommandClick true value change self made script to android app.   
@@ -13,6 +13,9 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
+* [Structure](#structure)
+* [Fannel structure](#funnel-structure)
+* [Setting variable](#setting-variable)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
 * [Edit execute always](#edit-execute-always)
@@ -32,6 +35,33 @@ Table of Contents
 * [Javascript TroubleShooting](#javascript-troubleshooting)
 * [CommandClick repository](#commandclick-repository)
 
+
+### Structure
+
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e06a623e-0fd6-4325-ac9f-b795e2d2a4aa" width="500">  
+
+### Fannel structure
+
+`fannel` is `ComamndClick` using script  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
+
+- setting variable contents  
+  -> [setting variable](https://github.com/puutaro/CommandClick/edit/master/DEVELOPER.md#setting-variable)
+
+- cmd variable contents  
+  user difinition setting variables  
+
+- script contents  
+  `javascript`' or `shellscript`' contents
+
+
+### setting variable 
+
+  `CommandClick`'s system setting variables  
+
+  -> detail
 
 
 ### Add
