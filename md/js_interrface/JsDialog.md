@@ -4,7 +4,7 @@
 Launch dialog 
 
 
-```
+```js.js
 
 	jsDialog.prompt(
 		title: String,
