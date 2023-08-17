@@ -8,7 +8,9 @@ Table of setVariableTypes
 
 * [Overview](#Overview)
 * [setVariableTypes options table](#setvariabletypes-options-table)
-* [Setting variable](#setting-variable)
+* [Usage](#usage)
+ * [This option can be combined](#this-option-can-be-combined)
+ * [Specify-file-path](#specify-file-path)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
 * [Edit execute always](#edit-execute-always)
@@ -76,7 +78,7 @@ ex) Transform `editText` command variable into select box
 | `LI` | edit list component | {variableName}:LI=listDir={target list dir path}&#124;menu={menuName1}(&subMenuName1&subMenuName2..}!{menuName2}(&subMenuName21&subMenuName22..}(&#124;prefix={grep prefix})(&#124;suffix={grep suffix}) |..   |
 
 
-`setVariableType` Option usage  
+## usage  
 
 - This setting is applied to command variable
 - This setting can be specify multiply.
@@ -104,7 +106,7 @@ TTS_PLAY=""
 /// CMD_VARIABLE_SECTION_END
 
 
-- This option can be combined
+### This option can be combined
 
 ex1)  
 
@@ -136,6 +138,8 @@ setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}'
 ```
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
+
+### Specify file path
 
 **[Recommend]**   
 `setVariableType` can specify file path like bellow. 
