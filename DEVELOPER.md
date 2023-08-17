@@ -63,21 +63,6 @@ Table of Contents
   -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/setting_variables.md)
 
   
-### Edit execute once
-
-One time edit and execute
-
-![image](https://user-images.githubusercontent.com/55217593/216524059-97c35357-c0de-48c1-953f-b1e1478cf296.png)
-
-
-### Edit execute always
-
-![image](https://user-images.githubusercontent.com/55217593/216652110-4bc01a73-2b8b-42f2-8253-49062e775b66.png)
-
-Always edit and execute. So called `Script2GUI`. It's great feature. 
-How the script file turns into a GUI Application! 
-
-  
 
 ### Import library  
 
