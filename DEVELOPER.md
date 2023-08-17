@@ -16,8 +16,6 @@ Table of Contents
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
 * [Setting variable](#setting-variable)
-* [Edit execute once](#edit-execute-once)
-* [Edit execute always](#edit-execute-always)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
