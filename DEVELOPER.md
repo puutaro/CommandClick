@@ -14,6 +14,7 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Structure](#structure)
+* [Fannel structure](#funnel-structure)
 * [Add](#add)
 * [Edit execute once](#edit-execute-once)
 * [Edit execute always](#edit-execute-always)
@@ -39,6 +40,19 @@ Table of Contents
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e06a623e-0fd6-4325-ac9f-b795e2d2a4aa" width="500">  
 
+### Fannel structure
+
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/05aef15c-1408-4883-9d58-7f80c914c20e" width="400">  
+
+- setting contents  
+  `CommandClick`'s system setting contents
+
+- command contents  
+  user difinition setting contents
+
+- script contents  
+  `javascript`' or `shellscript`' contents
 
 
 ### Add
