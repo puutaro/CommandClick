@@ -26,7 +26,7 @@ setVariableTypes={variableName}:BTN=cmd={command string}(!label={button label})
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/52b84839-b7e5-41f9-a8ea-41639bac4dec" width="500">  
 
 - `jsf` is command for js file executing
-- '${0}' -> [javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/js_pre_reserved_word.md)  
+- '${0}' -> [javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)  
 - enable `termux` shell command
 
 
