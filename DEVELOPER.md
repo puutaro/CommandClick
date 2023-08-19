@@ -176,7 +176,7 @@ This, so colled, android app row code library.
 
 ### Javascript pre reserved word
 
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/js_pre_reserved_word.md) 
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
 
 
 ### Include Javascript Library  
