@@ -45,7 +45,7 @@ Table of Contents
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
 
 - setting variable contents  
-  -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#setting-variable)
+  -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 - cmd variable contents  
   user difinition setting variables  
@@ -58,7 +58,7 @@ Table of Contents
 
   `CommandClick`'s system setting variables  
   
-  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/setting_variables.md)
+  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
   
 
@@ -76,7 +76,7 @@ ccimport {path}
 
 * current directory -> `./`  
 * move parent direcoty -> ../  
-* other check [Javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/js_pre_reserved_word.md)   
+* other check [Javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)   
 
 #### Assets import
 
@@ -168,7 +168,7 @@ ex) am broadcast \
 
 ### JavaScript interface
 
--> [javascript interface directory](https://github.com/puutaro/CommandClick/tree/master/md/js_interface)  
+-> [javascript interface directory](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface)  
 
 `CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
 This, so colled, android app row code library.
