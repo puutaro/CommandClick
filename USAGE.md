@@ -177,7 +177,7 @@ Copy file path for script
 Add new script.  
 At the same time, if you installed code editor, edit new file.    
   
-More detail ref [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
   
 [Procedure]  
 1. Long press right buttom gear button  
@@ -232,7 +232,7 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 ### Config
 
 You can setting `CommandClick` Configration
-- detail setting reference [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+- detail setting reference [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 
 [Procedure]  
 1. Long press right buttom gear button  
@@ -414,7 +414,7 @@ This script is executed, click when internet buton is grey globle mark and long 
 ### Button exec script
 
 This script is executed when history buton click or long click, if you select  `urlHistoryOrButtonExec` to `BUTTON_EXEC` in setting variable.
-Also whether click or long click torigger, due to `historySwitch` setting  (reference to [add-DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+Also whether click or long click torigger, due to `historySwitch` setting  (reference to [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
 ).
 
 
