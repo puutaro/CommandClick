@@ -31,7 +31,7 @@ hideSettingVariables="setVariableTypes"
 ## Specify file path  
 
 `hideSettingVariables` can specify file path like bellow.   
-But, [setReplaceVariable](https://github.com/puutaro/CommandClick/blob/master/md/set_replace_variables.md) cannot use in file path.  
+But, [setReplaceVariable](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) cannot use in file path.  
 (bellow ${01} and ${001} is pre reserved word in `CommandClick`)
   
 ```js.js
