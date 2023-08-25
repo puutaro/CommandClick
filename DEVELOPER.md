@@ -59,6 +59,8 @@ Table of Contents
 
 ### Labeling section
 
+This section is description for fannel(js or shell file enforced by `CommandClick`).
+
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 ### Setting variable 
