@@ -3,6 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+//        maven { url = uri("https://chaquo.com/maven-test") }
     }
 }
 dependencyResolutionManagement {
@@ -12,6 +13,7 @@ dependencyResolutionManagement {
         mavenCentral()
         maven(url = "https://jitpack.io")
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots")
+//        maven(url = "https://chaquo.com/maven")
     }
 }
 rootProject.name = "CommandClick"
