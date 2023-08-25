@@ -221,8 +221,9 @@ class EditTextProducerForEdit(
         }
         descriptionButton.setOnClickListener { innerButtonView ->
             ScriptFileDescription.show(
-                innerButtonView.context,
+               editFragment,
                 currentShellContentsList,
+                currentAppDirPath,
                 SharePreffrenceMethod.getReadSharePreffernceMap(
                     readSharePreffernceMap,
                     SharePrefferenceSetting.current_script_file_name

@@ -2,8 +2,11 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.R
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.os.Build
 import android.text.Editable
+import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.puutaro.commandclick.common.variable.WebUrlVariables
@@ -37,9 +40,15 @@ class GoogleSuggest(
     fun set (
         searchEditable: Editable?
     ) {
+        if(
+            context == null
+        ) return
         suggestEditTexter.setItemClickListener()
         mDispText = String()
         if(searchEditable.isNullOrEmpty()) return
+        if(
+            !isOnline(context)
+        ) return
         val localLanguage = Locale.getDefault().toString()
         val searchWord = searchEditable.toString()
             .replace(Regex("　　*"), " ")
@@ -70,7 +79,7 @@ class GoogleSuggest(
         when(fragment) {
             is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
                 fragment.suggestJob?.cancel()
-                    fragment . suggestJob = launchSuggestCoroutine (connection)
+                    fragment.suggestJob = launchSuggestCoroutine(connection)
             }
             is EditFragment -> {
                 fragment.suggestJob?.cancel()
@@ -150,6 +159,29 @@ class GoogleSuggest(
             i++
         }
     }
+
+    private fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                ?: return false
+        if (
+            capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_CELLULAR
+            )
+        ) return true
+        else if (
+            capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_WIFI
+            )
+        ) return true
+        else if (
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        ) return true
+        return false
+    }
+
 }
 
 
@@ -236,5 +268,4 @@ private class SuggestEditTexter(
             selectedUrl
         )
     }
-
 }

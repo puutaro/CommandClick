@@ -1,38 +1,58 @@
 package com.puutaro.commandclick.proccess
 
-import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.JsOrShellFromSuffix
+import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import java.io.File
 
 
 object ScriptFileDescription {
 
+    private val filePrefix = "file://"
+    private val mdSuffix = ".md"
+
     fun show(
-        contextSrc: Context?,
+        fragment: Fragment,
         currentScriptContentsList: List<String>,
-        scriptFileName: String
+        currentAppDirName: String,
+        fannelName: String
     ) {
-        val context = contextSrc
+        val context = fragment.context
             ?: return
-        DialogObject.simpleTextShow(
-            context,
-            "Description",
+//        DialogObject.simpleTextShow(
+//            context,
+//            "Description",
+//            makeDescriptionContents(
+//                currentScriptContentsList,
+//                scriptFileName
+//            )
+//        )
+        DialogObject.descDialog(
+            fragment,
+            fannelName,
             makeDescriptionContents(
                 currentScriptContentsList,
-                scriptFileName
+                currentAppDirName,
+                fannelName,
             )
         )
     }
 
     fun makeDescriptionContents(
         currentScriptContentsList: List<String>,
-        scriptFileName: String
+        currentAppDirName: String,
+        fannelName: String,
     ): String {
         val languageType =
-            JsOrShellFromSuffix.judge(scriptFileName)
+            JsOrShellFromSuffix.judge(fannelName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -45,8 +65,8 @@ object ScriptFileDescription {
         val removePrefix = if(languageType == LanguageTypeSelects.SHELL_SCRIPT){
             "#"
         } else "//"
-
-        val descripitionContentsList =
+        val suffixBlank = "  "
+        val descriptionContentsList =
             CommandClickVariables.substituteVariableListFromHolder(
                 currentScriptContentsList,
                 labelingSectionStart,
@@ -61,10 +81,69 @@ object ScriptFileDescription {
                                 && !it.endsWith(labelingSectionEnd)
                         )
             }?.map {
-                it
+                line ->
+                val inputDescLine = line
                     .trim(' ')
                     .removePrefix(removePrefix)
+                    .removePrefix(" ")
+                    .let {
+                        it + suffixBlank
+                    }
+                if(
+                    !inputDescLine.startsWith(
+                        filePrefix
+                    )
+                    || !inputDescLine.endsWith(
+                        "${mdSuffix}${suffixBlank}"
+                    )
+                ) return@map inputDescLine
+                extractMdContents(
+                    inputDescLine,
+                    currentAppDirName,
+                    fannelName,
+                )
             } ?: return String()
-        return descripitionContentsList.joinToString("\n")
+        return descriptionContentsList.joinToString("\n")
     }
+
+    private fun extractMdContents(
+        inputDescLine: String,
+        currentAppDirName: String,
+        fannelName: String,
+    ): String {
+        val fannelDirName = fannelName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        val mdPath = inputDescLine.trim().let{
+            QuoteTool.trimBothEdgeQuote(it)
+        }.removePrefix(
+            filePrefix
+        ).let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirName,
+                fannelDirName,
+                fannelName
+            )
+        }
+        FileSystems.writeFile(
+            currentAppDirName,
+            "debug.txt",
+            mdPath
+        )
+        val mdPathObj = File(mdPath)
+        if(
+            !mdPathObj.isFile
+        ) return inputDescLine
+        val mdParent = mdPathObj.parent
+            ?: return inputDescLine
+        val mdName = mdPathObj.name
+            ?: return inputDescLine
+        return ReadText(
+            mdParent,
+            mdName
+        ).readText()
+    }
+
 }

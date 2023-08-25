@@ -1012,11 +1012,12 @@ class WithIndexListView(
             selectedItem == throughMark
         ) return
         ScriptFileDescription.show(
-            editFragment.context,
+            editFragment,
             ReadText(
                 currentAppDirPath,
                 selectedItem
             ).textToList(),
+            currentAppDirPath,
             selectedItem
         )
     }

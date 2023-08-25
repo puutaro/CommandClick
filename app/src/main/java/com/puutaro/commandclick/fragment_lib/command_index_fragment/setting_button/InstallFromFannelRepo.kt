@@ -159,11 +159,12 @@ class InstallFromFannelRepo(
                     val itemContext = itemView.context
                     val fannelName = fannelNameTextView.text.toString()
                     ScriptFileDescription.show(
-                        itemContext,
+                        cmdIndexFragment,
                         ReadText(
                             cmdclickFannelDirPath,
                             fannelName,
                         ).textToList(),
+                        cmdclickFannelDirPath,
                         fannelName
                     )
                 }
@@ -271,7 +272,9 @@ object InstallFannelList {
         val fannelListSource = ReadText(
             UsePath.cmdclickFannelListDirPath,
             UsePath.fannelListMemoryName,
-        ).readText().split(cmdclickFannelListSeparator)
+        ).readText()
+            .replace(Regex("\\*\\*([a-zA-Z0-9]*)\\*\\*"), "*$1")
+            .split(cmdclickFannelListSeparator)
         return if (
             fannelListSource.isNotEmpty()
             && !fannelListSource

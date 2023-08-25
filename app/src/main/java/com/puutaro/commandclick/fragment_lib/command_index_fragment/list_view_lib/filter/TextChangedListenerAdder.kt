@@ -30,10 +30,19 @@ object TextChangedListenerAdder {
         )
 
         val filter = InputFilter { source, _, _, _, _, _ ->
-            if (source.contains("　")) " " else source
+            if (
+                source.contains("　")
+            ) " "
+            else source
         }
 
-        if (filter !in cmdSearchEditText.filters) cmdSearchEditText.filters = arrayOf(*cmdSearchEditText.filters, filter)
+        if (
+            filter !in cmdSearchEditText.filters
+        ) cmdSearchEditText.filters =
+            arrayOf(
+                *cmdSearchEditText.filters,
+                filter
+            )
 
         cmdSearchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -46,7 +55,9 @@ object TextChangedListenerAdder {
                     return
                 }
                 if(!cmdIndexCommandIndexFragment.WebSearchSwitch) return
-                googleSuggest.set(cmdSearchEditText.text)
+                googleSuggest.set(
+                    cmdSearchEditText.text
+                )
             }
 
             override fun afterTextChanged(s: Editable?) {

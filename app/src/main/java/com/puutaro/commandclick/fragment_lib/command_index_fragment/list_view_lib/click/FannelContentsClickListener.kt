@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.ReadText
 
 object FannelContentsClickListener {
     fun set(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
@@ -21,11 +21,12 @@ object FannelContentsClickListener {
                 val itemContext = itemView.context
                 val fannelName = fannelNameTextView.text.toString()
                 ScriptFileDescription.show(
-                    itemContext,
+                    cmdIndexFragment,
                     ReadText(
                         currentAppDirPath,
                         fannelName,
                     ).textToList(),
+                    currentAppDirPath,
                     fannelName
                 )
             }

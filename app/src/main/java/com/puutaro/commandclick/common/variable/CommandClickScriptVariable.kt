@@ -327,121 +327,226 @@ object CommandClickScriptVariable {
     }
 
     private val colons = "::"
+    private val settingVariableStr = "Setting variables"
+    private val mdDash = "-------"
+    private val mdDescription = "description"
 
     fun makeDescription(): String {
-        return """
-            # * ${TERMINAL_SIZE_TYPE}
-            |#   -> cmdclick terminal size option
-            |#  - ${terminalSizeTypeOff}: no adjust (default)
-            |#  - ${terminalSizeTypeLong}: LongSize
-            |#  - ${terminalSizeTypeShort}: ShortSize
-            |# * ${TERMINAL_OUTPUT_MODE}
-            |#   -> decide output mode in cmdclick terminal (basically, only shellScript)
-            |#  - ${terminalOutPutModeNormal}: normal terminal output (default)
-            |#  - ${terminalOutPutModeReflash}: Before terminal output, screen resflesh
-            |#  - ${terminalOutPutModeReflashAndFirstRow}: Before terminal output, screen resflesh and focus first row
-            |#  - ${terminalOutPutModeDebug}: stdr + stderr
-            |#  - ${terminalOutPutModeNo}: no output (bacground exec)
-            |# * ${CMDCLICK_ON_AUTO_EXEC}
-            |#   -> ready for start and end script
-            |#  - ${autoExecSelectsOn}: start or end exec on
-            |#  - ${autoExecSelectsOff}: exec off (default)
-            |# * ${ON_UPDATE_LAST_MODIFY}
-            |#   -> how updating file last modified status when executing
-            |#  - ${onUpdateLastModifyOn}: update this (default)
-            |#  - ${onUpdateLastModifyOff}: no update this
-            |# * ${IGNORE_HISTORY_PATHS}
-            |#   -> ignore history path like grep -v
-            |# * ${CMDCLICK_HISTORY_SWITCH}
-            |#  -> switch app history with url history
-            |#  - ${historySwitchOn}: switch
-            |#  - ${historySwitchOff}: no switch
-            |#  - ${historySwitchInherit}: inherit config setting (default)
-            |# * ${CMDCLICK_ON_HISTORY_URL_TITLE}
-            |#   -> how adding url title to history
-            |#  - ${onHistoryUrlTitleON}: add
-            |#  - ${onHistoryUrlTitleOff}: no
-            |# * ${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
-            |#   -> src image ancher long press menu list
-            |#      DSL button
-            |#          - drag and sort long press menu list
-            |#      ADD button
-            |#          - Add script to long press menu list
-            |# * ${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
-            |#   -> src ancher long press menu list
-            |#      DSL button
-            |#          - drag and sort long press menu list
-            |#      ADD button
-            |#          - Add script to long press menu list
-            |# * ${IMAGE_LONG_PRESS_MENU_FILE_PATH}
-            |#   -> image long press menu list
-            |#      DSL button
-            |#          - drag and sort long press menu list
-            |#      ADD button
-            |#          - Add script to long press menu list
-            |# * ${HOME_SCRIPT_URLS_PATH}
-            |#  -> specified script, url and html put always bottom in url history
-            |#     ex) ${HOME_SCRIPT_URLS_PATH}=$\{file_path}
-            |#      DSL button
-            |#          - drag and sort home url script List
-            |#      ADD button
-            |#          - Add fannel to home url script list
-            |# * ${CMDCLICK_HOME_FANNELS_PATH}
-            |#   -> specified fannels put always bottom in app history 
-            |#     ex) ${CMDCLICK_HOME_FANNELS_PATH}=$\{file_path}
-            |#      DSL button
-            |#          - drag and sort home fannels list
-            |#      ADD button
-            |#          - Add fannel to home fannel list
-            |# * ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
-            |#   -> switch url history or button script exec
-            |#  - ${urlHistoryOrButtonExecUrlInherit}: inherit config setting
-            |#  - ${urlHistoryOrButtonExecUrlHistory}: switch url history
-            |#  - ${urlHistoryOrButtonExecUrlButtonExec}: switch url button script exec
-            |# * ${ON_ADBLOCK}
-            |#   -> adblock switch
-            |#  - ${onAdBlockInherit}: inherit config setting
-            |#  - ${onAdBlockOn}: on
-            |#  - ${onAdBlockOff}: off
-            |# * ${ON_URL_LAUNCH_MACRO}
-            |#   -> url launch macro(when set, cmdclick web terminal don't output)
-            |#  - ${onUrlLaunchMacroOff}: no launch
-            |#  - ${onUrlLaunchMacroRecent}: recent use url launch
-            |#  - ${onUrlLaunchMacroFrequency}: most use url launch
-            |# * ${ON_URL_HISTORY_REGISTER}
-            |#   -> url history update signal
-            |#  - ${onUrlHistoryRegisterOn}: update
-            |#  - ${onUrlHistoryRegisterOff}: no update
-            |# * ${EXEC_JS_OR_HTML_PATH}
-            |#   -> execute javascript or html file path
-            |#   - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
-            |# * ${CMDCLICK_TERMINAL_FONT_ZOOM}
-            |#   -> adjust terminal font size (percentage)
-            |# * ${TERMINAL_FONT_COLOR}
-            |#   -> adjust terminal font color
-            |# * ${TERMINAL_COLOR}
-            |#   -> adjust terminal background color
-            |# * ${EXEC_PLAY_BTN_LONG_PRESS}
-            |#  -> execute when play button long press in editExecute=EditExecute
-            |#    - WEB_SEARCH: apear web search bar
-            |#    - PAGE_SEARCH: apear page search bar
-            |#    - js file path: execute js file
-            |# * ${EXEC_EDIT_BTN_LONG_PRESS}
-            |#  -> execute when edit button long press
-            |#    - WEB_SEARCH: apear web search bar
-            |#    - PAGE_SEARCH: apear page search bar
-            |#    - js file path: execute js file
-            |# * ${SCRIPT_FILE_NAME}
-            |#   -> your shell file name
+        return """# Table of Contents
+            |# ${mdDash}
+            |# * [${settingVariableStr}](#${replaceLowerAdnBlankDash(settingVariableStr)})
+            |#  * [${SCRIPT_FILE_NAME}](#${replaceLowerAdnBlankDash(SCRIPT_FILE_NAME)})
+	        |#  * [${TERMINAL_SIZE_TYPE}](#${replaceLowerAdnBlankDash(TERMINAL_SIZE_TYPE)})
+            |#  * [${TERMINAL_OUTPUT_MODE}](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
+            |#  * [${CMDCLICK_ON_AUTO_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
+            |#  * [${ON_UPDATE_LAST_MODIFY}](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
+            |#  * [${IGNORE_HISTORY_PATHS}](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
+            |#  * [${CMDCLICK_HISTORY_SWITCH}](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
+            |#  * [${CMDCLICK_ON_HISTORY_URL_TITLE}](#${replaceLowerAdnBlankDash(CMDCLICK_ON_HISTORY_URL_TITLE)})
+            |#  * [${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
+            |#  * [${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
+            |#  * [${IMAGE_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(IMAGE_LONG_PRESS_MENU_FILE_PATH)})
+            |#  * [${HOME_SCRIPT_URLS_PATH}](#${replaceLowerAdnBlankDash(HOME_SCRIPT_URLS_PATH)})
+            |#  * [${CMDCLICK_HOME_FANNELS_PATH}](#${replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
+            |#  * [${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
+            |#  * [${ON_ADBLOCK}](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
+            |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
+            |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
+            |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
+            |#  * [${CMDCLICK_TERMINAL_FONT_ZOOM}](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
+            |#  * [${TERMINAL_FONT_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
+            |#  * [${TERMINAL_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
+            |#  * [${EXEC_PLAY_BTN_LONG_PRESS}](#${replaceLowerAdnBlankDash(EXEC_PLAY_BTN_LONG_PRESS)})
+            |#  * [${EXEC_EDIT_BTN_LONG_PRESS}](#${replaceLowerAdnBlankDash(EXEC_EDIT_BTN_LONG_PRESS)})
+            |
+            |
+            |# ## ${settingVariableStr}
+            |# ${mdDash}
+            |# 
+            |# ### ${SCRIPT_FILE_NAME}
+            |# Rename script name
+            |
+            |# ### ${TERMINAL_SIZE_TYPE}
+            |# `cmdclick terminal` size option
+            |
+            |# | option | descripton |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${terminalSizeTypeOff}` | no adjust (default) |
+            |# | `${terminalSizeTypeLong}` | LongSize |
+            |# | `${terminalSizeTypeShort}` | ShortSize |
+            |
+            |# ### ${TERMINAL_OUTPUT_MODE}
+            |# Decide output mode in cmdclick terminal (basically, only shellScript)
+            |
+            |# | output mode | ${mdDescription} |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${terminalOutPutModeNormal}` | normal terminal output (default) |
+            |# | `${terminalOutPutModeReflash}` | Before terminal output, screen resflesh |
+            |# | `${terminalOutPutModeReflashAndFirstRow}` | Before terminal output, screen resflesh and focus first row |
+            |# | `${terminalOutPutModeDebug}` | stdr + stderr |
+            |# | `${terminalOutPutModeNo}` | no output (bacground exec) |
+            |
+            |# ### ${CMDCLICK_ON_AUTO_EXEC}
+            |# Ready for start and end script
+            |
+            |# | switch | ${mdDescription} |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${autoExecSelectsOn}` | start or end exec on |
+            |# | `${autoExecSelectsOff}` | exec off (default) |
+            |
+            |# ### ${ON_UPDATE_LAST_MODIFY}
+            |# How updating file last modified status when executing
+            |
+            |# | switch | ${mdDescription} |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onUpdateLastModifyOn}` | update this (default) |
+            |# | `${onUpdateLastModifyOff}` | no update this |
+            |
+            |# ### ${IGNORE_HISTORY_PATHS}
+            |# Ignore history path like grep -v
+            |
+            |# ### ${CMDCLICK_HISTORY_SWITCH}
+            |# Switch app history with url history
+            |
+            |# | switch | ${mdDescription} |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${historySwitchOn}` | switch |
+            |# | `${historySwitchOff}` | no switch |
+            |# | `${historySwitchInherit}` | inherit config setting (default) |
+            |
+            |# ### ${CMDCLICK_ON_HISTORY_URL_TITLE}
+            |# How adding url title to history
+            |
+            |# | switch | ${mdDescription} |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onHistoryUrlTitleON}` | add |
+            |# | `${onHistoryUrlTitleOff}` | no |
+            |
+            |# ### ${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
+            |# Src image ancher long press menu list
+            |
+            |# | Button type | usage | 
+            |# | --------- | --------- |
+            |# | DSL button | Drag and sort long press menu list |
+            |# | ADD button | Add script to long press menu list |
+            |
+            |# ### ${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
+            |# Src ancher long press menu list
+            |
+            |# | Button type | usage | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | DSL button | Drag and sort long press menu list |
+            |# | ADD button | Add script to long press menu list |
+            |
+            |# ### ${IMAGE_LONG_PRESS_MENU_FILE_PATH}
+            |# Image long press menu list
+            |
+            |# | Button type | usage | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | DSL button | Drag and sort long press menu list |
+            |# | ADD button | Add script to long press menu list |
+            |
+            |# ### ${HOME_SCRIPT_URLS_PATH}
+            |# Specified script, url and html put always bottom in url history
+            |# ex) ${HOME_SCRIPT_URLS_PATH}=$\{file_path}
+            |
+            |# | Button type | usage | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | DSL button | Drag and sort home url script List |
+            |# | ADD button | Add fannel to home url script list |
+            |
+            |# ### ${CMDCLICK_HOME_FANNELS_PATH}
+            |# Specified fannels put always bottom in app history 
+            |# ex) ${CMDCLICK_HOME_FANNELS_PATH}=$\{file_path}
+            |
+            |# | Button type | usage | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | DSL button | Drag and sort home fannels list |
+            |# | ADD button | Add fannel to home fannel list |
+            |
+            |# ### ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
+            |# Switch url history or button script exec
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${urlHistoryOrButtonExecUrlInherit}` | inherit config setting |
+            |# | `${urlHistoryOrButtonExecUrlHistory}` | switch url history |
+            |# | `${urlHistoryOrButtonExecUrlButtonExec}` | switch url button script exec |
+            |
+            |# ### ${ON_ADBLOCK}
+            |# Adblock switch
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onAdBlockInherit}` | inherit config setting |
+            |# | `${onAdBlockOn}` | on |
+            |# | `${onAdBlockOff}` | off |
+            |
+            |# ### ${ON_URL_LAUNCH_MACRO}
+            |# Url launch macro(when set, cmdclick web terminal don't output)
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onUrlLaunchMacroOff}` | no launch |
+            |# | `${onUrlLaunchMacroRecent}` | recent use url launch |
+            |# | `${onUrlLaunchMacroFrequency}` | most use url launch |
+            |
+            |# ### ${ON_URL_HISTORY_REGISTER}
+            |# Url history update signal
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onUrlHistoryRegisterOn}` | update |
+            |# | `${onUrlHistoryRegisterOff}` | no update |
+            |
+            |# ### ${EXEC_JS_OR_HTML_PATH}
+            |# Execute javascript or html file path
+            |# - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
+            |
+            |# ### ${CMDCLICK_TERMINAL_FONT_ZOOM}
+            |# Adjust terminal font size (percentage)
+            |
+            |# ### ${TERMINAL_FONT_COLOR}
+            |# Adjust terminal font color
+            |
+            |# ### ${TERMINAL_COLOR}
+            |# Adjust terminal background color
+            |
+            |# ### ${EXEC_PLAY_BTN_LONG_PRESS}
+            |# Execute when play button long press in editExecute=EditExecute
+            |
+            |# | type or name | description |
+            |# | ------- | ------- |
+            |# | `WEB_SEARCH` | apear web search bar |
+            |# | `PAGE_SEARCH` | apear page search bar |
+            |# | js file path | execute js file |
+            |
+            |# ### ${EXEC_EDIT_BTN_LONG_PRESS}
+            |# Execute when edit button long press
+            |
+            |# | type or name | description |
+            |# | ------- | ------- |
+            |# | `WEB_SEARCH` | apear web search bar |
+            |# | `PAGE_SEARCH` | apear page search bar |
+            |# | js file path | execute js file |
+            |
             |#
             |#
             |#
-            |#  Access bellow url about more detail
-            |#   https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md
+            |# Access bellow url about more detail
+            |# https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md
             |#
             |#
             |#
         """.trimIndent().replace("EX_INDENT_BLANK", "        ")
+    }
+
+    private fun replaceLowerAdnBlankDash(
+        targetStr: String,
+    ): String {
+        return targetStr
+            .lowercase()
+            .replace(" ", "-")
     }
 
     fun makeScriptContents(

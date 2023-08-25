@@ -101,11 +101,12 @@ object ExecOnLongClickDo {
             }
             R.id.shell_script_menu_description -> {
                 ScriptFileDescription.show(
-                    cmdIndexFragment.context,
+                    cmdIndexFragment,
                     ReadText(
                         currentAppDirPath,
                         shellScriptName
                     ).textToList(),
+                    currentAppDirPath,
                     shellScriptName
                 )
             }

@@ -185,6 +185,7 @@ class GitCloneService: Service() {
                     cmdclickFannelItselfDirPath,
                     it
                 ).textToList(),
+                cmdclickFannelItselfDirPath,
                 it
             ).split('\n').firstOrNull()
             val descFirstLine = if(
