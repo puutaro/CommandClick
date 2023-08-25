@@ -6,7 +6,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]((https://opensource.org/licenses/MIT))
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
-<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
+<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">
+![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
 Table of Contents
 -----------------
