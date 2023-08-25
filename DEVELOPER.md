@@ -15,6 +15,7 @@ Table of Contents
 
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
+* [Labeling section](#labeling-section)
 * [Setting variable](#setting-variable)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
@@ -44,6 +45,8 @@ Table of Contents
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
 
+- labeling section
+
 - setting variable contents  
   -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
@@ -53,6 +56,10 @@ Table of Contents
 - script contents  
   `javascript`' or `shellscript`' contents
 
+
+### Labeling section
+
+-> [detail]()
 
 ### Setting variable 
 
