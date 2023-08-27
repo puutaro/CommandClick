@@ -79,10 +79,6 @@ object TermOnLongClickListener {
                         ?: return@setOnLongClickListener false
                     val longPressImageUrl = message.data.getString("src")
                         ?: return@setOnLongClickListener  false
-//                    ImageTempDownloader.download(
-//                        terminalFragment,
-//                        longPressImageUrl
-//                    )
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
@@ -99,7 +95,6 @@ object TermOnLongClickListener {
                 WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
                     val longPressLinkUrl = hitTestResult.extra
                         ?: return@setOnLongClickListener false
-//                    FileTempDownloader.downloadFile(url)
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
