@@ -56,6 +56,19 @@ object LinuxCmd {
         }
     }
 
+    fun execNoWait(
+        cmdList: String
+    ) {
+        try {
+            val pb = ProcessBuilder().command(
+                cmdList.split("\t")
+            ).redirectErrorStream(true)
+            pb.start()
+        } catch (e: Exception){
+            println("pass")
+        }
+    }
+
     fun adbShell(
         fragment: Fragment,
         cmd: String

@@ -117,6 +117,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
+    implementation("org.rauschig:jarchivelib:0.8.0")
+    implementation("org.apache.commons:commons-compress:1.20")
 
 
 //    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")
