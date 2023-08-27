@@ -3,8 +3,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
+import android.widget.Toast
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
@@ -34,9 +36,11 @@ object ImageOnLongClickListener {
             context,
             terminalFragment.imageLongPressMenuFilePath
         )
+        val listener =
+            context as? TerminalFragment.OnToolBarVisibleChangeListener
 
         activity?.registerForContextMenu(terminalWebView)
-        terminalWebView.setOnLongClickListener() { view ->
+        terminalWebView.setOnLongClickListener { view ->
             val hitTestResult = terminalWebView.hitTestResult
             val currentPageUrl = terminalWebView.url
             val httpsStartStr = WebUrlVariables.httpsPrefix
@@ -44,6 +48,15 @@ object ImageOnLongClickListener {
             val currentUrl = terminalFragment.currentUrl
                 ?: return@setOnLongClickListener false
             when (hitTestResult.type) {
+                WebView.HitTestResult.UNKNOWN_TYPE -> {
+                    val changeTargetFragment =
+                        IndexOrEditFragment(terminalFragment).select()
+                    listener?.onToolBarVisibleChange(
+                        true,
+                        changeTargetFragment
+                    )
+                    false
+                }
                 WebView.HitTestResult.IMAGE_TYPE -> {
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
