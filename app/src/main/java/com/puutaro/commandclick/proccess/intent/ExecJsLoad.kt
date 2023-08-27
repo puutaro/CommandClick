@@ -117,7 +117,9 @@ object ExecJsLoad {
 
 
         val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
-        terminalViewModel.onDisplayUpdate = true
+        enableJsLoadInWebView(
+            terminalViewModel
+        )
         val launchUrlString = JavaScriptLoadUrl.make(
             context,
             "${recentAppDirPath}/${selectedJsFileName}",
@@ -227,6 +229,12 @@ object ExecJsLoad {
                 else -> {}
             }
         }
+    }
+
+    private fun enableJsLoadInWebView(
+        terminalViewModel: TerminalViewModel
+    ){
+        terminalViewModel.onDisplayUpdate = true
     }
 
     private fun cleanUpAfterJsExc(
