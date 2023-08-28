@@ -135,7 +135,7 @@ class   TerminalFragment: Fragment() {
         WebViewClientSetter.set(this@TerminalFragment)
 
         WebViewSettings.set(this)
-        ImageOnLongClickListener.set(this)
+        TermOnLongClickListener.set(this)
         IntentAction.handle(this)
         DisplaySwitch.update(
             this,

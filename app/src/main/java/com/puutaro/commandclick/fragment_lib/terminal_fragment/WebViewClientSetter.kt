@@ -52,11 +52,6 @@ object WebViewClientSetter {
                         is WebViewRequestValidation.TransitionToOtherApp.No -> {}
                     }
                 }
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "url.txt",
-                    "${previousUrl}\t${allowedRequest}\t--"
-                )
                 return allowedRequest
             }
 

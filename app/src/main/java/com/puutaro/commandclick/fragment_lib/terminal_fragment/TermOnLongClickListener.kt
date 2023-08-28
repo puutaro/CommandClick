@@ -5,12 +5,13 @@ import android.os.Looper
 import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 
 
-object ImageOnLongClickListener {
+object TermOnLongClickListener {
 
     fun set(
         terminalFragment: TerminalFragment
@@ -34,9 +35,11 @@ object ImageOnLongClickListener {
             context,
             terminalFragment.imageLongPressMenuFilePath
         )
+        val listener =
+            context as? TerminalFragment.OnToolBarVisibleChangeListener
 
         activity?.registerForContextMenu(terminalWebView)
-        terminalWebView.setOnLongClickListener() { view ->
+        terminalWebView.setOnLongClickListener { view ->
             val hitTestResult = terminalWebView.hitTestResult
             val currentPageUrl = terminalWebView.url
             val httpsStartStr = WebUrlVariables.httpsPrefix
@@ -44,6 +47,15 @@ object ImageOnLongClickListener {
             val currentUrl = terminalFragment.currentUrl
                 ?: return@setOnLongClickListener false
             when (hitTestResult.type) {
+                WebView.HitTestResult.UNKNOWN_TYPE -> {
+                    val changeTargetFragment =
+                        IndexOrEditFragment(terminalFragment).select()
+                    listener?.onToolBarVisibleChange(
+                        true,
+                        changeTargetFragment
+                    )
+                    false
+                }
                 WebView.HitTestResult.IMAGE_TYPE -> {
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
@@ -67,10 +79,6 @@ object ImageOnLongClickListener {
                         ?: return@setOnLongClickListener false
                     val longPressImageUrl = message.data.getString("src")
                         ?: return@setOnLongClickListener  false
-//                    ImageTempDownloader.download(
-//                        terminalFragment,
-//                        longPressImageUrl
-//                    )
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true
@@ -87,7 +95,6 @@ object ImageOnLongClickListener {
                 WebView.HitTestResult.SRC_ANCHOR_TYPE -> {
                     val longPressLinkUrl = hitTestResult.extra
                         ?: return@setOnLongClickListener false
-//                    FileTempDownloader.downloadFile(url)
                     if (
                         currentPageUrl?.startsWith(httpsStartStr) == true
                         || currentPageUrl?.startsWith(httpStartStr) == true

@@ -116,7 +116,10 @@ object ExecJsLoad {
         )
 
 
-        terminalViewModel.onDisplayUpdate = true
+        val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
+        enableJsLoadInWebView(
+            terminalViewModel
+        )
         val launchUrlString = JavaScriptLoadUrl.make(
             context,
             "${recentAppDirPath}/${selectedJsFileName}",
@@ -128,6 +131,11 @@ object ExecJsLoad {
         jsUrlLaunchHandler(
             currentFragment,
             launchUrlString,
+        )
+
+        cleanUpAfterJsExc(
+            terminalViewModel,
+            tempOnDisplayUpdate,
         )
 
         JsFilePathToHistory.insert(
@@ -220,6 +228,22 @@ object ExecJsLoad {
                 }
                 else -> {}
             }
+        }
+    }
+
+    private fun enableJsLoadInWebView(
+        terminalViewModel: TerminalViewModel
+    ){
+        terminalViewModel.onDisplayUpdate = true
+    }
+
+    private fun cleanUpAfterJsExc(
+        terminalViewModel: TerminalViewModel,
+        tempOnDisplayUpdate: Boolean,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
         }
     }
 }

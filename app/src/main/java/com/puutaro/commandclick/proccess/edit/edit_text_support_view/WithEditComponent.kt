@@ -15,7 +15,6 @@ import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ButtonViewHowActive
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ColorPickerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DatePickerProducer
@@ -45,12 +44,6 @@ class WithEditComponent(
 ) {
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
-    private val binding = editFragment.binding
-    private val buttonViewHowActive = ButtonViewHowActive(
-        binding,
-        editFragment
-    )
-    private val validateErrEditTextNumberSet = mutableSetOf<Int>()
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     fun insert(
