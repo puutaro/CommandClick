@@ -56,7 +56,7 @@ class JsTextToSpeech(
             intent.putExtra(TextToSpeechIntentExtra.pitch.scheme, pitch)
             intent.putExtra(TextToSpeechIntentExtra.currentAppDirName.scheme, currentAppDirName)
             intent.putExtra(TextToSpeechIntentExtra.scriptRawName.scheme, fannelRawName)
-            context?.startService(intent)
+            context?.startForegroundService(intent)
         } catch (e: Exception) {
             Toast.makeText(
                 terminalFragment.context,

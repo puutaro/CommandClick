@@ -58,10 +58,17 @@ private fun monitorOutput(
                     )
                 }
             }
+            var previousMilliTime = -1000L
             withContext(Dispatchers.IO){
                 while (true) {
                     delay(200)
                     if(!terminalViewModel.onDisplayUpdate) continue
+                    val currentTime= System.currentTimeMillis()
+                    val diffTime = currentTime - previousMilliTime
+                    if(
+                        diffTime < 800
+                    ) continue
+                    previousMilliTime = currentTime
                     val currentMonitorFileNameLast = terminalViewModel.currentMonitorFileName
                     val readTextLast = ReadText(
                         UsePath.cmdclickMonitorDirPath,

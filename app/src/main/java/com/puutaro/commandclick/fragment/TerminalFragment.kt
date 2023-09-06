@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.app.Service
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -25,6 +26,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
@@ -73,6 +75,15 @@ class   TerminalFragment: Fragment() {
     private var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHtmlReceiveHandler.handle(
+                this@TerminalFragment,
+                intent,
+            )
+        }
+    }
+
+    private var broadcastReceiverForMonitorText: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            MonitorTextLauncher.handle(
                 this@TerminalFragment,
                 intent,
             )
@@ -169,6 +180,10 @@ class   TerminalFragment: Fragment() {
             this,
             broadcastReceiverForHtml
         )
+        BroadcastManager.unregisterBroadcastReceiverForTerm(
+            this,
+            broadcastReceiverForMonitorText
+        )
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
@@ -195,6 +210,11 @@ class   TerminalFragment: Fragment() {
             this,
             broadcastReceiverForHtml,
             BroadCastIntentScheme.HTML_LAUNCH.action
+        )
+        BroadcastManager.registerBroadcastReceiver(
+            this,
+            broadcastReceiverForMonitorText,
+            BroadCastIntentScheme.MONITOR_TEXT_PATH.action
         )
     }
 

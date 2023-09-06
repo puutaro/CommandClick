@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.activity
 
 import android.app.Activity
+import android.app.Service
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -43,6 +44,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
@@ -50,6 +52,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButto
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.service.PulseReceiverService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.util.*
