@@ -28,6 +28,7 @@ import com.puutaro.commandclick.util.StringLength
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.File
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -95,7 +96,10 @@ class TextToSpeechService:
         }
     }
     private var broadcastReceiverForTextToSpeechStop: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
+        override fun onReceive(
+            context: Context,
+            intent: Intent
+        ) {
             if(
                 intent.action
                 != BroadCastIntentScheme.STOP_TEXT_TO_SPEECH.action
@@ -278,7 +282,7 @@ class TextToSpeechService:
             notificationInstance
         )
         startForeground(
-            ServiceNotificationId.textToSpeech,
+            notificationId,
             notificationInstance
         )
         val listFilePath = intent?.getStringExtra(

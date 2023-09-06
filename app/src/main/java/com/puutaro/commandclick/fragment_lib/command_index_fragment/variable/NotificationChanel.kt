@@ -15,5 +15,9 @@ enum class NotificationChanel(
     TEXT_TO_MP3_NOTIFICATION(
     "channel_text_to_mp3",
     "text_to_mp3"
+    ),
+    PULSE_RECIEVER_NOTIFICATION(
+    "channel_pulse_server",
+    "pulse_server"
     )
 }

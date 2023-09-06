@@ -112,6 +112,10 @@ object WebViewSettings {
             JsPdf(terminalFragment),
             JsInterfaceVariant.jsPdf.name
         )
+        terminalWebView.addJavascriptInterface(
+            JsPulseAudioReceiver(terminalFragment),
+            JsInterfaceVariant.jsPulseAudioReceiver.name
+        )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),
 //            JsInterfaceVariant.jsTrans.name

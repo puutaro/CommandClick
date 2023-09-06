@@ -4,6 +4,10 @@ enum class BroadCastIntentScheme(
     val action: String,
     val scheme: String
 ) {
+    MONITOR_TEXT_PATH(
+        "com.puutaro.commandclick.url.monitor_text_path",
+        "monitor_text_path"
+    ),
     ULR_LAUNCH(
         "com.puutaro.commandclick.url.launch",
         "url",
@@ -43,5 +47,13 @@ enum class BroadCastIntentScheme(
     TO_TEXT_TO_SPEECH(
         "com.puutaro.commandclick.text_to_speech.to",
         "to",
+    ),
+    STOP_PULSE_RECIEVER(
+        "com.puutaro.commandclick.pulse_server.stop",
+        "stop",
+    ),
+    RESTART_PULSE_RECIEVER(
+        "com.puutaro.commandclick.pulse_server.restart",
+        "restart",
     ),
 }
