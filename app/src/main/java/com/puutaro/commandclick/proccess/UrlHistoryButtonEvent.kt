@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
@@ -59,7 +60,7 @@ class UrlHistoryButtonEvent(
         val urlHistoryListViewLinearParams =
             urlHistoryListView.layoutParams as LinearLayout.LayoutParams
         urlHistoryListViewLinearParams.weight = listLinearWeight
-        val urlHistoryList = mekeUrlHistoryList()
+        val urlHistoryList = makeUrlHistoryList()
         val searchText = urlHistoryDialog.findViewById<EditText>(
             com.puutaro.commandclick.R.id.url_history_search_edit_text
         )
@@ -92,7 +93,7 @@ class UrlHistoryButtonEvent(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
-        urlHistoryDialog.window?.setGravity(Gravity.BOTTOM);
+        urlHistoryDialog.window?.setGravity(Gravity.BOTTOM)
         urlHistoryDialog.show()
         setUrlHistoryListViewOnItemClickListener(
             urlHistoryListView,
@@ -198,7 +199,7 @@ class UrlHistoryButtonEvent(
         }
     }
 
-    private fun mekeUrlHistoryList(): List<String> {
+    private fun makeUrlHistoryList(): List<String> {
         return makeCompleteListSourceNoJsExclude(
             currentAppDirPath,
         ).reversed()
@@ -270,12 +271,40 @@ class UrlHistoryButtonEvent(
                 UrlHistoryMenuEnums.COPY_URL.itemName,
 
                 )
+            popup.menu.add(
+                UrlHistoryMenuEnums.DELETE.groupId,
+                UrlHistoryMenuEnums.DELETE.itemId,
+                UrlHistoryMenuEnums.DELETE.order,
+                UrlHistoryMenuEnums.DELETE.itemName,
+
+                )
             popup.setOnMenuItemClickListener {
                     menuItem ->
-                execCopyUrl(
-                    listSelectedView,
-                    selectedLine,
-                )
+                when(menuItem.itemId){
+                    UrlHistoryMenuEnums.COPY_URL.itemId -> {
+                        Toast.makeText(
+                            context,
+                            "copy",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        execCopyUrl(
+                            listSelectedView,
+                            selectedLine,
+                        )
+                    }
+                    UrlHistoryMenuEnums.DELETE.itemId -> {
+                        Toast.makeText(
+                            context,
+                            "delete",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        execDeleteUrl(
+                            selectedLine,
+                            urlHistoryListView
+
+                        )
+                    }
+                }
                 true
             }
             popup.show()
@@ -338,7 +367,7 @@ class UrlHistoryButtonEvent(
     private fun makeSearchFilteredUrlHistoryList(
         searchText: EditText
     ): List<String> {
-        return mekeUrlHistoryList().filter {
+        return makeUrlHistoryList().filter {
             val urlTitleSource =
                 it.split(tabReplaceStr)
                     .firstOrNull() ?:String()
@@ -354,29 +383,70 @@ class UrlHistoryButtonEvent(
             )
         }
     }
+
+
+    private fun execCopyUrl(
+        listSelectedView: View,
+        selectedLine: String?
+    ){
+        val clipboard = listSelectedView.context?.getSystemService(
+            Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val clip: ClipData = ClipData.newPlainText(
+            "url",
+            selectedLine
+        )
+        clipboard.setPrimaryClip(clip)
+    }
+    private fun execDeleteUrl(
+        selectedLine: String?,
+        urlHistoryListView: ListView,
+    ){
+        val bottomScriptUrlList = makeBottomScriptUrlList()
+        val isBottomScript = bottomScriptUrlList.filter {
+            val url = it.split("\t").lastOrNull()
+            url == selectedLine
+        }.isNotEmpty()
+        if(isBottomScript) {
+            Toast.makeText(
+                context,
+                "Bottom script must be deleted bellow\n" +
+                        "\tat ${CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH}\n" +
+                        "\t\tin start up script",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val urlHistoryDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+        val urlHistoryCon = ReadText(
+            urlHistoryDirPath,
+            cmdclickUrlHistoryFileName
+        ).textToList().filter {
+            val url = it.split("\t").lastOrNull()
+            url != selectedLine
+        }.joinToString("\n")
+        FileSystems.writeFile(
+            urlHistoryDirPath,
+            cmdclickUrlHistoryFileName,
+            urlHistoryCon
+        )
+        val urlHistoryList = makeUrlHistoryList()
+        val urlHistoryAdapter = urlHistoryListView.adapter as UrlHistoryAdapter
+        urlHistoryAdapter.clear()
+        urlHistoryAdapter.addAll(urlHistoryList)
+        urlHistoryAdapter.notifyDataSetChanged()
+    }
 }
 
-internal val mainMenuGroupId = 70000
+private val mainMenuGroupId = 70000
 
-internal enum class UrlHistoryMenuEnums(
+private enum class UrlHistoryMenuEnums(
     val groupId: Int,
     val itemId: Int,
     val order: Int,
     val itemName: String
 ) {
-    COPY_URL(mainMenuGroupId, 70100, 1, "copy_url"),
+    DELETE(mainMenuGroupId, 70100, 1, "delete"),
+    COPY_URL(mainMenuGroupId, 70200, 2, "copy_url"),
 }
 
-
-private fun execCopyUrl(
-    listSelectedView: View,
-    selectedLine: String?
-){
-    val clipboard = listSelectedView.context?.getSystemService(
-        Context.CLIPBOARD_SERVICE) as ClipboardManager
-    val clip: ClipData = ClipData.newPlainText(
-        "url",
-        selectedLine
-    )
-    clipboard.setPrimaryClip(clip)
-}
