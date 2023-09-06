@@ -1,0 +1,111 @@
+#!/data/data/com.puutaro.commandclick/files/support/busybox sh
+
+if [[ -z "${LIB_PATH}" ]]; then
+  LIB_PATH="$ROOT_PATH/support"
+fi
+
+$LIB_PATH/busybox clear
+
+if [[ -z "${OS_VERSION}" ]]; then
+  OS_VERSION="4.0.0"
+fi
+
+if [[ ! -r /dev/ashmem ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/ashmem" 
+fi
+if [[ ! -r /dev/shm ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/shm" 
+fi
+if [[ ! -r /proc/stat ]] ; then
+	numProc="$($LIB_PATH/busybox grep rocessor /proc/cpuinfo)"
+	numProc="${numProc: -1}"
+	if [[ "$numProc" -le "3" ]] 2>/dev/null ; then
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat4:/proc/stat" 
+	else
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat8:/proc/stat" 
+	fi
+fi
+if [[ ! -r /proc/uptime ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/uptime:/proc/uptime" 
+fi
+if [[ ! -r /proc/version ]] ; then
+	currDate="$($LIB_PATH/busybox date)"
+	echo "Linux version $OS_VERSION (fake@userland) #1 $currDate" > $ROOT_PATH/support/version
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/version:/proc/version" 
+fi
+
+#save what proot version we are using, so we cannot mess this up later
+#will make future major upgrades easier
+if [ -f $ROOTFS_PATH/support/.success_filesystem_extraction ]; then
+	if [ ! -f $ROOTFS_PATH/support/.proot_version ]; then
+		if [ -d $ROOTFS_PATH/support/meta_db ]; then
+			$LIB_PATH/busybox echo "_meta_leveldb" > $ROOTFS_PATH/support/.proot_version
+		else
+			$LIB_PATH/busybox echo "_meta" > $ROOTFS_PATH/support/.proot_version
+		fi
+	fi
+else
+	if [ ! -f $ROOTFS_PATH/support/.proot_version ]; then
+		$LIB_PATH/busybox touch $ROOTFS_PATH/support/.proot_version
+	fi
+fi
+PROOT_VER=$($LIB_PATH/busybox cat $ROOTFS_PATH/support/.proot_version)
+PROOT="$LIB_PATH/proot"
+echo -e "${PROOT}\n${PROOT_VER}" > /storage/emulated/0/Documents/proot_verCc.txt
+#PROOT="$LIB_PATH/proot$PROOT_VER"
+# echo "${ROOTFS_PATH}" > /storage/emulated/0/Documents/ROOTFS_PATH.txt
+# ls "${ROOTFS_PATH}"
+#launch PRoot
+unset LD_PRELOAD
+echo proot cc start
+cd "${ROOTFS_PATH}"
+# echo --ls
+# ls
+# echo --support
+# ls "${ROOTFS_PATH}/support"
+# echo --support/common
+# ls "${ROOTFS_PATH}/support/common"
+# echo --LIB_PATH
+# echo "${LIB_PATH}"
+# echo --ls LIB_PATH
+# ls "${LIB_PATH}"
+# echo ---
+# pwd
+chmod -R 777 "${ROOTFS_PATH}"
+# ls "${ROOTFS_PATH}/bin/pwd"
+
+# cat << EOF > "${ROOTFS_PATH}/startup.sh"
+# #!/bin/bash
+
+# echo $HOME
+# echo --
+# pwd
+# echo --
+# curl -LI http://google.com/
+# echo --
+# echo -- apt show
+# apt show jq
+#echo -- apt search
+#apt search jq
+#echo --- apt list
+#apt list
+# EOF
+
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
+PROOT_LOADER=$LIB_PATH/loader \
+PROOT_LOADER_32=$LIB_PATH/loader32 \
+$PROOT $@
+# >> /storage/emulated/0/Documents/proot_file_extract.txt
+# -r $ROOTFS_PATH -p --sysvipc -H -0 -l -L \
+# -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
+# -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support \
+# -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
+# -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
+# -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
+# -b $ROOT_PATH/support:/support/common \
+# $EXTRA_BINDINGS \
+# /usr/bin/env -i PATH="${PATH}" HOME=/root LANG=C.UTF-8 $@
+
+echo proot cc end
+#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PROOT_TMP_DIR=$ROOTFS_PATH/support/ PROOT_LOADER=$LIB_PATH/loader PROOT_LOADER_32=$LIB_PATH/loader32 $PROOT -r $ROOTFS_PATH -v $PROOT_DEBUG_LEVEL -p --sysvipc -H -0 -l -L -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload -b $ROOT_PATH/support:/support/common $EXTRA_BINDINGS $@
