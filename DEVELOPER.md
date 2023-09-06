@@ -102,6 +102,8 @@ ccimport {URL}
 
 ### am commands
 
+`CommandClick` has broadcast am command bellow.
+
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
 
 
@@ -110,7 +112,9 @@ ccimport {URL}
 - `cmdclickUrlHistory` 
       - CommandClick use recent used url launch etc.
 - `urlLoadFinished`
-      - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.
+      - This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.]
+- monitor update file path
+      - `/storage/emulated/0/Documents/cmdclick/temp/monitor/updateMonitor.txt` 
 
 ### JavaScript interface
 
