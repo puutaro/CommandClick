@@ -99,7 +99,7 @@ class PulseReceiverService:
             .setSmallIcon(R.drawable.ic_media_play)
             .setAutoCancel(true)
             .setContentTitle("Recieving..")
-            .setContentText("${serverAddress}:${UsePort.pluseRecieverPort}")
+            .setContentText("${serverAddress}:${UsePort.pluseRecieverPort.num}")
             .setProgress(0, 0, true)
             .setDeleteIntent(
                 cancelPendingIntent
