@@ -19,15 +19,15 @@ class JsPulseAudioReceiver(
 
     @JavascriptInterface
     fun start(
-        serverAddress: String,
+        pcIpv4Address: String,
     ) {
         val intent = Intent(
             activity,
-            PulseReceiverService::class.java
+            pulseReceiverService
         )
         intent.putExtra(
             PulseServerIntentExtra.serverAddress.schema,
-            serverAddress
+            pcIpv4Address
         )
         context?.let {
             ContextCompat.startForegroundService(context, intent)

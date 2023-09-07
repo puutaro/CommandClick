@@ -16,7 +16,7 @@ import java.net.UnknownHostException
 
 
 class PulseSoundThread(
-    private val serverAddress: String,
+    private val pcIpv4Address: String,
 ) {
     private var mTerminate = false
     private val mPort = UsePort.pluseRecieverPort.num
@@ -40,7 +40,7 @@ class PulseSoundThread(
 
     fun enableSock():Boolean{
         try {
-            val socket = Socket(serverAddress, mPort)
+            val socket = Socket(pcIpv4Address, mPort)
             socket.close()
             return true
         } catch(e: Exception){
@@ -53,7 +53,7 @@ class PulseSoundThread(
     ) {
         try {
             withContext(Dispatchers.IO) {
-                pulseReceiverSock = Socket(serverAddress, mPort)
+                pulseReceiverSock = Socket(pcIpv4Address, mPort)
             }
         } catch (e: UnknownHostException) {
             // TODO if the host name could not be resolved into an IP address.

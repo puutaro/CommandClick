@@ -59,7 +59,7 @@ CommandClick
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">
-![GitHub all releases](https://img.shields.io/github/downloads/puutaro/commandclick/total)  
+
 - Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
 - Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also android os. Therefore, this has wide spread usage
 - Existing web browsers cannot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
