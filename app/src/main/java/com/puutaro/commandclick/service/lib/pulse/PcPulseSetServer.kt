@@ -179,7 +179,9 @@ object PcPulseSetServer {
 private val ubuntuSetUpShell = """
     #!/bin/sh
         
-    pactl load-module module-null-sink sink_name=TCP_output \
+    pulseaudio --kill; sleep 0.5 \
+	; PULSE_SERVER=  && pulseaudio --start \
+    ; pactl load-module module-null-sink sink_name=TCP_output \
     && pacmd update-sink-proplist TCP_output device.description=TCP_output \
     && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=10080 listen=0.0.0.0
 
