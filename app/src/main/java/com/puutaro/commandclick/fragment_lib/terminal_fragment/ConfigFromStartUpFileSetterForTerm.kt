@@ -61,6 +61,18 @@ object ConfigFromStartUpFileSetterForTerm {
             ),
         )
 
+        terminalFragment.onTermBackendWhenStart = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
+                SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
+            ),
+        )
+
 
         terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
@@ -177,6 +189,18 @@ object ConfigFromStartUpFileSetterForTerm {
             listOf(
                 SettingVariableSelects.OnAdblockSelects.ON.name,
                 SettingVariableSelects.OnAdblockSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.onTermBackendWhenStart = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START,
+            terminalFragment.onTermBackendWhenStart,
+            SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
+            terminalFragment.onTermBackendWhenStart,
+            listOf(
+                SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
+                SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
             ),
         )
 

@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.common.variable
 
-import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.FileSystems
@@ -62,6 +61,7 @@ object CommandClickScriptVariable {
     val CMDCLICK_SHIBAN = "cmdclickShiban"
     val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
+    val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
     val CMDCLICK_HISTORY_SWITCH = "historySwitch"
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
     val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
@@ -164,6 +164,9 @@ object CommandClickScriptVariable {
     private val onAdBlockInherit = SettingVariableSelects.OnAdblockSelects.INHERIT.name
     private val onAdBlockOn = SettingVariableSelects.OnAdblockSelects.ON.name
     private val onAdBlockOff = SettingVariableSelects.OnAdblockSelects.OFF.name
+    private val onTermBackendWhenStartSelectsOn = SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
+    private val onTermBackendWhenStartSelectsOff = SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name
+    private val onTermBackendWhenStartSelectsInherit = SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name
     private val onUrlHistoryRegisterOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val overrideItemClickExecSelectsOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
@@ -187,6 +190,7 @@ object CommandClickScriptVariable {
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
     val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
     val PASS_CMDVARIABLE_EDIT_ON_VALUE =  "ON"
+    val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
@@ -291,8 +295,9 @@ object CommandClickScriptVariable {
         "${CMDCLICK_HISTORY_SWITCH}:CB=${historySwitchOff}!${historySwitchOn}!${historySwitchInherit}",
         "${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}:CB=${urlHistoryOrButtonExecUrlHistory}!${urlHistoryOrButtonExecUrlButtonExec}!${urlHistoryOrButtonExecUrlInherit}",
         "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
-        "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
+        "${ON_URL_LAUNCH_MACRO}:TXT:ECB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
         "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
+        "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsInherit}",
         "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
         "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
         "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
@@ -350,6 +355,7 @@ object CommandClickScriptVariable {
             |#  * [${CMDCLICK_HOME_FANNELS_PATH}](#${replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
             |#  * [${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
             |#  * [${ON_ADBLOCK}](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
+            |#  * [${ON_TERM_BACKEND_WHEN_START}](#${replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
             |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
             |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
@@ -482,6 +488,15 @@ object CommandClickScriptVariable {
             |# | `${onAdBlockOn}` | on |
             |# | `${onAdBlockOff}` | off |
             |
+            |# ### ${ON_TERM_BACKEND_WHEN_START}
+            |# cmdclick terminal view update switch
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onTermBackendWhenStartSelectsInherit}` | inherit config setting |
+            |# | `${onTermBackendWhenStartSelectsOn}` | on |
+            |# | `${onTermBackendWhenStartSelectsOff}` | off |
+            |
             |# ### ${ON_URL_LAUNCH_MACRO}
             |# Url launch macro(when set, cmdclick web terminal don't output)
             |
@@ -574,6 +589,7 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
         |${ON_ADBLOCK}="${onAdBlockInherit}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcAnchorLongPressMenuFilePath}
         |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${imageLongPressMenuFilePath}
@@ -730,6 +746,7 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}"
         |${ON_ADBLOCK}="${onAdBlockOff}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
         |${CMDCLICK_HOME_FANNELS_PATH}="${homeFannelsFilePath}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
         |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
@@ -785,6 +802,7 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
         |${ON_ADBLOCK}="${onAdBlockInherit}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
         |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcAnchorLongPressMenuFilePath}"

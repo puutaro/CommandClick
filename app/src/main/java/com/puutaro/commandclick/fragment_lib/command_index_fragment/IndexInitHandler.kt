@@ -33,13 +33,11 @@ object IndexInitHandler {
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        cmdIndexFragment.onUrlLaunchIntent = IntentAction.judge(
+        val onUrlLaunchIntent = IntentAction.judge(
             activity
         )
 
-        if(
-            cmdIndexFragment.onUrlLaunchIntent
-        ){
+        if(onUrlLaunchIntent){
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
                 UsePath.cmdclickDefaultAppDirName +

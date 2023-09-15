@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
 
 plugins {
     id("com.android.application")
@@ -54,6 +53,13 @@ android {
     }
 }
 
+//ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
+////ext.libDir = "$project.projectDir/src/main/resources/lib"
+//ext.libDir = "$project.projectDir/src/main/jniLibs"
+extra["architectures"] = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+//ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
+//ext.libDir = "$project.projectDir/src/main/resources/lib"
+extra["libDir"] = "${project.projectDir}/src/main/jniLibs"
 //chaquopy {
 //    defaultConfig {
 //        buildPython("/home/xbabu/.pyenv/shims/python")
@@ -71,6 +77,7 @@ android {
 //        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
 //    }
 //}
+
 
 
 dependencies {

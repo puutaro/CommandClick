@@ -24,6 +24,7 @@ object ExecJsLoad {
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
+        jsArgs: String = String()
     ) {
         if (
             !File(
@@ -126,7 +127,7 @@ object ExecJsLoad {
             jsContentsList
         ).toString()
 
-        terminalViewModel.jsArguments = String()
+        terminalViewModel.jsArguments = jsArgs
 
         jsUrlLaunchHandler(
             currentFragment,

@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -26,6 +27,7 @@ import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import java.io.File
 
 
 class CommandIndexFragment: Fragment() {
@@ -41,7 +43,6 @@ class CommandIndexFragment: Fragment() {
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
-    var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
@@ -132,11 +133,6 @@ class CommandIndexFragment: Fragment() {
 
         readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
             startUpPref
-        )
-
-        StartupOrEditExecuteOnceShell.invoke(
-            this,
-            readSharePreffernceMap
         )
 
         val cmdListView = binding.cmdList

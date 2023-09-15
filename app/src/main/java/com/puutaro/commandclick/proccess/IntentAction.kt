@@ -3,31 +3,43 @@ package com.puutaro.commandclick.proccess
 import android.app.Activity
 import android.app.SearchManager
 import android.content.Intent
+import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.StartupOrEditExecuteOnceShell
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 object IntentAction {
+
     fun handle(
         terminalFragment: TerminalFragment,
     ) {
+        val context = terminalFragment.context
         val activity = terminalFragment.activity
+        val webView = terminalFragment.binding.terminalWebView
+        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val intent = activity?.intent
         val intentAction =
             activity?.intent?.action
-        val webView = terminalFragment.binding.terminalWebView
-        when (
-            intentAction
-        ) {
+        when (intentAction) {
             Intent.ACTION_VIEW,
             Intent.ACTION_MAIN -> {
                 if (
-                    intent?.dataString.isNullOrEmpty()
-                ) return
-                val urlString = activity.intent?.dataString
-                urlString?.let {
-                    terminalFragment.firstDisplayUpdate = false
-                    webView.loadUrl(it)
+                    !intent?.dataString.isNullOrEmpty()
+                ) {
+                    val urlString = activity.intent?.dataString
+                    urlString?.let {
+                        terminalFragment.firstDisplayUpdate = false
+                        terminalViewModel.launchUrl = urlString
+//                    webView.loadUrl(it)
+                    }
+                    return
                 }
             }
             Intent.ACTION_WEB_SEARCH -> {
@@ -39,7 +51,28 @@ object IntentAction {
                     )
                     ?: return
                 terminalFragment.firstDisplayUpdate = false
-                webView.loadUrl("${WebUrlVariables.queryUrl}${query}")
+                terminalViewModel.launchUrl = "${WebUrlVariables.queryUrl}${query}"
+//                webView.loadUrl("${WebUrlVariables.queryUrl}${query}")
+                return
+            }
+            else -> {}
+        }
+        if(
+            !webView.url.isNullOrEmpty()
+        ) return
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                for (i in 1..100) {
+                    if(
+                        !terminalFragment.firstDisplayUpdate
+                    ) break
+                    delay(50)
+                }
+            }
+            withContext(Dispatchers.Main) {
+                StartupOrEditExecuteOnceShell.invoke(
+                    terminalFragment,
+                )
             }
         }
     }

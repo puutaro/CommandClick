@@ -50,13 +50,18 @@ object FileSystems {
         contents: String
     ) {
         if(
+            dirPath == "-"
+            || dirPath.isEmpty()
+        ) return
+        if(
             fileName == "-"
             || fileName.isEmpty()
         ) return
+        val dirObj = File(dirPath)
+        if(
+            !dirObj.isDirectory
+        ) createDirs(dirPath)
         val filePath = File(dirPath, fileName)
-        if(!filePath.isDirectory){
-            createDirs(dirPath)
-        }
         try {
             filePath.writeText(contents)
         } catch (e: java.lang.Exception){

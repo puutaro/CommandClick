@@ -1,40 +1,33 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import com.puutaro.commandclick.R
+import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
 
 object AutoShellExecManager {
+
+    private val onAutoExecArg = "onAutoExec"
+
     fun fire(
-        cmdIndexFragment: CommandIndexFragment,
+        terminalFrgment: TerminalFragment,
         cmdclickStartupOrEndShellName: String,
     ){
         if(
-            cmdIndexFragment.onUrlLaunchIntent
+            terminalFrgment.onUrlLaunchIntent
         ) return
-
-        val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
-        if(
-            readSharePreffernceMap.isEmpty()
-        ) return
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+        val activity = terminalFrgment.activity
+            ?: return
+        val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
+            startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
 
-        val activity = cmdIndexFragment.activity
-
-        TargetFragmentInstance()
-            .getFromFragment<TerminalFragment>(
-                activity,
-                activity?.getString(R.string.index_terminal_fragment)
-            ) ?: return
         val jsContentsList = ReadText(
             currentAppDirPath,
             cmdclickStartupOrEndShellName
@@ -67,10 +60,11 @@ object AutoShellExecManager {
             SettingVariableSelects.AutoExecSelects.ON.name
         ) return
         ExecJsLoad.execJsLoad(
-            cmdIndexFragment,
+            terminalFrgment,
             currentAppDirPath,
             cmdclickStartupOrEndShellName,
-            jsContentsList
+            jsContentsList,
+            onAutoExecArg
         )
     }
 }

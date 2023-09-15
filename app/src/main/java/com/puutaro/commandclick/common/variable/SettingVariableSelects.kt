@@ -103,4 +103,10 @@ object SettingVariableSelects {
         ON,
         OFF
     }
+
+    enum class OnTermBackendWhenStartSelects {
+        INHERIT,
+        ON,
+        OFF
+    }
 }

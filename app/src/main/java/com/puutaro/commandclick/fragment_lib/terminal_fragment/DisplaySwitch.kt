@@ -7,25 +7,25 @@ import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
+import java.time.LocalDateTime
 
 
 object DisplaySwitch {
+
+    private val termUpdateMilitime = 800L
     fun update (
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
     ): Job {
-        try {
-            terminalFragment.displayUpdateCoroutineJob?.cancel()
-        } catch (e: Exception){
-            println("not cancel")
-        }
         return monitorOutput(
             terminalFragment,
-            terminalViewModel
+            terminalViewModel,
+            termUpdateMilitime
         )
     }
 }
@@ -33,8 +33,10 @@ object DisplaySwitch {
 private fun monitorOutput(
     terminalFragment: TerminalFragment,
     terminalViewModel: TerminalViewModel,
+    termUpdateMilitime: Long,
 ): Job {
-    return terminalFragment.lifecycleScope.launch {
+//    terminalFragment.lifecycleScope.launch
+    return CoroutineScope(Dispatchers.IO).launch {
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED){
             var terminalContents = withContext(Dispatchers.IO){
@@ -44,24 +46,26 @@ private fun monitorOutput(
                 )
                 readText.readTextForHtml()
             }
-            withContext(Dispatchers.IO){
-                terminalFragment.firstDisplayUpdateRunner = firstUpdateWebView(
+            withContext(Dispatchers.Main){
+                if(
+                    !terminalFragment.firstDisplayUpdate
+                ) return@withContext
+                FileSystems.writeFile(
+                    UsePath.cmdclickDefaultAppDirPath,
+                    "dispFirstUpdate.txt",
+                    "${LocalDateTime.now()}"
+                )
+                firstSetWebView(
                     terminalFragment,
                     terminalContents,
-                    terminalViewModel,
+                    terminalViewModel
                 )
-                if(terminalFragment.firstDisplayUpdate) {
-                    registerRunner(
-                        terminalViewModel,
-                        terminalFragment.firstDisplayUpdateRunner,
-                        terminalFragment.terminalViewhandler
-                    )
-                }
+                terminalFragment.firstDisplayUpdate = false
             }
             var previousMilliTime = -1000L
             withContext(Dispatchers.IO){
                 while (true) {
-                    delay(200)
+                    delay(termUpdateMilitime)
                     if(!terminalViewModel.onDisplayUpdate) continue
                     val currentTime= System.currentTimeMillis()
                     val diffTime = currentTime - previousMilliTime
@@ -79,39 +83,26 @@ private fun monitorOutput(
                         terminalContents
                         == secondTerminalContents
                         && terminalViewModel.launchUrl.isNullOrEmpty()
-                    ){
-                        continue
-                    }
+                    ) continue
                     terminalContents = secondTerminalContents
-                    terminalFragment.lastDisplayUpdateRunner = updateWebView(
-                        terminalFragment,
-                        terminalContents,
-                        terminalViewModel,
-                    )
-
-                    registerRunner(
-                        null,
-                        terminalFragment.lastDisplayUpdateRunner,
-                        terminalFragment.terminalViewhandler
-                    )
+                    val launchUrl = terminalViewModel.launchUrl
+                    terminalViewModel.launchUrl = null
+                    withContext(Dispatchers.Main) {
+                        FileSystems.writeFile(
+                            UsePath.cmdclickDefaultAppDirPath,
+                            "dispSecUpdate.txt",
+                            "${LocalDateTime.now()}"
+                        )
+                        setWebView(
+                            terminalFragment,
+                            terminalContents,
+                            terminalViewModel,
+                            launchUrl
+                        )
+                    }
                 }
             }
         }
-    }
-}
-
-
-private fun firstUpdateWebView(
-    terminalFragment: TerminalFragment,
-    terminalContents: String,
-    terminalViewModel: TerminalViewModel
-): Runnable {
-    return Runnable {
-        firstSetWebView(
-            terminalFragment,
-            terminalContents,
-            terminalViewModel,
-        )
     }
 }
 
@@ -164,6 +155,7 @@ private fun setWebView(
     terminalViewModel: TerminalViewModel,
     launchUrl: String? = null
 ) {
+    val trimLastLine = terminalFragment.trimLastLine
     try {
         val webView = terminalFragment.binding.terminalWebView
         if(
@@ -196,7 +188,7 @@ private fun setWebView(
             HtmlDescriber.make(
                 terminalFragment.terminalColor,
                 terminalFragment.terminalFontColor,
-                text,
+                text.split("\n").takeLast(trimLastLine).joinToString("\n"),
                 terminalViewModel.onBottomScrollbyJs
             ),
             "text/html",
@@ -219,6 +211,9 @@ private fun registerRunner(
         && terminalViewModel.readlinesNum
         == ReadLines.LONGTH
     ) return
+    CoroutineScope(Dispatchers.Main).launch {
+
+    }
     val DisplayUpdateRunner = displayUpdateRunner as Runnable
     trminalViewhandler.post (
         DisplayUpdateRunner
