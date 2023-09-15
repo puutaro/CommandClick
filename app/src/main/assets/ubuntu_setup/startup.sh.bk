@@ -1,6 +1,9 @@
 #!/bin/bash
 
 export DEBIAN_FRONTEND=noninteractive
+#export LD_PRELOAD="/support/libdisableselinux.so /support/libandroid-shmem.so"
+# echo --- ls "${LD_PRELOAD}"
+# ls "${LD_PRELOAD}"
 R_USER="cmdclick"
 
 insert_str_to_file(){
@@ -27,6 +30,16 @@ export -f insert_str_to_file
 setup_sudo(){
 	echo "### $FUNCNAME"
 	apt-get install -y sudo
+	chown -R root:root /usr/bin/sudo
+	chmod -R 4755 /usr/bin/sudo
+	#ここでも頭に、usr/binの前にmediaPATHをつけ忘れないように
+	chown -R root:root /usr/lib/sudo/sudoers.so
+	chmod -R 4755 /usr/lib/sudo/sudoers.so
+	chown -R root:root /etc/sudoers
+	chown root:root /etc/sudo.conf
+	chown root:root /usr/bin/sudo
+	chmod 755 /etc/sudoers.d
+	chmod 440 /etc/sudoers.d/*
 	apt-get install fakeroot -y
 	insert_str_to_file \
 		'%sudo ALL=(ALL) NOPASSWD:ALL' \
@@ -190,6 +203,12 @@ install_pulseaudio(){
 	aptitude install -y pulseaudio \
 		|| echo pulse failure
 	dpkg_err_solution
+	# echo --- dpkg --configure -a
+	# dpkg --configure -a
+	# echo --- rm -rf /var/lib/dpkg/info/
+	# rm -rf /var/lib/dpkg/info/*
+	# echo update
+	# apt-get upgrade -y
 	cp -avf \
 		"/support/default.pa" \
 		"/etc/pulse/default.pa"
@@ -199,6 +218,12 @@ install_add_repository(){
 	echo "### $FUNCNAME"
 	apt-get install -y software-properties-common
 	dpkg_err_solution
+	# echo --- dpkg --configure -a
+	# dpkg --configure -a
+	# echo --- rm -rf /var/lib/dpkg/info/
+	# rm -rf /var/lib/dpkg/info/*
+	# echo -- upgrade
+	# apt-get upgrade -y
 }
 
 install_golang_and_server(){
@@ -210,18 +235,25 @@ install_golang_and_server(){
 	sudo apt-get update
 	echo --- sudo apt-get install -y golang-go
 	sudo apt-get install -y golang-go
-	# echo --- dpkg --configure -a
-	# dpkg --configure -a
-	# echo --- rm -rf /var/lib/dpkg/info/
-	# sudo rm -rf /var/lib/dpkg/info/*
-	# echo -- upgrade
-	# sudo apt-get upgrade -y
+	echo --- dpkg --configure -a
+	dpkg --configure -a
+	echo --- rm -rf /var/lib/dpkg/info/
+	sudo rm -rf /var/lib/dpkg/info/*
+	echo -- upgrade
+	apt-get upgrade -y
 	go version
 	go install github.com/skanehira/rtty@latest
 	export GOPATH=\$HOME/go
 	export GOBIN=\$GOPATH/bin
 	export PATH=\$PATH:\$GOBIN
-	\$HOME/go/bin/rtty run bash -a 127.0.0.1 -p 20080 --font "Cica Regular" --font-size 20
+	\$HOME/go/bin/rtty run bash -p 20080 -v --font "Cica Regular" --font-size 20
+	waitTimes=0
+	while true; 
+	do 
+		sleep 1; 
+		echo -n ssh[\${waitTimes}]..
+		waitTimes=\$(( waitTimes + 1 ))
+	done
 	EOF
 }
 
@@ -231,8 +263,6 @@ install_python_ssh_server(){
 	su - "${R_USER}" <<-EOF
 		echo --- sudo apt install -y python3-pip
 		sudo apt install -y python3-pip
-		wget https://bootstrap.pypa.io/get-pip.py
-		python3 get-pip.py
 		echo --- pip3 install webssh
 		pip3 install webssh
 		echo --- "wssh --address=127.0.0.1 --port=18080"
@@ -249,73 +279,61 @@ install_python_ssh_server(){
 install_opensshserver(){
 	echo "### $FUNCNAME"
 	# su - "${R_USER}" <<-EOF
-	dropbear_pakcage="dropbear"
-	local is_installed=$(\
-		apt list --installed | grep "${dropbear_pakcage}"\
-	)
-	case "${is_installed}" in
-		"")
-			echo --- install_opensshserver
-			sudo apt-get install -y \
-				"${dropbear_pakcage}"
-			# sudo apt-get install -y \
-			# 	openssh-server
-		    # echo "${R_USER}:${R_USER}" | chpasswd
+	echo --- install_opensshserver
+	sudo apt-get install -y \
+		openssh-server
+    # echo "${R_USER}:${R_USER}" | chpasswd
 
-		    # dpkg_err_solution
+    dpkg_err_solution
+    # echo --- dpkg --configure -a
+	# sudo dpkg --configure -a
+	# echo --- rm -rf /var/lib/dpkg/info/
+	# sudo rm -rf /var/lib/dpkg/info/*
+	# echo -- upgrade
+	# sudo apt-get upgrade -y
 
-		  	dropbearkey -t dss -s 1024 -f /etc/dropbear/dropbear_dss_host_key
-		    dropbearkey -t rsa -s 2048 -f /etc/dropbear/dropbear_rsa_host_key
-		    dropbearkey -t ecdsa -s 521 -f /etc/dropbear/dropbear_ecdsa_host_key
-		 ;;
-	esac
-	dropbear -E -p 10022 >/dev/null 2>&1
-	echo "Type bellow command"
-	echo -e "\tssh -p 10022  cmdclick@{your android ip_address}"
-	echo -e "\tpassword: ${R_USER}"
-
-
-	# etc_ssh_dir="/etc/ssh"
-	# sshd_config="sshd_config"
-	# support_sshd_config="/support/${sshd_config}"
-	# etc_ssh_sshd_config="${etc_ssh_dir}/sshd_config"
-	# echo --- ls ${etc_ssh_dir}
-	# ls "${etc_ssh_dir}"
-	# echo --- cp -arvf ${support_sshd_config} ${etc_ssh_dir}/
-	# cp -arvf ${support_sshd_config} ${etc_ssh_dir}/
-
+	varLibAptLists="/var/lib/apt/lists"
+	# echo --- rm -rf \${varLibAptLists}/
+	# sudo rm -rf \${varLibAptLists}/*
+	etc_ssh_dir="/etc/ssh"
+	sshd_config="sshd_config"
+	support_sshd_config="/support/${sshd_config}"
+	etc_ssh_sshd_config="${etc_ssh_dir}/sshd_config"
+	echo --- ls ${etc_ssh_dir}
+	ls "${etc_ssh_dir}"
+	echo --- cp -arvf ${support_sshd_config} ${etc_ssh_dir}/
+	cp -arvf ${support_sshd_config} ${etc_ssh_dir}/
 	# sudo sed 's/^\#Port 22/Port 10022/' -i "${etc_ssh_dir}/sshd_config"
-	# echo --- rm /run/sshd.pid
-	# rm -f /run/sshd.pid
-	# sleep 0.5
-	# sleep 5 && echo ---- grep Port ${etc_ssh_dir}/sshd_config && sudo grep Port ${etc_ssh_sshd_config} &
-	# sleep 7 && echo --- sudo netstat -plnt && sudo netstat -plnt &
-	# sleep 9 & echo --- sudo iptables-save && sudo iptables-save &
-	# echo --- service ssh start
-	# # sudo service ssh start
-	# sudo /etc/init.d/ssh start
-	# waitTimes=0
-	# while true; 
-	# do 
-	# 	sleep 1; 
-	# 	# echo -n ssh[${waitTimes}]..
-	# 	# waitTimes=$(( waitTimes + 1 ))
-	# done
+	echo --- rm /run/sshd.pid
+	rm -f /run/sshd.pid
+	sleep 0.5
+	sleep 5 && echo ---- grep Port ${etc_ssh_dir}/sshd_config && sudo grep Port ${etc_ssh_sshd_config} &
+	sleep 7 && echo --- sudo netstat -plnt && sudo netstat -plnt &
+	sleep 9 & echo --- sudo iptables-save && sudo iptables-save &
+	echo --- service ssh start
+	# sudo service ssh start
+	sudo /etc/init.d/ssh start
+	waitTimes=0
+	while true; 
+	do 
+		sleep 1; 
+		echo -n ssh[${waitTimes}]..
+		waitTimes=$(( waitTimes + 1 ))
+	done
 	# EOF
 }
 
-pulse_launch(){
+user_cmd(){
 	su - "${R_USER}" <<-EOF
 	echo \$USER
 	echo --- pulseaudio --start
-	curl 127.0.0.1:10081 | sh
-	# pulseaudio --kill; sleep 0.5 \
-	# ; PULSE_SERVER=  && pulseaudio --start \
-	# && pactl load-module module-null-sink sink_name=TCP_output \
-	# && pacmd update-sink-proplist TCP_output device.description=TCP_output \
-	# && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=10080 listen=0.0.0.0
-	# echo 00
-	for sec in \$(seq 5)
+	pulseaudio --kill; sleep 0.5 \
+	; PULSE_SERVER=  && pulseaudio --start \
+	&& pactl load-module module-null-sink sink_name=TCP_output \
+	&& pacmd update-sink-proplist TCP_output device.description=TCP_output \
+	&& pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=10080 listen=0.0.0.0
+	echo 00
+	for sec in \$(seq 30)
 	do
 	  echo \${sec}
 	  sleep 1
@@ -323,8 +341,8 @@ pulse_launch(){
 	espeak "sound quality test sound quality test  sound quality test sound quality test sound quality test sound quality test"
 	echo --- ps aux grep proot 
 	ps aux | grep proot 
-	# echo --- kill pulse
-	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
+	echo --- kill proot
+	kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
 	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
 	EOF
 }
@@ -362,39 +380,18 @@ install_require_packge(){
 	echo "### $FUNCNAME"
 	sudo apt-get install -y \
 		man \
-		manpages-dev \
-		git \
-		make \
-		wget \
-		nano \
-		less \
-		espeak \
-		curl \
-		python3-pip
-	sudo pip3 install webssh
-}
-
-wait_cmd(){
-	while true; 
-	do 
-		sleep 1; 
-	done	
+		manpages-dev
 }
 
 
 add_user
 user_cmd_sudo_test
-install_require_packge
-install_add_repository
+# install_require_packge
+# install_add_repository
 install_opensshserver
-install_pulseaudio
-pulse_launch
-wait_cmd
-exit 0
-install_golang_and_server
-
 exit 0
 install_python_ssh_server
+# install_golang_and_server
 exit 0
 echo --
 user_cmd_sudo_test
@@ -413,6 +410,7 @@ apt-get install -y \
 	firmware-sof-signed \
 	initramfs-tools
 
+install_pulseaudio
 # apt-get -y install aptitude
 # touch /var/lib/aptitude/pkgstates
 # aptitude install -y pulseaudio || echo pulse failure
@@ -442,6 +440,7 @@ echo --- apt-get install -y espeak
 apt-get install -y \
 	espeak \
 	pv
+user_cmd
 apt-get install -y espeak
 echo --- apt-get search curl
 # apt-get search curl

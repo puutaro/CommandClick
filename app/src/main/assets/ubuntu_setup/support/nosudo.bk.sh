@@ -1,0 +1,11 @@
+
+readonly bin_sudo_cmd="/bin/sudo"
+
+case "${USER}" in
+	"root") 
+		${bin_sudo_cmd} "$@"
+		;;
+	*)
+		fakeroot ${bin_sudo_cmd} "$@"
+		;;
+esac
