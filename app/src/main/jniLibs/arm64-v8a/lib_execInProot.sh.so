@@ -71,8 +71,13 @@ echo --ls LIB_PATH
 ls "${LIB_PATH}"
 echo ---
 pwd
-chmod 777 "${ROOTFS_PATH}/bin/pwd"
-chmod -R 777 "${ROOTFS_PATH}"
+ubuntuCompFile="/storage/emulated/0/Documents/cmdclick/AppDir/default/ubuntuComp.txt"
+chmod -R 777 "${ROOTFS_PATH}/support"
+# if [ ! -f "${ubuntuCompFile}" ]; then
+#     echo -- chmod 777
+#     chmod -R 777 "${ROOTFS_PATH}/support"
+#     touch "${ubuntuCompFile}"
+# fi
 ls "${ROOTFS_PATH}/bin/pwd"
 
 echo --
@@ -123,21 +128,26 @@ apt_log_file_path="/storage/emulated/0/Documents/apt_log.txt"
 # apt show jq >> "${apt_log_file_path}"
 
 # EOF
+echo --- ls "$ROOTFS_PATH/support/libdisableselinux.so"
+#ls "$ROOTFS_PATH/support/libdisableselinux.so"
+#export "LD_PRELOAD=$LIB_PATH/libdisableselinux.so $LIB_PATH/libandroid-shmem.so"
 
+ex_storage="/storage/emulated/0"
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
 PROOT_LOADER=$LIB_PATH/loader \
 PROOT_LOADER_32=$LIB_PATH/loader32 \
 $PROOT -r $ROOTFS_PATH -p \
---sysvipc \
 -H -0 -l -L \
+--sysvipc \
+--kill-on-exit \
 -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
 -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support \
 -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
 -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
 -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
 -b $ROOT_PATH/support:/support/common \
--b /storage/emulated/0:/external \
+-b ${ex_storage}/:${ex_storage} \
 $EXTRA_BINDINGS \
 /usr/bin/env -i \
     PATH="${PATH}" \
@@ -146,6 +156,7 @@ $EXTRA_BINDINGS \
     TERM=$TERM \
     DEBIAN_FRONTEND=noninteractive \
     $@
+# --fix-selinux-xattr \
 
 # $PROOT -r $ROOTFS_PATH -p \
 # --sysvipc \
