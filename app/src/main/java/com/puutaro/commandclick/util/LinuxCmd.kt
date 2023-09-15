@@ -47,11 +47,12 @@ object LinuxCmd {
             }
             return outputContents + "\n" + errContents
         } catch (e: Exception){
-            Toast.makeText(
-                fragment.context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            return e.toString()
+//            Toast.makeText(
+//                fragment.context,
+//                e.toString(),
+//                Toast.LENGTH_LONG
+//            ).show()
             return e.toString()
         }
     }
