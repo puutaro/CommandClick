@@ -116,6 +116,10 @@ object WebViewSettings {
             JsPulseAudioReceiver(terminalFragment),
             JsInterfaceVariant.jsPulseAudioReceiver.name
         )
+        terminalWebView.addJavascriptInterface(
+            JsSendKey(terminalFragment),
+            JsInterfaceVariant.jsSendKey.name
+        )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),
 //            JsInterfaceVariant.jsTrans.name

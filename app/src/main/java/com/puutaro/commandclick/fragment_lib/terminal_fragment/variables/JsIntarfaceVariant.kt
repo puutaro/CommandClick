@@ -23,6 +23,7 @@ enum class JsInterfaceVariant {
     jsRecordToText,
     jsPdf,
     jsPulseAudioReceiver,
+    jsSendKey,
     jsProcess,
     jsTrans,
 }
