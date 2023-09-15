@@ -189,7 +189,10 @@ class   TerminalFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        firstDisplayUpdate = if(!firstDisplayUpdate){
+        firstDisplayUpdate = if(
+            !firstDisplayUpdate
+            && terminalViewModel.readlinesNum != ReadLines.LONGTH
+        ){
             onTermBackendWhenStart == SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
         } else firstDisplayUpdate
         terminalViewModel.isStop = false

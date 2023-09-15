@@ -105,6 +105,7 @@ object CommandClickScriptVariable {
         STATUS_BAR_ICON_COLOR_MODE,
         CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
         ON_ADBLOCK,
+        ON_TERM_BACKEND_WHEN_START,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
         CMDCLICK_RUN_SHELL,
@@ -297,7 +298,7 @@ object CommandClickScriptVariable {
         "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
         "${ON_URL_LAUNCH_MACRO}:TXT:ECB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
         "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
-        "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsInherit}",
+        "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsOn}",
         "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
         "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
         "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
@@ -489,7 +490,7 @@ object CommandClickScriptVariable {
             |# | `${onAdBlockOff}` | off |
             |
             |# ### ${ON_TERM_BACKEND_WHEN_START}
-            |# cmdclick terminal view update switch
+            |# Display terminal backend when start 
             |
             |# | switch | description | 
             |# | ${mdDash} | ${mdDash} |
