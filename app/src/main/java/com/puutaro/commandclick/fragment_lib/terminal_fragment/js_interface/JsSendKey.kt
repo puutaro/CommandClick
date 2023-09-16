@@ -6,7 +6,6 @@ import android.view.KeyEvent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.DialogObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -42,7 +41,7 @@ class JsSendKey(
             "end" -> end()
             "backspace" -> backspace()
             "space" -> space()
-            else -> normalOrMpdiferType(keyName)
+            else -> normalOrMpdiferHandler(keyName)
         }
     }
 
@@ -153,7 +152,6 @@ class JsSendKey(
                 Toast.LENGTH_SHORT
             ).show()
         }
-
     }
 
     private fun paste(){
@@ -163,39 +161,124 @@ class JsSendKey(
         )
     }
 
-    private fun shiftCtrlA(){
-        keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
-            KeyEvent.KEYCODE_A,
+    private fun enter(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_ENTER
         )
-        keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
-            KeyEvent.KEYCODE_C,
-        )
-        DialogObject.simpleTextShow(
-            context,
-            "term text",
-            JsUtil(terminalFragment).echoFromClipboard(),
-            true
-        )
-
     }
 
-    private fun normalOrMpdiferType(
+    private fun normalOrMpdiferHandler(
         str: String,
     ){
-        Toast.makeText(
-            context,
-            judgeModifer(str).toString(),
-            Toast.LENGTH_SHORT
-        ).show()
         when(
             judgeModifer(str)
         ) {
-            true -> makeModifierKeyConbi(str)
-            else -> typeStr(str)
+            ModifierKeyName.ctrl_shift_alt
+            -> makeCtrlShiftAltNormal(str)
+            ModifierKeyName.ctrl_shift
+            -> makeCtrlShiftNormal(str)
+            ModifierKeyName.ctrl_alt
+            -> makeCtrlAltNormal(str)
+            ModifierKeyName.ctrl,
+            ModifierKeyName.shift,
+            ModifierKeyName.alt
+            -> makeOneModifierKeyConbi(str)
+            else
+            -> typeStr(str)
 
         }
+    }
+
+    private fun judgeModifer(
+        str: String
+    ): ModifierKeyName {
+        val ctrlShiftAltPrefix = "${ModifierKeyName.ctrl_shift_alt.name}${makeModifierSepalator}"
+        val ctrlShiftPrefix = "${ModifierKeyName.ctrl_shift.name}${makeModifierSepalator}"
+        val ctrlAltPrefix = "${ModifierKeyName.ctrl_alt.name}${makeModifierSepalator}"
+        val ctrlPrefix = "${ModifierKeyName.ctrl.name}${makeModifierSepalator}"
+        val shiftPrefix = "${ModifierKeyName.shift.name}${makeModifierSepalator}"
+        val altPrefix = "${ModifierKeyName.alt.name}${makeModifierSepalator}"
+
+        val isCtrlShiftAltPrefix = str.startsWith(ctrlShiftAltPrefix)
+        val isCtrlShiftPrefix = str.startsWith(ctrlShiftPrefix)
+        val isCtrlAltPrefix = str.startsWith(ctrlAltPrefix)
+        val isCtrlPrefix = str.startsWith(ctrlPrefix)
+        val isShiftPrefix = str.startsWith(shiftPrefix)
+        val isAltPrefix = str.startsWith(altPrefix)
+        val isOneSepalator = str.split(makeModifierSepalator).size == 2
+
+        if(isCtrlShiftAltPrefix && isOneSepalator) return ModifierKeyName.ctrl_shift_alt
+        if(isCtrlShiftPrefix && isOneSepalator) return ModifierKeyName.ctrl_shift
+        if(isCtrlAltPrefix && isOneSepalator) return ModifierKeyName.ctrl_alt
+        if(isCtrlPrefix && isOneSepalator) return ModifierKeyName.ctrl
+        if(isShiftPrefix && isOneSepalator) return ModifierKeyName.shift
+        if(isAltPrefix && isOneSepalator) return ModifierKeyName.alt
+        return ModifierKeyName.normalStr
+
+
+    }
+
+    private fun makeOneModifierKeyConbi(
+        modifierConbiStr: String,
+    ){
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
+        val modifierKey = modifierNormalPair.firstOrNull()
+            ?: return
+        val normalKey = modifierNormalPair.lastOrNull()
+            ?: return
+        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
+        when(modifierKey) {
+            ModifierKeyName.ctrl.name -> keyDownWithMeta(
+                KeyEvent.META_CTRL_ON,
+                keyEvent.keyCode
+            )
+            ModifierKeyName.shift.name -> keyDownWithMeta(
+                KeyEvent.META_SHIFT_ON,
+                keyEvent.keyCode
+            )
+            ModifierKeyName.alt.name -> keyDownWithMeta(
+                KeyEvent.META_ALT_ON,
+                keyEvent.keyCode
+            )
+        }
+    }
+
+    private fun makeCtrlShiftAltNormal(modifierConbiStr: String){
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
+        val normalKey = modifierNormalPair.lastOrNull()
+            ?: return
+        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON  or KeyEvent.META_ALT_ON,
+            keyEvent.keyCode,
+        )
+    }
+
+    private fun makeCtrlShiftNormal(modifierConbiStr: String){
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
+        val normalKey = modifierNormalPair.lastOrNull()
+            ?: return
+        Toast.makeText(
+            context,
+            "ctrlshift: ${normalKey}",
+            Toast.LENGTH_SHORT
+        ).show()
+        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+            keyEvent.keyCode,
+        )
+    }
+
+    private fun makeCtrlAltNormal(modifierConbiStr: String){
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
+        val normalKey = modifierNormalPair.lastOrNull()
+            ?: return
+        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON,
+            keyEvent.keyCode,
+        )
     }
 
     private fun typeStr(
@@ -210,71 +293,14 @@ class JsSendKey(
             )
         }
     }
-
-    private fun judgeModifer(
-        str: String
-    ): Boolean {
-        val ctrlPrefix = "${modifierKeyName.ctrl.name}${makeModifierSepalator}"
-        val shiftPrefix = "${modifierKeyName.shift.name}${makeModifierSepalator}"
-        val altPrefix = "${modifierKeyName.alt.name}${makeModifierSepalator}"
-        val isCtrlPrefix = str.startsWith(ctrlPrefix)
-        val isShiftPrefix = str.startsWith(shiftPrefix)
-        val isAltPrefix = str.startsWith(altPrefix)
-        val isOneSepalator = str.split(makeModifierSepalator).size == 2
-        return (isCtrlPrefix && isOneSepalator)
-                || (isShiftPrefix && isOneSepalator)
-                || (isAltPrefix && isOneSepalator)
-
-    }
-
-    private fun makeModifierKeyConbi(
-        modifierConbiStr: String,
-    ){
-        val makeModifierSeparator = "___"
-        val modifierNormalPair = modifierConbiStr.split(makeModifierSeparator)
-        val modifierKey = modifierNormalPair.firstOrNull()
-            ?: return
-        val normalKey = modifierNormalPair.lastOrNull()
-            ?: return
-        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
-        when(modifierKey) {
-            modifierKeyName.ctrl.name -> keyDownWithMeta(
-                KeyEvent.META_CTRL_ON,
-                keyEvent.keyCode
-            )
-            modifierKeyName.shift.name -> keyDownWithMeta(
-                KeyEvent.META_SHIFT_ON,
-                keyEvent.keyCode
-            )
-            modifierKeyName.alt.name -> keyDownWithMeta(
-                KeyEvent.META_ALT_ON,
-                keyEvent.keyCode
-            )
-        }
-    }
-
-    private fun enter(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_MOVE_END,
-        )
-        val enterKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                enterKeyDown
-            )
-        )
-    }
-
-    private fun shiftA(){
-        keyDownWithMeta(
-            KeyEvent.KEYCODE_A,
-            KeyEvent.META_SHIFT_ON,
-        )
-    }
 }
 
-private enum class modifierKeyName {
+private enum class ModifierKeyName {
     ctrl,
     shift,
     alt,
+    ctrl_shift,
+    ctrl_alt,
+    ctrl_shift_alt,
+    normalStr,
 }
