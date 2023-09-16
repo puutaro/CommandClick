@@ -25,16 +25,6 @@ object ScriptFileDescription {
         currentAppDirName: String,
         fannelName: String
     ) {
-        val context = fragment.context
-            ?: return
-//        DialogObject.simpleTextShow(
-//            context,
-//            "Description",
-//            makeDescriptionContents(
-//                currentScriptContentsList,
-//                scriptFileName
-//            )
-//        )
         DialogObject.descDialog(
             fragment,
             fannelName,
@@ -145,5 +135,4 @@ object ScriptFileDescription {
             mdName
         ).readText()
     }
-
 }
