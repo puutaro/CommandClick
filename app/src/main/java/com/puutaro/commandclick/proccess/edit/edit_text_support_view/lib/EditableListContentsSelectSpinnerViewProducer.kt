@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
@@ -21,6 +22,15 @@ object EditableListContentsSelectSpinnerViewProducer {
         weight: Float,
     ): Spinner {
         val currentFragment = editParameters.currentFragment
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
@@ -43,7 +53,9 @@ object EditableListContentsSelectSpinnerViewProducer {
             defaultListLimit
         )
         val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
-            elcbMap
+            elcbMap,
+            currentAppDirPath,
+            scriptName,
         )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()

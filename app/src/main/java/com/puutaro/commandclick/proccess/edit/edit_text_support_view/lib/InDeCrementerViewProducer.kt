@@ -120,11 +120,16 @@ object InDeCrementerViewProducer {
                             }
                         }
                     }
+                    MotionEvent.ACTION_CANCEL,
+                    MotionEvent.ACTION_SCROLL,
+                    MotionEvent.ACTION_HOVER_MOVE,
+                    MotionEvent.ACTION_MOVE,
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         job?.cancel()
                         crementHandler.removeCallbacksAndMessages(crementRunner);
                     }
+
                 }
                 true
             })

@@ -20,6 +20,19 @@ object SetConfigInfo {
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
         )
+
+        editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            ),
+        )
+
         editFragment.historySwitch =  SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,

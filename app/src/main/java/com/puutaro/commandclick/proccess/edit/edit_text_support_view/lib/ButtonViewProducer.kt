@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
+import android.view.MotionEvent
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
@@ -22,6 +23,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -34,6 +36,7 @@ object ButtonViewProducer {
     private const val settingFrag = "setf"
     private const val blankString = "cmdclickBlank"
     private const val buttoLabelThis = "this"
+    private var consecutiveJob: Job? = null
     fun make (
         editFragment: EditFragment,
         insertTextView: TextView,
@@ -46,22 +49,8 @@ object ButtonViewProducer {
         val context = editParameters.context
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
         val currentId = editParameters.currentId
-        val currentShellContentsList = editParameters.currentShellContentsList
-        val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
-        val setReplaceVariableMap = editParameters.setReplaceVariableMap
 
         val binding = editFragment.binding
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-
         val scriptFileSaver = ScriptFileSaver(
             binding,
             editFragment,
@@ -98,120 +87,216 @@ object ButtonViewProducer {
 
         insertButton.setOnClickListener {
                 innerButtonView ->
-            scriptFileSaver.save(
-                currentShellContentsList,
-                recordNumToMapNameValueInCommandHolder,
+            buttonClickListener(
+                editFragment,
+                insertEditText,
+                scriptFileSaver,
+                editParameters,
+                buttonMap,
+                currentSetVariableValue
             )
-            val execCmdEditable = insertEditText.text
+        }
 
-            val cmdPrefix = getCmdPrefix(
+        buttonTouchListener(
+            insertButton,
+            editFragment,
+            insertEditText,
+            scriptFileSaver,
+            editParameters,
+            buttonMap,
+            currentSetVariableValue
+        )
+        return insertButton
+    }
+
+    private fun buttonTouchListener(
+        insertButton: Button,
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        scriptFileSaver: ScriptFileSaver,
+        editParameters: EditParameters,
+        buttonMap: Map<String, String>?,
+        currentSetVariableValue: String?
+    ){
+        with(insertButton) {
+            if(
+                !getIsConsec(buttonMap)
+            ) return@with
+            setOnTouchListener(android.view.View.OnTouchListener { v, event ->
+                var execTouchJob: Job? = null
+                when (event.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        consecutiveJob?.cancel()
+                        consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
+                            var delayTime = 200L
+                            while (true) {
+                                delay(delayTime)
+                                execTouchJob = CoroutineScope(Dispatchers.Main).launch {
+                                    buttonClickListener(
+                                        editFragment,
+                                        insertEditText,
+                                        scriptFileSaver,
+                                        editParameters,
+                                        buttonMap,
+                                        currentSetVariableValue
+                                    )
+                                }
+                                delayTime = 80
+                            }
+                        }
+                    }
+                    MotionEvent.ACTION_UP,
+                    MotionEvent.ACTION_CANCEL,
+                    MotionEvent.ACTION_SCROLL,
+                    MotionEvent.ACTION_HOVER_MOVE,
+                    MotionEvent.ACTION_MOVE-> {
+                        v.performClick()
+                        execTouchJob?.cancel()
+                        consecutiveJob?.cancel()
+                    }
+                }
+                true
+            })
+        }
+    }
+
+    private fun buttonClickListener(
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        scriptFileSaver: ScriptFileSaver,
+        editParameters: EditParameters,
+        buttonMap: Map<String, String>?,
+        currentSetVariableValue: String?
+    ){
+        val context = editFragment.context
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val currentShellContentsList = editParameters.currentShellContentsList
+        val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
+        val setReplaceVariableMap = editParameters.setReplaceVariableMap
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        scriptFileSaver.save(
+            currentShellContentsList,
+            recordNumToMapNameValueInCommandHolder,
+        )
+        val execCmdEditable = insertEditText.text
+
+        val cmdPrefix = getCmdPrefix(
+            buttonMap
+        )
+            .split("!")
+            .firstOrNull()
+            ?: String()
+        if(
+            execCmdEditable.isNullOrEmpty()
+            && cmdPrefix.isEmpty()
+        ) return
+        val currentScriptPath = "${currentAppDirPath}/${currentScriptName}"
+        val innerExecCmd =  makeInnerExecCmd(
+            cmdPrefix,
+            execCmdEditable.toString(),
+            currentScriptPath,
+            setReplaceVariableMap,
+        )
+
+        val doubleColon = "::"
+        val backStackMacro = doubleColon +
+                SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
+                doubleColon
+        val termOutMacro = doubleColon +
+                SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
+                doubleColon
+        val noJsTermOut = doubleColon +
+                SettingVariableSelects.ButtonEditExecVariantSelects.NoJsTermOut.name +
+                doubleColon
+        val termLong = doubleColon +
+                SettingVariableSelects.ButtonEditExecVariantSelects.TermLong.name +
+                doubleColon
+
+        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
+        val onTermOutMacro = innerExecCmd.contains(termOutMacro)
+        if(onTermOutMacro) {
+            terminalViewModel.onDisplayUpdate = true
+        }
+        terminalViewModel.onDisplayUpdate = !innerExecCmd.contains(noJsTermOut)
+        if(
+            innerExecCmd.contains(termLong)
+        ){
+            val listener =
+                context as? EditFragment.OnTermSizeLongListenerForEdit
+            listener?.onTermSizeLongForEdit()
+        }
+        val execCmdAfterTrimButtonEditExecVariant =
+            innerExecCmd
+                .replace(backStackMacro, "")
+                .replace(termOutMacro, "")
+                .replace(noJsTermOut, "")
+                .replace(termLong, "")
+                .trim(' ')
+                .replace(Regex("\t\t*"), " ")
+                .replace("\t", " ")
+                .replace(Regex(";;*"), ";")
+                .replace(Regex("  *"), " ")
+        val execCmdReplaceBlankList = surroundBlankReplace(
+            execCmdAfterTrimButtonEditExecVariant
+        ).split(" ")
+
+        val firstCmdStr = QuoteTool.trimBothEdgeQuote(
+            execCmdReplaceBlankList.firstOrNull()
+        )
+        if(
+            firstCmdStr == jsFrag
+        ){
+            execJsFileForButton(
+                editFragment,
+                terminalViewModel,
+                execCmdReplaceBlankList,
                 buttonMap
             )
-                .split("!")
-                .firstOrNull()
-                ?: String()
-            if(
-                execCmdEditable.isNullOrEmpty()
-                && cmdPrefix.isEmpty()
-            ) return@setOnClickListener
-            val currentScriptPath = "${currentAppDirPath}/${currentScriptName}"
-            val innerExecCmd =  makeInnerExecCmd(
-                cmdPrefix,
-                execCmdEditable.toString(),
-                currentScriptPath,
-                setReplaceVariableMap,
-            )
-            val doubleColon = "::"
-            val backStackMacro = doubleColon +
-                    SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
-                    doubleColon
-            val termOutMacro = doubleColon +
-                    SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
-                    doubleColon
-            val noJsTermOut = doubleColon +
-                    SettingVariableSelects.ButtonEditExecVariantSelects.NoJsTermOut.name +
-                    doubleColon
-            val termLong = doubleColon +
-                    SettingVariableSelects.ButtonEditExecVariantSelects.TermLong.name +
-                    doubleColon
-
-            val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
-            val onTermOutMacro = innerExecCmd.contains(termOutMacro)
-            if(onTermOutMacro) {
-                terminalViewModel.onDisplayUpdate = true
-            }
-            terminalViewModel.onDisplayUpdate = !innerExecCmd.contains(noJsTermOut)
-            if(
-                innerExecCmd.contains(termLong)
-            ){
-                val listener =
-                    context as? EditFragment.OnTermSizeLongListenerForEdit
-                listener?.onTermSizeLongForEdit()
-            }
-            val execCmdAfterTrimButtonEditExecVariant =
-                innerExecCmd
-                    .replace(backStackMacro, "")
-                    .replace(termOutMacro, "")
-                    .replace(noJsTermOut, "")
-                    .replace(termLong, "")
-                    .trim(' ')
-                    .replace(Regex("\t\t*"), " ")
-                    .replace("\t", " ")
-                    .replace(Regex(";;*"), ";")
-                    .replace(Regex("  *"), " ")
-            val execCmdReplaceBlankList = surroundBlankReplace(
-                execCmdAfterTrimButtonEditExecVariant
-            ).split(" ")
-
-            val firstCmdStr = QuoteTool.trimBothEdgeQuote(
-                execCmdReplaceBlankList.firstOrNull()
-            )
-            if(
-                firstCmdStr == jsFrag
-            ){
-                execJsFileForButton(
-                    editFragment,
-                    terminalViewModel,
-                    execCmdReplaceBlankList
-                )
-                return@setOnClickListener
-            }
-            if(
-                firstCmdStr == settingFrag
-            ){
-                execSettingCmd(
-                    editFragment,
-                    insertEditText,
-                    readSharePreffernceMap,
-                    execCmdReplaceBlankList,
-                    currentSetVariableValue,
-                )
-                return@setOnClickListener
-            }
-
-            val execCmd = if(
-                execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
-                || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
-            ) "${execCmdAfterTrimButtonEditExecVariant};"
-            else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
-            ExecBashScriptIntent.ToTermux(
-                editFragment.runShell,
-                context,
-                execCmd,
-                true
-            )
-            if(onEditExecuteOnce) {
-                val listener =
-                    context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-                listener?.onToolBarButtonClickForEditFragment(
-                    editFragment.tag,
-                    ToolbarButtonBariantForEdit.OK,
-                    readSharePreffernceMap,
-                    true,
-                )
-            }
+            return
         }
-        return insertButton
+        if(
+            firstCmdStr == settingFrag
+        ){
+            execSettingCmd(
+                editFragment,
+                insertEditText,
+                readSharePreffernceMap,
+                execCmdReplaceBlankList,
+                currentSetVariableValue,
+            )
+            return
+        }
+
+        val execCmd = if(
+            execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
+            || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
+        ) "${execCmdAfterTrimButtonEditExecVariant};"
+        else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
+        ExecBashScriptIntent.ToTermux(
+            editFragment.runShell,
+            context,
+            execCmd,
+            true
+        )
+        if(onEditExecuteOnce) {
+            val listener =
+                context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+            listener?.onToolBarButtonClickForEditFragment(
+                editFragment.tag,
+                ToolbarButtonBariantForEdit.OK,
+                readSharePreffernceMap,
+                true,
+            )
+        }
     }
 
     private fun makeInnerExecCmd(
@@ -540,6 +625,7 @@ object ButtonViewProducer {
         editFragment: EditFragment,
         terminalViewModel: TerminalViewModel,
         execCmdReplaceBlankList: List<String>,
+        buttonMap: Map<String, String>?
     ){
         terminalViewModel.jsArguments = String()
         val jsFilePathIndex = 1
@@ -556,7 +642,11 @@ object ButtonViewProducer {
             false,
             true,
         )
-        Keyboard.hiddenKeyboardForFragment(editFragment)
+        if(
+            !getDisableKeyboardHidden(
+                buttonMap
+            )
+        ) Keyboard.hiddenKeyboardForFragment(editFragment)
         terminalViewModel.jsArguments = if(execCmdReplaceBlankList.size > 1){
             execCmdReplaceBlankList
                 .slice(2..execCmdReplaceBlankList.size-1)
@@ -599,6 +689,23 @@ object ButtonViewProducer {
         return buttonMap?.get(
             ButtonEditKey.label.name
         ) ?: String()
+    }
+
+    private fun getIsConsec(
+        buttonMap: Map<String, String>?
+    ): Boolean {
+        return buttonMap?.get(
+            ButtonEditKey.isConsec.name
+        ) == "true"
+    }
+
+
+    private fun getDisableKeyboardHidden(
+        buttonMap: Map<String, String>?
+    ): Boolean {
+        return buttonMap?.get(
+            ButtonEditKey.disableKeyboardHidden.name
+        ) == "true"
     }
 
     private fun getButtonMap(
@@ -665,6 +772,8 @@ object ButtonViewProducer {
     enum class ButtonEditKey {
         cmd,
         label,
+        isConsec,
+        disableKeyboardHidden
     }
 
     object SET_F_OPTION_MAP_KEY {

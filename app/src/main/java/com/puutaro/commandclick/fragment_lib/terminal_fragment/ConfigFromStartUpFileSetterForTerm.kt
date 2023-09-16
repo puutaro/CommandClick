@@ -73,6 +73,18 @@ object ConfigFromStartUpFileSetterForTerm {
             ),
         )
 
+        terminalFragment.onTermShortWhenLoad = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
+                SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
+            ),
+        )
+
 
         terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
@@ -201,6 +213,18 @@ object ConfigFromStartUpFileSetterForTerm {
             listOf(
                 SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
                 SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.onTermShortWhenLoad = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD,
+            terminalFragment.onTermShortWhenLoad,
+            SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
+            terminalFragment.onTermShortWhenLoad,
+            listOf(
+                SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
+                SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
             ),
         )
 

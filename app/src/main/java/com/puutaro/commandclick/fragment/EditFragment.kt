@@ -67,12 +67,16 @@ class EditFragment: Fragment() {
     ) as String
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
-    var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
+    var onTermVisibleWhenKeyboard =
+        CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
+    var urlHistoryOrButtonExec =
+        CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
-    var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
+    var statusBarIconColorMode =
+        CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
@@ -211,8 +215,6 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
         }
-
-
         binding.editTextView.text = EditFragmentTitle.make(
             this,
             currentAppDirPath,
@@ -244,6 +246,7 @@ class EditFragment: Fragment() {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
             if(terminalViewModel.onDialog) return@setEventListener
+            binding.editTextView.isVisible = !isOpen
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) {
@@ -261,8 +264,13 @@ class EditFragment: Fragment() {
                 isOpen
             ) !existIndexList
             else true
+            val isOpenKeyboard = if(
+                isOpen
+            ) onTermVisibleWhenKeyboard !=
+                        SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            else isOpen
             listener?.onKeyBoardVisibleChangeForEditFragment(
-                isOpen,
+                isOpenKeyboard,
                 this.isVisible
             )
         }

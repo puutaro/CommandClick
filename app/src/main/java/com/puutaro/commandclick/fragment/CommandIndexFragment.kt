@@ -38,6 +38,8 @@ class CommandIndexFragment: Fragment() {
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
+    var onTermVisibleWhenKeyboard =
+        CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
@@ -194,8 +196,13 @@ class CommandIndexFragment: Fragment() {
                 this,
             )
             val listener = context as? OnKeyboardVisibleListener
+            val isOpenKeyboard = if(
+                isOpen
+            ) onTermVisibleWhenKeyboard !=
+                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            else isOpen
             listener?.onKeyBoardVisibleChange(
-                isOpen,
+                isOpenKeyboard,
                 this.isVisible,
                 this.WebSearchSwitch
             )

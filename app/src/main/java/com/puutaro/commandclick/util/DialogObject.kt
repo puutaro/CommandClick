@@ -12,6 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
@@ -30,7 +31,8 @@ object DialogObject {
     fun simpleTextShow(
         contextSrc: Context?,
         title: String,
-        contents: String
+        contents: String,
+        scrollBottom: Boolean = false
     ) {
         val context = contextSrc
             ?: return
@@ -52,6 +54,15 @@ object DialogObject {
             simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_text_view
             )
+        if(scrollBottom){
+            val scrollView =
+                simpleTextDialogObj?.findViewById<ScrollView>(
+                    R.id.text_simple_dialog_scroll
+                )
+            scrollView?.post {
+                scrollView.fullScroll(View.FOCUS_DOWN)
+            }
+        }
         if(
             contents.isNotEmpty()
         ) descriptionTextView?.text = contents

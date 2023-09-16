@@ -1,417 +1,280 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.R.attr.text
-import android.R.id.input
-import android.app.Instrumentation
 import android.os.SystemClock
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
-import android.view.inputmethod.EditorInfo
-import android.view.inputmethod.InputConnection
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.DialogObject
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class JsSendKey(
     private val terminalFragment: TerminalFragment
 ) {
 
-    val constext = terminalFragment.context
+    private val context = terminalFragment.context
+    private val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
+    private val makeModifierSepalator = "___"
+
 
     @JavascriptInterface
     fun send(
         keyName: String,
     ){
         when(keyName){
-            "ls" -> typeLs()
-            "shift+a" -> shiftA()
-            "downKey" -> down()
-            "upKey" -> up()
+            "copy" -> copy()
+            "paste" -> paste()
+            "enter" -> enter()
+            "down" -> down()
+            "up" -> up()
+            "left" -> left()
+            "right" -> right()
+            "pageDown" -> pageDown()
+            "pageUp" -> pageUp()
+            "esc" -> esc()
+            "home" -> home()
+            "end" -> end()
+            "backspace" -> backspace()
+            "space" -> space()
+            else -> normalOrMpdiferType(keyName)
         }
-        return
+    }
+
+    private fun keyDownEvent(
+        keycode: Int
+    ){
+        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
+            KeyEvent(
+                KeyEvent.ACTION_DOWN,
+                keycode
+            )
+        )
+    }
+
+    private fun keyDownWithMeta(
+        metaCode: Int,
+        keycode: Int
+    ){
+        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
+            KeyEvent(
+                SystemClock.uptimeMillis(),
+                SystemClock.uptimeMillis(),
+                KeyEvent.ACTION_DOWN,
+                keycode,
+                1,
+                metaCode
+            )
+        )
     }
 
     private fun up(){
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_UP,
-                1,
-            )
+        keyDownEvent(
+            KeyEvent.KEYCODE_DPAD_UP,
         )
-
     }
 
     private fun down(){
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_DPAD_DOWN,
-                1,
-            )
+        keyDownEvent(
+            KeyEvent.KEYCODE_DPAD_DOWN,
         )
     }
 
-    private fun typeLs(){
-        val pwdCmd = "pwd"
-        val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
-        val events = mKeyCharacterMap.getEvents(pwdCmd.toCharArray())
-        val enterKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)
+    private fun left(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_DPAD_LEFT,
+        )
+    }
+
+    private fun right(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_DPAD_RIGHT,
+        )
+    }
+
+    private fun pageDown(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_PAGE_DOWN,
+        )
+    }
+
+    private fun pageUp(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_PAGE_UP,
+        )
+    }
+
+    private fun esc(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_ESCAPE,
+        )
+    }
+
+    private fun home(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_MOVE_HOME,
+        )
+    }
+
+    private fun end(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_MOVE_END,
+        )
+    }
+    private fun backspace(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_DEL,
+        )
+    }
+
+    private fun space(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_SPACE,
+        )
+    }
+
+    private fun copy(){
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON,
+            KeyEvent.KEYCODE_INSERT,
+        )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO){
+                delay(100)
+            }
+            Toast.makeText(
+                context,
+                "copy: ${JsUtil(terminalFragment).echoFromClipboard()}",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+    }
+
+    private fun paste(){
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+            KeyEvent.KEYCODE_V,
+        )
+    }
+
+    private fun shiftCtrlA(){
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+            KeyEvent.KEYCODE_A,
+        )
+        keyDownWithMeta(
+            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+            KeyEvent.KEYCODE_C,
+        )
+        DialogObject.simpleTextShow(
+            context,
+            "term text",
+            JsUtil(terminalFragment).echoFromClipboard(),
+            true
+        )
+
+    }
+
+    private fun normalOrMpdiferType(
+        str: String,
+    ){
+        Toast.makeText(
+            context,
+            judgeModifer(str).toString(),
+            Toast.LENGTH_SHORT
+        ).show()
+        when(
+            judgeModifer(str)
+        ) {
+            true -> makeModifierKeyConbi(str)
+            else -> typeStr(str)
+
+        }
+    }
+
+    private fun typeStr(
+        str: String
+    ){
+
+        val events = mKeyCharacterMap.getEvents(str.toCharArray())
         val terminalWebView = terminalFragment.binding.terminalWebView
         events.forEach {
             terminalWebView.dispatchKeyEvent(
                 it
             )
         }
+    }
 
-        terminalWebView.dispatchKeyEvent(enterKeyDown)
-        return
+    private fun judgeModifer(
+        str: String
+    ): Boolean {
+        val ctrlPrefix = "${modifierKeyName.ctrl.name}${makeModifierSepalator}"
+        val shiftPrefix = "${modifierKeyName.shift.name}${makeModifierSepalator}"
+        val altPrefix = "${modifierKeyName.alt.name}${makeModifierSepalator}"
+        val isCtrlPrefix = str.startsWith(ctrlPrefix)
+        val isShiftPrefix = str.startsWith(shiftPrefix)
+        val isAltPrefix = str.startsWith(altPrefix)
+        val isOneSepalator = str.split(makeModifierSepalator).size == 2
+        return (isCtrlPrefix && isOneSepalator)
+                || (isShiftPrefix && isOneSepalator)
+                || (isAltPrefix && isOneSepalator)
 
-//        val inputConnection: InputConnection = terminalFragment.binding.terminalWebView.onCreateInputConnection(EditorInfo())
-//        for (i in pwdCmd.indices) {
-//            val c: Char = input.charAt(i)
-//            sendKeyEvent(inputConnection, c)
-//        }
+    }
+
+    private fun makeModifierKeyConbi(
+        modifierConbiStr: String,
+    ){
+        val makeModifierSeparator = "___"
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSeparator)
+        val modifierKey = modifierNormalPair.firstOrNull()
+            ?: return
+        val normalKey = modifierNormalPair.lastOrNull()
+            ?: return
+        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
+        when(modifierKey) {
+            modifierKeyName.ctrl.name -> keyDownWithMeta(
+                KeyEvent.META_CTRL_ON,
+                keyEvent.keyCode
+            )
+            modifierKeyName.shift.name -> keyDownWithMeta(
+                KeyEvent.META_SHIFT_ON,
+                keyEvent.keyCode
+            )
+            modifierKeyName.alt.name -> keyDownWithMeta(
+                KeyEvent.META_ALT_ON,
+                keyEvent.keyCode
+            )
+        }
+    }
+
+    private fun enter(){
+        keyDownEvent(
+            KeyEvent.KEYCODE_MOVE_END,
+        )
+        val enterKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER)
         terminalFragment.binding.terminalWebView.dispatchKeyEvent(
             KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_V,
-                1,
-                KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
+                enterKeyDown
             )
         )
-        return
-        val ctrlKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_CTRL_LEFT)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(ctrlKeyDown)
-
-        val shiftKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(shiftKeyDown)
-
-        val vKeyDown = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_V)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(vKeyDown)
-
-        val vKeyUp = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_V)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(vKeyUp)
-
-        val shiftKeyUp = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_SHIFT_LEFT)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(shiftKeyUp)
-
-        val ctrlKeyUp = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_CTRL_LEFT)
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(ctrlKeyUp)
-        return
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_V,
-                2,
-                KeyEvent.META_SHIFT_ON and KeyEvent.META_CTRL_ON,
-            )
-        )
-        val event = KeyEvent(
-            SystemClock.uptimeMillis(), "ls", 0, 0
-        )
-        val aa = terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            event
-        )
-        Toast.makeText(
-            constext,
-            aa.toString(),
-            Toast.LENGTH_SHORT
-        ).show()
-        return
-//        terminalFragment.binding.terminalWebView.requestFocus()
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_CTRL_LEFT,
-                2,
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_V,
-                0,
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_V,
-                0,
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_CTRL_LEFT,
-                0,
-            )
-        )
-        return
-
-        val inst = Instrumentation()
-        inst.sendStringSync("ls")
-        KeyEvent(
-            KeyEvent.META_SHIFT_ON,
-            KeyEvent.KEYCODE_C
-        )
-//        val event = KeyEvent(
-//            SystemClock.uptimeMillis(), "ls", 0, 0
-//        )
-//        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-//            event
-//        )
-
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_V,
-                1,
-                KeyEvent.META_SHIFT_ON or KeyEvent.META_CTRL_ON
-            )
-        )
-        return
-//        inst.sendKeyDownUpSync(KeyEvent.KEYCODE_L)
-//        inst.sendKeyDownUpSync(KeyEvent.KEYCODE_S)
-        inst.sendKeyDownUpSync(KeyEvent.KEYCODE_ENTER);
     }
 
     private fun shiftA(){
-
-//        val mInputConnection = BaseInputConnection(
-//            terminalFragment.binding.terminalWebView,
-//            true
-//        )
-//        val kd = KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_MENU)
-//        val ku = KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_MENU)
-//        mInputConnection.sendKeyEvent(KeyEvent(
-//            KeyEvent.ACTION_DOWN,
-//            KeyEvent.KEYCODE_CTRL_LEFT
-//        ))
-//        mInputConnection.sendKeyEvent(KeyEvent(
-//            KeyEvent.ACTION_DOWN,
-//            KeyEvent.KEYCODE_A
-//        ))
-//        mInputConnection.sendKeyEvent(KeyEvent(
-//            KeyEvent.ACTION_UP,
-//            KeyEvent.KEYCODE_A
-//        ))
-//        mInputConnection.sendKeyEvent(KeyEvent(
-//            KeyEvent.ACTION_UP,
-//            KeyEvent.KEYCODE_CTRL_LEFT
-//        ))
-//
-//        return
-        terminalFragment.binding.terminalWebView.
-            dispatchKeyEvent(
-                KeyEvent(
-                    SystemClock.uptimeMillis(),
-                    SystemClock.uptimeMillis(),
-                    KeyEvent.ACTION_DOWN,
-                    KeyEvent.KEYCODE_A,
-                    1,
-                    KeyEvent.META_SHIFT_ON
-                )
-            )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_A,
-                1,
-                KeyEvent.META_CTRL_ON
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                SystemClock.uptimeMillis(),
-                SystemClock.uptimeMillis(),
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_C,
-                1,
-                KeyEvent.META_CTRL_ON
-            )
-        )
-        return
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.META_SHIFT_ON,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.META_SHIFT_LEFT_ON,
-                KeyEvent.KEYCODE_C
-            )
-        )
-
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.META_SHIFT_RIGHT_ON,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.KEYCODE_SHIFT_LEFT,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.KEYCODE_SHIFT_RIGHT,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
-        )
-        return
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_A)
-        )
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
-            KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_A)
-        )
-        return
-//        val keyEvent = KeyEvent(KeyEvent.META_CTRL_ON, KeyEvent.KEYCODE_C)
-//        inst.sendKeySync(keyEvent)
-//        return
-        val inst = Instrumentation()
-        val keyEvent = KeyEvent(KeyEvent.KEYCODE_SHIFT_LEFT, KeyEvent.KEYCODE_A)
-        inst.sendKeySync(keyEvent)
-
-        longPress(
-            inst, KeyEvent.KEYCODE_SHIFT_LEFT
-        )
-        val a = inst.sendKeyDownUpSync(KeyEvent.KEYCODE_C)
-
-
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_C
-            )
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_C)
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
-        )
-        return
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_SHIFT_LEFT)
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_A
-            )
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_A)
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
+        keyDownWithMeta(
+            KeyEvent.KEYCODE_A,
+            KeyEvent.META_SHIFT_ON,
         )
     }
-    private fun longPress(
-        inst: Instrumentation,
-        key: Int
-    ) {
-        val downTime = SystemClock.uptimeMillis()
-        val eventTime = SystemClock.uptimeMillis()
-        val event1 = KeyEvent(downTime, eventTime, KeyEvent.ACTION_DOWN, key, 0)
-        val event2 = KeyEvent(downTime, eventTime, KeyEvent.ACTION_DOWN, key, 1)
-        inst.sendKeySync(event1)
-        inst.sendKeySync(event2)
-    }
+}
 
-    private fun shiftDown(){
-        val inst = Instrumentation()
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_SHIFT_LEFT)
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_DOWN,
-                KeyEvent.KEYCODE_A
-            )
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_A)
-        )
-        inst.sendKeySync(
-            KeyEvent(
-                KeyEvent.ACTION_UP,
-                KeyEvent.KEYCODE_SHIFT_LEFT
-            )
-        )
-    }
+private enum class modifierKeyName {
+    ctrl,
+    shift,
+    alt,
 }
