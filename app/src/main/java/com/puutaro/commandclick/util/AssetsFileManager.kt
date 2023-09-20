@@ -14,6 +14,10 @@ object AssetsFileManager {
     private const val assetsDialogWebViewDirPath = "fannels/dialog_webview"
     const val assetsHighlightSchForDialogWebViewPath =
         "${assetsDialogWebViewDirPath}/highlightSchForDialogWebView.js"
+    const val assetsHighlightCopy =
+        "${assetsDialogWebViewDirPath}/highlightCopy.js"
+    const val fannelShellDirPath = "fannels/shell"
+    const val ansi2htmlShellPath = "${fannelShellDirPath}/ansi2html.sh"
     const val ubunutSupportDirPath = "ubuntu_setup/support"
     const val ubunutStartupScriptPath = "ubuntu_setup/startup.sh"
     const val ubunutStartupScript2Path = "ubuntu_setup/startup2.sh"

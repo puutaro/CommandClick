@@ -155,7 +155,7 @@ $EXTRA_BINDINGS \
     LANG=C.UTF-8 \
     TERM=$TERM \
     DEBIAN_FRONTEND=noninteractive \
-    $@
+    "$@"
 # --fix-selinux-xattr \
 
 # $PROOT -r $ROOTFS_PATH -p \

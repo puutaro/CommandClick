@@ -155,7 +155,7 @@ object UbuntuSetUp {
             ulaFiles.ubuntuCompFile.isFile
         ) {
             busyboxExecutor.executeProotCommand(
-                "bash startup.sh",
+                listOf("bash", "startup.sh")
             )
             return
         }
@@ -285,7 +285,7 @@ object UbuntuSetUp {
             String()
         )
         busyboxExecutor.executeProotCommand(
-            "bash startup.sh",
+            listOf("bash", "startup.sh")
         )
         return
         FileSystems.writeFile(
@@ -297,7 +297,7 @@ object UbuntuSetUp {
             )
         )
         busyboxExecutor.executeProotCommand(
-            "bash startup2.sh",
+            listOf("bash", "startup2.sh")
         )
         return
 

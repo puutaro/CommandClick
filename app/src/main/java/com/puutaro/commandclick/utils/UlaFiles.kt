@@ -15,7 +15,8 @@ import java.lang.NullPointerException
 class UlaFiles(
     context: Context,
     libDirPath: String,
-    private val symlinker: Symlinker = Symlinker()
+    private val symlinker: Symlinker = Symlinker(),
+    private val onInit: Boolean = true,
 ) {
 
     val filesDir: File = context.filesDir
@@ -55,6 +56,13 @@ class UlaFiles(
         "${UsePath.cmdclickDefaultAppDirPath}/ubuntuComp.txt"
     )
     init {
+        initer(context)
+    }
+
+    fun initer(
+        context: Context?
+    ){
+        if(!onInit) return
         FileSystems.createDirs(
             supportDir.absolutePath
         )
@@ -63,9 +71,10 @@ class UlaFiles(
             UsePath.cmdClickMonitorFileName_1,
             "${
                 ReadText(
-                UsePath.cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
-            ).readText()}\n\nsupport copy start"
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()
+            }\n\nsupport copy start"
         )
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
@@ -89,7 +98,8 @@ class UlaFiles(
                 ReadText(
                     UsePath.cmdclickMonitorDirPath,
                     UsePath.cmdClickMonitorFileName_1,
-                ).readText()}\n\nchmod start"
+                ).readText()
+            }\n\nchmod start"
         )
         supportDir.listFiles()?.forEach {
             makePermissionsUsable(
@@ -107,11 +117,12 @@ class UlaFiles(
                 ReadText(
                     UsePath.cmdclickMonitorDirPath,
                     UsePath.cmdClickMonitorFileName_1,
-                ).readText()}\n\nrootfs copy start"
+                ).readText()
+            }\n\nrootfs copy start"
         )
         FileSystems.copyFile(
             downloadRootfsTarGzPath,
-           "${filesDir}/${rootfsTarGzName}"
+            "${filesDir}/${rootfsTarGzName}"
         )
 
         makePermissionsUsable(
@@ -141,7 +152,8 @@ class UlaFiles(
                 File(
                     "${filesOneRootfs.absolutePath}/support"
                 ).list()?.joinToString("\n")
-                    ?: String()}"
+                    ?: String()
+            }"
         )
         emulatedUserDir.mkdirs()
         sdCardUserDir?.mkdirs()

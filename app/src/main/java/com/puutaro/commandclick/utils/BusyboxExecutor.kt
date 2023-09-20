@@ -6,8 +6,11 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import java.io.BufferedReader
 import java.io.File
 import java.io.InputStream
+import java.io.InputStreamReader
+import java.nio.charset.Charset
 
 sealed class ExecutionResult
 data class MissingExecutionAsset(val asset: String) : ExecutionResult()
@@ -102,41 +105,6 @@ class BusyboxExecutor(
 
         return try {
             val process = processBuilder.start()
-//            var errContents = String()
-//            BufferedReader(
-//                InputStreamReader(
-//                    process.errorStream,
-//                    Charset.defaultCharset()
-//                )
-//            ).use { r ->
-//                var line: String?
-//                while (r.readLine().also { line = it } != null) {
-//                    errContents += "\n" + line
-////                println(line)
-//                }
-//            }
-//            var outputContents = String()
-//            BufferedReader(
-//                InputStreamReader(
-//                    process.inputStream,
-//                    Charset.defaultCharset()
-//                )
-//            ).use { r ->
-//                var line: String?
-//                while (r.readLine().also { line = it } != null) {
-//                    outputContents += "\n" + line
-////                println(line)
-//                }
-//            }
-//            val result = outputContents + "\n" + errContents
-//            FileSystems.writeFile(
-//                UsePath.cmdclickMonitorDirPath,
-//                UsePath.cmdClickMonitorFileName_1,
-//                "${ReadText(
-//                    UsePath.cmdclickMonitorDirPath,
-//                    UsePath.cmdClickMonitorFileName_1,
-//                ).readText()}\n\n$result end"
-//            )
             val inputStream = process.inputStream
             val reader = inputStream.bufferedReader(Charsets.UTF_8)
             reader.forEachLine { line ->
@@ -165,47 +133,33 @@ class BusyboxExecutor(
             errReader.close()
             val output = process.waitFor()
             FailedExecution("ok")
-//            when {
-//                prootDebugEnabled && commandShouldTerminate -> {
-//                    // Call the listener explicitly since all output will be captured by the log
-//                    listener("Output redirecting to proot debug log")
-////                    prootDebugLogger.logStream(process.inputStream, coroutineScope)
-//                    getProcessResult(process)
-//                }
-//                prootDebugEnabled && !commandShouldTerminate -> {
-//                    // Call the listener explicitly since all output will be captured by the log
-//                    listener("Output redirecting to proot debug log")
-////                    prootDebugLogger.logStream(process.inputStream, coroutineScope)
-//                    OngoingExecution(process)
-//                }
-//                commandShouldTerminate -> {
-//                    collectOutput(process.inputStream, listener)
-//                    getProcessResult(process)
-//                }
-//                else -> {
-//                    OngoingExecution(process)
-//                }
-//            }
         } catch (err: Exception) {
             FailedExecution("$err")
         }
     }
 
     fun executeProotCommand(
-        command: String,
+        command: List<String>,
 //        filesystemDirName: String,
 //        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
+        outputType: TerminalOutputType = TerminalOutputType.Streaming
 //        listener: (String) -> Any = discardOutput,
 //        coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    ): ExecutionResult {
+    ): String {
         when {
-            !busyboxWrapper.busyboxIsPresent() ->
-                return MissingExecutionAsset("busybox")
-            !busyboxWrapper.prootIsPresent() ->
-                return MissingExecutionAsset("proot")
-            !busyboxWrapper.executionScriptIsPresent() ->
-                return MissingExecutionAsset("execution script")
+            !busyboxWrapper.busyboxIsPresent() -> {
+                Log.e(this::class.java.name, "no busybox")
+                return String()
+            }
+            !busyboxWrapper.prootIsPresent() -> {
+                Log.e(this::class.java.name, "no proot cmd")
+                return String()
+            }
+            !busyboxWrapper.executionScriptIsPresent() -> {
+                Log.e(this::class.java.name, "no execution script")
+                return String()
+            }
         }
 
 //        val prootDebugEnabled = prootDebugLogger.isEnabled
@@ -231,97 +185,37 @@ class BusyboxExecutor(
         processBuilder.environment().putAll(env)
         processBuilder.redirectErrorStream(true)
 
-        return try {
+        try {
             val process = processBuilder.start()
-//            var errContents = String()
-//            BufferedReader(
-//                InputStreamReader(
-//                    process.errorStream,
-//                    Charset.defaultCharset()
-//                )
-//            ).use { r ->
-//                var line: String?
-//                while (r.readLine().also { line = it } != null) {
-//                    errContents += "\n" + line
-////                println(line)
-//                }
-//            }
-//            var outputContents = String()
-//            BufferedReader(
-//                InputStreamReader(
-//                    process.inputStream,
-//                    Charset.defaultCharset()
-//                )
-//            ).use { r ->
-//                var line: String?
-//                while (r.readLine().also { line = it } != null) {
-//                    outputContents += "\n" + line
-////                println(line)
-//                }
-//            }
-//            val result = outputContents + "\n" + errContents
-//            FileSystems.writeFile(
-//                UsePath.cmdclickMonitorDirPath,
-//                UsePath.cmdClickMonitorFileName_1,
-//                "${ReadText(
-//                    UsePath.cmdclickMonitorDirPath,
-//                    UsePath.cmdClickMonitorFileName_1,
-//                ).readText()}\n\n$result end"
-//            )
 
-            val inputStream = process.inputStream
-            val reader = inputStream.bufferedReader(Charsets.UTF_8)
-            reader.forEachLine { line ->
-                FileSystems.writeFile(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                    "${ReadText(
+            when(outputType){
+                TerminalOutputType.last -> {
+                    val pid = process.waitFor()
+                    return lastOutput(process)
+//                  TODO after implement (change return type?)
+                }
+                TerminalOutputType.No -> {
+                    streaming(
+                        process,
                         UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1,
-                    ).readText()}\n$line"
-                )
-            }
-            reader.close()
-            val errStream = process.errorStream
-            val errReader = errStream.bufferedReader(Charsets.UTF_8)
-            errReader.forEachLine { line ->
-                FileSystems.writeFile(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                    "${ReadText(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1,
-                    ).readText()}\n$line"
-                )
-            }
-            errReader.close()
+                        UsePath.cmdClickMonitorFileName_2
+                    )
 
+                }
+                TerminalOutputType.Streaming -> {
+                    streaming(
+                        process,
+                        UsePath.cmdclickMonitorDirPath,
+                        UsePath.cmdClickMonitorFileName_1
+                    )
+                }
+            }
             val output = process.waitFor()
-            FailedExecution("ok")
+            return String()
 
-//            when {
-//                prootDebugEnabled && commandShouldTerminate -> {
-//                    // Call the listener explicitly since all output will be captured by the log
-//                    listener("Output redirecting to proot debug log")
-////                    prootDebugLogger.logStream(process.inputStream, coroutineScope)
-//                    getProcessResult(process)
-//                }
-//                prootDebugEnabled && !commandShouldTerminate -> {
-//                    // Call the listener explicitly since all output will be captured by the log
-//                    listener("Output redirecting to proot debug log")
-////                    prootDebugLogger.logStream(process.inputStream, coroutineScope)
-//                    OngoingExecution(process)
-//                }
-//                commandShouldTerminate -> {
-//                    collectOutput(process.inputStream, listener)
-//                    getProcessResult(process)
-//                }
-//                else -> {
-//                    OngoingExecution(process)
-//                }
-//            }
         } catch (err: Exception) {
-            FailedExecution("$err")
+            Log.e(this::class.java.name, "$err")
+            return String()
         }
     }
 
@@ -341,6 +235,79 @@ class BusyboxExecutor(
     private fun getProcessResult(process: Process): ExecutionResult {
         return if (process.waitFor() == 0) SuccessfulExecution
         else FailedExecution("Command failed with: ${process.exitValue()}")
+    }
+
+    private fun streaming(
+        process: Process,
+        monitorDir: String,
+        monitorName: String
+    ){
+        val inputStream = process.inputStream
+        val reader = inputStream.bufferedReader(Charsets.UTF_8)
+        reader.forEachLine { line ->
+            FileSystems.writeFile(
+                UsePath.cmdclickMonitorDirPath,
+                UsePath.cmdClickMonitorFileName_1,
+                "${ReadText(
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()}\n$line"
+            )
+        }
+        reader.close()
+        val errStream = process.errorStream
+        val errReader = errStream.bufferedReader(Charsets.UTF_8)
+        errReader.forEachLine { line ->
+            FileSystems.writeFile(
+                UsePath.cmdclickMonitorDirPath,
+                UsePath.cmdClickMonitorFileName_1,
+                "${ReadText(
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()}\n$line"
+            )
+        }
+        errReader.close()
+    }
+
+    private fun lastOutput(
+        process: Process
+    ): String {
+        var errContents = String()
+        BufferedReader(
+            InputStreamReader(
+                process.errorStream,
+                Charset.defaultCharset()
+            )
+        ).use { r ->
+            var line: String?
+            while (r.readLine().also { line = it } != null) {
+                errContents += "\n" + line
+//                println(line)
+            }
+        }
+        var outputContents = String()
+        BufferedReader(
+            InputStreamReader(
+                process.inputStream,
+                Charset.defaultCharset()
+            )
+        ).use { r ->
+            var line: String?
+            while (r.readLine().also { line = it } != null) {
+                outputContents += "\n" + line
+//                println(line)
+            }
+        }
+        FileSystems.writeFile(
+            UsePath.cmdclickMonitorDirPath,
+            UsePath.cmdClickMonitorFileName_2,
+            ReadText(
+                UsePath.cmdclickMonitorDirPath,
+                UsePath.cmdClickMonitorFileName_2
+            ).readText() + "\n" + errContents
+        )
+        return outputContents
     }
 }
 
@@ -367,8 +334,8 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
     }
 
     // Proot scripts expect CWD to be `applicationFilesDir/<filesystem`
-    fun addBusyboxAndProot(command: String): List<String> {
-        return listOf(ulaFiles.busybox.absolutePath, "sh", "support/execInProot.sh") + command.split(" ")
+    fun addBusyboxAndProot(command: List<String>): List<String> {
+        return listOf(ulaFiles.busybox.absolutePath, "sh", "support/execInProot.sh") + command
     }
 
     fun addBusyboxAndExtractRootfsShell(): List<String> {
@@ -425,4 +392,10 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
             sdCardBindingDir.delete()
         }
     }
+}
+
+enum class TerminalOutputType {
+    No,
+    Streaming,
+    last,
 }
