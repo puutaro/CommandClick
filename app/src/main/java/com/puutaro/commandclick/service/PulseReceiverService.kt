@@ -32,7 +32,8 @@ class PulseReceiverService:
     Service() {
     private var pulseRecieverJob: Job? = null
     private var pcPulseSetServerJob: Job? = null
-    private val notificationId = ServiceNotificationId.pulseReciever
+    private val notificationId = NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id
+    private val chanelId = ServiceNotificationId.pulseReciever
     private val notificationManager by lazy {
         val channel = NotificationChannel(
             NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id,
@@ -83,7 +84,7 @@ class PulseReceiverService:
         startId: Int
     ): Int {
         PcPulseSetServer.exit()
-        notificationManager.cancel(notificationId)
+        notificationManager.cancel(chanelId)
         pulseRecieverJob?.cancel()
         val serverAddress = intent?.getStringExtra(
             PulseServerIntentExtra.serverAddress.schema
@@ -92,14 +93,16 @@ class PulseReceiverService:
             applicationContext,
             BroadCastIntentScheme.STOP_PULSE_RECIEVER.action,
         )
+        val serverWaitAddressPort = "${serverAddress}:${UsePort.pcPulseSetServer.num}"
+        val serverReceivingAddressPort = "${serverAddress}:${UsePort.pluseRecieverPort.num}"
         val notificationBuilder = NotificationCompat.Builder(
             applicationContext,
-            NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id
+            notificationId
         )
             .setSmallIcon(R.drawable.ic_media_play)
             .setAutoCancel(true)
-            .setContentTitle("Recieving..")
-            .setContentText("${serverAddress}:${UsePort.pluseRecieverPort.num}")
+            .setContentTitle("wait..")
+            .setContentText(serverWaitAddressPort)
             .setProgress(0, 0, true)
             .setDeleteIntent(
                 cancelPendingIntent
@@ -110,12 +113,12 @@ class PulseReceiverService:
                 cancelPendingIntent
             )
         val notificationInstance = notificationBuilder.build()
-            notificationManager.notify(
-                ServiceNotificationId.pulseReciever,
-                notificationInstance
-            )
+        notificationManager.notify(
+            chanelId,
+            notificationInstance
+        )
         startForeground(
-            notificationId,
+            chanelId,
             notificationInstance
         )
         pcPulseSetServerJob = CoroutineScope(Dispatchers.IO).launch {
@@ -128,6 +131,11 @@ class PulseReceiverService:
                 PcPulseSetServer.launch(
                     applicationContext,
                     serverAddress,
+                    notificationId,
+                    chanelId,
+                    serverReceivingAddressPort,
+                    notificationManager,
+                    cancelPendingIntent
                 )
             }
         }
@@ -157,7 +165,7 @@ class PulseReceiverService:
         pulseRecieverJob?.cancel()
         pcPulseSetServerJob?.cancel()
         PcPulseSetServer.exit()
-        notificationManager.cancel(notificationId)
+        notificationManager.cancel(chanelId)
         stopForeground(STOP_FOREGROUND_DETACH)
         stopSelf()
     }
