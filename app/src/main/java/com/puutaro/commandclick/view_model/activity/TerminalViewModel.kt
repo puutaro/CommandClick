@@ -11,11 +11,12 @@ import java.io.File
 class TerminalViewModel: ViewModel() {
 
     var readlinesNum: Float = ReadLines.SHORTH
-    var currentMonitorFileName = try {
-        makeDetectCurrentMonitorFileName()
-    } catch (e: Exception){
-        UsePath.cmdClickMonitorFileName_1
-    }
+    var currentMonitorFileName = UsePath.cmdClickMonitorFileName_1
+//        try {
+//        makeDetectCurrentMonitorFileName()
+//    } catch (e: Exception){
+//        UsePath.cmdClickMonitorFileName_1
+//    }
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
@@ -32,7 +33,7 @@ class TerminalViewModel: ViewModel() {
 }
 
 
-internal fun makeDetectCurrentMonitorFileName(): String {
+private fun makeDetectCurrentMonitorFileName(): String {
     deleteInvalieMonitorFile()
     val recentUpdatedFileSource = FileSystems.sortedFiles(
         UsePath.cmdclickMonitorDirPath,
