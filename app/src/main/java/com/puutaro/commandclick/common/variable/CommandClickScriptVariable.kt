@@ -69,6 +69,7 @@ object CommandClickScriptVariable {
     val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
     val IGNORE_HISTORY_PATHS = "ignoreHistoryPaths"
     val ON_ADBLOCK = "onAdBlock"
+    val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
     val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
     val TERMINAL_COLOR = "terminalColor"
@@ -110,6 +111,7 @@ object CommandClickScriptVariable {
         ON_TERM_BACKEND_WHEN_START,
         ON_TERM_VISIBLE_WHEN_KEYBOARD,
         ON_TERM_SHORT_WHEN_LOAD,
+        DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
         CMDCLICK_RUN_SHELL,
@@ -178,6 +180,8 @@ object CommandClickScriptVariable {
     private val onTermShortWhenLoadSelectsOn = SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name
     private val onTermShortWhenLoadSelectsOff = SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name
     private val onTermShortWhenLoadSelectsInherit = SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name
+    private val disableShowToolbarWhenHighlightOn = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
+    private val disableShowToolbarWhenHighlightOff = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     private val onUrlHistoryRegisterOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val overrideItemClickExecSelectsOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
@@ -208,6 +212,8 @@ object CommandClickScriptVariable {
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
+    val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
+    val DISABLE_WIDE_VIEW_PORT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
     val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
     val DISABLE_SETTING_BUTTON_DEFAULT_VALUE = disableSettingButtonOff
@@ -313,6 +319,7 @@ object CommandClickScriptVariable {
         "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsOn}",
         "${ON_TERM_VISIBLE_WHEN_KEYBOARD}:CB=${onTermVisibleWhenKeyboardSelectsInherit}!${onTermVisibleWhenKeyboardSelectsOn}!${onTermVisibleWhenKeyboardSelectsOff}",
         "${ON_TERM_SHORT_WHEN_LOAD}:CB=${onTermShortWhenLoadSelectsInherit}!${onTermShortWhenLoadSelectsOn}!${onTermShortWhenLoadSelectsOff}",
+        "${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}:CB=${disableShowToolbarWhenHighlightOn}!${disableShowToolbarWhenHighlightOff}",
         "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
         "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
         "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
@@ -373,6 +380,7 @@ object CommandClickScriptVariable {
             |#  * [${ON_TERM_BACKEND_WHEN_START}](#${replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
             |#  * [${ON_TERM_VISIBLE_WHEN_KEYBOARD}](#${replaceLowerAdnBlankDash(ON_TERM_VISIBLE_WHEN_KEYBOARD)})
             |#  * [${ON_TERM_SHORT_WHEN_LOAD}](#${replaceLowerAdnBlankDash(ON_TERM_SHORT_WHEN_LOAD)})
+            |#  * [${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}](#${replaceLowerAdnBlankDash(DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT)})
             |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
             |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
@@ -524,13 +532,21 @@ object CommandClickScriptVariable {
             |# | `${onTermVisibleWhenKeyboardSelectsOff}` | off |
             |
             |# ### ${ON_TERM_SHORT_WHEN_LOAD}
-            |# terminal short sizging when load 
+            |# Terminal short sizging when load 
             |
             |# | switch | description | 
             |# | ${mdDash} | ${mdDash} |
             |# | `${onTermShortWhenLoadSelectsInherit}` | inherit config setting |
             |# | `${onTermShortWhenLoadSelectsOn}` | on |
             |# | `${onTermShortWhenLoadSelectsOff}` | off |
+            |
+            |# ### ${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}
+            |# Disable show toolbar when highlight text in webview 
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${disableShowToolbarWhenHighlightOff}` | on |
+            |# | `${disableShowToolbarWhenHighlightOn}` | off |
             |
             |# ### ${ON_URL_LAUNCH_MACRO}
             |# Url launch macro(when set, cmdclick web terminal don't output)

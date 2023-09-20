@@ -7,7 +7,7 @@
     android:background="#00000000"
     android:id="@+id/copy_webview_dialog_layout">
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/copy_dialog_title"
+        android:id="@+id/term_copy_dialog_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -18,18 +18,18 @@
         android:layout_marginEnd="10dp"
         android:textSize="20sp"
         android:textColor="@color/cmdclick_text_black"
-        android:layout_above="@+id/desc_dialog_webview"
+        android:layout_above="@+id/term_copy_dialog_webview"
         />
     <WebView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/desc_dialog_webview"
-        android:layout_above="@+id/copy_dialog_webview_progressBar"
+        android:id="@+id/term_copy_dialog_webview"
+        android:layout_above="@+id/term_copy_dialog_webview_progressBar"
         />
     <ProgressBar
-        android:id="@+id/copy_dialog_webview_progressBar"
+        android:id="@+id/term_copy_dialog_webview_progressBar"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_above="@+id/desc_firstBottom"
+        android:layout_above="@+id/term_copy_firstBottom"
         android:layout_width="match_parent"
         android:layout_height="5dp"
         android:layout_marginTop="0dp"
@@ -42,7 +42,7 @@
         android:layout_alignParentStart="true"
         android:layout_gravity="center_horizontal|center_vertical"
         android:gravity="center_horizontal|center_vertical"
-        android:id="@+id/desc_firstBottom"
+        android:id="@+id/term_copy_firstBottom"
         android:background="#00000000"
         android:weightSum="1"
         >
@@ -53,7 +53,7 @@
             android:src="@drawable/ic_copy"
             app:tint="@color/web_icon_color"
             android:backgroundTint="@color/white"
-            android:id="@+id/copy_webview_dialog_back"
+            android:id="@+id/term_copy_webview_dialog_copy"
             android:layout_weight="1"
             android:contentDescription="TODO" />
     </LinearLayout>

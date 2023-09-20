@@ -85,6 +85,17 @@ object ConfigFromStartUpFileSetterForTerm {
             ),
         )
 
+        terminalFragment.disableShowToolbarWhenHighlight = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
+            ),
+        )
 
         terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
@@ -225,6 +236,18 @@ object ConfigFromStartUpFileSetterForTerm {
             listOf(
                 SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
                 SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.disableShowToolbarWhenHighlight = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+            terminalFragment.disableShowToolbarWhenHighlight,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            terminalFragment.disableShowToolbarWhenHighlight,
+            listOf(
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
             ),
         )
 

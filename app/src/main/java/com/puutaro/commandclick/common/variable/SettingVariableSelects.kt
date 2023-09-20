@@ -120,4 +120,8 @@ object SettingVariableSelects {
         ON,
         OFF
     }
+    enum class DisableShowToolbarWhenHighlightSelects {
+        ON,
+        OFF
+    }
 }
