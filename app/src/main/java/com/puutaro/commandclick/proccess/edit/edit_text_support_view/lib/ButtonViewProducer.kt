@@ -85,17 +85,17 @@ object ButtonViewProducer {
         )
         insertTextView.isVisible = isInsertTextViewVisible
 
-        insertButton.setOnClickListener {
-                innerButtonView ->
-            buttonClickListener(
-                editFragment,
-                insertEditText,
-                scriptFileSaver,
-                editParameters,
-                buttonMap,
-                currentSetVariableValue
-            )
-        }
+//        insertButton.setOnClickListener {
+//                innerButtonView ->
+//            execButtonClickEvent(
+//                editFragment,
+//                insertEditText,
+//                scriptFileSaver,
+//                editParameters,
+//                buttonMap,
+//                currentSetVariableValue
+//            )
+//        }
 
         buttonTouchListener(
             insertButton,
@@ -119,20 +119,16 @@ object ButtonViewProducer {
         currentSetVariableValue: String?
     ){
         with(insertButton) {
-            if(
-                !getIsConsec(buttonMap)
-            ) return@with
             setOnTouchListener(android.view.View.OnTouchListener { v, event ->
                 var execTouchJob: Job? = null
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
                         consecutiveJob?.cancel()
                         consecutiveJob = CoroutineScope(Dispatchers.IO).launch {
-                            var delayTime = 200L
+                            var roopTimes = 0
                             while (true) {
-                                delay(delayTime)
                                 execTouchJob = CoroutineScope(Dispatchers.Main).launch {
-                                    buttonClickListener(
+                                    execButtonClickEvent(
                                         editFragment,
                                         insertEditText,
                                         scriptFileSaver,
@@ -141,15 +137,21 @@ object ButtonViewProducer {
                                         currentSetVariableValue
                                     )
                                 }
-                                delayTime = 80
+                                if(
+                                    !getIsConsec(buttonMap)
+                                ) break
+                                withContext(Dispatchers.IO){
+                                    if(
+                                        roopTimes == 0
+                                    ) delay(300)
+                                    else delay(60)
+                                }
+                                roopTimes++
                             }
                         }
                     }
                     MotionEvent.ACTION_UP,
-                    MotionEvent.ACTION_CANCEL,
-                    MotionEvent.ACTION_SCROLL,
-                    MotionEvent.ACTION_HOVER_MOVE,
-                    MotionEvent.ACTION_MOVE-> {
+                    MotionEvent.ACTION_CANCEL, -> {
                         v.performClick()
                         execTouchJob?.cancel()
                         consecutiveJob?.cancel()
@@ -160,7 +162,7 @@ object ButtonViewProducer {
         }
     }
 
-    private fun buttonClickListener(
+    private fun execButtonClickEvent(
         editFragment: EditFragment,
         insertEditText: EditText,
         scriptFileSaver: ScriptFileSaver,

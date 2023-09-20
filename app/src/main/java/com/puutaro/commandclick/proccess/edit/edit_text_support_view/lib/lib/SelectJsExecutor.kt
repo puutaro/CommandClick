@@ -83,5 +83,8 @@ private fun makeSelectJsContents(
     }.replace(
         "CMDCLICL_SELECT_ITEM",
         selectedItem
+            .replace("\"", "\\\"")
+            .replace("'", "\\\'")
+            .replace("`", "\\`")
     ).split("\n")
 }

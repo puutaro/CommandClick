@@ -94,11 +94,6 @@ object InDeCrementerViewProducer {
         var job: Job? = null
         with(insertButtonView) {
 
-            setOnClickListener{
-                incrementNum = incrementStepNum
-                execIncDec()
-            }
-
             setOnTouchListener(View.OnTouchListener { v, event ->
                 val crementHandler = Handler(Looper.getMainLooper())
                 val crementRunner = inDeCrementRunner()
@@ -109,21 +104,23 @@ object InDeCrementerViewProducer {
                             var delayTime = 150L
                             incrementNum = incrementStepNum
                             while (true) {
-                                delay(delayTime)
                                 incrementNum = roopTimes / 10 + incrementStepNum
                                 crementHandler.post(
                                     crementRunner
                                 )
+                                withContext(Dispatchers.IO){
+                                    if(
+                                        roopTimes == 1
+                                    ) delay(300)
+                                    else delay(delayTime)
+                                }
                                 roopTimes++
                                 if(delayTime <= 100L) continue
-                                delayTime = delayTime - roopTimes
+                                delayTime -= roopTimes
                             }
                         }
                     }
                     MotionEvent.ACTION_CANCEL,
-                    MotionEvent.ACTION_SCROLL,
-                    MotionEvent.ACTION_HOVER_MOVE,
-                    MotionEvent.ACTION_MOVE,
                     MotionEvent.ACTION_UP -> {
                         v.performClick()
                         job?.cancel()
