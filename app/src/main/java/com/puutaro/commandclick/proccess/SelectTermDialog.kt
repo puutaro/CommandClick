@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.select_term
+package com.puutaro.commandclick.proccess
 
 import android.app.Dialog
 import android.view.Gravity

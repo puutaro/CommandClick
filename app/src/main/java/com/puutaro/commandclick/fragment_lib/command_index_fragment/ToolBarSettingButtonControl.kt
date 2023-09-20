@@ -20,6 +20,7 @@ import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.UbuntuSetUp
+import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
@@ -189,6 +190,9 @@ class ToolBarSettingButtonControl(
                 MenuEnums.SETTING.itemName -> {
                     SubMenuDialog.launch(cmdIndexFragment)
                 }
+                MenuEnums.SELECTTERM.itemName -> {
+                    SelectTermDialog.launch(cmdIndexFragment)
+                }
                 MenuEnums.INSTALL_FANNEL.itemName -> {
                     InstallFannelHandler.handle(
                         cmdIndexFragment,
@@ -244,7 +248,7 @@ private enum class MenuEnums(
     val imageId: Int,
 ) {
     ADD("add", R.drawable.icons8_plus),
-//    SELECTTERM("select_term"),
+    SELECTTERM("select term", R.drawable.icons8_file),
 //    TERM1("term_1"),
 //    TERM2("term_2"),
 //    TERM3("term_3"),
