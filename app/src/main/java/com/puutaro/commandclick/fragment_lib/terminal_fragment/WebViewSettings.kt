@@ -3,9 +3,32 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.view.View
 import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.*
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.CmdIntent
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCurl
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDirSelect
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSelect
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsListSelect
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsNetTool
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPdf
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPulseAudioReceiver
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsRecordToText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsScript
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsSendKey
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsStop
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsTextToSpeech
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
+
 
 object WebViewSettings {
     fun set(

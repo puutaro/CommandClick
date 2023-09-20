@@ -188,11 +188,6 @@ class JsSendKey(
 //                    "${UsePath.cmdclickDefaultAppDirPath}/ansi2html.txt"
                 )
             }
-            Toast.makeText(
-                context,
-                "copy",
-                Toast.LENGTH_SHORT
-            ).show()
         } catch(e: Exception){
             Toast.makeText(
                 context,

@@ -113,6 +113,8 @@ object UsePath {
     const val cmdclickScrollSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickScrollSystemDirName}"
     private const val cmdclickHitSystemDirName = "hit"
     const val cmdclickHitSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickHitSystemDirName}"
+    private const val cmdclickTempSystemDirName = "temp"
+    const val cmdclickTempSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickTempSystemDirName}"
     val cmdclickUrlHistoryFileName = "cmdclickUrlHistory${tsvExtend}"
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory${tsvExtend}"
     val cmdclickSiteScrollPosiFileName = "scrollPosi${tsvExtend}"
