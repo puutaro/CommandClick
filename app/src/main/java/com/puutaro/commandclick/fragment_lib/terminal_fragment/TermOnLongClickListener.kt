@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.os.Handler
 import android.os.Looper
 import android.webkit.WebView
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
@@ -48,6 +49,10 @@ object TermOnLongClickListener {
                 ?: return@setOnLongClickListener false
             when (hitTestResult.type) {
                 WebView.HitTestResult.UNKNOWN_TYPE -> {
+                    if(
+                        terminalFragment.disableShowToolbarWhenHighlight
+                        == SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
+                    ) return@setOnLongClickListener false
                     val changeTargetFragment =
                         IndexOrEditFragment(terminalFragment).select()
                     listener?.onToolBarVisibleChange(
