@@ -141,8 +141,14 @@ object UsePath {
     val menuListDirPathForSelectMenuFannel = "\${01}/\${001}/menuList"
     val menuListFilePathForSelectMenu =
         "${menuListDirPathForSelectMenuFannel}/menu.txt"
+    val leftMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/leftMenuList${TXT_FILE_SUFFIX}"
+    val leftLongPressMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/leftLongPressMenuList${TXT_FILE_SUFFIX}"
     val centerMenuListFilePathForWebSearher =
         "${menuListDirPathForSelectMenuFannel}/centerMenuList${TXT_FILE_SUFFIX}"
+    val centerLongPressMenuListFilePathForWebSearher =
+        "${menuListDirPathForSelectMenuFannel}/centerLongPressMenuList${TXT_FILE_SUFFIX}"
     val rightMenuListFilePathForWebSearher =
         "${menuListDirPathForSelectMenuFannel}/rightMenuList${TXT_FILE_SUFFIX}"
     val srcImageAnchorMenuListFilePathForWebSearher =

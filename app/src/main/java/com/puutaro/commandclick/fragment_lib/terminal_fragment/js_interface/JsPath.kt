@@ -94,4 +94,17 @@ class JsPath(
     ): String {
         return File(path).name
     }
+
+    @JavascriptInterface
+    fun echoPath(pathType: String): String {
+        return when(pathType) {
+            PathType.appFiles.name
+            -> return "${context?.filesDir}"
+            else -> String()
+        }
+    }
+}
+
+private enum class PathType {
+    appFiles
 }

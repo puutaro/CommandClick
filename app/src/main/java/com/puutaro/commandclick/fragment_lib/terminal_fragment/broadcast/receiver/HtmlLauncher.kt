@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewMenuMapType
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
@@ -100,16 +101,18 @@ object HtmlLauncher{
         )
         if(
             onDialog == "true"
-        ) JsDialog(terminalFragment).webView(
-            htmlFilePath,
-            String(),
-            String(),
-            String(),
-            String(),
-            String(),
-            String()
-        )
-        else binding.terminalWebView.loadUrl(htmlFilePath)
+        ) {
+            val iconName = WebViewMenuMapType.iconName.name
+            val dismissType = WebViewMenuMapType.dismissType.name
+            val menuMapStrListStr= listOf(
+                    "${dismissType}=click!${iconName}=cancel"
+            ).joinToString("!")
+            JsDialog(terminalFragment).webView(
+                htmlFilePath,
+                String(),
+                menuMapStrListStr,
+                String(),
+            )
+        } else binding.terminalWebView.loadUrl(htmlFilePath)
     }
-
 }

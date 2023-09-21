@@ -25,6 +25,7 @@ enum class JsInterfaceVariant {
     jsPulseAudioReceiver,
     jsSendKey,
     jsNetTool,
+    jsHtml,
     jsProcess,
     jsTrans,
 }

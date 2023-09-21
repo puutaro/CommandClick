@@ -1,21 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.content.Context
 import android.os.SystemClock
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.webkit.JavascriptInterface
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.DialogObject
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.utils.UlaFiles
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 
 class JsSendKey(
@@ -32,7 +21,6 @@ class JsSendKey(
         keyName: String,
     ){
         when(keyName){
-            "copy" -> copy()
             "paste" -> paste()
             "enter" -> enter()
             "down" -> down()
@@ -140,62 +128,6 @@ class JsSendKey(
         keyDownEvent(
             KeyEvent.KEYCODE_SPACE,
         )
-    }
-
-    private fun copy(){
-        try  {
-            val ansi2HtmlShellCon = AssetsFileManager.readFromAssets(
-                context,
-                AssetsFileManager.ansi2htmlShellPath
-            )
-            val tempDirPath =
-                "${UsePath.cmdclickDefaultAppDirPath}/${UsePath.cmdclickTempSystemDirRelativePath}"
-            val ansi2HtmlShellName =
-                AssetsFileManager.ansi2htmlShellPath.split("/").lastOrNull()
-                    ?: return
-//            val tempAnsi2HtmlPath =
-//                "${tempDirPath}/${ansi2HtmlShellName}"
-            FileSystems.writeFile(
-                tempDirPath,
-                ansi2HtmlShellName,
-                ansi2HtmlShellCon
-            )
-            val ulaFiles = UlaFiles(
-                terminalFragment.context as Context,
-                context?.applicationInfo?.nativeLibraryDir ?: String(),
-                onInit = false
-            )
-
-//            val busyboxExecutor = BusyboxExecutor(
-//                ulaFiles,
-//            )
-//           val prootAnsi2Txt = busyboxExecutor.executeProotCommand(
-//                listOf("su", "-", "cmdclick", "-c", "bash ${tempAnsi2HtmlPath}"),
-//                        outputType = TerminalOutputType.last
-//            )
-//            bash '${tempAnsi2HtmlPath}'
-            val contents = ReadText(
-//                UsePath.cmdclickDefaultAppDirPath,
-//                "ansi2html.txt"
-                "${ulaFiles.filesOneRootfs}/home/cmdclick",
-                "script.log"
-//                "ansi2html.txt"
-            ).readText()
-            CoroutineScope(Dispatchers.Main).launch {
-                DialogObject.termStrCopyDialog(
-                    terminalFragment,
-                    contents,
-//                    "${UsePath.cmdclickDefaultAppDirPath}/ansi2html.txt"
-                )
-            }
-        } catch(e: Exception){
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        return
     }
 
     private fun paste(){

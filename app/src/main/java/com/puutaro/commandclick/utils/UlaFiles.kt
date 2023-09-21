@@ -34,7 +34,7 @@ class UlaFiles(
     val proot = File(supportDir, "proot")
     val documentDirPath = "${Environment.getExternalStorageDirectory().absolutePath}/" +
             Environment.DIRECTORY_DOCUMENTS
-    val filesOneRootfs = File("${filesDir}/1/rootfs")
+        val filesOneRootfs = File("${filesDir}/1/rootfs")
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
     val filesOneRootfsSupportCommonDir =

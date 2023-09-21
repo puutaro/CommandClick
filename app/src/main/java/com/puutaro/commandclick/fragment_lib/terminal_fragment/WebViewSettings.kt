@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDi
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHtml
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsListSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsNetTool
@@ -145,6 +146,10 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsNetTool(terminalFragment),
             JsInterfaceVariant.jsNetTool.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsHtml(terminalFragment),
+            JsInterfaceVariant.jsHtml.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),

@@ -20,23 +20,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 object DialogObject {
 
     private var simpleTextDialogObj: Dialog? = null
     private var descWebDialog: Dialog? = null
-    private var termCopyWebDialog: Dialog? = null
     private val defaultFontPercentage = 140
-    private val initScrollTermRange = 1000000000
 
     fun simpleTextShow(
         contextSrc: Context?,
@@ -174,99 +164,6 @@ object DialogObject {
             descWebDialog?.dismiss()
         }
     }
-
-    fun termStrCopyDialog(
-        fragment: Fragment,
-        contents: String,
-//        srcFilePath: String,
-    ){
-//        val srcFileObj = File(srcFilePath)
-//        if(!srcFileObj.isFile) return
-//        val srcDirPath = srcFileObj.parent
-//            ?: return
-//        val srcName = srcFileObj.name
-//        val contents = ReadText(
-//            srcDirPath,
-//            srcName,
-//        ).readText()
-        val context = fragment.context
-            ?: return
-        val activity = fragment.activity
-            ?: return
-        termCopyWebDialog?.dismiss()
-        termCopyWebDialog = Dialog(
-            context
-        )
-        termCopyWebDialog?.setContentView(
-            R.layout.term_copy_dialog_layout
-        )
-        val textView = termCopyWebDialog?.findViewById<AppCompatTextView>(
-            R.id.term_copy_dialog_title
-        ) ?: return
-        textView.isVisible = false
-        val webView = termCopyWebDialog?.findViewById<WebView>(
-            R.id.term_copy_dialog_webview
-        ) ?: return
-        webViewSetting(
-            fragment,
-            webView
-        )
-        webView.loadDataWithBaseURL(
-            "",
-            AsciiTool.convertTermStrToHtml(contents),
-            "text/html",
-            "utf-8",
-            null
-        )
-        val progressBar = termCopyWebDialog?.findViewById<ProgressBar>(
-            R.id.term_copy_dialog_webview_progressBar
-        )
-
-        setProgressChanged(
-            webView,
-            progressBar,
-        )
-
-        setWebViewClient(
-            webView,
-            activity,
-        )
-        val termCopyBtn = termCopyWebDialog?.findViewById<ImageButton>(
-            R.id.term_copy_webview_dialog_copy
-        ) ?: return
-        termCopyBtn.setOnClickListener {
-            val jsContents = AssetsFileManager.readFromAssets(
-                context,
-                AssetsFileManager.assetsHighlightCopy
-            ).split("\n")
-            val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(jsContents)
-                ?: return@setOnClickListener
-            webView.loadUrl(jsScriptUrl)
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.IO){
-                    delay(200)
-                }
-                withContext(Dispatchers.Main){
-                    termCopyWebDialog?.dismiss()
-                }
-            }
-        }
-        termCopyBtn.setOnLongClickListener {
-            termCopyWebDialog?.dismiss()
-            true
-        }
-        termCopyWebDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        termCopyWebDialog?.show()
-
-        termCopyWebDialog?.setOnCancelListener {
-            it.dismiss()
-            termCopyWebDialog?.dismiss()
-        }
-    }
-
     private fun webViewSetting(
         fragment: Fragment,
         webView: WebView
@@ -283,14 +180,6 @@ object DialogObject {
         )
         settings.textZoom = (terminalFontPercentage * 95 ) / 100
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webView.addJavascriptInterface(
-            JsToast(fragment),
-            JsInterfaceVariant.jsToast.name
-        )
-        webView.addJavascriptInterface(
-            JsUtil(fragment),
-            JsInterfaceVariant.jsUtil.name
-        )
     }
 
     private fun getFontZoomPercentage(
@@ -364,11 +253,6 @@ object DialogObject {
 
                 }
                 return false
-            }
-
-            override fun onPageFinished(view: WebView, url: String?) {
-                //use the param "view", and call getContentHeight in scrollTo
-                view.scrollTo(0, initScrollTermRange)
             }
         }
     }

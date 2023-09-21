@@ -100,7 +100,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.media:media:1.6.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
@@ -126,6 +126,7 @@ dependencies {
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
     implementation("org.rauschig:jarchivelib:0.8.0")
     implementation("org.apache.commons:commons-compress:1.20")
+    implementation("com.hierynomus:sshj:0.36.0")
 
 
 //    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")

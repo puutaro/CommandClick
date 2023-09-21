@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsMacroType
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -75,7 +76,7 @@ object StartFileMaker {
             currentAppDirPath,
             cmdclickStartupJsName
         )
-        val longPressMenuDirPath = InitSettingListFile.pathReplace(
+        val longPressMenuDirPath = ScriptPreWordReplacer.pathReplace(
             UsePath.longPressMenuDirPath,
             currentAppDirPath,
             cmdclickStartupJsName
@@ -154,7 +155,7 @@ object StartFileMaker {
                     )
                 }
             }
-            val selectMenuListFilePath = InitSettingListFile.pathReplace(
+            val selectMenuListFilePath = ScriptPreWordReplacer.pathReplace(
                 UsePath.menuListFilePathForSelectMenu,
                 currentAppDirPath,
                 selectMenuFannelName
@@ -187,7 +188,24 @@ object StartFileMaker {
         )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                val centerMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                val leftMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
+                    UsePath.leftMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    leftMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
+                            JsMacroType.GO_BACK_JS.str
+                        ),
+                    )
+                )
+            }
+            withContext(Dispatchers.IO) {
+                val centerMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
                     UsePath.centerMenuListFilePathForWebSearher,
                     currentAppDirPath,
                     webSearcherFannelName
@@ -198,13 +216,28 @@ object StartFileMaker {
                     webSearcherFannelName,
                     listOf(
                         UrlFileSystems.getFileNameFromUrl(
+                            JsMacroType.HIGHLIGHT_SCH_JS.str
+                        ),
+                    )
+                )
+                val centerLongPressMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
+                    UsePath.centerLongPressMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName
+                )
+                InitSettingListFile.makeFile(
+                    centerLongPressMenuListFilePathForWebSearher,
+                    currentAppDirPath,
+                    webSearcherFannelName,
+                    listOf(
+                        UrlFileSystems.getFileNameFromUrl(
                             siteSummaryUrl
                         ),
                     )
                 )
             }
             withContext(Dispatchers.IO) {
-                val centerMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                val centerMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
                     UsePath.rightMenuListFilePathForWebSearher,
                     currentAppDirPath,
                     webSearcherFannelName
@@ -215,13 +248,13 @@ object StartFileMaker {
                     webSearcherFannelName,
                     listOf(
                         UrlFileSystems.getFileNameFromUrl(
-                            urlTrans
+                            JsMacroType.LAUNCH_LOCAL_JS.str
                         ),
                     )
                 )
             }
             withContext(Dispatchers.IO) {
-                val srcImageAnchorMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                val srcImageAnchorMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
                     UsePath.srcImageAnchorMenuListFilePathForWebSearher,
                     currentAppDirPath,
                     webSearcherFannelName
@@ -238,13 +271,13 @@ object StartFileMaker {
                 )
             }
             withContext(Dispatchers.IO) {
-                val srcAnchorListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                val srcAnchorListFilePathForWebSearcher = ScriptPreWordReplacer.pathReplace(
                     UsePath.srcAnchorListFilePathForWebSearher,
                     currentAppDirPath,
                     webSearcherFannelName
                 )
                 InitSettingListFile.makeFile(
-                    srcAnchorListFilePathForWebSearher,
+                    srcAnchorListFilePathForWebSearcher,
                     currentAppDirPath,
                     webSearcherFannelName,
                     listOf(
@@ -255,7 +288,7 @@ object StartFileMaker {
                 )
             }
             withContext(Dispatchers.IO) {
-                val imageMenuListFilePathForWebSearher = InitSettingListFile.pathReplace(
+                val imageMenuListFilePathForWebSearher = ScriptPreWordReplacer.pathReplace(
                     UsePath.imageMenuListFilePathForWebSearher,
                     currentAppDirPath,
                     webSearcherFannelName
@@ -316,24 +349,6 @@ object StartFileMaker {
 
 private object InitSettingListFile {
 
-    fun pathReplace(
-        longPressFilePath: String,
-        currentAppDirPath: String,
-        scriptName: String,
-    ): String {
-        val fannelDirName = scriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
-        return longPressFilePath.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                fannelDirName,
-                scriptName,
-            )
-        }
-    }
 
     fun makeFile(
         settingListFilePathSrc: String,
@@ -341,7 +356,7 @@ private object InitSettingListFile {
         scriptName: String,
         settingConList: List<String>,
     ){
-        val settingListFilePath = pathReplace(
+        val settingListFilePath = ScriptPreWordReplacer.pathReplace(
             settingListFilePathSrc,
             currentAppDirPath,
             scriptName

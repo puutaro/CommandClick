@@ -254,20 +254,14 @@ class JsDialog(
     fun webView(
         urlStr: String,
         currentFannelPath: String,
-        centerMenuMapStr: String,
-        rightMenuMapStr: String,
-        srcAnchorImageMapStr: String,
-        srcAnchorMapStr: String,
-        imageMapStr: String,
+        menuMapStrListStr: String,
+        longPressMenuMapListStr: String
     ){
         webViewJsDialog.create(
             urlStr,
             currentFannelPath,
-            centerMenuMapStr,
-            rightMenuMapStr,
-            srcAnchorImageMapStr,
-            srcAnchorMapStr,
-            imageMapStr,
+            menuMapStrListStr,
+            longPressMenuMapListStr
         )
     }
 }
