@@ -1,14 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.utils.UlaFiles
+import com.puutaro.commandclick.utils.UbuntuFiles
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 import java.time.LocalDateTime
@@ -35,10 +34,8 @@ class JsCmd(
 //                currentMonitorFileName,
 //                "### ${LocalDateTime.now()} ulaInstanceStart"
 //            )
-            val ulaFiles = UlaFiles(
+            val ubuntuFiles = UbuntuFiles(
                 context,
-                context.applicationInfo.nativeLibraryDir,
-                onInit = false
             )
 //            FileSystems.updateFile(
 //                cmdclickMonitorDirPath,
@@ -69,8 +66,8 @@ class JsCmd(
             val executeShellName = executeShellObj.name
                 ?: return
             FileSystems.writeFile(
-                ulaFiles.filesOneRootfsHomeCmdclickCmdDir.absolutePath,
-                ulaFiles.cmdShell,
+                ubuntuFiles.filesOneRootfsHomeCmdclickCmdDir.absolutePath,
+                ubuntuFiles.cmdShell,
                 ReadText(
                     executeShellDirPath,
                     executeShellName
