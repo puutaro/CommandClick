@@ -110,11 +110,16 @@ object ExecJsLoad {
         )
 
         JavascriptExecuter.exec(
-            context,
+            currentFragment,
             terminalViewModel,
             substituteSettingVariableList,
             onUrlLaunchMacro,
         )
+        if(
+            selectedJsFileName == UsePath.cmdclickStartupJsName
+            || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
+            || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
+        ) return
 
 
         val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
@@ -134,10 +139,10 @@ object ExecJsLoad {
             launchUrlString,
         )
 
-        cleanUpAfterJsExc(
-            terminalViewModel,
-            tempOnDisplayUpdate,
-        )
+//        cleanUpAfterJsExc(
+//            terminalViewModel,
+//            tempOnDisplayUpdate,
+//        )
 
         JsFilePathToHistory.insert(
             recentAppDirPath,
@@ -163,7 +168,7 @@ object ExecJsLoad {
         )
     }
 
-    private fun jsUrlLaunchHandler(
+    fun jsUrlLaunchHandler(
         currentFragment: androidx.fragment.app.Fragment,
         launchUrlString: String,
     ){
@@ -235,7 +240,7 @@ object ExecJsLoad {
     private fun enableJsLoadInWebView(
         terminalViewModel: TerminalViewModel
     ){
-        terminalViewModel.onDisplayUpdate = true
+        terminalViewModel.onDisplayUpdate = false
     }
 
     private fun cleanUpAfterJsExc(

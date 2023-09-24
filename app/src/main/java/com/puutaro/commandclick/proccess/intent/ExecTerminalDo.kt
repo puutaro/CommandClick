@@ -92,7 +92,7 @@ object ExecTerminalDo {
         )
 
         JavascriptExecuter.exec(
-            context,
+            currentFragment,
             terminalViewModel,
             substituteSettingVariableList,
             onUrlLaunchMacro,
