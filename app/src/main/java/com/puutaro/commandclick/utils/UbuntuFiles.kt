@@ -4,20 +4,21 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.system.Os
-import com.puutaro.commandclick.common.variable.UbuntuSetPath
 import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
 import java.io.File
 import java.lang.NullPointerException
 
-class UlaFiles(
+class UbuntuFiles(
     context: Context,
-    libDirPath: String,
     private val symlinker: Symlinker = Symlinker(),
 ) {
-
+    companion object {
+        val downloadDirPath = Environment.getExternalStorageDirectory().absolutePath +
+                "/${Environment.DIRECTORY_DOWNLOADS}"
+        val rootfsTarGzName = "rootfs.tar.gz"
+        val downloadRootfsTarGzPath = "${downloadDirPath}/${rootfsTarGzName}"
+    }
+    val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir
     val libDir: File = File(libDirPath)
     val supportDir: File = File(filesDir, "support")
@@ -49,9 +50,6 @@ class UlaFiles(
         File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
-    val downloadDirPath = UbuntuSetPath.downlaodDirPath
-    val rootfsTarGzName = UbuntuSetPath.rootfsTarGzName
-    val downloadRootfsTarGzPath = UbuntuSetPath.downloadRootfsTarGzPath
     val ubuntuCompFile = File(
         "${UsePath.cmdclickDefaultAppDirPath}/ubuntuComp.txt"
     )

@@ -1,13 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
 import android.content.Context
-import android.media.AudioFormat
-import android.media.AudioManager
-import android.media.AudioTrack
-import android.system.Os
-import android.widget.Toast
-import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.UbuntuSetPath
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -15,32 +8,22 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.utils.BusyboxExecutor
-import com.puutaro.commandclick.utils.UlaFiles
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.utils.UbuntuFiles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.BufferedInputStream
-import java.io.DataInputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
-import java.net.ServerSocket
-import java.net.Socket
 import java.net.URL
-import java.time.LocalDateTime
 
 
 object UbuntuSetUp {
 
-    private val genRootDir = UbuntuSetPath.genRootDir
-    private val ubuntuRfs = "$genRootDir/ubuntuARM64-fs"
-    private val ubuntuGenShellPath = "${genRootDir}/android-ubuntu-gen.sh"
-    private val startUbuntuShellPath = "${genRootDir}/start-ubuntu.sh"
-    private val rootfsTarGzName = UbuntuSetPath.rootfsTarGzName
-    private val downloadDirPath = UbuntuSetPath.downlaodDirPath
-    private val downloadRootfsTarGzPath = UbuntuSetPath.downloadRootfsTarGzPath
+    private val rootfsTarGzName = UbuntuFiles.rootfsTarGzName
+    private val downloadDirPath = UbuntuFiles.downloadDirPath
+    private val downloadRootfsTarGzPath = UbuntuFiles.downloadRootfsTarGzPath
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val arm64UbuntuRootfsUrl =
         "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
@@ -73,61 +56,20 @@ object UbuntuSetUp {
             String()
         )
         downloadUbuntu(UsePath.cmdClickMonitorFileName_1)
-//        withContext(Dispatchers.IO) {
-//            if(
-//                File(
-//                    downloadRootfsTarGzPath
-//                ).isFile
-//            ) return@withContext
-//            // put your url.this is sample url.
-//            val url = URL(arm64UbuntuRootfsUrl)
-//            val conection = url.openConnection()
-//            conection.connect()
-//            val lenghtOfFile = conection.contentLength
-//            // download the file
-//            val input = conection.getInputStream()
-//            //catalogfile is your destenition folder
-//            val output: OutputStream = FileOutputStream(
-//                downloadRootfsTarGzPath
-//            )
-//            val data = ByteArray(1024)
-//            var total: Long = 0
-//            var count: Int
-//            var progress = 0L
-//            var previoutDisplayProgress: Long = 0
-//            while (input.read(data).also { count = it } != -1) {
-//                total += count
-//                previoutDisplayProgress = progress
-//                progress = total * 100 / lenghtOfFile
-//                output.write(data, 0, count)
-//                if(progress <= previoutDisplayProgress) continue
-//                FileSystems.updateFile(
-//                    cmdclickMonitorDirPath,
-//                    UsePath.cmdClickMonitorFileName_1,
-//                    "\ndownload ${rootfsTarGzName} ${progress}"
-//                )
-//            }
-//            // flushing output
-//            output.flush()
-//            // closing streams
-//            output.close()
-//            input.close()
-//        }
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             UsePath.cmdClickMonitorFileName_1,
             "\n\nulafiles start"
         )
-        val ulaFiles = UlaFiles(
+        val ubuntuFiles = UbuntuFiles(
             context,
-            context.applicationInfo.nativeLibraryDir
         )
         val busyboxExecutor = BusyboxExecutor(
             context,
-            ulaFiles,
+            ubuntuFiles,
         )
         if(
-            ulaFiles.ubuntuCompFile.isFile
+            ubuntuFiles.ubuntuCompFile.isFile
         ) {
             busyboxExecutor.executeProotCommand(
                 listOf("bash", "startup.sh"),
@@ -136,7 +78,7 @@ object UbuntuSetUp {
             return
         }
         FileSystems.removeAndCreateDir(
-            ulaFiles.filesOneRootfs.absolutePath
+            ubuntuFiles.filesOneRootfs.absolutePath
         )
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
@@ -145,7 +87,7 @@ object UbuntuSetUp {
         )
         initSetup(
             context,
-            ulaFiles,
+            ubuntuFiles,
         )
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
@@ -158,7 +100,7 @@ object UbuntuSetUp {
                 "chmod",
                 "-R",
                 "777",
-                ulaFiles.supportDir
+                ubuntuFiles.supportDir
             ).joinToString("\t")
         )
         busyboxExecutor.executeScript(
@@ -166,54 +108,41 @@ object UbuntuSetUp {
             UsePath.cmdClickMonitorFileName_1
         )
         FileSystems.removeFiles(
-            ulaFiles.filesDir.absolutePath,
+            ubuntuFiles.filesDir.absolutePath,
             rootfsTarGzName
         )
-//        busyboxExecutor.extractRootFs(
-//            monitorFileName = UsePath.cmdClickMonitorFileName_1
-//        )
-        ulaFiles.filesOneRootfsSupportDir.mkdirs()
+        ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
             AssetsFileManager.ubunutSupportDirPath,
             "ubuntu_setup",
-            ulaFiles.filesOneRootfs.absolutePath
+            ubuntuFiles.filesOneRootfs.absolutePath
         )
-        ulaFiles.filesOneRootfsSupportCommonDir.mkdirs()
-        ulaFiles.filesOneRootfsStorageDir.mkdir()
+        ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
+        ubuntuFiles.filesOneRootfsStorageDir.mkdir()
 //        ulaFiles.filesOneRootfsStorageEmurated0Dir.mkdirs()
-        ulaFiles.filesOneRootfsUsrLocalBinSudo.mkdirs()
-        ulaFiles.filesOneRootfsEtcDProfileDir.mkdir()
+        ubuntuFiles.filesOneRootfsUsrLocalBinSudo.mkdirs()
+        ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             UsePath.cmdClickMonitorFileName_1,
             "\n\nsupport copy start"
         )
-        val rootfsSupportDir =  File("${ulaFiles.filesOneRootfs}/support")
+        val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
         if(!rootfsSupportDir.isDirectory) rootfsSupportDir.mkdir()
         FileSystems.writeFile(
-        "${ulaFiles.filesOneRootfs}/support",
+        "${ubuntuFiles.filesOneRootfs}/support",
             "default.pa",
             AssetsFileManager.readFromAssets(
                 cmdIndexFragment.context,
                 AssetsFileManager.etcPulseDefaultPa
             )
         )
-//        "${ulaFiles.documentDirPath}/rootfs/support"
-//        File("${ulaFiles.documentDirPath}/rootfs/support").copyRecursively(
-//            rootfsSupportDir,
-//            overwrite = true,
-//            onError = { file, exception ->
-//                OnErrorAction.SKIP
-//                // do something with file or exception
-//                // the last expression must be of type OnErrorAction
-//            }
-//        )
         val lsResult = LinuxCmd.exec(
             cmdIndexFragment,
             listOf(
                 "ls",
-                ulaFiles.filesOneRootfs.absolutePath
+                ubuntuFiles.filesOneRootfs.absolutePath
             ).joinToString("\t")
         )
         FileSystems.updateFile(
@@ -222,7 +151,7 @@ object UbuntuSetUp {
             "\n\nlsResult: ${lsResult}"
         )
         FileSystems.writeFile(
-            ulaFiles.filesOneRootfs.absolutePath,
+            ubuntuFiles.filesOneRootfs.absolutePath,
             "startup.sh",
             AssetsFileManager.readFromAssets(
                 cmdIndexFragment.context,
@@ -269,7 +198,7 @@ object UbuntuSetUp {
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
                     monitorFileName,
-                    "download $rootfsTarGzName $progress"
+                    "download $rootfsTarGzName ${progress}%"
                 )
             }
             // flushing output
@@ -282,10 +211,10 @@ object UbuntuSetUp {
 
     private fun initSetup(
         context: Context?,
-        ulaFiles: UlaFiles,
+        ubuntuFiles: UbuntuFiles,
     ){
         FileSystems.createDirs(
-            ulaFiles.supportDir.absolutePath
+            ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
@@ -301,17 +230,8 @@ object UbuntuSetUp {
             context,
             AssetsFileManager.ubunutSupportDirPath,
             "ubuntu_setup",
-            ulaFiles.supportDir.absolutePath
+            ubuntuFiles.supportDir.absolutePath
         )
-//        docSupportDir.copyRecursively(
-//            supportDir,
-//            overwrite = true,
-//            onError = { file, exception ->
-//                OnErrorAction.SKIP
-//                // do something with file or exception
-//                // the last expression must be of type OnErrorAction
-//            }
-//        )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
             UsePath.cmdClickMonitorFileName_1,
@@ -322,14 +242,14 @@ object UbuntuSetUp {
                 ).readText()
             }\n\nchmod start"
         )
-        ulaFiles.supportDir.listFiles()?.forEach {
-            ulaFiles.makePermissionsUsable(
-                ulaFiles.supportDir.absolutePath,
+        ubuntuFiles.supportDir.listFiles()?.forEach {
+            ubuntuFiles.makePermissionsUsable(
+                ubuntuFiles.supportDir.absolutePath,
                 it.name
             )
         }
         FileSystems.createDirs(
-            ulaFiles.filesOneRootfs.absolutePath
+            ubuntuFiles.filesOneRootfs.absolutePath
         )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
@@ -343,31 +263,18 @@ object UbuntuSetUp {
         )
         FileSystems.copyFile(
             downloadRootfsTarGzPath,
-            "${ulaFiles.filesDir}/${rootfsTarGzName}"
+            "${ubuntuFiles.filesDir}/${rootfsTarGzName}"
         )
 
-        ulaFiles.makePermissionsUsable(
-            ulaFiles.filesOneRootfs.absolutePath,
+        ubuntuFiles.makePermissionsUsable(
+            ubuntuFiles.filesOneRootfs.absolutePath,
             "rootfs.tar.gz"
         )
         File(
-            "${ulaFiles.filesOneRootfs.absolutePath}/.success_filesystem_extraction"
+            "${ubuntuFiles.filesOneRootfs.absolutePath}/.success_filesystem_extraction"
         ).createNewFile()
-//        File(
-//            "${filesOneRootfs.absolutePath}/support/.proot_version"
-//        ).writeText(String())
-        File(
-            "${ulaFiles.documentDirPath}/1RootfsSupport.txt"
-        ).writeText(
-            "${ulaFiles.filesOneRootfs.absolutePath}/support\n${
-                File(
-                    "${ulaFiles.filesOneRootfs.absolutePath}/support"
-                ).list()?.joinToString("\n")
-                    ?: String()
-            }"
-        )
-        ulaFiles.emulatedUserDir.mkdirs()
-        ulaFiles.sdCardUserDir?.mkdirs()
-        ulaFiles.setupLinks()
+        ubuntuFiles.emulatedUserDir.mkdirs()
+        ubuntuFiles.sdCardUserDir?.mkdirs()
+        ubuntuFiles.setupLinks()
     }
 }

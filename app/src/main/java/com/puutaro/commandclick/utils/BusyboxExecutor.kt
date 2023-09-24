@@ -11,9 +11,9 @@ import java.io.File
 
 class BusyboxExecutor(
     private val context: Context?,
-    private val ulaFiles: UlaFiles,
+    private val ubuntuFiles: UbuntuFiles,
 //    private val prootDebugLogger: ProotDebugLogger,
-    private val busyboxWrapper: BusyboxWrapper = BusyboxWrapper(ulaFiles)
+    private val busyboxWrapper: BusyboxWrapper = BusyboxWrapper(ubuntuFiles)
 ) {
     private val className = this::class.java.name
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
@@ -51,7 +51,7 @@ class BusyboxExecutor(
 
         val env = busyboxWrapper.getBusyboxEnv()
         val processBuilder = ProcessBuilder(command)
-        processBuilder.directory(ulaFiles.filesDir)
+        processBuilder.directory(ubuntuFiles.filesDir)
         processBuilder.environment().putAll(env)
         processBuilder.redirectErrorStream(true)
 
@@ -96,7 +96,7 @@ class BusyboxExecutor(
         }
         val updatedCommand = busyboxWrapper.addBusyboxAndExtractRootfsShell()
         val filesystemDir = File(
-            ulaFiles.filesOneRootfs.absolutePath
+            ubuntuFiles.filesOneRootfs.absolutePath
         )
         env.putAll(
             busyboxWrapper.getProotEnv(
@@ -106,7 +106,7 @@ class BusyboxExecutor(
         )
 
         val processBuilder = ProcessBuilder(updatedCommand)
-        processBuilder.directory(ulaFiles.filesDir)
+        processBuilder.directory(ubuntuFiles.filesDir)
         processBuilder.environment().putAll(env)
         processBuilder.redirectErrorStream(true)
 
@@ -185,7 +185,7 @@ class BusyboxExecutor(
 
         val updatedCommand = busyboxWrapper.addBusyboxAndProot(command)
         val filesystemDir = File(
-            ulaFiles.filesOneRootfs.absolutePath
+            ubuntuFiles.filesOneRootfs.absolutePath
         )
         env.putAll(
             busyboxWrapper.getProotEnv(
@@ -195,7 +195,7 @@ class BusyboxExecutor(
         )
 
         val processBuilder = ProcessBuilder(updatedCommand)
-        processBuilder.directory(ulaFiles.filesDir)
+        processBuilder.directory(ubuntuFiles.filesDir)
         processBuilder.environment().putAll(env)
         processBuilder.redirectErrorStream(true)
 
@@ -274,35 +274,35 @@ class BusyboxExecutor(
 }
 
 // This class is intended to allow stubbing of elements that are unavailable during unit tests.
-class BusyboxWrapper(private val ulaFiles: UlaFiles) {
+class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
     // For basic commands, CWD should be `applicationFilesDir`
     fun wrapCommand(command: String): List<String> {
-        return listOf(ulaFiles.busybox.path, "sh", "-c", command)
+        return listOf(ubuntuFiles.busybox.path, "sh", "-c", command)
     }
 
     fun wrapScript(command: String): List<String> {
-        return listOf(ulaFiles.busybox.path, "sh") + command.split(" ")
+        return listOf(ubuntuFiles.busybox.path, "sh") + command.split(" ")
     }
 
     fun getBusyboxEnv(): HashMap<String, String> {
         return hashMapOf(
-                "LIB_PATH" to ulaFiles.supportDir.absolutePath,
-                "ROOT_PATH" to ulaFiles.filesDir.absolutePath,
-                "ROOTFS_PATH" to ulaFiles.filesOneRootfs.absolutePath,
+                "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
+                "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
+                "ROOTFS_PATH" to ubuntuFiles.filesOneRootfs.absolutePath,
         )
     }
 
     fun busyboxIsPresent(): Boolean {
-        return ulaFiles.busybox.exists()
+        return ubuntuFiles.busybox.exists()
     }
 
     // Proot scripts expect CWD to be `applicationFilesDir/<filesystem`
     fun addBusyboxAndProot(command: List<String>): List<String> {
-        return listOf(ulaFiles.busybox.absolutePath, "sh", "support/execInProot.sh") + command
+        return listOf(ubuntuFiles.busybox.absolutePath, "sh", "support/execInProot.sh") + command
     }
 
     fun addBusyboxAndExtractRootfsShell(): List<String> {
-        return listOf(ulaFiles.busybox.absolutePath, "sh", "support/extractRootfs.sh")
+        return listOf(ubuntuFiles.busybox.absolutePath, "sh", "support/extractRootfs.sh")
     }
 
     fun getProotEnv(
@@ -312,15 +312,15 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
     ): HashMap<String, String> {
         // TODO This hack should be removed once there are no users on releases 2.5.14 - 2.6.1
         handleHangingBindingDirectories(rootfsDir)
-        val emulatedStorageBinding = "-b ${ulaFiles.emulatedUserDir.absolutePath}:/storage/internal"
-        val externalStorageBinding = ulaFiles.sdCardUserDir?.run {
+        val emulatedStorageBinding = "-b ${ubuntuFiles.emulatedUserDir.absolutePath}:/storage/internal"
+        val externalStorageBinding = ubuntuFiles.sdCardUserDir?.run {
             "-b ${this.absolutePath}:/storage/sdcard"
         } ?: ""
         val bindings = "$emulatedStorageBinding $externalStorageBinding"
         return hashMapOf(
-                "LD_LIBRARY_PATH" to ulaFiles.supportDir.absolutePath,
-                "LIB_PATH" to ulaFiles.supportDir.absolutePath,
-                "ROOT_PATH" to ulaFiles.filesDir.absolutePath,
+                "LD_LIBRARY_PATH" to ubuntuFiles.supportDir.absolutePath,
+                "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
+                "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
                 "ROOTFS_PATH" to rootfsDir.absolutePath,
 //                "PROOT_DEBUG_LEVEL" to prootDebugLevel,
                 "EXTRA_BINDINGS" to bindings,
@@ -330,11 +330,11 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
     }
 
     fun prootIsPresent(): Boolean {
-        return ulaFiles.proot.exists()
+        return ubuntuFiles.proot.exists()
     }
 
     fun executionScriptIsPresent(): Boolean {
-        val execInProotFile = File(ulaFiles.supportDir, "execInProot.sh")
+        val execInProotFile = File(ubuntuFiles.supportDir, "execInProot.sh")
         return execInProotFile.exists()
     }
 
