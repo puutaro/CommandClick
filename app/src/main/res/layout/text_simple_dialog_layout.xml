@@ -55,6 +55,7 @@
                 android:divider="@null"
                 android:textSize="18sp"
                 android:textColor="@color/cmdclick_text_black"
+                android:textIsSelectable="true"
                 android:dividerHeight="0dp"
                 />
         </ScrollView>
