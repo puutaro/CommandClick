@@ -1,8 +1,12 @@
 #!/bin/bash
 
+CREATE_IMAGE=""
 export DEBIAN_FRONTEND=noninteractive
 R_USER="cmdclick"
-
+UBUNTU_COMP_FILE="/storage/emulated/0/Documents/cmdclick/AppDir/default/ubuntuComp.txt"
+SSH_PORT=10022
+WEB_SSH_TERM_PORT=18080
+CMD_PORT=15000
 
 install_pip3_pkg(){
 	local package="${1:-}"
@@ -90,31 +94,16 @@ add_user(){
 	test -n "${is_user}" \
 	&& return
 	if [ -z "${is_user}"  ]; then
-		touch aa.txt
-		ls -l
-		echo --id
-		id
 		echo add user
 		echo -- no passwd
 		echo "root:$R_USER" | chpasswd
 		setup_sudo
 		setup_user
-	
-		echo --- touch /external/touch.txt
-		touch /external/touch.txt
-		echo --- ls -l /external/touch.txt
-		ls -l /external/touch.txt
-		echo --- id
-		id
-		echo -- sudo ls by root
-		sudo ls -l
 	fi
 }
 
 dpkg_err_solution(){
 	echo "### $FUNCNAME"
-	echo --- dpkg --configure -a
-	dpkg --configure -a
 	echo --- rm -rf /var/lib/dpkg/info/
 	rm -rf /var/lib/dpkg/info/*
 	echo -- upgrade
@@ -164,8 +153,8 @@ install_add_repository(){
 	dpkg_err_solution
 }
 
-install_golang_and_server(){
-	echo "## install_golang_and_server"
+install_golang_and_go_package(){
+	echo "## $FUNCNAME"
 	su - "${R_USER}" <<-EOF
 	echo --- add-apt-repository -y ppa:longsleep/golang-backports
 	sudo add-apt-repository -y ppa:longsleep/golang-backports
@@ -187,68 +176,25 @@ install_golang_and_server(){
 			;;
 	esac
 	go version
-	go install github.com/skanehira/rtty@latest
+	go install github.com/msoap/shell2http@latest
+	# go install github.com/skanehira/rtty@latest
 	export GOPATH=\$HOME/go
 	export GOBIN=\$GOPATH/bin
 	export PATH=\$PATH:\$GOBIN
-	\$HOME/go/bin/rtty run bash -a 127.0.0.1 -p 20080 --font "Cica Regular" --font-size 20
+	# \$HOME/go/bin/rtty run bash -a 127.0.0.1 -p 20080 --font "Cica Regular" --font-size 20
 	EOF
 }
 
-
-install_python_ssh_server(){
+setup_dropbear_sshserver(){
 	echo "### $FUNCNAME"
-	su - "${R_USER}" <<-EOF
-		echo --- sudo apt install -y python3-pip
-		pip_package="python3-pip"
-		is_installed=\$(\
-			apt list --installed \
-			| grep "\${pip_package}" \
-		)
-		case "\${is_installed}" in
-			"") 
-				sudo apt install -y "\${pip_package}"
-				;;
-			*)
-				echo "installed: \${pip_package}"
-				;;
-		esac
-		# sudo apt install -y python3-pip
-		wget https://bootstrap.pypa.io/get-pip.py
-		python3 get-pip.py
-		echo --- pip3 install webssh
-		pip3 install webssh
-		echo --- "wssh --address=127.0.0.1 --port=18080"
-		wssh --address='127.0.0.1' --port=18080
-		while true;
-		do 
-			sleep 1; 
-			echo -n ssh[\${waitTimes}]..
-			waitTimes=\$(( waitTimes + 1 ))
-		done
-	EOF
-}
-
-install_opensshserver(){
-	echo "### $FUNCNAME"
-	dropbear_package="dropbear"
-	local is_installed=$(\
-		apt list --installed | grep "${dropbear_package}"\
-	)
-	case "${is_installed}" in
-		"")
-			echo --- install_opensshserver
-			apt-get install -y "${dropbear_package}"
-
-		  	dropbearkey -t dss -s 1024 -f /etc/dropbear/dropbear_dss_host_key
-		    dropbearkey -t rsa -s 2048 -f /etc/dropbear/dropbear_rsa_host_key
-		    dropbearkey -t ecdsa -s 521 -f /etc/dropbear/dropbear_ecdsa_host_key
-		 ;;
-	esac
-	dropbear -E -p 10022 >/dev/null 2>&1
-	echo "Type bellow command"
-	echo -e "\tssh -p 10022  cmdclick@{your android ip_address}"
-	echo -e "\tpassword: ${R_USER}"
+	echo --- setup_dropbear
+	rm -r \
+		"/etc/dropbear/dropbear_dss_host_key" \
+		"/etc/dropbear/dropbear_rsa_host_key" \
+		"/etc/dropbear/dropbear_ecdsa_host_key"
+  	dropbearkey -t dss -s 1024 -f /etc/dropbear/dropbear_dss_host_key
+    dropbearkey -t rsa -s 2048 -f /etc/dropbear/dropbear_rsa_host_key
+    dropbearkey -t ecdsa -s 521 -f /etc/dropbear/dropbear_ecdsa_host_key
 }
 
 startup_launch_cmd(){
@@ -263,71 +209,27 @@ startup_launch_cmd(){
 	done
 	espeak "sound quality test sound quality test  sound quality test sound quality test sound quality test sound quality test"
 	
-	echo --- ps aux grep proot 
-	ps aux | grep proot 
+	echo --- launch sshd server
+	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1
+	echo "Type bellow command"
+	echo -e "\tssh -p ${SSH_PORT}  cmdclick@{your android ip_address}"
+	echo -e "\tpassword: ${R_USER}"
 	echo --- wssh start
-	wssh --address='192.168.0.4' --port=18080 \
+	# 192.168.0.4
+	wssh --address='127.0.0.1' \
+		--port=${WEB_SSH_TERM_PORT} \
 		>/dev/null 2>&1 &
-	
+	echo --- launch shell2http
+	shell2http \
+		-port ${CMD_PORT} \
+		/bash "bash \$HOME/cmd/cmd.sh" \
+		>/dev/null 2>&1 &
 	# echo --- kill pulse
 	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
 	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
 	EOF
 }
 
-
-user_cmd_sudo_test(){
-	echo "### $FUNCNAME"
-	su - "${R_USER}" <<-EOF
-	echo -- sudo ls by "${R_USER}"
-	sudo ls -l
-	echo --- sudo apt-get install -y jq
-	jq_package="jq"
-	is_installed=\$(\
-		apt list --installed \
-		| grep "\${jq_package}" \
-	)
-	case "\${is_installed}" in
-		"") 
-			sudo apt install -y "\${jq_package}"
-			;;
-		*)
-			echo "installed: \${jq_package}"
-			;;
-	esac
-	sudo apt-get install -y jq
-	echo --- touch touch.txt
-	touch touch.txt
-	echo --- chown ${R_USER}:${R_USER} touch.txt
-	chown ${R_USER}:${R_USER} touch.txt
-	echo --- apt install -y jq
-	jq_package="jq"
-	is_installed=\$(\
-		apt list --installed \
-		| grep "\${jq_package}" \
-	)
-	case "\${is_installed}" in
-		"") 
-			apt install -y "\${jq_package}"
-			;;
-		*)
-			echo "installed: \${jq_package}"
-			;;
-	esac
-	echo --- ls -l
-	ls -l
-	echo --- ls -l /etc/sudo.conf
-	ls -l /etc/sudo.conf
-	echo --- ls -l / 
-	ls -l /
-	echo --- ls -l /external/touch.txt
-	ls -l /external/touch.txt
-	echo --- id
-	id
-	echo --- which su
-	which su
-	EOF
-}
 
 make_package_list(){
 	local packages="${1:-}"
@@ -346,39 +248,49 @@ make_package_list(){
 
 install_require_pacakges(){
 	echo "### $FUNCNAME"
+	install_pulseaudio
 	local require_packages=$(\
 		make_package_list "
 			curl 
 			sudo 
 			fakeroot
-			colorized-logs
+			git
+			dropbear
 			espeak
 			python3-pip
 			" \
 	)
 	apt-get install -y ${require_packages}
-	# apt_install git
+	# nano
+	# 		less
+	# install_add_repository
 	# apt_install make
 	# apt_install wget
-	# apt_install nano
-	# apt_install less
-	install_pip3_pkg webssh
-	# install_user_package
-}
-
-
-install_base_pkg(){
-	echo "### ${FUNCNAME}"
-	apt-get update -y && apt-get upgrade -y
-	install_pulseaudio
-	install_require_pacakges
 	# apt_install \
 	# 	"firmware-sof-signed"
 	# apt_install \
 	# 	"initramfs-tools"
 	# apt_install man
 	# apt_install manpages-dev
-	# install_add_repository
+	# install_user_package
+}
+
+install_shell2http(){
+	local package_name="shell2http_1.16.0_linux_arm64.deb"
+	curl \
+		-L https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_arm64.deb \
+		> "${package_name}"
+	dpkg -i "${package_name}"
+	rm -f "${package_name}"
+}
+
+
+install_base_pkg(){
+	echo "### ${FUNCNAME}"
+	apt-get update -y && apt-get upgrade -y
+	install_require_pacakges
+	install_pip3_pkg webssh
+	install_shell2http
 }
 
 install_user_package(){
@@ -402,7 +314,6 @@ install_nodjs(){
 	apt-get install -y nodejs
 }
 
-
 wait_cmd(){
 	while true; 
 	do 
@@ -411,17 +322,17 @@ wait_cmd(){
 }
 
 
-install_base_pkg
-add_user
-install_opensshserver
+if [ ! -f "${UBUNTU_COMP_FILE}" ] \
+		&& [ "${CREATE_IMAGE}" = "on" ];then
+	install_base_pkg
+	add_user
+fi
+if [ ! -f "${UBUNTU_COMP_FILE}" ];then \
+	apt-get install -y sudo
+	setup_dropbear_sshserver
+	touch "${UBUNTU_COMP_FILE}"
+fi
 startup_launch_cmd
 wait_cmd
 exit 0
-install_golang_and_server
-
-exit 0
-# user_cmd_sudo_test
-install_python_ssh_server
-exit 0
-echo --
-user_cmd_sudo_test
+install_golang_and_go_package

@@ -94,21 +94,26 @@ chmod -R 777 "${ROOTFS_PATH}"
 
 # export "LD_PRELOAD=$LIB_PATH/libdisableselinux.so $LIB_PATH/libandroid-shmem-aarch64.so"
 
-files_dir="/data/data/com.puutaro.commandclick/files/"
-rootfs_dir="/data/data/com.puutaro.commandclick/files/1/rootfs/"
-cd "${files_dir}"
+# files_dir="/data/data/com.puutaro.commandclick/files/"
+# rootfs_dir="/data/data/com.puutaro.commandclick/files/1/rootfs/"
+cd "${ROOT_PATH}"
 echo --- pwd
 pwd
 echo --- ls
 ls
-tar -xzvf rootfs.tar.gz \
+tar \
+--no-same-owner \
+-xzvf \
+rootfs.tar.gz \
 --exclude sys \
 --exclude dev \
 --exclude proc \
 --exclude mnt \
 --exclude support \
--C "${rootfs_dir}" \
+-C "${ROOTFS_PATH}" \
 >/dev/null
+
+# --no-same-permissions \
 exit 0
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 PROOT_TMP_DIR=$ROOTFS_PATH/support/ \

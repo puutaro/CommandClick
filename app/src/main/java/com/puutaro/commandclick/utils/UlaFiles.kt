@@ -34,7 +34,10 @@ class UlaFiles(
     val proot = File(supportDir, "proot")
     val documentDirPath = "${Environment.getExternalStorageDirectory().absolutePath}/" +
             Environment.DIRECTORY_DOCUMENTS
-        val filesOneRootfs = File("${filesDir}/1/rootfs")
+    val filesOneRootfs = File("${filesDir}/1/rootfs")
+    val filesOneRootfsHomeCmdclickCmdDir =
+        File("${filesOneRootfs.absolutePath}/home/cmdclick/cmd")
+    val cmdShell = "cmd.sh"
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
     val filesOneRootfsSupportCommonDir =
@@ -45,8 +48,10 @@ class UlaFiles(
         File("${filesOneRootfsEtcDir.absolutePath}/profile.d")
     val filesOneRootfsUsrLocalBinSudo =
         File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
+    val filesOneRootfsStorageDir =
+        File("${filesOneRootfs.absolutePath}/storage")
     val filesOneRootfsStorageEmurated0Dir =
-        File("${filesOneRootfs.absolutePath}/storage/emulated/0")
+        File("${filesOneRootfsStorageDir.absolutePath}/emulated/0")
     val docSupportDir = File("${documentDirPath}/support")
     val docRootfsDir = File("${documentDirPath}/rootfs")
     val downloadDirPath = UbuntuSetPath.downlaodDirPath

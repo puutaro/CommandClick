@@ -5,6 +5,7 @@ import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.CmdIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCmd
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCurl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
@@ -150,6 +151,10 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsHtml(terminalFragment),
             JsInterfaceVariant.jsHtml.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsCmd(terminalFragment),
+            JsInterfaceVariant.jsCmd.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),

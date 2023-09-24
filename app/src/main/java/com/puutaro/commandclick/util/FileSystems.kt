@@ -317,4 +317,21 @@ object FileSystems {
             dirPath
         )
     }
+
+    fun updateFile(
+        dirPath: String,
+        fileName: String,
+        updateCon: String,
+    ){
+        val currentCon =
+            ReadText(
+                dirPath,
+                fileName,
+            ).readText()
+        writeFile(
+            dirPath,
+            fileName,
+            "${currentCon}\n${updateCon}"
+        )
+    }
 }

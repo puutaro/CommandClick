@@ -1,52 +1,52 @@
 package com.puutaro.commandclick.utils
 
-import android.util.Log
+import android.content.Context
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.io.BufferedReader
 import java.io.File
-import java.io.InputStream
-import java.io.InputStreamReader
-import java.nio.charset.Charset
 
-sealed class ExecutionResult
-data class MissingExecutionAsset(val asset: String) : ExecutionResult()
-object SuccessfulExecution : ExecutionResult()
-data class FailedExecution(val reason: String) : ExecutionResult()
-data class OngoingExecution(val process: Process) : ExecutionResult()
 
 class BusyboxExecutor(
+    private val context: Context?,
     private val ulaFiles: UlaFiles,
 //    private val prootDebugLogger: ProotDebugLogger,
     private val busyboxWrapper: BusyboxWrapper = BusyboxWrapper(ulaFiles)
 ) {
-
-    private val discardOutput: (String) -> Any = { Log.d("busybox", it) }
+    private val className = this::class.java.name
+    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
 
     fun executeScript(
         scriptCall: String,
-        listener: (String) -> Any = discardOutput
-    ): ExecutionResult {
+        monitorFileName: String
+    ) {
         val updatedCommand = busyboxWrapper.wrapScript(scriptCall)
 
-        return runCommand(updatedCommand, listener)
+        return runCommand(updatedCommand, monitorFileName)
     }
 
-    fun executeCommand(
+    private fun executeCommand(
         command: String,
-        listener: (String) -> Any = discardOutput
-    ): ExecutionResult {
+        monitorFileName: String
+    ) {
         val updatedCommand = busyboxWrapper.wrapCommand(command)
 
-        return runCommand(updatedCommand, listener)
+        return runCommand(updatedCommand, monitorFileName)
     }
 
-    private fun runCommand(command: List<String>, listener: (String) -> Any): ExecutionResult {
+    private fun runCommand(
+        command: List<String>,
+        monitorFileName: String
+    ) {
+        val functionName = object{}.javaClass.enclosingMethod?.name
         if (!busyboxWrapper.busyboxIsPresent()) {
-            return MissingExecutionAsset("busybox")
+            return FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "${className} ${functionName} no busybox"
+            )
         }
 
         val env = busyboxWrapper.getBusyboxEnv()
@@ -57,10 +57,23 @@ class BusyboxExecutor(
 
         return try {
             val process = processBuilder.start()
-            collectOutput(process.inputStream, listener)
-            getProcessResult(process)
+            streaming(
+                process,
+                monitorFileName
+            )
+            val exitCode = process.waitFor()
+            outputFailureStatus(
+                process,
+                exitCode,
+                "$functionName",
+                monitorFileName
+            )
         } catch (err: Exception) {
-            FailedExecution("$err")
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "$err"
+            )
         }
     }
 
@@ -68,33 +81,27 @@ class BusyboxExecutor(
     fun extractRootFs(
 //        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
-//        listener: (String) -> Any = discardOutput,
-//        coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    ): ExecutionResult {
+        monitorFileName: String
+    ) {
+        val functionName = object{}.javaClass.enclosingMethod?.name
         when {
-            !busyboxWrapper.busyboxIsPresent() ->
-                return MissingExecutionAsset("busybox")
-            !busyboxWrapper.prootIsPresent() ->
-                return MissingExecutionAsset("proot")
-            !busyboxWrapper.executionScriptIsPresent() ->
-                return MissingExecutionAsset("execution script")
+            !busyboxWrapper.busyboxIsPresent() -> {
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    "${className} ${functionName}, no busybox"
+                )
+                return
+            }
         }
-
-//        val prootDebugEnabled = prootDebugLogger.isEnabled
-//        val prootDebugLevel =
-//                if (prootDebugEnabled) prootDebugLogger.verbosityLevel else "-1"
-
         val updatedCommand = busyboxWrapper.addBusyboxAndExtractRootfsShell()
         val filesystemDir = File(
             ulaFiles.filesOneRootfs.absolutePath
         )
-//            File("${ulaFiles.filesDir.absolutePath}/$filesystemDirName")
-
-
         env.putAll(
             busyboxWrapper.getProotEnv(
+                context,
                 filesystemDir,
-//                prootDebugLevel
             )
         )
 
@@ -108,33 +115,36 @@ class BusyboxExecutor(
             val inputStream = process.inputStream
             val reader = inputStream.bufferedReader(Charsets.UTF_8)
             reader.forEachLine { line ->
-                FileSystems.writeFile(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                    "${ReadText(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1,
-                    ).readText()}\n$line"
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    line
                 )
             }
             reader.close()
             val errStream = process.errorStream
             val errReader = errStream.bufferedReader(Charsets.UTF_8)
             errReader.forEachLine { line ->
-                FileSystems.writeFile(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                    "${ReadText(
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1,
-                    ).readText()}\n$line"
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    line
                 )
             }
             errReader.close()
-            val output = process.waitFor()
-            FailedExecution("ok")
+            val exitCode = process.waitFor()
+            outputFailureStatus(
+                process,
+                exitCode,
+                functionName,
+                monitorFileName
+            )
         } catch (err: Exception) {
-            FailedExecution("$err")
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "${className} ${functionName} ${err}"
+            )
         }
     }
 
@@ -143,40 +153,44 @@ class BusyboxExecutor(
 //        filesystemDirName: String,
 //        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
-        outputType: TerminalOutputType = TerminalOutputType.Streaming
-//        listener: (String) -> Any = discardOutput,
-//        coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
-    ): String {
+        monitorFileName: String
+    ) {
+        val functionName = object{}.javaClass.enclosingMethod?.name
         when {
             !busyboxWrapper.busyboxIsPresent() -> {
-                Log.e(this::class.java.name, "no busybox")
-                return String()
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    "${className} ${functionName}, no busybox"
+                )
+                return
             }
             !busyboxWrapper.prootIsPresent() -> {
-                Log.e(this::class.java.name, "no proot cmd")
-                return String()
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    "${className} ${functionName}, no proot cmd"
+                )
+                return
             }
             !busyboxWrapper.executionScriptIsPresent() -> {
-                Log.e(this::class.java.name, "no execution script")
-                return String()
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    "${className} ${functionName}, no execution script"
+                )
+                return
             }
         }
-
-//        val prootDebugEnabled = prootDebugLogger.isEnabled
-//        val prootDebugLevel =
-//                if (prootDebugEnabled) prootDebugLogger.verbosityLevel else "-1"
 
         val updatedCommand = busyboxWrapper.addBusyboxAndProot(command)
         val filesystemDir = File(
             ulaFiles.filesOneRootfs.absolutePath
         )
-//            File("${ulaFiles.filesDir.absolutePath}/$filesystemDirName")
-
-
         env.putAll(
             busyboxWrapper.getProotEnv(
+                context,
                 filesystemDir,
-//                prootDebugLevel
             )
         )
 
@@ -187,127 +201,75 @@ class BusyboxExecutor(
 
         try {
             val process = processBuilder.start()
-
-            when(outputType){
-                TerminalOutputType.last -> {
-                    val pid = process.waitFor()
-                    return lastOutput(process)
-//                  TODO after implement (change return type?)
-                }
-                TerminalOutputType.No -> {
-                    streaming(
-                        process,
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_2
-                    )
-
-                }
-                TerminalOutputType.Streaming -> {
-                    streaming(
-                        process,
-                        UsePath.cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_1
-                    )
-                }
-            }
-            val output = process.waitFor()
-            return String()
-
+            streaming(
+                process,
+                monitorFileName
+            )
+            val exitCode = process.waitFor()
+            outputFailureStatus(
+                process,
+                exitCode,
+                functionName,
+                monitorFileName
+            )
         } catch (err: Exception) {
-            Log.e(this::class.java.name, "$err")
-            return String()
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "${className} ${functionName} ${err}"
+            )
         }
     }
 
-    suspend fun recursivelyDelete(absolutePath: String): ExecutionResult = withContext(Dispatchers.IO) {
+    private fun outputFailureStatus(
+        process: Process,
+        exitCode: Int,
+        functionName: String?,
+        monitorFileName: String,
+    ){
+        if(exitCode == 0) return
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            monitorFileName,
+            "${className} ${functionName} failure ${process.exitValue()}"
+        )
+    }
+
+    suspend fun recursivelyDelete(
+        monitorFileName: String,
+        absolutePath: String
+    ) = withContext(Dispatchers.IO) {
         val command = "rm -rf $absolutePath"
-        return@withContext executeCommand(command)
-    }
-
-    private fun collectOutput(inputStream: InputStream, listener: (String) -> Any) {
-        val buf = inputStream.bufferedReader(Charsets.UTF_8)
-
-        buf.forEachLine { listener(it) }
-
-        buf.close()
-    }
-
-    private fun getProcessResult(process: Process): ExecutionResult {
-        return if (process.waitFor() == 0) SuccessfulExecution
-        else FailedExecution("Command failed with: ${process.exitValue()}")
+        return@withContext executeCommand(
+            command,
+            monitorFileName
+        )
     }
 
     private fun streaming(
         process: Process,
-        monitorDir: String,
         monitorName: String
     ){
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
         reader.forEachLine { line ->
-            FileSystems.writeFile(
-                UsePath.cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
-                "${ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                ).readText()}\n$line"
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorName,
+                line
             )
         }
         reader.close()
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
-            FileSystems.writeFile(
-                UsePath.cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
-                "${ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                ).readText()}\n$line"
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorName,
+                line
             )
         }
         errReader.close()
-    }
-
-    private fun lastOutput(
-        process: Process
-    ): String {
-        var errContents = String()
-        BufferedReader(
-            InputStreamReader(
-                process.errorStream,
-                Charset.defaultCharset()
-            )
-        ).use { r ->
-            var line: String?
-            while (r.readLine().also { line = it } != null) {
-                errContents += "\n" + line
-//                println(line)
-            }
-        }
-        var outputContents = String()
-        BufferedReader(
-            InputStreamReader(
-                process.inputStream,
-                Charset.defaultCharset()
-            )
-        ).use { r ->
-            var line: String?
-            while (r.readLine().also { line = it } != null) {
-                outputContents += "\n" + line
-//                println(line)
-            }
-        }
-        FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_2,
-            ReadText(
-                UsePath.cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_2
-            ).readText() + "\n" + errContents
-        )
-        return outputContents
     }
 }
 
@@ -325,7 +287,8 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
     fun getBusyboxEnv(): HashMap<String, String> {
         return hashMapOf(
                 "LIB_PATH" to ulaFiles.supportDir.absolutePath,
-                "ROOT_PATH" to ulaFiles.filesDir.absolutePath
+                "ROOT_PATH" to ulaFiles.filesDir.absolutePath,
+                "ROOTFS_PATH" to ulaFiles.filesOneRootfs.absolutePath,
         )
     }
 
@@ -343,11 +306,12 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
     }
 
     fun getProotEnv(
-        filesystemDir: File,
+        context: Context?,
+        rootfsDir: File,
 //        prootDebugLevel: String
     ): HashMap<String, String> {
         // TODO This hack should be removed once there are no users on releases 2.5.14 - 2.6.1
-        handleHangingBindingDirectories(filesystemDir)
+        handleHangingBindingDirectories(rootfsDir)
         val emulatedStorageBinding = "-b ${ulaFiles.emulatedUserDir.absolutePath}:/storage/internal"
         val externalStorageBinding = ulaFiles.sdCardUserDir?.run {
             "-b ${this.absolutePath}:/storage/sdcard"
@@ -357,10 +321,11 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
                 "LD_LIBRARY_PATH" to ulaFiles.supportDir.absolutePath,
                 "LIB_PATH" to ulaFiles.supportDir.absolutePath,
                 "ROOT_PATH" to ulaFiles.filesDir.absolutePath,
-                "ROOTFS_PATH" to filesystemDir.absolutePath,
+                "ROOTFS_PATH" to rootfsDir.absolutePath,
 //                "PROOT_DEBUG_LEVEL" to prootDebugLevel,
                 "EXTRA_BINDINGS" to bindings,
-                "OS_VERSION" to System.getProperty("os.version")!!
+                "OS_VERSION" to System.getProperty("os.version")!!,
+                "IP_V4_ADDRESS" to NetworkTool.getIpv4Address(context)
         )
     }
 
@@ -392,10 +357,4 @@ class BusyboxWrapper(private val ulaFiles: UlaFiles) {
             sdCardBindingDir.delete()
         }
     }
-}
-
-enum class TerminalOutputType {
-    No,
-    Streaming,
-    last,
 }
