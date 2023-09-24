@@ -194,7 +194,7 @@ object WebChromeClientSetter {
             ): Boolean {
                 val context = terminalFragment.context
                     ?: return true
-                
+
                 promptDialogObj = Dialog(
                     context
                 )
