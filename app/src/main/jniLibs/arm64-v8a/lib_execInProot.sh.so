@@ -28,25 +28,7 @@ if [[ ! -r /proc/version ]] ; then
 	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/version:/proc/version" 
 fi
 
-#save what proot version we are using, so we cannot mess this up later
-#will make future major upgrades easier
-# if [ -f $ROOTFS_PATH/support/.success_filesystem_extraction ]; then
-# 	if [ ! -f $ROOTFS_PATH/support/.proot_version ]; then
-# 		if [ -d $ROOTFS_PATH/support/meta_db ]; then
-# 			$LIB_PATH/busybox echo "_meta_leveldb" > $ROOTFS_PATH/support/.proot_version
-# 		else
-# 			$LIB_PATH/busybox echo "_meta" > $ROOTFS_PATH/support/.proot_version
-# 		fi
-# 	fi
-# else
-# 	if [ ! -f $ROOTFS_PATH/support/.proot_version ]; then
-# 		$LIB_PATH/busybox touch $ROOTFS_PATH/support/.proot_version
-# 	fi
-# fi
-# PROOT_VER=$($LIB_PATH/busybox cat $ROOTFS_PATH/support/.proot_version)
 PROOT="$LIB_PATH/proot"
-#PROOT="$LIB_PATH/proot$PROOT_VER"
-#launch PRoot
 unset LD_PRELOAD
 cd "${ROOTFS_PATH}"
 

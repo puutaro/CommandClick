@@ -16,7 +16,6 @@ class UlaFiles(
     context: Context,
     libDirPath: String,
     private val symlinker: Symlinker = Symlinker(),
-    private val onInit: Boolean = true,
 ) {
 
     val filesDir: File = context.filesDir
@@ -50,120 +49,12 @@ class UlaFiles(
         File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
-    val filesOneRootfsStorageEmurated0Dir =
-        File("${filesOneRootfsStorageDir.absolutePath}/emulated/0")
-    val docSupportDir = File("${documentDirPath}/support")
-    val docRootfsDir = File("${documentDirPath}/rootfs")
     val downloadDirPath = UbuntuSetPath.downlaodDirPath
     val rootfsTarGzName = UbuntuSetPath.rootfsTarGzName
     val downloadRootfsTarGzPath = UbuntuSetPath.downloadRootfsTarGzPath
     val ubuntuCompFile = File(
         "${UsePath.cmdclickDefaultAppDirPath}/ubuntuComp.txt"
     )
-//    init {
-//        initer(context)
-//    }
-
-    fun initer(
-        context: Context?
-    ){
-        if(!onInit) return
-        FileSystems.createDirs(
-            supportDir.absolutePath
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
-            "${
-                ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                ).readText()
-            }\n\nsupport copy start"
-        )
-        AssetsFileManager.copyFileOrDirFromAssets(
-            context,
-            AssetsFileManager.ubunutSupportDirPath,
-            "ubuntu_setup",
-            supportDir.absolutePath
-        )
-//        docSupportDir.copyRecursively(
-//            supportDir,
-//            overwrite = true,
-//            onError = { file, exception ->
-//                OnErrorAction.SKIP
-//                // do something with file or exception
-//                // the last expression must be of type OnErrorAction
-//            }
-//        )
-        FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
-            "${
-                ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                ).readText()
-            }\n\nchmod start"
-        )
-        supportDir.listFiles()?.forEach {
-            makePermissionsUsable(
-                supportDir.absolutePath,
-                it.name
-            )
-        }
-        FileSystems.createDirs(
-            filesOneRootfs.absolutePath
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
-            "${
-                ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
-                ).readText()
-            }\n\nrootfs copy start"
-        )
-        FileSystems.copyFile(
-            downloadRootfsTarGzPath,
-            "${filesDir}/${rootfsTarGzName}"
-        )
-
-        makePermissionsUsable(
-            filesOneRootfs.absolutePath,
-            "rootfs.tar.gz"
-        )
-
-//        docRootfsDir.copyRecursively(
-//            filesOneRootfs,
-//            overwrite = true,
-//            onError = { file, exception ->
-//                OnErrorAction.SKIP
-//                // do something with file or exception
-//                // the last expression must be of type OnErrorAction
-//            }
-//        )
-        File(
-            "${filesOneRootfs.absolutePath}/.success_filesystem_extraction"
-        ).createNewFile()
-//        File(
-//            "${filesOneRootfs.absolutePath}/support/.proot_version"
-//        ).writeText(String())
-        File(
-            "${documentDirPath}/1RootfsSupport.txt"
-        ).writeText(
-            "${filesOneRootfs.absolutePath}/support\n${
-                File(
-                    "${filesOneRootfs.absolutePath}/support"
-                ).list()?.joinToString("\n")
-                    ?: String()
-            }"
-        )
-        emulatedUserDir.mkdirs()
-        sdCardUserDir?.mkdirs()
-        setupLinks()
-    }
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {
         val commandToRun = arrayListOf("chmod", "0777", filename)

@@ -202,11 +202,11 @@ startup_launch_cmd(){
 	echo \$USER
 	echo --- pulseaudio --start
 	curl 127.0.0.1:10081 | sh
-	for sec in \$(seq 5)
-	do
-	  echo \${sec}
-	  sleep 1
-	done
+	# for sec in \$(seq 5)
+	# do
+	#   echo \${sec}
+	#   sleep 1
+	# done
 	espeak "sound quality test sound quality test  sound quality test sound quality test sound quality test sound quality test"
 	
 	echo --- launch sshd server
@@ -326,10 +326,10 @@ if [ ! -f "${UBUNTU_COMP_FILE}" ] \
 		&& [ "${CREATE_IMAGE}" = "on" ];then
 	install_base_pkg
 	add_user
+	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_COMP_FILE}" ];then \
 	apt-get install -y sudo
-	setup_dropbear_sshserver
 	touch "${UBUNTU_COMP_FILE}"
 fi
 startup_launch_cmd
