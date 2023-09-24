@@ -1,23 +1,19 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.os.Handler
 import androidx.lifecycle.*
-import com.puutaro.commandclick.common.variable.ReadLines
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
-import java.time.LocalDateTime
 
 
 object DisplaySwitch {
 
-    private val termUpdateMilitime = 800L
+    private const val termUpdateMiliTime = 800L
     fun update (
         terminalFragment: TerminalFragment,
         terminalViewModel: TerminalViewModel,
@@ -25,7 +21,7 @@ object DisplaySwitch {
         return monitorOutput(
             terminalFragment,
             terminalViewModel,
-            termUpdateMilitime
+            termUpdateMiliTime
         )
     }
 }
@@ -50,11 +46,6 @@ private fun monitorOutput(
                 if(
                     !terminalFragment.firstDisplayUpdate
                 ) return@withContext
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "dispFirstUpdate.txt",
-                    "${LocalDateTime.now()}"
-                )
                 firstSetWebView(
                     terminalFragment,
                     terminalContents,
@@ -88,11 +79,6 @@ private fun monitorOutput(
                     val launchUrl = terminalViewModel.launchUrl
                     terminalViewModel.launchUrl = null
                     withContext(Dispatchers.Main) {
-                        FileSystems.writeFile(
-                            UsePath.cmdclickDefaultAppDirPath,
-                            "dispSecUpdate.txt",
-                            "${LocalDateTime.now()}"
-                        )
                         setWebView(
                             terminalFragment,
                             terminalContents,
@@ -125,27 +111,9 @@ private fun firstSetWebView(
             "text/html",
             "utf-8",
             null
-        );
+        )
     } catch(e: Exception){
         return
-    }
-}
-
-
-private fun updateWebView(
-    terminalFragment: TerminalFragment,
-    terminalContents: String,
-    terminalViewModel: TerminalViewModel
-): Runnable {
-    val launchUrl = terminalViewModel.launchUrl
-    terminalViewModel.launchUrl = null
-    return Runnable {
-        setWebView(
-            terminalFragment,
-            terminalContents,
-            terminalViewModel,
-            launchUrl
-        )
     }
 }
 
@@ -194,28 +162,8 @@ private fun setWebView(
             "text/html",
             "utf-8",
             null
-        );
+        )
     } catch(e: Exception){
         return
     }
-}
-
-
-private fun registerRunner(
-    terminalViewModel: TerminalViewModel? = null,
-    displayUpdateRunner: Runnable?,
-    trminalViewhandler: Handler
-){
-    if(
-        terminalViewModel != null
-        && terminalViewModel.readlinesNum
-        == ReadLines.LONGTH
-    ) return
-    CoroutineScope(Dispatchers.Main).launch {
-
-    }
-    val DisplayUpdateRunner = displayUpdateRunner as Runnable
-    trminalViewhandler.post (
-        DisplayUpdateRunner
-    )
 }
