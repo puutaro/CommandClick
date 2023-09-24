@@ -60,9 +60,9 @@ class UlaFiles(
     val ubuntuCompFile = File(
         "${UsePath.cmdclickDefaultAppDirPath}/ubuntuComp.txt"
     )
-    init {
-        initer(context)
-    }
+//    init {
+//        initer(context)
+//    }
 
     fun initer(
         context: Context?
@@ -194,7 +194,7 @@ class UlaFiles(
     }
 
     @Throws(NullPointerException::class, NoSuchFileException::class, Exception::class)
-    private fun setupLinks() {
+    fun setupLinks() {
         supportDir.mkdirs()
 
         libDir.listFiles()!!.forEach { libFile ->

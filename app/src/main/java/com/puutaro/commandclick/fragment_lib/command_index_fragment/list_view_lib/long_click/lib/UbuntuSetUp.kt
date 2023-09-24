@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
+import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioTrack
@@ -142,6 +143,10 @@ object UbuntuSetUp {
             UsePath.cmdClickMonitorFileName_1,
             "\n\nbysubox instance start"
         )
+        initSetup(
+            context,
+            ulaFiles,
+        )
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             UsePath.cmdClickMonitorFileName_1,
@@ -159,6 +164,10 @@ object UbuntuSetUp {
         busyboxExecutor.executeScript(
             "support/extractRootfs.sh",
             UsePath.cmdClickMonitorFileName_1
+        )
+        FileSystems.removeFiles(
+            ulaFiles.filesDir.absolutePath,
+            rootfsTarGzName
         )
 //        busyboxExecutor.extractRootFs(
 //            monitorFileName = UsePath.cmdClickMonitorFileName_1
@@ -269,5 +278,96 @@ object UbuntuSetUp {
             output.close()
             input.close()
         }
+    }
+
+    private fun initSetup(
+        context: Context?,
+        ulaFiles: UlaFiles,
+    ){
+        FileSystems.createDirs(
+            ulaFiles.supportDir.absolutePath
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickMonitorDirPath,
+            UsePath.cmdClickMonitorFileName_1,
+            "${
+                ReadText(
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()
+            }\n\nsupport copy start"
+        )
+        AssetsFileManager.copyFileOrDirFromAssets(
+            context,
+            AssetsFileManager.ubunutSupportDirPath,
+            "ubuntu_setup",
+            ulaFiles.supportDir.absolutePath
+        )
+//        docSupportDir.copyRecursively(
+//            supportDir,
+//            overwrite = true,
+//            onError = { file, exception ->
+//                OnErrorAction.SKIP
+//                // do something with file or exception
+//                // the last expression must be of type OnErrorAction
+//            }
+//        )
+        FileSystems.writeFile(
+            UsePath.cmdclickMonitorDirPath,
+            UsePath.cmdClickMonitorFileName_1,
+            "${
+                ReadText(
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()
+            }\n\nchmod start"
+        )
+        ulaFiles.supportDir.listFiles()?.forEach {
+            ulaFiles.makePermissionsUsable(
+                ulaFiles.supportDir.absolutePath,
+                it.name
+            )
+        }
+        FileSystems.createDirs(
+            ulaFiles.filesOneRootfs.absolutePath
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickMonitorDirPath,
+            UsePath.cmdClickMonitorFileName_1,
+            "${
+                ReadText(
+                    UsePath.cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_1,
+                ).readText()
+            }\n\nrootfs copy start"
+        )
+        FileSystems.copyFile(
+            downloadRootfsTarGzPath,
+            "${ulaFiles.filesDir}/${rootfsTarGzName}"
+        )
+
+        ulaFiles.makePermissionsUsable(
+            ulaFiles.filesOneRootfs.absolutePath,
+            "rootfs.tar.gz"
+        )
+        File(
+            "${ulaFiles.filesOneRootfs.absolutePath}/.success_filesystem_extraction"
+        ).createNewFile()
+//        File(
+//            "${filesOneRootfs.absolutePath}/support/.proot_version"
+//        ).writeText(String())
+        File(
+            "${ulaFiles.documentDirPath}/1RootfsSupport.txt"
+        ).writeText(
+            "${ulaFiles.filesOneRootfs.absolutePath}/support\n${
+                File(
+                    "${ulaFiles.filesOneRootfs.absolutePath}/support"
+                ).list()?.joinToString("\n")
+                    ?: String()
+            }"
+        )
+        ulaFiles.emulatedUserDir.mkdirs()
+        ulaFiles.sdCardUserDir?.mkdirs()
+        ulaFiles.setupLinks()
     }
 }
