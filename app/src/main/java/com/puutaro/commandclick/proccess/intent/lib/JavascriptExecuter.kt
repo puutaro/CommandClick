@@ -9,6 +9,10 @@ import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JavascriptExecuter {
@@ -68,10 +72,34 @@ object JavascriptExecuter {
         if(
             currentAppDir.isNullOrEmpty()
         ) return
+        val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
+        enableJsLoadInWebView(
+            terminalViewModel
+        )
         ExecJsLoad.jsUrlLaunchHandler(
             fragment,
             "${currentAppDir}/${jsOrHtmlFileObj.name}"
         )
+        cleanUpAfterJsExc(
+            terminalViewModel,
+            tempOnDisplayUpdate,
+        )
 //        terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
+    }
+
+    fun enableJsLoadInWebView(
+        terminalViewModel: TerminalViewModel
+    ){
+        terminalViewModel.onDisplayUpdate = false
+    }
+
+    fun cleanUpAfterJsExc(
+        terminalViewModel: TerminalViewModel,
+        tempOnDisplayUpdate: Boolean,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
+        }
     }
 }

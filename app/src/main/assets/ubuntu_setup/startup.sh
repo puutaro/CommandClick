@@ -200,14 +200,15 @@ setup_dropbear_sshserver(){
 startup_launch_cmd(){
 	su - "${R_USER}" <<-EOF
 	echo \$USER
-	echo --- pulseaudio --start
-	curl 127.0.0.1:10081 | sh
-	# for sec in \$(seq 5)
-	# do
-	#   echo \${sec}
-	#   sleep 1
-	# done
-	espeak "sound quality test sound quality test  sound quality test sound quality test sound quality test sound quality test"
+	while true; 
+	do 
+		echo --- pulseaudio --start
+		curl 127.0.0.1:10081 | sh \
+		&& break
+		echo try pulseaudio
+		sleep 1
+	done	
+	espeak "sound quality test sound quality test"
 	
 	echo --- launch sshd server
 	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1

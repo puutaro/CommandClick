@@ -98,32 +98,32 @@ object ExecJsLoad {
         ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
 
-        val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
-            substituteSettingVariableList,
-            CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
-        ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
-
-        UrlLaunchMacro.launch(
-            terminalViewModel,
-            recentAppDirPath,
-            onUrlLaunchMacro,
-        )
-
-        JavascriptExecuter.exec(
-            currentFragment,
-            terminalViewModel,
-            substituteSettingVariableList,
-            onUrlLaunchMacro,
-        )
         if(
             selectedJsFileName == UsePath.cmdclickStartupJsName
             || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
             || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
-        ) return
+        ) {
+            val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
+                substituteSettingVariableList,
+                CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
+            ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
 
+            UrlLaunchMacro.launch(
+                terminalViewModel,
+                recentAppDirPath,
+                onUrlLaunchMacro,
+            )
+            JavascriptExecuter.exec(
+                currentFragment,
+                terminalViewModel,
+                substituteSettingVariableList,
+                onUrlLaunchMacro,
+            )
+            return
+        }
 
         val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
-        enableJsLoadInWebView(
+        JavascriptExecuter.enableJsLoadInWebView(
             terminalViewModel
         )
         val launchUrlString = JavaScriptLoadUrl.make(
@@ -139,10 +139,10 @@ object ExecJsLoad {
             launchUrlString,
         )
 
-//        cleanUpAfterJsExc(
-//            terminalViewModel,
-//            tempOnDisplayUpdate,
-//        )
+        JavascriptExecuter.cleanUpAfterJsExc(
+            terminalViewModel,
+            tempOnDisplayUpdate,
+        )
 
         JsFilePathToHistory.insert(
             recentAppDirPath,
@@ -234,22 +234,6 @@ object ExecJsLoad {
                 }
                 else -> {}
             }
-        }
-    }
-
-    private fun enableJsLoadInWebView(
-        terminalViewModel: TerminalViewModel
-    ){
-        terminalViewModel.onDisplayUpdate = false
-    }
-
-    private fun cleanUpAfterJsExc(
-        terminalViewModel: TerminalViewModel,
-        tempOnDisplayUpdate: Boolean,
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
-            terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
         }
     }
 }

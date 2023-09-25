@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -26,45 +27,17 @@ class JsCmd(
     fun run(
         url: String,
         executeShellPath:String
-    ){
-        if(context == null) return
+    ): String {
+        if(context == null) return String()
         try {
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} ulaInstanceStart"
-//            )
             val ubuntuFiles = UbuntuFiles(
                 context,
             )
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} busyboxInstanceStart"
-//            )
-//
-//            val busyboxExecutor = BusyboxExecutor(
-//                ulaFiles,
-//            )
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} prootCmdStart"
-//            )
-//            val output = busyboxExecutor.executeProotCommand(
-//                listOf("su", "-", "cmdclick", "-c", "ls"),
-//                outputType = TerminalOutputType.last
-//            )
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} prootCmdEnd\n${output}"
-//            )
             val executeShellObj = File(executeShellPath)
             val executeShellDirPath = executeShellObj.parent
-                ?: return
+                ?: return String()
             val executeShellName = executeShellObj.name
-                ?: return
+                ?: return String()
             FileSystems.writeFile(
                 ubuntuFiles.filesOneRootfsHomeCmdclickCmdDir.absolutePath,
                 ubuntuFiles.cmdShell,
@@ -92,118 +65,27 @@ class JsCmd(
                     currentMonitorFileName,
                     "### ${LocalDateTime.now()}\n no output"
                 )
-                return
+                return String()
             }
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 currentMonitorFileName,
                 "### ${LocalDateTime.now()}\n ${shellOutput}"
             )
+            Toast.makeText(
+                context,
+                shellOutput,
+                Toast.LENGTH_SHORT
+            ).show()
+            return shellOutput
 
-//            val ssh =
-//                sshConnectSetting(
-//                    "192.168.0.4",
-//                    "cmdclick",
-//                    "cmdclick"
-//                )
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} sshCmdStart"
-//            )
-//            // コマンド実行
-//            sessionCommand(
-//                ssh.startSession(),
-//                "ls",
-//                5
-//            )
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} sshCmdEnd"
-//            )
-//            ssh.disconnect()
         } catch (e: Exception) {
             FileSystems.writeFile(
                 cmdclickDefaultAppDirPath,
                 "prootError.txt",
                 "### ${LocalDateTime.now()}\n${e.toString()}"
             )
+            return String()
         }
     }
-
-//    @Throws(IOException::class)
-//    private fun sessionCommand(session: Session, command: String, timeout: Long) {
-//        try {
-//            val cmd: Session.Command = session.exec(command)
-//            val output = IOUtils.readFully(cmd.inputStream).toString()
-//            cmd.join(timeout, TimeUnit.SECONDS)
-//            FileSystems.writeFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                ReadText(
-//                    cmdclickMonitorDirPath,
-//                    currentMonitorFileName,
-//                ).readText() + "\n${output}"
-//            )
-//            System.out.println(
-//                """
-//
-//                ** exit status: ${cmd.getExitStatus()}
-//                """.trimIndent()
-//            )
-//        } finally {
-//            session.close()
-//        }
-//    }
-//    @Throws(IOException::class)
-//    private fun sshConnectSetting(host: String, username: String, password: String): SSHClient {
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} SSHClient Start"
-//        )
-//        val ssh = SSHClient()
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} loadKnownHosts Start"
-//        )
-//        try {
-//            ssh.loadKnownHosts()
-//        } catch (e: Exception){
-//            FileSystems.updateFile(
-//                cmdclickMonitorDirPath,
-//                currentMonitorFileName,
-//                "### ${LocalDateTime.now()} loadKnownHosts failure"
-//            )
-//        }
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} connect Start"
-//        )
-//        ssh.connect(host, 10022)
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} allowedMethods Start"
-//        )
-//        ssh.userAuth.allowedMethods
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} keepAliveInterval Start"
-//        )
-//        // keepAliveの感覚設定
-//        ssh.connection.keepAlive.keepAliveInterval = 5
-//
-//        FileSystems.updateFile(
-//            cmdclickMonitorDirPath,
-//            currentMonitorFileName,
-//            "### ${LocalDateTime.now()} ulaInstanceStart"
-//        )
-//        return ssh
-//    }
-
 }

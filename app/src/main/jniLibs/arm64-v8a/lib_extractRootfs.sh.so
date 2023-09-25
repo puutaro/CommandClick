@@ -1,5 +1,22 @@
 #!/data/data/com.puutaro.commandclick/files/support/busybox sh
 
+
+wait_spin(){
+	local target_pid="${1}"
+	local wait_message="${2}"
+
+	local spin='-\|/'
+	local i=0
+	while kill -0 "${target_pid}" 2>/dev/null
+	do
+	  i=$(( (i+1) %4 ))
+	  printf "\r ${wait_message} ${spin:$i:1} "
+	  sleep .1
+	done
+	printf "\r ${wait_message} ok "
+	echo ""
+}
+
 if [[ -z "${LIB_PATH}" ]]; then
   LIB_PATH="$ROOT_PATH/support"
 fi
@@ -53,7 +70,12 @@ rootfs.tar.gz \
 --exclude mnt \
 --exclude support \
 -C "${ROOTFS_PATH}" \
->/dev/null
+>/dev/null &
+
+extract_pid=$!
+wait_spin \
+    "${extract_pid}" \
+    "extract.."
 
 # --no-same-permissions \
 exit 0
