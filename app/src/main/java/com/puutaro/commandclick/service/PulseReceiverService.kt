@@ -86,15 +86,18 @@ class PulseReceiverService:
         PcPulseSetServer.exit()
         notificationManager.cancel(chanelId)
         pulseRecieverJob?.cancel()
-        val serverAddress = intent?.getStringExtra(
-            PulseServerIntentExtra.serverAddress.schema
+        val pcAddress = intent?.getStringExtra(
+            PulseServerIntentExtra.pcAddress.schema
+        ) ?: return START_STICKY
+        val serverPort = intent.getStringExtra(
+            PulseServerIntentExtra.serverPort.schema
         ) ?: return START_STICKY
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentScheme.STOP_PULSE_RECIEVER.action,
         )
-        val serverWaitAddressPort = "${serverAddress}:${UsePort.pcPulseSetServer.num}"
-        val serverReceivingAddressPort = "${serverAddress}:${UsePort.pluseRecieverPort.num}"
+        val serverWaitAddressPort = "${pcAddress}:${UsePort.pcPulseSetServer.num}"
+        val serverReceivingAddressPort = "${pcAddress}:${UsePort.pluseRecieverPort.num}"
         val notificationBuilder = NotificationCompat.Builder(
             applicationContext,
             notificationId
@@ -130,7 +133,8 @@ class PulseReceiverService:
                 )
                 PcPulseSetServer.launch(
                     applicationContext,
-                    serverAddress,
+                    pcAddress,
+                    serverPort,
                     notificationId,
                     chanelId,
                     serverReceivingAddressPort,

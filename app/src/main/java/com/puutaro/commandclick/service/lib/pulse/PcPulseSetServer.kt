@@ -39,20 +39,28 @@ object PcPulseSetServer {
     @JvmStatic
     suspend fun launch(
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPortStr: String,
         notificationId: String,
         channelId: Int,
         serverReceivingAddressPort: String,
         notificationManager: NotificationManagerCompat,
         cancelPendingIntent: PendingIntent
     ) {
+        val serverPort = try {
+            serverPortStr.toInt()
+        } catch (e: Exception){
+            UsePort.pluseRecieverPort.num
+        }
         val enableRestart = PulseSoundThread(
-            serverAddress,
+            pcAddress,
+            serverPort,
         ).enableSock()
         when(enableRestart) {
             true -> restartPulse(
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
                 notificationId,
                 channelId,
                 serverReceivingAddressPort,
@@ -61,7 +69,8 @@ object PcPulseSetServer {
             )
             else -> startPulse(
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
                 notificationId,
                 channelId,
                 serverReceivingAddressPort,
@@ -74,7 +83,8 @@ object PcPulseSetServer {
 
     private suspend fun restartPulse(
         context: Context?,
-        serverAddress: String,
+        ocAddress: String,
+        serverPort: Int,
         notificationId: String,
         channelId: Int,
         serverReceivingAddressPort: String,
@@ -91,7 +101,8 @@ object PcPulseSetServer {
             )
             delay(100)
             pulseSoundThread = PulseSoundThread(
-                serverAddress,
+                ocAddress,
+                serverPort
             )
             recieveNotification(
                 context,
@@ -109,7 +120,8 @@ object PcPulseSetServer {
 
     private suspend fun startPulse(
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPort: Int,
         notificationId: String,
         channelId: Int,
         serverReceivingAddressPort: String,
@@ -143,7 +155,8 @@ object PcPulseSetServer {
             clientHandle(
                 client,
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
                 notificationId,
                 channelId,
                 serverReceivingAddressPort,
@@ -166,7 +179,8 @@ object PcPulseSetServer {
     private fun clientHandle(
         client: Socket?,
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPort: Int,
         notificationId: String,
         channelId: Int,
         serverReceivingAddressPort: String,
@@ -193,7 +207,8 @@ object PcPulseSetServer {
                 withContext(Dispatchers.IO) {
                     delay(3000)
                     pulseSoundThread = PulseSoundThread(
-                        serverAddress,
+                        pcAddress,
+                        serverPort,
                     )
                     recieveNotification(
                         context,
