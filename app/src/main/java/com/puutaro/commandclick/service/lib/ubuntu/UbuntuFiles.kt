@@ -1,10 +1,9 @@
-package com.puutaro.commandclick.utils
+package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.system.Os
-import com.puutaro.commandclick.common.variable.UsePath
 import java.io.File
 import java.lang.NullPointerException
 
@@ -13,10 +12,12 @@ class UbuntuFiles(
     private val symlinker: Symlinker = Symlinker(),
 ) {
     companion object {
+        val arm64UbuntuRootfsUrl =
+            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
         val downloadDirPath = Environment.getExternalStorageDirectory().absolutePath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
         val rootfsTarGzName = "rootfs.tar.gz"
-        val downloadRootfsTarGzPath = "${downloadDirPath}/${rootfsTarGzName}"
+        val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir
@@ -50,8 +51,11 @@ class UbuntuFiles(
         File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
-    val ubuntuCompFile = File(
-        "${UsePath.cmdclickDefaultAppDirPath}/ubuntuComp.txt"
+    val ubuntuSetupCompFile = File(
+        "${filesOneRootfsSupportDir.absolutePath}/ubuntuSetupComp.txt"
+    )
+    val ubuntuLaunchCompFile = File(
+        "${filesOneRootfsSupportDir.absolutePath}/ubuntuLaunchComp.txt"
     )
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {

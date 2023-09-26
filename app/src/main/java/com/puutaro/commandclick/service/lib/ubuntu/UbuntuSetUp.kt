@@ -1,16 +1,21 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
+package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.UsePath
-import com.puutaro.commandclick.fragment.CommandIndexFragment
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.service.lib.PendingIntentCreator
+import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.utils.BusyboxExecutor
-import com.puutaro.commandclick.utils.UbuntuFiles
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -20,45 +25,45 @@ import java.net.URL
 
 
 object UbuntuSetUp {
-
-    private val rootfsTarGzName = UbuntuFiles.rootfsTarGzName
-    private val downloadDirPath = UbuntuFiles.downloadDirPath
-    private val downloadRootfsTarGzPath = UbuntuFiles.downloadRootfsTarGzPath
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val arm64UbuntuRootfsUrl =
-        "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
 //        #"https://partner-images.canonical.com/core/jammy/" +
 //                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
 
     fun set(
-        cmdIndexFragment: CommandIndexFragment
-    ){
-        try {
+        context: Context?,
+        monitorFileName: String,
+        notificationManager: NotificationManagerCompat?,
+        notificationBuilder: NotificationCompat.Builder?
+    ): Job? {
+       return try {
             CoroutineScope(Dispatchers.IO).launch {
-                execSet(cmdIndexFragment)
+                execSet(
+                    context,
+                    monitorFileName,
+                    notificationManager,
+                    notificationBuilder
+                )
             }
         } catch (e: Exception){
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
+                UsePath.cmdclickMonitorDirPath,
+                monitorFileName,
                 "\n\n${e}"
             )
+           null
         }
     }
     private suspend fun execSet(
-        cmdIndexFragment: CommandIndexFragment
+        contextSrc: Context?,
+        monitorFileName: String,
+        notificationManager: NotificationManagerCompat?,
+        notificationBuilder: NotificationCompat.Builder?
     ) {
-        val context  = cmdIndexFragment.context
+        val context  = contextSrc
             ?: return
-        FileSystems.writeFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
-            String()
-        )
-        downloadUbuntu(UsePath.cmdClickMonitorFileName_1)
+        downloadUbuntu(monitorFileName)
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            UsePath.cmdclickMonitorDirPath,
+            monitorFileName,
             "\n\nulafiles start"
         )
         val ubuntuFiles = UbuntuFiles(
@@ -69,33 +74,56 @@ object UbuntuSetUp {
             ubuntuFiles,
         )
         if(
-            ubuntuFiles.ubuntuCompFile.isFile
+            ubuntuFiles.ubuntuSetupCompFile.isFile
         ) {
             busyboxExecutor.executeProotCommand(
                 listOf("bash", "startup.sh"),
-                monitorFileName = UsePath.cmdClickMonitorFileName_1
+                monitorFileName = monitorFileName
             )
+            return
+        }
+        val isWifi = NetworkTool.isWifi(context)
+        if(!isWifi) {
+            val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
+                context,
+                BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
+            )
+            notificationBuilder?.setContentTitle(UbuntuStateType.WIFI_WAIT.title)
+            notificationBuilder?.setContentText(UbuntuStateType.WIFI_WAIT.message)
+            notificationBuilder?.clearActions()
+            notificationBuilder?.addAction(
+                com.puutaro.commandclick.R.drawable.icons8_cancel,
+                ButtonLabel.RESTART.label,
+                cancelUbuntuServicePendingIntent,
+            )
+            notificationBuilder?.build()?.let {
+                notificationManager?.notify(
+                    ServiceNotificationId.ubuntuServer,
+                    it
+                )
+            }
             return
         }
         FileSystems.removeAndCreateDir(
             ubuntuFiles.filesOneRootfs.absolutePath
         )
+        delay(200)
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            UsePath.cmdclickMonitorDirPath,
+            monitorFileName,
             "\n\nbysubox instance start"
         )
         initSetup(
             context,
             ubuntuFiles,
+            monitorFileName
         )
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            UsePath.cmdclickMonitorDirPath,
+            monitorFileName,
             "\n\nextract file"
         )
         val err4 = LinuxCmd.exec(
-            cmdIndexFragment,
             listOf(
                 "chmod",
                 "-R",
@@ -105,12 +133,14 @@ object UbuntuSetUp {
         )
         busyboxExecutor.executeScript(
             "support/extractRootfs.sh",
-            UsePath.cmdClickMonitorFileName_1
+            monitorFileName
         )
         FileSystems.removeFiles(
             ubuntuFiles.filesDir.absolutePath,
-            rootfsTarGzName
+            UbuntuFiles.rootfsTarGzName
         )
+        ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
+
         ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
@@ -124,8 +154,8 @@ object UbuntuSetUp {
         ubuntuFiles.filesOneRootfsUsrLocalBinSudo.mkdirs()
         ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            UsePath.cmdclickMonitorDirPath,
+            monitorFileName,
             "\n\nsupport copy start"
         )
         val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
@@ -134,47 +164,46 @@ object UbuntuSetUp {
         "${ubuntuFiles.filesOneRootfs}/support",
             "default.pa",
             AssetsFileManager.readFromAssets(
-                cmdIndexFragment.context,
+                context,
                 AssetsFileManager.etcPulseDefaultPa
             )
         )
         val lsResult = LinuxCmd.exec(
-            cmdIndexFragment,
             listOf(
                 "ls",
                 ubuntuFiles.filesOneRootfs.absolutePath
             ).joinToString("\t")
         )
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            UsePath.cmdclickMonitorDirPath,
+            monitorFileName,
             "\n\nlsResult: ${lsResult}"
         )
         FileSystems.writeFile(
             ubuntuFiles.filesOneRootfs.absolutePath,
             "startup.sh",
             AssetsFileManager.readFromAssets(
-                cmdIndexFragment.context,
+                context,
                 AssetsFileManager.ubunutStartupScriptPath
             )
         )
         busyboxExecutor.executeProotCommand(
             listOf("bash", "startup.sh"),
-            monitorFileName = UsePath.cmdClickMonitorFileName_1
+            monitorFileName = monitorFileName
         )
     }
 
-    private suspend fun downloadUbuntu(
+    suspend fun downloadUbuntu(
         monitorFileName: String,
     ){
         withContext(Dispatchers.IO) {
             if(
                 File(
-                    downloadRootfsTarGzPath
+                    UbuntuFiles.downloadRootfsTarGzPath
                 ).isFile
             ) return@withContext
             // put your url.this is sample url.
-            val url = URL(arm64UbuntuRootfsUrl)
+            val url = URL(UbuntuFiles.arm64UbuntuRootfsUrl)
             val conection = url.openConnection()
             conection.connect()
             val lenghtOfFile = conection.contentLength
@@ -182,7 +211,7 @@ object UbuntuSetUp {
             val input = conection.getInputStream()
             //catalogfile is your destenition folder
             val output: OutputStream = FileOutputStream(
-                downloadRootfsTarGzPath
+                UbuntuFiles.downloadRootfsTarGzPath
             )
             val data = ByteArray(1024)
             var total: Long = 0
@@ -196,9 +225,9 @@ object UbuntuSetUp {
                 output.write(data, 0, count)
                 if(progress <= previoutDisplayProgress) continue
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
+                    UsePath.cmdclickMonitorDirPath,
                     monitorFileName,
-                    "download $rootfsTarGzName ${progress}%"
+                    "download ${UbuntuFiles.rootfsTarGzName} ${progress}%"
                 )
             }
             // flushing output
@@ -209,20 +238,21 @@ object UbuntuSetUp {
         }
     }
 
-    private fun initSetup(
+    fun initSetup(
         context: Context?,
         ubuntuFiles: UbuntuFiles,
+        monitorFileName: String,
     ){
         FileSystems.createDirs(
             ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            monitorFileName,
             "${
                 ReadText(
                     UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
+                    monitorFileName,
                 ).readText()
             }\n\nsupport copy start"
         )
@@ -234,11 +264,11 @@ object UbuntuSetUp {
         )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            monitorFileName,
             "${
                 ReadText(
                     UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
+                    monitorFileName,
                 ).readText()
             }\n\nchmod start"
         )
@@ -253,17 +283,17 @@ object UbuntuSetUp {
         )
         FileSystems.writeFile(
             UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_1,
+            monitorFileName,
             "${
                 ReadText(
                     UsePath.cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
+                    monitorFileName,
                 ).readText()
             }\n\nrootfs copy start"
         )
         FileSystems.copyFile(
-            downloadRootfsTarGzPath,
-            "${ubuntuFiles.filesDir}/${rootfsTarGzName}"
+            UbuntuFiles.downloadRootfsTarGzPath,
+            "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
 
         ubuntuFiles.makePermissionsUsable(
@@ -273,8 +303,51 @@ object UbuntuSetUp {
         File(
             "${ubuntuFiles.filesOneRootfs.absolutePath}/.success_filesystem_extraction"
         ).createNewFile()
-        ubuntuFiles.emulatedUserDir.mkdirs()
-        ubuntuFiles.sdCardUserDir?.mkdirs()
+        FileSystems.createDirs(
+            ubuntuFiles.emulatedUserDir.absolutePath
+        )
+        ubuntuFiles.sdCardUserDir?.absolutePath?.let {
+            FileSystems.createDirs(
+                it
+            )
+        }
         ubuntuFiles.setupLinks()
     }
+
+    fun killAllProcess(
+        ubuntuCoroutineJobsHashMap: HashMap<String, Job?>
+    ){
+        ubuntuCoroutineJobsHashMap.forEach { t, u ->
+            u?.cancel()
+        }
+    }
+}
+
+enum class UbuntuProcessType {
+    SetUp,
+    SetUpMonitoring,
+    PulseaudioSetUp,
+}
+
+enum class UbuntuStateType(
+    val title: String,
+    val message: String,
+) {
+    WAIT("Wait..", "Wait.."),
+    UBUNTU_SETUP_WAIT(
+        "Ubuntu Setup, Ok?",
+        "Take 5 minutes for install"
+    ),
+    WIFI_WAIT("Connect wifi!", "Connect wifi! and restart"),
+    ON_SETUP("Ubuntu Setup..", "Ubuntu Setup..(take 5 minutes)"),
+    RUNNING("Ubuntu running..", "%d process.."),
+}
+
+enum class ButtonLabel(
+    val label: String,
+){
+    CANCEL("CANCEL"),
+    RESTART("RESTART"),
+    SETUP("SETUP"),
+    TERMINAL("TERMINAL"),
 }

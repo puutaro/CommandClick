@@ -20,7 +20,6 @@ class EditModeHandler(
     binding: EditFragmentBinding,
     private val currentShellContentsList: List<String>
 ) {
-
     private val context = editFragment.context
     private val currentEditFragmentTag = editFragment.tag
     private val onPassCmdVariableEdit =
@@ -65,7 +64,6 @@ class EditModeHandler(
                 && onShortcut
                 )
 
-
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,
@@ -78,8 +76,8 @@ class EditModeHandler(
     val settingSectionStart = editFragment.settingSectionStart
     val settingSectionEnd = editFragment.settingSectionEnd
 
-    val commandSectionStart = editFragment.commandSectionStart
-    val commandSectionEnd = editFragment.commandSectionEnd
+    private val commandSectionStart = editFragment.commandSectionStart
+    private val commandSectionEnd = editFragment.commandSectionEnd
 
 
     fun execByHowFullEdit(){

@@ -7,7 +7,7 @@ import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
@@ -197,6 +197,7 @@ object PcPulseSetServer {
             while (br.ready()) {
                 reader.append(br.read().toChar())
             }
+            pulseSoundThread?.exit()
             val body = ubuntuSetUpShell
             val response = String.format(
                 "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
@@ -287,7 +288,7 @@ private val ubuntuSetUpShell = """
 	; PULSE_SERVER=  && pulseaudio --start \
     ; pactl load-module module-null-sink sink_name=TCP_output \
     && pacmd update-sink-proplist TCP_output device.description=TCP_output \
-    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=10080 listen=0.0.0.0
+    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=${UsePort.pluseRecieverPort.num} listen=0.0.0.0
 
     """.trimIndent()
 

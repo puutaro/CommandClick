@@ -16,7 +16,7 @@ import androidx.media.app.NotificationCompat as MediaNotificationCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.Translate
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
@@ -28,7 +28,6 @@ import com.puutaro.commandclick.util.StringLength
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup
 import java.io.File
-import java.time.LocalDateTime
 import java.util.*
 
 

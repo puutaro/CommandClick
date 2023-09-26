@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -36,8 +37,10 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermMinimumForEd
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
+import com.puutaro.commandclick.activity_lib.manager.UbuntuServiceManager
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -46,15 +49,23 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.service.PulseReceiverService
+import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -124,6 +135,20 @@ class MainActivity:
     val getNotifierSetterLaunch =
         NotifierSetter.set(this)
 
+    private var broadcastReceiverForRestartUbuntuService: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if(
+                intent.action !=
+                BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+            ) return
+            if(this@MainActivity.isDestroyed) return
+            UbuntuServiceManager.monitoringAndLaunchUbuntuService(
+                this@MainActivity,
+                false
+            )
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,13 +156,29 @@ class MainActivity:
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
-
+        UbuntuServiceManager.monitoringAndLaunchUbuntuService(
+            this,
+            true
+        )
         InitManager(this).invoke()
     }
 
     override fun onResume() {
         super.onResume()
         volumeControlStream = AudioManager.STREAM_MUSIC
+        BroadcastManager.registerBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+            BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+        )
+    }
+
+    override fun onStart() {
+        super.onStart()
+        BroadcastManager.unregisterBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+        )
     }
 
     override fun onDestroy() {

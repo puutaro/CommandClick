@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.text.Editable
-import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.puutaro.commandclick.common.variable.WebUrlVariables
@@ -69,7 +68,7 @@ class GoogleSuggest(
         connection.setRequestProperty("User-Agent", "Android " + Build.MODEL)
         connection.setRequestProperty("Accept-Encoding", "gzip, deflate")
         connection.requestMethod = "GET"
-        connection.doInput = true;// レスポンスのボディの受信を許可
+        connection.doInput = true // レスポンスのボディの受信を許可
 
         connection.addRequestProperty(
             "Accept-Language",
@@ -83,13 +82,23 @@ class GoogleSuggest(
             }
             is EditFragment -> {
                 fragment.suggestJob?.cancel()
-                fragment.suggestJob = launchSuggestCoroutine (connection)
+                fragment.suggestJob = launchSuggestCoroutine(connection)
             }
         }
 
     }
 
     private fun launchSuggestCoroutine(
+        connection: HttpURLConnection
+    ): Job? {
+        return try {
+            execLaunchSuggestCoroutine(connection)
+        } catch (e: Exception){
+            null
+        }
+    }
+
+    private fun execLaunchSuggestCoroutine(
         connection:  HttpURLConnection
     ):Job {
         return CoroutineScope(Dispatchers.IO).launch {

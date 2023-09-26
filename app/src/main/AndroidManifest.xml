@@ -95,6 +95,8 @@
         <service android:name=".service.TextToSpeechService"/>
 <!--        <service android:name=".service.RecordToTextService"/>-->
         <service android:name=".service.PulseReceiverService"/>
+
+        <service android:name=".service.UbuntuService"/>
     </application>
 
     <queries>

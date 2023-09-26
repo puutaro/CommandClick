@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util
 
 
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 
 object JsOrShellFromSuffix {
     fun judge(

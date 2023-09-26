@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.service.variable.ServiceNotificationId

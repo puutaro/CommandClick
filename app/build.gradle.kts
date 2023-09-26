@@ -126,7 +126,7 @@ dependencies {
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
     implementation("org.rauschig:jarchivelib:0.8.0")
     implementation("org.apache.commons:commons-compress:1.20")
-    implementation("com.hierynomus:sshj:0.36.0")
+//    implementation("com.hierynomus:sshj:0.36.0")
 
 
 //    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")

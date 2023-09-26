@@ -9,7 +9,6 @@ import java.nio.charset.Charset
 
 object LinuxCmd {
     fun exec(
-        fragment: Fragment,
         cmdList: String
     ): String {
         try {

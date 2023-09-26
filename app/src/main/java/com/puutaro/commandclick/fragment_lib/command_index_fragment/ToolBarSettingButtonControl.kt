@@ -13,13 +13,12 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.UbuntuSetUp
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
@@ -214,11 +213,6 @@ class ToolBarSettingButtonControl(
                         UsePath.cmdclickStartupJsName,
                     )
                 }
-                MenuEnums.SETUP_UBUNTU.itemName -> {
-                    UbuntuSetUp.set(
-                        cmdIndexFragment
-                    )
-                }
             }
         }
     }
@@ -256,7 +250,7 @@ private enum class MenuEnums(
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
-    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),
     SETTING("setting",R.drawable.icons8_setting),
+    //    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),
 }
 

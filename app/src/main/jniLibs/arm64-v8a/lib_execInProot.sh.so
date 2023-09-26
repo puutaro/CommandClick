@@ -37,7 +37,6 @@ if [ ! -f "${ubuntuCompFile}" ]; then
     echo "nameserver 1.1.1.1" > "${ROOTFS_PATH}/etc/resolv.conf"
 fi
 
-date "+%Y/%m/%d %H:%M:%S"
 echo "### execCmd"
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
@@ -114,6 +113,5 @@ $EXTRA_BINDINGS \
 #     DEBIAN_FRONTEND=noninteractive \
 #     $@
 
-date "+%Y/%m/%d %H:%M:%S"
 echo proot cc end
 #PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PROOT_TMP_DIR=$ROOTFS_PATH/support/ PROOT_LOADER=$LIB_PATH/loader PROOT_LOADER_32=$LIB_PATH/loader32 $PROOT -r $ROOTFS_PATH -v $PROOT_DEBUG_LEVEL -p --sysvipc -H -0 -l -L -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload -b $ROOT_PATH/support:/support/common $EXTRA_BINDINGS $@

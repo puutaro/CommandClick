@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -119,7 +120,6 @@ class EditFragment: Fragment() {
             this
         )
         SetConfigInfo.set(this)
-
         val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
             this,
         )
@@ -227,14 +227,14 @@ class EditFragment: Fragment() {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
 
-        val currentShellContentsList = ReadText(
+        val currentScriptContentsList = ReadText(
             currentAppDirPath,
             currentShellFileName
         ).textToList()
         val editModeHandler = EditModeHandler(
             this,
             binding,
-            currentShellContentsList
+            currentScriptContentsList
         )
         editModeHandler.execByHowFullEdit()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()

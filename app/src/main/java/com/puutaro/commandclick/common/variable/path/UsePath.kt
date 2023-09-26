@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable
+package com.puutaro.commandclick.common.variable.path
 
 import android.os.Environment
 
@@ -27,6 +27,10 @@ object UsePath {
     private const val cmdclickTmpMonitorDirName = "monitor"
     private const val cmdclickTempMonitorRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpMonitorDirName"
     val cmdclickTempMonitorDirPath = "$rootPath/$cmdclickTempMonitorRelativeDirPath"
+    private const val cmdclickTmpUbuntuServiceDirName = "ubuntuService"
+    private const val cmdclickTempUbuntuServiceRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpUbuntuServiceDirName"
+    val cmdclickTempUbuntuServiceDirPath = "$rootPath/$cmdclickTempUbuntuServiceRelativeDirPath"
+    const val cmdclickTmpUbuntuServiceActiveFileName = "isActinveUbuntuService.txt"
     const val cmdclickTmpUpdateMonitorFileName = "updateMonitor.txt"
     private const val cmdclickTempUpdateMonitorRelativeFilePath = "$cmdclickTempRelativePath/$cmdclickTmpUpdateMonitorFileName"
     val cmdclickTempUpdateMonitorFilePath = "$rootPath/$cmdclickTempUpdateMonitorRelativeFilePath"
@@ -48,8 +52,8 @@ object UsePath {
     private const val cmdclickAppHistoryDirName = "AppHistoryDir"
     private const val cmdclickAppHistoryDirRelativePath = "$cmdclickConfRelativePath/$cmdclickAppHistoryDirName"
     val cmdclickAppHistoryDirAdminPath =  "$rootPath/$cmdclickAppHistoryDirRelativePath"
-    val cmdclickButtonExecShellFileName = "cmdclickButtonExec${JS_FILE_SUFFIX}"
-    val cmdclickInternetButtonExecJsFileName = "internetButtonExec${JS_FILE_SUFFIX}"
+    val cmdclickButtonExecShellFileName = "cmdclickButtonExec$JS_FILE_SUFFIX"
+    val cmdclickInternetButtonExecJsFileName = "internetButtonExec$JS_FILE_SUFFIX"
     private const val cmdclickCcimportDirName = "ccimport"
     private val cmdclickCcimportRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickCcimportDirName"
     val cmdclickCcimportDirPath =  "$rootPath/$cmdclickCcimportRelativeDirPath"
@@ -70,7 +74,7 @@ object UsePath {
     private val cmdclickcmdclickFannelListDirNameRelativeDirPath = "$cmdclickRepositoryRelativeDirPath/$cmdclickFannelListDirName"
     val cmdclickFannelListDirPath =  "$rootPath/$cmdclickcmdclickFannelListDirNameRelativeDirPath"
     val fannelListMemoryName = "fannelListMemory"
-    val fannelListMemoryPath = "${cmdclickFannelListDirPath}/fannelListMemoryName"
+    val fannelListMemoryPath = "$cmdclickFannelListDirPath/fannelListMemoryName"
 
     private const val cmdclickFannelItselfDirName = "fannel"
     private val cmdclickFannelItselfRelativeDirPath = "$cmdclickFannelAppsRelativeDirPath/$cmdclickFannelItselfDirName"
@@ -82,7 +86,7 @@ object UsePath {
     const val cmdClickMonitorFileName_3 = "${cmdclickMonitorFileNameSuffix}_3"
     const val cmdClickMonitorFileName_4 = "${cmdclickMonitorFileNameSuffix}_4"
     private const val cmdclickAppDirParentName = "AppDir"
-    private const val cmdclickAppDirRelativePath = "${cmdclickDirName}/${cmdclickAppDirParentName}"
+    private const val cmdclickAppDirRelativePath = "$cmdclickDirName/$cmdclickAppDirParentName"
     val cmdclickAppDirPath =  "$rootPath/$cmdclickAppDirRelativePath"
     const val cmdclickDefaultAppDirName = "default"
     private val cmdclickDefaultAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickDefaultAppDirName"
@@ -90,7 +94,7 @@ object UsePath {
     const val cmdclickSystemAppDirName = "system"
     private val cmdclickSystemAppRelativePath = "$cmdclickAppDirRelativePath/$cmdclickSystemAppDirName"
     val cmdclickSystemAppDirPath =  "$rootPath/$cmdclickSystemAppRelativePath"
-    val cmdclickConfigFileName = "cmdclickConfig${JS_FILE_SUFFIX}"
+    val cmdclickConfigFileName = "cmdclickConfig$JS_FILE_SUFFIX"
     private val cmdclickConfigFileRelativePath = "$cmdclickSystemAppRelativePath/$cmdclickConfigFileName"
     val cmdclickConfigFilePath = "$rootPath/$cmdclickConfigFileRelativePath"
     val cmdclickConfigFannelDirName =  "cmdclickConfigDir"
@@ -101,62 +105,62 @@ object UsePath {
     val homeFannelsFilePath =
         "\${01}/\${001}/settings/homeFannelsFilePaths.txt"
     val ccImportManagerFannelName = "ccImportManager.js"
-    val ccImportAdminFannelPath = "${cmdclickSystemAppDirPath}/${ccImportManagerFannelName}"
+    val ccImportAdminFannelPath = "$cmdclickSystemAppDirPath/$ccImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"
-    val appDirManagerFannelPath = "${cmdclickSystemAppDirPath}/${appDirManagerFannelName}"
+    val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
 
 
     private const val cmdclickSystemDirName = "system"
     private const val cmdclickUrlSystemDirName = "url"
-    const val cmdclickUrlSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickUrlSystemDirName}"
+    const val cmdclickUrlSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickUrlSystemDirName"
     private const val cmdclickScrollSystemDirName = "scroll"
-    const val cmdclickScrollSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickScrollSystemDirName}"
+    const val cmdclickScrollSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickScrollSystemDirName"
     private const val cmdclickHitSystemDirName = "hit"
-    const val cmdclickHitSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickHitSystemDirName}"
+    const val cmdclickHitSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickHitSystemDirName"
     private const val cmdclickTempSystemDirName = "temp"
-    const val cmdclickTempSystemDirRelativePath = "${cmdclickSystemDirName}/${cmdclickTempSystemDirName}"
-    val cmdclickUrlHistoryFileName = "cmdclickUrlHistory${tsvExtend}"
-    val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory${tsvExtend}"
-    val cmdclickSiteScrollPosiFileName = "scrollPosi${tsvExtend}"
-    val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi${tsvExtend}"
+    const val cmdclickTempSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickTempSystemDirName"
+    val cmdclickUrlHistoryFileName = "cmdclickUrlHistory$tsvExtend"
+    val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory$tsvExtend"
+    val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"
+    val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi$tsvExtend"
     const val assetsFannelsReplacePrefix = "fannels/startUp"
     const val startUpFannelAsetsDirPath = assetsFannelsReplacePrefix
     const val startUpFannleAssetsPath = assetsFannelsReplacePrefix
     const val cmdclickStartupJsName = "cmdclickStartup.js"
-    val cmdclickFirstHistoryTitle = "firstHistoryTitle${tsvExtend}"
+    val cmdclickFirstHistoryTitle = "firstHistoryTitle$tsvExtend"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
     val settingsDirPath = "\${01}/\${001}/settings"
-    val homeScriptUrlsFilePath =  "${settingsDirPath}/homeScriptUrlsPath.txt"
+    val homeScriptUrlsFilePath =  "$settingsDirPath/homeScriptUrlsPath.txt"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
-        "${longPressMenuDirPath}/srcImageAnchorLongPressMenu.txt"
+        "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"
     val srcAnchorLongPressMenuFilePath =
-        "${longPressMenuDirPath}/srcAnchorLongPressMenu.txt"
+        "$longPressMenuDirPath/srcAnchorLongPressMenu.txt"
     val imageLongPressMenuFilePath =
-        "${longPressMenuDirPath}/imageLongPressMenu.txt"
+        "$longPressMenuDirPath/imageLongPressMenu.txt"
     val noScrollSaveUrlsFilePath =
-        "${settingsDirPath}/noScrollSaveUrls.txt"
-    val selectMenuFannelPath = "\${01}/selectMenu${JS_FILE_SUFFIX}"
+        "$settingsDirPath/noScrollSaveUrls.txt"
+    val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val menuListDirPathForSelectMenuFannel = "\${01}/\${001}/menuList"
     val menuListFilePathForSelectMenu =
-        "${menuListDirPathForSelectMenuFannel}/menu.txt"
+        "$menuListDirPathForSelectMenuFannel/menu.txt"
     val leftMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/leftMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/leftMenuList$TXT_FILE_SUFFIX"
     val leftLongPressMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/leftLongPressMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/leftLongPressMenuList$TXT_FILE_SUFFIX"
     val centerMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/centerMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/centerMenuList$TXT_FILE_SUFFIX"
     val centerLongPressMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/centerLongPressMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/centerLongPressMenuList$TXT_FILE_SUFFIX"
     val rightMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/rightMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/rightMenuList$TXT_FILE_SUFFIX"
     val srcImageAnchorMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/srcImageAnchorMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/srcImageAnchorMenuList$TXT_FILE_SUFFIX"
     val srcAnchorListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/srcAnchorMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/srcAnchorMenuList$TXT_FILE_SUFFIX"
     val imageMenuListFilePathForWebSearher =
-        "${menuListDirPathForSelectMenuFannel}/imageMenuList${TXT_FILE_SUFFIX}"
+        "$menuListDirPathForSelectMenuFannel/imageMenuList$TXT_FILE_SUFFIX"
     fun makeOmitPath(
         path: String
     ): String {

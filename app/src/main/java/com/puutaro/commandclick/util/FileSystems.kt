@@ -2,13 +2,12 @@ package com.puutaro.commandclick.util
 
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.Date
 
 
 object FileSystems {

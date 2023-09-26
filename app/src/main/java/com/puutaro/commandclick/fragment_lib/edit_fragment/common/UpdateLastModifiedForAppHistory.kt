@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod

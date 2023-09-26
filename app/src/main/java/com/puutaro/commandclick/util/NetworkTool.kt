@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
+import android.net.NetworkCapabilities
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.net.Inet4Address
@@ -40,5 +41,19 @@ object NetworkTool {
             }
         }
         return ipAd
+    }
+
+    fun isWifi(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                ?: return false
+        if (
+            capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_WIFI
+            )
+        ) return true
+        return false
     }
 }

@@ -17,13 +17,9 @@ object AssetsFileManager {
     const val assetsHighlightCopy =
         "${assetsDialogWebViewDirPath}/highlightCopy.js"
     const val fannelShellDirPath = "fannels/shell"
-    const val ansi2htmlShellPath = "${fannelShellDirPath}/ansi2html.sh"
     const val ubunutSupportDirPath = "ubuntu_setup/support"
     const val ubunutStartupScriptPath = "ubuntu_setup/startup.sh"
-    const val ubunutStartupScript2Path = "ubuntu_setup/startup2.sh"
     const val etcPulseDefaultPa = "ubuntu_setup/support/default.pa"
-    const val etcProfileDuserLandProfile = "ubuntu_setup/support/userland_profile.sh"
-    const val etcLdsoPreload = "ubuntu_setup/support/ld.so.preload"
 
 
     fun readFromAssets(

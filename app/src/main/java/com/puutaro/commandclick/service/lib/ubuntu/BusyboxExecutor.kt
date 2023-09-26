@@ -1,7 +1,9 @@
-package com.puutaro.commandclick.utils
+package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.UsePath
+import android.content.Intent
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +29,7 @@ class BusyboxExecutor(
         return runCommand(updatedCommand, monitorFileName)
     }
 
-    private fun executeCommand(
+    fun executeCommand(
         command: String,
         monitorFileName: String
     ) {
@@ -153,7 +155,9 @@ class BusyboxExecutor(
 //        filesystemDirName: String,
 //        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
-        monitorFileName: String
+        monitorFileName: String,
+        updateubuntuCoroutineJobsHashMapUpdateData: UbuntuCoroutineJobsHashMapUpdateData? = null
+
     ) {
         val functionName = object{}.javaClass.enclosingMethod?.name
         when {
@@ -212,6 +216,18 @@ class BusyboxExecutor(
                 functionName,
                 monitorFileName
             )
+            if(
+                updateubuntuCoroutineJobsHashMapUpdateData != null
+            ) {
+                updateubuntuCoroutineJobsHashMapUpdateData.ubuntuCoroutineJobsHashMap[
+                        updateubuntuCoroutineJobsHashMapUpdateData.backgroundJobType
+                ]?.cancel()
+                val processNumUpdateIntent = Intent()
+                processNumUpdateIntent.action =
+                    BroadCastIntentScheme.UPDATE_PROCESS_NUM_UBUNTU_SERVICE.action
+                context?.sendBroadcast(processNumUpdateIntent)
+                return
+            }
         } catch (err: Exception) {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,

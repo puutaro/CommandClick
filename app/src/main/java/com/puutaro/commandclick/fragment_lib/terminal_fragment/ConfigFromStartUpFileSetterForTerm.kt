@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.proccess.StartFileMaker

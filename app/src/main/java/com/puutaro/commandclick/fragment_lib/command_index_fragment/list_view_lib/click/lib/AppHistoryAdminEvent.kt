@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import java.io.File

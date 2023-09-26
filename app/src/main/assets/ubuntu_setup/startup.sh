@@ -3,10 +3,12 @@
 CREATE_IMAGE=""
 export DEBIAN_FRONTEND=noninteractive
 R_USER="cmdclick"
-UBUNTU_COMP_FILE="/storage/emulated/0/Documents/cmdclick/AppDir/default/ubuntuComp.txt"
+UBUNTU_SETUP_COMP_FILE="/support/ubuntuSetupComp.txt"
+UBUNTU_LAUNCH_COMP_FILE="/support/ubuntuLaunchComp.txt"
 SSH_PORT=10022
 WEB_SSH_TERM_PORT=18080
 CMD_PORT=15000
+PULSE_HANDLE_SERVER_PORT=10091
 
 install_pip3_pkg(){
 	local package="${1:-}"
@@ -200,18 +202,25 @@ setup_dropbear_sshserver(){
 startup_launch_cmd(){
 	su - "${R_USER}" <<-EOF
 	echo \$USER
-	while true; 
-	do 
-		echo --- pulseaudio --start
-		curl 127.0.0.1:10081 | sh \
-		&& break
-		echo try pulseaudio
+	echo --- pulseaudio --start
+	retry_times=5
+	for i in \$(seq \${retry_times})
+	do
+		shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
+		case "\${shellCon}" in
+			"") ;;
+			*)	
+				sh -c "\${shellCon}"
+				break
+				;;
+		esac
+		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
 		sleep 1
-	done	
+	done
 	espeak "sound quality test sound quality test"
 	
 	echo --- launch sshd server
-	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1
+	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1 &
 	echo "Type bellow command"
 	echo -e "\tssh -p ${SSH_PORT}  cmdclick@{your android ip_address}"
 	echo -e "\tpassword: ${R_USER}"
@@ -223,8 +232,9 @@ startup_launch_cmd(){
 	echo --- launch shell2http
 	shell2http \
 		-port ${CMD_PORT} \
-		/bash "bash \$HOME/cmd/cmd.sh" \
-		>/dev/null 2>&1 &
+		/bash "bash \$HOME/cmd/cmd.sh"  &
+		# \
+		# >/dev/null 2>&1 &
 	# echo --- kill pulse
 	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
 	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
@@ -323,17 +333,18 @@ wait_cmd(){
 }
 
 
-if [ ! -f "${UBUNTU_COMP_FILE}" ] \
+if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 		&& [ "${CREATE_IMAGE}" = "on" ];then
 	install_base_pkg
 	add_user
 	setup_dropbear_sshserver
 fi
-if [ ! -f "${UBUNTU_COMP_FILE}" ];then \
+if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 	apt-get install -y sudo
-	touch "${UBUNTU_COMP_FILE}"
+	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 startup_launch_cmd
+touch "${UBUNTU_LAUNCH_COMP_FILE}"
 wait_cmd
 exit 0
 install_golang_and_go_package
