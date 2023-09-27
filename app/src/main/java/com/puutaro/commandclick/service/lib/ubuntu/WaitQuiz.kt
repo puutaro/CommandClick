@@ -38,6 +38,70 @@ class WaitQuiz(
 
     private val quizPairList = listOf(
         Pair(
+            "How to quickly customize?",
+            "-> long press setting button -> edit_startup"
+        ),
+        Pair(
+            "What's data management system in ${appName}?",
+            "-> File system in under Document dir"
+        ),
+        Pair(
+            "What's base merit in ${appName}?",
+            "-> Rich customizability"
+        ),
+        Pair(
+            "What's better than termux?",
+            "-> one touched & one handed op"
+        ),
+        Pair(
+            "Oh! ubuntu go Heaven!?",
+            "-> Reinstall ${appName}"
+        ),
+        Pair(
+            "Oh! ubuntu go Heaven?",
+            "-> Reinstall ${appName}"
+        ),
+        Pair(
+            "What's Ubuntu login system?",
+            "-> Dropbear ssh server system"
+        ),
+        Pair(
+            "How to init ubuntu?",
+            "-> Remove /support/ubuntuSetupComp.txt"
+        ),
+        Pair(
+            "What is the installation period for this ubuntu?",
+            "-> About one month"
+        ),
+        Pair(
+            "Oh no sound!?",
+            "-> Press RESTART in notification"
+        ),
+        Pair(
+            "Why did you add sound system to ubuntu?",
+            "-> I think backend include sound"
+        ),
+        Pair(
+            "Will you install GUI env on ubuntu?",
+            "-> No, backend for ${appName}"
+        ),
+        Pair(
+            "How do you think termux?",
+            "-> Super backend"
+        ),
+        Pair(
+            "What are the advantages of this ubuntu?",
+            "-> Can use apt, programing from browser"
+        ),
+        Pair(
+            "Can you use shell from js?",
+            "-> Can, very fast"
+        ),
+        Pair(
+            "What are the weaknesses of this sudo?",
+            "-> Slow"
+        ),
+        Pair(
             "Which proot is easier to run on recent devices?",
             "-> sudo ok, UserLAnd's proot + fakeroot"
         ),

@@ -219,6 +219,14 @@ startup_launch_cmd(){
 		/bash "bash \$HOME/cmd/cmd.sh"  &
 		# \
 		# >/dev/null 2>&1 &
+	# echo --- kill pulse
+	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
+	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
+	EOF
+}
+
+pulseaudioSetup(){
+	su - "${R_USER}" <<-EOF
 	echo --- pulseaudio --start
 	retry_times=5
 	for i in \$(seq \${retry_times})
@@ -250,9 +258,6 @@ startup_launch_cmd(){
 		sleep 2
 	done
 	espeak "sound quality test sound quality test"
-	# echo --- kill pulse
-	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
-	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
 	EOF
 }
 
@@ -360,6 +365,7 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 fi
 startup_launch_cmd
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
+pulseaudioSetup
 wait_cmd
 exit 0
 install_golang_and_go_package

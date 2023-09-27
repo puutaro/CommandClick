@@ -10,6 +10,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
@@ -27,7 +28,7 @@ class InitFragmentManager(
         SharePrefferenceSetting.on_shortcut.name
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
     private val allowIntentSystemFannelList = listOf(
-        "cmdTerminal.js"
+        SystemFannel.cmdTerminal
     )
 
     fun registerSharePreferenceFromIntentExtra() {
@@ -35,18 +36,14 @@ class InitFragmentManager(
         val normalTaskNum = 1
         val okOneTask = mngr?.appTasks?.size == normalTaskNum
         val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
-        if (
-            disableOneTaskForUrlLaunch
-        ) {
+        if (disableOneTaskForUrlLaunch) {
             removeTask(mngr)
             execUrlIntent()
             return
         }
         val disableTaskRootForUrlLaunch =
             IntentAction.judge(activity) && !activity.isTaskRoot
-        if (
-            disableTaskRootForUrlLaunch
-        ) {
+        if (disableTaskRootForUrlLaunch) {
             execUrlIntent()
             return
         }

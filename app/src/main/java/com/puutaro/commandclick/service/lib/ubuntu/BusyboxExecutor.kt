@@ -160,6 +160,17 @@ class BusyboxExecutor(
         )
     }
 
+    fun executeKillProcess(
+        targetProcessName: String,
+        monitorFileName: String
+    ){
+        val packageName = context?.packageName ?: String()
+        executeProotCommand(
+            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | grep '${targetProcessName}' | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
+            monitorFileName = monitorFileName
+        )
+    }
+
     fun executeProotCommand(
         command: List<String>,
 //        filesystemDirName: String,

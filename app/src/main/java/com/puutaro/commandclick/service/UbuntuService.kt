@@ -53,10 +53,6 @@ class UbuntuService:
     private var ubuntuFiles: UbuntuFiles? = null
     private var isTaskKill = false
 
-//    val startUbuntuServicePendingIntent = PendingIntentCreator.create(
-//        applicationContext,
-//        BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
-//    )
     private var notificationBuilder:  NotificationCompat.Builder? = null
     private var ubuntuCoroutineJobsHashMap = HashMap<String, Job?>()
     private val notificationId = NotificationChanel.UBUNTU_NOTIFICATION.id
@@ -84,6 +80,7 @@ class UbuntuService:
             killAllProot()
             finishProcess()
             stopSelf()
+            reLaunchUbuntuService()
         }
     }
     private var broadcastReceiverForUpdateProcessNum: BroadcastReceiver = object : BroadcastReceiver() {
@@ -162,6 +159,12 @@ class UbuntuService:
                 UbuntuServerIntentExtra.ubuntuCroutineJobType.schema
             ) ?: return
             ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobType)?.cancel()
+            ubuntuFiles?.let {
+                BusyboxExecutor(applicationContext, it).executeKillProcess(
+                    ubuntuCroutineJobType,
+                    cmdclickMonitorFileName
+                )
+            }
             updateNotificationForProcessNum()
         }
     }
@@ -250,17 +253,21 @@ class UbuntuService:
         flags: Int,
         startId: Int
     ): Int {
+        if(
+            intent?.getStringExtra(
+                UbuntuServerIntentExtra.ubuntuStartCommand.schema
+            ).isNullOrEmpty()
+        ) return START_STICKY
         val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
         )
-//        PcPulseSetServer.exit()
         if(isTaskKill) {
             isTaskKill = false
             notificationBuilder?.clearActions()
             notificationBuilder?.addAction(
                 com.puutaro.commandclick.R.drawable.icons8_cancel,
-                ButtonLabel.CANCEL.label,
+                ButtonLabel.RESTART.label,
                 cancelUbuntuServicePendingIntent
             )
             addOpenTerminalButton(notificationBuilder)
@@ -303,19 +310,6 @@ class UbuntuService:
             notificationBuilder?.setContentTitle(UbuntuStateType.UBUNTU_SETUP_WAIT.title)
             notificationBuilder?.setContentText(UbuntuStateType.UBUNTU_SETUP_WAIT.message)
         }
-//        notificationBuilder?.clearActions()
-//        notificationBuilder?.addAction(
-//            com.puutaro.commandclick.R.drawable.icons8_cancel,
-//            ButtonLabel.RESTART.label,
-//            cancelUbuntuServicePendingIntent
-//        )
-//        val notificationInstance = notificationBuilder?.build()
-//        notificationInstance?.let {
-//            notificationManager?.notify(
-//                chanelId,
-//                it
-//            )
-//        }
         if(
             ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
             && !NetworkTool.isWifi(applicationContext)
@@ -399,7 +393,6 @@ class UbuntuService:
         super.onDestroy()
         finishProcess()
         stopSelf()
-        reLaunchUbuntuService()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {
@@ -555,7 +548,7 @@ class UbuntuService:
         notificationBuilder?.clearActions()
         notificationBuilder?.addAction(
             com.puutaro.commandclick.R.drawable.icons8_cancel,
-            ButtonLabel.CANCEL.label,
+            ButtonLabel.RESTART.label,
             cancelUbuntuServicePendingIntent
         )
         addOpenTerminalButton(notificationBuilder)
@@ -680,18 +673,18 @@ class UbuntuService:
                 cmdclickMonitorFileName
             )
         }
-//        val userId = LinuxCmd.exec(
-//            listOf(
-//                "sh",
-//                "-c",
-//                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
-//            ).joinToString("\t")
-//        )
+        val userId = LinuxCmd.exec(
+            listOf(
+                "sh",
+                "-c",
+                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
+            ).joinToString("\t")
+        )
         val output = LinuxCmd.exec(
             listOf(
                 "sh",
                 "-c",
-                "kill -9 $(ps -ef | grep proot | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
+                "kill -9 $(ps -ef | grep ${userId} | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
             ).joinToString("\t")
         )
         FileSystems.updateFile(

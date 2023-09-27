@@ -4,9 +4,11 @@ import android.content.Intent
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,6 +50,15 @@ object UbuntuServiceManager {
                     ) break
                 }
                 if(cmdclickTmpUbuntuServiceActiveFile.isFile) return@withContext
+                val prootGrepResult = LinuxCmd.exec(
+                    listOf(
+                        "sh",
+                        "-c",
+                        "ps -ef | grep proot | grep -v grep"
+                    ).joinToString("\t")
+                ).trim()
+                val existProotInUbuntuService =  prootGrepResult != String()
+                if(existProotInUbuntuService) return@withContext
                 launch(activity)
             }
         }
@@ -61,8 +72,7 @@ object UbuntuServiceManager {
             activity,
             UbuntuService::class.java
         )
+        intent.putExtra(UbuntuServerIntentExtra.ubuntuStartCommand.schema, "on")
         ContextCompat.startForegroundService(activity, intent)
     }
-
-
 }
