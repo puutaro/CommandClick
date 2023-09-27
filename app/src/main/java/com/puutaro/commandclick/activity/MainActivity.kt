@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity
 
 import android.app.Activity
-import android.app.Service
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -15,7 +14,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -47,9 +45,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
@@ -57,15 +54,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeT
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.service.PulseReceiverService
-import com.puutaro.commandclick.service.UbuntuService
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -141,7 +133,6 @@ class MainActivity:
                 intent.action !=
                 BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
             ) return
-            if(this@MainActivity.isDestroyed) return
             UbuntuServiceManager.monitoringAndLaunchUbuntuService(
                 this@MainActivity,
                 false
@@ -156,6 +147,11 @@ class MainActivity:
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
+        BroadcastManager.registerBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+            BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+        )
         UbuntuServiceManager.monitoringAndLaunchUbuntuService(
             this,
             true
@@ -166,25 +162,16 @@ class MainActivity:
     override fun onResume() {
         super.onResume()
         volumeControlStream = AudioManager.STREAM_MUSIC
-        BroadcastManager.registerBroadcastReceiverForActivity(
-            this,
-            broadcastReceiverForRestartUbuntuService,
-            BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
-        )
-    }
-
-    override fun onStart() {
-        super.onStart()
-        BroadcastManager.unregisterBroadcastReceiverForActivity(
-            this,
-            broadcastReceiverForRestartUbuntuService,
-        )
     }
 
     override fun onDestroy() {
         super.onDestroy()
         val intent = Intent(this, GitCloneService::class.java)
         this.stopService(intent)
+        BroadcastManager.unregisterBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+        )
     }
 
 

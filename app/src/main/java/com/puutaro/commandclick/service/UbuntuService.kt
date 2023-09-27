@@ -303,6 +303,70 @@ class UbuntuService:
             notificationBuilder?.setContentTitle(UbuntuStateType.UBUNTU_SETUP_WAIT.title)
             notificationBuilder?.setContentText(UbuntuStateType.UBUNTU_SETUP_WAIT.message)
         }
+//        notificationBuilder?.clearActions()
+//        notificationBuilder?.addAction(
+//            com.puutaro.commandclick.R.drawable.icons8_cancel,
+//            ButtonLabel.RESTART.label,
+//            cancelUbuntuServicePendingIntent
+//        )
+//        val notificationInstance = notificationBuilder?.build()
+//        notificationInstance?.let {
+//            notificationManager?.notify(
+//                chanelId,
+//                it
+//            )
+//        }
+        if(
+            ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
+            && !NetworkTool.isWifi(applicationContext)
+        ) {
+            notificationBuilder?.setContentTitle(UbuntuStateType.WIFI_WAIT.title)
+            notificationBuilder?.setContentText(UbuntuStateType.WIFI_WAIT.message)
+            notificationBuilder?.clearActions()
+            notificationBuilder?.addAction(
+                com.puutaro.commandclick.R.drawable.icons8_cancel,
+                ButtonLabel.RESTART.label,
+                cancelUbuntuServicePendingIntent,
+            )
+            val notificationInstance = notificationBuilder?.build()
+            notificationBuilder?.build()?.let {
+                notificationManager?.notify(
+                    ServiceNotificationId.ubuntuServer,
+                    it
+                )
+            }
+            startForeground(
+                chanelId,
+                notificationInstance
+            )
+            return START_STICKY
+        }
+        if(
+            ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
+        ) {
+            val startUbuntuServicePendingIntent = PendingIntentCreator.create(
+                applicationContext,
+                BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
+            )
+            notificationBuilder?.clearActions()
+            notificationBuilder?.addAction(
+                com.puutaro.commandclick.R.drawable.icons8_cancel,
+                ButtonLabel.SETUP.label,
+                startUbuntuServicePendingIntent
+            )
+            val notificationInstance = notificationBuilder?.build()
+            notificationInstance?.let {
+                notificationManager?.notify(
+                    chanelId,
+                    it
+                )
+            }
+            startForeground(
+                chanelId,
+                notificationInstance
+            )
+            return START_STICKY
+        }
         notificationBuilder?.clearActions()
         notificationBuilder?.addAction(
             com.puutaro.commandclick.R.drawable.icons8_cancel,
@@ -320,27 +384,6 @@ class UbuntuService:
             chanelId,
             notificationInstance
         )
-        if(
-            ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
-        ) {
-            val startUbuntuServicePendingIntent = PendingIntentCreator.create(
-                applicationContext,
-                BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
-            )
-            notificationBuilder?.clearActions()
-            notificationBuilder?.addAction(
-                com.puutaro.commandclick.R.drawable.icons8_cancel,
-                ButtonLabel.SETUP.label,
-                startUbuntuServicePendingIntent
-            )
-                notificationBuilder?.build()?.let {
-                notificationManager?.notify(
-                    chanelId,
-                    it
-                )
-            }
-            return START_STICKY
-        }
 
         launchSetupMonitoring()
         launchInnerPulseServer()
@@ -395,7 +438,7 @@ class UbuntuService:
             broadcastReceiverForOpenFannel,
         )
         PcPulseSetServerForUbuntu.exit()
-        UbuntuSetUp.killAllProcess(ubuntuCoroutineJobsHashMap)
+        UbuntuSetUp.killAllCoroutinJob(ubuntuCoroutineJobsHashMap)
         PcPulseSetServer.exit()
         notificationManager?.cancel(chanelId)
         stopForeground(STOP_FOREGROUND_DETACH)
@@ -450,7 +493,7 @@ class UbuntuService:
         val setupMonitoringJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
                 while(true) {
-                    delay(3000)
+                    delay(2000)
                     if(
                         ubuntuFiles?.ubuntuLaunchCompFile?.isFile == true
                     ) break
@@ -499,6 +542,7 @@ class UbuntuService:
 
     private fun reLaunchUbuntuService(){
         val intent = Intent()
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.action = BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
         sendBroadcast(intent)
     }
@@ -630,11 +674,24 @@ class UbuntuService:
     }
 
     private fun killAllProot(){
+        val packageName = this.packageName
+        ubuntuFiles?.let {
+            BusyboxExecutor(applicationContext, it).executeKillAllProcess(
+                cmdclickMonitorFileName
+            )
+        }
+//        val userId = LinuxCmd.exec(
+//            listOf(
+//                "sh",
+//                "-c",
+//                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
+//            ).joinToString("\t")
+//        )
         val output = LinuxCmd.exec(
             listOf(
                 "sh",
                 "-c",
-                "kill -9 $(ps -ef | grep proot | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
+                "kill -9 $(ps -ef | grep proot | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
             ).joinToString("\t")
         )
         FileSystems.updateFile(

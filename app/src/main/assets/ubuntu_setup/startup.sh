@@ -202,6 +202,23 @@ setup_dropbear_sshserver(){
 startup_launch_cmd(){
 	su - "${R_USER}" <<-EOF
 	echo \$USER
+	echo --- launch sshd server
+	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1 &
+	echo "Type bellow command"
+	echo -e "\tssh -p ${SSH_PORT}  cmdclick@{your android ip_address}"
+	echo -e "\tpassword: ${R_USER}"
+	echo --- wssh start
+	# 192.168.0.4
+	wssh --address='127.0.0.1' \
+		--port=${WEB_SSH_TERM_PORT} &
+		# \
+		# >/dev/null 2>&1 &
+	echo --- launch shell2http
+	shell2http \
+		-port ${CMD_PORT} \
+		/bash "bash \$HOME/cmd/cmd.sh"  &
+		# \
+		# >/dev/null 2>&1 &
 	echo --- pulseaudio --start
 	retry_times=5
 	for i in \$(seq \${retry_times})
@@ -215,26 +232,24 @@ startup_launch_cmd(){
 				;;
 		esac
 		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
-		sleep 1
+		sleep 2
+	done
+	sleep 2
+	retry_times=5
+	for i in \$(seq \${retry_times})
+	do
+		shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
+		case "\${shellCon}" in
+			"") ;;
+			*)	
+				sh -c "\${shellCon}"
+				break
+				;;
+		esac
+		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
+		sleep 2
 	done
 	espeak "sound quality test sound quality test"
-	
-	echo --- launch sshd server
-	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1 &
-	echo "Type bellow command"
-	echo -e "\tssh -p ${SSH_PORT}  cmdclick@{your android ip_address}"
-	echo -e "\tpassword: ${R_USER}"
-	echo --- wssh start
-	# 192.168.0.4
-	wssh --address='127.0.0.1' \
-		--port=${WEB_SSH_TERM_PORT} \
-		>/dev/null 2>&1 &
-	echo --- launch shell2http
-	shell2http \
-		-port ${CMD_PORT} \
-		/bash "bash \$HOME/cmd/cmd.sh"  &
-		# \
-		# >/dev/null 2>&1 &
 	# echo --- kill pulse
 	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
 	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')

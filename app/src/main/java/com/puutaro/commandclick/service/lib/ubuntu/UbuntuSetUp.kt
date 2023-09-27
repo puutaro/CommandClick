@@ -314,7 +314,7 @@ object UbuntuSetUp {
         ubuntuFiles.setupLinks()
     }
 
-    fun killAllProcess(
+    fun killAllCoroutinJob(
         ubuntuCoroutineJobsHashMap: HashMap<String, Job?>
     ){
         ubuntuCoroutineJobsHashMap.forEach { t, u ->

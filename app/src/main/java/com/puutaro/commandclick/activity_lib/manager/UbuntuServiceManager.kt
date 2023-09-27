@@ -30,7 +30,6 @@ object UbuntuServiceManager {
                 if(!onInitDelay) return@withContext
                 delay(8000)
             }
-
             withContext(Dispatchers.IO){
                 FileSystems.removeFiles(
                     cmdclickTempUbuntuServiceDirPath,
