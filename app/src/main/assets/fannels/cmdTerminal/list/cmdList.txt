@@ -1,0 +1,19 @@
+ls -l
+echo "cmdclick terminal"
+ls
+echo
+sed "s///g"
+pwd
+ps aux
+grep
+cat
+ |
+""
+''
+cut
+awk '{print $1}'
+find
+cd
+ps aux | grep pulse
+ps aux | grep dropbear
+ps aux | grep ssh

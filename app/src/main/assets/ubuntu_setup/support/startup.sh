@@ -5,10 +5,24 @@ export DEBIAN_FRONTEND=noninteractive
 R_USER="cmdclick"
 UBUNTU_SETUP_COMP_FILE="/support/ubuntuSetupComp.txt"
 UBUNTU_LAUNCH_COMP_FILE="/support/ubuntuLaunchComp.txt"
-SSH_PORT=10022
-WEB_SSH_TERM_PORT=18080
-CMD_PORT=15000
-PULSE_HANDLE_SERVER_PORT=10091
+
+
+kill_front_and_sub_process(){
+	local killId=$(\
+		ps aux \
+		| grep -v "${PACKAGE_NAME}" \
+		| grep \
+			-e "pulseaudio"  \
+			-e "wssh --address="  \
+			-e "shell2http"  \
+		| awk '{print $2}' \
+	)
+	case "${killId}" in
+		"") return ;;
+	esac
+	echo --- kill process
+	kill ${killId}
+}
 
 install_pip3_pkg(){
 	local package="${1:-}"
@@ -199,13 +213,16 @@ setup_dropbear_sshserver(){
     dropbearkey -t ecdsa -s 521 -f /etc/dropbear/dropbear_ecdsa_host_key
 }
 
-startup_launch_cmd(){
+startup_launch_system(){
+	echo "### $FUNCNAME"
 	su - "${R_USER}" <<-EOF
 	echo \$USER
 	echo --- launch sshd server
-	sudo dropbear -E -p ${SSH_PORT} >/dev/null 2>&1 &
+	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
+	sudo dropbear -E -p ${DROPBEAR_SSH_PORT} >/dev/null &
+	# 2>&1 &
 	echo "Type bellow command"
-	echo -e "\tssh -p ${SSH_PORT}  cmdclick@{your android ip_address}"
+	echo -e "\tssh -p ${DROPBEAR_SSH_PORT}  cmdclick@{your android ip_address}"
 	echo -e "\tpassword: ${R_USER}"
 	echo --- wssh start
 	# 192.168.0.4
@@ -214,16 +231,15 @@ startup_launch_cmd(){
 		# \
 		# >/dev/null 2>&1 &
 	echo --- launch shell2http
+	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
-		-port ${CMD_PORT} \
+		-port ${HTTP2_SHELL_PORT} \
 		/bash "bash \$HOME/cmd/cmd.sh"  &
 		# \
 		# >/dev/null 2>&1 &
-	# echo --- kill pulse
-	# kill -9 \$(ps aux | grep pulse | grep -v "/usr/bin" | grep -v "/usr/local/bin" | grep -v grep | awk '{print \$2}')
-	# kill -9 \$(ps aux | grep proot | awk '{print \$2}')
 	EOF
 }
+
 
 pulseaudioSetup(){
 	su - "${R_USER}" <<-EOF
@@ -231,10 +247,11 @@ pulseaudioSetup(){
 	retry_times=5
 	for i in \$(seq \${retry_times})
 	do
-		shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
+		shellCon="\$(curl 127.0.0.1:${UBUNTU_PC_PULSE_SET_SERVER_PORT})"
 		case "\${shellCon}" in
 			"") ;;
 			*)	
+				echo "UBUNTU_PC_PULSE_SET_SERVER_PORT ${UBUNTU_PC_PULSE_SET_SERVER_PORT}"
 				sh -c "\${shellCon}"
 				break
 				;;
@@ -292,18 +309,6 @@ install_require_pacakges(){
 			" \
 	)
 	apt-get install -y ${require_packages}
-	# nano
-	# 		less
-	# install_add_repository
-	# apt_install make
-	# apt_install wget
-	# apt_install \
-	# 	"firmware-sof-signed"
-	# apt_install \
-	# 	"initramfs-tools"
-	# apt_install man
-	# apt_install manpages-dev
-	# install_user_package
 }
 
 install_shell2http(){
@@ -345,6 +350,7 @@ install_nodjs(){
 	apt-get install -y nodejs
 }
 
+
 wait_cmd(){
 	while true; 
 	do 
@@ -363,7 +369,8 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
 	apt-get install -y sudo
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
-startup_launch_cmd
+kill_front_and_sub_process
+startup_launch_system
 touch "${UBUNTU_LAUNCH_COMP_FILE}"
 pulseaudioSetup
 wait_cmd
