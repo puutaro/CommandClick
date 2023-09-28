@@ -12,11 +12,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.RESTART_OR_KILL_FRONT_SYSTEM
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
@@ -52,12 +53,25 @@ class UbuntuService:
     private val cmdclickMonitorFileName = UsePath.cmdClickMonitorFileName_2
     private var ubuntuFiles: UbuntuFiles? = null
     private var isTaskKill = false
-
+    private var monitorScreenJob: Job? = null
     private var notificationBuilder:  NotificationCompat.Builder? = null
     private var ubuntuCoroutineJobsHashMap = HashMap<String, Job?>()
     private val notificationId = NotificationChanel.UBUNTU_NOTIFICATION.id
     private val chanelId = ServiceNotificationId.ubuntuServer
     private var notificationManager: NotificationManagerCompat? = null
+    private var screenOffKill = false
+    private val screenStatusReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // Receive screen off
+            when(intent.action) {
+                Intent.ACTION_SCREEN_OFF
+                -> monitorScreen()
+                Intent.ACTION_SCREEN_ON
+                -> launchRestartBroadcast()
+            }
+        }
+    }
+
     private var broadcastReceiverForUbuntuServerIsActive: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if(
@@ -69,6 +83,40 @@ class UbuntuService:
                 UsePath.cmdclickTmpUbuntuServiceActiveFileName,
                 String()
             )
+        }
+    }
+    private var broadcastReceiverForRestartOrKillSubFrontSystem: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if(
+                intent.action
+                != BroadCastIntentScheme.RESTART_OR_KILL_SUB_FRONT_SYSTEM.action
+            ) return
+            val startOrStop = intent.getStringExtra(
+                UbuntuServerIntentExtra.restart_or_stop_front_system.schema
+            )
+            if(
+                ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+            ) return
+            when(startOrStop){
+                RESTART_OR_KILL_FRONT_SYSTEM.START.name
+                -> {
+                    startFrontProcess()
+                    FileSystems.writeFile(
+                        UsePath.cmdclickDefaultAppDirPath,
+                        "ubuntuFrontStart${LocalDateTime.now()}.txt",
+                        String()
+                    )
+                }
+                RESTART_OR_KILL_FRONT_SYSTEM.KILL.name
+                -> {
+                    killFrontProcess()
+                    FileSystems.writeFile(
+                        UsePath.cmdclickDefaultAppDirPath,
+                        "ubuntuFrontKill${LocalDateTime.now()}.txt",
+                        String()
+                    )
+                }
+            }
         }
     }
     private var broadcastReceiverForUbuntuServerStop: BroadcastReceiver = object : BroadcastReceiver() {
@@ -246,6 +294,15 @@ class UbuntuService:
             broadcastReceiverForOpenFannel,
             BroadCastIntentScheme.OPEN_FANNEL.action
         )
+        BroadcastManagerForService.registerBroadcastReceiver(
+            this,
+            broadcastReceiverForRestartOrKillSubFrontSystem,
+            BroadCastIntentScheme.RESTART_OR_KILL_SUB_FRONT_SYSTEM.action
+        )
+        BroadcastManagerForService.registerScreenOnOffReceiver(
+            this,
+            screenStatusReceiver,
+        )
     }
 
     override fun onStartCommand(
@@ -333,6 +390,7 @@ class UbuntuService:
                 chanelId,
                 notificationInstance
             )
+            monitorProcessNum()
             return START_STICKY
         }
         if(
@@ -359,6 +417,7 @@ class UbuntuService:
                 chanelId,
                 notificationInstance
             )
+            monitorProcessNum()
             return START_STICKY
         }
         notificationBuilder?.clearActions()
@@ -378,6 +437,7 @@ class UbuntuService:
             chanelId,
             notificationInstance
         )
+        monitorProcessNum()
 
         launchSetupMonitoring()
         launchInnerPulseServer()
@@ -429,6 +489,10 @@ class UbuntuService:
         BroadcastManagerForService.unregisterBroadcastReceiver(
             this,
             broadcastReceiverForOpenFannel,
+        )
+        BroadcastManagerForService.unregisterBroadcastReceiver(
+            this,
+            screenStatusReceiver,
         )
         PcPulseSetServerForUbuntu.exit()
         UbuntuSetUp.killAllCoroutinJob(ubuntuCoroutineJobsHashMap)
@@ -581,10 +645,10 @@ class UbuntuService:
                 PcPulseSetServerForUbuntu.launch(
                     applicationContext,
                     "127.0.0.1",
-                    UsePort.ubuntuPulseRecieverPort.num.toString(),
+                    UsePort.UBUNTU_PULSE_RECEIVER_PORT.num.toString(),
                     notificationId,
                     chanelId,
-                    UsePort.ubuntuPcPulseSetServer.num.toString(),
+                    UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num.toString(),
                     it,
                     cancelUbuntuServicePendingIntent
                 )
@@ -694,4 +758,107 @@ class UbuntuService:
         )
     }
 
+
+    private fun startFrontProcess(){
+        ubuntuFiles?.let {
+            BusyboxExecutor(applicationContext, it).executeStartFrontProcess(
+                cmdclickMonitorFileName
+            )
+        }
+    }
+    private fun killFrontProcess(){
+        ubuntuFiles?.let {
+            BusyboxExecutor(applicationContext, it).executeKillFrontProcess(
+                cmdclickMonitorFileName
+            )
+        }
+    }
+
+    private fun killSubFrontProcess(){
+        ubuntuFiles?.let {
+            BusyboxExecutor(applicationContext, it).executeKillSubFrontProcess(
+                cmdclickMonitorFileName
+            )
+        }
+    }
+
+    private fun killAllProcess(){
+        val packageName = this.packageName
+        ubuntuFiles?.let {
+            BusyboxExecutor(applicationContext, it).executeKillAllProcess(
+                cmdclickMonitorFileName
+            )
+        }
+        val userId = LinuxCmd.exec(
+            listOf(
+                "sh",
+                "-c",
+                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
+            ).joinToString("\t")
+        )
+        val output = LinuxCmd.exec(
+            listOf(
+                "sh",
+                "-c",
+                "kill -9 $(ps -ef | grep ${userId} | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
+            ).joinToString("\t")
+        )
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdclickMonitorFileName,
+            output
+        )
+    }
+
+    private fun launchRestartBroadcast(){
+        if(!screenOffKill) return
+        monitorScreenJob?.cancel()
+        killAllProot()
+        finishProcess()
+        stopSelf()
+        screenOffKill = false
+        reLaunchUbuntuService()
+    }
+
+    private fun monitorScreen(){
+        val systemProcessNum = UbuntuProcessType.values().size - 1
+        monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                delay(10000)
+                killFrontProcess()
+                val processNum = processNumCalculator()
+                if (
+                    processNum > systemProcessNum
+                ) return@withContext
+                screenOffKill = true
+                killSubFrontProcess()
+//                killAllProot()
+            }
+        }
+    }
+
+    private fun monitorProcessNum(){
+        var previousProcessNum = 0
+        ubuntuCoroutineJobsHashMap[UbuntuProcessType.monitoringProcessNum.name]?.cancel()
+        val processNumUpdateIntent = Intent()
+        processNumUpdateIntent.action =
+            BroadCastIntentScheme.UPDATE_PROCESS_NUM_UBUNTU_SERVICE.action
+        val monitorProcessNumJob = CoroutineScope(Dispatchers.IO).launch {
+            while(true){
+                delay(500)
+                if(
+                    ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+                ) continue
+                val currentProcessNum = processNumCalculator()
+                if(
+                    previousProcessNum == currentProcessNum
+                ) continue
+                previousProcessNum = currentProcessNum
+                applicationContext.sendBroadcast(processNumUpdateIntent)
+            }
+        }
+        ubuntuCoroutineJobsHashMap[
+                UbuntuProcessType.monitoringProcessNum.name
+        ] = monitorProcessNumJob
+    }
 }

@@ -9,6 +9,7 @@ import java.io.InputStream
 import java.io.OutputStream
 
 object AssetsFileManager {
+    private const val assetsFannelsDirName = "fannels"
     const val textImagePingPath = "res/png/text_image.png"
     const val pdfImagePingPath = "res/png/pdf_image.png"
     private const val assetsDialogWebViewDirPath = "fannels/dialog_webview"
@@ -16,11 +17,14 @@ object AssetsFileManager {
         "${assetsDialogWebViewDirPath}/highlightSchForDialogWebView.js"
     const val assetsHighlightCopy =
         "${assetsDialogWebViewDirPath}/highlightCopy.js"
-    const val fannelShellDirPath = "fannels/shell"
+    const val fannelShellDirPath = "${assetsFannelsDirName}/shell"
     const val ubunutSupportDirPath = "ubuntu_setup/support"
     const val ubunutStartupScriptPath = "ubuntu_setup/startup.sh"
     const val etcPulseDefaultPa = "ubuntu_setup/support/default.pa"
-
+    const val cmdTerminalDirPath = "${assetsFannelsDirName}/cmdTerminal"
+    const val cmdFannelListDir = "${cmdTerminalDirPath}/list"
+    const val cmdListTxt = "${cmdTerminalDirPath}/list/cmdList.txt"
+    const val extraKeyListTxt = "${cmdTerminalDirPath}/list/extraKeyList.txt"
 
     fun readFromAssets(
         context: Context?,

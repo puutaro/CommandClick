@@ -38,8 +38,36 @@ class WaitQuiz(
 
     private val quizPairList = listOf(
         Pair(
+            "What's this ubuntu size?",
+            "-> About 1GB"
+        ),
+        Pair(
+            "What's ${appName} concept?",
+            "-> Swiss knife"
+        ),
+        Pair(
+            "Where are fannel store?",
+            "-> Search commandclick-repository"
+        ),
+        Pair(
+            "Where are fannel store menu?",
+            "-> Long press setting button -> install fannel"
+        ),
+        Pair(
+            "Where are bookmark?",
+            "-> Long press left bottom button"
+        ),
+        Pair(
+            "What's this browser hot spot?",
+            "-> Highlight text -> press net mark!"
+        ),
+        Pair(
+            "How long does ubuntu sound set?",
+            "-> 10 seconds at the latest"
+        ),
+        Pair(
             "How to quickly customize?",
-            "-> long press setting button -> edit_startup"
+            "-> Long press setting button -> edit_startup"
         ),
         Pair(
             "What's data management system in ${appName}?",

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
@@ -160,6 +161,32 @@ class BusyboxExecutor(
         )
     }
 
+    fun executeStartFrontProcess(
+        monitorFileName: String
+    ){
+        executeProotCommand(
+            listOf("bash", "/support/restartup.sh"),
+            monitorFileName = monitorFileName
+        )
+    }
+    fun executeKillFrontProcess(
+        monitorFileName: String
+    ){
+        executeProotCommand(
+            listOf("bash", "/support/kill_front_process.sh"),
+            monitorFileName = monitorFileName
+        )
+    }
+
+    fun executeKillSubFrontProcess(
+        monitorFileName: String
+    ){
+        executeProotCommand(
+            listOf("bash", "/support/kill_sub_front_process.sh"),
+            monitorFileName = monitorFileName
+        )
+    }
+
     fun executeKillProcess(
         targetProcessName: String,
         monitorFileName: String
@@ -230,13 +257,6 @@ class BusyboxExecutor(
                 process,
                 monitorFileName
             )
-            val exitCode = process.waitFor()
-            outputFailureStatus(
-                process,
-                exitCode,
-                functionName,
-                monitorFileName
-            )
             if(
                 updateubuntuCoroutineJobsHashMapUpdateData != null
             ) {
@@ -249,6 +269,13 @@ class BusyboxExecutor(
                 context?.sendBroadcast(processNumUpdateIntent)
                 return
             }
+            val exitCode = process.waitFor()
+            outputFailureStatus(
+                process,
+                exitCode,
+                functionName,
+                monitorFileName
+            )
         } catch (err: Exception) {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
@@ -355,14 +382,20 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
         } ?: ""
         val bindings = "$emulatedStorageBinding $externalStorageBinding"
         return hashMapOf(
-                "LD_LIBRARY_PATH" to ubuntuFiles.supportDir.absolutePath,
-                "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
-                "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
-                "ROOTFS_PATH" to rootfsDir.absolutePath,
+            "LD_LIBRARY_PATH" to ubuntuFiles.supportDir.absolutePath,
+            "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
+            "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
+            "ROOTFS_PATH" to rootfsDir.absolutePath,
 //                "PROOT_DEBUG_LEVEL" to prootDebugLevel,
-                "EXTRA_BINDINGS" to bindings,
-                "OS_VERSION" to System.getProperty("os.version")!!,
-                "IP_V4_ADDRESS" to NetworkTool.getIpv4Address(context)
+            "EXTRA_BINDINGS" to bindings,
+            "OS_VERSION" to System.getProperty("os.version")!!,
+            "IP_V4_ADDRESS" to NetworkTool.getIpv4Address(context),
+            "PACKAGE_NAME" to context?.packageName.toString(),
+            "UBUNTU_PC_PULSE_SET_SERVER_PORT" to UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num.toString(),
+            "UBUNTU_PULSE_RECEIVER_PORT" to UsePort.UBUNTU_PULSE_RECEIVER_PORT.num.toString(),
+            "HTTP2_SHELL_PORT" to UsePort.HTTP2_SHELL_PORT.num.toString(),
+            "WEB_SSH_TERM_PORT" to UsePort.WEB_SSH_TERM_PORT.num.toString(),
+            "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
         )
     }
 

@@ -10,4 +10,10 @@ enum class UbuntuServerIntentExtra(
     monitorFileName("monitorFileName"),
     fannelDirPath("fannelDirPath"),
     fannelName("fannelName"),
+    restart_or_stop_front_system("start_or_stop_front_system"),
+}
+
+enum class RESTART_OR_KILL_FRONT_SYSTEM {
+    START,
+    KILL
 }

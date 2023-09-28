@@ -118,6 +118,9 @@ object IndexInitHandler {
                 cmdIndexFragment,
                 currentAppDirPath
             )
+            StartFileMaker.makecmdTerminalListFiles(
+                cmdIndexFragment,
+            )
             ConfigFromStartUpFileSetter.set(
                 cmdIndexFragment,
                 currentAppDirPath,

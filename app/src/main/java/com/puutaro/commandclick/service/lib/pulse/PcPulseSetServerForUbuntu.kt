@@ -48,7 +48,7 @@ object PcPulseSetServerForUbuntu {
         val serverPort = try {
             serverPortStr.toInt()
         } catch (e: Exception){
-            UsePort.ubuntuPulseRecieverPort.num
+            UsePort.UBUNTU_PULSE_RECEIVER_PORT.num
         }
         val enableRestart = PulseSoundThread(
             pcAddress,
@@ -150,12 +150,12 @@ object PcPulseSetServerForUbuntu {
 //            )
 //        }
         pcPulseSetServer = withContext(Dispatchers.IO) {
-            val ubuntuPcPulseSetServerPortInt = try {
+            val UBUNTUPCPULSESETSERVERPORTPortInt = try {
                 ubuntuPcPulseSetServerPort.toInt()
             } catch (e: Exception){
-                UsePort.ubuntuPcPulseSetServer.num
+                UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num
             }
-            ServerSocket(ubuntuPcPulseSetServerPortInt)
+            ServerSocket(UBUNTUPCPULSESETSERVERPORTPortInt)
         }
         enablePcPulseSetServerRoop = true
 
@@ -252,7 +252,7 @@ object PcPulseSetServerForUbuntu {
         context: Context?,
         updateMonitorContents: String
     ){
-        FileSystems.writeFile(
+        FileSystems.updateFile(
             cmdclickTempMonitorDirPath,
             cmdclickTmpUpdateMonitorFileName,
             updateMonitorContents
@@ -305,7 +305,7 @@ private val ubuntuSetUpShell = """
 	; PULSE_SERVER=  && pulseaudio --start \
     ; pactl load-module module-null-sink sink_name=TCP_output \
     && pacmd update-sink-proplist TCP_output device.description=TCP_output \
-    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=${UsePort.ubuntuPulseRecieverPort.num} listen=0.0.0.0
+    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=${UsePort.UBUNTU_PULSE_RECEIVER_PORT.num} listen=0.0.0.0
 
     """.trimIndent()
 
@@ -313,7 +313,7 @@ private val ubuntuSetUpShell = """
 private val fullStatProcDesc = """
     ### Execute bellow in PC
     
-    1. curl %s:${UsePort.ubuntuPcPulseSetServer.num} | sh
+    1. curl %s:${UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num} | sh
     2. start "pavucontrol" 
     3. select "output -> TCP_output" in "pavucontrol"
 

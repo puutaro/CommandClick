@@ -72,6 +72,10 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.ubuntu_service.is_active",
         "is_active",
     ),
+    RESTART_OR_KILL_SUB_FRONT_SYSTEM(
+        "com.puutaro.commandclick.ubuntu_service.restart_sub_front_system",
+        "restart_sub_front_system",
+    ),
     BACKGROUND_CMD_KILL(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_kill",
         "background_cmd_kill",

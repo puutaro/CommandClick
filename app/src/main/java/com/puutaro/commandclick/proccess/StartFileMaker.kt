@@ -1,7 +1,9 @@
 package com.puutaro.commandclick.proccess
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsMacroType
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -26,6 +28,25 @@ object StartFileMaker {
     private val webSearcher = UrlFileSystems.webSearcher
     private val askGpt35 = UrlFileSystems.askGpt35
 
+    fun makecmdTerminalListFiles(
+        fragment: Fragment,
+    ){
+        val context = fragment.context
+        val fannelDirName = SystemFannel.cmdTerminal
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        makeCmdTerminalListFile(
+            context,
+            fannelDirName,
+            AssetsFileManager.cmdListTxt,
+        )
+        makeCmdTerminalListFile(
+            context,
+            fannelDirName,
+            AssetsFileManager.extraKeyListTxt,
+        )
+    }
 
     fun makeForStartupScript(
         fragment: Fragment,
@@ -376,4 +397,32 @@ private object InitSettingListFile {
             contents
         )
     }
+}
+
+private fun makeCmdTerminalListFile(
+    context: Context?,
+    fannelDirName: String,
+    targetAssetsFilePath: String,
+) {
+    val fannelDirPath = "${UsePath.cmdclickSystemAppDirPath}/${fannelDirName}"
+    val listFilePath = targetAssetsFilePath.replace(
+        AssetsFileManager.cmdTerminalDirPath,
+        fannelDirPath
+    )
+    val listFilePathObj = File(listFilePath)
+    if(
+        listFilePathObj.isFile
+    ) return
+    val listFileDirPath = listFilePathObj.parent
+        ?: return
+    val listFileName = listFilePathObj.name
+        ?: return
+    FileSystems.writeFile(
+        listFileDirPath,
+        listFileName,
+        AssetsFileManager.readFromAssets(
+            context,
+            targetAssetsFilePath
+        )
+    )
 }

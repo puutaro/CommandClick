@@ -27,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocke
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.sender.UbuntuFrontSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
@@ -182,6 +183,7 @@ class   TerminalFragment: Fragment() {
             this,
             broadcastReceiverForMonitorText
         )
+//        UbuntuFrontSystem.kill(this)
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
@@ -226,6 +228,7 @@ class   TerminalFragment: Fragment() {
             broadcastReceiverForMonitorText,
             BroadCastIntentScheme.MONITOR_TEXT_PATH.action
         )
+//        UbuntuFrontSystem.start(this)
         previousTerminalTag = tag
     }
 

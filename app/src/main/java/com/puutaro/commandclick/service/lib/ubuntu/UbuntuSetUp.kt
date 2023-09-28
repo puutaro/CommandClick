@@ -27,7 +27,7 @@ import java.net.URL
 object UbuntuSetUp {
 //        #"https://partner-images.canonical.com/core/jammy/" +
 //                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
-
+    private val startupFilePath = "/support/startup.sh"
     fun set(
         context: Context?,
         monitorFileName: String,
@@ -77,7 +77,7 @@ object UbuntuSetUp {
             ubuntuFiles.ubuntuSetupCompFile.isFile
         ) {
             busyboxExecutor.executeProotCommand(
-                listOf("bash", "startup.sh"),
+                listOf("bash", startupFilePath),
                 monitorFileName = monitorFileName
             )
             return
@@ -179,16 +179,8 @@ object UbuntuSetUp {
             monitorFileName,
             "\n\nlsResult: ${lsResult}"
         )
-        FileSystems.writeFile(
-            ubuntuFiles.filesOneRootfs.absolutePath,
-            "startup.sh",
-            AssetsFileManager.readFromAssets(
-                context,
-                AssetsFileManager.ubunutStartupScriptPath
-            )
-        )
         busyboxExecutor.executeProotCommand(
-            listOf("bash", "startup.sh"),
+            listOf("bash", startupFilePath),
             monitorFileName = monitorFileName
         )
     }
@@ -327,6 +319,7 @@ enum class UbuntuProcessType {
     SetUp,
     SetUpMonitoring,
     PulseaudioSetUp,
+    monitoringProcessNum,
 }
 
 enum class UbuntuStateType(
