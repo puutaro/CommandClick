@@ -92,11 +92,13 @@ class JsDialog(
     @JavascriptInterface
     fun prompt(
         title: String,
-        message: String
+        message: String,
+        variableName: String,
     ): String {
         return promptJsDialog.create(
             title,
-            message
+            message,
+            variableName
         )
     }
 

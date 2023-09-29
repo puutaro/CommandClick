@@ -43,7 +43,7 @@ class WaitQuiz(
         ),
         Pair(
             "How long ubuntu sleep time?",
-            "-> 10 min"
+            "-> 20 min"
         ),
         Pair(
             "What's this ubuntu size?",

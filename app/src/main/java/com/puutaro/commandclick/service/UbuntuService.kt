@@ -49,7 +49,7 @@ class UbuntuService:
     private var isStartup = false
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val cmdclickMonitorFileName = UsePath.cmdClickMonitorFileName_2
-    private val BlankScreenKillDelay = 10000L * 6 * 10
+    private val BlankScreenKillDelay = 10000L * 6 * 20
     private var ubuntuFiles: UbuntuFiles? = null
     private var isTaskKill = false
     private var monitorScreenJob: Job? = null
@@ -787,12 +787,12 @@ class UbuntuService:
         monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 delay(BlankScreenKillDelay)
-                killFrontProcess()
                 val processNum = processNumCalculator()
                 if (
                     processNum > systemProcessNum
                 ) return@withContext
                 screenOffKill = true
+                killFrontProcess()
                 killSubFrontProcess()
 //                killAllProot()
             }

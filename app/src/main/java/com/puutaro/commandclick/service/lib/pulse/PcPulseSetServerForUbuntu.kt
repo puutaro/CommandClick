@@ -141,14 +141,14 @@ object PcPulseSetServerForUbuntu {
         notificationManager: NotificationManagerCompat,
         cancelPendingIntent: PendingIntent
     ){
-        withContext(Dispatchers.IO) {
-            displayProcess(
-                context,
-                fullStatProcDesc.format(
-                    NetworkTool.getIpv4Address(context)
-                )
-            )
-        }
+//        withContext(Dispatchers.IO) {
+//            displayProcess(
+//                context,
+//                fullStatProcDesc.format(
+//                    NetworkTool.getIpv4Address(context)
+//                )
+//            )
+//        }
         pcPulseSetServer = withContext(Dispatchers.IO) {
             val UBUNTUPCPULSESETSERVERPORTPortInt = try {
                 ubuntuPcPulseSetServerPort.toInt()

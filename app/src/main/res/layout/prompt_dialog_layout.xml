@@ -9,6 +9,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     >
+    <!--    android:theme="@style/BottomSheetDialogTheme"-->
     <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -16,6 +17,8 @@
         android:layout_weight="1"
         android:paddingTop="15dp"
         >
+<!--        androidx.appcompat.widget.AppCompatTextView-->
+<!--        com.puutaro.commandclick.custom_view.AutoCompleteTextViewImpl-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/prompt_dialog_title"
             android:layout_width="match_parent"
@@ -48,11 +51,15 @@
             android:textColor="@color/cmdclick_text_black"
             android:paddingBottom="15dp"
             />
-        <androidx.appcompat.widget.AppCompatEditText
+<!--
+android:dropDownHeight="200dp"
+-->
+        <AutoCompleteTextView
             android:id="@+id/prompt_dialog_input"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
+            android:gravity="bottom"
             android:layout_centerVertical="true"
             android:layout_marginBottom="0dp"
             android:layout_marginStart="20dp"
@@ -62,6 +69,8 @@
             android:inputType="text"
             android:paddingBottom="15dp"
             />
+<!--        android:dropDownHeight="200dp"
+            android:dropDownVerticalOffset="-250dp"-->
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
         android:orientation="horizontal"
