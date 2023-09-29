@@ -62,14 +62,17 @@ object UbuntuSetUp {
     ) {
         val context  = contextSrc
             ?: return
-        downloadUbuntu(monitorFileName)
+        val ubuntuFiles = UbuntuFiles(
+            context,
+        )
+        downloadUbuntu(
+            ubuntuFiles,
+            monitorFileName
+        )
         FileSystems.updateFile(
             UsePath.cmdclickMonitorDirPath,
             monitorFileName,
             "\n\nulafiles start"
-        )
-        val ubuntuFiles = UbuntuFiles(
-            context,
         )
         val busyboxExecutor = BusyboxExecutor(
             context,
@@ -187,15 +190,25 @@ object UbuntuSetUp {
         )
     }
 
-    suspend fun downloadUbuntu(
+    private suspend fun downloadUbuntu(
+        ubuntuFiles: UbuntuFiles,
         monitorFileName: String,
     ){
+        val supportDirPath = ubuntuFiles.supportDir.absolutePath
+        val downloadCompTxt = "downloadComp.txt"
+        FileSystems.createDirs(
+            supportDirPath
+        )
         withContext(Dispatchers.IO) {
             if(
                 File(
-                    UbuntuFiles.downloadRootfsTarGzPath
+                    "${supportDirPath}/${downloadCompTxt}",
                 ).isFile
             ) return@withContext
+            FileSystems.removeFiles(
+                UbuntuFiles.downloadDirPath,
+                UbuntuFiles.rootfsTarGzName
+            )
             // put your url.this is sample url.
             val url = URL(UbuntuFiles.arm64UbuntuRootfsUrl)
             val conection = url.openConnection()
@@ -230,9 +243,16 @@ object UbuntuSetUp {
             output.close()
             input.close()
         }
+        withContext(Dispatchers.IO){
+            FileSystems.writeFile(
+                supportDirPath,
+                downloadCompTxt,
+                String()
+            )
+        }
     }
 
-    fun initSetup(
+    private fun initSetup(
         context: Context?,
         ubuntuFiles: UbuntuFiles,
         monitorFileName: String,
@@ -289,6 +309,10 @@ object UbuntuSetUp {
             UbuntuFiles.downloadRootfsTarGzPath,
             "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
+        FileSystems.removeFiles(
+            UbuntuFiles.downloadDirPath,
+            UbuntuFiles.rootfsTarGzName
+        )
 
         ubuntuFiles.makePermissionsUsable(
             ubuntuFiles.filesOneRootfs.absolutePath,
@@ -308,7 +332,7 @@ object UbuntuSetUp {
         ubuntuFiles.setupLinks()
     }
 
-    fun killAllCoroutinJob(
+    fun killAllCoroutineJob(
         ubuntuCoroutineJobsHashMap: HashMap<String, Job?>
     ){
         ubuntuCoroutineJobsHashMap.forEach { t, u ->

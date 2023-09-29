@@ -496,7 +496,7 @@ class UbuntuService:
             screenStatusReceiver,
         )
         PcPulseSetServerForUbuntu.exit()
-        UbuntuSetUp.killAllCoroutinJob(ubuntuCoroutineJobsHashMap)
+        UbuntuSetUp.killAllCoroutineJob(ubuntuCoroutineJobsHashMap)
         PcPulseSetServer.exit()
         notificationManager?.cancel(chanelId)
         stopForeground(STOP_FOREGROUND_DETACH)

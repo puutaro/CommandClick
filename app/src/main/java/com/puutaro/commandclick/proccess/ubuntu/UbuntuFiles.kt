@@ -14,8 +14,6 @@ class UbuntuFiles(
     companion object {
         val arm64UbuntuRootfsUrl =
             "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
-//            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
-//            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
 //            "https://partner-images.canonical.com/core/jammy/" +
 //                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
 //            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
