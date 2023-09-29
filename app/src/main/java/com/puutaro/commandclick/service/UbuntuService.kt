@@ -23,17 +23,15 @@ import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
-import com.puutaro.commandclick.service.lib.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.service.lib.ubuntu.ButtonLabel
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuCoroutineJobsHashMapUpdateData
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuProcessType
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -48,9 +46,10 @@ import java.time.LocalDateTime
 class UbuntuService:
     Service() {
 
-
+    private var isStartup = false
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val cmdclickMonitorFileName = UsePath.cmdClickMonitorFileName_2
+    private val BlankScreenKillDelay = 10000L * 6 * 10
     private var ubuntuFiles: UbuntuFiles? = null
     private var isTaskKill = false
     private var monitorScreenJob: Job? = null
@@ -241,10 +240,6 @@ class UbuntuService:
                 ).executeProotCommand(
                     listOf("su","-", "cmdclick", "-c" ,"bash '$backgroundShellPath' $backgroundArgsTabSepaStr"),
                     monitorFileName = monitorFileName,
-                    updateubuntuCoroutineJobsHashMapUpdateData = UbuntuCoroutineJobsHashMapUpdateData(
-                        ubuntuCoroutineJobsHashMap,
-                        backgroundShellPath
-                    )
                 )
             }
             ubuntuCoroutineJobsHashMap.get(
@@ -310,6 +305,12 @@ class UbuntuService:
         flags: Int,
         startId: Int
     ): Int {
+        if(
+            isStartup
+        ) {
+            isStartup = true
+            return START_STICKY
+        }
         if(
             intent?.getStringExtra(
                 UbuntuServerIntentExtra.ubuntuStartCommand.schema
@@ -700,7 +701,7 @@ class UbuntuService:
         val execIntent = Intent(context, MainActivity::class.java)
         execIntent
             .setAction(Intent.ACTION_MAIN)
-            .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+            .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
 
         execIntent.putExtra(
             SharePrefferenceSetting.current_app_dir.name,
@@ -731,31 +732,11 @@ class UbuntuService:
     }
 
     private fun killAllProot(){
-        val packageName = this.packageName
         ubuntuFiles?.let {
             BusyboxExecutor(applicationContext, it).executeKillAllProcess(
                 cmdclickMonitorFileName
             )
         }
-        val userId = LinuxCmd.exec(
-            listOf(
-                "sh",
-                "-c",
-                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
-            ).joinToString("\t")
-        )
-        val output = LinuxCmd.exec(
-            listOf(
-                "sh",
-                "-c",
-                "kill -9 $(ps -ef | grep ${userId} | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
-            ).joinToString("\t")
-        )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdclickMonitorFileName,
-            output
-        )
     }
 
 
@@ -782,49 +763,30 @@ class UbuntuService:
         }
     }
 
-    private fun killAllProcess(){
-        val packageName = this.packageName
-        ubuntuFiles?.let {
-            BusyboxExecutor(applicationContext, it).executeKillAllProcess(
-                cmdclickMonitorFileName
-            )
-        }
-        val userId = LinuxCmd.exec(
-            listOf(
-                "sh",
-                "-c",
-                "ps -ef | grep '${packageName}' | sed 's/\\t\\t*/\\t/g' | cut -f 1"
-            ).joinToString("\t")
-        )
-        val output = LinuxCmd.exec(
-            listOf(
-                "sh",
-                "-c",
-                "kill -9 $(ps -ef | grep ${userId} | grep -vE \" ${packageName}$\" | sed 's/ /\\t/g' | sed 's/\\t\\t*/\\t/g' | cut -f 2)"
-            ).joinToString("\t")
-        )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdclickMonitorFileName,
-            output
-        )
-    }
-
     private fun launchRestartBroadcast(){
         if(!screenOffKill) return
         monitorScreenJob?.cancel()
-        killAllProot()
-        finishProcess()
-        stopSelf()
+        notificationBuilder?.setContentTitle("Sleeping...")
+        notificationBuilder?.setContentText("...")
+        notificationBuilder?.build()?.let {
+            notificationManager?.notify(
+                chanelId,
+                it
+            )
+        }
+//        killAllProot()
+//        killAllProcess()
+//        finishProcess()
+//        stopSelf()
         screenOffKill = false
-        reLaunchUbuntuService()
+//        reLaunchUbuntuService()
     }
 
     private fun monitorScreen(){
         val systemProcessNum = UbuntuProcessType.values().size - 1
         monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                delay(10000)
+                delay(BlankScreenKillDelay)
                 killFrontProcess()
                 val processNum = processNumCalculator()
                 if (

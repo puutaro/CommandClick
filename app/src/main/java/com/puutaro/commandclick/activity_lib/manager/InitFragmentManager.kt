@@ -27,9 +27,6 @@ class InitFragmentManager(
     private val onShortcut = intent.getStringExtra(
         SharePrefferenceSetting.on_shortcut.name
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
-    private val allowIntentSystemFannelList = listOf(
-        SystemFannel.cmdTerminal
-    )
 
     fun registerSharePreferenceFromIntentExtra() {
         val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
@@ -175,7 +172,7 @@ class InitFragmentManager(
         if(
             startUpAppDirPath != UsePath.cmdclickSystemAppDirPath
         ) return false
-        return !allowIntentSystemFannelList.contains(
+        return !SystemFannel.allowIntentSystemFannelList.contains(
             startUpScriptFileName
         )
 

@@ -144,9 +144,6 @@ install_pulseaudio(){
 	esac
 	apt-get install -y "${pulse_pkg_name}"
 	dpkg_err_solution
-	cp -avf \
-		"/support/default.pa" \
-		"/etc/pulse/default.pa"
 }
 
 install_add_repository(){
@@ -274,7 +271,7 @@ pulseaudioSetup(){
 		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
 		sleep 2
 	done
-	espeak "sound quality test sound quality test"
+	# espeak "sound quality test sound quality test"
 	EOF
 }
 
@@ -366,7 +363,7 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
-	apt-get install -y sudo
+	apt-get install -y pulseaudio sudo
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process

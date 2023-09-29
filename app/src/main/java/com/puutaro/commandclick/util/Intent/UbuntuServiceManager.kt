@@ -1,14 +1,15 @@
-package com.puutaro.commandclick.activity_lib.manager
+package com.puutaro.commandclick.util.Intent
 
+import android.app.Activity
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -20,7 +21,7 @@ import java.io.File
 object UbuntuServiceManager {
 
     fun monitoringAndLaunchUbuntuService(
-        activity: MainActivity,
+        activity: Activity,
         onInitDelay: Boolean
     ): Boolean {
         val cmdclickTempUbuntuServiceDirPath = UsePath.cmdclickTempUbuntuServiceDirPath
@@ -50,29 +51,43 @@ object UbuntuServiceManager {
                     ) break
                 }
                 if(cmdclickTmpUbuntuServiceActiveFile.isFile) return@withContext
-                val prootGrepResult = LinuxCmd.exec(
-                    listOf(
-                        "sh",
-                        "-c",
-                        "ps -ef | grep proot | grep -v grep"
-                    ).joinToString("\t")
-                ).trim()
-                val existProotInUbuntuService =  prootGrepResult != String()
-                if(existProotInUbuntuService) return@withContext
+//                val prootGrepResult = LinuxCmd.exec(
+//                    listOf(
+//                        "sh",
+//                        "-c",
+//                        "ps -ef | grep proot | grep -v grep"
+//                    ).joinToString("\t")
+//                ).trim()
+//                val existProotInUbuntuService =  prootGrepResult != String()
+//                if(existProotInUbuntuService) return@withContext
                 launch(activity)
             }
         }
         return false
     }
 
-    private fun launch(
-        activity: MainActivity,
+    fun launch(
+        activity: Activity?,
     ){
+        if(activity == null) return
         val intent = Intent(
             activity,
             UbuntuService::class.java
         )
+        killAllProcess(activity)
         intent.putExtra(UbuntuServerIntentExtra.ubuntuStartCommand.schema, "on")
         ContextCompat.startForegroundService(activity, intent)
+    }
+
+
+    private fun killAllProcess(
+        activity: Activity?
+    ){
+        if(activity == null) return
+        UbuntuFiles(activity).let {
+            BusyboxExecutor(activity, it).executeKillAllProcess(
+                UsePath.cmdClickMonitorFileName_2
+            )
+        }
     }
 }

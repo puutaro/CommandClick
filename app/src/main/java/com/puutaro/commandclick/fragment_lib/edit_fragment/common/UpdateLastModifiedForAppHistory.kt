@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
@@ -28,8 +29,13 @@ object UpdateLastModifiedForAppHistory {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
+        val fannelName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         if(
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
+            && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
         FileSystems.updateLastModified(
             UsePath.cmdclickAppHistoryDirAdminPath,

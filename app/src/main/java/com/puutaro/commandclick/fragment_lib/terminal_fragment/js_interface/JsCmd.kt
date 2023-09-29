@@ -12,7 +12,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 import java.time.LocalDateTime

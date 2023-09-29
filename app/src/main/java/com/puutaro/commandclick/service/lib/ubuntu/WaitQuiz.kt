@@ -38,6 +38,14 @@ class WaitQuiz(
 
     private val quizPairList = listOf(
         Pair(
+            "Ubuntu sleep time feature?",
+            "-> Kill terminal process and sound system"
+        ),
+        Pair(
+            "How long ubuntu sleep time?",
+            "-> 10 min"
+        ),
+        Pair(
             "What's this ubuntu size?",
             "-> About 1GB"
         ),

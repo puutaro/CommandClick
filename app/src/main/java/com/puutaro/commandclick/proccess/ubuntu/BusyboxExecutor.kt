@@ -1,8 +1,6 @@
-package com.puutaro.commandclick.service.lib.ubuntu
+package com.puutaro.commandclick.proccess.ubuntu
 
 import android.content.Context
-import android.content.Intent
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
@@ -204,7 +202,6 @@ class BusyboxExecutor(
 //        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
         monitorFileName: String,
-        updateubuntuCoroutineJobsHashMapUpdateData: UbuntuCoroutineJobsHashMapUpdateData? = null
 
     ) {
         val functionName = object{}.javaClass.enclosingMethod?.name
@@ -257,18 +254,6 @@ class BusyboxExecutor(
                 process,
                 monitorFileName
             )
-            if(
-                updateubuntuCoroutineJobsHashMapUpdateData != null
-            ) {
-                updateubuntuCoroutineJobsHashMapUpdateData.ubuntuCoroutineJobsHashMap[
-                        updateubuntuCoroutineJobsHashMapUpdateData.backgroundJobType
-                ]?.cancel()
-                val processNumUpdateIntent = Intent()
-                processNumUpdateIntent.action =
-                    BroadCastIntentScheme.UPDATE_PROCESS_NUM_UBUNTU_SERVICE.action
-                context?.sendBroadcast(processNumUpdateIntent)
-                return
-            }
             val exitCode = process.waitFor()
             outputFailureStatus(
                 process,

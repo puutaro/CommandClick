@@ -145,7 +145,7 @@ class EditFragment: Fragment() {
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             )
-        val currentShellFileName =
+        val currentScriptFileName =
             SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_script_file_name
@@ -161,14 +161,14 @@ class EditFragment: Fragment() {
                 SharePrefferenceSetting.current_app_dir.name
                         to currentAppDirPath,
                 SharePrefferenceSetting.current_script_file_name.name
-                        to currentShellFileName,
+                        to currentScriptFileName,
                         SharePrefferenceSetting.on_shortcut.name
                         to shortcutOn
             )
         )
 
         languageType =
-            JsOrShellFromSuffix.judge(currentShellFileName)
+            JsOrShellFromSuffix.judge(currentScriptFileName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -191,7 +191,7 @@ class EditFragment: Fragment() {
         if(
             UpdateLastModifyForEdit().judge(
                 this,
-                currentAppDirPath
+                currentAppDirPath,
             )
         ) {
             FileSystems.updateLastModified(
@@ -200,7 +200,7 @@ class EditFragment: Fragment() {
             )
             FileSystems.updateLastModified(
                 currentAppDirPath,
-                currentShellFileName
+                currentScriptFileName,
             )
             val pageSearchToolbarManagerForEdit =
                 PageSearchToolbarManagerForEdit(this)
@@ -218,7 +218,7 @@ class EditFragment: Fragment() {
         binding.editTextView.text = EditFragmentTitle.make(
             this,
             currentAppDirPath,
-            currentShellFileName
+            currentScriptFileName
         )
 
         val window = activity?.window
@@ -229,7 +229,7 @@ class EditFragment: Fragment() {
 
         val currentScriptContentsList = ReadText(
             currentAppDirPath,
-            currentShellFileName
+            currentScriptFileName
         ).textToList()
         val editModeHandler = EditModeHandler(
             this,

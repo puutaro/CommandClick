@@ -5,6 +5,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -160,14 +162,14 @@ object UbuntuSetUp {
         )
         val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
         if(!rootfsSupportDir.isDirectory) rootfsSupportDir.mkdir()
-        FileSystems.writeFile(
-        "${ubuntuFiles.filesOneRootfs}/support",
-            "default.pa",
-            AssetsFileManager.readFromAssets(
-                context,
-                AssetsFileManager.etcPulseDefaultPa
-            )
-        )
+//        FileSystems.writeFile(
+//        "${ubuntuFiles.filesOneRootfs}/support",
+//            "default.pa",
+//            AssetsFileManager.readFromAssets(
+//                context,
+//                AssetsFileManager.etcPulseDefaultPa
+//            )
+//        )
         val lsResult = LinuxCmd.exec(
             listOf(
                 "ls",
@@ -219,7 +221,7 @@ object UbuntuSetUp {
                 FileSystems.updateFile(
                     UsePath.cmdclickMonitorDirPath,
                     monitorFileName,
-                    "download ${UbuntuFiles.rootfsTarGzName} ${progress}%"
+                    "download ${progress}%"
                 )
             }
             // flushing output

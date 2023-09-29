@@ -746,6 +746,7 @@ private enum class IconType(
     SUPPORT("support", R.drawable.icons8_support),
     PLAY("play", R.drawable.play),
     SHARE("share", R.drawable.icons8_share),
+    LAUNCH("launch", R.drawable.icons8_launch),
     UPDATE("update", R.drawable.icons8_update),
 }
 
