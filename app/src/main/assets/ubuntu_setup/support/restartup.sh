@@ -1,10 +1,9 @@
 #!/bin/bash
 
-R_USER="cmdclick"
 
 startup_launch_front_system(){
 	echo "### $FUNCNAME"
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 	echo \$USER
 	echo --- wssh start
 	# 192.168.0.4

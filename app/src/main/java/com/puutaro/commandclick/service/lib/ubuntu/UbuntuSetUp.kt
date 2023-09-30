@@ -1,14 +1,11 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Context
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
+import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.service.lib.PendingIntentCreator
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
@@ -33,16 +30,12 @@ object UbuntuSetUp {
     fun set(
         context: Context?,
         monitorFileName: String,
-        notificationManager: NotificationManagerCompat?,
-        notificationBuilder: NotificationCompat.Builder?
     ): Job? {
        return try {
             CoroutineScope(Dispatchers.IO).launch {
                 execSet(
                     context,
                     monitorFileName,
-                    notificationManager,
-                    notificationBuilder
                 )
             }
         } catch (e: Exception){
@@ -57,23 +50,23 @@ object UbuntuSetUp {
     private suspend fun execSet(
         contextSrc: Context?,
         monitorFileName: String,
-        notificationManager: NotificationManagerCompat?,
-        notificationBuilder: NotificationCompat.Builder?
     ) {
         val context  = contextSrc
             ?: return
         val ubuntuFiles = UbuntuFiles(
             context,
         )
-        downloadUbuntu(
-            ubuntuFiles,
-            monitorFileName
-        )
-        FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
-            monitorFileName,
-            "\n\nulafiles start"
-        )
+        try {
+            downloadUbuntu(
+                ubuntuFiles,
+                monitorFileName
+            )
+        } catch (e: Exception){
+            val setupIntent = Intent()
+            setupIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
+            context.sendBroadcast(setupIntent)
+            return
+        }
         val busyboxExecutor = BusyboxExecutor(
             context,
             ubuntuFiles,
@@ -89,24 +82,9 @@ object UbuntuSetUp {
         }
         val isWifi = NetworkTool.isWifi(context)
         if(!isWifi) {
-            val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
-                context,
-                BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
-            )
-            notificationBuilder?.setContentTitle(UbuntuStateType.WIFI_WAIT.title)
-            notificationBuilder?.setContentText(UbuntuStateType.WIFI_WAIT.message)
-            notificationBuilder?.clearActions()
-            notificationBuilder?.addAction(
-                com.puutaro.commandclick.R.drawable.icons8_cancel,
-                ButtonLabel.RESTART.label,
-                cancelUbuntuServicePendingIntent,
-            )
-            notificationBuilder?.build()?.let {
-                notificationManager?.notify(
-                    ServiceNotificationId.ubuntuServer,
-                    it
-                )
-            }
+            val wifiNotiIntent = Intent()
+            wifiNotiIntent.action = BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action
+            context.sendBroadcast(wifiNotiIntent)
             return
         }
         FileSystems.removeAndCreateDir(
@@ -165,25 +143,6 @@ object UbuntuSetUp {
         )
         val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
         if(!rootfsSupportDir.isDirectory) rootfsSupportDir.mkdir()
-//        FileSystems.writeFile(
-//        "${ubuntuFiles.filesOneRootfs}/support",
-//            "default.pa",
-//            AssetsFileManager.readFromAssets(
-//                context,
-//                AssetsFileManager.etcPulseDefaultPa
-//            )
-//        )
-        val lsResult = LinuxCmd.exec(
-            listOf(
-                "ls",
-                ubuntuFiles.filesOneRootfs.absolutePath
-            ).joinToString("\t")
-        )
-        FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
-            monitorFileName,
-            "\n\nlsResult: ${lsResult}"
-        )
         busyboxExecutor.executeProotCommand(
             listOf("bash", startupFilePath),
             monitorFileName = monitorFileName
@@ -200,7 +159,7 @@ object UbuntuSetUp {
             supportDirPath
         )
         withContext(Dispatchers.IO) {
-            return@withContext
+//            return@withContext
             if(
                 File(
                     "${supportDirPath}/${downloadCompTxt}",
@@ -331,14 +290,6 @@ object UbuntuSetUp {
             )
         }
         ubuntuFiles.setupLinks()
-    }
-
-    fun killAllCoroutineJob(
-        ubuntuCoroutineJobsHashMap: HashMap<String, Job?>
-    ){
-        ubuntuCoroutineJobsHashMap.forEach { t, u ->
-            u?.cancel()
-        }
     }
 }
 

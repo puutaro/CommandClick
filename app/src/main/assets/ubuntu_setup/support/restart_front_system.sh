@@ -1,9 +1,8 @@
 #!/bin/bash
 
-R_USER="cmdclick"
 
 startup_launch_cmd(){
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -11,7 +10,7 @@ startup_launch_cmd(){
 	# 2>&1 &
 	echo "Type bellow command"
 	echo -e "\tssh -p ${DROPBEAR_SSH_PORT}  cmdclick@{your android ip_address}"
-	echo -e "\tpassword: ${R_USER}"
+	echo -e "\tpassword: ${CMDCLICK_USER}"
 	echo --- wssh start
 	# 192.168.0.4
 	wssh --address='127.0.0.1' \

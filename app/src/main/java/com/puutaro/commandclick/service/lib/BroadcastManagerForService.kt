@@ -24,6 +24,25 @@ object BroadcastManagerForService {
         }
     }
 
+    fun registerActionListBroadcastReceiver(
+        service: Service,
+        broadcastReceiver: BroadcastReceiver,
+        actionNameList: List<String>
+    ){
+        try {
+            val intentFilter = IntentFilter()
+            actionNameList.forEach {
+                intentFilter.addAction(it)
+            }
+            service.registerReceiver(
+                broadcastReceiver,
+                intentFilter
+            )
+        } catch(e: Exception){
+            return
+        }
+    }
+
     fun registerScreenOnOffReceiver(
         service: Service,
         broadcastReceiver: BroadcastReceiver,

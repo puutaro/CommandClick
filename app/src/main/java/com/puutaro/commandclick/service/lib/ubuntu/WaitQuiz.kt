@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
-import android.content.Context
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 
-class WaitQuiz(
-    context: Context?
-) {
+class WaitQuiz {
     private val appName = "CommandClick"
     private var currentQuestStr = String()
 
@@ -38,12 +36,32 @@ class WaitQuiz(
 
     private val quizPairList = listOf(
         Pair(
+            "How to save battery?",
+            "-> Adjust ${CommandClickScriptVariable.UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF} in config"
+        ),
+        Pair(
+            "How to work ubuntu always?",
+            "-> Set 0 ${CommandClickScriptVariable.UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF} in config"
+        ),
+        Pair(
+            "What's webview dialog?",
+            "-> Easily, change one url to gui application"
+        ),
+        Pair(
+            "What's best js interface for developer?",
+            "-> webview dialog"
+        ),
+        Pair(
+            "How to shutdown ubuntu 1?",
+            "-> setting -> setting -> config"
+        ),
+        Pair(
             "Ubuntu sleep time feature?",
             "-> Kill terminal process and sound system"
         ),
         Pair(
             "How long ubuntu sleep time?",
-            "-> 20 min"
+            "-> setting -> setting -> config"
         ),
         Pair(
             "What's this ubuntu size?",

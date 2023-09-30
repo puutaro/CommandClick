@@ -64,17 +64,13 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.ubuntu_service.stop",
         "stop",
     ),
-    UPDATE_PROCESS_NUM_UBUNTU_SERVICE(
+    UPDATE_PROCESS_NUM_NOTIFICATION(
         "com.puutaro.commandclick.ubuntu_service.update_process_num",
         "update_process_num",
     ),
     IS_ACTIVE_UBUNTU_SERVICE(
         "com.puutaro.commandclick.ubuntu_service.is_active",
         "is_active",
-    ),
-    RESTART_OR_KILL_SUB_FRONT_SYSTEM(
-        "com.puutaro.commandclick.ubuntu_service.restart_sub_front_system",
-        "restart_sub_front_system",
     ),
     BACKGROUND_CMD_KILL(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_kill",
@@ -91,5 +87,25 @@ enum class BroadCastIntentScheme(
     OPEN_FANNEL(
         "com.puutaro.commandclick.ubuntu_service.open_fannel",
         "open_fannel",
+    ),
+    WIFI_WAIT_NITIFICATION(
+        "com.puutaro.commandclick.ubuntu_service.wifi_wait",
+        "wifi_wait",
+    ),
+    ON_UBUNTU_SETUP_NOTIFICATION(
+        "com.puutaro.commandclick.ubuntu_service.on_ubuntu_setup",
+        "on_ubuntu_setup",
+    ),
+    ON_UBUNTU_SETUP_QUIZ_NOTIFICATION(
+        "com.puutaro.commandclick.ubuntu_service.on_ubuntu_setup_quiz",
+        "on_ubuntu_setup_quiz",
+    ),
+    ON_RUNNING_NOTIFICATION(
+        "com.puutaro.commandclick.ubuntu_service.on_running",
+        "on_running",
+    ),
+    ON_SLEEPING_NOTIFICATION(
+        "com.puutaro.commandclick.ubuntu_service.sleeping",
+        "sleeping",
     ),
 }

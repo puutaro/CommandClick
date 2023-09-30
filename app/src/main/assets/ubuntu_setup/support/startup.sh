@@ -1,8 +1,7 @@
 #!/bin/bash
 
-CREATE_IMAGE=""
+CREATE_IMAGE="on"
 export DEBIAN_FRONTEND=noninteractive
-R_USER="cmdclick"
 UBUNTU_SETUP_COMP_FILE="/support/ubuntuSetupComp.txt"
 UBUNTU_LAUNCH_COMP_FILE="/support/ubuntuLaunchComp.txt"
 
@@ -89,30 +88,30 @@ setup_sudo(){
 }
 
 setup_user(){
-	echo "### $FUNCNAME: ${R_USER}"
+	echo "### $FUNCNAME: ${CMDCLICK_USER}"
 	local R_UID=2000
 	local R_GID=2000
 	local isUser=$(\
 		cat "/etc/passwd" \
-		| grep "${R_USER}"\
+		| grep "${CMDCLICK_USER}"\
 	)
 	test -n "${isUser}" \
 	&& return
-	useradd $R_USER -s /bin/bash -m -u 2000 
-	echo "${R_USER}:${R_USER}" | chpasswd
+	useradd $CMDCLICK_USER -s /bin/bash -m -u 2000 
+	echo "${CMDCLICK_USER}:${CMDCLICK_USER}" | chpasswd
 }
 
 
 add_user(){
 	local is_user="$(\
-		cat "/etc/passwd" | grep "${R_USER}"\
+		cat "/etc/passwd" | grep "${CMDCLICK_USER}"\
 	)"
 	test -n "${is_user}" \
 	&& return
 	if [ -z "${is_user}"  ]; then
 		echo add user
 		echo -- no passwd
-		echo "root:$R_USER" | chpasswd
+		echo "root:$CMDCLICK_USER" | chpasswd
 		setup_sudo
 		setup_user
 	fi
@@ -168,7 +167,7 @@ install_add_repository(){
 
 install_golang_and_go_package(){
 	echo "## $FUNCNAME"
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 	echo --- add-apt-repository -y ppa:longsleep/golang-backports
 	sudo add-apt-repository -y ppa:longsleep/golang-backports
 	echo --- sudo apt-get update
@@ -212,7 +211,7 @@ setup_dropbear_sshserver(){
 
 startup_launch_system(){
 	echo "### $FUNCNAME"
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -220,7 +219,7 @@ startup_launch_system(){
 	# 2>&1 &
 	echo "Type bellow command"
 	echo -e "\tssh -p ${DROPBEAR_SSH_PORT}  cmdclick@{your android ip_address}"
-	echo -e "\tpassword: ${R_USER}"
+	echo -e "\tpassword: ${CMDCLICK_USER}"
 	echo --- wssh start
 	# 192.168.0.4
 	wssh --address='127.0.0.1' \
@@ -239,7 +238,7 @@ startup_launch_system(){
 
 
 pulseaudioSetup(){
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 	echo --- pulseaudio --start
 	retry_times=5
 	for i in \$(seq \${retry_times})
@@ -327,7 +326,7 @@ install_base_pkg(){
 }
 
 install_user_package(){
-	su - "${R_USER}" <<-EOF
+	su - "${CMDCLICK_USER}" <<-EOF
 		ansi2html_package="ansi2html"
 		is_installed=\$(\
 			pip3 list | grep "\${ansi2html_package}"\

@@ -381,6 +381,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "HTTP2_SHELL_PORT" to UsePort.HTTP2_SHELL_PORT.num.toString(),
             "WEB_SSH_TERM_PORT" to UsePort.WEB_SSH_TERM_PORT.num.toString(),
             "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
+            "CMDCLICK_USER" to UbuntuInfo.user,
         )
     }
 
