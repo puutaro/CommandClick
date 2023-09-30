@@ -30,7 +30,7 @@ class AutoCompleteAdapter(
                         suggestions.add(it)
                     }
                 }
-                suggestions.reverse()
+//                suggestions.reverse()
                 val filterResults = FilterResults()
                 filterResults.values = suggestions
                 filterResults.count = suggestions.size

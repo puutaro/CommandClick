@@ -93,6 +93,7 @@ object CommandClickScriptVariable {
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
+    val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
         TERMINAL_DO,
@@ -113,6 +114,7 @@ object CommandClickScriptVariable {
         ON_TERM_VISIBLE_WHEN_KEYBOARD,
         ON_TERM_SHORT_WHEN_LOAD,
         DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+        UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
         CMDCLICK_RUN_SHELL,
@@ -338,6 +340,7 @@ object CommandClickScriptVariable {
         "${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcAnchorLongPressMenuFilePath}",
         "${IMAGE_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForImageLongPressMenuFilePath}",
         "${NO_SCROLL_SAVE_URLS}:DSL=${setVariableValueForNoScrollSaveUrlsFilePath}",
+        "${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}:TXT:NUM=0..60!10"
     )
 
     fun makeShellScriptName(
@@ -385,6 +388,7 @@ object CommandClickScriptVariable {
             |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
             |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
+            |#  * [${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}](#${replaceLowerAdnBlankDash(UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF)})
             |#  * [${CMDCLICK_TERMINAL_FONT_ZOOM}](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
             |#  * [${TERMINAL_FONT_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
             |#  * [${TERMINAL_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
@@ -569,6 +573,11 @@ object CommandClickScriptVariable {
             |# ### ${EXEC_JS_OR_HTML_PATH}
             |# Execute javascript or html file path
             |# - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
+            |
+            |# ### ${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}
+            |# Ubuntu Sleep delay minutes in screen off 
+            |# - Config only value
+            |# - 0 -> no sleep
             |
             |# ### ${CMDCLICK_TERMINAL_FONT_ZOOM}
             |# Adjust terminal font size (percentage)
@@ -805,6 +814,7 @@ object CommandClickScriptVariable {
         |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
         |${CMDCLICK_HOME_FANNELS_PATH}="${homeFannelsFilePath}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
+        |${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}="20"
         |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
         |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
         |${PASS_CMDVARIABLE_EDIT}="${PASS_CMDVARIABLE_EDIT_ON_VALUE}"

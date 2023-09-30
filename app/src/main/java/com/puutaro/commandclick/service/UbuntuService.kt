@@ -12,6 +12,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.RESTART_OR_KILL_FRONT_SYSTEM
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
@@ -31,9 +33,11 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuSetUp
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -46,10 +50,22 @@ import java.time.LocalDateTime
 class UbuntuService:
     Service() {
 
+    private val languageType = LanguageTypeSelects.JAVA_SCRIPT
+    private val languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            languageType
+        )
+    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+    ) as String
+
+    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+    ) as String
+
     private var isStartup = false
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val cmdclickMonitorFileName = UsePath.cmdClickMonitorFileName_2
-    private val BlankScreenKillDelay = 10000L * 6 * 20
     private var ubuntuFiles: UbuntuFiles? = null
     private var isTaskKill = false
     private var monitorScreenJob: Job? = null
@@ -100,20 +116,10 @@ class UbuntuService:
                 RESTART_OR_KILL_FRONT_SYSTEM.START.name
                 -> {
                     startFrontProcess()
-                    FileSystems.writeFile(
-                        UsePath.cmdclickDefaultAppDirPath,
-                        "ubuntuFrontStart${LocalDateTime.now()}.txt",
-                        String()
-                    )
                 }
                 RESTART_OR_KILL_FRONT_SYSTEM.KILL.name
                 -> {
                     killFrontProcess()
-                    FileSystems.writeFile(
-                        UsePath.cmdclickDefaultAppDirPath,
-                        "ubuntuFrontKill${LocalDateTime.now()}.txt",
-                        String()
-                    )
                 }
             }
         }
@@ -786,7 +792,9 @@ class UbuntuService:
         val systemProcessNum = UbuntuProcessType.values().size - 1
         monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
-                delay(BlankScreenKillDelay)
+                val sleepDelayMinutes = makeSleepDelayMinutes()
+                if(sleepDelayMinutes == 0L) return@withContext
+                delay(sleepDelayMinutes)
                 val processNum = processNumCalculator()
                 if (
                     processNum > systemProcessNum
@@ -822,5 +830,35 @@ class UbuntuService:
         ubuntuCoroutineJobsHashMap[
                 UbuntuProcessType.monitoringProcessNum.name
         ] = monitorProcessNumJob
+    }
+
+    private fun makeSleepDelayMinutes(): Long {
+        val defaultDelaySleepTime = 20L
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            CommandClickVariables.makeScriptContentsList(
+                UsePath.cmdclickSystemAppDirPath,
+                UsePath.cmdclickConfigFileName
+            ),
+            settingSectionStart,
+            settingSectionEnd
+        )
+        val sleepDelayMinutesStr = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
+            defaultDelaySleepTime.toString()
+        )
+        return try{
+            convertMiliSecToMinutes(
+                sleepDelayMinutesStr.toLong()
+            )
+        } catch(e: Exception){
+            convertMiliSecToMinutes(
+                defaultDelaySleepTime
+            )
+        }
+    }
+
+    private fun convertMiliSecToMinutes(miliTime: Long): Long {
+        return miliTime * 1000 * 60
     }
 }

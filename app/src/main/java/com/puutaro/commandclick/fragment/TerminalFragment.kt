@@ -313,6 +313,7 @@ class   TerminalFragment: Fragment() {
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
+        firstDisplayUpdate = true
     }
 
     interface OnMultiSelectListenerForTerm {

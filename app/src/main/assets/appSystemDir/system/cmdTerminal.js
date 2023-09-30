@@ -13,8 +13,6 @@ onTermVisibleWhenKeyboard="ON"
 onTermShortWhenLoad="ON"
 disableShowToolbarWhenHighlight="ON"
 disableWideViewPort="ON"
-disableEditButton="ON"
-disablePlayButton="ON"
 onUrlHistoryRegister="OFF"
 setReplaceVariables="file://${01}/${001}/settingVariables/setReplaceVariables.js"
 setVariableTypes="file://${01}/${001}/settingVariables/setVariableTypes.js"
@@ -179,7 +177,11 @@ function execCopy() {
 
 
 function termInput(){
-  const inputStr = prompt();
+  const inputStr = jsDialog.prompt(
+    "",
+    "",
+    "termInput",
+  );
   if(!inputStr) exitZero();
-  jsSendKey.send(inputStr)
+  jsSendKey.send(inputStr);
 };
