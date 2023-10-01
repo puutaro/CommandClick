@@ -159,7 +159,8 @@ object UbuntuSetUp {
             supportDirPath
         )
         withContext(Dispatchers.IO) {
-//            return@withContext
+            // TODO comment out when release
+            return@withContext
             if(
                 File(
                     "${supportDirPath}/${downloadCompTxt}",
@@ -269,6 +270,7 @@ object UbuntuSetUp {
             UbuntuFiles.downloadRootfsTarGzPath,
             "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
+        // TODO restore when release
 //        FileSystems.removeFiles(
 //            UbuntuFiles.downloadDirPath,
 //            UbuntuFiles.rootfsTarGzName

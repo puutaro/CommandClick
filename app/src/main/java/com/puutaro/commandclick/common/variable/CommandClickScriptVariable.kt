@@ -94,6 +94,7 @@ object CommandClickScriptVariable {
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
     val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
+    val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
         TERMINAL_DO,
@@ -137,7 +138,8 @@ object CommandClickScriptVariable {
         NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-        IMAGE_LONG_PRESS_MENU_FILE_PATH
+        IMAGE_LONG_PRESS_MENU_FILE_PATH,
+        DEFAULT_MONITOR_FILE
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
@@ -222,6 +224,7 @@ object CommandClickScriptVariable {
     val DISABLE_SETTING_BUTTON_DEFAULT_VALUE = disableSettingButtonOff
     val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
     val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
+    val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = cmdclickStartupJsName
         .removeSuffix(UsePath.JS_FILE_SUFFIX)
@@ -328,6 +331,7 @@ object CommandClickScriptVariable {
         "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
         "${DISABLE_EDIT_BUTTON}:CB=${disableEditButtonOff}!${disableEditButtonOn}",
         "${DISABLE_PLAY_BUTTON}:CB=${disablePlayButtonOff}!${disablePlayButtonOn}",
+        "${DEFAULT_MONITOR_FILE}:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "${CMDCLICK_TERMINAL_FONT_ZOOM}:TXT:NUM=0..1000!1",
         "${TERMINAL_COLOR}:TXT:CLR=",
         "${TERMINAL_FONT_COLOR}:TXT:CLR=",
@@ -387,6 +391,7 @@ object CommandClickScriptVariable {
             |#  * [${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}](#${replaceLowerAdnBlankDash(DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT)})
             |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
+            |#  * [${DEFAULT_MONITOR_FILE}](#${replaceLowerAdnBlankDash(DEFAULT_MONITOR_FILE)})
             |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
             |#  * [${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}](#${replaceLowerAdnBlankDash(UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF)})
             |#  * [${CMDCLICK_TERMINAL_FONT_ZOOM}](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
@@ -574,6 +579,9 @@ object CommandClickScriptVariable {
             |# Execute javascript or html file path
             |# - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
             |
+            |# ### ${DEFAULT_MONITOR_FILE}
+            |# Select default monitor file for screen
+            |
             |# ### ${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}
             |# Ubuntu Sleep delay minutes in screen off 
             |# - Config only value
@@ -659,6 +667,7 @@ object CommandClickScriptVariable {
         |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
         |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
         |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
+        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
         |${IGNORE_HISTORY_PATHS}=""
         |${EXEC_JS_OR_HTML_PATH}="${execJsOrHtmlPathValue}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
@@ -872,6 +881,7 @@ object CommandClickScriptVariable {
         |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
         |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
         |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
+        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcAnchorLongPressMenuFilePath}"
         |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${UsePath.imageLongPressMenuFilePath}"

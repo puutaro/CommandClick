@@ -176,6 +176,19 @@ object ConfigFromStartUpFileSetterForTerm {
                 settingVariableListFromStartup,
                 CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
             )
+
+            terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                listOf(
+                    UsePath.cmdClickMonitorFileName_2,
+                    UsePath.cmdClickMonitorFileName_3,
+                    UsePath.cmdClickMonitorFileName_4,
+                ),
+            )
         }
 
         val fannelDirName = currentScriptFileName
@@ -249,6 +262,19 @@ object ConfigFromStartUpFileSetterForTerm {
             listOf(
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            listOf(
+                UsePath.cmdClickMonitorFileName_2,
+                UsePath.cmdClickMonitorFileName_3,
+                UsePath.cmdClickMonitorFileName_4,
             ),
         )
 

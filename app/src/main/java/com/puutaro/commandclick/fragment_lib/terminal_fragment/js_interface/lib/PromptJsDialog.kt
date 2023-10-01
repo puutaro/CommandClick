@@ -224,6 +224,7 @@ class PromptJsDialog(
     private fun registerToSuggest(
         variableName: String,
     ){
+        if(variableName.isEmpty()) return
         val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
         val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
         FileSystems.createDirs(

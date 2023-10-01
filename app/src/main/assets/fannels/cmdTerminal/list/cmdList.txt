@@ -1,5 +1,4 @@
 ls -l
-echo "cmdclick terminal"
 ls
 echo
 sed "s///g"
@@ -7,9 +6,6 @@ pwd
 ps aux
 grep
 cat
- |
-""
-''
 cut
 awk '{print $1}'
 find

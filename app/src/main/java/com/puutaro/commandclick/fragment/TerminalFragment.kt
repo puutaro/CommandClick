@@ -55,6 +55,7 @@ class   TerminalFragment: Fragment() {
     var onTermShortWhenLoad =
         CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE
     var disableShowToolbarWhenHighlight = CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE
+    var defaultMonitorFile = CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
@@ -135,6 +136,10 @@ class   TerminalFragment: Fragment() {
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
+        MonitorFileManager.switchCurMonitorFile(
+            this,
+            terminalViewModel
+        )
         UrlHistoryBackUp.backup(this)
         ScrollYPosiBackUp.backup(this)
         AdBlocker.init(this)
@@ -150,6 +155,7 @@ class   TerminalFragment: Fragment() {
 
         WebViewSettings.set(this)
         TermOnLongClickListener.set(this)
+        MonitorFileManager.trim(terminalViewModel)
         return binding.root
     }
 
