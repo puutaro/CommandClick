@@ -42,7 +42,7 @@ object UbuntuSetUp {
             FileSystems.updateFile(
                 UsePath.cmdclickMonitorDirPath,
                 monitorFileName,
-                "\n\n${e}"
+                    "\n\n${e}"
             )
            null
         }
@@ -94,7 +94,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             UsePath.cmdclickMonitorDirPath,
             monitorFileName,
-            "\n\nbysubox instance start"
+            "\nbysubox instance start"
         )
         initSetup(
             context,
@@ -104,7 +104,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             UsePath.cmdclickMonitorDirPath,
             monitorFileName,
-            "\n\nextract file"
+            "\nextract file"
         )
         val err4 = LinuxCmd.exec(
             listOf(
@@ -139,7 +139,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             UsePath.cmdclickMonitorDirPath,
             monitorFileName,
-            "\n\nsupport copy start"
+            "\nsupport copy start"
         )
         val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
         if(!rootfsSupportDir.isDirectory) rootfsSupportDir.mkdir()
@@ -160,7 +160,7 @@ object UbuntuSetUp {
         )
         withContext(Dispatchers.IO) {
             // TODO comment out when release
-            return@withContext
+//            return@withContext
             if(
                 File(
                     "${supportDirPath}/${downloadCompTxt}",
@@ -229,7 +229,7 @@ object UbuntuSetUp {
                     UsePath.cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
-            }\n\nsupport copy start"
+            }\nsupport copy start"
         )
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
@@ -245,7 +245,7 @@ object UbuntuSetUp {
                     UsePath.cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
-            }\n\nchmod start"
+            }\nchmod start"
         )
         ubuntuFiles.supportDir.listFiles()?.forEach {
             ubuntuFiles.makePermissionsUsable(
@@ -264,17 +264,17 @@ object UbuntuSetUp {
                     UsePath.cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
-            }\n\nrootfs copy start"
+            }\nrootfs copy start"
         )
         FileSystems.copyFile(
             UbuntuFiles.downloadRootfsTarGzPath,
             "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
         // TODO restore when release
-//        FileSystems.removeFiles(
-//            UbuntuFiles.downloadDirPath,
-//            UbuntuFiles.rootfsTarGzName
-//        )
+        FileSystems.removeFiles(
+            UbuntuFiles.downloadDirPath,
+            UbuntuFiles.rootfsTarGzName
+        )
 
         ubuntuFiles.makePermissionsUsable(
             ubuntuFiles.filesOneRootfs.absolutePath,

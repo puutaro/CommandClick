@@ -1,5 +1,9 @@
 #!/bin/bash
 
+
+# It is assumed that you are root user.
+# sudo -su -
+
 export rootfsTarGz="rootfs.tar.gz" \
 ; cd / \
 ; rm -f "/etc/pulse/default.pa" \

@@ -12,8 +12,11 @@ class UbuntuFiles(
     private val symlinker: Symlinker = Symlinker(),
 ) {
     companion object {
-        val arm64UbuntuRootfsUrl =
+//        TODO When create image, set "on"
+        const val createImageSwitch = ""
+        const val arm64UbuntuRootfsUrl =
             "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
+//            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
 //            "https://partner-images.canonical.com/core/jammy/" +
 //                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
 //            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
@@ -36,12 +39,10 @@ class UbuntuFiles(
 
     val busybox = File(supportDir, "busybox")
     val proot = File(supportDir, "proot")
-    val documentDirPath = "${Environment.getExternalStorageDirectory().absolutePath}/" +
-            Environment.DIRECTORY_DOCUMENTS
     val filesOneRootfs = File("${filesDir}/1/rootfs")
-    val filesOneRootfsHomeCmdclickCmdDir =
-        File("${filesOneRootfs.absolutePath}/home/cmdclick/cmd")
-    val cmdShell = "cmd.sh"
+//    val filesOneRootfsHomeCmdclickCmdDir =
+//        File("${filesOneRootfs.absolutePath}/home/cmdclick/cmd")
+//    val cmdShell = "cmd.sh"
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
     val filesOneRootfsSupportCommonDir =

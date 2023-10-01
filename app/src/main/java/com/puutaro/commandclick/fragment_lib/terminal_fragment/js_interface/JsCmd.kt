@@ -26,7 +26,7 @@ class JsCmd(
     val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    val currentMonitorFileName = terminalViewModel.currentMonitorFileName
+    val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
 
     @JavascriptInterface
     fun run(
@@ -36,29 +36,20 @@ class JsCmd(
     ): String {
         if(context == null) return String()
         try {
-            val ubuntuFiles = UbuntuFiles(
-                context,
-            )
-            val executeShellObj = File(executeShellPath)
-            val executeShellDirPath = executeShellObj.parent
-                ?: return String()
-            val executeShellName = executeShellObj.name
-                ?: return String()
             val shellCon = """
                 #!/bin/bash
                 
                 exec bash "${executeShellPath}" ${tabSepaArgs}
             """.trimIndent()
-
             FileSystems.writeFile(
-                ubuntuFiles.filesOneRootfsHomeCmdclickCmdDir.absolutePath,
-                ubuntuFiles.cmdShell,
+                UsePath.cmdclickTempCmdDirPath,
+                UsePath.cmdclickTempCmdShellName,
                 shellCon
             )
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 currentMonitorFileName,
-                "### ${LocalDateTime.now()}\n curl start"
+                "### ${LocalDateTime.now()} ${this::class.java.name}\n curl start"
             )
             val shellOutput = CurlManager.get(
                 url,
@@ -72,27 +63,21 @@ class JsCmd(
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
                     currentMonitorFileName,
-                    "### ${LocalDateTime.now()}\n no output"
+                    "### ${LocalDateTime.now()} ${this::class.java.name}\n no output"
                 )
                 return String()
             }
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 currentMonitorFileName,
-                "### ${LocalDateTime.now()}\n ${shellOutput}"
+                "### ${LocalDateTime.now()} ${this::class.java.name}\n ${shellOutput}"
             )
-            Toast.makeText(
-                context,
-                shellOutput,
-                Toast.LENGTH_SHORT
-            ).show()
             return shellOutput
-
         } catch (e: Exception) {
-            FileSystems.writeFile(
-                cmdclickDefaultAppDirPath,
-                "prootError.txt",
-                "### ${LocalDateTime.now()}\n${e.toString()}"
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                currentMonitorFileName,
+                "### ${LocalDateTime.now()} ${this::class.java.name}\n${e.toString()}"
             )
             return String()
         }

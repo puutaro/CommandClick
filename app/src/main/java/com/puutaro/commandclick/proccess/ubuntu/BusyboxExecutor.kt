@@ -382,6 +382,9 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "WEB_SSH_TERM_PORT" to UsePort.WEB_SSH_TERM_PORT.num.toString(),
             "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
             "CMDCLICK_USER" to UbuntuInfo.user,
+            "CREATE_IMAGE_SWITCH" to UbuntuFiles.createImageSwitch,
+            "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
+            "HTTP2_SHELL_PATH" to "${UsePath.cmdclickTempCmdDirPath}/${UsePath.cmdclickTempCmdShellName}",
         )
     }
 

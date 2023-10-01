@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 class WaitQuiz {
     private val appName = "CommandClick"
     private var currentQuestStr = String()
+    private val quizPrefix = "Q. "
 
     fun echoQorA(): String {
         if(currentQuestStr.isEmpty()){
@@ -12,7 +13,7 @@ class WaitQuiz {
             val quizPair = quizPairList.getOrNull(quizPairIndex)
                 ?: return String()
             currentQuestStr = quizPair.first
-            return currentQuestStr
+            return "$quizPrefix$currentQuestStr"
         }
         val currentIndex = getIndex(currentQuestStr)
         val answer = quizPairList.getOrNull(currentIndex)?.second
@@ -36,6 +37,10 @@ class WaitQuiz {
 
     private val quizPairList = listOf(
         Pair(
+            "What is the significance of ubuntu?",
+            "-> pakcage system for ${appName}"
+        ),
+        Pair(
             "How to save battery?",
             "-> Adjust ${CommandClickScriptVariable.UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF} in config"
         ),
@@ -52,7 +57,7 @@ class WaitQuiz {
             "-> webview dialog"
         ),
         Pair(
-            "How to shutdown ubuntu 1?",
+            "How to shutdown ubuntu?",
             "-> setting -> setting -> config"
         ),
         Pair(
@@ -164,7 +169,7 @@ class WaitQuiz {
             "-> sudo ok, green-green-avk/build-proot-android"
         ),
         Pair(
-            "What failure about ubuntu on android",
+            "What failure about ubuntu on android?",
             "-> Not working depend on proot edition and devices"
         ),
         Pair(
@@ -184,11 +189,11 @@ class WaitQuiz {
             "-> CypherpunkArmory/UserLAnd, termux"
         ),
         Pair(
-            "What's ${appName}'s origin ",
+            "What's ${appName}'s origin?",
             "-> puutaro/cmdclick: pc edition"
         ),
         Pair(
-            "How to exit ubuntu",
+            "How to exit ubuntu?",
             "-> Task kill, and click CANCEL in notification."
         ),
         Pair(
@@ -220,23 +225,23 @@ class WaitQuiz {
             "-> Specialized in CommandClick"
         ),
         Pair(
-            "How to work ubuntu on android",
+            "How to work ubuntu on android?",
             "-> Login rootfs by proot"
         ),
         Pair(
-            "How to create fannel",
+            "How to create fannel?",
             "-> Go ${appName} github"
         ),
         Pair(
-            "What's ${appName}'s terminal feature",
+            "What's ${appName}'s terminal feature?",
             "-> One touch cmd"
         ),
         Pair(
-            "What create by ${appName}",
+            "What create by ${appName}?",
             "-> Standalone addon"
         ),
         Pair(
-            "What enable in ubuntu",
+            "What enable in ubuntu?",
             "-> Terminal, apt, sound, etc.."
         ),
         Pair(
@@ -261,18 +266,18 @@ class WaitQuiz {
         ),
         Pair(
             "Who is this app author?",
-            "-> puutaro, web engineer"
+            "-> puutaro, web engineer, Japan"
         ),
         Pair(
             "What library is used in terminal?",
             "-> huashengdun/webssh"
         ),
         Pair(
-            "Where is ${appName} history",
+            "Where is ${appName} history?",
             "-> Left bottom button"
         ),
         Pair(
-            "Where is ${appName} setting",
+            "Where is ${appName} setting?",
             "-> Right bottom button"
         ),
         Pair(

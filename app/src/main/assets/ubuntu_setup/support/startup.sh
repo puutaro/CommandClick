@@ -1,6 +1,5 @@
 #!/bin/bash
 
-CREATE_IMAGE="on"
 export DEBIAN_FRONTEND=noninteractive
 UBUNTU_SETUP_COMP_FILE="/support/ubuntuSetupComp.txt"
 UBUNTU_LAUNCH_COMP_FILE="/support/ubuntuLaunchComp.txt"
@@ -53,7 +52,6 @@ install_pip3_pkg(){
 	${install_cmd}
 }
 
-
 insert_str_to_file(){
 	insert_str="${1}"
 	file_path="${2}"
@@ -99,6 +97,9 @@ setup_user(){
 	&& return
 	useradd $CMDCLICK_USER -s /bin/bash -m -u 2000 
 	echo "${CMDCLICK_USER}:${CMDCLICK_USER}" | chpasswd
+	insert_str_to_file \
+			'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
+			"/home/${CMDCLICK_USER}/.bashrc"
 }
 
 
@@ -212,6 +213,7 @@ setup_dropbear_sshserver(){
 startup_launch_system(){
 	echo "### $FUNCNAME"
 	su - "${CMDCLICK_USER}" <<-EOF
+	export APP_ROOT_PATH="${APP_ROOT_PATH}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -224,15 +226,12 @@ startup_launch_system(){
 	# 192.168.0.4
 	wssh --address='127.0.0.1' \
 		--port=${WEB_SSH_TERM_PORT} &
-		# \
-		# >/dev/null 2>&1 &
 	echo --- launch shell2http
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		/bash "bash \$HOME/cmd/cmd.sh"  &
-		# \
-		# >/dev/null 2>&1 &
+		-export-vars=APP_ROOT_PATH \
+		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
 
@@ -293,6 +292,7 @@ make_package_list(){
 install_require_pacakges(){
 	echo "### $FUNCNAME"
 	install_pulseaudio
+	install_add_repository
 	local require_packages=$(\
 		make_package_list "
 			curl 
@@ -356,7 +356,7 @@ wait_cmd(){
 
 
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
-		&& [ "${CREATE_IMAGE}" = "on" ];then
+		&& [ "${CREATE_IMAGE_SWITCH}" = "on" ];then
 	install_base_pkg
 	add_user
 	setup_dropbear_sshserver
