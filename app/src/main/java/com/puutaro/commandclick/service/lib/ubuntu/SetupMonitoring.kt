@@ -3,6 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.service.UbuntuService
+import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
@@ -18,7 +19,7 @@ object SetupMonitoring {
         val context = ubuntuService.applicationContext
         val ubuntuFiles = ubuntuService.ubuntuFiles
         val ubuntuSetupCompFile = ubuntuFiles?.ubuntuSetupCompFile
-        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuProcessType.SetUpMonitoring.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUpMonitoring.name]?.cancel()
         val ubuntuLaunchCompFile = ubuntuFiles?.ubuntuLaunchCompFile
             ?: return
         if(
@@ -62,7 +63,7 @@ object SetupMonitoring {
                 ubuntuService.sendBroadcast(runningNotificationIntent)
             }
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuProcessType.SetUpMonitoring.name] =
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUpMonitoring.name] =
             setupMonitoringJob
     }
 }

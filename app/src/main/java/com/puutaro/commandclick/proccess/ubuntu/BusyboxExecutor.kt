@@ -5,7 +5,10 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
 
@@ -78,74 +81,20 @@ class BusyboxExecutor(
         }
     }
 
-
-    fun extractRootFs(
-//        commandShouldTerminate: Boolean,
-        env: HashMap<String, String> = hashMapOf(),
+    fun executeKillApp(
         monitorFileName: String
-    ) {
-        val functionName = object{}.javaClass.enclosingMethod?.name
-        when {
-            !busyboxWrapper.busyboxIsPresent() -> {
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                    "${className} ${functionName}, no busybox"
-                )
-                return
+    ){
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                executeKillAllProcess(monitorFileName)
+                delay(200)
             }
-        }
-        val updatedCommand = busyboxWrapper.addBusyboxAndExtractRootfsShell()
-        val filesystemDir = File(
-            ubuntuFiles.filesOneRootfs.absolutePath
-        )
-        env.putAll(
-            busyboxWrapper.getProotEnv(
-                context,
-                filesystemDir,
-            )
-        )
-
-        val processBuilder = ProcessBuilder(updatedCommand)
-        processBuilder.directory(ubuntuFiles.filesDir)
-        processBuilder.environment().putAll(env)
-        processBuilder.redirectErrorStream(true)
-
-        return try {
-            val process = processBuilder.start()
-            val inputStream = process.inputStream
-            val reader = inputStream.bufferedReader(Charsets.UTF_8)
-            reader.forEachLine { line ->
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                    line
+            withContext(Dispatchers.IO){
+                executeProotCommand(
+                    listOf("bash", "-c", "echo kill;kill -9 $(ps aux | awk '{print $2}' );kill end"),
+                    monitorFileName = monitorFileName
                 )
             }
-            reader.close()
-            val errStream = process.errorStream
-            val errReader = errStream.bufferedReader(Charsets.UTF_8)
-            errReader.forEachLine { line ->
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                    line
-                )
-            }
-            errReader.close()
-            val exitCode = process.waitFor()
-            outputFailureStatus(
-                process,
-                exitCode,
-                functionName,
-                monitorFileName
-            )
-        } catch (err: Exception) {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
-                "${className} ${functionName} ${err}"
-            )
         }
     }
 
@@ -191,7 +140,7 @@ class BusyboxExecutor(
     ){
         val packageName = context?.packageName ?: String()
         executeProotCommand(
-            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | grep '${targetProcessName}' | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
+            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | grep '${targetProcessName}' | grep bash | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
             monitorFileName = monitorFileName
         )
     }
@@ -348,10 +297,6 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
     // Proot scripts expect CWD to be `applicationFilesDir/<filesystem`
     fun addBusyboxAndProot(command: List<String>): List<String> {
         return listOf(ubuntuFiles.busybox.absolutePath, "sh", "support/execInProot.sh") + command
-    }
-
-    fun addBusyboxAndExtractRootfsShell(): List<String> {
-        return listOf(ubuntuFiles.busybox.absolutePath, "sh", "support/extractRootfs.sh")
     }
 
     fun getProotEnv(

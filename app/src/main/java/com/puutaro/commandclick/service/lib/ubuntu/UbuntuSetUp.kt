@@ -295,13 +295,6 @@ object UbuntuSetUp {
     }
 }
 
-enum class UbuntuProcessType {
-    SetUp,
-    SetUpMonitoring,
-    PulseaudioSetUp,
-    monitoringProcessNum,
-}
-
 enum class UbuntuStateType(
     val title: String,
     val message: String,

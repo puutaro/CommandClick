@@ -191,7 +191,7 @@ class UbuntuService:
                 chanelId,
                 notificationInstance
             )
-            ProcessManager.monitorProcessNum(this)
+            ProcessManager.monitorProcessAndNum(this)
             return START_STICKY
         }
         if(
@@ -218,7 +218,7 @@ class UbuntuService:
                 chanelId,
                 notificationInstance
             )
-            ProcessManager.monitorProcessNum(this)
+            ProcessManager.monitorProcessAndNum(this)
             return START_STICKY
         }
         notificationBuilder?.clearActions()
@@ -238,7 +238,7 @@ class UbuntuService:
             chanelId,
             notificationInstance
         )
-        ProcessManager.monitorProcessNum(this)
+        ProcessManager.monitorProcessAndNum(this)
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
         UbuntuInitProcess.launch(this)

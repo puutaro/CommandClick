@@ -9,7 +9,6 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuProcessType
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,6 +16,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 object ProcessManager {
+
+    enum class UbuntuProcessType {
+        SetUp,
+        SetUpMonitoring,
+        PulseaudioSetUp,
+        monitoringProcessNum,
+    }
     fun killAllProot(
         ubuntuService: UbuntuService
     ){
@@ -65,7 +71,7 @@ object ProcessManager {
         }
     }
 
-    fun monitorProcessNum(
+    fun monitorProcessAndNum(
         ubuntuService: UbuntuService
     ){
         var previousProcessNum = 0
@@ -73,6 +79,13 @@ object ProcessManager {
         val processNumUpdateIntent = Intent()
         processNumUpdateIntent.action =
             BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
+        val cmdclickTempProcessDirPath = UsePath.cmdclickTempProcessDirPath
+        val cmdclickTempProcessesTxt = UsePath.cmdclickTempProcessesTxt
+        FileSystems.writeFile(
+            cmdclickTempProcessDirPath,
+            cmdclickTempProcessesTxt,
+            makeProcessTypeList(ubuntuService).joinToString("\n")
+        )
         val monitorProcessNumJob = CoroutineScope(Dispatchers.IO).launch {
             while(true){
                 delay(1000)
@@ -82,21 +95,36 @@ object ProcessManager {
                 val currentProcessNum = processNumCalculator(
                     ubuntuService
                 )
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "processMonitor-${previousProcessNum}-${currentProcessNum}.txt",
-                    String()
-
-                )
                 if(
                     previousProcessNum == currentProcessNum
                 ) continue
                 previousProcessNum = currentProcessNum
                 ubuntuService.sendBroadcast(processNumUpdateIntent)
+                val processTypeList = makeProcessTypeList(ubuntuService)
+                if(processTypeList.isEmpty()) continue
+                FileSystems.writeFile(
+                    cmdclickTempProcessDirPath,
+                    cmdclickTempProcessesTxt,
+                    processTypeList.joinToString("\n")
+                )
             }
         }
         ubuntuService.ubuntuCoroutineJobsHashMap[
                 UbuntuProcessType.monitoringProcessNum.name
         ] = monitorProcessNumJob
+    }
+
+    private fun makeProcessTypeList(
+        ubuntuService: UbuntuService
+    ): List<String> {
+        return ubuntuService.ubuntuCoroutineJobsHashMap.keys.filter {
+                curProcessType ->
+            val isRegularProcess = UbuntuProcessType.values().filter {
+                curProcessType == it.name
+            }.isNotEmpty()
+            val isActive =
+                ubuntuService.ubuntuCoroutineJobsHashMap[curProcessType]?.isActive == true
+            !isRegularProcess && isActive
+        }
     }
 }

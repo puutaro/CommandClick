@@ -37,6 +37,10 @@ class WaitQuiz {
 
     private val quizPairList = listOf(
         Pair(
+            "App all feature not working?",
+            "-> kill -> app kill"
+        ),
+        Pair(
             "What is the significance of ubuntu?",
             "-> pakcage system for ${appName}"
         ),

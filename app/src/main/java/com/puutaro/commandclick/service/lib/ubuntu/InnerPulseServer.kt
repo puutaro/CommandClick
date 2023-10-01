@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
+import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,7 +22,7 @@ object InnerPulseServer {
             context,
             BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
         )
-        val pulseaudioSetupName = UbuntuProcessType.PulseaudioSetUp.name
+        val pulseaudioSetupName = ProcessManager.UbuntuProcessType.PulseaudioSetUp.name
         ubuntuService.ubuntuCoroutineJobsHashMap[pulseaudioSetupName]?.cancel()
         val pulseaudioSetUpJob = CoroutineScope(Dispatchers.IO).launch {
             ubuntuService.notificationManager?.let {

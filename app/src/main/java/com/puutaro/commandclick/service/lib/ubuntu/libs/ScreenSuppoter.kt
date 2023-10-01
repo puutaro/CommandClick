@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuProcessType
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -20,7 +19,7 @@ object ScreenMonitor {
     fun killInMonitorOff(
         ubuntuService: UbuntuService
     ){
-        val systemProcessNum = UbuntuProcessType.values().size - 1
+        val systemProcessNum = ProcessManager.UbuntuProcessType.values().size - 1
         val noSleepSignal = 0L
         val settingSectionStart = ubuntuService.settingSectionStart
         val settingSectionEnd = ubuntuService.settingSectionEnd
@@ -39,7 +38,6 @@ object ScreenMonitor {
                 ubuntuService.screenOffKill = true
                 killFrontProcess(ubuntuService)
                 killSubFrontProcess(ubuntuService)
-//                killAllProot()
             }
         }
     }
@@ -52,16 +50,7 @@ object ScreenMonitor {
         val sleepingIntent = Intent()
         sleepingIntent.action = BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action
         ubuntuService.sendBroadcast(sleepingIntent)
-//        notificationBuilder?.setContentTitle("Sleeping...")
-//        notificationBuilder?.setContentText("...")
-//        notificationBuilder?.build()?.let {
-//            notificationManager?.notify(
-//                chanelId,
-//                it
-//            )
-//        }
         ubuntuService.screenOffKill = false
-//        reLaunchUbuntuService()
     }
 
 
