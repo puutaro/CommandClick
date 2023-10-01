@@ -5,6 +5,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
+import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatImageButton
@@ -57,12 +59,12 @@ class PromptJsDialog(
         val variableName = suggestMap.get(SuggestVars.variableName.name)
         val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
         val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
-        val suggestSrcListEntry = ReadText(
+        val suggestSrcListEntry = makeExtraSuggestList(
+            suggestMap.get(SuggestVars.concatFilePathList.name)?.split(secondSeparator)
+        ) + ReadText(
             suggestDirPath,
             suggestTxtName
-        ).textToList() + makeExtraSuggestList(
-            suggestMap.get(SuggestVars.concatFilePathList.name)?.split(secondSeparator)
-        )
+        ).textToList()
         val suggestSrcList = suggestSrcListEntry.distinct()
         terminalViewModel.onDialog = true
         returnValue = String()
@@ -135,6 +137,10 @@ class PromptJsDialog(
             promptEditText,
             suggestSrcList,
         )
+        editTextKeyListener(
+            promptEditText,
+            variableName
+        )
         val promptCancelButton =
             promptDialogObj?.findViewById<AppCompatImageButton>(
                 R.id.prompt_dialog_cancel
@@ -198,6 +204,33 @@ class PromptJsDialog(
         })
     }
 
+    private fun editTextKeyListener(
+        promptEditText: AutoCompleteTextView?,
+        variableName: String?,
+    ){
+        promptEditText?.setOnKeyListener(object : View.OnKeyListener {
+            override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
+                if (event.action != KeyEvent.ACTION_DOWN ||
+                    keyCode != KeyEvent.KEYCODE_ENTER
+                ) return false
+                val currentInputEditable = promptEditText.text
+                if(promptEditText.text.isNullOrEmpty()){
+                    returnValue = String()
+                    promptDialogObj?.dismiss()
+                    terminalViewModel.onDialog = false
+                    return false
+                }
+                returnValue = currentInputEditable.toString()
+                registerToSuggest(
+                    variableName,
+                )
+                promptDialogObj?.dismiss()
+                terminalViewModel.onDialog = false
+                return false
+            }
+        })
+    }
+
 
     private fun makeSuggest(
         promptEditText: AutoCompleteTextView?,
@@ -253,17 +286,19 @@ class PromptJsDialog(
     private fun registerToSuggest(
         variableName: String?,
     ){
+        val trimedReturnValue =
+            returnValue.trim()
         if(variableName.isNullOrEmpty()) return
         val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
         val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
         FileSystems.createDirs(
             suggestDirPath
         )
-        val updateSuggestList = listOf(returnValue) + ReadText(
-            suggestDirPath,
-            suggestTxtName
-        ).textToList().filter {
-            returnValue != it
+        val updateSuggestList = makeNoEmptyList(
+            trimedReturnValue,
+            suggestTxtName,
+        ).filter {
+            trimedReturnValue != it
         }.distinct().take(200)
         FileSystems.writeFile(
             suggestDirPath,
@@ -281,6 +316,20 @@ class PromptJsDialog(
                 "="
             )
         }.toMap()
+    }
+
+    private fun makeNoEmptyList(
+        trimedReturnValue: String,
+        suggestTxtName: String,
+    ): List<String> {
+        val curSuggestList = ReadText(
+            suggestDirPath,
+            suggestTxtName
+        ).textToList()
+        if(
+            trimedReturnValue.isNotEmpty()
+        ) return listOf(trimedReturnValue) + curSuggestList
+        return curSuggestList
     }
 }
 
