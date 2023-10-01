@@ -16,6 +16,7 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -23,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class PromptJsDialog(
@@ -43,12 +45,25 @@ class PromptJsDialog(
             "Dir"
     private val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
     private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
+    private val firstSeparator = "|"
+    private val secondSeparator = "!"
 
     fun create(
         title: String,
         message: String,
-        variableName: String,
+        suggestVars: String,
     ): String {
+        val suggestMap = makeSuggestMap(suggestVars)
+        val variableName = suggestMap.get(SuggestVars.variableName.name)
+        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
+        val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+        val suggestSrcListEntry = ReadText(
+            suggestDirPath,
+            suggestTxtName
+        ).textToList() + makeExtraSuggestList(
+            suggestMap.get(SuggestVars.concatFilePathList.name)?.split(secondSeparator)
+        )
+        val suggestSrcList = suggestSrcListEntry.distinct()
         terminalViewModel.onDialog = true
         returnValue = String()
         runBlocking {
@@ -57,7 +72,8 @@ class PromptJsDialog(
                     execCreate(
                         title,
                         message,
-                        variableName
+                        variableName,
+                        suggestSrcList,
                     )
                 } catch (e: Exception){
                     Log.e(this.javaClass.name, e.toString())
@@ -79,7 +95,8 @@ class PromptJsDialog(
     private fun execCreate(
         title: String,
         message: String,
-        variableName: String,
+        variableName: String?,
+        suggestSrcList: List<String>,
     ) {
         val context = context
             ?: return
@@ -116,7 +133,7 @@ class PromptJsDialog(
         promptEditText?.requestFocus()
         setSuggestEditText(
             promptEditText,
-            variableName,
+            suggestSrcList,
         )
         val promptCancelButton =
             promptDialogObj?.findViewById<AppCompatImageButton>(
@@ -163,17 +180,17 @@ class PromptJsDialog(
 
     private fun setSuggestEditText(
         promptEditText: AutoCompleteTextView?,
-        variableName: String,
+        suggestSrcList: List<String>
     ){
         if(promptEditText == null) return
-        if(variableName.isEmpty()) return
+        if(suggestSrcList.isEmpty()) return
         promptEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 if(!promptEditText.hasFocus()) return
                 makeSuggest(
                     promptEditText,
-                    variableName,
+                    suggestSrcList,
                 )
             }
 
@@ -184,7 +201,7 @@ class PromptJsDialog(
 
     private fun makeSuggest(
         promptEditText: AutoCompleteTextView?,
-        variableName: String,
+        suggestSrcList: List<String>
     ){
         if(promptEditText == null) return
         if(context == null) return
@@ -192,17 +209,12 @@ class PromptJsDialog(
             currentScriptName.isEmpty()
             || currentScriptName == CommandClickScriptVariable.EMPTY_STRING
         ) return
-        val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
-        val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
         FileSystems.createDirs(
             suggestDirPath
         )
         val currentText = promptEditText.text
             ?: return
-        val suggestList = ReadText(
-            suggestDirPath,
-            suggestTxtName
-        ).textToList().filter {
+        val suggestList = suggestSrcList.filter {
             it.contains(currentText)
         }
         if(
@@ -211,20 +223,37 @@ class PromptJsDialog(
         val suggestAdapter = AutoCompleteAdapter(
             context,
             android.R.layout.simple_list_item_1,
-            ReadText(
-                suggestDirPath,
-                suggestTxtName
-            ).textToList()
+            suggestList
         )
         promptEditText.threshold = 0
         promptEditText.setAdapter(
             suggestAdapter
         )
     }
+
+    private fun makeExtraSuggestList(
+        suggestConcatFilePathList: List<String>?,
+    ): List<String> {
+        if(
+            suggestConcatFilePathList.isNullOrEmpty()
+        ) return emptyList()
+        return suggestConcatFilePathList.map {
+            val suggestConcatFile = File(it)
+            val suggestConcatDirPath = suggestConcatFile.parent
+                ?: return emptyList()
+            val suggestConcatFileName = suggestConcatFile.name
+            ReadText(
+                suggestConcatDirPath,
+                suggestConcatFileName
+            ).textToList()
+        }.flatten().filter { it.trim().isNotEmpty()}
+
+    }
+
     private fun registerToSuggest(
-        variableName: String,
+        variableName: String?,
     ){
-        if(variableName.isEmpty()) return
+        if(variableName.isNullOrEmpty()) return
         val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
         val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
         FileSystems.createDirs(
@@ -242,4 +271,20 @@ class PromptJsDialog(
             updateSuggestList.joinToString("\n")
         )
     }
+
+    private fun makeSuggestMap(
+        suggestVars: String,
+    ): Map<String, String> {
+        return suggestVars.split(firstSeparator).map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }.toMap()
+    }
+}
+
+private enum class SuggestVars {
+    variableName,
+    concatFilePathList
 }

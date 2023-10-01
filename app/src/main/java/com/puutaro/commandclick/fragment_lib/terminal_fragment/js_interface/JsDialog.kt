@@ -93,12 +93,12 @@ class JsDialog(
     fun prompt(
         title: String,
         message: String,
-        variableName: String,
+        suggestVars: String,
     ): String {
         return promptJsDialog.create(
             title,
             message,
-            variableName
+            suggestVars,
         )
     }
 

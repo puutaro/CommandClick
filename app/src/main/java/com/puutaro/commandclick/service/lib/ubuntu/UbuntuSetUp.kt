@@ -160,7 +160,7 @@ object UbuntuSetUp {
         )
         withContext(Dispatchers.IO) {
             // TODO comment out when release
-//            return@withContext
+            return@withContext
             if(
                 File(
                     "${supportDirPath}/${downloadCompTxt}",
@@ -271,10 +271,10 @@ object UbuntuSetUp {
             "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
         // TODO restore when release
-        FileSystems.removeFiles(
-            UbuntuFiles.downloadDirPath,
-            UbuntuFiles.rootfsTarGzName
-        )
+//        FileSystems.removeFiles(
+//            UbuntuFiles.downloadDirPath,
+//            UbuntuFiles.rootfsTarGzName
+//        )
 
         ubuntuFiles.makePermissionsUsable(
             ubuntuFiles.filesOneRootfs.absolutePath,

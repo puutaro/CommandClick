@@ -17,6 +17,7 @@ onUrlHistoryRegister="OFF"
 defaultMonitorFile="term_4"
 disableEditButton="ON"
 disablePlayButton="ON"
+terminalFontZoom="100"
 setReplaceVariables="file://${01}/${001}/settingVariables/setReplaceVariables.js"
 setVariableTypes="file://${01}/${001}/settingVariables/setVariableTypes.js"
 hideSettingVariables="file://${01}/${001}/settingVariables/hideSettingVariables.js"
@@ -170,6 +171,15 @@ function execCopy() {
   ).replaceAll(
       "\n",
       "<br>"
+  ).replaceAll(
+    /\<font color\=\"\#30992e\"\>\<b\>cmdclick@localhost\<\/b\>\<\/font\>: \~\<br\>/g,
+    "",
+  ).replaceAll(
+    /\<font color\=\"\#30992e\"\>\<b\>cmdclick@localhost\<\/b\>\<\/font\>\:\~\$ \<br\>/g,
+    "",
+  ).replaceAll(
+    /\<br\>\<br\>*/g,
+    "\<br\>",
   );
   jsDialog.copyDialog(
         "Select text",
@@ -183,7 +193,7 @@ function termInput(){
   const inputStr = jsDialog.prompt(
     "",
     "",
-    "termInput",
+    "variableName=termInput|concatFilePathList=${cmdTerminalCmdListFilePath}",
   );
   if(!inputStr) exitZero();
   jsSendKey.send(inputStr);

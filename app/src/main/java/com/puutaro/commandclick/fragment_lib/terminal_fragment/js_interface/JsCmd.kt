@@ -2,19 +2,17 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import java.io.File
 import java.time.LocalDateTime
 
 
@@ -23,18 +21,18 @@ class JsCmd(
 ) {
     val context = terminalFragment.context
     val activity = terminalFragment.activity
-    val cmdclickDefaultAppDirPath = UsePath.cmdclickDefaultAppDirPath
     val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
 
     @JavascriptInterface
     fun run(
-        url: String,
         executeShellPath:String,
-        tabSepaArgs: String = String()
+        tabSepaArgs: String = String(),
+        timeoutMiliSec: Int,
     ): String {
         if(context == null) return String()
+        val cmdUrl = "http://127.0.0.1:${UsePort.HTTP2_SHELL_PORT.num}/bash"
         try {
             val shellCon = """
                 #!/bin/bash
@@ -52,10 +50,10 @@ class JsCmd(
                 "### ${LocalDateTime.now()} ${this::class.java.name}\n curl start"
             )
             val shellOutput = CurlManager.get(
-                url,
+                cmdUrl,
                 String(),
                 String(),
-                2000,
+                timeoutMiliSec,
             )
             if(
                 shellOutput.isEmpty()
