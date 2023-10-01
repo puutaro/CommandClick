@@ -101,7 +101,6 @@ object ProcessManager {
                 previousProcessNum = currentProcessNum
                 ubuntuService.sendBroadcast(processNumUpdateIntent)
                 val processTypeList = makeProcessTypeList(ubuntuService)
-                if(processTypeList.isEmpty()) continue
                 FileSystems.writeFile(
                     cmdclickTempProcessDirPath,
                     cmdclickTempProcessesTxt,
