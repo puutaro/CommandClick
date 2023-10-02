@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatEditText
@@ -195,7 +196,6 @@ object WebChromeClientSetter {
                 val context = terminalFragment.context
                     ?: return true
 
-
                 promptDialogObj = Dialog(
                     context
                 )
@@ -217,7 +217,7 @@ object WebChromeClientSetter {
                     )
                 promptMessageTextView?.text = message
                 val promptEditText =
-                    promptDialogObj?.findViewById<AppCompatEditText>(
+                    promptDialogObj?.findViewById<AutoCompleteTextView>(
                         com.puutaro.commandclick.R.id.prompt_dialog_input
                     )
                 val promptCancelButton =

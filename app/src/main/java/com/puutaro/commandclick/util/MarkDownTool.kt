@@ -72,6 +72,11 @@ object MarkDownTool {
         margin-right: auto;
         margin-left: auto;
     }
+    
+    a { 
+        color:#0000FF; text-decoration:none; 
+    }
+
 </style>
 </head>
 <body>

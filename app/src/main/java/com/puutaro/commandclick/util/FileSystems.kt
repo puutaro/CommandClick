@@ -2,13 +2,12 @@ package com.puutaro.commandclick.util
 
 import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
-import java.util.Date
 
 
 object FileSystems {
@@ -50,13 +49,18 @@ object FileSystems {
         contents: String
     ) {
         if(
+            dirPath == "-"
+            || dirPath.isEmpty()
+        ) return
+        if(
             fileName == "-"
             || fileName.isEmpty()
         ) return
+        val dirObj = File(dirPath)
+        if(
+            !dirObj.isDirectory
+        ) createDirs(dirPath)
         val filePath = File(dirPath, fileName)
-        if(!filePath.isDirectory){
-            createDirs(dirPath)
-        }
         try {
             filePath.writeText(contents)
         } catch (e: java.lang.Exception){
@@ -310,6 +314,23 @@ object FileSystems {
         )
         createDirs(
             dirPath
+        )
+    }
+
+    fun updateFile(
+        dirPath: String,
+        fileName: String,
+        updateCon: String,
+    ){
+        val currentCon =
+            ReadText(
+                dirPath,
+                fileName,
+            ).readText()
+        writeFile(
+            dirPath,
+            fileName,
+            "${currentCon}\n${updateCon}"
         )
     }
 }

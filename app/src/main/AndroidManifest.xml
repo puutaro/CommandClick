@@ -16,7 +16,8 @@
 
 
     <application
-        android:allowBackup="true"
+        tools:replace="android:allowBackup"
+        android:allowBackup="false"
         android:stopWithTask="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"
@@ -95,6 +96,8 @@
         <service android:name=".service.TextToSpeechService"/>
 <!--        <service android:name=".service.RecordToTextService"/>-->
         <service android:name=".service.PulseReceiverService"/>
+
+        <service android:name=".service.UbuntuService"/>
     </application>
 
     <queries>

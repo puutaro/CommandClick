@@ -2,7 +2,7 @@ package com.puutaro.commandclick.view_model.activity
 
 import androidx.lifecycle.ViewModel
 import com.puutaro.commandclick.common.variable.ReadLines
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Job
 import java.io.File
@@ -11,11 +11,7 @@ import java.io.File
 class TerminalViewModel: ViewModel() {
 
     var readlinesNum: Float = ReadLines.SHORTH
-    var currentMonitorFileName = try {
-        makeDetectCurrentMonitorFileName()
-    } catch (e: Exception){
-        UsePath.cmdClickMonitorFileName_1
-    }
+    var currentMonitorFileName = UsePath.cmdClickMonitorFileName_1
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
     var editExecuteOnceCurrentShellFileName: String? = null
@@ -32,7 +28,7 @@ class TerminalViewModel: ViewModel() {
 }
 
 
-internal fun makeDetectCurrentMonitorFileName(): String {
+private fun makeDetectCurrentMonitorFileName(): String {
     deleteInvalieMonitorFile()
     val recentUpdatedFileSource = FileSystems.sortedFiles(
         UsePath.cmdclickMonitorDirPath,

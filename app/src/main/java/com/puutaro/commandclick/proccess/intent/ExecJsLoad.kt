@@ -5,7 +5,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -24,6 +24,7 @@ object ExecJsLoad {
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
+        jsArgs: String = String()
     ) {
         if (
             !File(
@@ -97,27 +98,32 @@ object ExecJsLoad {
         ) ?: CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE
 
 
-        val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
-            substituteSettingVariableList,
-            CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
-        ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
+        if(
+            selectedJsFileName == UsePath.cmdclickStartupJsName
+            || selectedJsFileName == UsePath.cmdclickInternetButtonExecJsFileName
+            || selectedJsFileName == UsePath.cmdclickButtonExecShellFileName
+        ) {
+            val onUrlLaunchMacro = CommandClickVariables.substituteCmdClickVariable(
+                substituteSettingVariableList,
+                CommandClickScriptVariable.ON_URL_LAUNCH_MACRO
+            ) ?: CommandClickScriptVariable.ON_URL_LAUNCH_MACRO_DEFAULT_VALUE
 
-        UrlLaunchMacro.launch(
-            terminalViewModel,
-            recentAppDirPath,
-            onUrlLaunchMacro,
-        )
-
-        JavascriptExecuter.exec(
-            context,
-            terminalViewModel,
-            substituteSettingVariableList,
-            onUrlLaunchMacro,
-        )
-
+            UrlLaunchMacro.launch(
+                terminalViewModel,
+                recentAppDirPath,
+                onUrlLaunchMacro,
+            )
+            JavascriptExecuter.exec(
+                currentFragment,
+                terminalViewModel,
+                substituteSettingVariableList,
+                onUrlLaunchMacro,
+            )
+            return
+        }
 
         val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
-        enableJsLoadInWebView(
+        JavascriptExecuter.enableJsLoadInWebView(
             terminalViewModel
         )
         val launchUrlString = JavaScriptLoadUrl.make(
@@ -126,14 +132,14 @@ object ExecJsLoad {
             jsContentsList
         ).toString()
 
-        terminalViewModel.jsArguments = String()
+        terminalViewModel.jsArguments = jsArgs
 
         jsUrlLaunchHandler(
             currentFragment,
             launchUrlString,
         )
 
-        cleanUpAfterJsExc(
+        JavascriptExecuter.cleanUpAfterJsExc(
             terminalViewModel,
             tempOnDisplayUpdate,
         )
@@ -162,7 +168,7 @@ object ExecJsLoad {
         )
     }
 
-    private fun jsUrlLaunchHandler(
+    fun jsUrlLaunchHandler(
         currentFragment: androidx.fragment.app.Fragment,
         launchUrlString: String,
     ){
@@ -228,22 +234,6 @@ object ExecJsLoad {
                 }
                 else -> {}
             }
-        }
-    }
-
-    private fun enableJsLoadInWebView(
-        terminalViewModel: TerminalViewModel
-    ){
-        terminalViewModel.onDisplayUpdate = true
-    }
-
-    private fun cleanUpAfterJsExc(
-        terminalViewModel: TerminalViewModel,
-        tempOnDisplayUpdate: Boolean,
-    ) {
-        CoroutineScope(Dispatchers.IO).launch {
-            delay(1000)
-            terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
         }
     }
 }

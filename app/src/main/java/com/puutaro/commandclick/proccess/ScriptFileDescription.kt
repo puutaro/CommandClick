@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.FileSystems
@@ -25,16 +25,6 @@ object ScriptFileDescription {
         currentAppDirName: String,
         fannelName: String
     ) {
-        val context = fragment.context
-            ?: return
-//        DialogObject.simpleTextShow(
-//            context,
-//            "Description",
-//            makeDescriptionContents(
-//                currentScriptContentsList,
-//                scriptFileName
-//            )
-//        )
         DialogObject.descDialog(
             fragment,
             fannelName,
@@ -145,5 +135,4 @@ object ScriptFileDescription {
             mdName
         ).readText()
     }
-
 }

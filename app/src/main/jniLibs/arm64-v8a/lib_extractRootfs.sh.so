@@ -1,0 +1,81 @@
+#!/data/data/com.puutaro.commandclick/files/support/busybox sh
+
+
+wait_spin(){
+	local target_pid="${1}"
+	local wait_message="${2}"
+
+	local spin='-\|/'
+	local i=0
+	while kill -0 "${target_pid}" 2>/dev/null
+	do
+	  i=$(( (i+1) %4 ))
+	  printf "\r ${wait_message} ${spin:$i:1} "
+	  sleep .1
+	done
+	printf "\r ${wait_message} ok "
+	echo ""
+}
+
+if [[ -z "${LIB_PATH}" ]]; then
+  LIB_PATH="$ROOT_PATH/support"
+fi
+
+$LIB_PATH/busybox clear
+
+if [[ -z "${OS_VERSION}" ]]; then
+  OS_VERSION="4.0.0"
+fi
+
+if [[ ! -r /dev/ashmem ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/ashmem" 
+fi
+if [[ ! -r /dev/shm ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/shm" 
+fi
+if [[ ! -r /proc/stat ]] ; then
+	numProc="$($LIB_PATH/busybox grep rocessor /proc/cpuinfo)"
+	numProc="${numProc: -1}"
+	if [[ "$numProc" -le "3" ]] 2>/dev/null ; then
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat4:/proc/stat" 
+	else
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat8:/proc/stat" 
+	fi
+fi
+if [[ ! -r /proc/uptime ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/uptime:/proc/uptime" 
+fi
+if [[ ! -r /proc/version ]] ; then
+	currDate="$($LIB_PATH/busybox date)"
+	echo "Linux version $OS_VERSION (fake@userland) #1 $currDate" > $ROOT_PATH/support/version
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/version:/proc/version" 
+fi
+
+
+PROOT="$LIB_PATH/proot"
+#launch PRoot
+unset LD_PRELOAD
+echo proot cc start
+cd "${ROOTFS_PATH}"
+chmod -R 777 "${ROOTFS_PATH}"
+cd "${ROOT_PATH}"
+
+tar \
+--no-same-owner \
+-xzvf \
+rootfs.tar.gz \
+--exclude sys \
+--exclude dev \
+--exclude proc \
+--exclude mnt \
+--exclude support \
+-C "${ROOTFS_PATH}" \
+>/dev/null &
+
+extract_pid=$!
+wait_spin \
+    "${extract_pid}" \
+    "extract.."
+
+# --no-same-permissions \
+exit 0

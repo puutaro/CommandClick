@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 
 object ScriptPreWordReplacer {
 
@@ -9,6 +9,25 @@ object ScriptPreWordReplacer {
     private val currentAppDirPathMark = "\${01}"
     private val fannelDirNameMark = "\${001}"
     private val currentScriptNameMark = "\${02}"
+
+    fun pathReplace(
+        targetFilePath: String,
+        currentAppDirPath: String,
+        scriptName: String,
+    ): String {
+        val fannelDirName = scriptName
+            .removeSuffix(UsePath.JS_FILE_SUFFIX)
+            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                "Dir"
+        return targetFilePath.let {
+            replace(
+                it,
+                currentAppDirPath,
+                fannelDirName,
+                scriptName,
+            )
+        }
+    }
 
     fun replace(
         tergetString: String,

@@ -10,9 +10,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
+import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -34,11 +35,7 @@ object ConfirmDialogForKill {
         if(
             !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
         ){
-            Toast.makeText(
-                context,
-                "no shell extend",
-                Toast.LENGTH_SHORT
-            ).show()
+            AppProcessManager.killDialog(cmdIndexFragment)
             return
         }
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()

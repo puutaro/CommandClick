@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.common
 
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 
 class NoUpdatelastModifyForCmdIndex {
 

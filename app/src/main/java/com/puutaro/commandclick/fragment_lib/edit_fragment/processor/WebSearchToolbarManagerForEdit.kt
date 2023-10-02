@@ -61,7 +61,11 @@ class WebSearchToolbarManagerForEdit(
                     cmdWebSearchEditText.threshold = 100000;
                     return
                 }
-                googleSuggest.set(cmdWebSearchEditText.text)
+                try {
+                    googleSuggest.set(cmdWebSearchEditText.text)
+                } catch (e: Exception){
+                    print("pass")
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {

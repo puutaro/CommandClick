@@ -19,10 +19,9 @@ class JsListSelect(
         targetListFilePath: String,
         itemText: String
     ) {
-        val trimSearchText = itemText.trim()
         if(
-            trimSearchText == escapeCharHyphen
-            || trimSearchText.isEmpty()
+            itemText == escapeCharHyphen
+            || itemText.isEmpty()
         ) return
         val listFileObj = File(targetListFilePath)
         val searchListDirPath = listFileObj.parent
@@ -34,13 +33,13 @@ class JsListSelect(
             searchListFileName
         ).textToList()
         val findSearchText = listContentsList.find {
-            it.trim() == trimSearchText
+            it == itemText
         }
         if(
             !findSearchText.isNullOrEmpty()
         ) return
         val lastListContentsSourceList =
-            listOf(trimSearchText) + listContentsList
+            listOf(itemText) + listContentsList
         val lastListContents = lastListContentsSourceList.filter {
             it.isNotEmpty()
                     || it != escapeCharHyphen
@@ -58,9 +57,8 @@ class JsListSelect(
         targetListFilePath: String,
         itemText: String
     ){
-        val trimSearchText = itemText.trim()
         if(
-            trimSearchText == escapeCharHyphen
+            itemText == escapeCharHyphen
             || itemText.isEmpty()
         ) return
         val listFileObj = File(targetListFilePath)
@@ -73,7 +71,7 @@ class JsListSelect(
             searchListFileName
         ).textToList()
         val findSearchText = listContentsList.find {
-            it.trim() == trimSearchText
+            it == itemText
         }
         if(
             findSearchText.isNullOrEmpty()
@@ -89,16 +87,10 @@ class JsListSelect(
             searchListDirPath,
             searchListFileName,
         ).textToList().filter {
-            val trimItem = it.trim()
-            trimItem.isNotEmpty()
-                    && trimItem != escapeCharHyphen
-                    && trimItem != itemText
+            it.isNotEmpty()
+                    && it != escapeCharHyphen
+                    && it != itemText
         }.joinToString("\n")
-        Toast.makeText(
-            context,
-            itemText + "\n-----\n" + updateListContents,
-            Toast.LENGTH_LONG
-        ).show()
         FileSystems.writeFile(
             searchListDirPath,
             searchListFileName,

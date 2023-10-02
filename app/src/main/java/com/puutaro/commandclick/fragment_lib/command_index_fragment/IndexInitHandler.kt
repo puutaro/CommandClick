@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import android.content.Context
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromStartUpFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
@@ -33,13 +33,11 @@ object IndexInitHandler {
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-        cmdIndexFragment.onUrlLaunchIntent = IntentAction.judge(
+        val onUrlLaunchIntent = IntentAction.judge(
             activity
         )
 
-        if(
-            cmdIndexFragment.onUrlLaunchIntent
-        ){
+        if(onUrlLaunchIntent){
             FileSystems.updateLastModified(
                 cmdclickAppDirAdminPath,
                 UsePath.cmdclickDefaultAppDirName +
@@ -119,6 +117,9 @@ object IndexInitHandler {
             StartFileMaker.makeForWebSearcher(
                 cmdIndexFragment,
                 currentAppDirPath
+            )
+            StartFileMaker.makecmdTerminalListFiles(
+                cmdIndexFragment,
             )
             ConfigFromStartUpFileSetter.set(
                 cmdIndexFragment,

@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
@@ -36,12 +37,13 @@ class CommandIndexFragment: Fragment() {
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
+    var onTermVisibleWhenKeyboard =
+        CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
-    var onUrlLaunchIntent = false
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
@@ -134,11 +136,6 @@ class CommandIndexFragment: Fragment() {
             startUpPref
         )
 
-        StartupOrEditExecuteOnceShell.invoke(
-            this,
-            readSharePreffernceMap
-        )
-
         val cmdListView = binding.cmdList
         cmdListView.setHasFixedSize(true)
         cmdListView.setItemViewCacheSize(100)
@@ -198,8 +195,13 @@ class CommandIndexFragment: Fragment() {
                 this,
             )
             val listener = context as? OnKeyboardVisibleListener
+            val isOpenKeyboard = if(
+                isOpen
+            ) onTermVisibleWhenKeyboard !=
+                    SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            else isOpen
             listener?.onKeyBoardVisibleChange(
-                isOpen,
+                isOpenKeyboard,
                 this.isVisible,
                 this.WebSearchSwitch
             )

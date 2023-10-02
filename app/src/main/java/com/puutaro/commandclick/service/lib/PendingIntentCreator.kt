@@ -8,9 +8,16 @@ object PendingIntentCreator {
     fun create(
         context: Context,
         action: String,
+        extraList: List<Pair<String, String>>? = null
     ): PendingIntent {
         val intent = Intent()
         intent.action = action
+        extraList?.forEach {
+            intent.putExtra(
+                it.first,
+                it.second
+            )
+        }
         return PendingIntent.getBroadcast(
             context,
             0,

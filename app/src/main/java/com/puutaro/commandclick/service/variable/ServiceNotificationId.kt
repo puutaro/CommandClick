@@ -5,4 +5,5 @@ object ServiceNotificationId {
     val textToMp3 = 2
     val textToSpeech = 3
     val pulseReciever = 4
+    val ubuntuServer = 5
 }

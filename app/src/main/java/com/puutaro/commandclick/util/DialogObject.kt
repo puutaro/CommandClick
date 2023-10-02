@@ -12,12 +12,13 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.ImageButton
 import android.widget.ProgressBar
+import android.widget.ScrollView
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -30,7 +31,8 @@ object DialogObject {
     fun simpleTextShow(
         contextSrc: Context?,
         title: String,
-        contents: String
+        contents: String,
+        scrollBottom: Boolean = false
     ) {
         val context = contextSrc
             ?: return
@@ -52,6 +54,15 @@ object DialogObject {
             simpleTextDialogObj?.findViewById<AppCompatTextView>(
                 R.id.text_simple_dialog_text_view
             )
+        if(scrollBottom){
+            val scrollView =
+                simpleTextDialogObj?.findViewById<ScrollView>(
+                    R.id.text_simple_dialog_scroll
+                )
+            scrollView?.post {
+                scrollView.fullScroll(View.FOCUS_DOWN)
+            }
+        }
         if(
             contents.isNotEmpty()
         ) descriptionTextView?.text = contents
@@ -122,41 +133,14 @@ object DialogObject {
         webViewCancelBtn.setOnClickListener {
             descWebDialog?.dismiss()
         }
-        webView.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, newProgress: Int) {
-                super.onProgressChanged(view, newProgress)
-                if (newProgress == 100) {
-                    progressBar?.visibility = View.GONE
-                } else {
-                    progressBar?.visibility = View.VISIBLE
-                    progressBar?.progress = newProgress
-                }
-            }
-        }
-        webView.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(
-                view: WebView?,
-                request: WebResourceRequest?
-            ): Boolean {
-                if (
-                    request?.url?.scheme.equals("intent")
-                    || request?.url?.scheme.equals("android-app")
-                ) {
-                    val intent = Intent.parseUri(request?.url.toString(), Intent.URI_INTENT_SCHEME)
-                    val packageManager = activity.packageManager
-                    if (
-                        packageManager != null && intent?.resolveActivity(
-                            packageManager
-                        ) != null
-                    ) {
-                        activity.startActivity(intent)
-                        return true
-                    }
-
-                }
-                return false
-            }
-        }
+        setProgressChanged(
+            webView,
+            progressBar,
+        )
+        setWebViewClient(
+            webView,
+            activity,
+        )
         val webViewBackBtn = descWebDialog?.findViewById<ImageButton>(
             R.id.desc_webview_dialog_back
         ) ?: return
@@ -180,7 +164,6 @@ object DialogObject {
             descWebDialog?.dismiss()
         }
     }
-
     private fun webViewSetting(
         fragment: Fragment,
         webView: WebView
@@ -225,5 +208,52 @@ object DialogObject {
         ) return editExecuteTerminal.fontZoomPercent
 
         return defaultFontPercentage
+    }
+
+    private fun setProgressChanged(
+        webView: WebView,
+        progressBar: ProgressBar?,
+    ){
+        webView.webChromeClient = object : WebChromeClient() {
+            override fun onProgressChanged(view: WebView, newProgress: Int) {
+                super.onProgressChanged(view, newProgress)
+                if (newProgress == 100) {
+                    progressBar?.visibility = View.GONE
+                } else {
+                    progressBar?.visibility = View.VISIBLE
+                    progressBar?.progress = newProgress
+                }
+            }
+        }
+    }
+
+    private fun setWebViewClient(
+        webView: WebView,
+        activity: FragmentActivity,
+    ){
+        webView.webViewClient = object : WebViewClient() {
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                if (
+                    request?.url?.scheme.equals("intent")
+                    || request?.url?.scheme.equals("android-app")
+                ) {
+                    val intent = Intent.parseUri(request?.url.toString(), Intent.URI_INTENT_SCHEME)
+                    val packageManager = activity.packageManager
+                    if (
+                        packageManager != null && intent?.resolveActivity(
+                            packageManager
+                        ) != null
+                    ) {
+                        activity.startActivity(intent)
+                        return true
+                    }
+
+                }
+                return false
+            }
+        }
     }
 }

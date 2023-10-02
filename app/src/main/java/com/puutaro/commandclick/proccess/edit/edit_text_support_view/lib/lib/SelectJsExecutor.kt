@@ -3,8 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -84,5 +83,8 @@ private fun makeSelectJsContents(
     }.replace(
         "CMDCLICL_SELECT_ITEM",
         selectedItem
+            .replace("\"", "\\\"")
+            .replace("'", "\\\'")
+            .replace("`", "\\`")
     ).split("\n")
 }

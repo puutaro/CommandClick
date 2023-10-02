@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity
 
 import android.app.Activity
-import android.app.Service
 import android.content.*
 import android.media.AudioManager
 import android.net.Uri
@@ -36,23 +35,24 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermMinimumForEd
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
+import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.service.PulseReceiverService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.util.*
@@ -124,6 +124,20 @@ class MainActivity:
     val getNotifierSetterLaunch =
         NotifierSetter.set(this)
 
+    private var broadcastReceiverForRestartUbuntuService: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            if(
+                intent.action !=
+                BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+            ) return
+            UbuntuServiceManager.monitoringAndLaunchUbuntuService(
+                this@MainActivity,
+                false,
+                false
+            )
+        }
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,7 +145,16 @@ class MainActivity:
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
-
+        BroadcastManager.registerBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+            BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+        )
+        UbuntuServiceManager.monitoringAndLaunchUbuntuService(
+            this,
+            true,
+            false
+        )
         InitManager(this).invoke()
     }
 
@@ -144,6 +167,10 @@ class MainActivity:
         super.onDestroy()
         val intent = Intent(this, GitCloneService::class.java)
         this.stopService(intent)
+        BroadcastManager.unregisterBroadcastReceiverForActivity(
+            this,
+            broadcastReceiverForRestartUbuntuService,
+        )
     }
 
 

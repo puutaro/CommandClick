@@ -1,22 +1,28 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
-import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JavascriptExecuter {
     fun exec(
-        context: Context?,
+        fragment: Fragment,
         terminalViewModel: TerminalViewModel,
         substituteSettingVariableList: List<String>?,
         onUrlLaunchMacro: String,
     ) {
+        val context = fragment.context
         if(
             onUrlLaunchMacro
             != SettingVariableSelects.OnUrlLaunchMacroSelects.OFF.name
@@ -36,10 +42,17 @@ object JavascriptExecuter {
                 UsePath.JSX_FILE_SUFFIX
             )
         ) {
-            terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
-                context,
-                execJsOrHtmlPath,
+            ExecJsLoad.jsUrlLaunchHandler(
+                fragment,
+                JavaScriptLoadUrl.make(
+                    context,
+                    execJsOrHtmlPath,
+                ) ?: String()
             )
+//            terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
+//                context,
+//                execJsOrHtmlPath,
+//            )
             return
         }
         val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
@@ -59,6 +72,34 @@ object JavascriptExecuter {
         if(
             currentAppDir.isNullOrEmpty()
         ) return
-        terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
+        val tempOnDisplayUpdate = terminalViewModel.onDisplayUpdate
+        enableJsLoadInWebView(
+            terminalViewModel
+        )
+        ExecJsLoad.jsUrlLaunchHandler(
+            fragment,
+            "${currentAppDir}/${jsOrHtmlFileObj.name}"
+        )
+        cleanUpAfterJsExc(
+            terminalViewModel,
+            tempOnDisplayUpdate,
+        )
+//        terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
+    }
+
+    fun enableJsLoadInWebView(
+        terminalViewModel: TerminalViewModel
+    ){
+        terminalViewModel.onDisplayUpdate = false
+    }
+
+    fun cleanUpAfterJsExc(
+        terminalViewModel: TerminalViewModel,
+        tempOnDisplayUpdate: Boolean,
+    ) {
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
+        }
     }
 }

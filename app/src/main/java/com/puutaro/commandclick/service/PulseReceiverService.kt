@@ -12,7 +12,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
@@ -32,7 +32,8 @@ class PulseReceiverService:
     Service() {
     private var pulseRecieverJob: Job? = null
     private var pcPulseSetServerJob: Job? = null
-    private val notificationId = ServiceNotificationId.pulseReciever
+    private val notificationId = NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id
+    private val chanelId = ServiceNotificationId.pulseReciever
     private val notificationManager by lazy {
         val channel = NotificationChannel(
             NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id,
@@ -83,23 +84,28 @@ class PulseReceiverService:
         startId: Int
     ): Int {
         PcPulseSetServer.exit()
-        notificationManager.cancel(notificationId)
+        notificationManager.cancel(chanelId)
         pulseRecieverJob?.cancel()
-        val serverAddress = intent?.getStringExtra(
-            PulseServerIntentExtra.serverAddress.schema
+        val pcAddress = intent?.getStringExtra(
+            PulseServerIntentExtra.pcAddress.schema
+        ) ?: return START_STICKY
+        val serverPort = intent.getStringExtra(
+            PulseServerIntentExtra.serverPort.schema
         ) ?: return START_STICKY
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentScheme.STOP_PULSE_RECIEVER.action,
         )
+        val serverWaitAddressPort = "${pcAddress}:${UsePort.pcPulseSetServer.num}"
+        val serverReceivingAddressPort = "${pcAddress}:${UsePort.pluseRecieverPort.num}"
         val notificationBuilder = NotificationCompat.Builder(
             applicationContext,
-            NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id
+            notificationId
         )
             .setSmallIcon(R.drawable.ic_media_play)
             .setAutoCancel(true)
-            .setContentTitle("Recieving..")
-            .setContentText("${serverAddress}:${UsePort.pluseRecieverPort.num}")
+            .setContentTitle("wait..")
+            .setContentText(serverWaitAddressPort)
             .setProgress(0, 0, true)
             .setDeleteIntent(
                 cancelPendingIntent
@@ -110,12 +116,12 @@ class PulseReceiverService:
                 cancelPendingIntent
             )
         val notificationInstance = notificationBuilder.build()
-            notificationManager.notify(
-                ServiceNotificationId.pulseReciever,
-                notificationInstance
-            )
+        notificationManager.notify(
+            chanelId,
+            notificationInstance
+        )
         startForeground(
-            notificationId,
+            chanelId,
             notificationInstance
         )
         pcPulseSetServerJob = CoroutineScope(Dispatchers.IO).launch {
@@ -127,7 +133,13 @@ class PulseReceiverService:
                 )
                 PcPulseSetServer.launch(
                     applicationContext,
-                    serverAddress,
+                    pcAddress,
+                    serverPort,
+                    notificationId,
+                    chanelId,
+                    serverReceivingAddressPort,
+                    notificationManager,
+                    cancelPendingIntent
                 )
             }
         }
@@ -157,7 +169,7 @@ class PulseReceiverService:
         pulseRecieverJob?.cancel()
         pcPulseSetServerJob?.cancel()
         PcPulseSetServer.exit()
-        notificationManager.cancel(notificationId)
+        notificationManager.cancel(chanelId)
         stopForeground(STOP_FOREGROUND_DETACH)
         stopSelf()
     }

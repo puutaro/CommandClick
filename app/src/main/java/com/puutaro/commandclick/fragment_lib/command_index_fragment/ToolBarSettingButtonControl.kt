@@ -6,19 +6,18 @@ import android.util.Size
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.MeasureSpec
-import android.widget.ListView
 import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.MenuListAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
+import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
@@ -27,6 +26,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
+import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
@@ -188,6 +188,9 @@ class ToolBarSettingButtonControl(
                 MenuEnums.SETTING.itemName -> {
                     SubMenuDialog.launch(cmdIndexFragment)
                 }
+                MenuEnums.SELECTTERM.itemName -> {
+                    SelectTermDialog.launch(cmdIndexFragment)
+                }
                 MenuEnums.INSTALL_FANNEL.itemName -> {
                     InstallFannelHandler.handle(
                         cmdIndexFragment,
@@ -209,43 +212,31 @@ class ToolBarSettingButtonControl(
                         UsePath.cmdclickStartupJsName,
                     )
                 }
+                MenuEnums.RESTART_UBUNTU.itemName -> {
+                    UbuntuServiceManager.launch(
+                        cmdIndexFragment.activity
+                    )
+                }
             }
         }
     }
-    private fun calculateHeight(list: ListView): Int {
-        var height = 0
-        for (i in 0 until list.count) {
-            val childView = list.adapter.getView(i, null, list)
-            childView.measure(
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
-                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED)
-            )
-            height += childView.measuredHeight
-        }
-
-        //dividers height
-        height += list.dividerHeight * list.count
-        return height
-    }
 }
-
-
-internal val <T> T.checkAllMatched: T
-    get() = this
 
 private enum class MenuEnums(
     val itemName: String,
     val imageId: Int,
 ) {
     ADD("add", R.drawable.icons8_plus),
-//    SELECTTERM("select_term"),
+    SELECTTERM("select term", R.drawable.icons8_file),
 //    TERM1("term_1"),
 //    TERM2("term_2"),
 //    TERM3("term_3"),
 //    TERM4("term_4"),
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
+    RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     SETTING("setting",R.drawable.icons8_setting),
+    //    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),
 }
 

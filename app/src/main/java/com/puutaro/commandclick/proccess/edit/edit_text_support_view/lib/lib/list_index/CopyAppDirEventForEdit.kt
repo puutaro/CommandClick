@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.li
 
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File

@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*
 
@@ -30,6 +30,18 @@ object ConfigFromConfigFileSetter {
             ),
             settingSectionStart,
             settingSectionEnd
+        )
+
+        cmdIndexFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            ),
         )
 
         cmdIndexFragment.historySwitch =  SettingVariableReader.getCbValue(

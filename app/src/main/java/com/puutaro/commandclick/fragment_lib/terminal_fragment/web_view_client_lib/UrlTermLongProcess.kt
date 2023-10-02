@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
@@ -24,6 +25,10 @@ object UrlTermLongProcess {
         if (
             title.trim(' ').contains(WebUrlVariables.escapeStr)
         ) return
+        val isTermShortWhenLoad =
+            terminalFragment.onTermShortWhenLoad ==
+                    SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name
+        if(isTermShortWhenLoad) return
         val changeTargetFragment =
             IndexOrEditFragment(terminalFragment).select()
         val listener =

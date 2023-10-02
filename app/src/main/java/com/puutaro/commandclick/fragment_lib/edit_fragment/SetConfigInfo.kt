@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -20,6 +20,19 @@ object SetConfigInfo {
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
         )
+
+        editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            ),
+        )
+
         editFragment.historySwitch =  SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_HISTORY_SWITCH,

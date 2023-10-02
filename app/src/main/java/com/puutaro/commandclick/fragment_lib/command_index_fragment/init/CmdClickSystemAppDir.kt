@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.init
 
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.AssetsFileManager
 import kotlinx.coroutines.CoroutineScope
