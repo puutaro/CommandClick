@@ -10,11 +10,11 @@
 <br>
 <br>
 
-`CommandClick` is "another browser".  
+`CommandClick` is "Linux browser".  
 <br>
 <br>
 <br>
-Are you satisfied with existing web browsers life ? 
+This is "both" end browser from backend + frontend. 
 <br>
 <br>
 <br>
@@ -61,9 +61,10 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">
 
 - Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
-- Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also android os. Therefore, this has wide spread usage
-- Existing web browsers cannot support shellscript. But `CommandClick` can support shellscript via termux. You can take advantage of the shell's wealth of assets.
-- Existing web browsers cannot create original android application. But `CommandClick` can create application just for you as low code tool. 
+- Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also ubuntu and android os. Therefore, this has wide spread usage
+- Existing web browsers cannot have built-in ubuntu. But `CommandClick` can have ubuntu natively . You can take advantage of the ubuntu's big wealth of assets.
+- Existing android terminal app cannot support two click execution. But `cmdTerminal` can support two click execution.
+- Existing web browsers cannot create original android application. But `CommandClick` can create application just for you as low code tool.
 
 
 Screenshots
