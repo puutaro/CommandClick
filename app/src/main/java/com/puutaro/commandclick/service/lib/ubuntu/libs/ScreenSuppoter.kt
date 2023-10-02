@@ -19,7 +19,9 @@ object ScreenMonitor {
     fun killInMonitorOff(
         ubuntuService: UbuntuService
     ){
-        val systemProcessNum = ProcessManager.UbuntuProcessType.values().size - 1
+        val noUbuntuRunningProcess = 1
+        val ubuntuRunningProcessNum =
+            ProcessManager.UbuntuProcessType.values().size - noUbuntuRunningProcess
         val noSleepSignal = 0L
         val settingSectionStart = ubuntuService.settingSectionStart
         val settingSectionEnd = ubuntuService.settingSectionEnd
@@ -33,7 +35,7 @@ object ScreenMonitor {
                 delay(sleepDelayMinutes)
                 val processNum = ProcessManager.processNumCalculator(ubuntuService)
                 if (
-                    processNum > systemProcessNum
+                    processNum > ubuntuRunningProcessNum
                 ) return@withContext
                 ubuntuService.screenOffKill = true
                 killFrontProcess(ubuntuService)

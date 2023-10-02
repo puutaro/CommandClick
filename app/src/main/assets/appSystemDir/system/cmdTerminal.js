@@ -141,10 +141,13 @@ function updateSeachWordList(
 
 
 function launchTerminal(){
-  const deviceIpv4 = jsNetTool.getIpv4();
+  // const deviceIpv4 = jsNetTool.getIpv4();
   const terminalUrl = `http://127.0.0.1:18080/?hostname=127.0.0.1&port=10022&username=cmdclick&password=Y21kY2xpY2s=&command=script%20-qf%20script.log`;
-  // "http://192.168.0.4:8080/?hostname=192.168.0.4&port=10022&username=cmdclick&password=Y21kY2xpY2s="
-  jsUrl.loadUrl(terminalUrl);
+  const loadJsCon = `jsUrl.loadUrl("${terminalUrl}")`;
+  jsUbuntu.bootOnExec(
+      loadJsCon,
+      3000
+  );
 };
 
 function execCopy() {

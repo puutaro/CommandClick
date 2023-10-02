@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
@@ -239,10 +240,9 @@ object UbuntuBroadcastHandler {
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
         ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.RUNNING.title)
-        val itSelfProcessNum = 1
         ubuntuService.notificationBuilder?.setContentText(
             UbuntuStateType.RUNNING.message.format(
-                ProcessManager.processNumCalculator(ubuntuService) - itSelfProcessNum
+                ProcessManager.processNumCalculator(ubuntuService)
             )
         )
         ubuntuService.notificationBuilder?.clearActions()
@@ -323,7 +323,7 @@ object UbuntuBroadcastHandler {
                 context,
                 UbuntuFiles(context)
             ).executeProotCommand(
-                listOf("su","-", "cmdclick", "-c" ,"bash '$backgroundShellPath' $backgroundArgsTabSepaStr"),
+                listOf("su","-", UbuntuInfo.user, "-c" ,"bash '$backgroundShellPath' $backgroundArgsTabSepaStr"),
                 monitorFileName = monitorFileName,
             )
         }

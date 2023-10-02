@@ -37,6 +37,10 @@ class WaitQuiz {
 
     private val quizPairList = listOf(
         Pair(
+            "What's ${appName}?",
+            "-> Bothend. Generally backend + frontend"
+        ),
+        Pair(
             "App all feature not working?",
             "-> kill -> app kill"
         ),

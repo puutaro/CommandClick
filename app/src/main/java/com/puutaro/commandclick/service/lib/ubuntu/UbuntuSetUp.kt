@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
@@ -24,8 +25,7 @@ import java.net.URL
 
 
 object UbuntuSetUp {
-//        #"https://partner-images.canonical.com/core/jammy/" +
-//                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
+
     private val startupFilePath = "/support/startup.sh"
     fun set(
         context: Context?,
@@ -106,7 +106,7 @@ object UbuntuSetUp {
             monitorFileName,
             "\nextract file"
         )
-        val err4 = LinuxCmd.exec(
+        val err4 = LinuxCmd.execCommand(
             listOf(
                 "chmod",
                 "-R",
@@ -159,8 +159,9 @@ object UbuntuSetUp {
             supportDirPath
         )
         withContext(Dispatchers.IO) {
-            // TODO comment out when release
-            return@withContext
+            if(
+                UbuntuInfo.onForDev
+            ) return@withContext
             if(
                 File(
                     "${supportDirPath}/${downloadCompTxt}",
@@ -171,7 +172,7 @@ object UbuntuSetUp {
                 UbuntuFiles.rootfsTarGzName
             )
             // put your url.this is sample url.
-            val url = URL(UbuntuFiles.arm64UbuntuRootfsUrl)
+            val url = URL(UbuntuInfo.arm64UbuntuRootfsUrl)
             val conection = url.openConnection()
             conection.connect()
             val lenghtOfFile = conection.contentLength
@@ -270,15 +271,18 @@ object UbuntuSetUp {
             UbuntuFiles.downloadRootfsTarGzPath,
             "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
-        // TODO restore when release
-//        FileSystems.removeFiles(
-//            UbuntuFiles.downloadDirPath,
-//            UbuntuFiles.rootfsTarGzName
-//        )
+        if(
+            !UbuntuInfo.onForDev
+        ) {
+            FileSystems.removeFiles(
+                UbuntuFiles.downloadDirPath,
+                UbuntuFiles.rootfsTarGzName
+            )
+        }
 
         ubuntuFiles.makePermissionsUsable(
             ubuntuFiles.filesOneRootfs.absolutePath,
-            "rootfs.tar.gz"
+            UbuntuFiles.rootfsTarGzName
         )
         File(
             "${ubuntuFiles.filesOneRootfs.absolutePath}/.success_filesystem_extraction"

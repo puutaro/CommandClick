@@ -139,7 +139,7 @@ object CommandClickScriptVariable {
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         IMAGE_LONG_PRESS_MENU_FILE_PATH,
-        DEFAULT_MONITOR_FILE
+        DEFAULT_MONITOR_FILE,
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
@@ -204,7 +204,6 @@ object CommandClickScriptVariable {
     val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
     val TERMINAL_COLOR_DEFAULT_VALUE = "#043d02"
-//            #121212
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
     val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
@@ -217,6 +216,7 @@ object CommandClickScriptVariable {
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
+    val ON_BOOT_UBUNTU_DEFAULT_VALUE = SettingVariableSelects.onBootUbuntuSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val DISABLE_WIDE_VIEW_PORT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff

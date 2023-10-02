@@ -124,4 +124,9 @@ object SettingVariableSelects {
         ON,
         OFF
     }
+
+    enum class onBootUbuntuSelects {
+        ON,
+        OFF
+    }
 }

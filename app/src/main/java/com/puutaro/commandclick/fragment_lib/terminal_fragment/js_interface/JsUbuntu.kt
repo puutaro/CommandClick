@@ -2,21 +2,30 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
-import androidx.core.content.ContextCompat
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.service.UbuntuService
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.UbuntuBootManager
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 
-class JsCmd(
+class JsUbuntu(
     private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
@@ -26,7 +35,7 @@ class JsCmd(
     val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
 
     @JavascriptInterface
-    fun run(
+    fun runCmd(
         executeShellPath:String,
         tabSepaArgs: String = String(),
         timeoutMiliSec: Int,
@@ -124,14 +133,118 @@ class JsCmd(
         terminalFragment.activity?.sendBroadcast(intent)
     }
 
+
     @JavascriptInterface
-    fun launch(){
-        val intent = Intent(
-            activity,
-            UbuntuService::class.java
-        )
-        context?.let {
-            ContextCompat.startForegroundService(context, intent)
+    fun bootOnExec(
+        execCode: String,
+        delayMiliTime: Int
+    ){
+        if(
+            context == null
+        ) return
+        val jsUrl = JsUrl(terminalFragment)
+        val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+            execCode.split("\n")
+        ) ?: return
+        if(
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ){
+            jsUrl.loadUrl(jsScriptUrl)
+            return
+        }
+        var retryTimesProcess = 0
+        val firstSuccess = 0
+        val bootFailureTimes = 50
+        UbuntuBootManager.boot(terminalFragment)
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                for (i in 0..bootFailureTimes) {
+                    if (
+                        LinuxCmd.isBasicProcess()
+                    ) {
+                        retryTimesProcess = i
+                        break
+                    }
+                    withContext(Dispatchers.Main) boot@ {
+                        if( i % 20 != 0) return@boot
+                        Toast.makeText(
+                            context,
+                            "boot..",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    delay(100)
+                }
+            }
+            if(
+                retryTimesProcess == firstSuccess
+            ) {
+                withContext(Dispatchers.Main){
+                    jsUrl.loadUrl(jsScriptUrl)
+                }
+                return@launch
+            }
+            if(retryTimesProcess == bootFailureTimes){
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(
+                        context,
+                        "boot failure",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                return@launch
+            }
+            withContext(Dispatchers.Main){
+                Toast.makeText(
+                    context,
+                    "delay..${delayMiliTime} mili sec",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            delay(delayMiliTime.toLong())
+            withContext(Dispatchers.Main) {
+                jsUrl.loadUrl(jsScriptUrl)
+            }
+        }
+    }
+
+    @JavascriptInterface
+    fun boot(){
+        if(
+            context == null
+        ) return
+        var isBootSuccess = false
+        if(
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ){
+            Toast.makeText(
+                context,
+                "Setup ubuntu",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        UbuntuBootManager.boot(terminalFragment)
+        runBlocking {
+            withContext(Dispatchers.IO) {
+                for (i in 1..50) {
+                    if (
+                        LinuxCmd.isBasicProcess()
+                    ) {
+                        isBootSuccess = true
+                        break
+                    }
+                    delay(100)
+                }
+            }
+        }
+        if(!isBootSuccess) {
+            Toast.makeText(
+                context,
+                "boot failure",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
         }
     }
 

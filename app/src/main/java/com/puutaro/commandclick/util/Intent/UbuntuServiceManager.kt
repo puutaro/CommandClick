@@ -10,6 +10,7 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -21,9 +22,11 @@ import java.io.File
 object UbuntuServiceManager {
 
     fun monitoringAndLaunchUbuntuService(
-        activity: Activity,
-        onInitDelay: Boolean
-    ): Boolean {
+        activity: Activity?,
+        onInitDelay: Boolean,
+        onBasicProcessMonitor: Boolean
+    ) {
+        if(activity == null) return
         val cmdclickTempUbuntuServiceDirPath = UsePath.cmdclickTempUbuntuServiceDirPath
         val cmdclickTmpUbuntuServiceActiveFileName = UsePath.cmdclickTmpUbuntuServiceActiveFileName
         val cmdclickTmpUbuntuServiceActiveFile = File("${cmdclickTempUbuntuServiceDirPath}/${cmdclickTmpUbuntuServiceActiveFileName}")
@@ -45,25 +48,23 @@ object UbuntuServiceManager {
                 ubuntuIntent.action = BroadCastIntentScheme.IS_ACTIVE_UBUNTU_SERVICE.action
                 for(i in 1..3) {
                     activity.sendBroadcast(ubuntuIntent)
-                    delay(400)
+                    delay(300)
                     if (
                         cmdclickTmpUbuntuServiceActiveFile.isFile
                     ) break
                 }
-                if(cmdclickTmpUbuntuServiceActiveFile.isFile) return@withContext
-//                val prootGrepResult = LinuxCmd.exec(
-//                    listOf(
-//                        "sh",
-//                        "-c",
-//                        "ps -ef | grep proot | grep -v grep"
-//                    ).joinToString("\t")
-//                ).trim()
-//                val existProotInUbuntuService =  prootGrepResult != String()
-//                if(existProotInUbuntuService) return@withContext
+                val isBasicProcess = if(
+                    !onBasicProcessMonitor
+                ) true
+                else LinuxCmd.isBasicProcess()
+
+                if(
+                    cmdclickTmpUbuntuServiceActiveFile.isFile
+                    && isBasicProcess
+                ) return@withContext
                 launch(activity)
             }
         }
-        return false
     }
 
     fun launch(

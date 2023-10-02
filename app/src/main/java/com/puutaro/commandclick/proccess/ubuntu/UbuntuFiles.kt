@@ -12,14 +12,6 @@ class UbuntuFiles(
     private val symlinker: Symlinker = Symlinker(),
 ) {
     companion object {
-//        TODO When create image, set "on"
-        const val createImageSwitch = ""
-        const val arm64UbuntuRootfsUrl =
-            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
-//            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
-//            "https://partner-images.canonical.com/core/jammy/" +
-//                "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
-//            "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"
         val downloadDirPath = Environment.getExternalStorageDirectory().absolutePath +
                 "/${Environment.DIRECTORY_DOWNLOADS}"
         val rootfsTarGzName = "rootfs.tar.gz"

@@ -233,17 +233,6 @@ class BusyboxExecutor(
         )
     }
 
-    suspend fun recursivelyDelete(
-        monitorFileName: String,
-        absolutePath: String
-    ) = withContext(Dispatchers.IO) {
-        val command = "rm -rf $absolutePath"
-        return@withContext executeCommand(
-            command,
-            monitorFileName
-        )
-    }
-
     private fun streaming(
         process: Process,
         monitorName: String
@@ -327,7 +316,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "WEB_SSH_TERM_PORT" to UsePort.WEB_SSH_TERM_PORT.num.toString(),
             "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
             "CMDCLICK_USER" to UbuntuInfo.user,
-            "CREATE_IMAGE_SWITCH" to UbuntuFiles.createImageSwitch,
+            "CREATE_IMAGE_SWITCH" to UbuntuInfo.createImageSwitch,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "HTTP2_SHELL_PATH" to "${UsePath.cmdclickTempCmdDirPath}/${UsePath.cmdclickTempCmdShellName}",
         )

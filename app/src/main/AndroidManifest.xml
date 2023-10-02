@@ -16,7 +16,8 @@
 
 
     <application
-        android:allowBackup="true"
+        tools:replace="android:allowBackup"
+        android:allowBackup="false"
         android:stopWithTask="true"
         android:usesCleartextTraffic="true"
         android:hardwareAccelerated="true"

@@ -22,6 +22,7 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 class InitFragmentManager(
     private val activity: MainActivity
 ) {
+    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
     private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
     private val onShortcut = intent.getStringExtra(
@@ -29,12 +30,11 @@ class InitFragmentManager(
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
 
     fun registerSharePreferenceFromIntentExtra() {
-        val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
-        val okOneTask = mngr?.appTasks?.size == normalTaskNum
+        val okOneTask = activityManager?.appTasks?.size == normalTaskNum
         val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
         if (disableOneTaskForUrlLaunch) {
-            removeTask(mngr)
+            removeTask(activityManager)
             execUrlIntent()
             return
         }

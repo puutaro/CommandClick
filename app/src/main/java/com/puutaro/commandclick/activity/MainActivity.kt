@@ -132,6 +132,7 @@ class MainActivity:
             ) return
             UbuntuServiceManager.monitoringAndLaunchUbuntuService(
                 this@MainActivity,
+                false,
                 false
             )
         }
@@ -151,7 +152,8 @@ class MainActivity:
         )
         UbuntuServiceManager.monitoringAndLaunchUbuntuService(
             this,
-            true
+            true,
+            false
         )
         InitManager(this).invoke()
     }

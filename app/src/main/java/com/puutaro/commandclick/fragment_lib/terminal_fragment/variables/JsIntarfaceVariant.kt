@@ -26,7 +26,7 @@ enum class JsInterfaceVariant {
     jsSendKey,
     jsNetTool,
     jsHtml,
-    jsCmd,
+    jsUbuntu,
     jsProcess,
     jsTrans,
 }
