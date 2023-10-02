@@ -33,6 +33,7 @@ class JsUbuntu(
     val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
+    val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
     fun runCmd(
@@ -194,16 +195,42 @@ class JsUbuntu(
                 }
                 return@launch
             }
-            withContext(Dispatchers.Main){
-                Toast.makeText(
-                    context,
-                    "delay..${delayMiliTime} mili sec",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-            delay(delayMiliTime.toLong())
-            withContext(Dispatchers.Main) {
-                jsUrl.loadUrl(jsScriptUrl)
+            withContext(Dispatchers.IO){
+                for(i in 0..4) {
+                    val isActive = try {
+                        CurlManager.get(
+                            cmdTerminalUrl,
+                            String(),
+                            String(),
+                            200,
+                        ).isNotEmpty()
+                    } catch (e: Exception){
+                        false
+                    }
+                    if(isActive) break
+                    withContext(Dispatchers.Main) boot@ {
+                        val remainder = i % 20
+                        if( remainder != 0) return@boot
+                        Toast.makeText(
+                            context,
+                            ".".repeat(remainder),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    delay(1000)
+                }
+                withContext(Dispatchers.Main) {
+                    jsUrl.loadUrl(jsScriptUrl)
+                }
+//                if(isRetryTimes == 0) return@withContext
+//                withContext(Dispatchers.Main){
+//                    Toast.makeText(
+//                        context,
+//                        "delay..${delayMiliTime} mili sec",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//                delay(delayMiliTime.toLong())
             }
         }
     }
