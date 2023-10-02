@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 object UbuntuInfo {
     val user = "cmdclick"
 //  for development
-    val onForDev = true
+    val onForDev = false
     const val createImageSwitch = ""
     const val arm64UbuntuRootfsUrl =
         "https://github.com/puutaro/CommandClick-Linux/releases/download/v0.0.1/rootfs.tar.gz"

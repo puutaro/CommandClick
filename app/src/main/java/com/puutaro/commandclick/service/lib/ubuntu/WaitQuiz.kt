@@ -118,7 +118,7 @@ class WaitQuiz {
         ),
         Pair(
             "What's better than termux?",
-            "-> one touched & one handed op"
+            "-> two touched & one handed op"
         ),
         Pair(
             "Oh! ubuntu go Heaven!?",
@@ -242,7 +242,7 @@ class WaitQuiz {
         ),
         Pair(
             "What's ${appName}'s terminal feature?",
-            "-> One touch cmd"
+            "-> Two touch cmd"
         ),
         Pair(
             "What create by ${appName}?",

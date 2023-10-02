@@ -1,1 +1,1 @@
-"Another browser" powered by javascript and shellscript(termux).
+"Linux browser" powered by javascript and ubuntu.
