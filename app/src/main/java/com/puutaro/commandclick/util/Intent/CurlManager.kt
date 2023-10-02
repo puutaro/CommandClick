@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.util.Intent
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.FileSystems
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -61,7 +63,12 @@ object CurlManager {
             responseBody
         } catch (e: Exception) {
             connection.disconnect()
-            errPrefix + "invalid url\n" + e.toString()
+            FileSystems.writeFile(
+                UsePath.cmdclickMonitorDirPath,
+                UsePath.cmdClickMonitorFileName_2,
+                errPrefix + "invalid url\n" + e.toString()
+            )
+            String()
         }
     }
 }

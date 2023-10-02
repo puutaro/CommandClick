@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import java.io.File
 
@@ -94,4 +93,17 @@ class JsPath(
     ): String {
         return File(path).name
     }
+
+    @JavascriptInterface
+    fun echoPath(pathType: String): String {
+        return when(pathType) {
+            PathType.appFiles.name
+            -> return "${context?.filesDir}"
+            else -> String()
+        }
+    }
+}
+
+private enum class PathType {
+    appFiles
 }

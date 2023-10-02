@@ -4,9 +4,8 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -27,6 +26,15 @@ object ListContentsSelectSpinnerViewProducer {
         val defaultListLimit = 100
         val context = editParameters.context
         val currentId = editParameters.currentId
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -46,7 +54,9 @@ object ListContentsSelectSpinnerViewProducer {
         )
 
         val selectJsPath = getSelectJsPath(
-            elcbMap
+            elcbMap,
+            currentAppDirPath,
+            scriptName
         )
 
         val fileObj = File(listContentsFilePath)
@@ -160,13 +170,23 @@ object ListContentsSelectSpinnerViewProducer {
 
     fun getSelectJsPath(
         elcbMap: Map<String, String>?,
+        currentAppDirPath: String,
+        scriptName: String,
     ): String {
-        return elcbMap?.get(ListContentsEditKey.selectJs.name)
+        return elcbMap?.get(ListContentsEditKey.selectJsPath.name)
             ?.let {
                 if(
                     it.isEmpty()
                 ) return@let String()
-                it
+                ScriptPreWordReplacer.replace(
+                    it,
+                    currentAppDirPath,
+                    scriptName
+                        .removeSuffix(UsePath.JS_FILE_SUFFIX)
+                    .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
+                        "Dir",
+                    scriptName
+                )
             } ?: String()
     }
 
@@ -214,7 +234,7 @@ object ListContentsSelectSpinnerViewProducer {
     enum class ListContentsEditKey {
         listPath,
         limitNum,
-        selectJs,
+        selectJsPath,
     }
 }
 

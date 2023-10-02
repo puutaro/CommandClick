@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.proccess.StartFileMaker
@@ -61,6 +62,41 @@ object ConfigFromStartUpFileSetterForTerm {
             ),
         )
 
+        terminalFragment.onTermBackendWhenStart = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
+                SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.onTermShortWhenLoad = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
+            SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
+                SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.disableShowToolbarWhenHighlight = SettingVariableReader.getCbValue(
+            settingVariableListFromConfig,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            listOf(
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
+            ),
+        )
 
         terminalFragment.fontZoomPercent = SettingVariableReader.getNumValue(
             settingVariableListFromConfig,
@@ -140,6 +176,19 @@ object ConfigFromStartUpFileSetterForTerm {
                 settingVariableListFromStartup,
                 CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
             )
+
+            terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+                settingVariableListFromStartup,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+                listOf(
+                    UsePath.cmdClickMonitorFileName_2,
+                    UsePath.cmdClickMonitorFileName_3,
+                    UsePath.cmdClickMonitorFileName_4,
+                ),
+            )
         }
 
         val fannelDirName = currentScriptFileName
@@ -177,6 +226,55 @@ object ConfigFromStartUpFileSetterForTerm {
             listOf(
                 SettingVariableSelects.OnAdblockSelects.ON.name,
                 SettingVariableSelects.OnAdblockSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.onTermBackendWhenStart = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START,
+            terminalFragment.onTermBackendWhenStart,
+            SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name,
+            terminalFragment.onTermBackendWhenStart,
+            listOf(
+                SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name,
+                SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.onTermShortWhenLoad = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD,
+            terminalFragment.onTermShortWhenLoad,
+            SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name,
+            terminalFragment.onTermShortWhenLoad,
+            listOf(
+                SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name,
+                SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.disableShowToolbarWhenHighlight = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+            terminalFragment.disableShowToolbarWhenHighlight,
+            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            terminalFragment.disableShowToolbarWhenHighlight,
+            listOf(
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
+                SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name,
+            ),
+        )
+
+        terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE,
+            listOf(
+                UsePath.cmdClickMonitorFileName_2,
+                UsePath.cmdClickMonitorFileName_3,
+                UsePath.cmdClickMonitorFileName_4,
             ),
         )
 

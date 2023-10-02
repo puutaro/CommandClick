@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
@@ -54,6 +55,18 @@ object ConfigFromScriptFileSetter {
                 currentScriptFileName,
             )
         }?.split("\n")
+
+        editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
+            settingVariableList,
+            CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD,
+            editFragment.onTermVisibleWhenKeyboard,
+            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name,
+            editFragment.onTermVisibleWhenKeyboard,
+            listOf(
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name,
+                SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+            ),
+        )
 
         editFragment.historySwitch = SettingVariableReader.getCbValue(
             settingVariableList,

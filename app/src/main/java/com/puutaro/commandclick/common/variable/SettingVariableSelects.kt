@@ -84,6 +84,12 @@ object SettingVariableSelects {
         ON,
     }
 
+    enum class OnTermVisibleWhenKeyboardSelects {
+        INHERIT,
+        OFF,
+        ON,
+    }
+
     enum class overrideItemClickExecSelects {
         ON,
         OFF
@@ -100,6 +106,26 @@ object SettingVariableSelects {
     }
 
     enum class disableEditButtonSelects {
+        ON,
+        OFF
+    }
+
+    enum class OnTermBackendWhenStartSelects {
+        INHERIT,
+        ON,
+        OFF
+    }
+    enum class OnTermShortWhenLoadSelects {
+        INHERIT,
+        ON,
+        OFF
+    }
+    enum class DisableShowToolbarWhenHighlightSelects {
+        ON,
+        OFF
+    }
+
+    enum class onBootUbuntuSelects {
         ON,
         OFF
     }

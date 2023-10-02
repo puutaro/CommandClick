@@ -1,0 +1,9 @@
+esc
+home
+end
+ |
+pageDown
+/
+\
+""
+''

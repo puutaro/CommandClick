@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.common.variable
 
-import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.FileSystems
@@ -62,11 +62,15 @@ object CommandClickScriptVariable {
     val CMDCLICK_SHIBAN = "cmdclickShiban"
     val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
+    val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
+    val ON_TERM_VISIBLE_WHEN_KEYBOARD = "onTermVisibleWhenKeyboard"
+    val ON_TERM_SHORT_WHEN_LOAD = "onTermShortWhenLoad"
     val CMDCLICK_HISTORY_SWITCH = "historySwitch"
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC = "urlHistoryOrButtonExec"
     val ON_URL_HISTORY_REGISTER = "onUrlHistoryRegister"
     val IGNORE_HISTORY_PATHS = "ignoreHistoryPaths"
     val ON_ADBLOCK = "onAdBlock"
+    val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
     val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
     val TERMINAL_COLOR = "terminalColor"
@@ -89,6 +93,8 @@ object CommandClickScriptVariable {
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
     val SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcAnchorLongPressMenuFilePath"
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
+    val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
+    val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
         TERMINAL_DO,
@@ -105,6 +111,11 @@ object CommandClickScriptVariable {
         STATUS_BAR_ICON_COLOR_MODE,
         CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
         ON_ADBLOCK,
+        ON_TERM_BACKEND_WHEN_START,
+        ON_TERM_VISIBLE_WHEN_KEYBOARD,
+        ON_TERM_SHORT_WHEN_LOAD,
+        DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
+        UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
         CMDCLICK_RUN_SHELL,
@@ -127,7 +138,8 @@ object CommandClickScriptVariable {
         NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-        IMAGE_LONG_PRESS_MENU_FILE_PATH
+        IMAGE_LONG_PRESS_MENU_FILE_PATH,
+        DEFAULT_MONITOR_FILE,
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
@@ -164,6 +176,17 @@ object CommandClickScriptVariable {
     private val onAdBlockInherit = SettingVariableSelects.OnAdblockSelects.INHERIT.name
     private val onAdBlockOn = SettingVariableSelects.OnAdblockSelects.ON.name
     private val onAdBlockOff = SettingVariableSelects.OnAdblockSelects.OFF.name
+    private val onTermVisibleWhenKeyboardSelectsInherit = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name
+    private val onTermVisibleWhenKeyboardSelectsOn = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+    private val onTermVisibleWhenKeyboardSelectsOff = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
+    private val onTermBackendWhenStartSelectsOn = SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
+    private val onTermBackendWhenStartSelectsOff = SettingVariableSelects.OnTermBackendWhenStartSelects.OFF.name
+    private val onTermBackendWhenStartSelectsInherit = SettingVariableSelects.OnTermBackendWhenStartSelects.INHERIT.name
+    private val onTermShortWhenLoadSelectsOn = SettingVariableSelects.OnTermShortWhenLoadSelects.ON.name
+    private val onTermShortWhenLoadSelectsOff = SettingVariableSelects.OnTermShortWhenLoadSelects.OFF.name
+    private val onTermShortWhenLoadSelectsInherit = SettingVariableSelects.OnTermShortWhenLoadSelects.INHERIT.name
+    private val disableShowToolbarWhenHighlightOn = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
+    private val disableShowToolbarWhenHighlightOff = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     private val onUrlHistoryRegisterOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val overrideItemClickExecSelectsOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
@@ -181,21 +204,27 @@ object CommandClickScriptVariable {
     val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
     val TERMINAL_COLOR_DEFAULT_VALUE = "#043d02"
-//            #121212
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
     val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
     val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
     val PASS_CMDVARIABLE_EDIT_ON_VALUE =  "ON"
+    val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
+    val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
+    val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
+    val ON_BOOT_UBUNTU_DEFAULT_VALUE = SettingVariableSelects.onBootUbuntuSelects.OFF.name
+    val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
+    val DISABLE_WIDE_VIEW_PORT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
     val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
     val DISABLE_SETTING_BUTTON_DEFAULT_VALUE = disableSettingButtonOff
     val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
     val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
+    val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = cmdclickStartupJsName
         .removeSuffix(UsePath.JS_FILE_SUFFIX)
@@ -291,13 +320,18 @@ object CommandClickScriptVariable {
         "${CMDCLICK_HISTORY_SWITCH}:CB=${historySwitchOff}!${historySwitchOn}!${historySwitchInherit}",
         "${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}:CB=${urlHistoryOrButtonExecUrlHistory}!${urlHistoryOrButtonExecUrlButtonExec}!${urlHistoryOrButtonExecUrlInherit}",
         "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
-        "${ON_URL_LAUNCH_MACRO}:CB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
+        "${ON_URL_LAUNCH_MACRO}:TXT:ECB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
         "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
+        "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsOn}",
+        "${ON_TERM_VISIBLE_WHEN_KEYBOARD}:CB=${onTermVisibleWhenKeyboardSelectsInherit}!${onTermVisibleWhenKeyboardSelectsOn}!${onTermVisibleWhenKeyboardSelectsOff}",
+        "${ON_TERM_SHORT_WHEN_LOAD}:CB=${onTermShortWhenLoadSelectsInherit}!${onTermShortWhenLoadSelectsOn}!${onTermShortWhenLoadSelectsOff}",
+        "${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}:CB=${disableShowToolbarWhenHighlightOn}!${disableShowToolbarWhenHighlightOff}",
         "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
         "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
         "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
         "${DISABLE_EDIT_BUTTON}:CB=${disableEditButtonOff}!${disableEditButtonOn}",
         "${DISABLE_PLAY_BUTTON}:CB=${disablePlayButtonOff}!${disablePlayButtonOn}",
+        "${DEFAULT_MONITOR_FILE}:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "${CMDCLICK_TERMINAL_FONT_ZOOM}:TXT:NUM=0..1000!1",
         "${TERMINAL_COLOR}:TXT:CLR=",
         "${TERMINAL_FONT_COLOR}:TXT:CLR=",
@@ -310,6 +344,7 @@ object CommandClickScriptVariable {
         "${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcAnchorLongPressMenuFilePath}",
         "${IMAGE_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForImageLongPressMenuFilePath}",
         "${NO_SCROLL_SAVE_URLS}:DSL=${setVariableValueForNoScrollSaveUrlsFilePath}",
+        "${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}:TXT:NUM=0..60!10"
     )
 
     fun makeShellScriptName(
@@ -350,9 +385,15 @@ object CommandClickScriptVariable {
             |#  * [${CMDCLICK_HOME_FANNELS_PATH}](#${replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
             |#  * [${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
             |#  * [${ON_ADBLOCK}](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
+            |#  * [${ON_TERM_BACKEND_WHEN_START}](#${replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
+            |#  * [${ON_TERM_VISIBLE_WHEN_KEYBOARD}](#${replaceLowerAdnBlankDash(ON_TERM_VISIBLE_WHEN_KEYBOARD)})
+            |#  * [${ON_TERM_SHORT_WHEN_LOAD}](#${replaceLowerAdnBlankDash(ON_TERM_SHORT_WHEN_LOAD)})
+            |#  * [${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}](#${replaceLowerAdnBlankDash(DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT)})
             |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
+            |#  * [${DEFAULT_MONITOR_FILE}](#${replaceLowerAdnBlankDash(DEFAULT_MONITOR_FILE)})
             |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
+            |#  * [${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}](#${replaceLowerAdnBlankDash(UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF)})
             |#  * [${CMDCLICK_TERMINAL_FONT_ZOOM}](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
             |#  * [${TERMINAL_FONT_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
             |#  * [${TERMINAL_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
@@ -482,6 +523,41 @@ object CommandClickScriptVariable {
             |# | `${onAdBlockOn}` | on |
             |# | `${onAdBlockOff}` | off |
             |
+            |# ### ${ON_TERM_BACKEND_WHEN_START}
+            |# Display terminal backend when start 
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onTermBackendWhenStartSelectsInherit}` | inherit config setting |
+            |# | `${onTermBackendWhenStartSelectsOn}` | on |
+            |# | `${onTermBackendWhenStartSelectsOff}` | off |
+            |
+            |# ### ${ON_TERM_VISIBLE_WHEN_KEYBOARD}
+            |# terminal visible when keyboard open 
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onTermVisibleWhenKeyboardSelectsInherit}` | inherit config setting |
+            |# | `${onTermVisibleWhenKeyboardSelectsOn}` | on |
+            |# | `${onTermVisibleWhenKeyboardSelectsOff}` | off |
+            |
+            |# ### ${ON_TERM_SHORT_WHEN_LOAD}
+            |# Terminal short sizging when load 
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${onTermShortWhenLoadSelectsInherit}` | inherit config setting |
+            |# | `${onTermShortWhenLoadSelectsOn}` | on |
+            |# | `${onTermShortWhenLoadSelectsOff}` | off |
+            |
+            |# ### ${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}
+            |# Disable show toolbar when highlight text in webview 
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${disableShowToolbarWhenHighlightOff}` | on |
+            |# | `${disableShowToolbarWhenHighlightOn}` | off |
+            |
             |# ### ${ON_URL_LAUNCH_MACRO}
             |# Url launch macro(when set, cmdclick web terminal don't output)
             |
@@ -502,6 +578,14 @@ object CommandClickScriptVariable {
             |# ### ${EXEC_JS_OR_HTML_PATH}
             |# Execute javascript or html file path
             |# - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
+            |
+            |# ### ${DEFAULT_MONITOR_FILE}
+            |# Select default monitor file for screen
+            |
+            |# ### ${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}
+            |# Ubuntu Sleep delay minutes in screen off 
+            |# - Config only value
+            |# - 0 -> no sleep
             |
             |# ### ${CMDCLICK_TERMINAL_FONT_ZOOM}
             |# Adjust terminal font size (percentage)
@@ -574,12 +658,16 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
         |${ON_ADBLOCK}="${onAdBlockInherit}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
+        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
+        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcAnchorLongPressMenuFilePath}
         |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${imageLongPressMenuFilePath}
         |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
         |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
         |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
+        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
         |${IGNORE_HISTORY_PATHS}=""
         |${EXEC_JS_OR_HTML_PATH}="${execJsOrHtmlPathValue}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
@@ -730,8 +818,12 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}"
         |${ON_ADBLOCK}="${onAdBlockOff}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
+        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
+        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
         |${CMDCLICK_HOME_FANNELS_PATH}="${homeFannelsFilePath}"
         |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
+        |${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}="20"
         |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
         |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
         |${PASS_CMDVARIABLE_EDIT}="${PASS_CMDVARIABLE_EDIT_ON_VALUE}"
@@ -785,7 +877,11 @@ object CommandClickScriptVariable {
         |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
         |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
         |${ON_ADBLOCK}="${onAdBlockInherit}"
+        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
+        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
+        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
         |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
+        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
         |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcImageAnchorLongPressMenuFilePath}"
         |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcAnchorLongPressMenuFilePath}"
         |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${UsePath.imageLongPressMenuFilePath}"

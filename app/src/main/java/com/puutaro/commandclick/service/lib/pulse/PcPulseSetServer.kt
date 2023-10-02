@@ -1,9 +1,13 @@
 package com.puutaro.commandclick.service.lib.pulse
 
+import android.R
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
@@ -35,26 +39,57 @@ object PcPulseSetServer {
     @JvmStatic
     suspend fun launch(
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPortStr: String,
+        notificationId: String,
+        channelId: Int,
+        serverReceivingAddressPort: String,
+        notificationManager: NotificationManagerCompat,
+        cancelPendingIntent: PendingIntent
     ) {
+        val serverPort = try {
+            serverPortStr.toInt()
+        } catch (e: Exception){
+            UsePort.pluseRecieverPort.num
+        }
         val enableRestart = PulseSoundThread(
-            serverAddress,
+            pcAddress,
+            serverPort,
         ).enableSock()
         when(enableRestart) {
             true -> restartPulse(
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
+                notificationId,
+                channelId,
+                serverReceivingAddressPort,
+                notificationManager,
+                cancelPendingIntent
             )
             else -> startPulse(
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
+                notificationId,
+                channelId,
+                serverReceivingAddressPort,
+                notificationManager,
+                cancelPendingIntent
             )
         }
+
     }
 
     private suspend fun restartPulse(
         context: Context?,
-        serverAddress: String,
+        ocAddress: String,
+        serverPort: Int,
+        notificationId: String,
+        channelId: Int,
+        serverReceivingAddressPort: String,
+        notificationManager: NotificationManagerCompat,
+        cancelPendingIntent: PendingIntent
     ){
         withContext(Dispatchers.IO) {
             pulseRecieverJob?.cancel()
@@ -66,7 +101,16 @@ object PcPulseSetServer {
             )
             delay(100)
             pulseSoundThread = PulseSoundThread(
-                serverAddress,
+                ocAddress,
+                serverPort
+            )
+            recieveNotification(
+                context,
+                notificationId,
+                channelId,
+                serverReceivingAddressPort,
+                notificationManager,
+                cancelPendingIntent
             )
             pulseSoundThread?.run(
                 context
@@ -76,7 +120,13 @@ object PcPulseSetServer {
 
     private suspend fun startPulse(
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPort: Int,
+        notificationId: String,
+        channelId: Int,
+        serverReceivingAddressPort: String,
+        notificationManager: NotificationManagerCompat,
+        cancelPendingIntent: PendingIntent
     ){
         withContext(Dispatchers.IO) {
             displayProcess(
@@ -105,7 +155,13 @@ object PcPulseSetServer {
             clientHandle(
                 client,
                 context,
-                serverAddress,
+                pcAddress,
+                serverPort,
+                notificationId,
+                channelId,
+                serverReceivingAddressPort,
+                notificationManager,
+                cancelPendingIntent
             )
         }
     }
@@ -123,7 +179,13 @@ object PcPulseSetServer {
     private fun clientHandle(
         client: Socket?,
         context: Context?,
-        serverAddress: String,
+        pcAddress: String,
+        serverPort: Int,
+        notificationId: String,
+        channelId: Int,
+        serverReceivingAddressPort: String,
+        notificationManager: NotificationManagerCompat,
+        cancelPendingIntent: PendingIntent
     ) {
 
         val isr = InputStreamReader(client?.getInputStream())
@@ -135,6 +197,7 @@ object PcPulseSetServer {
             while (br.ready()) {
                 reader.append(br.read().toChar())
             }
+            pulseSoundThread?.exit()
             val body = ubuntuSetUpShell
             val response = String.format(
                 "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
@@ -143,9 +206,18 @@ object PcPulseSetServer {
             )
             pulseRecieverJob = CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
-                    delay(2000)
+                    delay(3000)
                     pulseSoundThread = PulseSoundThread(
-                        serverAddress,
+                        pcAddress,
+                        serverPort,
+                    )
+                    recieveNotification(
+                        context,
+                        notificationId,
+                        channelId,
+                        serverReceivingAddressPort,
+                        notificationManager,
+                        cancelPendingIntent
                     )
                     pulseSoundThread?.run(
                         context
@@ -172,6 +244,39 @@ object PcPulseSetServer {
         updateMonitorIntent.action = BroadCastIntentScheme.MONITOR_TEXT_PATH.action
         context?.sendBroadcast(updateMonitorIntent)
     }
+
+    private fun recieveNotification(
+        context: Context?,
+        notificationId: String,
+        channelId: Int,
+        serverReceivingAddressPort: String,
+        notificationManager: NotificationManagerCompat,
+        cancelPendingIntent: PendingIntent
+    ){
+        if(context == null) return
+        val notificationBuilder = NotificationCompat.Builder(
+            context,
+            notificationId
+        )
+            .setSmallIcon(R.drawable.ic_media_play)
+            .setAutoCancel(true)
+            .setContentTitle("Recieving..")
+            .setContentText(serverReceivingAddressPort)
+            .setProgress(0, 0, true)
+            .setDeleteIntent(
+                cancelPendingIntent
+            )
+            .addAction(
+                R.drawable.ic_menu_close_clear_cancel,
+                "cancel",
+                cancelPendingIntent
+            )
+        val notificationInstance = notificationBuilder.build()
+        notificationManager.notify(
+            channelId,
+            notificationInstance
+        )
+    }
 }
 
 
@@ -179,9 +284,11 @@ object PcPulseSetServer {
 private val ubuntuSetUpShell = """
     #!/bin/sh
         
-    pactl load-module module-null-sink sink_name=TCP_output \
+    pulseaudio --kill; sleep 0.5 \
+	; PULSE_SERVER=  && pulseaudio --start \
+    ; pactl load-module module-null-sink sink_name=TCP_output \
     && pacmd update-sink-proplist TCP_output device.description=TCP_output \
-    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=10080 listen=0.0.0.0
+    && pactl load-module module-simple-protocol-tcp rate=48000 format=s16le channels=2 source=TCP_output.monitor record=true port=${UsePort.pluseRecieverPort.num} listen=0.0.0.0
 
     """.trimIndent()
 

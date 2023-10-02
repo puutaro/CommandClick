@@ -1,4 +1,3 @@
-import org.gradle.internal.impldep.com.amazonaws.PredefinedClientConfigurations.defaultConfig
 
 plugins {
     id("com.android.application")
@@ -54,6 +53,13 @@ android {
     }
 }
 
+//ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
+////ext.libDir = "$project.projectDir/src/main/resources/lib"
+//ext.libDir = "$project.projectDir/src/main/jniLibs"
+extra["architectures"] = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
+//ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
+//ext.libDir = "$project.projectDir/src/main/resources/lib"
+extra["libDir"] = "${project.projectDir}/src/main/jniLibs"
 //chaquopy {
 //    defaultConfig {
 //        buildPython("/home/xbabu/.pyenv/shims/python")
@@ -71,6 +77,7 @@ android {
 //        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
 //    }
 //}
+
 
 
 dependencies {
@@ -93,7 +100,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.6.1")
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation("androidx.media:media:1.6.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
     implementation("androidx.recyclerview:recyclerview:1.3.1")
@@ -117,6 +124,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
     implementation("com.github.bachors:Android-Img2Ascii:1.1")
+    implementation("org.rauschig:jarchivelib:0.8.0")
+    implementation("org.apache.commons:commons-compress:1.20")
+//    implementation("com.hierynomus:sshj:0.36.0")
 
 
 //    implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable")

@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
@@ -44,13 +45,17 @@ class   TerminalFragment: Fragment() {
     var onPageFinishedCoroutineJob: Job? = null
     var registerUrlHistoryTitleCoroutineJob: Job? = null
     var onWebHistoryUpdaterJob: Job? = null
-    var firstDisplayUpdateRunner: Runnable? = null
-    var lastDisplayUpdateRunner: Runnable? = null
+    var previousTerminalTag: String? = null
     private var outputFileLength: Int = 0
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var firstDisplayUpdate = true
     var onHistoryUrlTitle = CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
     var onAdBlock = CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE
+    var onTermBackendWhenStart = CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START
+    var onTermShortWhenLoad =
+        CommandClickScriptVariable.ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE
+    var disableShowToolbarWhenHighlight = CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE
+    var defaultMonitorFile = CommandClickScriptVariable.DEFAULT_MONITOR_FILE_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
@@ -60,6 +65,7 @@ class   TerminalFragment: Fragment() {
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     var ignoreHistoryPathList: List<String>? = null
+    var onUrlLaunchIntent: Boolean = false
     var noScrollSaveUrls = emptyList<String>()
     var srcImageAnchorLongPressMenuFilePath: String = String()
     var srcAnchorLongPressMenuFilePath: String = String()
@@ -116,7 +122,6 @@ class   TerminalFragment: Fragment() {
         false
         )
 
-
         if(savedInstanceState!=null) {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
@@ -131,6 +136,10 @@ class   TerminalFragment: Fragment() {
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
+        MonitorFileManager.switchCurMonitorFile(
+            this,
+            terminalViewModel
+        )
         UrlHistoryBackUp.backup(this)
         ScrollYPosiBackUp.backup(this)
         AdBlocker.init(this)
@@ -146,11 +155,7 @@ class   TerminalFragment: Fragment() {
 
         WebViewSettings.set(this)
         TermOnLongClickListener.set(this)
-        IntentAction.handle(this)
-        DisplaySwitch.update(
-            this,
-            terminalViewModel,
-        )
+        MonitorFileManager.trim(terminalViewModel)
         return binding.root
     }
 
@@ -188,18 +193,30 @@ class   TerminalFragment: Fragment() {
         onPageFinishedCoroutineJob?.cancel()
         registerUrlHistoryTitleCoroutineJob?.cancel()
         onWebHistoryUpdaterJob?.cancel()
+        displayUpdateCoroutineJob?.cancel()
     }
 
     override fun onResume() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        firstDisplayUpdate = if(
+            !firstDisplayUpdate
+            && terminalViewModel.readlinesNum != ReadLines.LONGTH
+        ){
+            onTermBackendWhenStart == SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
+        } else firstDisplayUpdate
         terminalViewModel.isStop = false
         alertDialogInstance?.dismiss()
         dialogInstance?.dismiss()
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
-        InitCurrentMonitorFile.trim(this)
+        IntentAction.handle(this)
+        displayUpdateCoroutineJob?.cancel()
+        displayUpdateCoroutineJob = DisplaySwitch.update(
+            this,
+            terminalViewModel,
+        )
         BroadcastManager.registerBroadcastReceiver(
             this,
             broadcastReceiverForUrl,
@@ -215,6 +232,7 @@ class   TerminalFragment: Fragment() {
             broadcastReceiverForMonitorText,
             BroadCastIntentScheme.MONITOR_TEXT_PATH.action
         )
+        previousTerminalTag = tag
     }
 
 
@@ -298,6 +316,7 @@ class   TerminalFragment: Fragment() {
         this.displayUpdateCoroutineJob?.cancel()
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
+        firstDisplayUpdate = true
     }
 
     interface OnMultiSelectListenerForTerm {

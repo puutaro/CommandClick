@@ -8,6 +8,7 @@ import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
@@ -18,6 +19,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
 
 object EditableListContentsSelectOnlyImageGridViewProducer {
@@ -98,6 +100,7 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
             gridView.adapter = adapter
             setGridViewItemClickListener(
                 currentFragment,
+                editParameters,
                 insertEditText,
                 gridView,
                 adapter,
@@ -126,11 +129,21 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
 
     private fun setGridViewItemClickListener(
         currentFragment: Fragment,
+        editParameters: EditParameters,
         insertEditText: EditText,
         gridView: GridView,
         adapter: OnlyImageAdapter,
         elcbMap: Map<String, String>?,
     ){
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
             elcbMap,
         )
@@ -140,7 +153,9 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
         )
 
         val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
-            elcbMap
+            elcbMap,
+            currentAppDirPath,
+            scriptName,
         )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()

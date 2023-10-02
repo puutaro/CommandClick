@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -20,14 +21,19 @@ class JsPulseAudioReceiver(
     @JavascriptInterface
     fun start(
         pcIpv4Address: String,
+        serverPort: Int,
     ) {
         val intent = Intent(
             activity,
             pulseReceiverService
         )
         intent.putExtra(
-            PulseServerIntentExtra.serverAddress.schema,
+            PulseServerIntentExtra.pcAddress.schema,
             pcIpv4Address
+        )
+        intent.putExtra(
+            PulseServerIntentExtra.serverPort.schema,
+            serverPort.toString()
         )
         context?.let {
             ContextCompat.startForegroundService(context, intent)

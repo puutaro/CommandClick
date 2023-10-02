@@ -6,11 +6,10 @@ import android.content.Context
 import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
 import android.widget.TextView
-import android.widget.Toast
-import com.puutaro.commandclick.fragment.TerminalFragment
+import androidx.fragment.app.Fragment
 
 class JsUtil(
-    private val terminalFragment: TerminalFragment
+    private val fragment: Fragment
 ) {
 
     @JavascriptInterface
@@ -21,8 +20,8 @@ class JsUtil(
     @JavascriptInterface
     fun copyToClipboard(text: String?, fontSize: Int) {
         val clipboard: ClipboardManager? =
-            terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
-        val textView = TextView(terminalFragment.context)
+            fragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        val textView = TextView(fragment.context)
         textView.setText(text)
         textView.textSize = fontSize.toFloat()
         val clipText = textView.text
@@ -33,11 +32,11 @@ class JsUtil(
     @JavascriptInterface
     fun echoFromClipboard(): String {
         val clipboard: ClipboardManager? =
-            terminalFragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+            fragment.activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
         val clipText = clipboard
             ?.primaryClip
             ?.getItemAt(0)
-            ?.coerceToStyledText(terminalFragment.context)
+            ?.coerceToStyledText(fragment.context)
             ?: return String()
         return clipText.toString()
     }

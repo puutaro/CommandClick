@@ -11,6 +11,7 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getElsbMap
@@ -22,6 +23,8 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.SharePreffrenceMethod
+import org.eclipse.jgit.diff.Edit
 import java.io.File
 
 
@@ -69,6 +72,7 @@ object EditableListContentsSelectGridViewProducer {
             )
             setGridListView(
                 currentFragment,
+                editParameters,
                 insertEditText,
                 listContentsFilePath,
                 elcbMap
@@ -89,6 +93,7 @@ object EditableListContentsSelectGridViewProducer {
 
     private fun setGridListView(
         currentFragment: Fragment,
+        editParameters: EditParameters,
         insertEditText: EditText,
         listContentsFilePath: String,
         elcbMap: Map<String, String>?
@@ -120,6 +125,7 @@ object EditableListContentsSelectGridViewProducer {
         )
         setGridViewItemClickListener(
             currentFragment,
+            editParameters,
             insertEditText,
             listDialogSearchEditText,
             gridView,
@@ -144,11 +150,21 @@ object EditableListContentsSelectGridViewProducer {
 
     private fun setGridViewItemClickListener(
         currentFragment: Fragment,
+        editParameters: EditParameters,
         insertEditText: EditText,
         searchText: EditText,
         gridView: GridView,
         elcbMap: Map<String, String>?,
     ){
+        val readSharePreffernceMap = editParameters.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
         val listContentsFilePath = getListPath(
             elcbMap,
         )
@@ -158,7 +174,10 @@ object EditableListContentsSelectGridViewProducer {
         )
 
         val selectJsPath = getSelectJsPath(
-            elcbMap
+            elcbMap,
+            currentAppDirPath,
+            scriptName,
+
         )
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()

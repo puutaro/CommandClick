@@ -19,5 +19,9 @@ enum class NotificationChanel(
     PULSE_RECIEVER_NOTIFICATION(
     "channel_pulse_server",
     "pulse_server"
+    ),
+    UBUNTU_NOTIFICATION(
+    "channel_ubuntu_server",
+    "ubuntu_server"
     )
 }

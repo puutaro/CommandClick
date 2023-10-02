@@ -1,0 +1,127 @@
+#!/data/data/com.puutaro.commandclick/files/support/busybox sh
+
+date "+%Y/%m/%d %H:%M:%S"
+echo proot cc start
+ubuntuCompFile="/storage/emulated/0/Documents/cmdclick/AppDir/default/ubuntuComp.txt"
+
+if [[ ! -r /dev/ashmem ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/ashmem" 
+fi
+if [[ ! -r /dev/shm ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOTFS_PATH/tmp:/dev/shm" 
+fi
+if [[ ! -r /proc/stat ]] ; then
+	numProc="$($LIB_PATH/busybox grep rocessor /proc/cpuinfo)"
+	numProc="${numProc: -1}"
+	if [[ "$numProc" -le "3" ]] 2>/dev/null ; then
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat4:/proc/stat" 
+	else
+		EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/stat8:/proc/stat" 
+	fi
+fi
+if [[ ! -r /proc/uptime ]] ; then
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/uptime:/proc/uptime" 
+fi
+if [[ ! -r /proc/version ]] ; then
+	currDate="$($LIB_PATH/busybox date)"
+	echo "Linux version $OS_VERSION (fake@userland) #1 $currDate" > $ROOT_PATH/support/version
+	EXTRA_BINDINGS="$EXTRA_BINDINGS -b $ROOT_PATH/support/version:/proc/version" 
+fi
+
+PROOT="$LIB_PATH/proot"
+unset LD_PRELOAD
+cd "${ROOTFS_PATH}"
+
+if [ ! -f "${ubuntuCompFile}" ]; then
+    chmod -R 777 "${ROOTFS_PATH}/support"
+    echo "nameserver 1.1.1.1" > "${ROOTFS_PATH}/etc/resolv.conf"
+fi
+
+echo "### execCmd"
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
+PROOT_LOADER=$LIB_PATH/loader \
+PROOT_LOADER_32=$LIB_PATH/loader32 \
+$PROOT -r $ROOTFS_PATH -p \
+-H -0 -l -L \
+--sysvipc \
+--kill-on-exit \
+-b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
+ -b $ROOTFS_PATH/support/:/support \
+-b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
+-b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
+-b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
+-b $ROOT_PATH/support:/support/common \
+-b /:/host-rootfs \
+-b /storage/:/storage \
+$EXTRA_BINDINGS \
+/usr/bin/env -i \
+    PATH="${PATH}" \
+    HOME=/root \
+    LANG=C.UTF-8 \
+    TERM=$TERM \
+    PACKAGE_NAME=${PACKAGE_NAME} \
+    UBUNTU_PC_PULSE_SET_SERVER_PORT=${UBUNTU_PC_PULSE_SET_SERVER_PORT} \
+    UBUNTU_PULSE_RECEIVER_PORT=${UBUNTU_PULSE_RECEIVER_PORT} \
+    HTTP2_SHELL_PORT=${HTTP2_SHELL_PORT} \
+    WEB_SSH_TERM_PORT=${WEB_SSH_TERM_PORT} \
+    DROPBEAR_SSH_PORT=${DROPBEAR_SSH_PORT} \
+    CMDCLICK_USER="${CMDCLICK_USER}" \
+    CREATE_IMAGE_SWITCH="${CREATE_IMAGE_SWITCH}" \
+    APP_ROOT_PATH="${APP_ROOT_PATH}" \
+    HTTP2_SHELL_PATH="${HTTP2_SHELL_PATH}" \
+    DEBIAN_FRONTEND=noninteractive \
+    "$@"
+
+# -b /:/host-rootfs
+# -b /storage/:/storage \
+
+# PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
+# PROOT_LOADER=$LIB_PATH/loader \
+# PROOT_LOADER_32=$LIB_PATH/loader32 \
+# $PROOT -r $ROOTFS_PATH -p \
+# -H -0 -l -L \
+# --sysvipc \
+# --kill-on-exit \
+# -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
+# -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support \
+# -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
+# -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
+# -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
+# -b $ROOT_PATH/support:/support/common \
+# -b /storage/:/storage \
+# $EXTRA_BINDINGS \
+# /usr/bin/env -i \
+#    PATH="${PATH}" \
+#    HOME=/root \
+#    LANG=C.UTF-8 \
+#    TERM=$TERM \
+#    DEBIAN_FRONTEND=noninteractive \
+#    "$@"
+
+
+
+# -b ${ex_storage}/:${ex_storage} \
+# --fix-selinux-xattr \
+
+# $PROOT -r $ROOTFS_PATH -p \
+# --sysvipc \
+# -H -0 -l -L \
+# -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
+# -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support \
+# -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
+# -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
+# -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
+# -b $ROOT_PATH/support:/support/common \
+# -b /storage/emulated/0:/external \
+# $EXTRA_BINDINGS \
+# /usr/bin/env -i \
+#     PATH="${PATH}" \
+#     HOME=/root \
+#     LANG=C.UTF-8 \
+#     TERM=$TERM \
+#     DEBIAN_FRONTEND=noninteractive \
+#     $@
+
+echo proot cc end
+#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin PROOT_TMP_DIR=$ROOTFS_PATH/support/ PROOT_LOADER=$LIB_PATH/loader PROOT_LOADER_32=$LIB_PATH/loader32 $PROOT -r $ROOTFS_PATH -v $PROOT_DEBUG_LEVEL -p --sysvipc -H -0 -l -L -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab -b /:/host-rootfs -b $ROOTFS_PATH/support/:/support -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload -b $ROOT_PATH/support:/support/common $EXTRA_BINDINGS $@

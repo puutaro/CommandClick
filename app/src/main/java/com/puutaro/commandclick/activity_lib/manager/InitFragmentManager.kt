@@ -10,7 +10,8 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.fannel.SystemFannel
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.FragmentTagManager
@@ -21,32 +22,25 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 class InitFragmentManager(
     private val activity: MainActivity
 ) {
+    private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
     private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
     private val onShortcut = intent.getStringExtra(
         SharePrefferenceSetting.on_shortcut.name
     ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
 
-
     fun registerSharePreferenceFromIntentExtra() {
-        val mngr = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
         val normalTaskNum = 1
-        val okOneTask = mngr?.appTasks?.size == normalTaskNum
-//IntentAction.handle(activity) &&
+        val okOneTask = activityManager?.appTasks?.size == normalTaskNum
         val disableOneTaskForUrlLaunch = IntentAction.judge(activity) && !okOneTask
-        if (
-            disableOneTaskForUrlLaunch
-        ) {
-            removeTask(mngr)
+        if (disableOneTaskForUrlLaunch) {
+            removeTask(activityManager)
             execUrlIntent()
             return
         }
-//IntentAction.handle(activity) &&
         val disableTaskRootForUrlLaunch =
             IntentAction.judge(activity) && !activity.isTaskRoot
-        if (
-            disableTaskRootForUrlLaunch
-        ) {
+        if (disableTaskRootForUrlLaunch) {
             execUrlIntent()
             return
         }
@@ -57,13 +51,13 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        val startUpScriptFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
-            startUpPref,
-            SharePrefferenceSetting.current_script_file_name
-        )
         val startUpAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
+        )
+        val startUpScriptFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
+            startUpPref,
+            SharePrefferenceSetting.current_script_file_name
         )
         val onShortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
             startUpPref,
@@ -77,7 +71,10 @@ class InitFragmentManager(
             || startUpScriptFileName == emptyShellFileName
             || startUpAppDirPath == UsePath.cmdclickAppDirAdminPath
             || startUpAppDirPath == UsePath.cmdclickAppHistoryDirAdminPath
-            || startUpAppDirPath == UsePath.cmdclickSystemAppDirPath
+            || allowJudgeSystemFannelIntent(
+                startUpAppDirPath,
+                startUpScriptFileName
+            )
             || onShortcut == SharePrefferenceSetting.on_shortcut.defalutStr
         ) {
             WrapFragmentManager.initFragment(
@@ -166,5 +163,18 @@ class InitFragmentManager(
         mngr.appTasks.forEach {
             it.finishAndRemoveTask()
         }
+    }
+
+    private fun allowJudgeSystemFannelIntent(
+        startUpAppDirPath: String,
+        startUpScriptFileName: String,
+    ): Boolean {
+        if(
+            startUpAppDirPath != UsePath.cmdclickSystemAppDirPath
+        ) return false
+        return !SystemFannel.allowIntentSystemFannelList.contains(
+            startUpScriptFileName
+        )
+
     }
 }

@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bachors.img2ascii.Img2Ascii
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems

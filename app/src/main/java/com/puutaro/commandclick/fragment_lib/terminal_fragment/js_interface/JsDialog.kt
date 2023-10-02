@@ -8,6 +8,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ImageJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.AsciiArtJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.CopyJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectOnlyImageGridViewJsDialog
@@ -19,7 +20,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     val context = terminalFragment.context
 
@@ -91,11 +92,13 @@ class JsDialog(
     @JavascriptInterface
     fun prompt(
         title: String,
-        message: String
+        message: String,
+        suggestVars: String,
     ): String {
         return promptJsDialog.create(
             title,
-            message
+            message,
+            suggestVars,
         )
     }
 
@@ -254,20 +257,28 @@ class JsDialog(
     fun webView(
         urlStr: String,
         currentFannelPath: String,
-        centerMenuMapStr: String,
-        rightMenuMapStr: String,
-        srcAnchorImageMapStr: String,
-        srcAnchorMapStr: String,
-        imageMapStr: String,
+        menuMapStrListStr: String,
+        longPressMenuMapListStr: String
     ){
         webViewJsDialog.create(
             urlStr,
             currentFannelPath,
-            centerMenuMapStr,
-            rightMenuMapStr,
-            srcAnchorImageMapStr,
-            srcAnchorMapStr,
-            imageMapStr,
+            menuMapStrListStr,
+            longPressMenuMapListStr
+        )
+    }
+
+    @JavascriptInterface
+    fun copyDialog(
+        title: String,
+        contents: String,
+        scrollBottom: Boolean
+    ){
+        CopyJsDialog.create(
+            title,
+            terminalFragment,
+            contents,
+            scrollBottom
         )
     }
 }

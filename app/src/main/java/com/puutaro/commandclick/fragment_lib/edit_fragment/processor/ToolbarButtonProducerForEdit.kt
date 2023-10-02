@@ -26,6 +26,7 @@ import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -561,6 +562,14 @@ class ToolbarButtonProducerForEdit(
                         terminalViewModel.currentMonitorFileName
                     )
                 }
+                MenuEnumsForEdit.SELECT_TERM.itemName -> {
+                    SelectTermDialog.launch(editFragment)
+                }
+                MenuEnumsForEdit.RESTART_UBUNTU.itemName -> {
+                    UbuntuServiceManager.launch(
+                        editFragment.activity
+                    )
+                }
             }
         }
     }
@@ -571,17 +580,10 @@ private enum class MenuEnumsForEdit(
     val itemName: String,
     val imageId: Int,
 ) {
-//    SHORTCUT(submenuSettingGroupId, 70401, 1, "create_short_cut"),
-//    TERMUX_SETUP(submenuSettingGroupId, 70402, 2, "termux_setup"),
-//    CONFIG(submenuSettingGroupId, 70403, 3, "config"),
-//    SELECTTERM(mainMenuGroupId, 70700, 7, "select_term"),
-//    TERM1(submenuTermSlectGroupId, 70701, 1, "term_1"),
-//    TERM2(submenuTermSlectGroupId, 70702, 2, "term_2"),
-//    TERM3(submenuTermSlectGroupId, 70703, 3, "term_3"),
-//    TERM4(submenuTermSlectGroupId, 70704, 4, "term_4"),
-    TERM_REFRESH("term_refresh", R.drawable.icons8_refresh),
+    TERM_REFRESH("term refresh", R.drawable.icons8_refresh),
+    SELECT_TERM("select term", R.drawable.icons8_file),
+    RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     KILL("kill", R.drawable.cancel),
-    NO_SCROLL_SAVE_URL("no_scroll_save_url", R.drawable.icons8_check_ok),
+    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     SETTING("setting", R.drawable.icons8_setting),
-//    FORWARD(mainMenuGroupId, 71000, 10, "forward"),
 }

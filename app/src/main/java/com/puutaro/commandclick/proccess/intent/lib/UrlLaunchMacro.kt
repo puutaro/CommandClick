@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -44,10 +45,26 @@ object UrlLaunchMacro {
                     .split("\t")
                     .lastOrNull()
             }
-            else -> {
-
-            }
+            else -> launchUrl(
+                onUrlLaunchMacro,
+                terminalViewModel
+            )
         }
+    }
+
+    private fun launchUrl(
+        urlStr: String,
+        terminalViewModel: TerminalViewModel,
+    ){
+        if(
+            !urlStr.startsWith(
+                WebUrlVariables.httpsPrefix
+            )
+            && !urlStr.startsWith(
+                WebUrlVariables.httpPrefix
+            )
+        ) return
+        terminalViewModel.launchUrl = urlStr
     }
 
 }

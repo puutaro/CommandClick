@@ -3,7 +3,7 @@ package com.puutaro.commandclick.component.adapter.lib
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import com.puutaro.commandclick.common.variable.UsePath
+import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 import kotlin.math.roundToInt
 
