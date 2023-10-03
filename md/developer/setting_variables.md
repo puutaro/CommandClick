@@ -18,10 +18,15 @@
     | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
     | `onAdBlock`  | `INHERIT`/`ON`/`OFF` | sadblock switch; `INHERIT`: inherit config setting, `ON`: on, `OFF`: off
     | `onUrlHistoryRegister`  | `ON`/`OFF` | url history update signal; `ON`: update, `OFF`: no update
-    | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch  
-    | `disableSettingButton`  | `ON`/`OFF` | setting button diable; `ON`: on, `OFF`: off  
+    | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
+    | `onAutoExec`  | `ON`/`OFF` | Auto execute script when fannel launch; `ON`: on, `OFF`: off
+    | `onTermBackendWhenStart`  | `ON`/`OFF` | Display terminal backend when start; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
+    | `onTermVisibleWhenKeyboard`  | `ON`/`OFF` | terminal visible when keyboard open; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
+    | `onTermShortWhenLoad`  | `ON`/`OFF` | Terminal short sizging when load; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
+    | `disableShowToolbarWhenHighlight`  | `ON`/`OFF` | Disable show toolbar when highlight text in webview; `ON`: on, `OFF`: off
     | `disableEditButton`  | `ON`/`OFF` | edit button diable; `ON`: on, `OFF`: off  
     | `disablePlayButton`  | `ON`/`OFF` | play button diable; `ON`: on, `OFF`: off  
+    | `defaultMonitorFile`  | `term_*` | Select default monitor file for screen; `term_1`: stdour, `term_2`: stderr and syslog, 'term_3': free, 'term_4': dev/null    
     | `execPlayBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when play button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `execEditBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when edit button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
     | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
@@ -38,6 +43,7 @@
     | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
     | `terminalFontColor` | `string` | adjust terminal font color |
     | `terminalColor` | `string` | adjust terminal background color |
+    | `ubuntuSleepDelayMinInScreenOff`  | `number` | Ubuntu Sleep delay minutes in screen off, Config only value; 0: no sleep  
     | `beforeCommand` | `shell command string` | before run shellscript, run command |
     | `afterCommand` | `shell command string` | after run shellscript, run command |
     | `scriptFileName`  | `string` | shellscript file name  |
