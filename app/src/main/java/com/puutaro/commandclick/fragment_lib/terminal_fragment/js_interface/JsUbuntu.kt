@@ -212,9 +212,10 @@ class JsUbuntu(
                     withContext(Dispatchers.Main) boot@ {
                         val remainder = i % 10
                         if( remainder != 0) return@boot
+                        val quotient = i / 10
                         Toast.makeText(
                             context,
-                            "ready${".".repeat(remainder)}",
+                            "ready${".".repeat(quotient)}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
@@ -224,14 +225,6 @@ class JsUbuntu(
                     delay(delayMiliTime.toLong())
                     jsUrl.loadUrl(jsScriptUrl)
                 }
-//                if(isRetryTimes == 0) return@withContext
-//                withContext(Dispatchers.Main){
-//                    Toast.makeText(
-//                        context,
-//                        "delay..${delayMiliTime} mili sec",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                }
             }
         }
     }
