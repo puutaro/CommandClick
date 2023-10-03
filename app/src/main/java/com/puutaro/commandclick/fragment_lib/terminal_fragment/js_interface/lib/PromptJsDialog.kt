@@ -293,12 +293,14 @@ class PromptJsDialog(
         FileSystems.createDirs(
             suggestDirPath
         )
-        val updateSuggestList = makeNoEmptyList(
-            trimedReturnValue,
-            suggestTxtName,
-        ).filter {
-            trimedReturnValue != it
-        }.distinct().take(200)
+        val updateSuggestList =
+            listOf(trimedReturnValue) +
+                    makeNoEmptyList(
+                        trimedReturnValue,
+                        suggestTxtName,
+                    ).filter {
+                        trimedReturnValue != it
+                    }.distinct().take(200)
         FileSystems.writeFile(
             suggestDirPath,
             suggestTxtName,

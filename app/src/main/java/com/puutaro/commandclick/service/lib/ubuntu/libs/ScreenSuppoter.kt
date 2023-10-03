@@ -49,6 +49,7 @@ object ScreenMonitor {
     ){
         if(!ubuntuService.screenOffKill) return
         ubuntuService.monitorScreenJob?.cancel()
+        ProcessManager.removeLaunchCompFile(ubuntuService)
         val sleepingIntent = Intent()
         sleepingIntent.action = BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action
         ubuntuService.sendBroadcast(sleepingIntent)

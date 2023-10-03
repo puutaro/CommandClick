@@ -5,15 +5,18 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
 import com.puutaro.commandclick.util.FileSystems
+import com.skydoves.colorpickerview.kotlin.colorPickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 object ProcessManager {
 
@@ -48,6 +51,7 @@ object ProcessManager {
         )
         PcPulseSetServerForUbuntu.exit()
         killAllCoroutineJob(ubuntuService)
+        removeLaunchCompFile(ubuntuService)
         PcPulseSetServer.exit()
         ubuntuService.notificationManager?.cancel(ubuntuService.chanelId)
         ubuntuService.stopForeground(Service.STOP_FOREGROUND_DETACH)
@@ -125,5 +129,17 @@ object ProcessManager {
                 ubuntuService.ubuntuCoroutineJobsHashMap[curProcessType]?.isActive == true
             !isRegularProcess && isActive
         }
+    }
+
+    fun removeLaunchCompFile(
+        ubuntuService: UbuntuService
+    ) {
+        val ubuntuLaunchCompFile = UbuntuFiles(ubuntuService.applicationContext).ubuntuLaunchCompFile
+        val supportDirPath = ubuntuLaunchCompFile.parent ?: return
+        val ubuntuLaunchCompFileName = ubuntuLaunchCompFile.name
+        FileSystems.removeFiles(
+            supportDirPath,
+            ubuntuLaunchCompFileName
+        )
     }
 }

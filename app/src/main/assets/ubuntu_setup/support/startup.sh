@@ -238,6 +238,7 @@ startup_launch_system(){
 
 pulseaudioSetup(){
 	su - "${CMDCLICK_USER}" <<-EOF
+	rm -rf \$HOME/.config/pulse
 	echo --- pulseaudio --start
 	retry_times=5
 	for i in \$(seq \${retry_times})
@@ -362,7 +363,7 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
-	apt-get install -y pulseaudio sudo
+	apt-get install -y sudo
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process
