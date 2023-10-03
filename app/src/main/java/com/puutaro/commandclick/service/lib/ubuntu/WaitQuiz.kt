@@ -42,7 +42,7 @@ class WaitQuiz {
         ),
         Pair(
             "App all feature not working?",
-            "-> kill -> app kill"
+            "-> kill -> kill app"
         ),
         Pair(
             "What is the significance of ubuntu?",

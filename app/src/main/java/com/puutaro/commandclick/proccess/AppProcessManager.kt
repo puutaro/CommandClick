@@ -38,16 +38,6 @@ object AppProcessManager {
         val context = fragment.context
             ?: return
         val ubuntuFiles = UbuntuFiles(context)
-        if(
-            !ubuntuFiles.ubuntuLaunchCompFile.isFile
-        ) {
-            Toast.makeText(
-                context,
-                "Install ubuntu from above notification",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
 
         killDialog = Dialog(
             context
@@ -312,10 +302,21 @@ object AppProcessManager {
         fragment: Fragment,
         selectedProcess: String,
     ){
+        val context = fragment.context
+            ?: return
+        if(
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "Install ubuntu from above notification",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         if(
             selectedProcess.isEmpty()
         ) return
-        val context = fragment.context
         val killProcessIntent = Intent()
         killProcessIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_KILL.action
         killProcessIntent.putExtra(
