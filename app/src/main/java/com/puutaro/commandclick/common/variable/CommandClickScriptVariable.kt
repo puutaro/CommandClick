@@ -427,7 +427,7 @@ object CommandClickScriptVariable {
             |# | `${terminalOutPutModeNo}` | no output (bacground exec) |
             |
             |# ### ${CMDCLICK_ON_AUTO_EXEC}
-            |# Ready for start and end script
+            |# Auto execute script when fannel launch
             |
             |# | switch | ${mdDescription} |
             |# | ${mdDash} | ${mdDash} |
@@ -580,6 +580,13 @@ object CommandClickScriptVariable {
             |
             |# ### ${DEFAULT_MONITOR_FILE}
             |# Select default monitor file for screen
+            |
+            |# | switch | description | 
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${UsePath.cmdClickMonitorFileName_1}` | stdout |
+            |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |
+            |# | `${UsePath.cmdClickMonitorFileName_3}` | free |
+            |# | `${UsePath.cmdClickMonitorFileName_4}` | /dev/null |
             |
             |# ### ${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}
             |# Ubuntu Sleep delay minutes in screen off 
