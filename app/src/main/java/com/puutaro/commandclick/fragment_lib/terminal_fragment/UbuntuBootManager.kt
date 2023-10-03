@@ -12,7 +12,7 @@ object UbuntuBootManager {
             ?: return
         val ubuntuFiles = UbuntuFiles(context)
         if(
-            !ubuntuFiles.ubuntuLaunchCompFile.isFile
+            !ubuntuFiles.ubuntuSetupCompFile.isFile
         ) return
         UbuntuServiceManager.monitoringAndLaunchUbuntuService(
             terminalFragment.activity,

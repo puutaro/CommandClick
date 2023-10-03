@@ -10,7 +10,7 @@ object UbuntuInitProcess {
         ubuntuService: UbuntuService
         ){
         val context = ubuntuService.applicationContext
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUp.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name]?.cancel()
         FileSystems.updateFile(
             ubuntuService.cmdclickMonitorDirPath,
             ubuntuService.cmdclickMonitorFileName,
@@ -20,6 +20,6 @@ object UbuntuInitProcess {
             context,
             ubuntuService.cmdclickMonitorFileName,
         )
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUp.name] = setupUbuntuJob
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name] = setupUbuntuJob
     }
 }

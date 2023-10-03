@@ -19,7 +19,7 @@ object SetupMonitoring {
         val context = ubuntuService.applicationContext
         val ubuntuFiles = ubuntuService.ubuntuFiles
         val ubuntuSetupCompFile = ubuntuFiles?.ubuntuSetupCompFile
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUpMonitoring.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuInitProcessType.SetUpMonitoring.name]?.cancel()
         val ubuntuLaunchCompFile = ubuntuFiles?.ubuntuLaunchCompFile
             ?: return
         if(
@@ -63,7 +63,7 @@ object SetupMonitoring {
                 ubuntuService.sendBroadcast(runningNotificationIntent)
             }
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUpMonitoring.name] =
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuInitProcessType.SetUpMonitoring.name] =
             setupMonitoringJob
     }
 }

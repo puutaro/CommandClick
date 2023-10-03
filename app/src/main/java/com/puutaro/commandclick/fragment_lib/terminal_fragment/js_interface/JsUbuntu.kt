@@ -147,8 +147,9 @@ class JsUbuntu(
         val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
             execCode.split("\n")
         ) ?: return
+        val ubuntuFiles = UbuntuFiles(context)
         if(
-            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+            !ubuntuFiles.ubuntuSetupCompFile.isFile
         ){
             jsUrl.loadUrl(jsScriptUrl)
             return
@@ -167,14 +168,14 @@ class JsUbuntu(
                         break
                     }
                     withContext(Dispatchers.Main) boot@ {
-                        if( i % 20 != 0) return@boot
+                        if( i % 10 != 0) return@boot
                         Toast.makeText(
                             context,
                             "boot..",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    delay(100)
+                    delay(300)
                 }
             }
             if(
@@ -196,7 +197,7 @@ class JsUbuntu(
                 return@launch
             }
             withContext(Dispatchers.IO){
-                for(i in 0..4) {
+                for(i in 0..10) {
                     val isActive = try {
                         CurlManager.get(
                             cmdTerminalUrl,
@@ -209,15 +210,15 @@ class JsUbuntu(
                     }
                     if(isActive) break
                     withContext(Dispatchers.Main) boot@ {
-                        val remainder = i % 20
+                        val remainder = i % 10
                         if( remainder != 0) return@boot
                         Toast.makeText(
                             context,
-                            ".".repeat(remainder),
+                            "ready${".".repeat(remainder)}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
-                    delay(1000)
+                    delay(500)
                 }
                 withContext(Dispatchers.Main) {
                     jsUrl.loadUrl(jsScriptUrl)
@@ -242,7 +243,7 @@ class JsUbuntu(
         ) return
         var isBootSuccess = false
         if(
-            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+            !UbuntuFiles(context).ubuntuSetupCompFile.isFile
         ){
             Toast.makeText(
                 context,
@@ -261,7 +262,7 @@ class JsUbuntu(
                         isBootSuccess = true
                         break
                     }
-                    delay(100)
+                    delay(300)
                 }
             }
         }

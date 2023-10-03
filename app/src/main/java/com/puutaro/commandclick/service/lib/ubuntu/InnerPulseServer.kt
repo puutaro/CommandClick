@@ -22,7 +22,7 @@ object InnerPulseServer {
             context,
             BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
         )
-        val pulseaudioSetupName = ProcessManager.UbuntuProcessType.PulseaudioSetUp.name
+        val pulseaudioSetupName = ProcessManager.UbuntuRunningSystemProcessType.PulseaudioSetUp.name
         ubuntuService.ubuntuCoroutineJobsHashMap[pulseaudioSetupName]?.cancel()
         val pulseaudioSetUpJob = CoroutineScope(Dispatchers.IO).launch {
             ubuntuService.notificationManager?.let {

@@ -198,7 +198,7 @@ object UbuntuBroadcastHandler {
                 it
             )
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuProcessType.SetUpMonitoring.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuInitProcessType.SetUpMonitoring.name]?.cancel()
     }
 
     private fun execSleepingNotification(
@@ -239,10 +239,14 @@ object UbuntuBroadcastHandler {
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
+        val systemRunningProcessNum =
+            ProcessManager.UbuntuRunningSystemProcessType.values().size
         ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.RUNNING.title)
+        val userProotProcessNum =
+            ProcessManager.processNumCalculator(ubuntuService) - systemRunningProcessNum
         ubuntuService.notificationBuilder?.setContentText(
             UbuntuStateType.RUNNING.message.format(
-                ProcessManager.processNumCalculator(ubuntuService)
+                userProotProcessNum
             )
         )
         ubuntuService.notificationBuilder?.clearActions()

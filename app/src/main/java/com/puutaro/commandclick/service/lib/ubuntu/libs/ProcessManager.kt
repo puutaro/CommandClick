@@ -11,18 +11,19 @@ import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
 import com.puutaro.commandclick.util.FileSystems
-import com.skydoves.colorpickerview.kotlin.colorPickerDialog
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
 
 object ProcessManager {
 
-    enum class UbuntuProcessType {
-        SetUp,
+    enum class UbuntuInitProcessType {
         SetUpMonitoring,
+    }
+
+    enum class UbuntuRunningSystemProcessType {
+        SetUp,
         PulseaudioSetUp,
         monitoringProcessNum,
     }
@@ -67,7 +68,7 @@ object ProcessManager {
         }.size
     }
 
-    fun killAllCoroutineJob(
+    private fun killAllCoroutineJob(
         ubuntuService: UbuntuService
     ){
         ubuntuService.ubuntuCoroutineJobsHashMap.forEach { t, u ->
@@ -79,7 +80,7 @@ object ProcessManager {
         ubuntuService: UbuntuService
     ){
         var previousProcessNum = 0
-        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuProcessType.monitoringProcessNum.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuRunningSystemProcessType.monitoringProcessNum.name]?.cancel()
         val processNumUpdateIntent = Intent()
         processNumUpdateIntent.action =
             BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
@@ -113,7 +114,7 @@ object ProcessManager {
             }
         }
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                UbuntuProcessType.monitoringProcessNum.name
+                UbuntuRunningSystemProcessType.monitoringProcessNum.name
         ] = monitorProcessNumJob
     }
 
@@ -122,7 +123,7 @@ object ProcessManager {
     ): List<String> {
         return ubuntuService.ubuntuCoroutineJobsHashMap.keys.filter {
                 curProcessType ->
-            val isRegularProcess = UbuntuProcessType.values().filter {
+            val isRegularProcess = UbuntuRunningSystemProcessType.values().filter {
                 curProcessType == it.name
             }.isNotEmpty()
             val isActive =
