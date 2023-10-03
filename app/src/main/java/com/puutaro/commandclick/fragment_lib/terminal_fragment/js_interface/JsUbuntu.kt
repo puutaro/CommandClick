@@ -221,6 +221,7 @@ class JsUbuntu(
                     delay(500)
                 }
                 withContext(Dispatchers.Main) {
+                    delay(delayMiliTime.toLong())
                     jsUrl.loadUrl(jsScriptUrl)
                 }
 //                if(isRetryTimes == 0) return@withContext
@@ -231,7 +232,6 @@ class JsUbuntu(
 //                        Toast.LENGTH_SHORT
 //                    ).show()
 //                }
-//                delay(delayMiliTime.toLong())
             }
         }
     }

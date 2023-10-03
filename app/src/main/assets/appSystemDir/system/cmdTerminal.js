@@ -146,7 +146,7 @@ function launchTerminal(){
   const loadJsCon = `jsUrl.loadUrl("${terminalUrl}")`;
   jsUbuntu.bootOnExec(
       loadJsCon,
-      3000
+      1000
   );
 };
 
