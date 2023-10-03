@@ -10,7 +10,7 @@
 <br>
 <br>
 
-`CommandClick` is ubuntu browser on android without root access.  
+`CommandClick` is ubuntu browser on android without root access and termux.  
 <br>
 <br>
 <br>
