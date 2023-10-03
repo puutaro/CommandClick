@@ -27,6 +27,7 @@ Table of Contents
   * [Add](#add)
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
+  * [Setup ubuntu](#setup-ubuntu)
   * [Install fannel](#install-fannel)
   * [Config](#config)
   * [Termux setting](#termux-setting)
@@ -210,7 +211,22 @@ You can create shortcut for current `App directory` or `script`
 [Procedure]  
 1. Long press right buttom gear button  
 2. Click `setting` -> "create_short_cut" in popup menu
-   
+
+### Setup ubuntu
+
+'CommandClick' is enable ubuntu as backend with with sound.
+
+[Procedure]  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
+
+1. Press `Setup` button in Notification  
+2. Complete about 5 minutes
+3. Press `Terminal` button 
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
+
+- `Restart` -> Press button when ubuntu not working
 
 ### Install fannel
 
