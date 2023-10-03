@@ -10,7 +10,7 @@
 <br>
 <br>
 
-`CommandClick` is "Linux browser".  
+`CommandClick` is ubuntu browser on android.  
 <br>
 <br>
 <br>
