@@ -35,10 +35,9 @@ object JavaScriptLoadUrl {
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
         val scriptFileName = jsFileObj.name
-        val fannelDirName = scriptFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptFileName
+        )
         val jsList = if(
             jsListSource.isNullOrEmpty()
         ) {

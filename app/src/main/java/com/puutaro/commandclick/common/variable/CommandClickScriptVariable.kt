@@ -3,6 +3,7 @@ package com.puutaro.commandclick.common.variable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
@@ -216,7 +217,6 @@ object CommandClickScriptVariable {
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
-    val ON_BOOT_UBUNTU_DEFAULT_VALUE = SettingVariableSelects.onBootUbuntuSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val DISABLE_WIDE_VIEW_PORT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
@@ -226,10 +226,9 @@ object CommandClickScriptVariable {
     val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
-    val fannelDirName = cmdclickStartupJsName
-        .removeSuffix(UsePath.JS_FILE_SUFFIX)
-        .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-            "Dir"
+    val fannelDirName = CcPathTool.makeFannelDirName(
+        cmdclickStartupJsName
+    )
     private val homeScriptUrlsFilePath =
         UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =

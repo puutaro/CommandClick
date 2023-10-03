@@ -12,7 +12,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -53,14 +53,6 @@ class ToolBarSettingButtonControl(
     }
     private var menuPopupWindow: PopupWindow? = null
 
-
-//    fun inflate(){
-//        popup.menuInflater.inflate(
-//            R.menu.cmd_index_menu,
-//            popup.menu
-//        )
-//    }
-
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
             ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
@@ -70,7 +62,6 @@ class ToolBarSettingButtonControl(
     }
 
     fun toolbarSettingButtonOnClick(){
-        var listViewHeight = 0
         settingButtonView.setOnLongClickListener {
             settingButtonInnerView ->
             val settingButtonViewContext = settingButtonInnerView.context
@@ -92,7 +83,7 @@ class ToolBarSettingButtonControl(
                         this.findViewById<NoScrollListView>(
                             R.id.setting_menu_list_view
                         )
-                    val menuListAdapter = MenuListAdapter(
+                    val menuListAdapter = subMenuAdapter(
                         settingButtonViewContext,
                         menuListMap.toMutableList()
                     )
@@ -176,7 +167,7 @@ class ToolBarSettingButtonControl(
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
             val menuListAdapter =
-                menuListView.adapter as MenuListAdapter
+                menuListView.adapter as subMenuAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnums.ADD.itemName -> {
                     AddScriptHandler(

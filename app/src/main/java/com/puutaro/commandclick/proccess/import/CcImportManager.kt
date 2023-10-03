@@ -2,9 +2,9 @@ package com.puutaro.commandclick.proccess.import
 
 import android.content.Context
 import android.util.Log
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
@@ -27,10 +27,9 @@ object CcImportManager {
         val recentAppDirPath = jsFileObj.parent
             ?: return String()
         val scriptFileName = jsFileObj.name
-        val fannelDirName = scriptFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptFileName
+        )
         val trimRow = row
             .trim()
             .trim(';')

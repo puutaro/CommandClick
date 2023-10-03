@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
@@ -147,11 +148,10 @@ class EditedTextContents(
     private fun howUpdateLastModify(
         submitScriptContentsList: List<String>
     ): Boolean {
-        val fannelDirName = currentScriptFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptFileName
+        )
+        val settingVariableList = substituteVariableListFromHolder(
             submitScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
@@ -198,11 +198,10 @@ class EditedTextContents(
         curentAppDirPath: String,
         scriptFileName: String,
     ): String {
-        val selectedFannelName =
+        val selectedFannelDirName = CcPathTool.makeFannelDirName(
             scriptFileName
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-        return curentAppDirPath + "/" + selectedFannelName + UsePath.fannelDirSuffix
+        )
+        return curentAppDirPath + "/" + selectedFannelDirName
     }
 
 }

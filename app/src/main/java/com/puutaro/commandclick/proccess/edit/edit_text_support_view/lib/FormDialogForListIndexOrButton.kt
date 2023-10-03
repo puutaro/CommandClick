@@ -12,7 +12,6 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn.*
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -23,6 +22,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -156,10 +156,9 @@ class FormDialogForListIndexOrButton(
                 settingSectionEnd,
                 true,
             )
-        val fannelDirName = selectedScriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            selectedScriptName
+        )
         val recordNumToSetVariableMaps = if(
             onSetting.isEmpty()
         ) {

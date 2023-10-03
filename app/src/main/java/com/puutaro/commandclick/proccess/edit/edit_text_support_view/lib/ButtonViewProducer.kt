@@ -312,10 +312,9 @@ object ButtonViewProducer {
             ?: return String()
         val currentScriptName = scriptFileObj.name
             ?: return String()
-        val fannelDirName = currentScriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptName
+        )
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
                 QuoteTool.trimBothEdgeQuote(

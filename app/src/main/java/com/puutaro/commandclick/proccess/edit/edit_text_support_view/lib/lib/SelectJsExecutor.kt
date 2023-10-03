@@ -5,6 +5,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
@@ -40,10 +41,9 @@ object SelectJsExecutor {
             val currentAppDir = jsFilePathObj.parent
                 ?: return@launch
             val scriptName = jsFilePathObj.name
-            val fannelDirName = scriptName
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                    "Dir"
+            val fannelDirName = CcPathTool.makeFannelDirName(
+                scriptName
+            )
             val jsFileContents = makeSelectJsContents(
                 currentAppDir,
                 scriptName,

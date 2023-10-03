@@ -10,7 +10,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.SystemFannelLauncher
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
@@ -79,7 +79,7 @@ object SubMenuDialog {
         val subMenuPairList = SettingSubMenuEnums.values().map {
             it.itemName to it.imageId
         }
-        val subMenuAdapter = MenuListAdapter(
+        val subMenuAdapter = subMenuAdapter(
             context,
             subMenuPairList.toMutableList()
         )
@@ -99,7 +99,7 @@ object SubMenuDialog {
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
             subMenuDialog?.dismiss()
-            val menuListAdapter = subMenuListView.adapter as MenuListAdapter
+            val menuListAdapter = subMenuListView.adapter as subMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             when(selectedSubMenu){

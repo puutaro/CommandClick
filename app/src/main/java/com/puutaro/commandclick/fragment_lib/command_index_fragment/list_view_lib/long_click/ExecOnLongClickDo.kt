@@ -4,16 +4,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.view.MenuItem
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
+import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object ExecOnLongClickDo {
@@ -24,23 +23,11 @@ object ExecOnLongClickDo {
         item: MenuItem,
         contextItemSelected: Boolean,
     ): Boolean {
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
-        val activity = cmdIndexFragment.activity
         val context = cmdIndexFragment.context
         val binding = cmdIndexFragment.binding
         val cmdListView = binding.cmdList
 
-//        val info: AdapterView.AdapterContextMenuInfo? = try {
-//            item.menuInfo as AdapterView.AdapterContextMenuInfo?
-//        } catch (e: ClassCastException) {
-//            return false
-//        }
         val shellScriptName = FannelIndexListAdapter.selectedFannelName
-//            info
-//            ?.position
-//            ?: cmdIndexFragment.mParentContextMenuListIndex
-//        val shellScriptName =
-//            fannelIndexListAdapter.fannelIndexList.get(listPosition)
         if(
             shellScriptName
             == CommandClickScriptVariable.EMPTY_STRING
@@ -63,7 +50,7 @@ object ExecOnLongClickDo {
                 )
                 return contextItemSelected
             }
-            R.id.shell_script_menu_write, -> {
+            R.id.shell_script_menu_write -> {
                 val editor = Editor(
                     currentAppDirPath,
                     shellScriptName,
@@ -73,12 +60,10 @@ object ExecOnLongClickDo {
                 return contextItemSelected
             }
             R.id.shell_script_menu_kill  -> {
-                ConfirmDialogForKill.show(
+                AppProcessManager.killDialog(
                     cmdIndexFragment,
                     currentAppDirPath,
-                    shellScriptName,
-                    terminalViewModel.currentMonitorFileName,
-                    cmdListView
+                    shellScriptName
                 )
                 return contextItemSelected
             }

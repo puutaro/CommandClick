@@ -62,10 +62,9 @@ object ExecJsLoad {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val fannelDirName = selectedJsFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            selectedJsFileName
+        )
         val jsContents = if (jsContentsListSource.isNullOrEmpty()) {
             ReadText(
                 recentAppDirPath,

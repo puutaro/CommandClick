@@ -128,7 +128,7 @@ class JsUbuntu(
         val intent = Intent()
         intent.action = BroadCastIntentScheme.BACKGROUND_CMD_KILL.action
         intent.putExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobType.schema,
+            UbuntuServerIntentExtra.ubuntuCroutineJobTypeList.schema,
             cmdName
         )
         terminalFragment.activity?.sendBroadcast(intent)

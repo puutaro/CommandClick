@@ -36,6 +36,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.Editor
@@ -108,16 +109,13 @@ class WithIndexListView(
             sourceScriptFilePath,
             targetScriptFilePath
         )
-        val sourceFannelName =
-            selectedItemForCopy
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-        val targetFannelName =
+        val sourceFannelDir =
+            CcPathTool.makeFannelDirName(
+                selectedItemForCopy
+            )
+        val targetFannelDir = CcPathTool.makeFannelDirName(
             File(targetScriptFilePath).name
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
-        val targetFannelDir = targetFannelName + UsePath.fannelDirSuffix
+        )
         FileSystems.copyDirectory(
             "${filterDir}/${sourceFannelDir}",
             "${targetDirectoryPath}/${targetFannelDir}"
@@ -158,11 +156,9 @@ class WithIndexListView(
             sourceFilePath,
             targetScriptFilePathSource
         )
-        val sourceFannelName =
+        val sourceFannelDir = CcPathTool.makeFannelDirName(
             getFileName
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
+        )
         FileSystems.copyDirectory(
             "${sourceDirPath}/${sourceFannelDir}",
             "${filterDir}/${sourceFannelDir}"
@@ -261,10 +257,9 @@ class WithIndexListView(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-        fannelDirName = currentScriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptName
+        )
         fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
 
         val indexListMap = getIndexListMap(
@@ -1197,9 +1192,9 @@ class WithIndexListView(
                 selectedItem
             )
             val deleteFannelName =
-                selectedItem
-                    .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                    .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
+                CcPathTool.makeFannelDirName(
+                    selectedItem
+                )
             val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
             FileSystems.removeDir(
                 "${filterDir}/${deleteFannelDir}"

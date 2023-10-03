@@ -15,9 +15,9 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -41,10 +41,9 @@ class PromptJsDialog(
     private val suggestTxtSuffix = ".txt"
     private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val currentScriptName = terminalFragment.currentScriptName
-    private val fannelDirName = currentScriptName
-        .removeSuffix(UsePath.JS_FILE_SUFFIX)
-        .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-            "Dir"
+    private val fannelDirName = CcPathTool.makeFannelDirName(
+        currentScriptName
+    )
     private val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
     private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
     private val firstSeparator = "|"

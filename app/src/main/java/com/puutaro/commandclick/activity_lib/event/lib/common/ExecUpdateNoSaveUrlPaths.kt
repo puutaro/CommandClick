@@ -6,6 +6,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -67,10 +68,9 @@ object ExecUpdateNoSaveUrlPaths {
             fannelName.isEmpty()
         ) UsePath.cmdclickStartupJsName
         else fannelName
-        val fannelDirName = currentFannelName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentFannelName
+        )
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
             currentAppDirPath,

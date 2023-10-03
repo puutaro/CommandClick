@@ -11,7 +11,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.*
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
@@ -19,7 +19,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.KillConfirmDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
@@ -55,7 +54,7 @@ class ToolbarButtonProducerForEdit(
         SharePrefferenceSetting.current_app_dir
     )
 
-    private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_script_file_name
     )
@@ -378,7 +377,7 @@ class ToolbarButtonProducerForEdit(
             ExecJsOrSellHandler.handle(
                 editFragment,
                 currentAppDirPath,
-                currentShellFileName,
+                currentScriptFileName,
             )
             return
         }
@@ -399,7 +398,7 @@ class ToolbarButtonProducerForEdit(
         if(
             editExecuteValue == EditExecuteOnce
         ) {
-            terminalViewModel.editExecuteOnceCurrentShellFileName = currentShellFileName
+            terminalViewModel.editExecuteOnceCurrentShellFileName = currentScriptFileName
             val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
                 editFragment.tag,
@@ -454,7 +453,7 @@ class ToolbarButtonProducerForEdit(
                     this.findViewById<NoScrollListView>(
                         R.id.setting_menu_list_view
                     )
-                val menuListAdapter = MenuListAdapter(
+                val menuListAdapter = subMenuAdapter(
                     settingButtonViewContext,
                     menuListMap.toMutableList()
                 )
@@ -535,7 +534,7 @@ class ToolbarButtonProducerForEdit(
         menuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
-            val menuListAdapter = menuListView.adapter as MenuListAdapter
+            val menuListAdapter = menuListView.adapter as subMenuAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnumsForEdit.SETTING.itemName -> {
                     SubMenuDialogForEdit.launch(
@@ -550,11 +549,10 @@ class ToolbarButtonProducerForEdit(
                     )
                 }
                 MenuEnumsForEdit.KILL.itemName -> {
-                    KillConfirmDialogForEdit.show(
+                    AppProcessManager.killDialog(
                         editFragment,
                         currentAppDirPath,
-                        currentShellFileName,
-                        terminalViewModel.currentMonitorFileName,
+                        currentScriptFileName
                     )
                 }
                 MenuEnumsForEdit.TERM_REFRESH.itemName -> {

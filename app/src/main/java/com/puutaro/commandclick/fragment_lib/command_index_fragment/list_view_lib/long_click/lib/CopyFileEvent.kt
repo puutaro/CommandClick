@@ -11,9 +11,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
@@ -83,7 +84,7 @@ class CopyFileEvent(
             copyFileDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
-        val subMenuAdapter = MenuListAdapter(
+        val subMenuAdapter = subMenuAdapter(
             context,
             appDirList.toMutableList()
         )
@@ -99,7 +100,7 @@ class CopyFileEvent(
     ) {
         appDirListView.setOnItemClickListener {
                 parent, View, pos, id ->
-            val menuListAdapter = appDirListView.adapter as MenuListAdapter
+            val menuListAdapter = appDirListView.adapter as subMenuAdapter
             val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             execInvokeItemSetClickListnerForCopyFile(
@@ -130,13 +131,13 @@ class CopyFileEvent(
             selectedShellFilePath
         )
         val sourceFannelName =
-            sourceScriptFileName
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
+            CcPathTool.makeFannelDirName(
+                sourceScriptFileName
+            )
         val selectedFannelName =
-            File(selectedShellFilePath).name
-                .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
+            CcPathTool.makeFannelDirName(
+                File(selectedShellFilePath).name
+            )
         val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
         val selectedFannelDir = selectedFannelName + UsePath.fannelDirSuffix
         FileSystems.copyDirectory(

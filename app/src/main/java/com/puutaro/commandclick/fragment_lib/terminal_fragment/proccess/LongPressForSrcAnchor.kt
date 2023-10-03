@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.ReadText
@@ -107,7 +107,7 @@ class LongPressForSrcAnchor(
             longPressSrcAnchorDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
-        val subMenuAdapter = MenuListAdapter(
+        val subMenuAdapter = subMenuAdapter(
             context,
             menuList.toMutableList()
         )
@@ -129,7 +129,7 @@ class LongPressForSrcAnchor(
                 parent, View, pos, id
             ->
             longPressSrcAnchorDialog?.dismiss()
-            val menuListAdapter = dialogListView.adapter as MenuListAdapter
+            val menuListAdapter = dialogListView.adapter as subMenuAdapter
             val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             menuScriptHandler(

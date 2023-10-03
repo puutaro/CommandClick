@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
@@ -26,16 +25,20 @@ object ConfirmDialogForKill {
     fun show(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
-        shellScriptName: String,
+        fannelName: String,
         currentMonitorFileName: String,
         cmdListView: RecyclerView
     ){
         val context = cmdIndexFragment.context
             ?: return
         if(
-            !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
+            !fannelName.endsWith(UsePath.SHELL_FILE_SUFFIX)
         ){
-            AppProcessManager.killDialog(cmdIndexFragment)
+            AppProcessManager.killDialog(
+                cmdIndexFragment,
+                currentAppDirPath,
+                fannelName
+            )
             return
         }
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
@@ -57,7 +60,7 @@ object ConfirmDialogForKill {
             killConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
-        confirmContentTextView?.text = "\tpath: ${shellScriptName}"
+        confirmContentTextView?.text = "\tpath: ${fannelName}"
         val confirmCancelButton =
             killConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
@@ -69,7 +72,7 @@ object ConfirmDialogForKill {
         setOkButton(
             context,
             currentAppDirPath,
-            shellScriptName,
+            fannelName,
             currentMonitorFileName,
             cmdListView
         )

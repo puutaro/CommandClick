@@ -15,10 +15,9 @@ object ScriptPreWordReplacer {
         currentAppDirPath: String,
         scriptName: String,
     ): String {
-        val fannelDirName = scriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptName
+        )
         return targetFilePath.let {
             replace(
                 it,

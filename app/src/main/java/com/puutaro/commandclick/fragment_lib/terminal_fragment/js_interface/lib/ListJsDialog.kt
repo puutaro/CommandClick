@@ -12,7 +12,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -72,7 +72,7 @@ class ListJsDialog(
         val dialogList = listSource.split("\t").map {
             it to icons8Wheel
         }
-        val dialogListAdapter = MenuListAdapter(
+        val dialogListAdapter = subMenuAdapter(
             terminalFragment.context as Context,
             dialogList.toMutableList()
         )
@@ -141,7 +141,7 @@ class ListJsDialog(
                 parent, View, pos, id
             ->
             listDialog?.dismiss()
-            val menuListAdapter = dialogListView.adapter as MenuListAdapter
+            val menuListAdapter = dialogListView.adapter as subMenuAdapter
             val selectedElement =
                 menuListAdapter.getItem(pos)
                     ?: return@setOnItemClickListener
@@ -191,7 +191,7 @@ class ListJsDialog(
         dialogListView: ListView?,
         filteredList: List<Pair<String, Int>>
     ){
-        val menuListAdapter = dialogListView?.adapter as MenuListAdapter
+        val menuListAdapter = dialogListView?.adapter as subMenuAdapter
         menuListAdapter.clear()
         menuListAdapter.addAll(filteredList)
         menuListAdapter.notifyDataSetChanged()

@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -76,7 +76,7 @@ object SelectTermDialog {
             it.first != currentMonitorFileName
         }
         val subMenuPairList = subMenuPairListNoSelected + subMenuPairListSelected
-        val subMenuAdapter = MenuListAdapter(
+        val subMenuAdapter = subMenuAdapter(
             context,
             subMenuPairList.toMutableList()
         )
@@ -96,7 +96,7 @@ object SelectTermDialog {
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
             subMenuDialog?.dismiss()
-            val menuListAdapter = subMenuListView.adapter as MenuListAdapter
+            val menuListAdapter = subMenuListView.adapter as subMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             when(selectedSubMenu){

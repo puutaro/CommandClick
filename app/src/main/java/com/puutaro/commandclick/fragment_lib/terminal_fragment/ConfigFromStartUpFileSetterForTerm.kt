@@ -191,10 +191,9 @@ object ConfigFromStartUpFileSetterForTerm {
             )
         }
 
-        val fannelDirName = currentScriptFileName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptFileName
+        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             CommandClickVariables.makeScriptContentsList(
                 terminalFragment.currentAppDirPath,

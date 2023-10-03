@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.FileSystems
@@ -101,10 +101,9 @@ object ScriptFileDescription {
         currentAppDirName: String,
         fannelName: String,
     ): String {
-        val fannelDirName = fannelName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            fannelName
+        )
         val mdPath = inputDescLine.trim().let{
             QuoteTool.trimBothEdgeQuote(it)
         }.removePrefix(

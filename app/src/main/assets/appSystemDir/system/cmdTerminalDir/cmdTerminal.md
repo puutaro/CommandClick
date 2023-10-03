@@ -20,9 +20,10 @@ This terminal aim for "key input omission oriented"
 
 ### Keyboard
 
-This keyboard Squeeze most frequent key.
+This keyboard squeeze most frequent key.
 If, You wont to other key, tap dropdown in three row.
 
+- `Input` -> prompt by suggest
 
 ### cmdInput 
 

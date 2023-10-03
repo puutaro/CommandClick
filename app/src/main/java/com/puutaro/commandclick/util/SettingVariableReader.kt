@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 
 object SettingVariableReader {
@@ -79,10 +78,9 @@ object SettingVariableReader {
         )?.joinToString(",").let {
             QuoteTool.removeDoubleQuoteByIgnoreBackSlash(it)
         } ?: String()
-        val fannelDirName = scriptName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptName
+        )
         return ScriptPreWordReplacer.replace(
             variableValueListSource,
             currentAppDirPath,

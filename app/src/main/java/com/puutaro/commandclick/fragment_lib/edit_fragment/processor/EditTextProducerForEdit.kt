@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
@@ -39,11 +40,9 @@ class EditTextProducerForEdit(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_script_file_name
     )
-    val fannelDirName = currentScriptFileName
-        .removeSuffix(UsePath.JS_FILE_SUFFIX)
-        .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-            "Dir"
-
+    val fannelDirName = CcPathTool.makeFannelDirName(
+        currentScriptFileName
+    )
 
     private val setReplaceVariableMap =
         SetReplaceVariabler.makeSetReplaceVariableMap(

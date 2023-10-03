@@ -268,13 +268,13 @@ object UbuntuBroadcastHandler {
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
-        val ubuntuCroutineJobType = intent.getStringExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobType.schema
+        val ubuntuCroutineJobTypeList = intent.getStringExtra(
+            UbuntuServerIntentExtra.ubuntuCroutineJobTypeList.schema
         ) ?: return
-        ubuntuService.ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobType)?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobTypeList)?.cancel()
         ubuntuFiles.let {
-            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcess(
-                ubuntuCroutineJobType,
+            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcessFromList(
+                ubuntuCroutineJobTypeList.split("\t"),
                 ubuntuService.cmdclickMonitorFileName
             )
         }

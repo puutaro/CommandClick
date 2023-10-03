@@ -21,15 +21,19 @@ object KillConfirmDialogForEdit {
     fun show(
         editFragment: EditFragment,
         currentAppDirPath: String,
-        shellScriptName: String,
+        fannelName: String,
         currentMonitorFileName: String,
     ){
         val context = editFragment.context
             ?: return
         if(
-            !shellScriptName.endsWith(UsePath.SHELL_FILE_SUFFIX)
+            !fannelName.endsWith(UsePath.SHELL_FILE_SUFFIX)
         ) {
-            AppProcessManager.killDialog(editFragment)
+            AppProcessManager.killDialog(
+                editFragment,
+                currentAppDirPath,
+                fannelName
+            )
             return
         }
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
@@ -51,7 +55,7 @@ object KillConfirmDialogForEdit {
             killConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
-        confirmContentTextView?.text = "\tpath: ${shellScriptName}"
+        confirmContentTextView?.text = "\tpath: ${fannelName}"
         val confirmCancelButton =
             killConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
@@ -67,10 +71,10 @@ object KillConfirmDialogForEdit {
         confirmOkButton?.setOnClickListener {
             killConfirmDialog?.dismiss()
             val factExecCmd =
-            "ps aux | grep \"${shellScriptName}\" " +
+            "ps aux | grep \"${fannelName}\" " +
                     " | grep -v grep |  awk '{print \$2}' | xargs -I{} kill {} "
             val outputPath = "${UsePath.cmdclickMonitorDirPath}/${currentMonitorFileName}"
-            val execCmd = " touch \"${shellScriptName}\"; " +
+            val execCmd = " touch \"${fannelName}\"; " +
                     "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
                     ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
             ExecBashScriptIntent.ToTermux(

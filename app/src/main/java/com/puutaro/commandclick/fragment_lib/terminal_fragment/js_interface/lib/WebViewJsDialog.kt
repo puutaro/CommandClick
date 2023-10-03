@@ -20,7 +20,6 @@ import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
@@ -37,6 +36,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJsInterfaceVariant
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
@@ -388,10 +388,9 @@ class WebViewJsDialog(
         val fannelName =
             currentFannelPathObj.name
                 ?: String()
-        val fannelDirName = fannelName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            fannelName
+        )
 
         return centerMenuMapStr.let {
             ScriptPreWordReplacer.replace(

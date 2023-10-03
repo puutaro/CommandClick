@@ -11,9 +11,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.component.adapter.MenuListAdapter
+import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 
 class AddScriptHandler(
     private val cmdIndexFragment: CommandIndexFragment,
@@ -82,7 +81,7 @@ class AddScriptHandler(
             languageSelectDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
-        val subMenuAdapter = MenuListAdapter(
+        val subMenuAdapter = subMenuAdapter(
             context,
             languageSelectList.toMutableList()
         )
@@ -99,7 +98,7 @@ class AddScriptHandler(
                 parent, View, pos, id
             ->
             languageSelectDialog?.dismiss()
-            val menuListAdapter = subMenuListView.adapter as MenuListAdapter
+            val menuListAdapter = subMenuListView.adapter as subMenuAdapter
             val selectedLanguage = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             val languageTypeSelects = when(

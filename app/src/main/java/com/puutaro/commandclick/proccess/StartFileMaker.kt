@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsMacroType
 import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.UrlFileSystems
@@ -32,10 +33,9 @@ object StartFileMaker {
         fragment: Fragment,
     ){
         val context = fragment.context
-        val fannelDirName = SystemFannel.cmdTerminal
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            SystemFannel.cmdTerminal
+        )
         makeCmdTerminalListFile(
             context,
             fannelDirName,
