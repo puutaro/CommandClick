@@ -104,5 +104,8 @@ For Developer
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p> 
 
 
+Acknowledge
+--------
 
+Thanks to awesome [UserLand](https://github.com/CypherpunkArmory/UserLAnd) and [PRoot](https://github.com/proot-me/proot), which make this project possible.
 
