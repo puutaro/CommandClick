@@ -1,6 +1,6 @@
 
 # Command Click Developer page
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="700">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500">  
 
   
 This page is for developer. CommandClick true value change self made script to android app.   
