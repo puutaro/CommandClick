@@ -25,6 +25,7 @@ Table of Contents
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
   * [Add](#add)
+  * [Select term](#select-term)
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
   * [Setup ubuntu](#setup-ubuntu)
@@ -194,6 +195,22 @@ More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/mast
 2. Click `add` in popup menu 
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
+
+### Select term
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `select term` in popup menu 
+3. select term from term list
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/b49cc5ff-27e4-4362-a3d7-b12ba5af2eb4" width="250">  
+
+| type | description |
+| --------- | --------- |
+| `term_1` | starndard output |
+| `term_2` | error and system output |
+| `term_3` | free |
+| `term_4` | /dev/null |
 
 ### Change app dir
   
