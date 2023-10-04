@@ -5,9 +5,6 @@
   
 This page is for developer. CommandClick true value change self made script to android app.   
 I hope you get that knowledge.  
-Mainly, `ComamndClick` is enforced by javascript. So, most bellow context is for javascript development.  
-Although via `termux`, enforced by shellscript, this page's main contens is javascript.  
-
 
 Table of Contents
 -----------------
