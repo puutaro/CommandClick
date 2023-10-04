@@ -97,6 +97,12 @@ Usage
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
+Setup Ubuntu
+------
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
+
+-> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
 For Developer
 --------
