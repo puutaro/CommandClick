@@ -33,6 +33,7 @@ Table of Contents
   * [Config](#config)
   * [Termux setting](#termux-setting)
   * [Edit startup](#edit-startup)
+  * [Restart ubuntu](#restart-ubuntu)
   * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
@@ -336,7 +337,12 @@ Edit `statup script` contenst.
 [Procedure]  
 1. Long press right buttom gear button  
 2. Click `edit_startup` in popup menu
-  
+
+### Restart ubuntu
+
+Restart ubuntu Forcibly
+
+
 ### No scroll save url
 
 Register scroll y position ignore domain 
