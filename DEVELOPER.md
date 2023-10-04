@@ -35,7 +35,7 @@ Table of Contents
 
 ### Structure
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/bd145b36-9090-4ebc-b92c-26277fb1e356" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/88af0178-4854-4f67-bf3a-928ba4519f27" width="500">  
 
 ### Fannel structure
 
