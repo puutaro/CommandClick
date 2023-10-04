@@ -115,6 +115,14 @@ jsDialog.imageDialog(
   )
 	-> display image with share button
 
+jsDialog.prompt(
+	title: String,
+        message: String,
+        suggestVars: String,
+  )
+	- launch prompt dialog
+
+
 jsDialog.webview(
 	urlStr: String,
 	currentFannelPath: String,
@@ -126,3 +134,8 @@ jsDialog.webview(
 ```
 
 -> [About More detail to jsDialog.webView](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/webViewDialog.md)
+
+
+-> [About More detail to jsDialog.prompt](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/webViewDialog.md)
+
+
