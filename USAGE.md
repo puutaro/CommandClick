@@ -510,7 +510,7 @@ Crashes easily when memory is low
 
 
 
-### Ubuntu debian or widnows version
+### Ubuntu, debian and windows version
 
 -> [ubuntu, debian or windows version](https://github.com/puutaro/cmdclick)  
 
