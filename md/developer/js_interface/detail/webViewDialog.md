@@ -5,12 +5,12 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-  * [urlStr](#urlStr)
-  * [currentFannelPath](#currentFannelPath)
-  * [menuMapStrListStr](#menuMapStrListStr)
+  * [urlStr](#urlstr)
+  * [currentFannelPath](#currentfannelpath)
+  * [menuMapStrListStr](#menumapstrliststr)
     * [Key](#key)
     * [Format](#format)
-  * [longPressMenuMapListStr](#longPressMenuMapListStr)
+  * [longPressMenuMapListStr](#longpressmenumapliststr)
     * [Menu type](#menu-type)
     * [Format](#format) 
 
@@ -41,7 +41,7 @@ load url
 ### currentFannelPath
 
 current fannel(script) path  
-- about fannel
+- [About fannel](https://github.com/puutaro/commandclick-repository#commandclick-repository)
 
 ### menuMapStrListStr
 
@@ -118,7 +118,7 @@ jsDialog.webView(
     "",
 );
 
-- `$0}` -> pre word
+- `$0}` -> [pre resrved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
 
 ex2) 
 
