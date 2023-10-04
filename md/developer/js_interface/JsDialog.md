@@ -118,11 +118,8 @@ jsDialog.imageDialog(
 jsDialog.webview(
 	urlStr: String,
 	currentFannelPath: String,
-	centerMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
-	rightMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
-	srcAnchorImageMapStr: String(ex menuFilePath=~), 
-	srcAnchorMapStr: String(ex menuFilePath=~), 
-	imageMapStr: String(ex menuFilePath=~), 
+	menuMapStrListStr: String,  
+	longPressMenuMapListStr: String,  
   )
 	- launch webview dialog with url 
 
