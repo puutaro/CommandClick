@@ -125,4 +125,4 @@ jsDialog.webview(
 
 ```
 
-[About More detail to jsDialog.webView](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/webViewDialog.md)
+-> [About More detail to jsDialog.webView](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/webViewDialog.md)
