@@ -249,7 +249,7 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 ### Config
 
 You can setting `CommandClick` Configration
-- detail setting reference [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+- detail [setting reference](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 [Procedure]  
 1. Long press right buttom gear button  
