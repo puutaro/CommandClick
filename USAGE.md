@@ -134,11 +134,19 @@ Delete script
 
 ### Kill
   
-(Shell only) Kill shellscript proccess  
+Kill proccess  
   
 [Procedure]  
 1. Long press list item
 2. Click `utility` -> `kill` in menu
+3. Select kill type
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/72d1f628-ee6f-43eb-8e8c-6b43860ec03b" width="300">  
+
+- `kill app` -> kill all app process  
+- `kill this process` -> kill this fannel(script) process  
+- `select kill` -> kill process selected from process list dialog
+  
 
 ### Description
 
