@@ -25,7 +25,8 @@ object ProcessManager {
     enum class UbuntuRunningSystemProcessType {
         SetUp,
         PulseaudioSetUp,
-        monitoringProcessNum,
+        MonitoringProcessNum,
+        IntentRequestMonitor
     }
     fun killAllProot(
         ubuntuService: UbuntuService
@@ -80,7 +81,7 @@ object ProcessManager {
         ubuntuService: UbuntuService
     ){
         var previousProcessNum = 0
-        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuRunningSystemProcessType.monitoringProcessNum.name]?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuRunningSystemProcessType.MonitoringProcessNum.name]?.cancel()
         val processNumUpdateIntent = Intent()
         processNumUpdateIntent.action =
             BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
@@ -114,7 +115,7 @@ object ProcessManager {
             }
         }
         ubuntuService.ubuntuCoroutineJobsHashMap[
-                UbuntuRunningSystemProcessType.monitoringProcessNum.name
+                UbuntuRunningSystemProcessType.MonitoringProcessNum.name
         ] = monitorProcessNumJob
     }
 

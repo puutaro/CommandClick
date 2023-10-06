@@ -28,6 +28,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuBroadcastHandler
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
+import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.NetworkTool
@@ -104,6 +105,7 @@ class UbuntuService:
                 BroadCastIntentScheme.BACKGROUND_CMD_KILL.action,
                 BroadCastIntentScheme.OPEN_FANNEL.action,
                 BroadCastIntentScheme.BACKGROUND_CMD_START.action,
+                BroadCastIntentScheme.FOREGROUND_CMD_START.action,
             )
         )
         BroadcastManagerForService.registerScreenOnOffReceiver(
@@ -192,6 +194,7 @@ class UbuntuService:
                 notificationInstance
             )
             ProcessManager.monitorProcessAndNum(this)
+            IntentRequestMonitor.launch(this)
             return START_STICKY
         }
         if(
@@ -219,6 +222,7 @@ class UbuntuService:
                 notificationInstance
             )
             ProcessManager.monitorProcessAndNum(this)
+            IntentRequestMonitor.launch(this)
             return START_STICKY
         }
         notificationBuilder?.clearActions()
@@ -239,6 +243,7 @@ class UbuntuService:
             notificationInstance
         )
         ProcessManager.monitorProcessAndNum(this)
+        IntentRequestMonitor.launch(this)
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
         UbuntuInitProcess.launch(this)

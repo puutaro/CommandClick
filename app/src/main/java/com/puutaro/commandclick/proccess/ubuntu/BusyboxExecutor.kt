@@ -334,6 +334,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "CREATE_IMAGE_SWITCH" to UbuntuInfo.createImageSwitch,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "HTTP2_SHELL_PATH" to "${UsePath.cmdclickTempCmdDirPath}/${UsePath.cmdclickTempCmdShellName}",
+            "INTENT_MONITOR_PATH" to "${UsePath.cmdclickTempIntentMonitorDirPath}/${UsePath.cmdclickTmpIntentMonitorRequestFileName}",
         )
     }
 

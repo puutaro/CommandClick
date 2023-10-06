@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
@@ -74,6 +75,11 @@ object UbuntuBroadcastHandler {
             )
             BroadCastIntentScheme.BACKGROUND_CMD_START.action
             -> execBackGroundCmdStart(
+                ubuntuService,
+                intent
+            )
+            BroadCastIntentScheme.FOREGROUND_CMD_START.action
+            -> execSell2Http(
                 ubuntuService,
                 intent
             )
@@ -338,5 +344,37 @@ object UbuntuBroadcastHandler {
             backgroundShellPath,
             backgroundShellJob
         )
+    }
+
+    private fun execSell2Http(
+        ubuntuService: UbuntuService,
+        intent: Intent,
+    ){
+        val context = ubuntuService.applicationContext
+        val ubuntuFiles = UbuntuFiles(context)
+        if(
+            !ubuntuFiles.ubuntuLaunchCompFile.isFile
+        ) return
+        val defaultTimeoutMiliSec = 200
+        val foregroundShellPath = intent.getStringExtra(
+            UbuntuServerIntentExtra.foregroundShellPath.schema
+        ) ?: return
+        val args = intent.getStringExtra(
+            UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema
+        ) ?: String()
+        val timeout = try {
+            intent.getStringExtra(
+                UbuntuServerIntentExtra.foregroundTimeout.schema
+            )?.toInt() ?: defaultTimeoutMiliSec
+        } catch (e: Exception){
+            defaultTimeoutMiliSec
+        }
+        CoroutineScope(Dispatchers.IO).launch {
+            Shell2Http.runCmd(
+                foregroundShellPath,
+                args,
+                timeout
+            )
+        }
     }
 }

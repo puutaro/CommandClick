@@ -108,4 +108,8 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.ubuntu_service.sleeping",
         "sleeping",
     ),
+    FOREGROUND_CMD_START(
+        "com.puutaro.commandclick.ubuntu_service.shell2http",
+        "shell2http",
+    )
 }

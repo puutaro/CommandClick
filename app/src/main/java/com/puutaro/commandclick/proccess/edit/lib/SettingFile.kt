@@ -12,7 +12,15 @@ object SettingFile {
         return ReadText(
             settingFileDirPath,
             settingFileName
-        ).textToList().map{
+        ).textToList().let{
+            formSettingContents(it)
+        }
+    }
+
+    fun formSettingContents(
+        settingCon : List<String>
+    ): String {
+        return settingCon.map{
             it.trim()
         }.filter {
             it.isNotEmpty()
