@@ -115,17 +115,27 @@ jsDialog.imageDialog(
   )
 	-> display image with share button
 
+jsDialog.prompt(
+	title: String,
+        message: String,
+        suggestVars: String,
+  )
+	- launch prompt dialog
+
+
 jsDialog.webview(
 	urlStr: String,
 	currentFannelPath: String,
-	centerMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
-	rightMenuMapStr: String(ex onSwitch=\tmenuFilePath=~), *onSwitch exchange click and long click 
-	srcAnchorImageMapStr: String(ex menuFilePath=~), 
-	srcAnchorMapStr: String(ex menuFilePath=~), 
-	imageMapStr: String(ex menuFilePath=~), 
+	menuMapStrListStr: String,  
+	longPressMenuMapListStr: String,  
   )
 	- launch webview dialog with url 
 
-
-
 ```
+
+-> [About More detail to jsDialog.webView](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/webViewDialog.md)
+
+
+-> [About More detail to jsDialog.prompt](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/detail/promptDialog.md)
+
+

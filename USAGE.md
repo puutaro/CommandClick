@@ -25,6 +25,7 @@ Table of Contents
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
   * [Add](#add)
+  * [Select term](#select-term)
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
   * [Setup ubuntu](#setup-ubuntu)
@@ -32,6 +33,7 @@ Table of Contents
   * [Config](#config)
   * [Termux setting](#termux-setting)
   * [Edit startup](#edit-startup)
+  * [Restart ubuntu](#restart-ubuntu)
   * [No scroll save url](#no-scroll-save-url)
   * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
@@ -134,11 +136,19 @@ Delete script
 
 ### Kill
   
-(Shell only) Kill shellscript proccess  
+Kill proccess  
   
 [Procedure]  
 1. Long press list item
 2. Click `utility` -> `kill` in menu
+3. Select kill type
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/72d1f628-ee6f-43eb-8e8c-6b43860ec03b" width="300">  
+
+- `kill app` -> kill all app process  
+- `kill this process` -> kill this fannel(script) process  
+- `select kill` -> kill process selected from process list dialog
+  
 
 ### Description
 
@@ -186,6 +196,22 @@ More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/mast
 2. Click `add` in popup menu 
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
+
+### Select term
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `select term` in popup menu 
+3. select term from term list
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/b49cc5ff-27e4-4362-a3d7-b12ba5af2eb4" width="250">  
+
+| type | description |
+| --------- | --------- |
+| `term_1` | starndard output |
+| `term_2` | error and system output |
+| `term_3` | free |
+| `term_4` | /dev/null |
 
 ### Change app dir
   
@@ -249,7 +275,7 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
 ### Config
 
 You can setting `CommandClick` Configration
-- detail setting reference [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+- detail [setting reference](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 [Procedure]  
 1. Long press right buttom gear button  
@@ -311,7 +337,12 @@ Edit `statup script` contenst.
 [Procedure]  
 1. Long press right buttom gear button  
 2. Click `edit_startup` in popup menu
-  
+
+### Restart ubuntu
+
+Restart ubuntu Forcibly
+
+
 ### No scroll save url
 
 Register scroll y position ignore domain 
@@ -479,7 +510,7 @@ Crashes easily when memory is low
 
 
 
-### Ubuntu debian or widnows version
+### Ubuntu, debian and windows version
 
 -> [ubuntu, debian or windows version](https://github.com/puutaro/cmdclick)  
 

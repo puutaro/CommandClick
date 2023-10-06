@@ -89,7 +89,12 @@ get it on belllow link
 <a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
 
+Setup Ubuntu
+------
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
+
+-> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
 
 Usage

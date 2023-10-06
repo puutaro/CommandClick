@@ -5,9 +5,6 @@
   
 This page is for developer. CommandClick true value change self made script to android app.   
 I hope you get that knowledge.  
-Mainly, `ComamndClick` is enforced by javascript. So, most bellow context is for javascript development.  
-Although via `termux`, enforced by shellscript, this page's main contens is javascript.  
-
 
 Table of Contents
 -----------------
@@ -35,7 +32,7 @@ Table of Contents
 
 ### Structure
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/bd145b36-9090-4ebc-b92c-26277fb1e356" width="500">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/88af0178-4854-4f67-bf3a-928ba4519f27" width="500">  
 
 ### Fannel structure
 
