@@ -30,7 +30,8 @@ import java.time.LocalDateTime
 object IntentRequestMonitor {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
+    private const val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
+    private const val deleteIntentRequestCode = 99
 
     fun launch(
         ubuntuService: UbuntuService,
@@ -179,15 +180,15 @@ object IntentRequestMonitor {
     ){
         val broadcastIntent = Intent()
         val action = broadcastMap.get(
-            BroadCastSenderTheme.action.name
+            BroadCastSenderSchema.action.name
         ) ?: return
         broadcastIntent.action = action
         val extraPairList = broadcastMap.get(
-            BroadCastSenderTheme.extra.name
+            BroadCastSenderSchema.extra.name
         )?.let {
             createMap(
                 it,
-                "\t"
+                "|"
             )
         }
         extraPairList?.forEach {
@@ -332,6 +333,7 @@ object IntentRequestMonitor {
         val pendingIntent = pendingIntentCreatorWraper(
             ubuntuService,
             onDeleteMap,
+            deleteIntentRequestCode
         )
 
         notificationBuilder.setDeleteIntent(
@@ -344,34 +346,52 @@ object IntentRequestMonitor {
         notificationBuilder: NotificationCompat.Builder,
         buttonListStr: String?,
     ){
+        val funcName = object{}.javaClass.enclosingMethod?.name
         val buttonLabelKey = ButtonKey.label.name
-        buttonListStr?.split("|")?.forEach {
+        val buttonList = buttonListStr?.split("|")
+            ?: return
+        buttonList.indices.forEach {
+            index ->
+            val buttonMapEl = buttonList[index]
+            if(
+                buttonMapEl.isEmpty()
+            ) return@forEach
             val buttonTypeMap = createMap(
-                it,
+                buttonMapEl,
                 "!"
             ).toMap()
-            val buttonName = buttonTypeMap.get(buttonLabelKey) ?: String()
+            val buttonName = buttonTypeMap.get(buttonLabelKey)
+                ?: return@forEach
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                cmdClickMonitorFileName_2,
+                "### ${this::javaClass.name} ${funcName}\nbuttonTypeMap: ${buttonTypeMap}\n"
+            )
             val buttonIcon = ButtonNameToIcon.values().filter {
                 it.str == buttonName
             }.firstOrNull()?.int ?: R.drawable.ic_media_play
-            val pendingIntent = pendingIntentCreatorWraper(
+            pendingIntentCreatorWraper(
                 ubuntuService,
                 buttonTypeMap,
-            )
-            notificationBuilder.addAction(
-                buttonIcon,
-                buttonName,
-                pendingIntent
-            )
+                index
+            )?.let {
+                notificationBuilder.addAction(
+                    buttonIcon,
+                    buttonName,
+                    it,
+                )
+            }
         }
     }
 
     private fun pendingIntentCreatorWraper(
         ubuntuService: UbuntuService,
         targetMap: Map<String, String>,
-    ): PendingIntent {
+        requestCode: Int = 0
+    ): PendingIntent? {
         val context = ubuntuService.applicationContext
-        val shellPath = targetMap.get(ButtonKey.shellPath.name) ?: String()
+        val shellPath = targetMap.get(ButtonKey.shellPath.name)
+            ?: return null
         val execType = targetMap.get(ButtonKey.execType.name) ?: ExecType.fore.name
         val argsTabSepaStr = targetMap.get(ButtonKey.args.name) ?: String()
         val timeout = targetMap.get(ButtonKey.timeout.name) ?: "200"
@@ -413,7 +433,8 @@ object IntentRequestMonitor {
         return PendingIntentCreator.create(
             context,
             execAction,
-            extraList
+            extraList,
+            requestCode
         )
     }
 
@@ -446,7 +467,7 @@ private fun toInt(numStr: String?): Int? {
         FileSystems.updateFile(
             UsePath.cmdclickMonitorDirPath,
             UsePath.cmdClickMonitorFileName_2,
-            "### ${LocalDateTime.now()} err \n${e}"
+            "### ${LocalDateTime.now()} err\n${e}"
         )
         null
     }
@@ -488,7 +509,7 @@ private enum class ReceiveIntentType {
 }
 
 
-private enum class BroadCastSenderTheme {
+private enum class BroadCastSenderSchema {
     action,
     extra,
 }

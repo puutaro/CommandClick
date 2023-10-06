@@ -8,7 +8,8 @@ object PendingIntentCreator {
     fun create(
         context: Context,
         action: String,
-        extraList: List<Pair<String, String>>? = null
+        extraList: List<Pair<String, String>>? = null,
+        requestCode: Int = 0
     ): PendingIntent {
         val intent = Intent()
         intent.action = action
@@ -20,7 +21,7 @@ object PendingIntentCreator {
         }
         return PendingIntent.getBroadcast(
             context,
-            0,
+            requestCode,
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
                     or PendingIntent.FLAG_IMMUTABLE
