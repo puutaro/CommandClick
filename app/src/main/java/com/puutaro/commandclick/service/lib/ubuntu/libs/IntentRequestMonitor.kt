@@ -31,7 +31,6 @@ object IntentRequestMonitor {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private const val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
-    private const val deleteIntentRequestCode = 99
 
     fun launch(
         ubuntuService: UbuntuService,
@@ -239,13 +238,12 @@ object IntentRequestMonitor {
         broadcastMap: Map<String, String>
     ){
         val context = ubuntuService.applicationContext
-        val notificationId = broadcastMap.get(BroadcastMonitorFileScheme.notificationId.name)
-            ?: return
         val channelNumStr = broadcastMap.get(BroadcastMonitorFileScheme.channelNum.name)
             ?: return
         val importance = decideImportance(
             broadcastMap.get(BroadcastMonitorFileScheme.importance.name)
         )
+        val notificationId = listOf(ubuntuService.packageName, importance.str).joinToString(".")
         val onDelete = broadcastMap.get(BroadcastMonitorFileScheme.onDelete.name)
         val channelNum = toInt(channelNumStr) ?: return
         val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
@@ -254,19 +252,25 @@ object IntentRequestMonitor {
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
             ?: return
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
+        val notificationName = listOf(
+            notificationId,
+            (1..1000).random()
+
+        ).joinToString(".")
         val channel = NotificationChannel(
             notificationId,
             notificationId,
-            importance
+            importance.int
         )
-        channel.setSound(null, null)
         val notificationManager = NotificationManagerCompat.from(context)
+        notificationManager.deleteNotificationChannel(channel.id)
         notificationManager.createNotificationChannel(channel)
 
         val notificationBuilder = NotificationCompat.Builder(
             context,
             notificationId
         )
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
             .setContentTitle(title)
             .setContentText(message)
@@ -333,7 +337,7 @@ object IntentRequestMonitor {
         val pendingIntent = pendingIntentCreatorWraper(
             ubuntuService,
             onDeleteMap,
-            deleteIntentRequestCode
+            System.currentTimeMillis().toInt()
         )
 
         notificationBuilder.setDeleteIntent(
@@ -370,10 +374,16 @@ object IntentRequestMonitor {
             val buttonIcon = ButtonNameToIcon.values().filter {
                 it.str == buttonName
             }.firstOrNull()?.int ?: R.drawable.ic_media_play
+            val requestCode = System.currentTimeMillis().toInt()
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                cmdClickMonitorFileName_2,
+                "requestCode: ${requestCode}\t"
+            )
             pendingIntentCreatorWraper(
                 ubuntuService,
                 buttonTypeMap,
-                index
+                requestCode
             )?.let {
                 notificationBuilder.addAction(
                     buttonIcon,
@@ -393,7 +403,11 @@ object IntentRequestMonitor {
         val shellPath = targetMap.get(ButtonKey.shellPath.name)
             ?: return null
         val execType = targetMap.get(ButtonKey.execType.name) ?: ExecType.fore.name
-        val argsTabSepaStr = targetMap.get(ButtonKey.args.name) ?: String()
+        val argsTabSepaStr =
+            targetMap
+                .get(ButtonKey.args.name)
+                ?.replace("!", "\t")
+                ?: String()
         val timeout = targetMap.get(ButtonKey.timeout.name) ?: "200"
         val backgroundAction = BroadCastIntentScheme.BACKGROUND_CMD_START.action
         val execAction = when(execType){
@@ -453,10 +467,10 @@ object IntentRequestMonitor {
 
     private fun decideImportance(
         importanceStr: String?,
-    ): Int {
+    ): NotificationImportanceType {
         return NotificationImportanceType.values().filter {
             it.str == importanceStr
-        }.firstOrNull()?.int ?: NotificationManager.IMPORTANCE_LOW
+        }.firstOrNull() ?: NotificationImportanceType.LOW
     }
 }
 
@@ -517,7 +531,6 @@ private enum class BroadCastSenderSchema {
 private enum class BroadcastMonitorFileScheme {
     intentType,
     notificationType,
-    notificationId,
     notificationStyle,
     channelNum,
     iconName,
@@ -533,7 +546,6 @@ private enum class NotificationImportanceType(
     val int: Int,
 ){
     LOW("low", NotificationManager.IMPORTANCE_LOW),
-    DEFAULT("default", NotificationManager.IMPORTANCE_DEFAULT),
     HIGH("high", NotificationManager.IMPORTANCE_HIGH),
 }
 

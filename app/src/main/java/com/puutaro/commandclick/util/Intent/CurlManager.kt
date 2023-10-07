@@ -63,7 +63,7 @@ object CurlManager {
             responseBody
         } catch (e: Exception) {
             connection.disconnect()
-            FileSystems.writeFile(
+            FileSystems.updateFile(
                 UsePath.cmdclickMonitorDirPath,
                 UsePath.cmdClickMonitorFileName_2,
                 errPrefix + "invalid url\n" + e.toString()
