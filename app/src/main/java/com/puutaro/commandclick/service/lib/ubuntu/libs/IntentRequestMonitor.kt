@@ -252,11 +252,6 @@ object IntentRequestMonitor {
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
             ?: return
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
-        val notificationName = listOf(
-            notificationId,
-            (1..1000).random()
-
-        ).joinToString(".")
         val channel = NotificationChannel(
             notificationId,
             notificationId,
