@@ -57,6 +57,16 @@ class JsUbuntu(
         if(
             context == null
         ) return
+        if(
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "Launch ubuntu",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         val monitorFileName = decideMonitorName(monitorNum)
         val backgroundCmdIntent = Intent()
         backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action

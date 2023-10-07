@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Intent
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
@@ -296,7 +297,16 @@ object UbuntuBroadcastHandler {
     ){
         if(
             ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
-        ) return
+        ) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(
+                    ubuntuService.applicationContext,
+                    "Launch ubuntu",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return
+        }
         val fannelDirPath = intent.getStringExtra(
             UbuntuServerIntentExtra.fannelDirPath.schema
         ) ?: return
@@ -318,7 +328,16 @@ object UbuntuBroadcastHandler {
         val ubuntuFiles = ubuntuService.ubuntuFiles
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
-        ) return
+        ) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(
+                    ubuntuService.applicationContext,
+                    "Launch ubuntu",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return
+        }
         val backgroundShellPath = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundShellPath.schema
         ) ?: return
@@ -354,7 +373,16 @@ object UbuntuBroadcastHandler {
         val ubuntuFiles = UbuntuFiles(context)
         if(
             !ubuntuFiles.ubuntuLaunchCompFile.isFile
-        ) return
+        ) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(
+                    ubuntuService.applicationContext,
+                    "Launch ubuntu",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return
+        }
         val defaultTimeoutMiliSec = 200
         val foregroundShellPath = intent.getStringExtra(
             UbuntuServerIntentExtra.foregroundShellPath.schema
