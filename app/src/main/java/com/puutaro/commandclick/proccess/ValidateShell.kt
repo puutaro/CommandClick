@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 
 
@@ -18,7 +18,7 @@ class ValidateShell() {
         ): String {
             val context = fragment.context
             val languageType =
-                JsOrShellFromSuffix.judge(shellFileName)
+                CommandClickVariables.judgeJsOrShellFromSuffix(shellFileName)
 
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -92,7 +92,7 @@ private class CheckVariableValue(
     shellFileName: String
 ){
     val languageType =
-        JsOrShellFromSuffix.judge(shellFileName)
+        CommandClickVariables.judgeJsOrShellFromSuffix(shellFileName)
 
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -181,7 +181,7 @@ private class HolderCheck(
 ) {
 
     val languageType =
-        JsOrShellFromSuffix.judge(shellFileName)
+        CommandClickVariables.judgeJsOrShellFromSuffix(shellFileName)
 
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

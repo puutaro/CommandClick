@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
 
 class DecideEditTag(
     private val shellContentsList: List<String>,
@@ -12,7 +11,7 @@ class DecideEditTag(
 ) {
 
     private val languageType =
-        JsOrShellFromSuffix.judge(selectedScriptFileName)
+        CommandClickVariables.judgeJsOrShellFromSuffix(selectedScriptFileName)
 
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

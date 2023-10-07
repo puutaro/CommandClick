@@ -11,7 +11,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.time.LocalDateTime
 
 
 class BusyboxExecutor(
@@ -255,6 +254,9 @@ class BusyboxExecutor(
         val inputStream = process.inputStream
         val reader = inputStream.bufferedReader(Charsets.UTF_8)
         reader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 monitorName,
@@ -265,6 +267,9 @@ class BusyboxExecutor(
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 monitorName,
@@ -335,6 +340,8 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "HTTP2_SHELL_PATH" to "${UsePath.cmdclickTempCmdDirPath}/${UsePath.cmdclickTempCmdShellName}",
             "INTENT_MONITOR_PATH" to "${UsePath.cmdclickTempIntentMonitorDirPath}/${UsePath.cmdclickTmpIntentMonitorRequestFileName}",
+            "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
+            "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
         )
     }
 

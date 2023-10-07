@@ -14,12 +14,14 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -37,7 +39,6 @@ object AppProcessManager {
     ){
         val context = fragment.context
             ?: return
-        val ubuntuFiles = UbuntuFiles(context)
 
         killDialog = Dialog(
             context
@@ -275,8 +276,25 @@ object AppProcessManager {
         currentAppDirPath: String,
         fannelName: String,
     ){
+        val languageType =
+            CommandClickVariables.judgeJsOrShellFromSuffix(
+                fannelName
+            )
+        val settingVariable = CommandClickVariables.returnSettingVariableList(
+            ReadText(
+                currentAppDirPath,
+                fannelName,
+            ).textToList(),
+            languageType
+        )
+        val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
+            settingVariable,
+            CommandClickScriptVariable.SHELL_EXEC_ENV
+        ) ?: CommandClickScriptVariable.SHELL_EXEC_ENV_DEFAULT_VALUE
+
         if(
             fannelName.endsWith(UsePath.SHELL_FILE_SUFFIX)
+            && shellExecEnv == SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
         ) {
             killThisTermuxShell(
                 fragment,
@@ -290,7 +308,12 @@ object AppProcessManager {
         )
         val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
         val killProcessListTabSepaStr = createProcessList().filter {
-            it.first.contains(fannelDirPath)
+            val tergetFannelPath = it.first
+            val isContainFannelDirPath = tergetFannelPath.contains(fannelDirPath)
+            val isContainFannelPath = tergetFannelPath.contains(
+                "$currentAppDirPath/$fannelName"
+            )
+            isContainFannelDirPath ||  isContainFannelPath
         }.map { it.first }.joinToString("\t")
         execKillProcess(
             fragment,

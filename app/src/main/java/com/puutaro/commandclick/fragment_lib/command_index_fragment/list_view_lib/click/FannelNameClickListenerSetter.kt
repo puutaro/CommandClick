@@ -94,7 +94,7 @@ object FannelNameClickListenerSetter {
                     return
                 }
                 val languageType =
-                    JsOrShellFromSuffix.judge(selectedShellFileName)
+                    CommandClickVariables.judgeJsOrShellFromSuffix(selectedShellFileName)
 
                 val languageTypeToSectionHolderMap =
                     CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

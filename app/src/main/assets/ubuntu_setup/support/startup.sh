@@ -218,6 +218,8 @@ startup_launch_system(){
 	su - "${CMDCLICK_USER}" <<-EOF
 	export APP_ROOT_PATH="${APP_ROOT_PATH}"
 	export INTENT_MONITOR_PATH="${INTENT_MONITOR_PATH}"
+	export MONITOR_DIR_PATH="${MONITOR_DIR_PATH}"
+    export APP_DIR_PATH="${APP_DIR_PATH}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -234,7 +236,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH \
+		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -367,12 +369,19 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
+	bash_profile_path="/home/${CMDCLICK_USER}/.bash_profile"
 	insert_str_to_file \
-			'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
-			"/home/${CMDCLICK_USER}/.bash_profile"
+		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
+		"${bash_profile_path}"
 	insert_str_to_file \
-			'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
-			"/home/${CMDCLICK_USER}/.bash_profile"
+		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export APP_DIR_PATH="'${APP_DIR_PATH}'"' \
+		"${bash_profile_path}"
 	apt-get install -y sudo
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi

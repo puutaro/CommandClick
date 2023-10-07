@@ -12,7 +12,6 @@ import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -209,7 +208,7 @@ class FannelIndexListAdapter(
             context == null
         ) return com.puutaro.commandclick.R.color.fannel_icon_color
         val languageType =
-            JsOrShellFromSuffix.judge(fannelName)
+            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

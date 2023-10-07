@@ -7,7 +7,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -42,7 +41,7 @@ object ScriptFileDescription {
         fannelName: String,
     ): String {
         val languageType =
-            JsOrShellFromSuffix.judge(fannelName)
+            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

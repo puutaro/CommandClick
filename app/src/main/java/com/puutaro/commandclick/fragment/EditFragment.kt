@@ -168,7 +168,7 @@ class EditFragment: Fragment() {
         )
 
         languageType =
-            JsOrShellFromSuffix.judge(currentScriptFileName)
+            CommandClickVariables.judgeJsOrShellFromSuffix(currentScriptFileName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

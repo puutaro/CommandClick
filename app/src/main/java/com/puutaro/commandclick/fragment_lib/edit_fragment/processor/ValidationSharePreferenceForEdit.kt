@@ -105,7 +105,7 @@ class ValidationSharePreferenceForEdit(
             recentShellFileName
         ).textToList()
         val languageType =
-            JsOrShellFromSuffix.judge(
+            CommandClickVariables.judgeJsOrShellFromSuffix(
                 recentShellFileName
             )
 

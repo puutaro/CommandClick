@@ -49,7 +49,7 @@ class AppHistoryAdminEvent {
             ).textToList()
             val updateEditExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
                 shellContentsList,
-                JsOrShellFromSuffix.judge(selectedAppShellFileName)
+                CommandClickVariables.judgeJsOrShellFromSuffix(selectedAppShellFileName)
             )
             val onEditExecute = updateEditExecuteValue ==
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name

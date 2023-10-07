@@ -1,12 +1,16 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
+import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
@@ -34,9 +38,26 @@ object ButtonViewProducer {
     private const val setVariableSetSeparator = "|"
     private const val jsFrag = "jsf"
     private const val settingFrag = "setf"
+    private const val basht = "basht"
+    private const val bashf = "bashf"
+    private const val bashb = "bashb"
     private const val blankString = "cmdclickBlank"
     private const val buttoLabelThis = "this"
     private var consecutiveJob: Job? = null
+    val doubleColon = "::"
+    private val backStackMacro = doubleColon +
+            SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
+            doubleColon
+    private val termOutMacro = doubleColon +
+            SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
+            doubleColon
+    private val noJsTermOut = doubleColon +
+            SettingVariableSelects.ButtonEditExecVariantSelects.NoJsTermOut.name +
+            doubleColon
+    private val termLong = doubleColon +
+            SettingVariableSelects.ButtonEditExecVariantSelects.TermLong.name +
+            doubleColon
+    private val cmdclickTempButtonExecShellName = "cmdclickTempButtonExec.sh"
     fun make (
         editFragment: EditFragment,
         insertTextView: TextView,
@@ -84,18 +105,6 @@ object ButtonViewProducer {
             insertButton
         )
         insertTextView.isVisible = isInsertTextViewVisible
-
-//        insertButton.setOnClickListener {
-//                innerButtonView ->
-//            execButtonClickEvent(
-//                editFragment,
-//                insertEditText,
-//                scriptFileSaver,
-//                editParameters,
-//                buttonMap,
-//                currentSetVariableValue
-//            )
-//        }
 
         buttonTouchListener(
             insertButton,
@@ -180,7 +189,6 @@ object ButtonViewProducer {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
         val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
@@ -209,21 +217,6 @@ object ButtonViewProducer {
             setReplaceVariableMap,
         )
 
-        val doubleColon = "::"
-        val backStackMacro = doubleColon +
-                SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
-                doubleColon
-        val termOutMacro = doubleColon +
-                SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
-                doubleColon
-        val noJsTermOut = doubleColon +
-                SettingVariableSelects.ButtonEditExecVariantSelects.NoJsTermOut.name +
-                doubleColon
-        val termLong = doubleColon +
-                SettingVariableSelects.ButtonEditExecVariantSelects.TermLong.name +
-                doubleColon
-
-        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
         val onTermOutMacro = innerExecCmd.contains(termOutMacro)
         if(onTermOutMacro) {
             terminalViewModel.onDisplayUpdate = true
@@ -254,30 +247,57 @@ object ButtonViewProducer {
         val firstCmdStr = QuoteTool.trimBothEdgeQuote(
             execCmdReplaceBlankList.firstOrNull()
         )
-        if(
-            firstCmdStr == jsFrag
-        ){
-            execJsFileForButton(
+        when(firstCmdStr){
+            jsFrag
+            -> execJsFileForButton(
                 editFragment,
                 terminalViewModel,
                 execCmdReplaceBlankList,
                 buttonMap
             )
-            return
-        }
-        if(
-            firstCmdStr == settingFrag
-        ){
-            execSettingCmd(
+            settingFrag
+            -> execSettingCmd(
                 editFragment,
                 insertEditText,
                 readSharePreffernceMap,
                 execCmdReplaceBlankList,
                 currentSetVariableValue,
             )
-            return
+            basht
+            -> execShellScriptByTermux(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+                innerExecCmd,
+            )
+            bashb
+            -> execShellScriptByBackground(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+            bashf
+            -> execShellScriptByForeground(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+            else
+            -> execShellHandler(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+                editParameters,
+                innerExecCmd,
+            )
         }
+    }
 
+    private fun execShellScriptByTermux(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+        innerExecCmd: String,
+    ){
+        val context = editFragment.context
+            ?: return
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
         val execCmd = if(
             execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
             || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
@@ -286,19 +306,186 @@ object ButtonViewProducer {
         ExecBashScriptIntent.ToTermux(
             editFragment.runShell,
             context,
-            execCmd,
+            execCmd.replace(
+                Regex("^${basht}"),
+                "bash"
+            ),
             true
         )
+        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
         if(onEditExecuteOnce) {
             val listener =
                 context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
                 editFragment.tag,
                 ToolbarButtonBariantForEdit.OK,
-                readSharePreffernceMap,
+                editFragment.readSharePreffernceMap,
                 true,
             )
         }
+    }
+
+
+    private fun execShellHandler(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+        editParameters: EditParameters,
+        innerExecCmd: String,
+    ){
+
+        val substituteSettingVariableList =
+            CommandClickVariables.substituteVariableListFromHolder(
+                editParameters.currentShellContentsList,
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd,
+            )
+        val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
+            substituteSettingVariableList,
+            CommandClickScriptVariable.SHELL_EXEC_ENV
+        ) ?: CommandClickScriptVariable.SHELL_EXEC_ENV_DEFAULT_VALUE
+        when(shellExecEnv){
+            SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
+            -> execUbuntuShellHandler(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+                substituteSettingVariableList
+            )
+            SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
+            -> execShellScriptByTermux(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+                innerExecCmd,
+            )
+        }
+
+
+        val ubuntuExecMode = CommandClickVariables.substituteCmdClickVariable(
+            substituteSettingVariableList,
+            CommandClickScriptVariable.UBUNTU_EXEC_MODE
+        ) ?: CommandClickScriptVariable.UBUNTU_EXEC_MODE_DEFAULT_VALUE
+        when(ubuntuExecMode){
+            SettingVariableSelects.UbuntuExecModeSelects.background.name
+            -> execShellScriptByBackground(
+                    editFragment,
+                    execCmdAfterTrimButtonEditExecVariant,
+                )
+            SettingVariableSelects.UbuntuExecModeSelects.foreground.name
+            -> execShellScriptByForeground(
+                    editFragment,
+                    execCmdAfterTrimButtonEditExecVariant,
+                )
+        }
+    }
+
+    private fun execUbuntuShellHandler(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+        substituteSettingVariableList: List<String>?
+    ){
+
+        val ubuntuExecMode = CommandClickVariables.substituteCmdClickVariable(
+            substituteSettingVariableList,
+            CommandClickScriptVariable.UBUNTU_EXEC_MODE
+        ) ?: CommandClickScriptVariable.UBUNTU_EXEC_MODE_DEFAULT_VALUE
+        when(ubuntuExecMode){
+            SettingVariableSelects.UbuntuExecModeSelects.background.name
+            -> execShellScriptByBackground(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+            SettingVariableSelects.UbuntuExecModeSelects.foreground.name
+            -> execShellScriptByForeground(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+        }
+    }
+
+    private fun execShellScriptByForeground(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+    ){
+        val cmdclickTempButtonExecShellPath =
+            makeUbuntuButtonExecTempShellPath(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+        val foregroundCmdIntent = Intent()
+        foregroundCmdIntent.action = BroadCastIntentScheme.FOREGROUND_CMD_START.action
+        foregroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.foregroundShellPath.schema,
+            cmdclickTempButtonExecShellPath
+        )
+        foregroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema,
+            String()
+        )
+        foregroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.foregroundTimeout.schema,
+            "2000"
+        )
+        editFragment.activity?.sendBroadcast(foregroundCmdIntent)
+    }
+    private fun execShellScriptByBackground(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+    ){
+        val cmdclickTempButtonExecShellPath =
+            makeUbuntuButtonExecTempShellPath(
+                editFragment,
+                execCmdAfterTrimButtonEditExecVariant,
+            )
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val backgroundCmdIntent = Intent()
+        backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action
+        backgroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.backgroundShellPath.schema,
+            cmdclickTempButtonExecShellPath
+        )
+        backgroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema,
+            String()
+        )
+        backgroundCmdIntent.putExtra(
+            UbuntuServerIntentExtra.monitorFileName.schema,
+            terminalViewModel.currentMonitorFileName
+        )
+        editFragment.activity?.sendBroadcast(backgroundCmdIntent)
+    }
+
+    private fun makeUbuntuButtonExecTempShellPath(
+        editFragment: EditFragment,
+        execCmdAfterTrimButtonEditExecVariant: String,
+    ): String {
+        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            currentScriptName
+        )
+        val fannelDirPath = "${currentAppDirPath}/$fannelDirName"
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val outputMonitorPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
+        val execCmd = if(
+            execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null")
+            || execCmdAfterTrimButtonEditExecVariant.endsWith("> /dev/null 2>&1")
+        ) "${execCmdAfterTrimButtonEditExecVariant};"
+        else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputMonitorPath}\""
+        val tempBtnShellDirPath = "$fannelDirPath/temp_btn_shell"
+        FileSystems.writeFile(
+            tempBtnShellDirPath,
+            cmdclickTempButtonExecShellName,
+            execCmd
+                .replace(Regex("^${bashb}"), "bash")
+                .replace(Regex("^${bashf}"), "bash")
+        )
+        return "${tempBtnShellDirPath}/$cmdclickTempButtonExecShellName"
     }
 
     private fun makeInnerExecCmd(

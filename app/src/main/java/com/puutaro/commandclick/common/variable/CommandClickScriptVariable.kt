@@ -46,6 +46,9 @@ object CommandClickScriptVariable {
             HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
         )
     )
+    val SHELL_EXEC_ENV = "shellExecEnv"
+    val UBUNTU_EXEC_MODE = "ubuntuExecMode"
+    val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
     val TERMINAL_DO = "terminalDo"
     val EDIT_EXECUTE = "editExecute"
     val TERMINAL_SIZE_TYPE = "terminalSizeType"
@@ -98,6 +101,9 @@ object CommandClickScriptVariable {
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
+        SHELL_EXEC_ENV,
+        UBUNTU_EXEC_MODE,
+        UBUNTU_OUTPUT_FILE,
         TERMINAL_DO,
         EDIT_EXECUTE,
         TERMINAL_SIZE_TYPE,
@@ -177,6 +183,10 @@ object CommandClickScriptVariable {
     private val onAdBlockInherit = SettingVariableSelects.OnAdblockSelects.INHERIT.name
     private val onAdBlockOn = SettingVariableSelects.OnAdblockSelects.ON.name
     private val onAdBlockOff = SettingVariableSelects.OnAdblockSelects.OFF.name
+    private val shellExecEnvUbuntu = SettingVariableSelects.ShellExecEnvSelects.UBUNTU.name
+    private val shellExecEnvTermux = SettingVariableSelects.ShellExecEnvSelects.TERMUX.name
+    private val ubuntuExecModeSelectsBackground = SettingVariableSelects.UbuntuExecModeSelects.background.name
+    private val ubuntuExecModeSelectsForeground = SettingVariableSelects.UbuntuExecModeSelects.foreground.name
     private val onTermVisibleWhenKeyboardSelectsInherit = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.INHERIT.name
     private val onTermVisibleWhenKeyboardSelectsOn = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
     private val onTermVisibleWhenKeyboardSelectsOff = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
@@ -198,6 +208,9 @@ object CommandClickScriptVariable {
     private val disableEditButtonOff = SettingVariableSelects.disableEditButtonSelects.OFF.name
     private val disablePlayButtonOn = SettingVariableSelects.disablePlayButtonSelects.ON.name
     private val disablePlayButtonOff = SettingVariableSelects.disablePlayButtonSelects.OFF.name
+    val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
+    val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
+    val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val TERMINAL_DO_DEFAULT_VALUE = terminalOn
     val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
     val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
@@ -309,6 +322,9 @@ object CommandClickScriptVariable {
     private val setVariableValueForNoScrollSaveUrlsFilePath =
         "${listPathForListConSlSpi}=${noScrollSaveUrlsFilePath}"
     val setVariableForSettingHolder: List<String> = listOf(
+        "${SHELL_EXEC_ENV}:CB=${shellExecEnvUbuntu}!${shellExecEnvTermux}",
+        "${UBUNTU_EXEC_MODE}:CB=${ubuntuExecModeSelectsBackground}!${ubuntuExecModeSelectsForeground}",
+        "${UBUNTU_OUTPUT_FILE}:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "${TERMINAL_DO}:CB=${terminalOn}!${terminalTermux}!${terminalOff}",
         "${EDIT_EXECUTE}:CB=${editExecuteNo}!${editExecuteOnce}!${editExecuteAlways}",
         "${TERMINAL_SIZE_TYPE}:CB=${terminalSizeTypeOff}!${terminalSizeTypeShort}!${terminalSizeTypeLong}",
@@ -370,6 +386,9 @@ object CommandClickScriptVariable {
             |# ${mdDash}
             |# * [${settingVariableStr}](#${replaceLowerAdnBlankDash(settingVariableStr)})
             |#  * [${SCRIPT_FILE_NAME}](#${replaceLowerAdnBlankDash(SCRIPT_FILE_NAME)})
+            |#  * [${SHELL_EXEC_ENV}](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
+            |#  * [${UBUNTU_EXEC_MODE}](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
+            |#  * [${UBUNTU_OUTPUT_FILE}](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
 	        |#  * [${TERMINAL_SIZE_TYPE}](#${replaceLowerAdnBlankDash(TERMINAL_SIZE_TYPE)})
             |#  * [${TERMINAL_OUTPUT_MODE}](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
             |#  * [${CMDCLICK_ON_AUTO_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
@@ -405,6 +424,32 @@ object CommandClickScriptVariable {
             |# 
             |# ### ${SCRIPT_FILE_NAME}
             |# Rename script name
+            |
+            |# ### ${SHELL_EXEC_ENV}
+            |# Set shell exec enviroment
+            |
+            |# | option | descripton |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${shellExecEnvUbuntu}` | ubuntu |
+            |# | `${shellExecEnvTermux}` | termux |
+            |
+            |# ### ${UBUNTU_EXEC_MODE}
+            |# Set shell exec mode
+            |
+            |# | option | descripton |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${ubuntuExecModeSelectsBackground}` | fast exec mode |
+            |# | `${ubuntuExecModeSelectsForeground}` | back ground exec mode |
+            |
+            |# ### ${UBUNTU_OUTPUT_FILE}
+            |# Set ubuntu output file
+            |
+            |# | option | descripton |
+            |# | ${mdDash} | ${mdDash} |
+            |# | `${UsePath.cmdClickMonitorFileName_1}` | stdout |
+            |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |
+            |# | `${UsePath.cmdClickMonitorFileName_3}` | free |
+            |# | `${UsePath.cmdClickMonitorFileName_4}` | /dev/null |
             |
             |# ### ${TERMINAL_SIZE_TYPE}
             |# `cmdclick terminal` size option
@@ -656,6 +701,9 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+        |${SHELL_EXEC_ENV}="${SHELL_EXEC_ENV_DEFAULT_VALUE}"
+        |${UBUNTU_EXEC_MODE}="${UBUNTU_EXEC_MODE_DEFAULT_VALUE}"
+        |${UBUNTU_OUTPUT_FILE}="${UBUNTU_OUTPUT_FILE_DEFAULT_VALUE}"
         |${TERMINAL_DO}="${TERMINAL_DO_DEFAULT_VALUE}"
         |${EDIT_EXECUTE}="${EDIT_EXECUTE_DEFAULT_VALUE}"
         |${TERMINAL_SIZE_TYPE}="${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}"

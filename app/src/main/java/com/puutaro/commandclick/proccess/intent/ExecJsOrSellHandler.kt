@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.proccess.intent
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
+import com.puutaro.commandclick.util.CommandClickVariables
 
 object ExecJsOrSellHandler {
     fun handle(
@@ -13,12 +12,12 @@ object ExecJsOrSellHandler {
         scriptContentsListSource: List<String>? = null
     ){
         when(
-            JsOrShellFromSuffix.judge(
+            CommandClickVariables.judgeJsOrShellFromSuffix(
                 selectedScriptFileName
             )
         ){
             LanguageTypeSelects.SHELL_SCRIPT -> {
-                ExecTerminalDo.execTerminalDo(
+                ExecShellScript.execShellScript(
                     currentFragment,
                     recentAppDirPath,
                     selectedScriptFileName,

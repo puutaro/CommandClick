@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.util.JsOrShellFromSuffix
+import com.puutaro.commandclick.util.CommandClickVariables
 
 class CommentOutLabelingSection {
     companion object {
@@ -11,7 +11,7 @@ class CommentOutLabelingSection {
             shellScriptName: String,
         ): List<String> {
             val languageType =
-                JsOrShellFromSuffix.judge(shellScriptName)
+                CommandClickVariables.judgeJsOrShellFromSuffix(shellScriptName)
 
             val languageTypeToSectionHolderMap =
                 CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)

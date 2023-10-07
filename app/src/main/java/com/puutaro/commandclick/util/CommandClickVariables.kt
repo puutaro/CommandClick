@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.path.UsePath
 
 
 object CommandClickVariables {
@@ -45,6 +46,17 @@ object CommandClickVariables {
             }
     }
 
+    fun judgeJsOrShellFromSuffix(
+        shellScriptName: String
+    ):LanguageTypeSelects {
+        if(
+            shellScriptName.endsWith(
+                UsePath.SHELL_FILE_SUFFIX
+            )
+        ) return LanguageTypeSelects.SHELL_SCRIPT
+        return  LanguageTypeSelects.JAVA_SCRIPT
+    }
+
     fun substituteVariableListFromHolder(
         shellContentsList: List<String>?,
         startHolderName: String?,
@@ -70,6 +82,24 @@ object CommandClickVariables {
         } else null
     }
 
+    fun returnSettingVariableList(
+        shellContentsList: List<String>,
+        languageTypeSelects: LanguageTypeSelects
+    ): List<String>? {
+        val languageTypeHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                languageTypeSelects
+            )
+        return substituteVariableListFromHolder(
+                shellContentsList,
+                languageTypeHolderMap?.get(
+                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+                ),
+                languageTypeHolderMap?.get(
+                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+                )
+            )
+    }
     fun returnEditExecuteValueStr(
         shellContentsList: List<String>,
         languageTypeSelects: LanguageTypeSelects
