@@ -332,7 +332,6 @@ object ButtonViewProducer {
         editParameters: EditParameters,
         innerExecCmd: String,
     ){
-
         val substituteSettingVariableList =
             CommandClickVariables.substituteVariableListFromHolder(
                 editParameters.currentShellContentsList,
@@ -356,24 +355,6 @@ object ButtonViewProducer {
                 execCmdAfterTrimButtonEditExecVariant,
                 innerExecCmd,
             )
-        }
-
-
-        val ubuntuExecMode = CommandClickVariables.substituteCmdClickVariable(
-            substituteSettingVariableList,
-            CommandClickScriptVariable.UBUNTU_EXEC_MODE
-        ) ?: CommandClickScriptVariable.UBUNTU_EXEC_MODE_DEFAULT_VALUE
-        when(ubuntuExecMode){
-            SettingVariableSelects.UbuntuExecModeSelects.background.name
-            -> execShellScriptByBackground(
-                    editFragment,
-                    execCmdAfterTrimButtonEditExecVariant,
-                )
-            SettingVariableSelects.UbuntuExecModeSelects.foreground.name
-            -> execShellScriptByForeground(
-                    editFragment,
-                    execCmdAfterTrimButtonEditExecVariant,
-                )
         }
     }
 
