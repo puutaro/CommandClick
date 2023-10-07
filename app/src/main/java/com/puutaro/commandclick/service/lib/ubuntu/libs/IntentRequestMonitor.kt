@@ -263,7 +263,6 @@ object IntentRequestMonitor {
             importance.int
         )
         val notificationManager = NotificationManagerCompat.from(context)
-        notificationManager.deleteNotificationChannel(channel.id)
         notificationManager.createNotificationChannel(channel)
 
         val notificationBuilder = NotificationCompat.Builder(
