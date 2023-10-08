@@ -149,12 +149,8 @@ class BusyboxExecutor(
         targetProcessNameList: List<String>,
         monitorFileName: String
     ){
-        val packageName = context?.packageName ?: String()
-        val grepCmd = "grep " + targetProcessNameList.map {
-            "-e '${it}'"
-        }.joinToString(" ")
         executeProotCommand(
-            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | ${grepCmd} | grep bash | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
+            listOf("bash", "/support/killProcTree.sh") + targetProcessNameList,
             monitorFileName = monitorFileName
         )
     }
