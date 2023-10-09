@@ -230,7 +230,7 @@ object AppProcessManager {
         ) {
             Toast.makeText(
                 context,
-                "Install ubuntu from above notification",
+                "Launch ubuntu",
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -323,7 +323,7 @@ object AppProcessManager {
 
     private fun execKillProcess(
         fragment: Fragment,
-        selectedProcess: String,
+        selectedProcessTabSepa: String,
     ){
         val context = fragment.context
             ?: return
@@ -332,26 +332,26 @@ object AppProcessManager {
         ) {
             Toast.makeText(
                 context,
-                "Install ubuntu from above notification",
+                "Launch ubuntu",
                 Toast.LENGTH_SHORT
             ).show()
             return
         }
         if(
-            selectedProcess.isEmpty()
+            selectedProcessTabSepa.isEmpty()
         ) return
-        val killProcessIntent = Intent()
-        killProcessIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_KILL.action
-        killProcessIntent.putExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobTypeList.schema,
-            selectedProcess
-        )
-        fragment.context?.sendBroadcast(killProcessIntent)
         Toast.makeText(
             context,
             "killing..",
             Toast.LENGTH_SHORT
         ).show()
+        val killProcessIntent = Intent()
+        killProcessIntent.action = BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
+        killProcessIntent.putExtra(
+            UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema,
+            selectedProcessTabSepa
+        )
+        fragment.context?.sendBroadcast(killProcessIntent)
     }
 
     private fun killThisTermuxShell(

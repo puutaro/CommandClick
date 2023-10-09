@@ -72,13 +72,17 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.ubuntu_service.is_active",
         "is_active",
     ),
-    BACKGROUND_CMD_KILL(
+    CMD_KILL_BY_ADMIN(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_kill",
         "background_cmd_kill",
     ),
     BACKGROUND_CMD_START(
         "com.puutaro.commandclick.ubuntu_service.background_cmd_start",
         "background_cmd_start",
+    ),
+    ADMIN_CMD_START(
+        "com.puutaro.commandclick.ubuntu_service.admin_cmd_start",
+        "admin_cmd_start",
     ),
     RESTART_UBUNTU_SERVICE_FROM_ACTIVITY(
         "com.puutaro.commandclick.ubuntu_service.restart",
@@ -111,5 +115,5 @@ enum class BroadCastIntentScheme(
     FOREGROUND_CMD_START(
         "com.puutaro.commandclick.ubuntu_service.shell2http",
         "shell2http",
-    )
+    ),
 }

@@ -164,7 +164,7 @@ object ExecShellScript {
                     String()
                 )
                 backgroundCmdIntent.putExtra(
-                    UbuntuServerIntentExtra.monitorFileName.schema,
+                    UbuntuServerIntentExtra.backgroundMonitorFileName.schema,
                     ubuntuOutputFile
                 )
                 currentFragment.activity?.sendBroadcast(backgroundCmdIntent)

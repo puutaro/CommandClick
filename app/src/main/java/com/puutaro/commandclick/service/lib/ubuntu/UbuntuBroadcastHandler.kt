@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
+import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
@@ -64,13 +65,13 @@ object UbuntuBroadcastHandler {
             -> execSleepingNotification(
                 ubuntuService
             )
-            BroadCastIntentScheme.BACKGROUND_CMD_KILL.action
-            -> execBackGroundCmdKill(
+            BroadCastIntentScheme.OPEN_FANNEL.action
+            -> execOpenFannel(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentScheme.OPEN_FANNEL.action
-            -> execOpenFannel(
+            BroadCastIntentScheme.ADMIN_CMD_START.action
+            -> execAdminCmdStart(
                 ubuntuService,
                 intent
             )
@@ -83,6 +84,11 @@ object UbuntuBroadcastHandler {
             -> execSell2Http(
                 ubuntuService,
                 intent
+            )
+            BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
+            -> execCmdKillByAdmin(
+                ubuntuService,
+                intent,
             )
         }
 
@@ -271,26 +277,6 @@ object UbuntuBroadcastHandler {
         }
     }
 
-    private fun execBackGroundCmdKill(
-        ubuntuService: UbuntuService,
-        intent: Intent,
-    ){
-        val ubuntuFiles = ubuntuService.ubuntuFiles
-        if(
-            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
-        ) return
-        val ubuntuCroutineJobTypeList = intent.getStringExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobTypeList.schema
-        ) ?: return
-        ubuntuService.ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobTypeList)?.cancel()
-        ubuntuFiles.let {
-            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcessFromList(
-                ubuntuCroutineJobTypeList.split("\t"),
-                ubuntuService.cmdclickMonitorFileName
-            )
-        }
-    }
-
     private fun execOpenFannel(
         ubuntuService: UbuntuService,
         intent: Intent,
@@ -320,6 +306,54 @@ object UbuntuBroadcastHandler {
         )
     }
 
+    private fun execAdminCmdStart(
+        ubuntuService: UbuntuService,
+        intent: Intent
+    ){
+        val context = ubuntuService.applicationContext
+        val ubuntuFiles = ubuntuService.ubuntuFiles
+        if(
+            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+        ) {
+            CoroutineScope(Dispatchers.Main).launch {
+                Toast.makeText(
+                    ubuntuService.applicationContext,
+                    "Launch ubuntu",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            return
+        }
+        val adminShellPath = intent.getStringExtra(
+            UbuntuServerIntentExtra.adminShellPath.schema
+        ) ?: return
+        val adminArgsTabSepaStr = intent.getStringExtra(
+            UbuntuServerIntentExtra.adminArgsTabSepaStr.schema
+        ) ?: String()
+        val adminMonitorFileName = intent.getStringExtra(
+            UbuntuServerIntentExtra.adminMonitorFileName.schema
+        ) ?: return
+        val adminArgsTabSepaStrWithQuote = adminArgsTabSepaStr.split("\t").map {
+            "\"$it\""
+        }.joinToString("\t")
+        val adminShellJob = CoroutineScope(Dispatchers.IO).launch {
+            BusyboxExecutor(
+                context,
+                UbuntuFiles(context)
+            ).executeProotCommand(
+                listOf("su","-", UbuntuInfo.user, "-c" ,"bash '$adminShellPath' $adminArgsTabSepaStrWithQuote"),
+                monitorFileName = adminMonitorFileName,
+            )
+        }
+        ubuntuService.ubuntuCoroutineJobsHashMap.get(
+            adminShellPath,
+        )?.cancel()
+        ubuntuService.ubuntuCoroutineJobsHashMap.put(
+            adminShellPath,
+            adminShellJob
+        )
+    }
+
     private fun execBackGroundCmdStart(
         ubuntuService: UbuntuService,
         intent: Intent
@@ -344,21 +378,20 @@ object UbuntuBroadcastHandler {
         val backgroundArgsTabSepaStr = intent.getStringExtra(
             UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema
         ) ?: String()
-        val monitorFileName = intent.getStringExtra(
-            UbuntuServerIntentExtra.monitorFileName.schema
-        ) ?: return
-        val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
-            BusyboxExecutor(
-                context,
-                UbuntuFiles(context)
-            ).executeProotCommand(
-                listOf("su","-", UbuntuInfo.user, "-c" ,"bash '$backgroundShellPath' $backgroundArgsTabSepaStr"),
-                monitorFileName = monitorFileName,
-            )
-        }
+        val backgroundMonitorFileName = intent.getStringExtra(
+            UbuntuServerIntentExtra.backgroundMonitorFileName.schema
+        ) ?: UsePath.cmdClickMonitorFileName_2
         ubuntuService.ubuntuCoroutineJobsHashMap.get(
             backgroundShellPath,
         )?.cancel()
+        val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
+            SshManager.execScript(
+                backgroundShellPath,
+                backgroundArgsTabSepaStr,
+                backgroundMonitorFileName,
+                false,
+            )
+        }
         ubuntuService.ubuntuCoroutineJobsHashMap.put(
             backgroundShellPath,
             backgroundShellJob
@@ -402,6 +435,26 @@ object UbuntuBroadcastHandler {
                 foregroundShellPath,
                 args,
                 timeout
+            )
+        }
+    }
+
+    private fun execCmdKillByAdmin(
+        ubuntuService: UbuntuService,
+        intent: Intent,
+    ){
+        val ubuntuFiles = ubuntuService.ubuntuFiles
+        if(
+            ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+        ) return
+        val ubuntuCroutineJobTypeListForKill = intent.getStringExtra(
+            UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema
+        ) ?: return
+        ubuntuService.ubuntuCoroutineJobsHashMap.get(ubuntuCroutineJobTypeListForKill)?.cancel()
+        ubuntuFiles.let {
+            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillProcessFromList(
+                ubuntuCroutineJobTypeListForKill.split("\t"),
+                ubuntuService.cmdclickMonitorFileName
             )
         }
     }

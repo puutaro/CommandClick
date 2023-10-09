@@ -11,6 +11,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.UbuntuBootManager
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
+import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -35,21 +36,62 @@ class JsUbuntu(
     val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
-        fun runCmd(
+        fun execScript(
         executeShellPath:String,
         tabSepaArgs: String = String(),
-        timeoutMiliSec: Int,
     ): String {
+        if (
+            context == null
+        ) return String()
+        if (
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "Launch ubuntu",
+                Toast.LENGTH_SHORT
+            ).show()
+            return String()
+        }
         return Shell2Http.runCmd(
             executeShellPath,
             tabSepaArgs,
-            timeoutMiliSec,
+            2000,
         )
     }
 
 
     @JavascriptInterface
-    fun runByBackground(
+    fun execScriptBySsh(
+        executeShellPath:String,
+        tabSepaArgs: String = String(),
+        monitorNum: Int,
+    ): String {
+        if(
+            context == null
+        ) return  String()
+        if(
+            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
+        ) {
+            Toast.makeText(
+                context,
+                "Launch ubuntu",
+                Toast.LENGTH_SHORT
+            ).show()
+            return  String()
+        }
+        val monitorFileName = UsePath.decideMonitorName(monitorNum)
+        return SshManager.execScript(
+            executeShellPath,
+            tabSepaArgs,
+            monitorFileName,
+            true,
+        )
+    }
+
+
+    @JavascriptInterface
+    fun execScriptByBackground(
         backgroundShellPath: String,
         argsTabSepaStr:String,
         monitorNum: Int,
@@ -67,7 +109,7 @@ class JsUbuntu(
             ).show()
             return
         }
-        val monitorFileName = decideMonitorName(monitorNum)
+        val monitorFileName = UsePath.decideMonitorName(monitorNum)
         val backgroundCmdIntent = Intent()
         backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action
         backgroundCmdIntent.putExtra(
@@ -79,7 +121,7 @@ class JsUbuntu(
             argsTabSepaStr
         )
         backgroundCmdIntent.putExtra(
-            UbuntuServerIntentExtra.monitorFileName.schema,
+            UbuntuServerIntentExtra.backgroundMonitorFileName.schema,
             monitorFileName
         )
         terminalFragment.activity?.sendBroadcast(backgroundCmdIntent)
@@ -93,9 +135,9 @@ class JsUbuntu(
             cmdName.isEmpty()
         ) return
         val intent = Intent()
-        intent.action = BroadCastIntentScheme.BACKGROUND_CMD_KILL.action
+        intent.action = BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
         intent.putExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobTypeList.schema,
+            UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema,
             cmdName
         )
         terminalFragment.activity?.sendBroadcast(intent)
@@ -233,18 +275,6 @@ class JsUbuntu(
                 Toast.LENGTH_SHORT
             ).show()
             return
-        }
-    }
-
-    private fun decideMonitorName(
-        monitorNum: Int
-    ): String {
-        return when(monitorNum){
-            1 -> UsePath.cmdClickMonitorFileName_1
-            2 -> UsePath.cmdClickMonitorFileName_2
-            3 -> UsePath.cmdClickMonitorFileName_3
-            4 -> UsePath.cmdClickMonitorFileName_4
-            else -> UsePath.cmdClickMonitorFileName_1
         }
     }
 }

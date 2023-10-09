@@ -102,10 +102,11 @@ class UbuntuService:
                 BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
                 BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action,
                 BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action,
-                BroadCastIntentScheme.BACKGROUND_CMD_KILL.action,
                 BroadCastIntentScheme.OPEN_FANNEL.action,
+                BroadCastIntentScheme.ADMIN_CMD_START.action,
                 BroadCastIntentScheme.BACKGROUND_CMD_START.action,
                 BroadCastIntentScheme.FOREGROUND_CMD_START.action,
+                BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action,
             )
         )
         BroadcastManagerForService.registerScreenOnOffReceiver(

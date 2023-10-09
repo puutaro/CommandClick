@@ -428,7 +428,7 @@ object ButtonViewProducer {
             String()
         )
         backgroundCmdIntent.putExtra(
-            UbuntuServerIntentExtra.monitorFileName.schema,
+            UbuntuServerIntentExtra.backgroundMonitorFileName.schema,
             terminalViewModel.currentMonitorFileName
         )
         editFragment.activity?.sendBroadcast(backgroundCmdIntent)

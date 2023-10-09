@@ -210,4 +210,16 @@ object UsePath {
         ) return path
         return prefix + path
     }
+
+    fun decideMonitorName(
+        monitorNum: Int
+    ): String {
+        return when(monitorNum){
+            1 -> cmdClickMonitorFileName_1
+            2 -> cmdClickMonitorFileName_2
+            3 -> cmdClickMonitorFileName_3
+            4 -> cmdClickMonitorFileName_4
+            else -> cmdClickMonitorFileName_1
+        }
+    }
 }

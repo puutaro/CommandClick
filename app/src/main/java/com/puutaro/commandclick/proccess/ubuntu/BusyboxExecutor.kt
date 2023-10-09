@@ -259,7 +259,9 @@ class BusyboxExecutor(
                 line
             )
         }
-        reader.close()
+        if(process.inputStream != null){
+            process.inputStream.close()
+        }
         val errStream = process.errorStream
         val errReader = errStream.bufferedReader(Charsets.UTF_8)
         errReader.forEachLine { line ->
@@ -272,8 +274,11 @@ class BusyboxExecutor(
                 line
             )
         }
-        errReader.close()
+        if(process.errorStream != null){
+            process.errorStream.close()
+        }
     }
+
 }
 
 // This class is intended to allow stubbing of elements that are unavailable during unit tests.

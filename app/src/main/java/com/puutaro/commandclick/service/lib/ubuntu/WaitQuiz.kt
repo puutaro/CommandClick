@@ -37,6 +37,10 @@ class WaitQuiz {
 
     private val quizPairList = listOf(
         Pair(
+            "What's cmd exec env?",
+            "-> proot, ssh, shell2http"
+        ),
+        Pair(
             "What's ${appName}?",
             "-> Bothend. Generally backend + frontend"
         ),
@@ -221,8 +225,48 @@ class WaitQuiz {
             "-> Base is js, extra is shell"
         ),
         Pair(
-            "How to exec shell cmd?",
-            "-> http2shell, or proot when service"
+            "How to admin exec env?",
+            "-> proot"
+        ),
+        Pair(
+            "What's the position of shell2http?",
+            "-> foreground cmd env"
+        ),
+        Pair(
+            "What's the position of ssh?",
+            "-> background cmd env"
+        ),
+        Pair(
+            "What's the position of proot?",
+            "-> admin cmd env"
+        ),
+        Pair(
+            "What's the fature of proot?",
+            "-> slow but admin management"
+        ),
+        Pair(
+            "What's the fature of shell2http?",
+            "-> fast"
+        ),
+        Pair(
+            "What's the fature of ssh?",
+            "-> speedy for background"
+        ),
+        Pair(
+            "What's system configure env?",
+            "-> proot"
+        ),
+        Pair(
+            "What's admin exec env?",
+            "-> proot"
+        ),
+        Pair(
+            "What's background exec env?",
+            "-> ssh"
+        ),
+        Pair(
+            "What's foreground exec env?",
+            "-> http2shell"
         ),
         Pair(
             "How to make this sound system?",

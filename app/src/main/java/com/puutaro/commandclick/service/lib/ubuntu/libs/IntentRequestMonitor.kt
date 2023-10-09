@@ -31,6 +31,9 @@ object IntentRequestMonitor {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private const val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
+    private const val elementSeparator = "|"
+    private const val keySeparator = "!"
+    private const val valueSeparator = "&"
 
     fun launch(
         ubuntuService: UbuntuService,
@@ -187,7 +190,7 @@ object IntentRequestMonitor {
         )?.let {
             createMap(
                 it,
-                "|"
+                keySeparator
             )
         }
         extraPairList?.forEach {
@@ -248,7 +251,6 @@ object IntentRequestMonitor {
         val channelNum = toInt(channelNumStr) ?: return
         val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
             ?: return
-        val notificationStyle = broadcastMap.get(BroadcastMonitorFileScheme.notificationStyle.name)
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
             ?: return
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
@@ -272,10 +274,6 @@ object IntentRequestMonitor {
             notificationBuilder,
             iconName,
         )
-        setStyle(
-            notificationBuilder,
-            notificationStyle
-        )
         setDeleteIntent(
             ubuntuService,
             notificationBuilder,
@@ -285,6 +283,10 @@ object IntentRequestMonitor {
             ubuntuService,
             notificationBuilder,
             broadcastMap.get(BroadcastMonitorFileScheme.button.name)
+        )
+        setStyle(
+            notificationBuilder,
+            broadcastMap
         )
         val notificationInstance = notificationBuilder.build()
         notificationManager.notify(
@@ -308,11 +310,28 @@ object IntentRequestMonitor {
 
     private fun setStyle(
         notificationBuilder: NotificationCompat.Builder,
-        notificationStyle: String?,
+        broadcastMap: Map<String, String>
     ){
-        if(notificationStyle != NotificationStyle.media.name) return
+        val styleMap =
+            broadcastMap.get(
+                BroadcastMonitorFileScheme.notificationStyle.name
+            )?.let {
+            createMap(
+                it,
+                keySeparator
+            ).toMap()
+        } ?: return
+        if(styleMap.isEmpty()) return
+        val styleType = styleMap.get(NotificationStyleSchema.type.name)
+        if(styleType != NotificationStyle.media.name) return
+        val compactActionsInts = styleMap.get(
+            NotificationStyleSchema.compactActionsInts.name
+        )?.split(valueSeparator)?.map {
+            toInt(it) ?: 0
+        }?.toIntArray() ?: return
         notificationBuilder.setStyle(
             androidx.media.app.NotificationCompat.MediaStyle()
+                .setShowActionsInCompactView(*compactActionsInts)
         )
     }
 
@@ -326,7 +345,7 @@ object IntentRequestMonitor {
         ) return
         val onDeleteMap = createMap(
             onDeleteMapStr,
-            "!"
+            keySeparator
         ).toMap()
         val pendingIntent = pendingIntentCreatorWraper(
             ubuntuService,
@@ -346,8 +365,12 @@ object IntentRequestMonitor {
     ){
         val funcName = object{}.javaClass.enclosingMethod?.name
         val buttonLabelKey = ButtonKey.label.name
-        val buttonList = buttonListStr?.split("|")
+        val buttonList = buttonListStr?.split(elementSeparator)
             ?: return
+        if(
+            buttonList.isEmpty()
+        ) return
+        notificationBuilder.clearActions()
         buttonList.indices.forEach {
             index ->
             val buttonMapEl = buttonList[index]
@@ -356,7 +379,7 @@ object IntentRequestMonitor {
             ) return@forEach
             val buttonTypeMap = createMap(
                 buttonMapEl,
-                "!"
+                keySeparator
             ).toMap()
             val buttonName = buttonTypeMap.get(buttonLabelKey)
                 ?: return@forEach
@@ -400,7 +423,7 @@ object IntentRequestMonitor {
         val argsTabSepaStr =
             targetMap
                 .get(ButtonKey.args.name)
-                ?.replace("!", "\t")
+                ?.replace(valueSeparator, "\t")
                 ?: String()
         val timeout = targetMap.get(ButtonKey.timeout.name) ?: "200"
         val backgroundAction = BroadCastIntentScheme.BACKGROUND_CMD_START.action
@@ -419,7 +442,7 @@ object IntentRequestMonitor {
                     argsTabSepaStr
                 ),
                 Pair(
-                    UbuntuServerIntentExtra.monitorFileName.schema,
+                    UbuntuServerIntentExtra.backgroundMonitorFileName.schema,
                     UsePath.cmdClickMonitorFileName_2
                 )
             )
@@ -483,10 +506,10 @@ private fun toInt(numStr: String?): Int? {
 }
 
 private fun createMap(
-    matEntryStr: String,
+    mapEntryStr: String,
     sepalator: String
 ):List<Pair<String, String>> {
-    return matEntryStr.split(sepalator).map {
+    return mapEntryStr.split(sepalator).map {
         CcScript.makeKeyValuePairFromSeparatedString(
             it,
             "="
@@ -535,6 +558,11 @@ private enum class BroadcastMonitorFileScheme {
     button
 }
 
+private enum class NotificationStyleSchema {
+    type,
+    compactActionsInts
+}
+
 private enum class NotificationImportanceType(
     val str: String,
     val int: Int,
@@ -570,7 +598,7 @@ private enum class ButtonNameToIcon(
     CANCEL("CANCEL", R.drawable.ic_menu_close_clear_cancel),
     PREVIOUS("PREVIOUS", R.drawable.ic_media_previous),
     FROM("FROM", R.drawable.ic_media_rew),
-    STOP("STOP", R.drawable.ic_media_pause),
+    STOP("PAUSE", R.drawable.ic_media_pause),
     PLAY("PLAY", R.drawable.ic_media_play),
     TO("TO", R.drawable.ic_media_ff),
     NEXT("NEXT", R.drawable.ic_media_next),
