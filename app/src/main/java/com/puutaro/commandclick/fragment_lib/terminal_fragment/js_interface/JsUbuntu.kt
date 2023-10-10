@@ -28,12 +28,12 @@ import kotlinx.coroutines.withContext
 class JsUbuntu(
     private val terminalFragment: TerminalFragment
 ) {
-    val context = terminalFragment.context
-    val activity = terminalFragment.activity
-    val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-    val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
-    val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
+    private val context = terminalFragment.context
+    private val activity = terminalFragment.activity
+    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
+    private val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
+    private val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
         fun execScript(
@@ -257,6 +257,14 @@ class JsUbuntu(
         runBlocking {
             withContext(Dispatchers.IO) {
                 for (i in 1..50) {
+                    withContext(Dispatchers.Main) toast@ {
+                        if(i % 5 != 0) return@toast
+                        Toast.makeText(
+                            context,
+                            "boot${".".repeat(i / 10 + 1)}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                     if (
                         LinuxCmd.isBasicProcess()
                     ) {
@@ -275,5 +283,10 @@ class JsUbuntu(
             ).show()
             return
         }
+        Toast.makeText(
+            context,
+            "boot ok",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 }

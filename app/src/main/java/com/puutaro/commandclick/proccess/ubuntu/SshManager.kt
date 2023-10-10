@@ -26,14 +26,14 @@ object SshManager {
         val tabSepaStrWithQuote = tabSepaStr.split("\t").map{
             "\"${it}\""
         }.joinToString("\t")
-        return execCommmand(
+        return execCommand(
             "bash --login \"${scriptPath}\" $tabSepaStrWithQuote 2>&1",
             monitorFileName,
             isOutput
         )
     }
 
-    private fun execCommmand(
+    private fun execCommand(
         command: String,
         monitorFileName: String = sysMonitorFileName,
         isOutput: Boolean
@@ -43,7 +43,7 @@ object SshManager {
         try {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
+                sysMonitorFileName,
                 "### ${LocalDateTime.now()} ssh start"
             )
             val jsch = JSch()
@@ -179,33 +179,28 @@ object SshManager {
         try {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
+                sysMonitorFileName,
                 "### start extractInputStream..0"
-            )
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
-                "### start extractInputStream..1"
             )
             output = StreamWrapper.extractByReader(
                 channel.inputStream.bufferedReader(Charsets.UTF_8)
             )
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_1,
+                sysMonitorFileName,
                 "### after extractInputStream.."
             )
         } finally {
             if(channel.inputStream != null) {
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
+                    sysMonitorFileName,
                     "### close inputstream extractInputStream.."
                 )
                 channel.inputStream.close()
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_1,
+                    sysMonitorFileName,
                     "### close ok inputstream extractInputStream"
                 )
             }
