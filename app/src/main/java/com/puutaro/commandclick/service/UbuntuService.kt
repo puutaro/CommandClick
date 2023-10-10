@@ -16,11 +16,11 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
-import com.puutaro.commandclick.service.lib.ubuntu.ButtonLabel
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.ubuntu.BroadcastScreenSwitchHandler
+import com.puutaro.commandclick.service.lib.ubuntu.ButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.ForegroundContinue
 import com.puutaro.commandclick.service.lib.ubuntu.InnerPulseServer
 import com.puutaro.commandclick.service.lib.ubuntu.SetupMonitoring
@@ -122,24 +122,20 @@ class UbuntuService:
     ): Int {
         if(isStartup) {
             isStartup = true
-            return START_STICKY
+            return START_NOT_STICKY
         }
         if(
             intent?.getStringExtra(
                 UbuntuServerIntentExtra.ubuntuStartCommand.schema
             ).isNullOrEmpty()
-        ) return START_STICKY
-        val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
-            applicationContext,
-            BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
-        )
+        ) return START_NOT_STICKY
         if(isTaskKill) {
             isTaskKill = false
             val processNumUpdateIntent = Intent()
             processNumUpdateIntent.action =
                 BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
             sendBroadcast(processNumUpdateIntent)
-            return START_STICKY
+            return START_NOT_STICKY
         }
         ubuntuFiles = UbuntuFiles(
             applicationContext,
@@ -196,7 +192,7 @@ class UbuntuService:
             )
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
-            return START_STICKY
+            return START_NOT_STICKY
         }
         if(
             ubuntuFiles?.ubuntuSetupCompFile?.isFile != true
@@ -224,7 +220,7 @@ class UbuntuService:
             )
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
-            return START_STICKY
+            return START_NOT_STICKY
         }
         notificationBuilder?.clearActions()
         notificationBuilder?.addAction(
@@ -248,7 +244,7 @@ class UbuntuService:
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
         UbuntuInitProcess.launch(this)
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -258,7 +254,6 @@ class UbuntuService:
     override fun onDestroy() {
         super.onDestroy()
         ProcessManager.finishProcess(this)
-        stopSelf()
     }
 
     override fun onTaskRemoved(rootIntent: Intent?) {

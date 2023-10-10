@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
+import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
@@ -28,13 +29,13 @@ object UbuntuSetUp {
 
     private val startupFilePath = "/support/startup.sh"
     fun set(
-        context: Context?,
+        ubuntuService: UbuntuService,
         monitorFileName: String,
     ): Job? {
        return try {
             CoroutineScope(Dispatchers.IO).launch {
                 execSet(
-                    context,
+                    ubuntuService,
                     monitorFileName,
                 )
             }
@@ -48,14 +49,13 @@ object UbuntuSetUp {
         }
     }
     private suspend fun execSet(
-        contextSrc: Context?,
+        ubuntuService: UbuntuService,
         monitorFileName: String,
     ) {
-        val context  = contextSrc
+        val context  = ubuntuService.applicationContext
             ?: return
-        val ubuntuFiles = UbuntuFiles(
-            context,
-        )
+        val ubuntuFiles = ubuntuService.ubuntuFiles
+            ?: return
         try {
             downloadUbuntu(
                 ubuntuFiles,

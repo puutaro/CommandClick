@@ -12,7 +12,6 @@ import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.OpenTerminalButton
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
@@ -133,19 +132,14 @@ object UbuntuBroadcastHandler {
     fun execOnUbuntuSetupNotification(
         ubuntuService: UbuntuService
     ) {
-        val context = ubuntuService.applicationContext
         val chanelId = ubuntuService.chanelId
-        val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
-            context,
-            BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
-        )
         ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.ON_SETUP.title)
         ubuntuService.notificationBuilder?.setContentText(UbuntuStateType.ON_SETUP.message)
         ubuntuService.notificationBuilder?.clearActions()
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
             ButtonLabel.RESTART.label,
-            cancelUbuntuServicePendingIntent
+            ubuntuService.cancelUbuntuServicePendingIntent
         )
         ubuntuService.notificationBuilder?.build()?.let {
             ubuntuService.notificationManager?.notify(
@@ -184,10 +178,6 @@ object UbuntuBroadcastHandler {
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) return
-        val cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
-            ubuntuService.applicationContext,
-            BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
-        )
         val chanelId = ubuntuService.chanelId
         ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.RUNNING.title)
         val itSelfProcessNum = 1
@@ -200,7 +190,7 @@ object UbuntuBroadcastHandler {
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
             ButtonLabel.RESTART.label,
-            cancelUbuntuServicePendingIntent
+            ubuntuService.cancelUbuntuServicePendingIntent
         )
         OpenTerminalButton.add(
             ubuntuService
@@ -365,7 +355,7 @@ object UbuntuBroadcastHandler {
         ) {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(
-                    ubuntuService.applicationContext,
+                   context,
                     "Launch ubuntu",
                     Toast.LENGTH_SHORT
                 ).show()
@@ -409,7 +399,7 @@ object UbuntuBroadcastHandler {
         ) {
             CoroutineScope(Dispatchers.Main).launch {
                 Toast.makeText(
-                    ubuntuService.applicationContext,
+                    context,
                     "Launch ubuntu",
                     Toast.LENGTH_SHORT
                 ).show()

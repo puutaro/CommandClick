@@ -1,15 +1,16 @@
 package com.puutaro.commandclick.service.lib.ubuntu.libs
 
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
+import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -80,7 +81,6 @@ object ProcessManager {
     fun monitorProcessAndNum(
         ubuntuService: UbuntuService
     ){
-        var previousProcessNum = 0
         ubuntuService.ubuntuCoroutineJobsHashMap[UbuntuRunningSystemProcessType.MonitoringProcessNum.name]?.cancel()
         val processNumUpdateIntent = Intent()
         processNumUpdateIntent.action =
@@ -92,19 +92,28 @@ object ProcessManager {
             cmdclickTempProcessesTxt,
             makeProcessTypeList(ubuntuService).joinToString("\n")
         )
+        val notificationManager = ubuntuService.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId = ubuntuService.chanelId
+        val runningSystemProcessNum = UbuntuRunningSystemProcessType.values().size
+        val notiUbuntuRunningMessage =  UbuntuStateType.RUNNING.message
+        val ubuntuLaunchCompFile = ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
         val monitorProcessNumJob = CoroutineScope(Dispatchers.IO).launch {
             while(true){
                 delay(1000)
                 if(
-                    ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
+                    ubuntuLaunchCompFile?.isFile != true
                 ) continue
                 val currentProcessNum = processNumCalculator(
                     ubuntuService
                 )
+                val currentDisplayMessage = notificationManager.activeNotifications.filter {
+                    it.id == channelId
+                }.firstOrNull()?.notification?.extras?.getString("android.text")
+                val shouldDisplayProcessNum = currentProcessNum - runningSystemProcessNum
+                val shouldDisplayMessage = notiUbuntuRunningMessage.format(shouldDisplayProcessNum)
                 if(
-                    previousProcessNum == currentProcessNum
+                    currentDisplayMessage == shouldDisplayMessage
                 ) continue
-                previousProcessNum = currentProcessNum
                 ubuntuService.sendBroadcast(processNumUpdateIntent)
                 val processTypeList = makeProcessTypeList(ubuntuService)
                 FileSystems.writeFile(
@@ -136,7 +145,8 @@ object ProcessManager {
     fun removeLaunchCompFile(
         ubuntuService: UbuntuService
     ) {
-        val ubuntuLaunchCompFile = UbuntuFiles(ubuntuService.applicationContext).ubuntuLaunchCompFile
+        val ubuntuLaunchCompFile = ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
+            ?:return
         val supportDirPath = ubuntuLaunchCompFile.parent ?: return
         val ubuntuLaunchCompFileName = ubuntuLaunchCompFile.name
         FileSystems.removeFiles(

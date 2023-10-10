@@ -77,7 +77,15 @@ object UbuntuServiceManager {
         )
         killAllProcess(activity)
         intent.putExtra(UbuntuServerIntentExtra.ubuntuStartCommand.schema, "on")
-        ContextCompat.startForegroundService(activity, intent)
+        CoroutineScope(Dispatchers.IO).launch{
+            withContext(Dispatchers.IO){
+                activity.stopService(intent)
+                delay(300)
+            }
+            withContext(Dispatchers.IO){
+                ContextCompat.startForegroundService(activity, intent)
+            }
+        }
     }
 
 

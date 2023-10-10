@@ -88,10 +88,10 @@ class PulseReceiverService:
         pulseRecieverJob?.cancel()
         val pcAddress = intent?.getStringExtra(
             PulseServerIntentExtra.pcAddress.schema
-        ) ?: return START_STICKY
+        ) ?: return START_NOT_STICKY
         val serverPort = intent.getStringExtra(
             PulseServerIntentExtra.serverPort.schema
-        ) ?: return START_STICKY
+        ) ?: return START_NOT_STICKY
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentScheme.STOP_PULSE_RECIEVER.action,
@@ -143,7 +143,7 @@ class PulseReceiverService:
                 )
             }
         }
-        return START_STICKY
+        return START_NOT_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? {

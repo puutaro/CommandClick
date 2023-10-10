@@ -9,7 +9,6 @@ object UbuntuInitProcess {
     fun launch(
         ubuntuService: UbuntuService
         ){
-        val context = ubuntuService.applicationContext
         ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name]?.cancel()
         FileSystems.updateFile(
             ubuntuService.cmdclickMonitorDirPath,
@@ -17,7 +16,7 @@ object UbuntuInitProcess {
             "### ${LocalDateTime.now()} proot"
         )
         val setupUbuntuJob = UbuntuSetUp.set(
-            context,
+            ubuntuService,
             ubuntuService.cmdclickMonitorFileName,
         )
         ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name] = setupUbuntuJob

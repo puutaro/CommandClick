@@ -89,7 +89,6 @@ class JsUbuntu(
         )
     }
 
-
     @JavascriptInterface
     fun execScriptByBackground(
         backgroundShellPath: String,
