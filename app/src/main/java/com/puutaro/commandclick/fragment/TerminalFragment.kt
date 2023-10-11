@@ -27,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocke
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
@@ -142,7 +143,7 @@ class   TerminalFragment: Fragment() {
         )
         UrlHistoryBackUp.backup(this)
         ScrollYPosiBackUp.backup(this)
-        AdBlocker.init(this)
+//        AdBlocker.init(this)
 
         WebChromeClientSetter.set(
             this,
@@ -205,6 +206,7 @@ class   TerminalFragment: Fragment() {
         ){
             onTermBackendWhenStart == SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
         } else firstDisplayUpdate
+        InitCurrentMonitorFile.trim(this)
         terminalViewModel.isStop = false
         alertDialogInstance?.dismiss()
         dialogInstance?.dismiss()
