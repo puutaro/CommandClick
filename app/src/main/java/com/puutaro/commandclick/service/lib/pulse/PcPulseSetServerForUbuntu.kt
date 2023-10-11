@@ -64,12 +64,12 @@ object PcPulseSetServerForUbuntu {
 //            )
 //        }
         pcPulseSetServer = withContext(Dispatchers.IO) {
-            val UBUNTUPCPULSESETSERVERPORTPortInt = try {
+            val ubuntuPcPulseSetServerPortInt = try {
                 ubuntuPcPulseSetServerPort.toInt()
             } catch (e: Exception){
                 UsePort.UBUNTU_PC_PULSE_SET_SERVER_PORT.num
             }
-            ServerSocket(UBUNTUPCPULSESETSERVERPORTPortInt)
+            ServerSocket(ubuntuPcPulseSetServerPortInt)
         }
         enablePcPulseSetServerRoop = true
 

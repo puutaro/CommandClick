@@ -33,6 +33,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.Job
+import java.net.ServerSocket
 
 
 class UbuntuService:
@@ -65,6 +66,8 @@ class UbuntuService:
     var cancelUbuntuServicePendingIntent: PendingIntent? = null
     var screenOffKill = false
     val waitQuiz = WaitQuiz()
+    val notificationBuilderHashMap = HashMap<Int,  NotificationCompat.Builder>()
+    var intentMonitorServerSocket: ServerSocket? = null
     val screenStatusReceiver: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             // Receive screen off

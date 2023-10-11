@@ -321,6 +321,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "-b ${this.absolutePath}:/storage/sdcard"
         } ?: ""
         val bindings = "$emulatedStorageBinding $externalStorageBinding"
+        val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
         return hashMapOf(
             "LD_LIBRARY_PATH" to ubuntuFiles.supportDir.absolutePath,
             "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
@@ -336,6 +337,8 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "HTTP2_SHELL_PORT" to UsePort.HTTP2_SHELL_PORT.num.toString(),
             "WEB_SSH_TERM_PORT" to UsePort.WEB_SSH_TERM_PORT.num.toString(),
             "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
+            "INTENT_MONITOR_PORT" to ubuntuIntentMonitorPort,
+            "INTENT_MONITOR_ADDRESS" to "127.0.0.1:${ubuntuIntentMonitorPort}",
             "CMDCLICK_USER" to UbuntuInfo.user,
             "CREATE_IMAGE_SWITCH" to UbuntuInfo.createImageSwitch,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,

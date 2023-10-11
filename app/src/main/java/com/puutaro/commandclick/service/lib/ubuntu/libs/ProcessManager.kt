@@ -56,6 +56,7 @@ object ProcessManager {
         killAllCoroutineJob(ubuntuService)
         removeLaunchCompFile(ubuntuService)
         PcPulseSetServer.exit()
+        ubuntuService.intentMonitorServerSocket?.close()
         ubuntuService.notificationManager?.cancel(ubuntuService.chanelId)
         ubuntuService.stopForeground(Service.STOP_FOREGROUND_DETACH)
         ubuntuService.stopSelf()

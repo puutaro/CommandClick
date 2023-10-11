@@ -31,6 +31,7 @@ private fun monitorOutput(
     terminalViewModel: TerminalViewModel,
     termUpdateMilitime: Long,
 ): Job {
+    val leavesLines = 500
 //    terminalFragment.lifecycleScope.launch
     return CoroutineScope(Dispatchers.IO).launch {
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
@@ -69,7 +70,12 @@ private fun monitorOutput(
                         UsePath.cmdclickMonitorDirPath,
                         currentMonitorFileNameLast,
                     )
-                    val secondTerminalContents = readTextLast.readTextForHtml()
+                    val secondTerminalContents =
+                        readTextLast
+                            .readTextForHtml()
+                            .split("\n")
+                            .takeLast(leavesLines)
+                            .joinToString("\n")
                     if(
                         terminalContents
                         == secondTerminalContents

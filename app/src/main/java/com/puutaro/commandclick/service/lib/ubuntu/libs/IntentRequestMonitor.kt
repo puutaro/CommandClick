@@ -11,6 +11,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
+import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -18,13 +19,15 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.OutputStream
+import java.net.ServerSocket
 import java.time.LocalDateTime
 
 object IntentRequestMonitor {
@@ -58,64 +61,120 @@ object IntentRequestMonitor {
     ){
         val funcName = object{}.javaClass.enclosingMethod?.name
         val context = ubuntuService.applicationContext
-        val cmdclickTempIntentMonitorDirPath = UsePath.cmdclickTempIntentMonitorDirPath
-        val cmdclickTmpIntentMonitorRequestFileName = UsePath.cmdclickTmpIntentMonitorRequestFileName
-        val cmdclickTmpIntentMonitorRequestFile = File(
-            "${UsePath.cmdclickTempIntentMonitorDirPath}/${cmdclickTmpIntentMonitorRequestFileName}"
-        )
         val ubuntuFiles = UbuntuFiles(context)
         val ubuntuLaunchCompFile = ubuntuFiles.ubuntuLaunchCompFile
+
+        withContext(Dispatchers.IO) {
+            ubuntuService.intentMonitorServerSocket?.close()
+        }
+        ubuntuService.intentMonitorServerSocket = withContext(Dispatchers.IO) {
+            ServerSocket(UsePort.UBUNTU_INTENT_MONITOR_PORT.num)
+        }
+
         while (true) {
-            delay(100)
-            FileSystems.createDirs(
-                cmdclickTempIntentMonitorDirPath
-            )
-            if (
-                !cmdclickTmpIntentMonitorRequestFile.isFile
-            ) continue
             if (
                 !ubuntuLaunchCompFile.isFile
-            ) continue
-            val broadcastMapStr = readMonitorText(
-                cmdclickTempIntentMonitorDirPath,
-                cmdclickTmpIntentMonitorRequestFileName,
-            )
-            val broadcastMap = createBroadcastMap(
-                broadcastMapStr
-            )
-            FileSystems.removeFiles(
-                cmdclickTempIntentMonitorDirPath,
-                cmdclickTmpIntentMonitorRequestFileName
-            )
-            if(broadcastMap.isEmpty()) continue
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                cmdClickMonitorFileName_2,
-                "### ${this::javaClass.name} ${funcName}\nbroadcastMap ${broadcastMap}"
-            )
-            val intentType = broadcastMap.get(
-                BroadcastMonitorFileScheme.intentType.name
-            )
-                ?: continue
-            when(intentType){
-                ReceiveIntentType.broadcast.name
-                -> broadcastSender(
-                    ubuntuService,
-                    broadcastMap,
-                )
-                ReceiveIntentType.notification.name
-                -> notificationHandler(
-                    ubuntuService,
-                    broadcastMap,
-                )
-                ReceiveIntentType.toast.name
-                -> execToast(
-                    ubuntuService,
-                    broadcastMap,
-                )
-                ReceiveIntentType.intent.name -> {
-
+            ) {
+                delay(100)
+                continue
+            }
+            var isTerminated = false
+            val client = withContext(Dispatchers.IO) {
+                try {
+                    FileSystems.updateFile(
+                        cmdclickMonitorDirPath,
+                        cmdClickMonitorFileName_2,
+                        "### ${LocalDateTime.now()} ${funcName} accept start"
+                    )
+                    ubuntuService.intentMonitorServerSocket?.accept()
+                } catch (e:Exception){
+                    FileSystems.updateFile(
+                        cmdclickMonitorDirPath,
+                        cmdClickMonitorFileName_2,
+                        "${e}"
+                    )
+                    isTerminated = true
+                    null
                 }
+            } ?: return
+            if(isTerminated) return
+            withContext(Dispatchers.IO) {
+                val isr = InputStreamReader(client.getInputStream())
+                val br = BufferedReader(isr)
+                val writer: OutputStream = client.getOutputStream()
+                    ?: return@withContext
+                try {
+                    //code to read and print headers
+                    var headerLine: String? = null
+                    var responseCon = String()
+                    while (
+                        br.readLine().also {
+                            headerLine = it
+                        }.isNotEmpty()
+                    ) {
+                        responseCon += "\t$headerLine"
+                    }
+                    val payload = StringBuilder()
+                    while (br.ready()) {
+                        payload.append(br.read().toChar())
+                    }
+                    val response = String.format(
+                        "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
+                        payload.length,
+                        payload
+                    )
+                    intentHandler(
+                        ubuntuService,
+                        payload.toString()
+                    )
+                    writer.write(response.toByteArray())
+                }catch (e: Exception){
+                    client.close()
+                    FileSystems.updateFile(
+                        cmdclickMonitorDirPath,
+                        cmdClickMonitorFileName_2,
+                        "### ${LocalDateTime.now()} inuptstream err ${e}"
+                    )
+                }
+            }
+        }
+    }
+
+    private fun intentHandler(
+        ubuntuService: UbuntuService,
+        broadcastMapStr: String
+    ){
+        val funcName = object{}.javaClass.enclosingMethod?.name
+        val broadcastMap = createBroadcastMap(
+            broadcastMapStr
+        )
+        if(broadcastMap.isEmpty()) return
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName_2,
+            "### ${this::javaClass.name} ${funcName}\nbroadcastMap ${broadcastMap}"
+        )
+        val intentType = broadcastMap.get(
+            BroadcastMonitorFileScheme.intentType.name
+        ) ?: return
+        when(intentType){
+            ReceiveIntentType.broadcast.name
+            -> broadcastSender(
+                ubuntuService,
+                broadcastMap,
+            )
+            ReceiveIntentType.notification.name
+            -> notificationHandler(
+                ubuntuService,
+                broadcastMap,
+            )
+            ReceiveIntentType.toast.name
+            -> execToast(
+                ubuntuService,
+                broadcastMap,
+            )
+            ReceiveIntentType.intent.name -> {
+
             }
         }
     }
@@ -151,29 +210,6 @@ object IntentRequestMonitor {
                 }
             }
         }
-    }
-
-    private suspend fun readMonitorText(
-        cmdclickTempIntentMonitorDirPath: String,
-        cmdclickTmpIntentMonitorRequestFileName: String,
-    ): String {
-        var secondMonitorText = String()
-        for(i in 1..30) {
-            val firstMonitorText = ReadText(
-                cmdclickTempIntentMonitorDirPath,
-                cmdclickTmpIntentMonitorRequestFileName
-            ).readText()
-            delay(100)
-            secondMonitorText = ReadText(
-                cmdclickTempIntentMonitorDirPath,
-                cmdclickTmpIntentMonitorRequestFileName
-            ).readText()
-            if(
-                secondMonitorText != firstMonitorText
-            ) continue
-            break
-        }
-        return secondMonitorText
     }
 
     private fun broadcastSender(
@@ -216,14 +252,14 @@ object IntentRequestMonitor {
             )
 
             IntentMonitorNotificationType.exit.name
-            -> broadcastExiter(
+            -> notificationExiter(
                 ubuntuService,
                 broadcastMap,
             )
         }
     }
 
-    private fun broadcastExiter(
+    private fun notificationExiter(
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>
     ){
@@ -231,6 +267,7 @@ object IntentRequestMonitor {
         val channelNumStr = broadcastMap.get(BroadcastMonitorFileScheme.channelNum.name)
             ?: return
         val channelNum = toInt(channelNumStr) ?: return
+        ubuntuService.notificationBuilderHashMap.remove(channelNum)
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.cancel(channelNum)
 
@@ -250,7 +287,6 @@ object IntentRequestMonitor {
         val onDelete = broadcastMap.get(BroadcastMonitorFileScheme.onDelete.name)
         val channelNum = toInt(channelNumStr) ?: return
         val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
-            ?: return
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
             ?: return
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
@@ -262,14 +298,30 @@ object IntentRequestMonitor {
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.createNotificationChannel(channel)
 
-        val notificationBuilder = NotificationCompat.Builder(
-            context,
-            notificationId
-        )
-            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+        val notificationBuilder = ubuntuService.notificationBuilderHashMap.get(channelNum) ?: let {
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                cmdClickMonitorFileName_2,
+                "### ${LocalDateTime.now()} bulder create"
+            )
+                val newNotificationBuilder = NotificationCompat.Builder(
+                    context,
+                    notificationId
+                )
+                ubuntuService.notificationBuilderHashMap.put(
+                    channelNum,
+                    newNotificationBuilder
+                )
+                newNotificationBuilder
+            }
+        notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
             .setContentTitle(title)
             .setContentText(message)
+//        val notificationBuilder = NotificationCompat.Builder(
+//            context,
+//            notificationId
+//        )
         setSmallIcon(
             notificationBuilder,
             iconName,
@@ -300,7 +352,7 @@ object IntentRequestMonitor {
         iconName: String?,
     ){
         if(
-            iconName == null
+            iconName.isNullOrEmpty()
         ) return
         val iconId = CmcClickIcons.values().filter {
             it.str == iconName
@@ -370,6 +422,11 @@ object IntentRequestMonitor {
         if(
             buttonList.isEmpty()
         ) return
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName_2,
+            "### ${this::javaClass.name} ${funcName}\nbuttonList: ${buttonList.joinToString("\n")}\n"
+        )
         notificationBuilder.clearActions()
         buttonList.indices.forEach {
             index ->
@@ -383,20 +440,10 @@ object IntentRequestMonitor {
             ).toMap()
             val buttonName = buttonTypeMap.get(buttonLabelKey)
                 ?: return@forEach
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                cmdClickMonitorFileName_2,
-                "### ${this::javaClass.name} ${funcName}\nbuttonTypeMap: ${buttonTypeMap}\n"
-            )
             val buttonIcon = ButtonNameToIcon.values().filter {
                 it.str == buttonName
             }.firstOrNull()?.int ?: R.drawable.ic_media_play
             val requestCode = System.currentTimeMillis().toInt()
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                cmdClickMonitorFileName_2,
-                "requestCode: ${requestCode}\t"
-            )
             pendingIntentCreatorWraper(
                 ubuntuService,
                 buttonTypeMap,
