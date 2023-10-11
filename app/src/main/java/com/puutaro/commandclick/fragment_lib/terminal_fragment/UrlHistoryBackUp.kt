@@ -12,7 +12,7 @@ object UrlHistoryBackUp {
     fun backup(
         terminalFragment: TerminalFragment
     ){
-        val trimLastLineForBackup = terminalFragment.trimLastLine
+        val leavesLineForTerm = ReadText.leavesLineForTerm
         val currentAppDirPath =
             terminalFragment.currentAppDirPath
         CoroutineScope(Dispatchers.Main).launch {
@@ -30,7 +30,7 @@ object UrlHistoryBackUp {
             val urlHistoryBackupConList = ReadText(
                 appUrlSystemDirPath,
                 cmdclickUrlHistoryBackupFileName
-            ).textToList().take(trimLastLineForBackup)
+            ).textToList().take(leavesLineForTerm)
             val urlHistoryBuckupConListSize =
                 urlHistoryBackupConList.size
             if(

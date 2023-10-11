@@ -8,6 +8,10 @@ class ReadText(
     private val dirPath: String,
     private val fileName: String
 ) {
+
+    companion object {
+        val leavesLineForTerm = 500
+    }
     fun readText(): String {
         val success = FileSystems.createDirs(dirPath)
         if(!success) {
@@ -54,7 +58,11 @@ class ReadText(
         }
         val targetFile = File(dirPath, fileName)
         return try{
-            val convertAtagLtGtToTmpStr = targetFile.readText()
+            val convertAtagLtGtToTmpStr = targetFile
+                .readText()
+                .split("\n")
+                .takeLast(leavesLineForTerm)
+                .joinToString("\n")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
                 .replace("%", "&#37;")

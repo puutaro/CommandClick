@@ -31,8 +31,6 @@ private fun monitorOutput(
     terminalViewModel: TerminalViewModel,
     termUpdateMilitime: Long,
 ): Job {
-    val leavesLines = 500
-//    terminalFragment.lifecycleScope.launch
     return CoroutineScope(Dispatchers.IO).launch {
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED){
@@ -73,9 +71,6 @@ private fun monitorOutput(
                     val secondTerminalContents =
                         readTextLast
                             .readTextForHtml()
-                            .split("\n")
-                            .takeLast(leavesLines)
-                            .joinToString("\n")
                     if(
                         terminalContents
                         == secondTerminalContents
@@ -129,7 +124,7 @@ private fun setWebView(
     terminalViewModel: TerminalViewModel,
     launchUrl: String? = null
 ) {
-    val trimLastLine = terminalFragment.trimLastLine
+    val leavesLineForTerm = ReadText.leavesLineForTerm
     try {
         val webView = terminalFragment.binding.terminalWebView
         if(
@@ -162,7 +157,7 @@ private fun setWebView(
             HtmlDescriber.make(
                 terminalFragment.terminalColor,
                 terminalFragment.terminalFontColor,
-                text.split("\n").takeLast(trimLastLine).joinToString("\n"),
+                text.split("\n").takeLast(leavesLineForTerm).joinToString("\n"),
                 terminalViewModel.onBottomScrollbyJs
             ),
             "text/html",

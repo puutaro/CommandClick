@@ -11,14 +11,14 @@ object InitCurrentMonitorFile {
     fun trim(
         terminalFragment: TerminalFragment
     ) {
-        val trimLastLine = terminalFragment.trimLastLine
+        val leavesLineForTerm = ReadText.leavesLineForTerm
         val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         val trimedMonitorContents = ReadText(
             cmdclickMonitorDirPath,
             currentMonitorFileName
-        ).textToList().takeLast(trimLastLine).joinToString("\n")
+        ).textToList().takeLast(leavesLineForTerm).joinToString("\n")
         FileSystems.writeFile(
             cmdclickMonitorDirPath,
             currentMonitorFileName,
