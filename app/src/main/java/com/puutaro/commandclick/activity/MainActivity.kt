@@ -49,6 +49,7 @@ import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
@@ -156,6 +157,11 @@ class MainActivity:
             false
         )
         InitManager(this).invoke()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        AdBlocker.init(this)
     }
 
     override fun onResume() {
