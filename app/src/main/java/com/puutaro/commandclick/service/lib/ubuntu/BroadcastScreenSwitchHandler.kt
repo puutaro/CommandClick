@@ -13,7 +13,7 @@ object BroadcastScreenSwitchHandler {
             Intent.ACTION_SCREEN_OFF
             -> ScreenMonitor.killInMonitorOff(ubuntuService)
             Intent.ACTION_SCREEN_ON
-            -> ScreenMonitor.launchRestartBroadcast(ubuntuService)
+            -> ScreenMonitor.launchScreenRestart(ubuntuService)
         }
     }
 }

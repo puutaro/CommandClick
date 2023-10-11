@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
+import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -15,19 +17,25 @@ import java.io.*
 object AdBlocker {
     private const val AD_HOSTS_FILE = "hosts.txt"
 
-    fun init(terminalFragment: TerminalFragment) {
-        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-        terminalFragment.loadAssetCoroutineJob?.cancel()
-        if(
-            terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
-        ) return
-        if(
-            terminalFragment.loadAssetCoroutineJob != null
-        ) return
+    fun init(terminalFragment: MainActivity) {
+        val terminalViewModel: TerminalViewModel =
+            ViewModelProvider(terminalFragment).get(TerminalViewModel::class.java)
+
+
+//        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+//        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+//        terminalFragment.loadAssetCoroutineJob?.cancel()
+//        if(
+//            terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
+//        ) return
+//        if(
+//            terminalFragment.loadAssetCoroutineJob != null
+//        ) return
         if(
             terminalViewModel.blocklist.size > 0
         ) return
-        terminalFragment.loadAssetCoroutineJob = CoroutineScope(Dispatchers.IO).launch {
+//        terminalFragment.loadAssetCoroutineJob =
+        CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 loadFromAssets(
                     terminalFragment,
@@ -39,13 +47,13 @@ object AdBlocker {
 
 
     private fun loadFromAssets(
-        terminalFragment: TerminalFragment,
+        terminalFragment: MainActivity,
         terminalViewModel: TerminalViewModel,
     ) {
         try {
             terminalViewModel.blocklist =
                 AssetsFileManager.readFromAssets(
-                    terminalFragment.context,
+                    terminalFragment,
                     AD_HOSTS_FILE
                 ).split("\n").toHashSet()
         } catch (e: IOException) {

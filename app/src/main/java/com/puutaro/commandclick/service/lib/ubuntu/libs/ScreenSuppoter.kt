@@ -43,10 +43,11 @@ object ScreenMonitor {
         }
     }
 
-    fun launchRestartBroadcast(
+    fun launchScreenRestart(
         ubuntuService: UbuntuService
     ){
         if(!ubuntuService.screenOffKill) return
+        ubuntuService.notificationBuilderHashMap.clear()
         ubuntuService.monitorScreenJob?.cancel()
         ProcessManager.removeLaunchCompFile(ubuntuService)
         val sleepingIntent = Intent()
