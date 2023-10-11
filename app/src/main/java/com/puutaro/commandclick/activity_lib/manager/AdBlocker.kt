@@ -1,10 +1,7 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
+package com.puutaro.commandclick.activity_lib.manager
 
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope

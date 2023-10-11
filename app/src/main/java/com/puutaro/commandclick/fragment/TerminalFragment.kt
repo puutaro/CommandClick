@@ -23,7 +23,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
@@ -71,7 +70,6 @@ class   TerminalFragment: Fragment() {
     var srcImageAnchorLongPressMenuFilePath: String = String()
     var srcAnchorLongPressMenuFilePath: String = String()
     var imageLongPressMenuFilePath: String = String()
-    val trimLastLine = 500
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
