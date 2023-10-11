@@ -116,6 +116,35 @@ class UbuntuService:
             this,
             screenStatusReceiver,
         )
+        val channel = NotificationChannel(
+            NotificationChanel.UBUNTU_NOTIFICATION.id,
+            NotificationChanel.UBUNTU_NOTIFICATION.name,
+            NotificationManager.IMPORTANCE_LOW
+        )
+        channel.setSound(null, null)
+        notificationManager = NotificationManagerCompat.from(applicationContext)
+        notificationManager?.createNotificationChannel(channel)
+        notificationBuilder = NotificationCompat.Builder(
+            applicationContext,
+            notificationId
+        )
+            .setSmallIcon(com.puutaro.commandclick.R.drawable.ic_terminal)
+            .setAutoCancel(true)
+            .setContentTitle(UbuntuStateType.WAIT.title)
+            .setContentText(UbuntuStateType.WAIT.message)
+            .setDeleteIntent(
+                cancelUbuntuServicePendingIntent
+            )
+        notificationBuilder?.build()?.let {
+            notificationManager?.notify(
+                ServiceNotificationId.ubuntuServer,
+                it
+            )
+            startForeground(
+                chanelId,
+                it
+            )
+        }
     }
 
     override fun onStartCommand(
@@ -143,25 +172,6 @@ class UbuntuService:
         ubuntuFiles = UbuntuFiles(
             applicationContext,
         )
-        val channel = NotificationChannel(
-            NotificationChanel.UBUNTU_NOTIFICATION.id,
-            NotificationChanel.UBUNTU_NOTIFICATION.name,
-            NotificationManager.IMPORTANCE_LOW
-        )
-        channel.setSound(null, null)
-        notificationManager = NotificationManagerCompat.from(applicationContext)
-        notificationManager?.createNotificationChannel(channel)
-        notificationBuilder = NotificationCompat.Builder(
-            applicationContext,
-            notificationId
-        )
-            .setSmallIcon(com.puutaro.commandclick.R.drawable.ic_terminal)
-            .setAutoCancel(true)
-            .setContentTitle(UbuntuStateType.WAIT.title)
-            .setContentText(UbuntuStateType.WAIT.message)
-            .setDeleteIntent(
-                cancelUbuntuServicePendingIntent
-            )
         ubuntuFiles = UbuntuFiles(applicationContext)
         if(ubuntuFiles?.ubuntuSetupCompFile?.isFile == true) {
             notificationBuilder?.setContentTitle(UbuntuStateType.WAIT.title)
@@ -182,17 +192,12 @@ class UbuntuService:
                 ButtonLabel.RESTART.label,
                 cancelUbuntuServicePendingIntent,
             )
-            val notificationInstance = notificationBuilder?.build()
             notificationBuilder?.build()?.let {
                 notificationManager?.notify(
                     ServiceNotificationId.ubuntuServer,
                     it
                 )
             }
-            startForeground(
-                chanelId,
-                notificationInstance
-            )
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
@@ -217,10 +222,6 @@ class UbuntuService:
                     it
                 )
             }
-            startForeground(
-                chanelId,
-                notificationInstance
-            )
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
             return START_NOT_STICKY
@@ -238,10 +239,6 @@ class UbuntuService:
                 it
             )
         }
-        startForeground(
-            chanelId,
-            notificationInstance
-        )
         ProcessManager.monitorProcessAndNum(this)
         IntentRequestMonitor.launch(this)
         SetupMonitoring.launch(this)
