@@ -5,13 +5,22 @@ import com.puutaro.commandclick.BuildConfig
 
 object UbuntuInfo {
     val user = "cmdclick"
-    //  for development
-    val onForDev = if(
-        BuildConfig.DEBUG
-    ) true
-    else false
 
-    val createImageSwitch = CreateImageSwitch.off.name
+    private const val buildConfigDebug = BuildConfig.DEBUG
+
+    //  for development
+    private const val devFalseInRelease = false
+    val onForDev = if(
+        buildConfigDebug
+    ) true
+    else devFalseInRelease
+
+    private val createImageSwitchOffInRelease = CreateImageSwitch.off.name
+    val createImageSwitch = if(
+        buildConfigDebug
+    ) CreateImageSwitch.off.name
+    else createImageSwitchOffInRelease
+
     val arm64UbuntuRootfsUrl =
         decideArm64UbuntuRootfsUrl(createImageSwitch)
 
