@@ -1,9 +1,15 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
+import com.puutaro.commandclick.BuildConfig
+
+
 object UbuntuInfo {
     val user = "cmdclick"
-//  for development
-    val onForDev = false
+    //  for development
+    val onForDev = if(
+        BuildConfig.DEBUG
+    ) true
+    else false
 
     val createImageSwitch = CreateImageSwitch.off.name
     val arm64UbuntuRootfsUrl =

@@ -14,6 +14,10 @@ android {
     namespace = "com.puutaro.commandclick"
     compileSdk = 33
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
@@ -23,7 +27,19 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         base.archivesName.set("${applicationName}-${versionName}")
-
+        buildTypes {
+            debug {
+                buildConfigField("boolean", "DEBUG", "true")
+            }
+            release {
+                buildConfigField("boolean", "DEBUG", "false")
+                isMinifyEnabled = false
+                proguardFiles(getDefaultProguardFile(
+                    "proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
+        }
 //        ndk {
 //            abiFilters += listOf("arm64-v8a", "x86_64")
 //                listOf("armeabi-v7a", "arm64-v8a")
@@ -31,15 +47,8 @@ android {
     }
 
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile(
-                "proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -60,39 +69,13 @@ extra["architectures"] = listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64")
 //ext.architectures = ["armeabi-v7a", "arm64-v8a", "x86", "x86_64"]
 //ext.libDir = "$project.projectDir/src/main/resources/lib"
 extra["libDir"] = "${project.projectDir}/src/main/jniLibs"
-//chaquopy {
-//    defaultConfig {
-//        buildPython("/home/xbabu/.pyenv/shims/python")
-//        pip {
-//            // A requirement specifier, with or without a version number:
-//            install("requests")
-//            install("yt-dlp")
-//        }
-//    }
-//}
-
-//configurations {
-//     runtimeOnly {
-//        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-//        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
-//    }
-//}
 
 
 
 dependencies {
     implementation("androidx.core:core-ktx:1.10.1")
-//    {
-//        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-//        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk7")
-//    }
     implementation("androidx.appcompat:appcompat:1.6.1")
 
-
-//    implementation("androidx.compose.material:material:1.4.3")
-//    implementation("androidx.compose.ui:ui:1.4.3")
-//    implementation("androidx.compose.ui:ui-tooling:1.4.3")
-//    implementation("androidx.activity:activity-compose:1.7.2")
 
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
