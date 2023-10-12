@@ -90,7 +90,6 @@ noti(){
 	}
 	BEGIN {
 		ouput_con=""
-		# if(help) ouput_con = ouput_con"help="help"\n"
 		concat(help, "help")
 		ouput_con = ouput_con"intentType=notification\n"
 		concat(notificationType, "notificationType")

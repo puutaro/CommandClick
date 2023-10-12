@@ -8,6 +8,7 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
@@ -578,33 +579,42 @@ object IntentRequestMonitor {
         val compactActionsInts = NotificationStyleSchema.compactActionsInts.name
         val comaKeySeparator = ","
         return """
+        
+        ### Notification management command in ${BuildConfig.APPLICATION_ID}
+        
         ${BroadcastMonitorFileScheme.notificationType.name.camelToShellArgsName()}
         -t
         : ${launch}/${exit}
             ${launch} -> launch and update notification
             ${exit} -> exit notification
         
+        
         ${BroadcastMonitorFileScheme.channelNum.name.camelToShellArgsName()}
         -cn
         : Int
         
+        
         ${BroadcastMonitorFileScheme.iconName.name.camelToShellArgsName()}
         -in
         : ${CmcClickIcons.values().joinToString(", ")}
+        
         
         ${BroadcastMonitorFileScheme.importance.name.camelToShellArgsName()}
         -i
         : ${high}/${low}
             ${high} -> importance high
             ${low} -> importance low
+           
             
         ${BroadcastMonitorFileScheme.title.name.camelToShellArgsName()}
         -t
         : String
         
+        
         ${BroadcastMonitorFileScheme.message.name.camelToShellArgsName()}
         -m
         : String
+
 
         ${deleteOption}
         -d
@@ -613,7 +623,9 @@ object IntentRequestMonitor {
             * enalble this option by concat '${comaKeySeparator}' 
             ${shellPath}: execute shell script path
             ${args}: script args with '${valueSeparator}' as separator
-        ex) ${deleteOption}="${shellPath}=${'$'}{shell path}${comaKeySeparator}${args}=aa${valueSeparator}bb" 
+        ex) 
+            ${deleteOption}="${shellPath}=${'$'}{shell path}${comaKeySeparator}${args}=aa${valueSeparator}bb" 
+        
         
         ${buttonOption}
         -b
@@ -645,10 +657,8 @@ object IntentRequestMonitor {
             * enable this option by concat '${comaKeySeparator}'
             ${notificatinStyleType}: only "${media}"
             ${compactActionsInts}: specify button index up to 3 in compact,  
-        ex) ${notificationStyleOption}="${notificatinStyleType}=${media}${comaKeySeparator}${compactActionsInts}=0${valueSeparator}1${valueSeparator}3"
-        
-         
-                
+        ex) 
+            ${notificationStyleOption}="${notificatinStyleType}=${media}${comaKeySeparator}${compactActionsInts}=0${valueSeparator}1${valueSeparator}3"      
     """.trimIndent()
     }
 }
