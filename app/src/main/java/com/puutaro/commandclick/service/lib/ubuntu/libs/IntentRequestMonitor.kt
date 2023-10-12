@@ -18,7 +18,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,15 +28,15 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
-import java.time.LocalDateTime
 
 object IntentRequestMonitor {
 
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private const val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
+    private val fieldSeparator = ","
     private const val elementSeparator = "|"
     private const val keySeparator = "!"
     private const val valueSeparator = "&"
+    private val requireArgsErrMessage = "%s is required"
+    private var responseString = String()
 
     fun launch(
         ubuntuService: UbuntuService,
@@ -59,7 +59,6 @@ object IntentRequestMonitor {
     private suspend fun execIntentMonitor (
         ubuntuService: UbuntuService
     ){
-        val funcName = object{}.javaClass.enclosingMethod?.name
         val context = ubuntuService.applicationContext
         val ubuntuFiles = UbuntuFiles(context)
         val ubuntuLaunchCompFile = ubuntuFiles.ubuntuLaunchCompFile
@@ -79,20 +78,15 @@ object IntentRequestMonitor {
                 continue
             }
             var isTerminated = false
+            responseString = String()
             val client = withContext(Dispatchers.IO) {
                 try {
-                    FileSystems.updateFile(
-                        cmdclickMonitorDirPath,
-                        cmdClickMonitorFileName_2,
-                        "### ${LocalDateTime.now()} ${funcName} accept start"
+                    LogSystems.stdSys(
+                        "accept start"
                     )
                     ubuntuService.intentMonitorServerSocket?.accept()
                 } catch (e:Exception){
-                    FileSystems.updateFile(
-                        cmdclickMonitorDirPath,
-                        cmdClickMonitorFileName_2,
-                        "${e}"
-                    )
+                    LogSystems.stdErr("${e}")
                     isTerminated = true
                     null
                 }
@@ -118,22 +112,20 @@ object IntentRequestMonitor {
                     while (br.ready()) {
                         payload.append(br.read().toChar())
                     }
-                    val response = String.format(
-                        "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
-                        payload.length,
-                        payload
-                    )
                     intentHandler(
                         ubuntuService,
                         payload.toString()
                     )
+                    val response = String.format(
+                        "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
+                        responseString.length,
+                        responseString
+                    )
                     writer.write(response.toByteArray())
                 }catch (e: Exception){
                     client.close()
-                    FileSystems.updateFile(
-                        cmdclickMonitorDirPath,
-                        cmdClickMonitorFileName_2,
-                        "### ${LocalDateTime.now()} inuptstream err ${e}"
+                    LogSystems.stdErr(
+                        "inuptstream err ${e}"
                     )
                 }
             }
@@ -144,15 +136,12 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         broadcastMapStr: String
     ){
-        val funcName = object{}.javaClass.enclosingMethod?.name
         val broadcastMap = createBroadcastMap(
             broadcastMapStr
         )
         if(broadcastMap.isEmpty()) return
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName_2,
-            "### ${this::javaClass.name} ${funcName}\nbroadcastMap ${broadcastMap}"
+        LogSystems.stdSys(
+            "broadcastMap ${broadcastMap}"
         )
         val intentType = broadcastMap.get(
             BroadcastMonitorFileScheme.intentType.name
@@ -242,20 +231,34 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>
     ){
+        val helpCon = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpCon.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpCon()}"
+        }
+        val typeLaunch = IntentMonitorNotificationType.launch.name
+        val typeExit = IntentMonitorNotificationType.exit.name
         val notificatinType = broadcastMap.get(BroadcastMonitorFileScheme.notificationType.name)
             ?: return
         when(notificatinType) {
-            IntentMonitorNotificationType.launch.name
+            typeLaunch
             -> broadCastLauncher(
                 ubuntuService,
                 broadcastMap,
             )
 
-            IntentMonitorNotificationType.exit.name
+            typeExit
             -> notificationExiter(
                 ubuntuService,
                 broadcastMap,
             )
+            else
+            -> {
+                val notificationTypeOption = "${BroadcastMonitorFileScheme.notificationType.name.camelToShellArgsName()}/-t"
+                responseString +=
+                    "\n${notificationTypeOption} must be \"${typeLaunch}\" or \"${typeExit}\""
+            }
         }
     }
 
@@ -278,17 +281,22 @@ object IntentRequestMonitor {
         broadcastMap: Map<String, String>
     ){
         val context = ubuntuService.applicationContext
-        val channelNumStr = broadcastMap.get(BroadcastMonitorFileScheme.channelNum.name)
-            ?: return
+        val channelNumKey = BroadcastMonitorFileScheme.channelNum.name
+        val channeNumOptionName = "${channelNumKey.camelToShellArgsName()}/-cn"
+        val channelNumStr = broadcastMap.get(channelNumKey)
+            ?: return Unit.also {
+                responseString += "\n${requireArgsErrMessage.format(channeNumOptionName)}"
+            }
         val importance = decideImportance(
             broadcastMap.get(BroadcastMonitorFileScheme.importance.name)
         )
         val notificationId = listOf(ubuntuService.packageName, importance.str).joinToString(".")
-        val onDelete = broadcastMap.get(BroadcastMonitorFileScheme.onDelete.name)
-        val channelNum = toInt(channelNumStr) ?: return
+        val delete = broadcastMap.get(BroadcastMonitorFileScheme.delete.name)
+        val channelNum = toInt(channelNumStr) ?: return Unit.also {
+            responseString += "\n${channeNumOptionName} must be Int"
+        }
         val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
-            ?: return
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
         val channel = NotificationChannel(
             notificationId,
@@ -299,29 +307,24 @@ object IntentRequestMonitor {
         notificationManager.createNotificationChannel(channel)
 
         val notificationBuilder = ubuntuService.notificationBuilderHashMap.get(channelNum) ?: let {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                cmdClickMonitorFileName_2,
-                "### ${LocalDateTime.now()} bulder create"
+            LogSystems.stdSys(
+                "builder create"
             )
-                val newNotificationBuilder = NotificationCompat.Builder(
-                    context,
-                    notificationId
-                )
-                ubuntuService.notificationBuilderHashMap.put(
-                    channelNum,
-                    newNotificationBuilder
-                )
+            val newNotificationBuilder = NotificationCompat.Builder(
+                context,
+                notificationId
+            )
+            ubuntuService.notificationBuilderHashMap.put(
+                channelNum,
                 newNotificationBuilder
-            }
+            )
+            newNotificationBuilder
+        }
         notificationBuilder.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setAutoCancel(true)
             .setContentTitle(title)
             .setContentText(message)
-//        val notificationBuilder = NotificationCompat.Builder(
-//            context,
-//            notificationId
-//        )
+
         setSmallIcon(
             notificationBuilder,
             iconName,
@@ -329,7 +332,7 @@ object IntentRequestMonitor {
         setDeleteIntent(
             ubuntuService,
             notificationBuilder,
-            onDelete,
+            delete,
         )
         addButton(
             ubuntuService,
@@ -415,17 +418,14 @@ object IntentRequestMonitor {
         notificationBuilder: NotificationCompat.Builder,
         buttonListStr: String?,
     ){
-        val funcName = object{}.javaClass.enclosingMethod?.name
         val buttonLabelKey = ButtonKey.label.name
         val buttonList = buttonListStr?.split(elementSeparator)
             ?: return
         if(
             buttonList.isEmpty()
         ) return
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName_2,
-            "### ${this::javaClass.name} ${funcName}\nbuttonList: ${buttonList.joinToString("\n")}\n"
+        LogSystems.stdSys(
+            "buttonList: ${buttonList.joinToString("\n")}\n"
         )
         notificationBuilder.clearActions()
         buttonList.indices.forEach {
@@ -519,14 +519,27 @@ object IntentRequestMonitor {
     private fun createBroadcastMap(
         broadcastMapStr: String
     ): Map<String, String> {
-        return broadcastMapStr.split("\n").let {
+        return broadcastMapStr
+            .trimSeparatorGap(fieldSeparator)
+            .trimSeparatorGap(elementSeparator)
+            .trimSeparatorGap(keySeparator)
+            .trimSeparatorGap(valueSeparator)
+            .split("\n").let {
             SettingFile.formSettingContents(it)
         }.let {
             createMap(
                 it,
-                ","
+                fieldSeparator
             )
         }.toMap()
+    }
+
+    private fun String.trimSeparatorGap(
+        separator: String,
+    ): String {
+        return this.split(separator).map {
+            it.trim()
+        }.joinToString(separator)
     }
 
     private fun decideImportance(
@@ -536,16 +549,112 @@ object IntentRequestMonitor {
             it.str == importanceStr
         }.firstOrNull() ?: NotificationImportanceType.LOW
     }
+
+    private fun makeHelpCon(): String {
+        val deleteOption = BroadcastMonitorFileScheme.delete.name.camelToShellArgsName()
+        val notificationStyleOption = BroadcastMonitorFileScheme.notificationStyle.name.camelToShellArgsName()
+        val buttonOption = BroadcastMonitorFileScheme.button.name.camelToShellArgsName()
+        val launch = IntentMonitorNotificationType.launch.name
+        val exit = IntentMonitorNotificationType.exit.name
+        val high = NotificationImportanceType.HIGH.name
+        val low = NotificationImportanceType.LOW.name
+        val label = ButtonKey.label.name
+        val shellPath = ButtonKey.shellPath.name
+        val args = ButtonKey.args.name
+        val execType = ButtonKey.execType.name
+        val timeout = ButtonKey.timeout.name
+        val media = NotificationStyle.media.name
+        val notificatinStyleType = NotificationStyleSchema.type.name
+        val compactActionsInts = NotificationStyleSchema.compactActionsInts.name
+        val comaKeySeparator = ","
+        return """
+        ${BroadcastMonitorFileScheme.notificationType.name.camelToShellArgsName()}
+        -t
+        : ${launch}/${exit}
+            ${launch} -> launch and update notification
+            ${exit} -> exit notification
+        
+        ${BroadcastMonitorFileScheme.channelNum.name.camelToShellArgsName()}
+        -cn
+        : Int
+        
+        ${BroadcastMonitorFileScheme.iconName.name.camelToShellArgsName()}
+        -in
+        : ${CmcClickIcons.values().joinToString(", ")}
+        
+        ${BroadcastMonitorFileScheme.importance.name.camelToShellArgsName()}
+        -i
+        : ${high}/${low}
+            ${high} -> importance high
+            ${low} -> importance low
+            
+        ${BroadcastMonitorFileScheme.title.name.camelToShellArgsName()}
+        -t
+        : String
+        
+        ${BroadcastMonitorFileScheme.message.name.camelToShellArgsName()}
+        -m
+        : String
+
+        ${deleteOption}
+        -d
+        : In delete, be executed
+        option
+            * enalble this option by concat '${comaKeySeparator}' 
+            ${shellPath}: execute shell script path
+            ${args}: script args with '${valueSeparator}' as separator
+        ex) ${deleteOption}="${shellPath}=${'$'}{shell path}${comaKeySeparator}${args}=aa${valueSeparator}bb" 
+        
+        ${buttonOption}
+        -b
+        : Specify about button
+        option
+            * enable this option by concat '${comaKeySeparator}'
+            * enable multiple spedified up to 5 with concat ${elementSeparator}
+            ${label}: button label
+                spedify icon by bellow MACRO in media style
+                MACRO: ${ButtonNameToIcon.values().joinToString(", ")}
+            ${shellPath}: exec shell script path
+            ${args}: script args with '${valueSeparator}' as separator
+            ${execType}: exec type 
+                ${ExecType.fore.name} -> foreground
+                ${ExecType.back.name} -> background
+            ${timeout}: time out mili sec[Int] in foreground
+        ex) 
+            ${buttonOption}="${label}=button1${comaKeySeparator}${shellPath}=${'$'}{shellPath1}"
+            ${buttonOption}="${label}=button2${comaKeySeparator}${shellPath}=${'$'}{shellPath2}"
+            ${buttonOption}="${label}=button3${comaKeySeparator}${shellPath}=${'$'}{shellPath3}"
+            ${buttonOption}="${label}=button4${comaKeySeparator}${shellPath}=${'$'}{shellPath4}"
+            ${buttonOption}="${label}=button5${comaKeySeparator}${shellPath}=${'$'}{shellPath5}"
+        
+        
+        $notificationStyleOption
+        -s
+        : Specify about media
+        option
+            * enable this option by concat '${comaKeySeparator}'
+            ${notificatinStyleType}: only "${media}"
+            ${compactActionsInts}: specify button index up to 3 in compact,  
+        ex) ${notificationStyleOption}="${notificatinStyleType}=${media}${comaKeySeparator}${compactActionsInts}=0${valueSeparator}1${valueSeparator}3"
+        
+         
+                
+    """.trimIndent()
+    }
+}
+
+
+private fun String.camelToShellArgsName(): String {
+    val pattern = "(?<=.)[A-Z]".toRegex()
+    return "--" + this.replace(pattern, "-$0").lowercase()
 }
 
 private fun toInt(numStr: String?): Int? {
     return try {
         numStr?.toInt()
     } catch (e: Exception){
-        FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
-            UsePath.cmdClickMonitorFileName_2,
-            "### ${LocalDateTime.now()} err\n${e}"
+        LogSystems.stdErr(
+            "${e}"
         )
         null
     }
@@ -579,6 +688,10 @@ private enum class ExecType {
     fore,
 }
 
+private enum class HelpKey {
+    help
+}
+
 private enum class ReceiveIntentType {
     broadcast,
     notification,
@@ -601,7 +714,7 @@ private enum class BroadcastMonitorFileScheme {
     importance,
     title,
     message,
-    onDelete,
+    delete,
     button
 }
 

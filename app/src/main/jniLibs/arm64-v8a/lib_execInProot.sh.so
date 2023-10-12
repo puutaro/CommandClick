@@ -49,6 +49,7 @@ $PROOT -r $ROOTFS_PATH -p \
 -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
  -b $ROOTFS_PATH/support/:/support \
 -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
+-b $ROOTFS_PATH/support/noti:/usr/local/bin/noti \
 -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
 -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
 -b $ROOT_PATH/support:/support/common \

@@ -6,7 +6,7 @@ import com.puutaro.commandclick.BuildConfig
 object UbuntuInfo {
     val user = "cmdclick"
 
-    private const val buildConfigDebug = BuildConfig.DEBUG
+    private val buildConfigDebug = BuildConfig.DEBUG
 
     //  for development
     private const val devFalseInRelease = false

@@ -97,12 +97,6 @@ setup_user(){
 	&& return
 	useradd $CMDCLICK_USER -s /bin/bash -m -u 2000 
 	echo "${CMDCLICK_USER}:${CMDCLICK_USER}" | chpasswd
-	# insert_str_to_file \
-	# 		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
-	# 		"/home/${CMDCLICK_USER}/.bash_profile"
-	# insert_str_to_file \
-	# 		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
-	# 		"/home/${CMDCLICK_USER}/.bash_profile"
 }
 
 
@@ -352,6 +346,29 @@ install_user_package(){
 	EOF
 }
 
+launch_setup(){
+	local bash_profile_path="/home/${CMDCLICK_USER}/.bash_profile"
+	insert_str_to_file \
+		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export APP_DIR_PATH="'${APP_DIR_PATH}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export INTENT_MONITOR_PORT="'${INTENT_MONITOR_PORT}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export INTENT_MONITOR_ADDRESS="'${INTENT_MONITOR_ADDRESS}'"' \
+		"${bash_profile_path}"
+	apt-get install -y sudo
+}
+
 install_nodjs(){
 	apt-get install -y nodejs
 }
@@ -372,26 +389,7 @@ if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ] \
 	setup_dropbear_sshserver
 fi
 if [ ! -f "${UBUNTU_SETUP_COMP_FILE}" ];then \
-	bash_profile_path="/home/${CMDCLICK_USER}/.bash_profile"
-	insert_str_to_file \
-		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
-		"${bash_profile_path}"
-	insert_str_to_file \
-		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
-		"${bash_profile_path}"
-	insert_str_to_file \
-		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
-		"${bash_profile_path}"
-	insert_str_to_file \
-		'export APP_DIR_PATH="'${APP_DIR_PATH}'"' \
-		"${bash_profile_path}"
-	insert_str_to_file \
-		'export INTENT_MONITOR_PORT="'${INTENT_MONITOR_PORT}'"' \
-		"${bash_profile_path}"
-	insert_str_to_file \
-		'export INTENT_MONITOR_ADDRESS="'${INTENT_MONITOR_ADDRESS}'"' \
-		"${bash_profile_path}"
-	apt-get install -y sudo
+	launch_setup
 	touch "${UBUNTU_SETUP_COMP_FILE}"
 fi
 kill_front_and_sub_process

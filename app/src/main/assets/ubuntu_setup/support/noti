@@ -1,0 +1,104 @@
+#!/bin/bash
+
+set -ue
+
+HELP=""
+NOTIFICATION_TYPE=""
+CHANNEL_NUM=""
+ICON_NAME=""
+IMPORTANCE=""
+TITLE=""
+MESSAGE=""
+DELETE=""
+NOTIFICATION_STYLE=""
+BUTTONS=""
+
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--notification-type|-t)
+			NOTIFICATION_TYPE="${2}"
+			shift
+			;;
+		--channel-num|-cn)
+			CHANNEL_NUM="${2}"
+			shift
+			;;
+		--icon-name|-in)
+			ICON_NAME="${2}"
+			shift
+			;;
+		--importance|-i)
+			IMPORTANCE="${2}"
+			shift
+			;;
+		--title|-t)
+			TITLE="${2}"
+			shift
+			;;
+		--message|-m)
+			MESSAGE="${2}"
+			shift
+			;;
+		--delete|-d)
+			DELETE="${2}"
+			shift
+			;;
+		--notification-style|-s)
+			NOTIFICATION_STYLE="${2}"
+			shift
+			;;
+		--button|-b)
+			BUTTONS="${BUTTONS}|${2}"
+			shift
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+read_args "$@"
+
+noti(){
+	echo "
+	help=${HELP}
+	intentType=notification
+	notificationType=${NOTIFICATION_TYPE}
+	channelNum=${CHANNEL_NUM}
+	iconName=${ICON_NAME}
+	importance=${IMPORTANCE}
+	title=${TITLE}
+	message=${MESSAGE}
+	onDelete=${DELETE}
+	notificationStyle=${NOTIFICATION_STYLE}
+	button=${BUTTONS/\|/}
+" | awk '{
+	if(!$0) next
+	gsub(",", "!", $0)
+	print $0","
+}' \
+| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}"
+}
+
+readonly output="$(noti)"
+echo "${output}"
+case "${output}" in
+	"") exit 0;;
+esac
+test -n "${HELP}" \
+	&& exit 0 \
+	|| exit 1
