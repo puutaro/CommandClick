@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 object UbuntuInfo {
     val user = "cmdclick"
 //  for development
-    val onForDev = true
+    val onForDev = false
 
     val createImageSwitch = CreateImageSwitch.off.name
     val arm64UbuntuRootfsUrl =
