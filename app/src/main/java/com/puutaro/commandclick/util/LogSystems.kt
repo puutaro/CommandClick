@@ -31,4 +31,15 @@ object LogSystems {
         )
     }
 
+    fun stdWarn(
+        errContents: String,
+    ){
+        val st = Thread.currentThread().stackTrace[3]
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            sysLogFileName,
+            "### ${LocalDateTime.now()} ${st.className} ${st.methodName} WARNING\n${errContents}"
+        )
+    }
+
 }

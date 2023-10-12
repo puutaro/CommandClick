@@ -359,7 +359,9 @@ object IntentRequestMonitor {
         ) return
         val iconId = CmcClickIcons.values().filter {
             it.str == iconName
-        }.firstOrNull()?.id ?: return
+        }.firstOrNull()?.id ?: return Unit.also {
+            LogSystems.stdWarn("no macro icon name ${iconName}")
+        }
         notificationBuilder.setSmallIcon(iconId)
     }
 
@@ -382,12 +384,20 @@ object IntentRequestMonitor {
         val compactActionsInts = styleMap.get(
             NotificationStyleSchema.compactActionsInts.name
         )?.split(valueSeparator)?.map {
-            toInt(it) ?: 0
-        }?.toIntArray() ?: return
-        notificationBuilder.setStyle(
-            androidx.media.app.NotificationCompat.MediaStyle()
-                .setShowActionsInCompactView(*compactActionsInts)
-        )
+            toInt(it) ?: return Unit.also {
+                LogSystems.stdWarn("no int value ${it}")
+            }
+        }?.toIntArray() ?: return Unit.also {
+            LogSystems.stdWarn("include no int value ${styleMap}")
+        }
+        try {
+            notificationBuilder.setStyle(
+                androidx.media.app.NotificationCompat.MediaStyle()
+                    .setShowActionsInCompactView(*compactActionsInts)
+            )
+        } catch (e: Exception){
+            LogSystems.stdWarn("$e")
+        }
     }
 
     private fun setDeleteIntent(

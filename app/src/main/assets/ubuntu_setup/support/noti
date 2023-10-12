@@ -74,24 +74,39 @@ read_args(){
 read_args "$@"
 
 noti(){
-	echo "
-	help=${HELP}
-	intentType=notification
-	notificationType=${NOTIFICATION_TYPE}
-	channelNum=${CHANNEL_NUM}
-	iconName=${ICON_NAME}
-	importance=${IMPORTANCE}
-	title=${TITLE}
-	message=${MESSAGE}
-	onDelete=${DELETE}
-	notificationStyle=${NOTIFICATION_STYLE}
-	button=${BUTTONS/\|/}
-" | awk '{
-	if(!$0) next
-	gsub(",", "!", $0)
-	print $0","
-}' \
-| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}"
+	awk \
+	-v help="${HELP}" \
+	-v notificationType="${NOTIFICATION_TYPE}" \
+	-v channelNum="${CHANNEL_NUM}" \
+	-v iconName="${ICON_NAME}" \
+	-v importance="${IMPORTANCE}" \
+	-v title="${TITLE}" \
+	-v message="${MESSAGE}" \
+	-v deleteStr="${DELETE}" \
+	-v notificationStyle="${NOTIFICATION_STYLE}" \
+	-v button="${BUTTONS/\|/}" \
+	'function concat(val, val_name){
+		if(val) ouput_con = ouput_con""val_name"="val"\n"
+	}
+	BEGIN {
+		ouput_con=""
+		# if(help) ouput_con = ouput_con"help="help"\n"
+		concat(help, "help")
+		ouput_con = ouput_con"intentType=notification\n"
+		concat(notificationType, "notificationType")
+		concat(channelNum, "channelNum")
+		concat(iconName, "iconName")
+		concat(importance, "importance")
+		concat(title, "title")
+		concat(message, "message")
+		concat(deleteStr, "deleteStr")
+		concat(notificationStyle, "notificationStyle")
+		concat(button, "button")
+		gsub(",", "!", ouput_con)
+		gsub(/\n/, ",\n", ouput_con)
+		print ouput_con
+	}' \
+	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
 }
 
 readonly output="$(noti)"
