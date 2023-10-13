@@ -106,16 +106,50 @@ object ButtonViewProducer {
         )
         insertTextView.isVisible = isInsertTextViewVisible
 
-        buttonTouchListener(
-            insertButton,
-            editFragment,
-            insertEditText,
-            scriptFileSaver,
-            editParameters,
-            buttonMap,
-            currentSetVariableValue
-        )
+        when(getIsConsec(buttonMap)) {
+            true -> buttonTouchListener(
+                insertButton,
+                editFragment,
+                insertEditText,
+                scriptFileSaver,
+                editParameters,
+                buttonMap,
+                currentSetVariableValue
+            )
+            else -> buttonClickListner(
+                    insertButton,
+                    editFragment,
+                    insertEditText,
+                    scriptFileSaver,
+                    editParameters,
+                    buttonMap,
+                    currentSetVariableValue
+                )
+        }
+
+
         return insertButton
+    }
+
+    private fun buttonClickListner(
+        insertButton: Button,
+        editFragment: EditFragment,
+        insertEditText: EditText,
+        scriptFileSaver: ScriptFileSaver,
+        editParameters: EditParameters,
+        buttonMap: Map<String, String>?,
+        currentSetVariableValue: String?
+    ){
+        insertButton.setOnClickListener {
+            execButtonClickEvent(
+                editFragment,
+                insertEditText,
+                scriptFileSaver,
+                editParameters,
+                buttonMap,
+                currentSetVariableValue
+            )
+        }
     }
 
     private fun buttonTouchListener(
