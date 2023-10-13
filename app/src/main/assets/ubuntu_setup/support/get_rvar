@@ -104,5 +104,3 @@ if [ -e "${ARG[0]}"  ];then
 else 
 	grep_key "${ARG[0]}" "${ARG[1]}"
 fi
-
-
