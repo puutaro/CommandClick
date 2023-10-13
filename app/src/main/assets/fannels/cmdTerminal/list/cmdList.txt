@@ -13,3 +13,6 @@ cd
 ps aux | grep pulse
 ps aux | grep dropbear
 ps aux | grep ssh
+sudo rm -rf /var/lib/dpkg/info/*
+sudo dpkg --configure -a
+sudo dpkg -r
