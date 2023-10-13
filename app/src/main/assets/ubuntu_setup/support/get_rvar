@@ -62,9 +62,7 @@ get_replace_variables(){
 		-v APP_DIR_PATH="${APP_ROOT_PATH}/AppDir" \
 		'BEGIN {
 			app_dir_relative_path = current_file_path
-			# print "app_dir_relative_path0 " app_dir_relative_path
 			gsub(APP_DIR_PATH"/", "", app_dir_relative_path)
-			# print "app_dir_relative_path " app_dir_relative_path
 			size = split( app_dir_relative_path , app_dir_relative_path_array, "/" )
 			fannnel_dir_relative_path = app_dir_relative_path_array[1]"/"app_dir_relative_path_array[2] 
 			print APP_DIR_PATH"/"fannnel_dir_relative_path
@@ -90,7 +88,6 @@ grep_key(){
 			sub(/.*\t/, "", slice_con)
 			print slice_con
 		}'
-	# echo "${con}" | grep "${key}" | cut -f 2
 }
 
 HELP=""
