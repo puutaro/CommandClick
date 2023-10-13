@@ -98,7 +98,7 @@ noti(){
 		concat(importance, "importance")
 		concat(title, "title")
 		concat(message, "message")
-		concat(deleteStr, "deleteStr")
+		concat(deleteStr, "delete")
 		concat(notificationStyle, "notificationStyle")
 		concat(button, "button")
 		gsub(",", "!", ouput_con)
