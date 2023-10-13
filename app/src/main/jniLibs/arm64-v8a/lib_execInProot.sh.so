@@ -52,6 +52,7 @@ $PROOT -r $ROOTFS_PATH -p \
 -b $ROOTFS_PATH/support/noti:/usr/local/bin/noti \
 -b $ROOTFS_PATH/support/get_rvar:/usr/local/bin/get_rvar \
 -b $ROOTFS_PATH/support/send-broadcast:/usr/local/bin/send-broadcast \
+-b $ROOTFS_PATH/support/toast:/usr/local/bin/toast \
 -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
 -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
 -b $ROOT_PATH/support:/support/common \

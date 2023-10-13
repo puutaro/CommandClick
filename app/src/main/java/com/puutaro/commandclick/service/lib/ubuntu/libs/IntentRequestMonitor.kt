@@ -173,6 +173,12 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>,
     ){
+        val helpOption = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpOption.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpConForToast()}"
+        }
         val message = broadcastMap.get(
             ToastSchema.message.name
         )
@@ -714,6 +720,32 @@ object IntentRequestMonitor {
         : Intent extra string in broadcast
         option
             * enable multiple spedified
+        
+        ex)
+            send-broadcast \
+                -a "com.puutaro.commandclick.url.launch" \
+                -e "https://github.com/puutaro/CommandClick"
+            
+    """.trimIndent()
+    }
+
+    private fun makeHelpConForToast(): String {
+        return """
+        
+        ### Toast message launcher
+        
+        ${ToastSchema.message.name.camelToShellArgsName()}
+        -m
+        : message
+        
+        ${ToastSpan.short.name.camelToShellArgsName()}
+        -s
+        : short (default)
+        
+        ${ToastSpan.long.name.camelToShellArgsName()}
+        -l
+        : long
+        
         
         ex)
             send-broadcast \

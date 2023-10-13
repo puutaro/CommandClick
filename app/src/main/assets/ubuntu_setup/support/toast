@@ -1,0 +1,73 @@
+#!/bin/bash
+
+set -ue
+
+HELP=""
+MESSAGE=""
+SPAN=""
+
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--message|-m)
+			MESSAGE="${2}"
+			shift
+			;;
+		--short|-s)
+			SPAN="short"
+			;;
+		--long|-l)
+			SPAN="long"
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+read_args "$@"
+case "${SPAN}" in
+	"") SPAN="short" ;;
+esac
+
+noti(){
+	awk \
+	-v help="${HELP}" \
+	-v message="${MESSAGE}" \
+	-v span="${SPAN}" \
+	'function concat(val, val_name){
+		if(val) ouput_con = ouput_con""val_name"="val"\n"
+	}
+	BEGIN {
+		ouput_con=""
+		concat(help, "help")
+		ouput_con = ouput_con"intentType=toast\n"
+		concat(message, "message")
+		concat(span, "span")
+		gsub(/\n/, ",\n", ouput_con)
+		print ouput_con
+	}' \
+	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+}
+
+readonly output="$(noti)"
+echo "${output}"
+case "${output}" in
+	"") exit 0;;
+esac
+test -n "${HELP}" \
+	&& exit 0 \
+	|| exit 1
