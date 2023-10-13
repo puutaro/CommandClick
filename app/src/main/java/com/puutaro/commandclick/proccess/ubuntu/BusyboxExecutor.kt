@@ -346,6 +346,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "INTENT_MONITOR_PATH" to "${UsePath.cmdclickTempIntentMonitorDirPath}/${UsePath.cmdclickTmpIntentMonitorRequestFileName}",
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
             "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
+            "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath
         )
     }
 

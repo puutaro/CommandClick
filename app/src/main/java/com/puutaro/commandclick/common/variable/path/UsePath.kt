@@ -114,8 +114,13 @@ object UsePath {
         "$cmdclickSystemAppRelativePath/$cmdclickConfigFannelDirName"
     val cmdclickConfigFannelDirPath =
         "$rootPath/$cmdclickConfigFannelDirRelativePath"
+    private val settingVariablesDirName = "settingVariables"
+    val fannelSettingVariablsDirPath = "\${01}/\${001}/${settingVariablesDirName}"
+    val replaceVariablesTsv = "replaceVariablesTable.tsv"
+    val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
+    val fannelSettingDirPath = "\${01}/\${001}/setting"
     val homeFannelsFilePath =
-        "\${01}/\${001}/settings/homeFannelsFilePaths.txt"
+        "${fannelSettingDirPath}/homeFannelsFilePaths.txt"
     val ccImportManagerFannelName = "ccImportManager.js"
     val ccImportAdminFannelPath = "$cmdclickSystemAppDirPath/$ccImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"

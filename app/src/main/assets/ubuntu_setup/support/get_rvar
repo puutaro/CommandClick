@@ -1,0 +1,108 @@
+#!/bin/bash
+
+set -e
+
+read_args(){
+	local STR=""
+	local index=0
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+	    --help|-h)
+	        HELP="${1}"
+	        ;;
+	    -*) ;;
+	    *)
+			ARG[index]="${1}"
+			index="$(( ${index} + 1 ))"
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+get_help(){
+	case "${HELP}" in
+		"") ;;
+		*) 
+			awk 'BEGIN{
+				print "### Replace variables getter"
+				print ""
+				print "* enable only call shellscript from js interface"
+				print ""
+				print ""
+				print "## Useage"
+				print ""
+				print "# Get replace variables contents"
+				print "get_rvar \x22${contents}\x22 \x22${replace variables name}\x22"
+				print ""
+				print "# Get variable by variable name"
+				print "get_rvar \x22${contents}\x22 \x22${replace variables name}\x22"
+				print ""
+			}'
+			exit 0
+		;;
+	esac
+}
+
+get_replace_variables(){
+	local current_file_path="${1}"
+
+	case "${current_file_path}" in
+		 "") echo ""; exit 0;;
+	esac
+	local fannel_dir_path=$(\
+		awk \
+		-v current_file_path="${current_file_path}"\
+		-v APP_DIR_PATH="${APP_ROOT_PATH}/AppDir" \
+		'BEGIN {
+			app_dir_relative_path = current_file_path
+			# print "app_dir_relative_path0 " app_dir_relative_path
+			gsub(APP_DIR_PATH"/", "", app_dir_relative_path)
+			# print "app_dir_relative_path " app_dir_relative_path
+			size = split( app_dir_relative_path , app_dir_relative_path_array, "/" )
+			fannnel_dir_relative_path = app_dir_relative_path_array[1]"/"app_dir_relative_path_array[2] 
+			print APP_DIR_PATH"/"fannnel_dir_relative_path
+		}' \
+	)
+	local replace_variables_table_path="${fannel_dir_path}/${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
+	test ! -f "${replace_variables_table_path}" && exit 0 || e=$?
+	cat "${replace_variables_table_path}"
+}
+
+grep_key(){
+	local con="${1}"
+	local key="${2}"
+	awk \
+		-v con="${con}" \
+		-v key="${key}" \
+		'BEGIN {
+			grep_key = key"\t"
+			index_grep_key = index(con, grep_key)
+			if(index_grep_key < 0) exit
+			slice_con = substr(con, index_grep_key, length(con))
+			sub(/\n.*/, "", slice_con)
+			sub(/.*\t/, "", slice_con)
+			print slice_con
+		}'
+	# echo "${con}" | grep "${key}" | cut -f 2
+}
+
+HELP=""
+ARG=()
+read_args "$@"
+get_help
+
+case "${ARG[@]}" in
+	"") exit 1;;
+esac
+
+if [ -e "${ARG[0]}"  ];then
+	get_replace_variables "${ARG[0]}"
+else 
+	grep_key "${ARG[0]}" "${ARG[1]}"
+fi
+
+
