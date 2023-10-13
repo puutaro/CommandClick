@@ -1,0 +1,68 @@
+#!/bin/bash
+
+set -ue
+
+HELP=""
+ACTION=""
+EXTRAS=""
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--action|-a)
+			ACTION="${2}"
+			shift
+			;;
+		--extras|-e)
+			EXTRAS="${EXTRAS}!${2}"
+			shift
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+read_args "$@"
+
+send-broadcast(){
+	awk \
+	-v help="${HELP}" \
+	-v action="${ACTION}" \
+	-v extras="${EXTRAS/\!/}" \
+	'function concat(val, val_name){
+		if(val) ouput_con = ouput_con""val_name"="val"\n"
+	}
+	BEGIN {
+		ouput_con=""
+		concat(help, "help")
+		ouput_con = ouput_con"intentType=broadcast\n"
+		concat(action, "action")
+		concat(extras, "extras")
+		gsub(",", "!", ouput_con)
+		gsub(/\n/, ",\n", ouput_con)
+		print ouput_con
+	}' \
+	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+}
+
+readonly output="$(send-broadcast)"
+echo "${output}"
+case "${output}" in
+	"") exit 0;;
+esac
+test -n "${HELP}" \
+	&& exit 0 \
+	|| exit 1

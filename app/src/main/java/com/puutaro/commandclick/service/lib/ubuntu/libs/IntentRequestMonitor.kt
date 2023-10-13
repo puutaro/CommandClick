@@ -206,13 +206,19 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>,
     ){
+        val helpOption = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpOption.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpConForBroadcast()}"
+        }
         val broadcastIntent = Intent()
         val action = broadcastMap.get(
             BroadCastSenderSchema.action.name
         ) ?: return
         broadcastIntent.action = action
         val extraPairList = broadcastMap.get(
-            BroadCastSenderSchema.extra.name
+            BroadCastSenderSchema.extras.name
         )?.let {
             createMap(
                 it,
@@ -232,11 +238,11 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>
     ){
-        val helpCon = broadcastMap.get(HelpKey.help.name)
+        val helpOption = broadcastMap.get(HelpKey.help.name)
         if(
-            !helpCon.isNullOrEmpty()
+            !helpOption.isNullOrEmpty()
         ) return Unit.also {
-            responseString += "\n${makeHelpCon()}"
+            responseString += "\n${makeHelpConForNotification()}"
         }
         val typeLaunch = IntentMonitorNotificationType.launch.name
         val typeExit = IntentMonitorNotificationType.exit.name
@@ -589,7 +595,7 @@ object IntentRequestMonitor {
         }.firstOrNull() ?: NotificationImportanceType.LOW
     }
 
-    private fun makeHelpCon(): String {
+    private fun makeHelpConForNotification(): String {
         val deleteOption = BroadcastMonitorFileScheme.delete.name.camelToShellArgsName()
         val notificationStyleOption = BroadcastMonitorFileScheme.notificationStyle.name.camelToShellArgsName()
         val buttonOption = BroadcastMonitorFileScheme.button.name.camelToShellArgsName()
@@ -693,6 +699,29 @@ object IntentRequestMonitor {
             ${notificationStyleOption}="${notificatinStyleType}=${media}${comaKeySeparator}${compactActionsInts}=0${valueSeparator}1${valueSeparator}3"      
     """.trimIndent()
     }
+
+    private fun makeHelpConForBroadcast(): String {
+        return """
+        
+        ### Boradcast sender
+        
+        ${BroadCastSenderSchema.action.name.camelToShellArgsName()}
+        -a
+        : Intent action in broadcast
+        
+        ${BroadCastSenderSchema.extras.name.camelToShellArgsName()}
+        -e
+        : Intent extra string in broadcast
+        option
+            * enable multiple spedified
+        
+        ex)
+            send-broadcast \
+                -a "com.puutaro.commandclick.url.launch" \
+                -e "https://github.com/puutaro/CommandClick"
+            
+    """.trimIndent()
+    }
 }
 
 
@@ -754,7 +783,7 @@ private enum class ReceiveIntentType {
 
 private enum class BroadCastSenderSchema {
     action,
-    extra,
+    extras,
 }
 
 private enum class BroadcastMonitorFileScheme {
