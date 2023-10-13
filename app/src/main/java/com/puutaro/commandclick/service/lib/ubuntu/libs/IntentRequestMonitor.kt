@@ -734,10 +734,11 @@ object IntentRequestMonitor {
         
         ### Toast message launcher
         
-        ${ToastSchema.message.name.camelToShellArgsName()}
-        -m
+        
+        arg 
         : message
         
+        option
         ${ToastSpan.short.name.camelToShellArgsName()}
         -s
         : short (default)
@@ -746,11 +747,10 @@ object IntentRequestMonitor {
         -l
         : long
         
-        
         ex)
-            send-broadcast \
-                -a "com.puutaro.commandclick.url.launch" \
-                -e "https://github.com/puutaro/CommandClick"
+            toast "CommandClcik"
+        ex)
+            toast -l "CommandClcik"
             
     """.trimIndent()
     }

@@ -15,10 +15,6 @@ read_args(){
 		--help|-h)
 			HELP="${1}"
 			;;
-		--message|-m)
-			MESSAGE="${2}"
-			shift
-			;;
 		--short|-s)
 			SPAN="short"
 			;;
@@ -30,6 +26,7 @@ read_args(){
 			exit 1
 			;;
 		*)	
+			MESSAGE="${1}"
 			;;
 	esac
 	shift
@@ -43,7 +40,7 @@ case "${SPAN}" in
 	"") SPAN="short" ;;
 esac
 
-noti(){
+toast(){
 	awk \
 	-v help="${HELP}" \
 	-v message="${MESSAGE}" \
@@ -60,13 +57,14 @@ noti(){
 		gsub(/\n/, ",\n", ouput_con)
 		print ouput_con
 	}' \
-	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" \
+	>/dev/null 2>&1
 }
 
-readonly output="$(noti)"
-echo "${output}"
+readonly output="$(toast)"
 case "${output}" in
 	"") exit 0;;
+	*) echo "${output}"
 esac
 test -n "${HELP}" \
 	&& exit 0 \

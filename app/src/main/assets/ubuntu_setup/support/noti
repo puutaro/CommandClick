@@ -115,9 +115,9 @@ noti(){
 }
 
 readonly output="$(noti)"
-echo "${output}"
 case "${output}" in
 	"") exit 0;;
+	*) echo "${output}"
 esac
 test -n "${HELP}" \
 	&& exit 0 \
