@@ -9,6 +9,7 @@ ICON_NAME=""
 IMPORTANCE=""
 TITLE=""
 MESSAGE=""
+ALERT_ONCE=""
 DELETE=""
 NOTIFICATION_STYLE=""
 BUTTONS=""
@@ -37,6 +38,9 @@ read_args(){
 		--importance|-i)
 			IMPORTANCE="${2}"
 			shift
+			;;
+		--alert-once|-o)
+			ALERT_ONCE="${1}"
 			;;
 		--title|-t)
 			TITLE="${2}"
@@ -82,7 +86,8 @@ noti(){
 	-v importance="${IMPORTANCE}" \
 	-v title="${TITLE}" \
 	-v message="${MESSAGE}" \
-	-v deleteStr="${DELETE}" \
+	-v alertOnce="${ALERT_ONCE}" \
+	-v delete_key="${DELETE}" \
 	-v notificationStyle="${NOTIFICATION_STYLE}" \
 	-v button="${BUTTONS/\|/}" \
 	'function concat(val, val_name){
@@ -98,7 +103,8 @@ noti(){
 		concat(importance, "importance")
 		concat(title, "title")
 		concat(message, "message")
-		concat(deleteStr, "delete")
+		concat(alertOnce, "alertOnce")
+		concat(delete_key, "delete")
 		concat(notificationStyle, "notificationStyle")
 		concat(button, "button")
 		gsub(",", "!", ouput_con)

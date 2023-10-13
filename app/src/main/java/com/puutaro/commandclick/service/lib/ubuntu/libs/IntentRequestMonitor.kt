@@ -299,6 +299,8 @@ object IntentRequestMonitor {
         val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
         val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
         val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
+        val alertOnce =
+            broadcastMap.get(BroadcastMonitorFileScheme.alertOnce.name)
         val channel = NotificationChannel(
             notificationId,
             notificationId,
@@ -329,6 +331,10 @@ object IntentRequestMonitor {
         setSmallIcon(
             notificationBuilder,
             iconName,
+        )
+        setAlertOnce(
+            notificationBuilder,
+            alertOnce
         )
         setDeleteIntent(
             ubuntuService,
@@ -424,6 +430,16 @@ object IntentRequestMonitor {
         )
     }
 
+    private fun setAlertOnce(
+        notificationBuilder: NotificationCompat.Builder,
+        alertOnce: String?
+    ){
+        if(
+            alertOnce.isNullOrEmpty()
+        ) return
+        notificationBuilder
+        notificationBuilder.setOnlyAlertOnce(true)
+    }
     private fun addButton(
         ubuntuService: UbuntuService,
         notificationBuilder: NotificationCompat.Builder,
@@ -604,7 +620,11 @@ object IntentRequestMonitor {
         : ${high}/${low}
             ${high} -> importance high
             ${low} -> importance low
-           
+        
+        ${BroadcastMonitorFileScheme.alertOnce.name.camelToShellArgsName()}
+        -o
+        : once alert
+
             
         ${BroadcastMonitorFileScheme.title.name.camelToShellArgsName()}
         -t
@@ -733,6 +753,7 @@ private enum class BroadcastMonitorFileScheme {
     iconName,
     importance,
     title,
+    alertOnce,
     message,
     delete,
     button
