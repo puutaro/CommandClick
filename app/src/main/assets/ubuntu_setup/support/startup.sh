@@ -217,6 +217,7 @@ startup_launch_system(){
     export APP_DIR_PATH="${APP_DIR_PATH}"
     export INTENT_MONITOR_PORT="${INTENT_MONITOR_PORT}"
     export INTENT_MONITOR_ADDRESS="${INTENT_MONITOR_ADDRESS}"
+    export REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -233,7 +234,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS \
+		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -365,6 +366,9 @@ launch_setup(){
 		"${bash_profile_path}"
 	insert_str_to_file \
 		'export INTENT_MONITOR_ADDRESS="'${INTENT_MONITOR_ADDRESS}'"' \
+		"${bash_profile_path}"
+	insert_str_to_file \
+		'export REPLACE_VARIABLES_TSV_RELATIVE_PATH="'${REPLACE_VARIABLES_TSV_RELATIVE_PATH}'"' \
 		"${bash_profile_path}"
 	apt-get install -y sudo
 }
