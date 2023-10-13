@@ -6,6 +6,9 @@ import com.puutaro.commandclick.common.variable.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CcImportManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JavaScriptLoadUrl {
@@ -59,6 +62,34 @@ object JavaScriptLoadUrl {
                 fannelDirName,
                 scriptFileName
             )
+        CoroutineScope(Dispatchers.IO).launch {
+            if(setReplaceVariableMap.isNullOrEmpty()) return@launch
+            val preWordTsvTable = ScriptPreWordReplacer.makeTsvTable(
+                recentAppDirPath,
+                scriptFileName,
+            )
+            val replaceVariableTable = setReplaceVariableMap.entries.map {
+                val replacedVal = ScriptPreWordReplacer.replace(
+                    it.value,
+                    recentAppDirPath,
+                    fannelDirName,
+                    scriptFileName,
+                )
+                "${it.key}\t${replacedVal}"
+            }.joinToString("\n")
+            val fannelSettingsDirPath = ScriptPreWordReplacer.replace(
+                UsePath.fannelSettingVariablsDirPath,
+                recentAppDirPath,
+                fannelDirName,
+                scriptFileName,
+            )
+            FileSystems.writeFile(
+                fannelSettingsDirPath,
+                UsePath.replaceVariablesTsv,
+                "${preWordTsvTable}\n${replaceVariableTable}"
+            )
+        }
+
         var countSettingSectionStart = 0
         var countSettingSectionEnd = 0
         var countCmdSectionStart = 0

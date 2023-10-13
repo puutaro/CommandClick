@@ -10,6 +10,28 @@ object ScriptPreWordReplacer {
     private val fannelDirNameMark = "\${001}"
     private val currentScriptNameMark = "\${02}"
 
+    fun makeTsvTable(
+        currentAppDirPath: String,
+        scriptName: String,
+    ): String {
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptName
+        )
+        return listOf(
+            currentScriptPathMark,
+            cmdclickDirPathMark,
+            currentAppDirPathMark,
+            fannelDirNameMark,
+            currentScriptNameMark,
+        ).map {
+            "$it\t" + replace(
+                currentScriptPathMark,
+                currentAppDirPath,
+                fannelDirName,
+                scriptName,
+            )
+        }.joinToString("\n")
+    }
     fun pathReplace(
         targetFilePath: String,
         currentAppDirPath: String,

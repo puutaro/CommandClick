@@ -341,14 +341,15 @@ object IntentRequestMonitor {
             notificationBuilder,
             delete,
         )
-        addButton(
+        val buttonListSize = addButton(
             ubuntuService,
             notificationBuilder,
             broadcastMap.get(BroadcastMonitorFileScheme.button.name)
         )
         setStyle(
             notificationBuilder,
-            broadcastMap
+            broadcastMap,
+            buttonListSize
         )
         val notificationInstance = notificationBuilder.build()
         notificationManager.notify(
@@ -374,8 +375,13 @@ object IntentRequestMonitor {
 
     private fun setStyle(
         notificationBuilder: NotificationCompat.Builder,
-        broadcastMap: Map<String, String>
+        broadcastMap: Map<String, String>,
+        buttonListSize: Int,
     ){
+        if(
+            buttonListSize == 0
+        ) return
+        val buttonListTotalIndex = buttonListSize - 1
         val styleMap =
             broadcastMap.get(
                 BroadcastMonitorFileScheme.notificationStyle.name
@@ -391,9 +397,14 @@ object IntentRequestMonitor {
         val compactActionsInts = styleMap.get(
             NotificationStyleSchema.compactActionsInts.name
         )?.split(valueSeparator)?.map {
-            toInt(it) ?: return Unit.also {
+            val posi = toInt(it) ?: return Unit.also {
                 LogSystems.stdWarn("no int value ${it}")
             }
+            if(posi > buttonListTotalIndex) {
+                LogSystems.stdWarn("over index: $posi")
+                return@map 0
+            }
+            posi
         }?.toIntArray() ?: return Unit.also {
             LogSystems.stdWarn("include no int value ${styleMap}")
         }
@@ -444,13 +455,13 @@ object IntentRequestMonitor {
         ubuntuService: UbuntuService,
         notificationBuilder: NotificationCompat.Builder,
         buttonListStr: String?,
-    ){
+    ): Int {
         val buttonLabelKey = ButtonKey.label.name
         val buttonList = buttonListStr?.split(elementSeparator)
-            ?: return
+            ?: return 0
         if(
             buttonList.isEmpty()
-        ) return
+        ) return 0
         LogSystems.stdSys(
             "buttonList: ${buttonList.joinToString("\n")}\n"
         )
@@ -483,6 +494,7 @@ object IntentRequestMonitor {
                 )
             }
         }
+        return buttonList.size
     }
 
     private fun pendingIntentCreatorWraper(
