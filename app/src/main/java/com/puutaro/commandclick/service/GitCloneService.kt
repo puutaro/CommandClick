@@ -84,6 +84,7 @@ class GitCloneService: Service() {
         notificationBuilder.setSmallIcon(R.drawable.stat_sys_download)
         notificationBuilder.setContentTitle("Cloning...")
         notificationBuilder.setAutoCancel(true)
+        notificationBuilder.setOnlyAlertOnce(true)
         notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
         notificationBuilder.setProgress(0, 0, true)
         notificationBuilder.addAction(
