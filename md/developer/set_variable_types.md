@@ -70,7 +70,7 @@ ex)
 
 ```js.js
 /// SETTING_SECTION_START
-setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setReplaceVariables="file://"
 setVariableTypes="txtPdfPath:GB=listPath=${currentFannelDirPath}/listfile!limitNum=10"
 TTS_PLAY:BTN=cmd="jsf '{0}' play"
 .
@@ -121,13 +121,16 @@ setVariableTypes="${variable name3}:TXT:NUM:BTN=label=0!1..1000!1|cmd=jsf '${0}'
 
 - `NUM` is recommended to combline `TXT` option becuase of visualizing current number
 
-### Specify file path
+### Specify config 
 
-`setVariableType` can specify file path like bellow. 
+`setVariableType` can specify config path (`${01}/${001}/settingVariables/setVariableTypes.js`) like bellow. 
+
+- `${01}`, `${001}` -> [pre order word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
+
   
 ```js.js
 /// SETTING_SECTION_START
-setVariableType="file://${01}/${001}/setVariableType.js"
+setVariableType="file://"
 /// SETTING_SECTION_END
 ```
 
