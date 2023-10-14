@@ -39,9 +39,9 @@ hideSettingVariables="setVariableTypes"
   
 ```js.js
 /// SETTING_SECTION_START
-setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
-setVariableTypes="file://${01}/${001}setVariableTypes.js"
-hideSettingVariables="file://${01}/${001}/hideSettingVariables.js"
+setReplaceVariables="file://"
+setVariableTypes="file://"
+hideSettingVariables="file://"
 /// SETTING_SECTION_END
 ```
 
