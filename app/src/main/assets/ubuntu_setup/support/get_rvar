@@ -33,7 +33,6 @@ get_help(){
 				print "### Replace variables getter"
 				print ""
 				print "* Enable only call shellscript from js interface"
-				print "* Enable when follow tsv path exist: ${fannel dir path}/"REPLACE_VARIABLES_TSV_RELATIVE_PATH
 				print ""
 				print ""
 				print "## Useage"

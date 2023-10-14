@@ -125,12 +125,12 @@ object UbuntuSetUp {
         ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
 
         ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
-        AssetsFileManager.copyFileOrDirFromAssets(
-            context,
-            AssetsFileManager.ubunutSupportDirPath,
-            "ubuntu_setup",
-            ubuntuFiles.filesOneRootfs.absolutePath
-        )
+//        AssetsFileManager.copyFileOrDirFromAssets(
+//            context,
+//            AssetsFileManager.ubunutSupportDirPath,
+//            "ubuntu_setup",
+//            ubuntuFiles.filesOneRootfs.absolutePath
+//        )
         ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
         ubuntuFiles.filesOneRootfsStorageDir.mkdir()
 //        ulaFiles.filesOneRootfsStorageEmurated0Dir.mkdirs()

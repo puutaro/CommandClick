@@ -709,7 +709,7 @@ object IntentRequestMonitor {
     private fun makeHelpConForBroadcast(): String {
         return """
         
-        ### Boradcast sender
+        ### Broadcast sender
         
         ${BroadCastSenderSchema.action.name.camelToShellArgsName()}
         -a

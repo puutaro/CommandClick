@@ -49,10 +49,6 @@ object JavascriptExecuter {
                     execJsOrHtmlPath,
                 ) ?: String()
             )
-//            terminalViewModel.launchUrl = JavaScriptLoadUrl.make(
-//                context,
-//                execJsOrHtmlPath,
-//            )
             return
         }
         val enableHtmlSuffix = execJsOrHtmlPath.endsWith(
