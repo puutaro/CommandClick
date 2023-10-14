@@ -32,12 +32,7 @@ get_help(){
 			'BEGIN{
 				print "### Replace variables getter"
 				print ""
-				print "* Without calling shell from js, set tsv to ${fannelDirPath}/"REPLACE_VARIABLES_TSV_RELATIVE_PATH
-				print "\tex)"
-				print "\t   ${variable name1}\t${variable value1}"
-				print "\t   ${variable name2}\t${variable value2}"
-				print "\t    ."
-				print "\t    ."
+				print "* Enable only call shellscript from js interface"
 				print ""
 				print ""
 				print "## Usage"
