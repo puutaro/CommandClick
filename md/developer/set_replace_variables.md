@@ -33,9 +33,10 @@ const currentFannelDirPath = "${currentFannelDirPath}"
 
 ## Specify file path  
 
-`setReplaceVariables` can specify file path like bellow.   
-But, setReplaceVariable cannot use in file path.  
-(bellow ${01} and ${001} is pre reserved word in `CommandClick`)
+`setReplaceVariables` can specify config path (`${01}/${001}/settingVariables/setReplaceVariables.js`) like bellow.   
+
+- `${01}`, `${001}` -> [pre order word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
+  
   
 ```js.js
 /// SETTING_SECTION_START
