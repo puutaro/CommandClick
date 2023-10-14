@@ -1,9 +1,8 @@
 package com.puutaro.commandclick.activity_lib.broadcast
 
-import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 
 object activityBroadcastHandler {
     fun handle(

@@ -1,5 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -45,8 +48,9 @@ object ListSettingVariableListMaker {
         fannelDirName: String,
         settingVariablesList: List<String>,
     ): List<String> {
-        val filePrefix = "file://"
-        val listSettingVariableListSource = SettingVariableReader.getStrListByReplace(
+        val filePrefix = EditSettings.filePrefix
+        val listSettingVariableListSource =
+            SettingVariableReader.getStrListByReplace(
             settingVariablesList,
             settingVariableName,
             currentScriptFileName,
@@ -57,7 +61,15 @@ object ListSettingVariableListMaker {
                 !it.startsWith(filePrefix)
             ) return@map QuoteTool.trimBothEdgeQuote(it)
                 .replace(",", "\n")
-            val listSettingVariablePath = it.removePrefix(filePrefix)
+            val listSettingVariablePath = decideSettingVariableName(settingVariableName).let {
+                ScriptPreWordReplacer.replace(
+                    it,
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptFileName
+                )
+            }
+//                it.removePrefix(filePrefix)
             val listSettingVariablePathObj = File(listSettingVariablePath)
             val listSettingVariableDirPath = listSettingVariablePathObj.parent
                 ?: return@map QuoteTool.trimBothEdgeQuote(it)
@@ -83,5 +95,17 @@ object ListSettingVariableListMaker {
             .filter {
                 it.isNotEmpty()
             }
+    }
+
+    private fun decideSettingVariableName(
+        variableName: String
+    ): String {
+        return when(variableName){
+            CommandClickScriptVariable.HIDE_SETTING_VARIABLES
+            -> "${UsePath.fannelSettingVariablsDirPath}/${UsePath.hideSettingVariablesConfig}"
+            CommandClickScriptVariable.IGNORE_HISTORY_PATHS
+            -> "${UsePath.fannelSettingVariablsDirPath}/${UsePath.ignoreHistoryPathsConfig}"
+            else -> String()
+        }
     }
 }

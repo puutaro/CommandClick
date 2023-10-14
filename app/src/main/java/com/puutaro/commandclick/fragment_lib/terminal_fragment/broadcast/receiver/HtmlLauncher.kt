@@ -2,8 +2,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiv
 
 import android.content.Context
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewMenuMapType

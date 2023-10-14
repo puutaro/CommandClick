@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.util
 
-import android.util.Log
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
@@ -20,7 +19,9 @@ object FileSystems {
             }
             return dirPathObj.mkdirs()
         } catch(e: Exception) {
-            Log.e("FileSystems", "not mkdir ${dirPath}")
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
+            )
             return false
         }
     }
@@ -35,10 +36,8 @@ object FileSystems {
         try {
             filePath.createNewFile()
         } catch (e: java.lang.Exception){
-            Log.e(
-                "createFiles",
-                "cannot make file: " +
-                    "${e.cause}, ${e.message}, ${e.stackTrace}, ${filePath.absolutePath}"
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
     }
@@ -64,10 +63,8 @@ object FileSystems {
         try {
             filePath.writeText(contents)
         } catch (e: java.lang.Exception){
-            Log.e(
-                "writeFiles",
-                "cannot write file: " +
-                        "${e.cause}, ${e.message}, ${e.stackTrace}, ${filePath.absolutePath}"
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
     }
@@ -82,10 +79,8 @@ object FileSystems {
         try {
             filePath.delete()
         } catch (e: java.lang.Exception){
-            Log.e(
-                "deleteFiles",
-                "cannot delete file: " +
-                        "${e.cause}, ${e.message}, ${e.stackTrace}, ${filePath.absolutePath}"
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
     }
@@ -98,10 +93,8 @@ object FileSystems {
         try {
             filePath.deleteRecursively()
         } catch (e: java.lang.Exception){
-            Log.e(
-                "removeDir",
-                "cannot remove file: " +
-                        "${e.cause}, ${e.message}, ${e.stackTrace}, ${filePath.absolutePath}"
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
     }
@@ -302,6 +295,9 @@ object FileSystems {
                 StandardCopyOption.REPLACE_EXISTING
             )
         } catch (e: Exception) {
+            LogSystems.stdErr(
+                "${e.cause}, ${e.message}, ${e.stackTrace}"
+            )
             return
         }
     }

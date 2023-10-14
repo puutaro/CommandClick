@@ -10,8 +10,8 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel

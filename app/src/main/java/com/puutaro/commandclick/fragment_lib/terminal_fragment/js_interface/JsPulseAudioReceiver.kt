@@ -2,9 +2,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.content.Intent
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.common.variable.PulseServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.PulseServerIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.PulseReceiverService
 

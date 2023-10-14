@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.util
 
-import android.util.Log
 import java.io.File
 
 
@@ -13,24 +12,12 @@ class ReadText(
         val leavesLineForTerm = 500
     }
     fun readText(): String {
-        val success = FileSystems.createDirs(dirPath)
-        if(!success) {
-            val err_message = "cannot mkdir: ${dirPath}"
-            Log.e(javaClass.name, err_message)
-            return err_message
-        }
+        if(dirPath.isEmpty()) return String()
         if(fileName.isEmpty()) return String()
-        try {
-            FileSystems.createFiles(
-                dirPath,
-                fileName,
-            )
-        } catch (e: java.lang.Exception) {
-            val err_message = "cannot create file: ${dirPath}/${fileName}"
-            Log.e(javaClass.name, err_message)
-            return err_message
-        }
         val targetFile = File(dirPath, fileName)
+        if(
+            !targetFile.isFile
+        ) return String()
         return try{
             targetFile.readText()
         } catch(e: Exception) {
@@ -40,48 +27,34 @@ class ReadText(
     }
 
     fun readTextForHtml(): String {
-        val success = FileSystems.createDirs(dirPath)
-        if(!success) {
-            val err_message = "cannnot mkdir: ${dirPath}"
-            Log.e(javaClass.name, err_message)
-            return err_message
-        }
-        try {
-            FileSystems.createFiles(
-                dirPath,
-                fileName,
-            )
-        } catch (e: java.lang.Exception) {
-            val err_message = "cannot create file: ${dirPath}/${fileName}"
-            Log.e(javaClass.name, err_message)
-            return err_message
-        }
+        if(dirPath.isEmpty()) return String()
+        if(fileName.isEmpty()) return String()
         val targetFile = File(dirPath, fileName)
+        if(
+            !targetFile.isFile
+        ) return String()
         return try{
-            val convertAtagLtGtToTmpStr = targetFile
-                .readText()
-                .split("\n")
-                .takeLast(leavesLineForTerm)
-                .joinToString("\n")
-                .replace("<", "&lt;")
-                .replace(">", "&gt;")
-                .replace("%", "&#37;")
-            convertAtagLtGtToTmpStr
+           targetFile
+               .readText()
+               .split("\n")
+               .takeLast(leavesLineForTerm)
+               .joinToString("\n")
+               .replace("<", "&lt;")
+               .replace(">", "&gt;")
+               .replace("%", "&#37;")
         } catch(e: Exception) {
-            ""
+            String()
         }
-
     }
 
     fun textToList(
     ): List<String> {
-        val shellFile = File(
-            dirPath,
-            fileName
-        )
-        if(!shellFile.isFile){
-            return listOf()
-        }
-        return shellFile.readLines()
+        if(dirPath.isEmpty()) return emptyList()
+        if(fileName.isEmpty()) return emptyList()
+        val targetFile = File(dirPath, fileName)
+        if(
+            !targetFile.isFile
+        ) return emptyList()
+        return targetFile.readLines()
     }
 }

@@ -6,9 +6,9 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForFzHtml
-import com.puutaro.commandclick.common.variable.BroadCastIntentExtraForHtml
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForFzHtml
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra

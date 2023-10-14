@@ -3,8 +3,8 @@ package com.puutaro.commandclick.util.Intent
 import android.app.Activity
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.util.FileSystems

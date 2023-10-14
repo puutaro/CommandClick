@@ -15,8 +15,8 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.TextToMp3IntentExtra
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.TextToMp3IntentExtra
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems

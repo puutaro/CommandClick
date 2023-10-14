@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath

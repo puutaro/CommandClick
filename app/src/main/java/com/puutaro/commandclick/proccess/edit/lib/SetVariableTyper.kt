@@ -3,12 +3,15 @@ package com.puutaro.commandclick.proccess.edit.lib
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
 object SetVariableTyper {
 
-    private val filePrefix = "file://"
+    private val filePrefix = EditSettings.filePrefix
+    private val setVariableTypesConfigPathSrc = "${UsePath.fannelSettingVariablsDirPath}/${UsePath.setVariableTypesConfig}"
 
     fun makeRecordNumToSetVariableMaps(
         setVariableTypeList: List<String>?,
@@ -99,7 +102,6 @@ object SetVariableTyper {
                 )
             ) return@map setTargetVariableValueSource
             makeSetVariableValueFromFile(
-                setTargetVariableValueSource,
                 currentAppDirPath,
                 currentShellFileName,
                 fannelDirName
@@ -110,14 +112,13 @@ object SetVariableTyper {
     }
 
     private fun makeSetVariableValueFromFile(
-        setTargetVariableValueSource: String,
         currentAppDirPath: String,
         currentShellFileName: String,
         fannelDirName: String
     ): String {
-        val setVariableTypeFilePath =
+        val setVariableTypesConfigPath =
             ScriptPreWordReplacer.replace(
-                setTargetVariableValueSource
+                setVariableTypesConfigPathSrc
                     .removePrefix(
                         filePrefix
                     ),
@@ -125,13 +126,13 @@ object SetVariableTyper {
                 fannelDirName,
                 currentShellFileName,
             )
-        val setVariableTypeFilePathObj = File(setVariableTypeFilePath)
-        val setVariableTypeFileDirPath = setVariableTypeFilePathObj.parent
+        val setVariableTypesConfigObj = File(setVariableTypesConfigPath)
+        val setVariableTypesConfigDirPath = setVariableTypesConfigObj.parent
             ?: String()
-        val setVariableTypeFileName = setVariableTypeFilePathObj.name
+        val setVariableTypesConfigName = setVariableTypesConfigObj.name
         return SettingFile.read(
-            setVariableTypeFileDirPath,
-            setVariableTypeFileName
+            setVariableTypesConfigDirPath,
+            setVariableTypesConfigName
         )
     }
 }

@@ -2,8 +2,7 @@ package com.puutaro.commandclick.util
 
 import android.content.Intent
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 
 object BroadCastIntent {
     fun sendUrlCon(

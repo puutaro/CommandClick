@@ -117,6 +117,10 @@ object UsePath {
     private val settingVariablesDirName = "settingVariables"
     val fannelSettingVariablsDirPath = "\${01}/\${001}/${settingVariablesDirName}"
     val replaceVariablesTsv = "replaceVariablesTable.tsv"
+    val hideSettingVariablesConfig = "hideSettingVariables.js"
+    val setReplaceVariablesConfig = "setReplaceVariables.js"
+    val setVariableTypesConfig = "setVariableTypes.js"
+    val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
     val fannelSettingDirPath = "\${01}/\${001}/setting"
     val homeFannelsFilePath =

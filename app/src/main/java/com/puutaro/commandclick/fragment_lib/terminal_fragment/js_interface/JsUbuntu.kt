@@ -4,8 +4,8 @@ import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment

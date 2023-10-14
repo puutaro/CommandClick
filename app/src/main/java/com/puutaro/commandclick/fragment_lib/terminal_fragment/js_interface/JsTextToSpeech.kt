@@ -6,8 +6,8 @@ import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.TextToMp3IntentExtra
-import com.puutaro.commandclick.common.variable.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.intent.TextToMp3IntentExtra
+import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.TextToMp3Service
 import com.puutaro.commandclick.service.TextToSpeechService

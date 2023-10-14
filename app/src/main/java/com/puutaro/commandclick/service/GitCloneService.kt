@@ -10,16 +10,18 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.*
 import org.eclipse.jgit.lib.ProgressMonitor
@@ -219,7 +221,9 @@ class GitCloneService: Service() {
                 notificationManager,
             )
         } catch (e: Exception) {
-            Log.e(LoggerTag.fannnelListUpdateErr, "close git")
+            LogSystems.stdErr(
+                "close git"
+            )
             return
         } finally {
             git?.close()

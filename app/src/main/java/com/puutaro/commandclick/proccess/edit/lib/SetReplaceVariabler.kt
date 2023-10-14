@@ -2,13 +2,16 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
 object SetReplaceVariabler {
 
-    private val filePrefix = "file://"
+    private val filePrefix = EditSettings.filePrefix
+    private val setReplaceVariablesConfigPathSrc = "${UsePath.fannelSettingVariablsDirPath}/${UsePath.setReplaceVariablesConfig}"
 
     fun makeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
@@ -75,7 +78,6 @@ object SetReplaceVariabler {
                 )
             ) return@map setTargetVariableValueSource
             makeSetVariableValueFromFile(
-                setTargetVariableValueSource,
                 currentAppDirPath,
                 currentShellFileName,
                 fannelDirName
@@ -108,14 +110,13 @@ object SetReplaceVariabler {
     }
 
     private fun makeSetVariableValueFromFile(
-        setTargetVariableValueSource: String,
         currentAppDirPath: String,
         currentShellFileName: String,
         fannelDirName: String
     ): String {
-        val setVariableTypeFilePath =
+        val setReplaceVariablesConfigPath =
             ScriptPreWordReplacer.replace(
-                setTargetVariableValueSource
+                setReplaceVariablesConfigPathSrc
                     .removePrefix(
                         filePrefix
                     ),
@@ -123,13 +124,13 @@ object SetReplaceVariabler {
                 fannelDirName,
                 currentShellFileName,
             )
-        val setReplaceVariableFilePathObj = File(setVariableTypeFilePath)
-        val setReplaceVariableFileDirPath = setReplaceVariableFilePathObj.parent
+        val setReplaceVariablesConfigObj = File(setReplaceVariablesConfigPath)
+        val setReplaceVariableConfigDirPath = setReplaceVariablesConfigObj.parent
             ?: return String()
-        val setReplaceVariableFileName = setReplaceVariableFilePathObj.name
+        val setReplaceVariableConfigName = setReplaceVariablesConfigObj.name
         return SettingFile.read(
-            setReplaceVariableFileDirPath,
-            setReplaceVariableFileName
+            setReplaceVariableConfigDirPath,
+            setReplaceVariableConfigName
         )
     }
 }

@@ -12,7 +12,7 @@ object SettingFile {
         return ReadText(
             settingFileDirPath,
             settingFileName
-        ).textToList().let{
+        ).textToList().let {
             formSettingContents(it)
         }
     }

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.service.lib.pulse
 
 import android.content.Context
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
