@@ -6,4 +6,5 @@ object ServiceNotificationId {
     val textToSpeech = 3
     val pulseReciever = 4
     val ubuntuServer = 5
+    val ubuntuManager = 6
 }

@@ -687,8 +687,8 @@ object IntentRequestMonitor {
                 ${ExecType.back.name} -> background
             ${timeout}: time out mili sec[Int] in foreground
         ex) 
-            ${buttonOption}="${label}=button1${comaKeySeparator}${shellPath}=${'$'}{shellPath1}"
-            ${buttonOption}="${label}=button2${comaKeySeparator}${shellPath}=${'$'}{shellPath2}"
+            ${buttonOption}="${label}=button1${comaKeySeparator}${shellPath}=${'$'}{shellPath1},args=arg1"
+            ${buttonOption}="${label}=button2${comaKeySeparator}${shellPath}=${'$'}{shellPath2},args=arg1${valueSeparator}arg2"
             ${buttonOption}="${label}=button3${comaKeySeparator}${shellPath}=${'$'}{shellPath3}"
             ${buttonOption}="${label}=button4${comaKeySeparator}${shellPath}=${'$'}{shellPath4}"
             ${buttonOption}="${label}=button5${comaKeySeparator}${shellPath}=${'$'}{shellPath5}"

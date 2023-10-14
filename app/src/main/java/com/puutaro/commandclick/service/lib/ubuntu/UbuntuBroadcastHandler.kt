@@ -13,7 +13,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
-import com.puutaro.commandclick.service.lib.ubuntu.libs.OpenTerminalButton
+import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServiceButton
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManager
 import com.puutaro.commandclick.service.variable.ServiceNotificationId
@@ -33,6 +33,7 @@ object UbuntuBroadcastHandler {
             BroadCastIntentScheme.START_UBUNTU_SERVICE.action
             -> execStartUbuntuService(
                 ubuntuService,
+                intent,
             )
             BroadCastIntentScheme.ON_RUNNING_NOTIFICATION.action
             -> execRunningNotification(
@@ -95,7 +96,11 @@ object UbuntuBroadcastHandler {
 
     private fun execStartUbuntuService(
         ubuntuService: UbuntuService,
+        intent: Intent
     ){
+        val isUbuntuRestore = !intent.getStringExtra(
+            UbuntuServerIntentExtra.ubuntuRestoreSign.schema
+        ).isNullOrEmpty()
         val onSetUpNotificationIntent = Intent()
         onSetUpNotificationIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
         ubuntuService.sendBroadcast(onSetUpNotificationIntent)
@@ -106,7 +111,8 @@ object UbuntuBroadcastHandler {
             ubuntuService,
         )
         UbuntuInitProcess.launch(
-            ubuntuService
+            ubuntuService,
+            isUbuntuRestore
         )
     }
 
@@ -129,7 +135,7 @@ object UbuntuBroadcastHandler {
         }
     }
 
-    fun execOnUbuntuSetupNotification(
+    private fun execOnUbuntuSetupNotification(
         ubuntuService: UbuntuService
     ) {
         val chanelId = ubuntuService.chanelId
@@ -149,7 +155,7 @@ object UbuntuBroadcastHandler {
         }
     }
 
-    fun execOnUbuntuSetupQuizNotification(
+    private fun execOnUbuntuSetupQuizNotification(
         ubuntuService: UbuntuService
     ) {
         val chanelId = ubuntuService.chanelId
@@ -192,9 +198,8 @@ object UbuntuBroadcastHandler {
             ButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent
         )
-        OpenTerminalButton.add(
-            ubuntuService
-        )
+        UbuntuServiceButton.addOpenTerminal(ubuntuService)
+        UbuntuServiceButton.addManager(ubuntuService)
         ubuntuService.notificationBuilder?.build()?.let {
             ubuntuService.notificationManager?.notify(
                 chanelId,
@@ -258,7 +263,8 @@ object UbuntuBroadcastHandler {
             ButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent
         )
-        OpenTerminalButton.add(ubuntuService)
+        UbuntuServiceButton.addOpenTerminal(ubuntuService)
+        UbuntuServiceButton.addManager(ubuntuService)
         ubuntuService.notificationBuilder?.build()?.let {
             ubuntuService.notificationManager?.notify(
                 ubuntuService.chanelId,

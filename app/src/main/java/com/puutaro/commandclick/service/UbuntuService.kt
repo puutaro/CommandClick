@@ -215,6 +215,23 @@ class UbuntuService:
                 ButtonLabel.SETUP.label,
                 startUbuntuServicePendingIntent
             )
+            if(
+                ubuntuFiles?.ubuntuBackupRootfsFile?.isFile == true
+            ) {
+                val extraList = listOf(
+                    UbuntuServerIntentExtra.ubuntuRestoreSign.schema to "on"
+                )
+                val restorebuntuServicePendingIntent = PendingIntentCreator.create(
+                    applicationContext,
+                    BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
+                    extraList
+                )
+                notificationBuilder?.addAction(
+                    com.puutaro.commandclick.R.drawable.icons8_cancel,
+                    ButtonLabel.RESTORE.label,
+                    restorebuntuServicePendingIntent
+                )
+            }
             val notificationInstance = notificationBuilder?.build()
             notificationInstance?.let {
                 notificationManager?.notify(
@@ -243,7 +260,7 @@ class UbuntuService:
         IntentRequestMonitor.launch(this)
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
-        UbuntuInitProcess.launch(this)
+        UbuntuInitProcess.launch(this, false)
         return START_NOT_STICKY
     }
 

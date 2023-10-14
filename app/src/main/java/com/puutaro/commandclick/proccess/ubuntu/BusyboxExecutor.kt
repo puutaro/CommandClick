@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
@@ -190,7 +191,12 @@ class BusyboxExecutor(
                 return
             }
         }
-
+        AssetsFileManager.copyFileOrDirFromAssets(
+            context,
+            AssetsFileManager.ubunutSupportDirPath,
+            "ubuntu_setup",
+            ubuntuFiles.filesOneRootfs.absolutePath
+        )
         val updatedCommand = busyboxWrapper.addBusyboxAndProot(command)
         val filesystemDir = File(
             ubuntuFiles.filesOneRootfs.absolutePath
@@ -346,7 +352,8 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "INTENT_MONITOR_PATH" to "${UsePath.cmdclickTempIntentMonitorDirPath}/${UsePath.cmdclickTmpIntentMonitorRequestFileName}",
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
             "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
-            "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath
+            "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath,
+            "UBUNTU_BACKUP_ROOTFS_PATH" to ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
         )
     }
 

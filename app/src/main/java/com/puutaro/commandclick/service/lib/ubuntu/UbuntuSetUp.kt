@@ -11,7 +11,6 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
-import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -28,20 +27,23 @@ import java.net.URL
 object UbuntuSetUp {
 
     private val startupFilePath = "/support/startup.sh"
+    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     fun set(
         ubuntuService: UbuntuService,
         monitorFileName: String,
+        isUbuntuRestore: Boolean
     ): Job? {
        return try {
             CoroutineScope(Dispatchers.IO).launch {
                 execSet(
                     ubuntuService,
                     monitorFileName,
+                    isUbuntuRestore
                 )
             }
         } catch (e: Exception){
             FileSystems.updateFile(
-                UsePath.cmdclickMonitorDirPath,
+                cmdclickMonitorDirPath,
                 monitorFileName,
                     "\n\n${e}"
             )
@@ -51,58 +53,71 @@ object UbuntuSetUp {
     private suspend fun execSet(
         ubuntuService: UbuntuService,
         monitorFileName: String,
+        isUbuntuRestore: Boolean,
     ) {
         val context  = ubuntuService.applicationContext
             ?: return
         val ubuntuFiles = ubuntuService.ubuntuFiles
             ?: return
-        try {
-            downloadUbuntu(
-                ubuntuFiles,
-                monitorFileName
-            )
-        } catch (e: Exception){
-            val setupIntent = Intent()
-            setupIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
-            context.sendBroadcast(setupIntent)
-            return
-        }
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            ubuntuFiles,
-        )
         if(
             ubuntuFiles.ubuntuSetupCompFile.isFile
+            && !isUbuntuRestore
         ) {
+            val busyboxExecutor = BusyboxExecutor(
+                context,
+                ubuntuFiles,
+            )
             busyboxExecutor.executeProotCommand(
                 listOf("bash", startupFilePath),
                 monitorFileName = monitorFileName
             )
             return
         }
-        val isWifi = NetworkTool.isWifi(context)
-        if(!isWifi) {
-            val wifiNotiIntent = Intent()
-            wifiNotiIntent.action = BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action
-            context.sendBroadcast(wifiNotiIntent)
-            return
-        }
+//        val isWifi = NetworkTool.isWifi(context)
+//        if(!isWifi) {
+//            val wifiNotiIntent = Intent()
+//            wifiNotiIntent.action = BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action
+//            context.sendBroadcast(wifiNotiIntent)
+//            return
+//        }
         FileSystems.removeAndCreateDir(
             ubuntuFiles.filesOneRootfs.absolutePath
         )
-        delay(200)
-        FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
-            monitorFileName,
-            "\nbysubox instance start"
-        )
+        when(isUbuntuRestore){
+            true
+            -> {
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    UsePath.cmdClickMonitorFileName_2,
+                    "copy start"
+                )
+                FileSystems.copyFile(
+                    ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
+                    "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+                )
+            }
+            else
+            -> {
+                downloadUbuntu(
+                    context,
+                    ubuntuFiles,
+                    monitorFileName
+                )
+                delay(200)
+                FileSystems.copyFile(
+                    UbuntuFiles.downloadRootfsTarGzPath,
+                    "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+                )
+            }
+
+        }
         initSetup(
             context,
             ubuntuFiles,
             monitorFileName
         )
         FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
+            cmdclickMonitorDirPath,
             monitorFileName,
             "\nextract file"
         )
@@ -113,6 +128,10 @@ object UbuntuSetUp {
                 "777",
                 ubuntuFiles.supportDir
             ).joinToString("\t")
+        )
+        val busyboxExecutor = BusyboxExecutor(
+            context,
+            ubuntuFiles,
         )
         busyboxExecutor.executeScript(
             "support/extractRootfs.sh",
@@ -137,7 +156,7 @@ object UbuntuSetUp {
         ubuntuFiles.filesOneRootfsUsrLocalBinSudo.mkdirs()
         ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()
         FileSystems.updateFile(
-            UsePath.cmdclickMonitorDirPath,
+            cmdclickMonitorDirPath,
             monitorFileName,
             "\nsupport copy start"
         )
@@ -150,11 +169,29 @@ object UbuntuSetUp {
     }
 
     private suspend fun downloadUbuntu(
+        context: Context,
+        ubuntuFiles: UbuntuFiles,
+        monitorFileName: String,
+    ){
+        try {
+            execDownloadUbuntu(
+                ubuntuFiles,
+                monitorFileName
+            )
+        } catch (e: Exception){
+            val setupIntent = Intent()
+            setupIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
+            context.sendBroadcast(setupIntent)
+            return
+        }
+    }
+
+    private suspend fun execDownloadUbuntu(
         ubuntuFiles: UbuntuFiles,
         monitorFileName: String,
     ){
         val supportDirPath = ubuntuFiles.supportDir.absolutePath
-        val downloadCompTxt = "downloadComp.txt"
+        val downloadCompTxt = ubuntuFiles.ubuntuRootfsDownloadCompFile.name
         FileSystems.createDirs(
             supportDirPath
         )
@@ -194,7 +231,7 @@ object UbuntuSetUp {
                 output.write(data, 0, count)
                 if(progress <= previoutDisplayProgress) continue
                 FileSystems.updateFile(
-                    UsePath.cmdclickMonitorDirPath,
+                    cmdclickMonitorDirPath,
                     monitorFileName,
                     "download ${progress}%"
                 )
@@ -223,11 +260,11 @@ object UbuntuSetUp {
             ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
+            cmdclickMonitorDirPath,
             monitorFileName,
             "${
                 ReadText(
-                    UsePath.cmdclickMonitorDirPath,
+                    cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
             }\nsupport copy start"
@@ -239,11 +276,11 @@ object UbuntuSetUp {
             ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
+            cmdclickMonitorDirPath,
             monitorFileName,
             "${
                 ReadText(
-                    UsePath.cmdclickMonitorDirPath,
+                    cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
             }\nchmod start"
@@ -258,18 +295,14 @@ object UbuntuSetUp {
             ubuntuFiles.filesOneRootfs.absolutePath
         )
         FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
+            cmdclickMonitorDirPath,
             monitorFileName,
             "${
                 ReadText(
-                    UsePath.cmdclickMonitorDirPath,
+                    cmdclickMonitorDirPath,
                     monitorFileName,
                 ).readText()
             }\nrootfs copy start"
-        )
-        FileSystems.copyFile(
-            UbuntuFiles.downloadRootfsTarGzPath,
-            "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
         )
         if(
             !UbuntuInfo.onForDev
@@ -319,5 +352,7 @@ enum class ButtonLabel(
     CANCEL("CANCEL"),
     RESTART("RESTART"),
     SETUP("SETUP"),
+    RESTORE("RESTORE"),
     TERMINAL("TERMINAL"),
+    BACKUP("BACKUP"),
 }

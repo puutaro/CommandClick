@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Build
 import android.os.Environment
 import android.system.Os
+import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.File
 import java.lang.NullPointerException
 
@@ -37,6 +38,10 @@ class UbuntuFiles(
 //    val cmdShell = "cmd.sh"
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
+    val ubuntuManagerDirPath =
+        File("${filesOneRootfsSupportDir.absolutePath}/ubuntu_manager")
+    val ubuntuManagerShellPath =
+        File("${ubuntuManagerDirPath.absolutePath}/launch_manager.sh")
     val filesOneRootfsSupportCommonDir =
         File("${filesOneRootfsSupportDir.absolutePath}/common")
     val filesOneRootfsEtcDir =
@@ -47,11 +52,17 @@ class UbuntuFiles(
         File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
+    val ubuntuRootfsDownloadCompFile = File(
+        "${filesOneRootfsSupportDir.absolutePath}/downloadComp.txt"
+    )
     val ubuntuSetupCompFile = File(
         "${filesOneRootfsSupportDir.absolutePath}/ubuntuSetupComp.txt"
     )
     val ubuntuLaunchCompFile = File(
         "${filesOneRootfsSupportDir.absolutePath}/ubuntuLaunchComp.txt"
+    )
+    val ubuntuBackupRootfsFile = File(
+            "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsTarGzName}"
     )
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {

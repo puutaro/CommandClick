@@ -21,7 +21,7 @@ object PendingIntentCreator {
         }
         return PendingIntent.getBroadcast(
             context,
-            requestCode,
+            System.currentTimeMillis().toInt(),
             intent,
             PendingIntent.FLAG_UPDATE_CURRENT
                     or PendingIntent.FLAG_IMMUTABLE

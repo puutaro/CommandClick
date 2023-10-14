@@ -4,6 +4,7 @@ enum class UbuntuServerIntentExtra(
     val schema: String
 ) {
     ubuntuStartCommand("ubuntuStartCommand"),
+    ubuntuRestoreSign("ubuntu_restore_sign"),
     ubuntuCroutineJobTypeListForKill("ubuntu_croutine_job_type"),
     adminShellPath("shell_path"),
     adminArgsTabSepaStr("cmd_args_tab_sepa_str"),

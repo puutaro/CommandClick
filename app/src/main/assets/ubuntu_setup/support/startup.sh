@@ -218,6 +218,7 @@ startup_launch_system(){
     export INTENT_MONITOR_PORT="${INTENT_MONITOR_PORT}"
     export INTENT_MONITOR_ADDRESS="${INTENT_MONITOR_ADDRESS}"
     export REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
+   	export UBUNTU_BACKUP_ROOTFS_PATH="${UBUNTU_BACKUP_ROOTFS_PATH}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -234,7 +235,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH \
+		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_BACKUP_ROOTFS_PATH \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -348,28 +349,32 @@ install_user_package(){
 }
 
 launch_setup(){
-	local bash_profile_path="/home/${CMDCLICK_USER}/.bash_profile"
+	local profile_path="/etc/profile"
 	insert_str_to_file \
 		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export APP_DIR_PATH="'${APP_DIR_PATH}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export INTENT_MONITOR_PORT="'${INTENT_MONITOR_PORT}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export INTENT_MONITOR_ADDRESS="'${INTENT_MONITOR_ADDRESS}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
 	insert_str_to_file \
 		'export REPLACE_VARIABLES_TSV_RELATIVE_PATH="'${REPLACE_VARIABLES_TSV_RELATIVE_PATH}'"' \
-		"${bash_profile_path}"
+		"${profile_path}"
+	insert_str_to_file \
+		'export UBUNTU_BACKUP_ROOTFS_PATH="'${UBUNTU_BACKUP_ROOTFS_PATH}'"' \
+		"${profile_path}"
+	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo
 }
 

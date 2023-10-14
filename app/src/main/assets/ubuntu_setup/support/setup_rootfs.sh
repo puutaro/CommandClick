@@ -4,7 +4,8 @@
 # It is assumed that you are root user.
 # sudo -su -
 
-export rootfsTarGz="rootfs.tar.gz" \
+export backup_dir_path="${APP_ROOT_PATH}/backup" \
+;export rootfsTarGz="rootfs.tar.gz" \
 ; cd / \
 ; sudo apt-get purge \
 	--auto-remove -y sudo \
@@ -14,8 +15,9 @@ export rootfsTarGz="rootfs.tar.gz" \
 	--exclude=/host-rootfs \
 	--one-file-system \
 	/ \
-; cp -f ${rootfsTarGz} \
-	/storage/emulated/0/Documents/ 
+; mkdir -p "${backup_dir_path}"
+; cp -vf ${rootfsTarGz} \
+	"${backup_dir_path}/"
 
 
 # export rootfsTarGz="rootfs.tar.gz" \

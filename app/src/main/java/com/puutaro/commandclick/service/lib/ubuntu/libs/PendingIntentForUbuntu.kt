@@ -27,4 +27,28 @@ object PendingIntentForUbuntu {
             )
         )
     }
+
+    fun createManager(
+        ubuntuService: UbuntuService
+    ): PendingIntent {
+        return PendingIntentCreator.create(
+            ubuntuService.applicationContext,
+            BroadCastIntentScheme.FOREGROUND_CMD_START.action,
+            listOf(
+                Pair(
+                    UbuntuServerIntentExtra.foregroundShellPath.schema,
+                    ubuntuService.ubuntuFiles?.ubuntuManagerShellPath?.absolutePath
+                        ?: String()
+                ),
+                Pair(
+                    UbuntuServerIntentExtra.foregroundArgsTabSepaStr.schema,
+                    String()
+                ),
+                Pair(
+                    UbuntuServerIntentExtra.foregroundTimeout.schema,
+                    "2000"
+                ),
+            )
+        )
+    }
 }
