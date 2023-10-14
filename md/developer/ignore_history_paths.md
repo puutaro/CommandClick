@@ -17,7 +17,7 @@ ex)
 
 ```js.js
 /// SETTING_SECTION_START
-setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setReplaceVariables="file://"
 ignoreHistoryPaths="${currentAppDirPath}"
 ignoreHistoryPaths="hogehoge"
 /// SETTING_SECTION_END
@@ -35,9 +35,9 @@ ignoreHistoryPaths="hogehoge"
   
 ```js.js
 /// SETTING_SECTION_START
-setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
-setVariableTypes="file://${01}/${001}/setVariableTypes.js"
-ignoreHistoryPaths="file://${01}/${001}/hideSettingVariables.js"
+setReplaceVariables="file://"
+setVariableTypes="file://"
+ignoreHistoryPaths="file://"
 /// SETTING_SECTION_END
 ```
 
