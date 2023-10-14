@@ -20,7 +20,7 @@ ex)
 setReplaceVariables="settingVariables=editSettingVariables"
 setReplaceVariables="currentAppDirPath=${01}"
 setReplaceVariables="currentFannelDirPath=${currentAppDirPath}/${001}"
-setVariableTypes:GB="file://${01}/${001}/setVariableTypes.js"
+setVariableTypes:GB="file://"
 /// SETTING_SECTION_END
 
 
@@ -40,7 +40,7 @@ const currentFannelDirPath = "${currentFannelDirPath}"
   
 ```js.js
 /// SETTING_SECTION_START
-setReplaceVariables="file://${01}/${001}/setReplaceVariables.js"
+setReplaceVariables="file://"
 /// SETTING_SECTION_END
 ```
 
