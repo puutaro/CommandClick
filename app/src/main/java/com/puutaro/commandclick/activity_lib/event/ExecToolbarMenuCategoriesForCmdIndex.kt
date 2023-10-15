@@ -13,7 +13,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoBack
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecReload
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.util.FragmentTagManager

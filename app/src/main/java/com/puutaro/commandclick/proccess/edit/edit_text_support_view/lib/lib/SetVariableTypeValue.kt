@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter

@@ -5,7 +5,7 @@ import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod

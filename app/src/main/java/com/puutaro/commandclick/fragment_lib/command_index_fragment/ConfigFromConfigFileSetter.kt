@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.*

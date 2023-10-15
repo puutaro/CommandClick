@@ -1,9 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment

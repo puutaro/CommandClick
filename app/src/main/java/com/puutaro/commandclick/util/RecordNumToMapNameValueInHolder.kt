@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 
 

@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.proccess
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject

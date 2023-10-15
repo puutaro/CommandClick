@@ -12,8 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment

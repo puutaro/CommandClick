@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn

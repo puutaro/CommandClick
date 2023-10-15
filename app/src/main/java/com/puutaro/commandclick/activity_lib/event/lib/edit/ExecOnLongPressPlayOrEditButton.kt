@@ -2,7 +2,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.PageSearchToolbarHandler
-import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.proccess.EditLongPressType
 
 object ExecOnLongPressPlayOrEditButton {

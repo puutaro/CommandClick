@@ -5,7 +5,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.view.MenuItem
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsMacroType

@@ -4,10 +4,11 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro

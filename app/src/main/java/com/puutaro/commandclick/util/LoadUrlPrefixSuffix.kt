@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 
 object LoadUrlPrefixSuffix {
 

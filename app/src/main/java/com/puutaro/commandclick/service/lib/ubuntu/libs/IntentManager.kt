@@ -3,7 +3,7 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 
 object IntentManager {
     fun launchFannelIntent(

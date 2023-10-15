@@ -13,9 +13,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.*

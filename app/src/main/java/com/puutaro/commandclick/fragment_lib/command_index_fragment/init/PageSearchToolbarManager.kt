@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 
 class PageSearchToolbarManager(

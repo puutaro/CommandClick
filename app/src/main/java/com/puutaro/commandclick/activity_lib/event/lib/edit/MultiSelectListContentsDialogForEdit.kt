@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.abdeveloper.library.MultiSelectDialog
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object MultiSelectListContentsDialogForEdit {

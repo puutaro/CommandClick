@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.intent
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CommandClickVariables
 
 object ExecJsOrSellHandler {

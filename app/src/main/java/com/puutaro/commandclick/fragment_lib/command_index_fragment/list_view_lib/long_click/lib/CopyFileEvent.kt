@@ -9,7 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment

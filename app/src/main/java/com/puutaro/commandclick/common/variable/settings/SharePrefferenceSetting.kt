@@ -1,6 +1,7 @@
-package com.puutaro.commandclick.common.variable
+package com.puutaro.commandclick.common.variable.settings
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.FragmentTagManager
 
 enum class SharePrefferenceSetting(

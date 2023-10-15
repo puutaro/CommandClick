@@ -3,8 +3,10 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import java.io.File

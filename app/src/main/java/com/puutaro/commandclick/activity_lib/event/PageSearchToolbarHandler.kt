@@ -1,10 +1,9 @@
 package com.puutaro.commandclick.activity_lib.event
 
 import androidx.core.view.isVisible
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 
 class PageSearchToolbarHandler {
     companion object {

@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment

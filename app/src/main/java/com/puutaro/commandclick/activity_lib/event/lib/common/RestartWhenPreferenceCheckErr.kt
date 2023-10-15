@@ -3,8 +3,8 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 class RestartWhenPreferenceCheckErr {

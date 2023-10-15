@@ -1,8 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager

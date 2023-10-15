@@ -5,8 +5,8 @@ import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding

@@ -9,9 +9,9 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn.*
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn

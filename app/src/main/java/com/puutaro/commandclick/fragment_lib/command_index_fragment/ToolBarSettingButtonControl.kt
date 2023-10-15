@@ -10,7 +10,7 @@ import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView

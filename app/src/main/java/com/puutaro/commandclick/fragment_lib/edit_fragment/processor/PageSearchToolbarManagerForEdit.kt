@@ -9,7 +9,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.common.variable.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.EditToolbarSwitcher
 

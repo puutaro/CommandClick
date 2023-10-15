@@ -14,7 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool

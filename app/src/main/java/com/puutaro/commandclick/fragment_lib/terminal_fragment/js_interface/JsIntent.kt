@@ -9,7 +9,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForFzHtml
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra
 import com.puutaro.commandclick.util.Intent.IntentVarient

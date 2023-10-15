@@ -2,8 +2,8 @@ package com.puutaro.commandclick.proccess
 
 import android.content.SharedPreferences
 import android.view.View
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment

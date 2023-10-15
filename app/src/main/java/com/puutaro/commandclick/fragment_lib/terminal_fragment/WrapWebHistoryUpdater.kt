@@ -3,9 +3,9 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment

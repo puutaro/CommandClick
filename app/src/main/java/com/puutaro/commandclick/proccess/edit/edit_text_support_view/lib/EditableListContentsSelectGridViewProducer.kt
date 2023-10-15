@@ -11,7 +11,7 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getElsbMap
@@ -24,7 +24,6 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import org.eclipse.jgit.diff.Edit
 import java.io.File
 
 

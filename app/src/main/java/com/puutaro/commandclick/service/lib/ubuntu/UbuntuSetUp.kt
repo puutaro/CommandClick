@@ -259,7 +259,7 @@ object UbuntuSetUp {
         FileSystems.createDirs(
             ubuntuFiles.supportDir.absolutePath
         )
-        FileSystems.writeFile(
+        FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
             "${
@@ -275,7 +275,7 @@ object UbuntuSetUp {
             "ubuntu_setup",
             ubuntuFiles.supportDir.absolutePath
         )
-        FileSystems.writeFile(
+        FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
             "${
@@ -294,7 +294,7 @@ object UbuntuSetUp {
         FileSystems.createDirs(
             ubuntuFiles.filesOneRootfs.absolutePath
         )
-        FileSystems.writeFile(
+        FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
             "${

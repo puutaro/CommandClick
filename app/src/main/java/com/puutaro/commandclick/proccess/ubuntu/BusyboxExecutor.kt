@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
 import android.content.Context
+import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
+import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -197,6 +199,19 @@ class BusyboxExecutor(
             "ubuntu_setup",
             ubuntuFiles.filesOneRootfs.absolutePath
         )
+        val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
+        CoroutineScope(Dispatchers.IO).launch {
+            FileSystems.writeFile(
+                filesOneRootfsSupportDirPath,
+                UbuntuFiles.waitQuizTsvName,
+                WaitQuizPair.makeQuizPairCon()
+            )
+            FileSystems.writeFile(
+                filesOneRootfsSupportDirPath,
+                UbuntuFiles.ubuntuEnvTsvName,
+                UbuntuEnvTsv.makeTsv()
+            )
+        }
         val updatedCommand = busyboxWrapper.addBusyboxAndProot(command)
         val filesystemDir = File(
             ubuntuFiles.filesOneRootfs.absolutePath
@@ -349,11 +364,11 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "CREATE_IMAGE_SWITCH" to UbuntuInfo.createImageSwitch,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
             "HTTP2_SHELL_PATH" to "${UsePath.cmdclickTempCmdDirPath}/${UsePath.cmdclickTempCmdShellName}",
-            "INTENT_MONITOR_PATH" to "${UsePath.cmdclickTempIntentMonitorDirPath}/${UsePath.cmdclickTmpIntentMonitorRequestFileName}",
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
             "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
             "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath,
             "UBUNTU_BACKUP_ROOTFS_PATH" to ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
+            "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
         )
     }
 

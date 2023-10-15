@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.QuoteTool

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.view_model.activity
 
 import androidx.lifecycle.ViewModel
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Job

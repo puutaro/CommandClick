@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.delay

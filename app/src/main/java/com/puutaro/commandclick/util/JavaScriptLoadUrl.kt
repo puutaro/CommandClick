@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.util
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CcImportManager

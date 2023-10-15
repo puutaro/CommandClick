@@ -7,8 +7,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
-import com.puutaro.commandclick.common.variable.ReadLines
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage

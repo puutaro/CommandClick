@@ -10,7 +10,10 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.*
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.EditFragmentBinding

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable
+package com.puutaro.commandclick.common.variable.variables
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
@@ -24,7 +24,7 @@ class WebUrlVariables {
         fun makeUrlHistoryFile(
             dirPath: String,
         ){
-            val urlHistoryContents = "CommandClick\t${commandClickGitUrl}\n"
+            val urlHistoryContents = "CommandClick\t$commandClickGitUrl\n"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             if(
                 File(

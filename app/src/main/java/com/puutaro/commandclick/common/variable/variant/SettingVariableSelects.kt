@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable
+package com.puutaro.commandclick.common.variable.variant
 
 object SettingVariableSelects {
     enum class TerminalDoSelects {

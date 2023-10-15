@@ -12,7 +12,7 @@ object UsePath {
     val HTML_FILE_SUFFIX = ".html"
     val HTM_FILE_SUFFIX = ".htm"
     val TXT_FILE_SUFFIX = ".txt"
-    private val rootPath = Environment.getExternalStorageDirectory().absolutePath +
+    val rootPath = Environment.getExternalStorageDirectory().absolutePath +
             "/" + Environment.DIRECTORY_DOCUMENTS
     private const val cmdclickDirName = "cmdclick"
     val cmdclickDirPath = "$rootPath/$cmdclickDirName"
@@ -40,12 +40,6 @@ object UsePath {
     val cmdclickTempUbuntuServiceDirPath = "$rootPath/$cmdclickTempUbuntuServiceRelativeDirPath"
     const val cmdclickTmpUbuntuServiceActiveFileName = "isActinveUbuntuService.txt"
     const val cmdclickTmpUpdateMonitorFileName = "updateMonitor.txt"
-    private const val cmdclickTmpIntentMonitorDirName = "intentMonitor"
-    private const val cmdclickTempIntentMonitorRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpIntentMonitorDirName"
-    val cmdclickTempIntentMonitorDirPath = "$rootPath/$cmdclickTempIntentMonitorRelativeDirPath"
-    const val cmdclickTmpIntentMonitorRequestFileName = "requestIntent.txt"
-    private const val cmdclickTempUpdateMonitorRelativeFilePath = "$cmdclickTempRelativePath/$cmdclickTmpUpdateMonitorFileName"
-    val cmdclickTempUpdateMonitorFilePath = "$rootPath/$cmdclickTempUpdateMonitorRelativeFilePath"
     private const val cmdclickTmpCreateDirName = "create"
     private const val cmdclickTempCreateRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpCreateDirName"
     val cmdclickTempCreateDirPath = "$rootPath/$cmdclickTempCreateRelativeDirPath"

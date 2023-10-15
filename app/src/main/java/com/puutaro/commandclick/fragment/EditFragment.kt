@@ -14,8 +14,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex

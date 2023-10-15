@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.UrlTexter

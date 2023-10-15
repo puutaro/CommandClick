@@ -3,10 +3,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.content.Context
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AutoShellExecManager
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler

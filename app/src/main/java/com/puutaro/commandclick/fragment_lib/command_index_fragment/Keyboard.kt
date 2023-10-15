@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarWidgetWeightForLinearLayout
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex

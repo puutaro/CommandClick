@@ -7,7 +7,7 @@ import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems

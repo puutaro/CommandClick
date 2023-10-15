@@ -212,13 +212,13 @@ startup_launch_system(){
 	rm -rf  /tmp/pulse*
 	su - "${CMDCLICK_USER}" <<-EOF
 	export APP_ROOT_PATH="${APP_ROOT_PATH}"
-	export INTENT_MONITOR_PATH="${INTENT_MONITOR_PATH}"
 	export MONITOR_DIR_PATH="${MONITOR_DIR_PATH}"
     export APP_DIR_PATH="${APP_DIR_PATH}"
     export INTENT_MONITOR_PORT="${INTENT_MONITOR_PORT}"
     export INTENT_MONITOR_ADDRESS="${INTENT_MONITOR_ADDRESS}"
     export REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
    	export UBUNTU_BACKUP_ROOTFS_PATH="${UBUNTU_BACKUP_ROOTFS_PATH}"
+   	export UBUNTU_ENV_TSV_NAME="${UBUNTU_ENV_TSV_NAME}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -235,7 +235,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,INTENT_MONITOR_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_BACKUP_ROOTFS_PATH \
+		-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_BACKUP_ROOTFS_PATH,UBUNTU_ENV_TSV_NAME \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -354,9 +354,6 @@ launch_setup(){
 		'export APP_ROOT_PATH="'${APP_ROOT_PATH}'"' \
 		"${profile_path}"
 	insert_str_to_file \
-		'export INTENT_MONITOR_PATH="'${INTENT_MONITOR_PATH}'"' \
-		"${profile_path}"
-	insert_str_to_file \
 		'export MONITOR_DIR_PATH="'${MONITOR_DIR_PATH}'"' \
 		"${profile_path}"
 	insert_str_to_file \
@@ -373,6 +370,9 @@ launch_setup(){
 		"${profile_path}"
 	insert_str_to_file \
 		'export UBUNTU_BACKUP_ROOTFS_PATH="'${UBUNTU_BACKUP_ROOTFS_PATH}'"' \
+		"${profile_path}"
+	insert_str_to_file \
+		'export UBUNTU_ENV_TSV_NAME="'${UBUNTU_ENV_TSV_NAME}'"' \
 		"${profile_path}"
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo

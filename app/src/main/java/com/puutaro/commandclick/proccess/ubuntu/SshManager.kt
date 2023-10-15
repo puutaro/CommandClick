@@ -112,7 +112,7 @@ object SshManager {
         } catch (e: java.lang.Exception) {
             channel?.disconnect()
             session?.disconnect()
-            FileSystems.writeFile(
+            FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 sysMonitorFileName,
                 "${e}"

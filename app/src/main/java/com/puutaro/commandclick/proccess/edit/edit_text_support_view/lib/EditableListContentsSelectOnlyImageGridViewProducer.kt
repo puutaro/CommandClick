@@ -8,7 +8,7 @@ import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AppHistoryManager

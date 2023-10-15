@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText

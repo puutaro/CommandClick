@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents

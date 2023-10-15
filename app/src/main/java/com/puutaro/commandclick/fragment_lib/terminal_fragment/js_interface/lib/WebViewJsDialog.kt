@@ -19,8 +19,8 @@ import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager

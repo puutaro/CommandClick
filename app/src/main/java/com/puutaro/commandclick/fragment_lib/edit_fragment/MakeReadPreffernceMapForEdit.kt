@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FragmentTagManager
 

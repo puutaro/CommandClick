@@ -13,10 +13,11 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.FannelListVariable
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.service.variable.ServiceNotificationId

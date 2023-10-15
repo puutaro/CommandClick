@@ -8,8 +8,8 @@ import android.net.Uri
 import android.os.Bundle
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment

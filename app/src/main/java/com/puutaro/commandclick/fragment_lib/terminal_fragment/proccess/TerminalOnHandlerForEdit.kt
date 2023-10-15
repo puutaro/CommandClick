@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 object TerminalOnHandlerForEdit {

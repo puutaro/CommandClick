@@ -11,9 +11,9 @@ import android.widget.*
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.FannelListVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.FannelListVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.InstallFannelListAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager

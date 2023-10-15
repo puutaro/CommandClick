@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 

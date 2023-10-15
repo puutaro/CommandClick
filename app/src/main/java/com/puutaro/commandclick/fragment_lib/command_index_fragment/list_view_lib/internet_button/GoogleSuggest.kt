@@ -8,7 +8,7 @@ import android.os.Build
 import android.text.Editable
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard

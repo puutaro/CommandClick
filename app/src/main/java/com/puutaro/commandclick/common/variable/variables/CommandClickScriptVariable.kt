@@ -1,5 +1,8 @@
-package com.puutaro.commandclick.common.variable
+package com.puutaro.commandclick.common.variable.variables
 
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
@@ -27,22 +30,22 @@ object CommandClickScriptVariable {
     private const val commandSectionEndSentence = "CMD_VARIABLE_SECTION_END"
     val LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP = mapOf(
         LanguageTypeSelects.SHELL_SCRIPT to mapOf(
-            HolderTypeName.LABELING_SEC_START to "### ${labelingSectionStartSentence}",
-            HolderTypeName.LABELING_SEC_END to "### ${labelingSectionEndSentence}",
-            HolderTypeName.SETTING_SEC_START to "### ${settingSectionStartSentence}",
-            HolderTypeName.SETTING_SEC_END to "### ${settingSectionEndSentence}",
-            HolderTypeName.CMD_SEC_START to "### ${commandSectionStartSentence}",
-            HolderTypeName.CMD_SEC_END to "### ${commandSectionEndSentence}",
+            HolderTypeName.LABELING_SEC_START to "### $labelingSectionStartSentence",
+            HolderTypeName.LABELING_SEC_END to "### $labelingSectionEndSentence",
+            HolderTypeName.SETTING_SEC_START to "### $settingSectionStartSentence",
+            HolderTypeName.SETTING_SEC_END to "### $settingSectionEndSentence",
+            HolderTypeName.CMD_SEC_START to "### $commandSectionStartSentence",
+            HolderTypeName.CMD_SEC_END to "### $commandSectionEndSentence",
             HolderTypeName.SCRIPT_START to "### Please write bellow with shell script",
 
         ),
         LanguageTypeSelects.JAVA_SCRIPT to mapOf(
-            HolderTypeName.LABELING_SEC_START to "/// ${labelingSectionStartSentence}",
-            HolderTypeName.LABELING_SEC_END to "/// ${labelingSectionEndSentence}",
-            HolderTypeName.SETTING_SEC_START to "/// ${settingSectionStartSentence}",
-            HolderTypeName.SETTING_SEC_END to "/// ${settingSectionEndSentence}",
-            HolderTypeName.CMD_SEC_START to "/// ${commandSectionStartSentence}",
-            HolderTypeName.CMD_SEC_END to "/// ${commandSectionEndSentence}",
+            HolderTypeName.LABELING_SEC_START to "/// $labelingSectionStartSentence",
+            HolderTypeName.LABELING_SEC_END to "/// $labelingSectionEndSentence",
+            HolderTypeName.SETTING_SEC_START to "/// $settingSectionStartSentence",
+            HolderTypeName.SETTING_SEC_END to "/// $settingSectionEndSentence",
+            HolderTypeName.CMD_SEC_START to "/// $commandSectionStartSentence",
+            HolderTypeName.CMD_SEC_END to "/// $commandSectionEndSentence",
             HolderTypeName.SCRIPT_START to "/// Please write bellow with javascript",
         )
     )
@@ -262,24 +265,24 @@ object CommandClickScriptVariable {
     private val limitNumForListConSlSpi =
         ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
     private val setVaraibleValueForHomeScriptUrlsPath =
-        "${listPathForListConSlSpi}=" +
-                "${homeScriptUrlsFilePath}!${limitNumForListConSlSpi}=20" +
-                "|${buttonCmd}=" +
+        "$listPathForListConSlSpi=" +
+                "$homeScriptUrlsFilePath!$limitNumForListConSlSpi=20" +
+                "|$buttonCmd=" +
                     listOf(
-                        "setf ${buttonSetfType}=${SettingCmdArgs.ListAdd.name}",
-                        "${buttonSetfListAddSuffix}=.js&.sh&.html",
-                        "${buttonSetfListAddSourceDirPath}=\${01}",
-                        "${buttonSetfListAddHowFull}=on!${buttonLabel}=ADD"
+                        "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+                        "$buttonSetfListAddSuffix=.js&.sh&.html",
+                        "$buttonSetfListAddSourceDirPath=\${01}",
+                        "$buttonSetfListAddHowFull=on!$buttonLabel=ADD"
                     ).joinToString(" ")
     private val setVariableValueForHomeFannelsPath =
-        "${listPathForListConSlSpi}=" +
-                "${homeFannelsFilePath}!${limitNumForListConSlSpi}=20" +
-                "|${buttonCmd}=" +
+        "$listPathForListConSlSpi=" +
+                "$homeFannelsFilePath!$limitNumForListConSlSpi=20" +
+                "|$buttonCmd=" +
                 listOf(
-                    "setf ${buttonSetfType}=${SettingCmdArgs.ListAdd.name}",
-                    "${buttonSetfListAddSuffix}=${UsePath.JS_FILE_SUFFIX}",
-                    "${buttonSetfListAddSourceDirPath}=${UsePath.cmdclickAppHistoryDirAdminPath}" +
-                            "!${buttonLabel}=ADD"
+                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+                    "$buttonSetfListAddSourceDirPath=${UsePath.cmdclickAppHistoryDirAdminPath}" +
+                            "!$buttonLabel=ADD"
                 ).joinToString(" ")
     private val srcImageAnchorLongPressMenuFilePath =
         UsePath.srcImageAnchorLongPressMenuFilePath
@@ -290,76 +293,76 @@ object CommandClickScriptVariable {
     private val noScrollSaveUrlsFilePath =
         UsePath.noScrollSaveUrlsFilePath
     private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
-        "${listPathForListConSlSpi}=" +
-                "${srcImageAnchorLongPressMenuFilePath}!${limitNumForListConSlSpi}=20" +
-                "|${buttonCmd}=" +
+        "$listPathForListConSlSpi=" +
+                "$srcImageAnchorLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "|$buttonCmd=" +
                 listOf(
-                    "setf ${buttonSetfType}=${SettingCmdArgs.ListAdd.name}",
-                    "${buttonSetfListAddSuffix}=${UsePath.JS_FILE_SUFFIX}",
-                    "${buttonSetfListAddSourceDirPath}=\${01}" +
-                            "!${buttonLabel}=ADD"
+                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+                    "$buttonSetfListAddSourceDirPath=\${01}" +
+                            "!$buttonLabel=ADD"
                 ).joinToString(" ")
     private val setVariableValueForSrcAnchorLongPressMenuFilePath =
-        "${listPathForListConSlSpi}=" +
-                "${srcAnchorLongPressMenuFilePath}!${limitNumForListConSlSpi}=20" +
-                "|${buttonCmd}=" +
+        "$listPathForListConSlSpi=" +
+                "$srcAnchorLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "|$buttonCmd=" +
                 listOf(
-                    "setf ${buttonSetfType}=${SettingCmdArgs.ListAdd.name}",
-                    "${buttonSetfListAddSuffix}=${UsePath.JS_FILE_SUFFIX}",
-                    "${buttonSetfListAddSourceDirPath}=\${01}" +
-                            "!${buttonLabel}=ADD"
+                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+                    "$buttonSetfListAddSourceDirPath=\${01}" +
+                            "!$buttonLabel=ADD"
                 ).joinToString(" ")
     private val setVariableValueForImageLongPressMenuFilePath =
-        "${listPathForListConSlSpi}=" +
-                "${imageLongPressMenuFilePath}!${limitNumForListConSlSpi}=20" +
-                "|${buttonCmd}=" +
+        "$listPathForListConSlSpi=" +
+                "$imageLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "|$buttonCmd=" +
                 listOf(
-                    "setf ${buttonSetfType}=${SettingCmdArgs.ListAdd.name}",
-                    "${buttonSetfListAddSuffix}=${UsePath.JS_FILE_SUFFIX}",
-                    "${buttonSetfListAddSourceDirPath}=\${01}" +
-                            "!${buttonLabel}=ADD"
+                    "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
+                    "$buttonSetfListAddSuffix=${UsePath.JS_FILE_SUFFIX}",
+                    "$buttonSetfListAddSourceDirPath=\${01}" +
+                            "!$buttonLabel=ADD"
                 ).joinToString(" ")
     private val setVariableValueForNoScrollSaveUrlsFilePath =
-        "${listPathForListConSlSpi}=${noScrollSaveUrlsFilePath}"
+        "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
     val setVariableForSettingHolder: List<String> = listOf(
-        "${SHELL_EXEC_ENV}:CB=${shellExecEnvUbuntu}!${shellExecEnvTermux}",
-        "${UBUNTU_EXEC_MODE}:CB=${ubuntuExecModeSelectsBackground}!${ubuntuExecModeSelectsForeground}",
-        "${UBUNTU_OUTPUT_FILE}:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
-        "${TERMINAL_DO}:CB=${terminalOn}!${terminalTermux}!${terminalOff}",
-        "${EDIT_EXECUTE}:CB=${editExecuteNo}!${editExecuteOnce}!${editExecuteAlways}",
-        "${TERMINAL_SIZE_TYPE}:CB=${terminalSizeTypeOff}!${terminalSizeTypeShort}!${terminalSizeTypeLong}",
-        "${TERMINAL_OUTPUT_MODE}:CB=${terminalOutPutModeNormal}!${terminalOutPutModeReflash}!${terminalOutPutModeReflashAndFirstRow}!${terminalOutPutModeDebug}!${terminalOutPutModeNo}",
-        "${ON_UPDATE_LAST_MODIFY}:CB=${onUpdateLastModifyOn}!${onUpdateLastModifyOff}",
-        "${CMDCLICK_ON_AUTO_EXEC}:CB=${autoExecSelectsOn}!${autoExecSelectsOff}",
-        "${CMDCLICK_ON_HISTORY_URL_TITLE}:CB=${onHistoryUrlTitleON}!${onHistoryUrlTitleOff}",
-        "${CMDCLICK_HISTORY_SWITCH}:CB=${historySwitchOff}!${historySwitchOn}!${historySwitchInherit}",
-        "${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}:CB=${urlHistoryOrButtonExecUrlHistory}!${urlHistoryOrButtonExecUrlButtonExec}!${urlHistoryOrButtonExecUrlInherit}",
-        "${STATUS_BAR_ICON_COLOR_MODE}:CB=${statusBarIconColorModeWhite}!${statusBarIconColorModeBlack}!${statusBarIconColorInherit}",
-        "${ON_URL_LAUNCH_MACRO}:TXT:ECB=${onUrlLaunchMacroOff}!${onUrlLaunchMacroRecent}!${onUrlLaunchMacroFrequency}",
-        "${ON_ADBLOCK}:CB=${onAdBlockInherit}!${onAdBlockOff}!${onAdBlockOn}",
-        "${ON_TERM_BACKEND_WHEN_START}:CB=${onTermBackendWhenStartSelectsInherit}!${onTermBackendWhenStartSelectsOff}!${onTermBackendWhenStartSelectsOn}",
-        "${ON_TERM_VISIBLE_WHEN_KEYBOARD}:CB=${onTermVisibleWhenKeyboardSelectsInherit}!${onTermVisibleWhenKeyboardSelectsOn}!${onTermVisibleWhenKeyboardSelectsOff}",
-        "${ON_TERM_SHORT_WHEN_LOAD}:CB=${onTermShortWhenLoadSelectsInherit}!${onTermShortWhenLoadSelectsOn}!${onTermShortWhenLoadSelectsOff}",
-        "${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}:CB=${disableShowToolbarWhenHighlightOn}!${disableShowToolbarWhenHighlightOff}",
-        "${ON_URL_HISTORY_REGISTER}:CB=${onUrlHistoryRegisterOn}!${onUrlHistoryRegisterOff}",
-        "${OVERRIDE_ITEM_CLICK_EXEC}:CB=${overrideItemClickExecSelectsOff}!${overrideItemClickExecSelectsOn}",
-        "${DISABLE_SETTING_BUTTON}:CB=${disableSettingButtonOff}!${disableSettingButtonOn}",
-        "${DISABLE_EDIT_BUTTON}:CB=${disableEditButtonOff}!${disableEditButtonOn}",
-        "${DISABLE_PLAY_BUTTON}:CB=${disablePlayButtonOff}!${disablePlayButtonOn}",
-        "${DEFAULT_MONITOR_FILE}:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
-        "${CMDCLICK_TERMINAL_FONT_ZOOM}:TXT:NUM=0..1000!1",
-        "${TERMINAL_COLOR}:TXT:CLR=",
-        "${TERMINAL_FONT_COLOR}:TXT:CLR=",
-        "${EXEC_JS_OR_HTML_PATH}:TXT:FL=",
-        "${EXEC_PLAY_BTN_LONG_PRESS}:TXT:FL=",
-        "${EXEC_EDIT_BTN_LONG_PRESS}:TXT:FL=",
-        "${HOME_SCRIPT_URLS_PATH}:DSL:BTN=${setVaraibleValueForHomeScriptUrlsPath}",
-        "${CMDCLICK_HOME_FANNELS_PATH}:DSL:BTN=${setVariableValueForHomeFannelsPath}",
-        "${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcImageAnchorLongPressMenuFilePath}",
-        "${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForSrcAnchorLongPressMenuFilePath}",
-        "${IMAGE_LONG_PRESS_MENU_FILE_PATH}:DSL:BTN=${setVariableValueForImageLongPressMenuFilePath}",
-        "${NO_SCROLL_SAVE_URLS}:DSL=${setVariableValueForNoScrollSaveUrlsFilePath}",
-        "${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}:TXT:NUM=0..60!10"
+        "$SHELL_EXEC_ENV:CB=$shellExecEnvUbuntu!$shellExecEnvTermux",
+        "$UBUNTU_EXEC_MODE:CB=$ubuntuExecModeSelectsBackground!$ubuntuExecModeSelectsForeground",
+        "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
+        "$TERMINAL_DO:CB=$terminalOn!$terminalTermux!$terminalOff",
+        "$EDIT_EXECUTE:CB=$editExecuteNo!$editExecuteOnce!$editExecuteAlways",
+        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff!$terminalSizeTypeShort!$terminalSizeTypeLong",
+        "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal!$terminalOutPutModeReflash!$terminalOutPutModeReflashAndFirstRow!$terminalOutPutModeDebug!$terminalOutPutModeNo",
+        "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn!$onUpdateLastModifyOff",
+        "$CMDCLICK_ON_AUTO_EXEC:CB=$autoExecSelectsOn!$autoExecSelectsOff",
+        "$CMDCLICK_ON_HISTORY_URL_TITLE:CB=$onHistoryUrlTitleON!$onHistoryUrlTitleOff",
+        "$CMDCLICK_HISTORY_SWITCH:CB=$historySwitchOff!$historySwitchOn!$historySwitchInherit",
+        "$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC:CB=$urlHistoryOrButtonExecUrlHistory!$urlHistoryOrButtonExecUrlButtonExec!$urlHistoryOrButtonExecUrlInherit",
+        "$STATUS_BAR_ICON_COLOR_MODE:CB=$statusBarIconColorModeWhite!$statusBarIconColorModeBlack!$statusBarIconColorInherit",
+        "$ON_URL_LAUNCH_MACRO:TXT:ECB=$onUrlLaunchMacroOff!$onUrlLaunchMacroRecent!$onUrlLaunchMacroFrequency",
+        "$ON_ADBLOCK:CB=$onAdBlockInherit!$onAdBlockOff!$onAdBlockOn",
+        "$ON_TERM_BACKEND_WHEN_START:CB=$onTermBackendWhenStartSelectsInherit!$onTermBackendWhenStartSelectsOff!$onTermBackendWhenStartSelectsOn",
+        "$ON_TERM_VISIBLE_WHEN_KEYBOARD:CB=$onTermVisibleWhenKeyboardSelectsInherit!$onTermVisibleWhenKeyboardSelectsOn!$onTermVisibleWhenKeyboardSelectsOff",
+        "$ON_TERM_SHORT_WHEN_LOAD:CB=$onTermShortWhenLoadSelectsInherit!$onTermShortWhenLoadSelectsOn!$onTermShortWhenLoadSelectsOff",
+        "$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT:CB=$disableShowToolbarWhenHighlightOn!$disableShowToolbarWhenHighlightOff",
+        "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn!$onUrlHistoryRegisterOff",
+        "$OVERRIDE_ITEM_CLICK_EXEC:CB=$overrideItemClickExecSelectsOff!$overrideItemClickExecSelectsOn",
+        "$DISABLE_SETTING_BUTTON:CB=$disableSettingButtonOff!$disableSettingButtonOn",
+        "$DISABLE_EDIT_BUTTON:CB=$disableEditButtonOff!$disableEditButtonOn",
+        "$DISABLE_PLAY_BUTTON:CB=$disablePlayButtonOff!$disablePlayButtonOn",
+        "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
+        "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000!1",
+        "$TERMINAL_COLOR:TXT:CLR=",
+        "$TERMINAL_FONT_COLOR:TXT:CLR=",
+        "$EXEC_JS_OR_HTML_PATH:TXT:FL=",
+        "$EXEC_PLAY_BTN_LONG_PRESS:TXT:FL=",
+        "$EXEC_EDIT_BTN_LONG_PRESS:TXT:FL=",
+        "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
+        "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
+        "$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcImageAnchorLongPressMenuFilePath",
+        "$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcAnchorLongPressMenuFilePath",
+        "$IMAGE_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForImageLongPressMenuFilePath",
+        "$NO_SCROLL_SAVE_URLS:DSL=$setVariableValueForNoScrollSaveUrlsFilePath",
+        "$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF:TXT:NUM=0..60!10"
     )
 
     fun makeShellScriptName(
@@ -383,131 +386,175 @@ object CommandClickScriptVariable {
 
     fun makeDescription(): String {
         return """# Table of Contents
-            |# ${mdDash}
-            |# * [${settingVariableStr}](#${replaceLowerAdnBlankDash(settingVariableStr)})
-            |#  * [${SCRIPT_FILE_NAME}](#${replaceLowerAdnBlankDash(SCRIPT_FILE_NAME)})
-            |#  * [${SHELL_EXEC_ENV}](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
-            |#  * [${UBUNTU_EXEC_MODE}](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
-            |#  * [${UBUNTU_OUTPUT_FILE}](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
-	        |#  * [${TERMINAL_SIZE_TYPE}](#${replaceLowerAdnBlankDash(TERMINAL_SIZE_TYPE)})
-            |#  * [${TERMINAL_OUTPUT_MODE}](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
-            |#  * [${CMDCLICK_ON_AUTO_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
-            |#  * [${ON_UPDATE_LAST_MODIFY}](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
-            |#  * [${IGNORE_HISTORY_PATHS}](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
-            |#  * [${CMDCLICK_HISTORY_SWITCH}](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
-            |#  * [${CMDCLICK_ON_HISTORY_URL_TITLE}](#${replaceLowerAdnBlankDash(CMDCLICK_ON_HISTORY_URL_TITLE)})
-            |#  * [${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
-            |#  * [${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
-            |#  * [${IMAGE_LONG_PRESS_MENU_FILE_PATH}](#${replaceLowerAdnBlankDash(IMAGE_LONG_PRESS_MENU_FILE_PATH)})
-            |#  * [${HOME_SCRIPT_URLS_PATH}](#${replaceLowerAdnBlankDash(HOME_SCRIPT_URLS_PATH)})
-            |#  * [${CMDCLICK_HOME_FANNELS_PATH}](#${replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
-            |#  * [${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}](#${replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
-            |#  * [${ON_ADBLOCK}](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
-            |#  * [${ON_TERM_BACKEND_WHEN_START}](#${replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
-            |#  * [${ON_TERM_VISIBLE_WHEN_KEYBOARD}](#${replaceLowerAdnBlankDash(ON_TERM_VISIBLE_WHEN_KEYBOARD)})
-            |#  * [${ON_TERM_SHORT_WHEN_LOAD}](#${replaceLowerAdnBlankDash(ON_TERM_SHORT_WHEN_LOAD)})
-            |#  * [${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}](#${replaceLowerAdnBlankDash(DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT)})
-            |#  * [${ON_URL_LAUNCH_MACRO}](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
-            |#  * [${ON_URL_HISTORY_REGISTER}](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
-            |#  * [${DEFAULT_MONITOR_FILE}](#${replaceLowerAdnBlankDash(DEFAULT_MONITOR_FILE)})
-            |#  * [${EXEC_JS_OR_HTML_PATH}](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
-            |#  * [${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}](#${replaceLowerAdnBlankDash(UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF)})
-            |#  * [${CMDCLICK_TERMINAL_FONT_ZOOM}](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
-            |#  * [${TERMINAL_FONT_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
-            |#  * [${TERMINAL_COLOR}](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
-            |#  * [${EXEC_PLAY_BTN_LONG_PRESS}](#${replaceLowerAdnBlankDash(EXEC_PLAY_BTN_LONG_PRESS)})
-            |#  * [${EXEC_EDIT_BTN_LONG_PRESS}](#${replaceLowerAdnBlankDash(EXEC_EDIT_BTN_LONG_PRESS)})
+            |# $mdDash
+            |# * [$settingVariableStr](#${replaceLowerAdnBlankDash(settingVariableStr)})
+            |#  * [$SCRIPT_FILE_NAME](#${replaceLowerAdnBlankDash(SCRIPT_FILE_NAME)})
+            |#  * [$SHELL_EXEC_ENV](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
+            |#  * [$UBUNTU_EXEC_MODE](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
+            |#  * [$UBUNTU_OUTPUT_FILE](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
+	        |#  * [$TERMINAL_SIZE_TYPE](#${replaceLowerAdnBlankDash(TERMINAL_SIZE_TYPE)})
+            |#  * [$TERMINAL_OUTPUT_MODE](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
+            |#  * [$CMDCLICK_ON_AUTO_EXEC](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
+            |#  * [$ON_UPDATE_LAST_MODIFY](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
+            |#  * [$IGNORE_HISTORY_PATHS](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
+            |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
+            |#  * [$CMDCLICK_ON_HISTORY_URL_TITLE](#${
+            replaceLowerAdnBlankDash(
+                CMDCLICK_ON_HISTORY_URL_TITLE
+            )
+        })
+            |#  * [$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
+            replaceLowerAdnBlankDash(
+                SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
+            )
+        })
+            |#  * [$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
+            replaceLowerAdnBlankDash(
+                SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH
+            )
+        })
+            |#  * [$IMAGE_LONG_PRESS_MENU_FILE_PATH](#${
+            replaceLowerAdnBlankDash(
+                IMAGE_LONG_PRESS_MENU_FILE_PATH
+            )
+        })
+            |#  * [$HOME_SCRIPT_URLS_PATH](#${replaceLowerAdnBlankDash(HOME_SCRIPT_URLS_PATH)})
+            |#  * [$CMDCLICK_HOME_FANNELS_PATH](#${
+            replaceLowerAdnBlankDash(
+                CMDCLICK_HOME_FANNELS_PATH
+            )
+        })
+            |#  * [$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC](#${
+            replaceLowerAdnBlankDash(
+                CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
+            )
+        })
+            |#  * [$ON_ADBLOCK](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
+            |#  * [$ON_TERM_BACKEND_WHEN_START](#${
+            replaceLowerAdnBlankDash(
+                ON_TERM_BACKEND_WHEN_START
+            )
+        })
+            |#  * [$ON_TERM_VISIBLE_WHEN_KEYBOARD](#${
+            replaceLowerAdnBlankDash(
+                ON_TERM_VISIBLE_WHEN_KEYBOARD
+            )
+        })
+            |#  * [$ON_TERM_SHORT_WHEN_LOAD](#${replaceLowerAdnBlankDash(ON_TERM_SHORT_WHEN_LOAD)})
+            |#  * [$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT](#${
+            replaceLowerAdnBlankDash(
+                DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT
+            )
+        })
+            |#  * [$ON_URL_LAUNCH_MACRO](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
+            |#  * [$ON_URL_HISTORY_REGISTER](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
+            |#  * [$DEFAULT_MONITOR_FILE](#${replaceLowerAdnBlankDash(DEFAULT_MONITOR_FILE)})
+            |#  * [$EXEC_JS_OR_HTML_PATH](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
+            |#  * [$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF](#${
+            replaceLowerAdnBlankDash(
+                UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF
+            )
+        })
+            |#  * [$CMDCLICK_TERMINAL_FONT_ZOOM](#${
+            replaceLowerAdnBlankDash(
+                CMDCLICK_TERMINAL_FONT_ZOOM
+            )
+        })
+            |#  * [$TERMINAL_FONT_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
+            |#  * [$TERMINAL_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
+            |#  * [$EXEC_PLAY_BTN_LONG_PRESS](#${replaceLowerAdnBlankDash(EXEC_PLAY_BTN_LONG_PRESS)})
+            |#  * [$EXEC_EDIT_BTN_LONG_PRESS](#${replaceLowerAdnBlankDash(EXEC_EDIT_BTN_LONG_PRESS)})
             |
             |
-            |# ## ${settingVariableStr}
-            |# ${mdDash}
+            |# ## $settingVariableStr
+            |# $mdDash
             |# 
-            |# ### ${SCRIPT_FILE_NAME}
+            |# ### $SCRIPT_FILE_NAME
             |# Rename script name
             |
-            |# ### ${SHELL_EXEC_ENV}
+            |# ### $SHELL_EXEC_ENV
             |# Set shell exec enviroment
             |
             |# | option | descripton |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${shellExecEnvUbuntu}` | ubuntu |
-            |# | `${shellExecEnvTermux}` | termux |
+            |# | $mdDash | $mdDash |
+            |# | `$shellExecEnvUbuntu` | ubuntu |
+            |# | `$shellExecEnvTermux` | termux |
             |
-            |# ### ${UBUNTU_EXEC_MODE}
+            |# ### $UBUNTU_EXEC_MODE
             |# Set shell exec mode
             |
             |# | option | descripton |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${ubuntuExecModeSelectsBackground}` | fast exec mode |
-            |# | `${ubuntuExecModeSelectsForeground}` | back ground exec mode |
+            |# | $mdDash | $mdDash |
+            |# | `$ubuntuExecModeSelectsBackground` | fast exec mode |
+            |# | `$ubuntuExecModeSelectsForeground` | back ground exec mode |
             |
-            |# ### ${UBUNTU_OUTPUT_FILE}
+            |# ### $UBUNTU_OUTPUT_FILE
             |# Set ubuntu output file
             |
             |# | option | descripton |
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | `${UsePath.cmdClickMonitorFileName_1}` | stdout |
             |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |
             |# | `${UsePath.cmdClickMonitorFileName_3}` | free |
             |# | `${UsePath.cmdClickMonitorFileName_4}` | /dev/null |
             |
-            |# ### ${TERMINAL_SIZE_TYPE}
+            |# ### $TERMINAL_SIZE_TYPE
             |# `cmdclick terminal` size option
             |
             |# | option | descripton |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${terminalSizeTypeOff}` | no adjust (default) |
-            |# | `${terminalSizeTypeLong}` | LongSize |
-            |# | `${terminalSizeTypeShort}` | ShortSize |
+            |# | $mdDash | $mdDash |
+            |# | `$terminalSizeTypeOff` | no adjust (default) |
+            |# | `$terminalSizeTypeLong` | LongSize |
+            |# | `$terminalSizeTypeShort` | ShortSize |
             |
-            |# ### ${TERMINAL_OUTPUT_MODE}
+            |# ### $TERMINAL_OUTPUT_MODE
             |# Decide output mode in cmdclick terminal (basically, only shellScript)
             |
-            |# | output mode | ${mdDescription} |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${terminalOutPutModeNormal}` | normal terminal output (default) |
-            |# | `${terminalOutPutModeReflash}` | Before terminal output, screen resflesh |
-            |# | `${terminalOutPutModeReflashAndFirstRow}` | Before terminal output, screen resflesh and focus first row |
-            |# | `${terminalOutPutModeDebug}` | stdr + stderr |
-            |# | `${terminalOutPutModeNo}` | no output (bacground exec) |
+            |# | output mode | $mdDescription |
+            |# | $mdDash | $mdDash |
+            |# | `$terminalOutPutModeNormal` | normal terminal output (default) |
+            |# | `$terminalOutPutModeReflash` | Before terminal output, screen resflesh |
+            |# | `$terminalOutPutModeReflashAndFirstRow` | Before terminal output, screen resflesh and focus first row |
+            |# | `$terminalOutPutModeDebug` | stdr + stderr |
+            |# | `$terminalOutPutModeNo` | no output (bacground exec) |
             |
-            |# ### ${CMDCLICK_ON_AUTO_EXEC}
+            |# ### $CMDCLICK_ON_AUTO_EXEC
             |# Auto execute script when fannel launch
             |
-            |# | switch | ${mdDescription} |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${autoExecSelectsOn}` | start or end exec on |
-            |# | `${autoExecSelectsOff}` | exec off (default) |
+            |# | switch | $mdDescription |
+            |# | $mdDash | $mdDash |
+            |# | `$autoExecSelectsOn` | start or end exec on |
+            |# | `$autoExecSelectsOff` | exec off (default) |
             |
-            |# ### ${ON_UPDATE_LAST_MODIFY}
+            |# ### $ON_UPDATE_LAST_MODIFY
             |# How updating file last modified status when executing
             |
-            |# | switch | ${mdDescription} |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onUpdateLastModifyOn}` | update this (default) |
-            |# | `${onUpdateLastModifyOff}` | no update this |
+            |# | switch | $mdDescription |
+            |# | $mdDash | $mdDash |
+            |# | `$onUpdateLastModifyOn` | update this (default) |
+            |# | `$onUpdateLastModifyOff` | no update this |
             |
-            |# ### ${IGNORE_HISTORY_PATHS}
+            |# ### $IGNORE_HISTORY_PATHS
             |# Ignore history path like grep -v
             |
-            |# ### ${CMDCLICK_HISTORY_SWITCH}
+            |# ### $CMDCLICK_HISTORY_SWITCH
             |# Switch app history with url history
             |
-            |# | switch | ${mdDescription} |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${historySwitchOn}` | switch |
-            |# | `${historySwitchOff}` | no switch |
-            |# | `${historySwitchInherit}` | inherit config setting (default) |
+            |# | switch | $mdDescription |
+            |# | $mdDash | $mdDash |
+            |# | `$historySwitchOn` | switch |
+            |# | `$historySwitchOff` | no switch |
+            |# | `$historySwitchInherit` | inherit config setting (default) |
             |
-            |# ### ${CMDCLICK_ON_HISTORY_URL_TITLE}
+            |# ### $CMDCLICK_ON_HISTORY_URL_TITLE
             |# How adding url title to history
             |
-            |# | switch | ${mdDescription} |
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onHistoryUrlTitleON}` | add |
-            |# | `${onHistoryUrlTitleOff}` | no |
+            |# | switch | $mdDescription |
+            |# | $mdDash | $mdDash |
+            |# | `$onHistoryUrlTitleON` | add |
+            |# | `$onHistoryUrlTitleOff` | no |
             |
-            |# ### ${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
+            |# ### $SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
             |# Src image ancher long press menu list
             |
             |# | Button type | usage | 
@@ -515,139 +562,139 @@ object CommandClickScriptVariable {
             |# | DSL button | Drag and sort long press menu list |
             |# | ADD button | Add script to long press menu list |
             |
-            |# ### ${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}
+            |# ### $SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH
             |# Src ancher long press menu list
             |
             |# | Button type | usage | 
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort long press menu list |
             |# | ADD button | Add script to long press menu list |
             |
-            |# ### ${IMAGE_LONG_PRESS_MENU_FILE_PATH}
+            |# ### $IMAGE_LONG_PRESS_MENU_FILE_PATH
             |# Image long press menu list
             |
             |# | Button type | usage | 
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort long press menu list |
             |# | ADD button | Add script to long press menu list |
             |
-            |# ### ${HOME_SCRIPT_URLS_PATH}
+            |# ### $HOME_SCRIPT_URLS_PATH
             |# Specified script, url and html put always bottom in url history
-            |# ex) ${HOME_SCRIPT_URLS_PATH}=$\{file_path}
+            |# ex) $HOME_SCRIPT_URLS_PATH=$\{file_path}
             |
             |# | Button type | usage | 
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort home url script List |
             |# | ADD button | Add fannel to home url script list |
             |
-            |# ### ${CMDCLICK_HOME_FANNELS_PATH}
+            |# ### $CMDCLICK_HOME_FANNELS_PATH
             |# Specified fannels put always bottom in app history 
-            |# ex) ${CMDCLICK_HOME_FANNELS_PATH}=$\{file_path}
+            |# ex) $CMDCLICK_HOME_FANNELS_PATH=$\{file_path}
             |
             |# | Button type | usage | 
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | DSL button | Drag and sort home fannels list |
             |# | ADD button | Add fannel to home fannel list |
             |
-            |# ### ${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}
+            |# ### $CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
             |# Switch url history or button script exec
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${urlHistoryOrButtonExecUrlInherit}` | inherit config setting |
-            |# | `${urlHistoryOrButtonExecUrlHistory}` | switch url history |
-            |# | `${urlHistoryOrButtonExecUrlButtonExec}` | switch url button script exec |
+            |# | $mdDash | $mdDash |
+            |# | `$urlHistoryOrButtonExecUrlInherit` | inherit config setting |
+            |# | `$urlHistoryOrButtonExecUrlHistory` | switch url history |
+            |# | `$urlHistoryOrButtonExecUrlButtonExec` | switch url button script exec |
             |
-            |# ### ${ON_ADBLOCK}
+            |# ### $ON_ADBLOCK
             |# Adblock switch
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onAdBlockInherit}` | inherit config setting |
-            |# | `${onAdBlockOn}` | on |
-            |# | `${onAdBlockOff}` | off |
+            |# | $mdDash | $mdDash |
+            |# | `$onAdBlockInherit` | inherit config setting |
+            |# | `$onAdBlockOn` | on |
+            |# | `$onAdBlockOff` | off |
             |
-            |# ### ${ON_TERM_BACKEND_WHEN_START}
+            |# ### $ON_TERM_BACKEND_WHEN_START
             |# Display terminal backend when start 
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onTermBackendWhenStartSelectsInherit}` | inherit config setting |
-            |# | `${onTermBackendWhenStartSelectsOn}` | on |
-            |# | `${onTermBackendWhenStartSelectsOff}` | off |
+            |# | $mdDash | $mdDash |
+            |# | `$onTermBackendWhenStartSelectsInherit` | inherit config setting |
+            |# | `$onTermBackendWhenStartSelectsOn` | on |
+            |# | `$onTermBackendWhenStartSelectsOff` | off |
             |
-            |# ### ${ON_TERM_VISIBLE_WHEN_KEYBOARD}
+            |# ### $ON_TERM_VISIBLE_WHEN_KEYBOARD
             |# terminal visible when keyboard open 
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onTermVisibleWhenKeyboardSelectsInherit}` | inherit config setting |
-            |# | `${onTermVisibleWhenKeyboardSelectsOn}` | on |
-            |# | `${onTermVisibleWhenKeyboardSelectsOff}` | off |
+            |# | $mdDash | $mdDash |
+            |# | `$onTermVisibleWhenKeyboardSelectsInherit` | inherit config setting |
+            |# | `$onTermVisibleWhenKeyboardSelectsOn` | on |
+            |# | `$onTermVisibleWhenKeyboardSelectsOff` | off |
             |
-            |# ### ${ON_TERM_SHORT_WHEN_LOAD}
+            |# ### $ON_TERM_SHORT_WHEN_LOAD
             |# Terminal short sizging when load 
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onTermShortWhenLoadSelectsInherit}` | inherit config setting |
-            |# | `${onTermShortWhenLoadSelectsOn}` | on |
-            |# | `${onTermShortWhenLoadSelectsOff}` | off |
+            |# | $mdDash | $mdDash |
+            |# | `$onTermShortWhenLoadSelectsInherit` | inherit config setting |
+            |# | `$onTermShortWhenLoadSelectsOn` | on |
+            |# | `$onTermShortWhenLoadSelectsOff` | off |
             |
-            |# ### ${DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT}
+            |# ### $DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT
             |# Disable show toolbar when highlight text in webview 
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${disableShowToolbarWhenHighlightOff}` | on |
-            |# | `${disableShowToolbarWhenHighlightOn}` | off |
+            |# | $mdDash | $mdDash |
+            |# | `$disableShowToolbarWhenHighlightOff` | on |
+            |# | `$disableShowToolbarWhenHighlightOn` | off |
             |
-            |# ### ${ON_URL_LAUNCH_MACRO}
+            |# ### $ON_URL_LAUNCH_MACRO
             |# Url launch macro(when set, cmdclick web terminal don't output)
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onUrlLaunchMacroOff}` | no launch |
-            |# | `${onUrlLaunchMacroRecent}` | recent use url launch |
-            |# | `${onUrlLaunchMacroFrequency}` | most use url launch |
+            |# | $mdDash | $mdDash |
+            |# | `$onUrlLaunchMacroOff` | no launch |
+            |# | `$onUrlLaunchMacroRecent` | recent use url launch |
+            |# | `$onUrlLaunchMacroFrequency` | most use url launch |
             |
-            |# ### ${ON_URL_HISTORY_REGISTER}
+            |# ### $ON_URL_HISTORY_REGISTER
             |# Url history update signal
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
-            |# | `${onUrlHistoryRegisterOn}` | update |
-            |# | `${onUrlHistoryRegisterOff}` | no update |
+            |# | $mdDash | $mdDash |
+            |# | `$onUrlHistoryRegisterOn` | update |
+            |# | `$onUrlHistoryRegisterOff` | no update |
             |
-            |# ### ${EXEC_JS_OR_HTML_PATH}
+            |# ### $EXEC_JS_OR_HTML_PATH
             |# Execute javascript or html file path
-            |# - disable, when ${ON_URL_LAUNCH_MACRO} is not ${onUrlLaunchMacroOff}
+            |# - disable, when $ON_URL_LAUNCH_MACRO is not $onUrlLaunchMacroOff
             |
-            |# ### ${DEFAULT_MONITOR_FILE}
+            |# ### $DEFAULT_MONITOR_FILE
             |# Select default monitor file for screen
             |
             |# | switch | description | 
-            |# | ${mdDash} | ${mdDash} |
+            |# | $mdDash | $mdDash |
             |# | `${UsePath.cmdClickMonitorFileName_1}` | stdout |
             |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |
             |# | `${UsePath.cmdClickMonitorFileName_3}` | free |
             |# | `${UsePath.cmdClickMonitorFileName_4}` | /dev/null |
             |
-            |# ### ${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}
+            |# ### $UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF
             |# Ubuntu Sleep delay minutes in screen off 
             |# - Config only value
             |# - 0 -> no sleep
             |
-            |# ### ${CMDCLICK_TERMINAL_FONT_ZOOM}
+            |# ### $CMDCLICK_TERMINAL_FONT_ZOOM
             |# Adjust terminal font size (percentage)
             |
-            |# ### ${TERMINAL_FONT_COLOR}
+            |# ### $TERMINAL_FONT_COLOR
             |# Adjust terminal font color
             |
-            |# ### ${TERMINAL_COLOR}
+            |# ### $TERMINAL_COLOR
             |# Adjust terminal background color
             |
-            |# ### ${EXEC_PLAY_BTN_LONG_PRESS}
+            |# ### $EXEC_PLAY_BTN_LONG_PRESS
             |# Execute when play button long press in editExecute=EditExecute
             |
             |# | type or name | description |
@@ -656,7 +703,7 @@ object CommandClickScriptVariable {
             |# | `PAGE_SEARCH` | apear page search bar |
             |# | js file path | execute js file |
             |
-            |# ### ${EXEC_EDIT_BTN_LONG_PRESS}
+            |# ### $EXEC_EDIT_BTN_LONG_PRESS
             |# Execute when edit button long press
             |
             |# | type or name | description |
@@ -701,39 +748,39 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |${SHELL_EXEC_ENV}="${SHELL_EXEC_ENV_DEFAULT_VALUE}"
-        |${UBUNTU_EXEC_MODE}="${UBUNTU_EXEC_MODE_DEFAULT_VALUE}"
-        |${UBUNTU_OUTPUT_FILE}="${UBUNTU_OUTPUT_FILE_DEFAULT_VALUE}"
-        |${TERMINAL_DO}="${TERMINAL_DO_DEFAULT_VALUE}"
-        |${EDIT_EXECUTE}="${EDIT_EXECUTE_DEFAULT_VALUE}"
-        |${TERMINAL_SIZE_TYPE}="${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}"
-        |${TERMINAL_OUTPUT_MODE}="${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}"
-        |${ON_UPDATE_LAST_MODIFY}="${onUpdateLastModifyValue}"
-        |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
-        |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
-        |${ON_ADBLOCK}="${onAdBlockInherit}"
-        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
-        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
-        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
-        |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcImageAnchorLongPressMenuFilePath}"
-        |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${srcAnchorLongPressMenuFilePath}
-        |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${imageLongPressMenuFilePath}
-        |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
-        |${OVERRIDE_ITEM_CLICK_EXEC}="${OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE}
-        |${ON_URL_HISTORY_REGISTER}="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
-        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
-        |${IGNORE_HISTORY_PATHS}=""
-        |${EXEC_JS_OR_HTML_PATH}="${execJsOrHtmlPathValue}"
-        |${CMDCLICK_TERMINAL_FONT_ZOOM}=""            
-        |${TERMINAL_COLOR}=""
-        |${TERMINAL_FONT_COLOR}=""
-        |${EXEC_PLAY_BTN_LONG_PRESS}=""
-        |${EXEC_EDIT_BTN_LONG_PRESS}=""
-        |${SET_REPLACE_VARIABLE}=""
-        |${SET_VARIABLE_TYPE}=""
-        |${BEFORE_COMMAND}=""
-        |${AFTER_COMMAND}=""
-        |${SCRIPT_FILE_NAME}="${shellScriptName}"
+        |$SHELL_EXEC_ENV="$SHELL_EXEC_ENV_DEFAULT_VALUE"
+        |$UBUNTU_EXEC_MODE="$UBUNTU_EXEC_MODE_DEFAULT_VALUE"
+        |$UBUNTU_OUTPUT_FILE="$UBUNTU_OUTPUT_FILE_DEFAULT_VALUE"
+        |$TERMINAL_DO="$TERMINAL_DO_DEFAULT_VALUE"
+        |$EDIT_EXECUTE="$EDIT_EXECUTE_DEFAULT_VALUE"
+        |$TERMINAL_SIZE_TYPE="$TERMINAL_SIZE_TYPE_DEFAULT_VALUE"
+        |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
+        |$ON_UPDATE_LAST_MODIFY="${onUpdateLastModifyValue}"
+        |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
+        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
+        |$ON_ADBLOCK="$onAdBlockInherit"
+        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
+        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
+        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
+        |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH="$srcImageAnchorLongPressMenuFilePath"
+        |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH="$srcAnchorLongPressMenuFilePath
+        |$IMAGE_LONG_PRESS_MENU_FILE_PATH="$imageLongPressMenuFilePath
+        |$NO_SCROLL_SAVE_URLS="$noScrollSaveUrlsFilePath"
+        |$OVERRIDE_ITEM_CLICK_EXEC="$OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE
+        |$ON_URL_HISTORY_REGISTER="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
+        |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
+        |$IGNORE_HISTORY_PATHS=""
+        |$EXEC_JS_OR_HTML_PATH="${execJsOrHtmlPathValue}"
+        |$CMDCLICK_TERMINAL_FONT_ZOOM=""            
+        |$TERMINAL_COLOR=""
+        |$TERMINAL_FONT_COLOR=""
+        |$EXEC_PLAY_BTN_LONG_PRESS=""
+        |$EXEC_EDIT_BTN_LONG_PRESS=""
+        |$SET_REPLACE_VARIABLE=""
+        |$SET_VARIABLE_TYPE=""
+        |$BEFORE_COMMAND=""
+        |$AFTER_COMMAND=""
+        |$SCRIPT_FILE_NAME="${shellScriptName}"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
         |
@@ -799,7 +846,7 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |${SCRIPT_FILE_NAME}="${shellScriptName}"
+        |$SCRIPT_FILE_NAME="${shellScriptName}"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
     """.trimMargin()
@@ -866,22 +913,22 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |${EDIT_EXECUTE}="${editExecuteAlways}"
-        |${CMDCLICK_RUN_SHELL}="${CMDCLICK_RUN_SHELL_DEFAULT_VALUE}"
-        |${CMDCLICK_SHIBAN}="${CMDCLICK_SHIBAN_DEFAULT_VALUE}"
-        |${CMDCLICK_HISTORY_SWITCH}="${HISTORY_SWITCH_DEFAULT_VALUE}"
-        |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE}"
-        |${ON_ADBLOCK}="${onAdBlockOn}"
-        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
-        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
-        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
-        |${CMDCLICK_HOME_FANNELS_PATH}="${homeFannelsFilePath}"
-        |${CMDCLICK_TERMINAL_FONT_ZOOM}="${CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE}"
-        |${UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF}="20"
-        |${TERMINAL_COLOR}="${TERMINAL_COLOR_DEFAULT_VALUE}"
-        |${TERMINAL_FONT_COLOR}="${TERMINAL_FONT_COLOR_DEFAULT_VALUE}"
-        |${PASS_CMDVARIABLE_EDIT}="${PASS_CMDVARIABLE_EDIT_ON_VALUE}"
-        |${HIDE_SETTING_VARIABLES}="${EDIT_EXECUTE}"
+        |$EDIT_EXECUTE="$editExecuteAlways"
+        |$CMDCLICK_RUN_SHELL="$CMDCLICK_RUN_SHELL_DEFAULT_VALUE"
+        |$CMDCLICK_SHIBAN="$CMDCLICK_SHIBAN_DEFAULT_VALUE"
+        |$CMDCLICK_HISTORY_SWITCH="$HISTORY_SWITCH_DEFAULT_VALUE"
+        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE"
+        |$ON_ADBLOCK="$onAdBlockOn"
+        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
+        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
+        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
+        |$CMDCLICK_HOME_FANNELS_PATH="$homeFannelsFilePath"
+        |$CMDCLICK_TERMINAL_FONT_ZOOM="$CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE"
+        |$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF="20"
+        |$TERMINAL_COLOR="$TERMINAL_COLOR_DEFAULT_VALUE"
+        |$TERMINAL_FONT_COLOR="$TERMINAL_FONT_COLOR_DEFAULT_VALUE"
+        |$PASS_CMDVARIABLE_EDIT="$PASS_CMDVARIABLE_EDIT_ON_VALUE"
+        |$HIDE_SETTING_VARIABLES="$EDIT_EXECUTE"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
         |
@@ -923,32 +970,32 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |${TERMINAL_SIZE_TYPE}="${TERMINAL_SIZE_TYPE_DEFAULT_VALUE}"
-        |${TERMINAL_OUTPUT_MODE}="${TERMINAL_OUTPUT_MODE_DEFAULT_VALUE}"
-        |${CMDCLICK_ON_AUTO_EXEC}="${CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE}"
-        |${ON_UPDATE_LAST_MODIFY}="${onUpdateLastModifyOff}"
-        |${CMDCLICK_ON_HISTORY_URL_TITLE}="${CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE}"
-        |${CMDCLICK_HISTORY_SWITCH}="${historySwitchInherit}"
-        |${CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC}="${urlHistoryOrButtonExecUrlInherit}"
-        |${ON_ADBLOCK}="${onAdBlockInherit}"
-        |${ON_TERM_BACKEND_WHEN_START}="${ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE}"
-        |${ON_TERM_VISIBLE_WHEN_KEYBOARD}="${ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE}"
-        |${ON_TERM_SHORT_WHEN_LOAD}="${ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE}"
-        |${ON_URL_LAUNCH_MACRO}="${onUrlLaunchMacroRecent}"
-        |${DEFAULT_MONITOR_FILE}="${DEFAULT_MONITOR_FILE_DEFAULT_VALUE}"
-        |${SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcImageAnchorLongPressMenuFilePath}"
-        |${SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH}="${UsePath.srcAnchorLongPressMenuFilePath}"
-        |${IMAGE_LONG_PRESS_MENU_FILE_PATH}="${UsePath.imageLongPressMenuFilePath}"
-        |${IGNORE_HISTORY_PATHS}=""
-        |${EXEC_JS_OR_HTML_PATH}=""
-        |${HOME_SCRIPT_URLS_PATH}="${homeScriptUrlsFilePath}"
-        |${NO_SCROLL_SAVE_URLS}="${noScrollSaveUrlsFilePath}"
-        |${CMDCLICK_TERMINAL_FONT_ZOOM}=""
-        |${TERMINAL_FONT_COLOR}=""
-        |${TERMINAL_COLOR}=""
-        |${HIDE_SETTING_VARIABLES}="${SCRIPT_FILE_NAME}"
-        |${HIDE_SETTING_VARIABLES}="${ON_UPDATE_LAST_MODIFY}"
-        |${SCRIPT_FILE_NAME}="${jsScriptName}"
+        |$TERMINAL_SIZE_TYPE="$TERMINAL_SIZE_TYPE_DEFAULT_VALUE"
+        |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
+        |$CMDCLICK_ON_AUTO_EXEC="$CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE"
+        |$ON_UPDATE_LAST_MODIFY="$onUpdateLastModifyOff"
+        |$CMDCLICK_ON_HISTORY_URL_TITLE="$CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE"
+        |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
+        |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
+        |$ON_ADBLOCK="$onAdBlockInherit"
+        |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
+        |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
+        |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
+        |$ON_URL_LAUNCH_MACRO="$onUrlLaunchMacroRecent"
+        |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
+        |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH="${UsePath.srcImageAnchorLongPressMenuFilePath}"
+        |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH="${UsePath.srcAnchorLongPressMenuFilePath}"
+        |$IMAGE_LONG_PRESS_MENU_FILE_PATH="${UsePath.imageLongPressMenuFilePath}"
+        |$IGNORE_HISTORY_PATHS=""
+        |$EXEC_JS_OR_HTML_PATH=""
+        |$HOME_SCRIPT_URLS_PATH="$homeScriptUrlsFilePath"
+        |$NO_SCROLL_SAVE_URLS="$noScrollSaveUrlsFilePath"
+        |$CMDCLICK_TERMINAL_FONT_ZOOM=""
+        |$TERMINAL_FONT_COLOR=""
+        |$TERMINAL_COLOR=""
+        |$HIDE_SETTING_VARIABLES="$SCRIPT_FILE_NAME"
+        |$HIDE_SETTING_VARIABLES="$ON_UPDATE_LAST_MODIFY"
+        |$SCRIPT_FILE_NAME="${jsScriptName}"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
         |

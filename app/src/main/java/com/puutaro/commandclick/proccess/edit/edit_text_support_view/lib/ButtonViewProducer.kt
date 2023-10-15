@@ -6,10 +6,10 @@ import android.widget.*
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SettingCmdArgs
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters

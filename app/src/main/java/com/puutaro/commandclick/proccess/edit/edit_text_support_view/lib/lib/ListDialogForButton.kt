@@ -12,26 +12,13 @@ import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-import java.io.File
 
 
 object ListDialogForButton {

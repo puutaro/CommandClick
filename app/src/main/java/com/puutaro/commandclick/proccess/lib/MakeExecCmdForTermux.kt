@@ -3,8 +3,8 @@ package com.puutaro.commandclick.proccess.lib
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel

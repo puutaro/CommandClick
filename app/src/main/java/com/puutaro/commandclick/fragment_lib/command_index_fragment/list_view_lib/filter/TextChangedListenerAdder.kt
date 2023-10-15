@@ -4,7 +4,7 @@ import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager

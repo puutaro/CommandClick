@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File

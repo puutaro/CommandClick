@@ -13,7 +13,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 
 
 class ShortCutManager(

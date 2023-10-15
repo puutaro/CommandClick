@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems

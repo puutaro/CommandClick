@@ -2,6 +2,8 @@
 
 set -ue
 
+
+readonly comma_string="comma_string"
 HELP=""
 NOTIFICATION_TYPE=""
 CHANNEL_NUM=""
@@ -43,11 +45,11 @@ read_args(){
 			ALERT_ONCE="${1}"
 			;;
 		--title|-t)
-			TITLE="${2}"
+			TITLE="${2//\,/\.}"
 			shift
 			;;
 		--message|-m)
-			MESSAGE="${2}"
+			MESSAGE="${2//\,/\.}"
 			shift
 			;;
 		--delete|-d)
@@ -90,13 +92,14 @@ noti(){
 	-v delete_key="${DELETE}" \
 	-v notificationStyle="${NOTIFICATION_STYLE}" \
 	-v button="${BUTTONS/\|/}" \
+	-v comma_string="${comma_string}" \
 	'function concat(val, val_name){
-		if(val) ouput_con = ouput_con""val_name"="val"\n"
+		if(val) output_con = output_con""val_name"="val"\n"
 	}
 	BEGIN {
-		ouput_con=""
+		output_con=""
 		concat(help, "help")
-		ouput_con = ouput_con"intentType=notification\n"
+		output_con = output_con"intentType=notification\n"
 		concat(notificationType, "notificationType")
 		concat(channelNum, "channelNum")
 		concat(iconName, "iconName")
@@ -107,9 +110,9 @@ noti(){
 		concat(delete_key, "delete")
 		concat(notificationStyle, "notificationStyle")
 		concat(button, "button")
-		gsub(",", "!", ouput_con)
-		gsub(/\n/, ",\n", ouput_con)
-		print ouput_con
+		gsub(",", "!", output_con)
+		gsub(/\n/, ",\n", output_con)
+		print output_con
 	}' \
 	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
 }

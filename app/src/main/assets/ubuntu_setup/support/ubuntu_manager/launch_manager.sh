@@ -11,7 +11,7 @@ readonly NOTIFICATION_CAHNEL_NUM=$(\
 )
 
 readonly title="Ubuntu backup manager"
-readonly message="backup & restore ubuntu state"
+readonly message="Press bellow button"
 RESTORE_BUTTON_OPTION=""
 if [ -f "${UBUNTU_BACKUP_ROOTFS_PATH}" ];then
 	RESTORE_BUTTON_OPTION="--button \"label=RESTORE,shellPath=${EXEC_RESTORE_OK_SHELL_PATH}\""

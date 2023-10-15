@@ -4,7 +4,7 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor

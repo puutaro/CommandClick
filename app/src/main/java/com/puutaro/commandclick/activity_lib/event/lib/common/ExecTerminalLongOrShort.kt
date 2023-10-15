@@ -2,10 +2,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 
 import android.util.Log
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.puutaro.commandclick.common.variable.ReadLines
+import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 

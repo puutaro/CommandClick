@@ -15,9 +15,9 @@ import com.anggrayudi.storage.file.isEmpty
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
-import com.puutaro.commandclick.common.variable.Translate
+import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator

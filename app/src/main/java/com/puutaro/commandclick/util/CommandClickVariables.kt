@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.util
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 
 
@@ -48,7 +48,7 @@ object CommandClickVariables {
 
     fun judgeJsOrShellFromSuffix(
         shellScriptName: String
-    ):LanguageTypeSelects {
+    ): LanguageTypeSelects {
         if(
             shellScriptName.endsWith(
                 UsePath.SHELL_FILE_SUFFIX

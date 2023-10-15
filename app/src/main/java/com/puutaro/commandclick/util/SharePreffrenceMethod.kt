@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.util
 
 import android.content.SharedPreferences
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 
 class SharePreffrenceMethod {
     companion object {

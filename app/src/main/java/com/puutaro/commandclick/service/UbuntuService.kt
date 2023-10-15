@@ -11,8 +11,8 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel

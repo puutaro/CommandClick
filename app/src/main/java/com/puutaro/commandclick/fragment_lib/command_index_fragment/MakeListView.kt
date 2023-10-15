@@ -3,8 +3,8 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import android.content.Context
 import android.view.MenuItem
 import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
-import com.puutaro.commandclick.common.variable.*
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment

@@ -7,7 +7,7 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.WebUrlVariables
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import java.io.File
 
 

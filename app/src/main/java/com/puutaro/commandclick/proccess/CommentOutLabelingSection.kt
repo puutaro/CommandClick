@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CommandClickVariables
 
 class CommentOutLabelingSection {

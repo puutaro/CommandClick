@@ -1,16 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.webkit.JavascriptInterface
-import android.widget.Toast
-import com.puutaro.commandclick.common.variable.Translate
-import com.puutaro.commandclick.fragment.TerminalFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
-
 //class JsTrans(
 //    terminalFragment: TerminalFragment
 //) {

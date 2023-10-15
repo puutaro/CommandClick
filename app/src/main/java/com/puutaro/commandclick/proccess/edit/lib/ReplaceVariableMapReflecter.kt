@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer

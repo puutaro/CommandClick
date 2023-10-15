@@ -1,9 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
 import android.content.SharedPreferences
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.SharePreffrenceMethod

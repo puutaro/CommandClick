@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import com.puutaro.commandclick.common.variable.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.SettingVariableSelects
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
