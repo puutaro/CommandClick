@@ -388,7 +388,7 @@ object WaitQuizPair {
         ),
         Pair(
             "How long do backup?",
-            "-> About 3 minutes"
+            "-> About 5 minutes"
         ),
         Pair(
             "How not to delete ubuntu data by re-install?",

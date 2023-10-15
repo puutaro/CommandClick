@@ -28,4 +28,5 @@ sudo mv -vf ${ROOTFS_TAR_GZ} \
 echo "crean up.." >> "${MONITOR_FILE_PATH}"
 bash "${KILL_PROC_SHELL_PATH}" \
 	"${NOTI_UPDATE_SHELL_PATH}"
+sleep 2
 bash "${NOTI_MANAGER_SHELL_PATH}"
