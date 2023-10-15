@@ -197,6 +197,10 @@ class UbuntuService:
                     ServiceNotificationId.ubuntuServer,
                     it
                 )
+                startForeground(
+                    chanelId,
+                    it
+                )
             }
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
@@ -238,6 +242,10 @@ class UbuntuService:
                     chanelId,
                     it
                 )
+                startForeground(
+                    chanelId,
+                    it
+                )
             }
             ProcessManager.monitorProcessAndNum(this)
             IntentRequestMonitor.launch(this)
@@ -252,6 +260,10 @@ class UbuntuService:
         val notificationInstance = notificationBuilder?.build()
         notificationInstance?.let {
             notificationManager?.notify(
+                chanelId,
+                it
+            )
+            startForeground(
                 chanelId,
                 it
             )

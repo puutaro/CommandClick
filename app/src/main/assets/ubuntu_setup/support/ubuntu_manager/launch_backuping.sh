@@ -12,15 +12,9 @@ readonly NOTIFICATION_CAHNEL_NUM=$(\
 readonly TITLE="Ubuntu backuping.."
 readonly support_dir_path="/support"
 readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
-readonly wait_quiz_tsv_key="WAIT_QUIZ_TSV_NAME"
+readonly ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
 readonly wait_quiz_tsv_name=$(\
-	cat "${ubuntu_env_tsv_path}" \
-	| awk \
-		-F $'\t' \
-		-v wait_quiz_tsv_key="${wait_quiz_tsv_key}" \
-	 '{
-	 	if($1 == wait_quiz_tsv_key) print $2
-	 }'\
+	tsvar "${ubuntu_env_tsv_con}" "WAIT_QUIZ_TSV_NAME" \
 )
 readonly wait_quiz_tsv_path="${support_dir_path}/${wait_quiz_tsv_name}"
 readonly WAIT_QUIZ_TSV_CON="$(cat "${wait_quiz_tsv_path}")"

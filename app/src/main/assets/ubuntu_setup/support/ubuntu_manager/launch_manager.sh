@@ -9,6 +9,12 @@ readonly EXEC_RESTORE_OK_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_restore.sh"
 readonly NOTIFICATION_CAHNEL_NUM=$(\
 	bash "${NOTI_SHELL_DIR_PATH}/echo_channel_num.sh"\
 )
+readonly support_dir_path="/support"
+readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
+readonly UBUNTU_ENV_TSV_CON="$(cat "${ubuntu_env_tsv_path}")"
+readonly UBUNTU_BACKUP_ROOTFS_PATH="$(\
+	tsvar "${UBUNTU_ENV_TSV_CON}" "UBUNTU_BACKUP_ROOTFS_PATH" \
+)"
 
 readonly title="Ubuntu backup manager"
 readonly message="Press bellow button"
@@ -26,7 +32,7 @@ noti \
 	--message "${message}" \
 	--alert-once \
 	--delete "shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
-	--button "label=CANCEL,shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
+	--button "label=CLOSE,shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
 	--button "label=BACKUP,shellPath=${NOTI_BACKUP_SHELL_PATH},execType=back" \
 	${RESTORE_BUTTON_OPTION} \
 >/dev/null 2>&1

@@ -1,0 +1,69 @@
+#!/bin/bash
+
+
+set -e
+
+read_args(){
+	local STR=""
+	local index=0
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+	    --help|-h)
+	        HELP="${1}"
+	        ;;
+	    -*) ;;
+	    *)
+			ARG[index]="${1}"
+			index="$(( ${index} + 1 ))"
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+get_help(){
+	case "${HELP}" in
+		"") ;;
+		*) 
+			awk \
+			-v REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}" \
+			'BEGIN{
+				print "### tsv env variables getter"
+				print ""
+				print ""
+				print "## Usage"
+				print ""
+				print "# Get tsv env variables"
+				print "tsvar \x22${contents}\x22 \x22${variable name}\x22"
+				print ""
+			}'
+			exit 0
+		;;
+	esac
+}
+
+tsvar(){
+	local con="${1}"
+	local key="${2}"
+	echo "${con}" | awk \
+		-F $'\t' \
+		-v key="${key}" \
+	 '{
+	 	if($1 == key) print $2
+	 }'
+}
+
+
+HELP=""
+ARG=()
+read_args "$@"
+get_help
+
+case "${ARG[@]}" in
+	"") exit 1;;
+esac
+
+tsvar "${ARG[0]}" "${ARG[1]}"

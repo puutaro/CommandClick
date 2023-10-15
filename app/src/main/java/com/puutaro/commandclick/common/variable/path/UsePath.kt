@@ -96,6 +96,8 @@ object UsePath {
     val cmdclickUbuntuDirPath =  "$rootPath/$cmdclickUbuntuDirRelativePath"
     private const val cmdclickBackupDirParentName = "backup"
     val cmdclickUbuntuBackupDirPath =  "$cmdclickUbuntuDirPath/$cmdclickBackupDirParentName"
+    private const val cmdclickBackupTempDirName = "temp"
+    val cmdclickUbuntuBackupTempDirPath =  "$cmdclickUbuntuBackupDirPath/$cmdclickBackupTempDirName"
     private const val cmdclickAppDirParentName = "AppDir"
     private const val cmdclickAppDirRelativePath = "$cmdclickDirName/$cmdclickAppDirParentName"
     val cmdclickAppDirPath =  "$rootPath/$cmdclickAppDirRelativePath"

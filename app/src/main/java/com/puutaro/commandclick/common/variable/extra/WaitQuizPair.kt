@@ -25,6 +25,7 @@ object WaitQuizPair {
     private val sendBrdCtCmd = "send-broadcast"
     private val toastCmd = "toast"
     private val getRvarCmd="get_rvar"
+    private val tsvar = "tsvar"
     private val cmdTerminal = SystemFannel.cmdTerminal
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
@@ -363,7 +364,31 @@ object WaitQuizPair {
             "-> shell and curl wrapper"
         ),
         Pair(
-            "What's usage for \"get_rvar\" command?",
+            "What's usage for tsvar${tsvar}\" command?",
+            "-> Type \"${tsvar} -h\" in ${cmdTerminal}"
+        ),
+        Pair(
+            "What's \"${tsvar}\" command?",
+            "-> Get \"tsv env\" in shell"
+        ),
+        Pair(
+            "How to get \"tsv env\" in shell?",
+            "-> Use \"${tsvar}\" command"
+        ),
+        Pair(
+            "What's \"tsv env\" in shell?",
+            "-> Seconds env variable for ubuntu"
+        ),
+        Pair(
+            "What's difference \"tsv env\" and normal env?",
+            "-> env variable is few, tsv env is many"
+        ),
+        Pair(
+            "What's disadvantage \"tsv env\" ?",
+            "-> Slow about read speed"
+        ),
+        Pair(
+            "What's usage for \"${getRvarCmd}\" command?",
             "-> Type \"${getRvarCmd} -h\" in ${cmdTerminal}"
         ),
         Pair(
@@ -385,10 +410,6 @@ object WaitQuizPair {
         Pair(
             "What's ubuntu original feature?",
             "-> Command bellow usr/local/bin/"
-        ),
-        Pair(
-            "How long do backup?",
-            "-> About 5 minutes"
         ),
         Pair(
             "How not to delete ubuntu data by re-install?",

@@ -66,6 +66,9 @@ class UbuntuFiles(
     val ubuntuBackupRootfsFile = File(
             "${UsePath.cmdclickUbuntuBackupDirPath}/${rootfsTarGzName}"
     )
+    val ubuntuBackupTempRootfsFile = File(
+        "${UsePath.cmdclickUbuntuBackupTempDirPath}/${rootfsTarGzName}"
+    )
 
     fun makePermissionsUsable(containingDirectoryPath: String, filename: String) {
         val commandToRun = arrayListOf("chmod", "0777", filename)

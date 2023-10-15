@@ -367,7 +367,6 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "MONITOR_DIR_PATH" to UsePath.cmdclickMonitorDirPath,
             "APP_DIR_PATH" to UsePath.cmdclickAppDirPath,
             "REPLACE_VARIABLES_TSV_RELATIVE_PATH" to UsePath.replaceVariablesTsvRelativePath,
-            "UBUNTU_BACKUP_ROOTFS_PATH" to ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
             "UBUNTU_ENV_TSV_NAME" to UbuntuFiles.ubuntuEnvTsvName,
         )
     }
