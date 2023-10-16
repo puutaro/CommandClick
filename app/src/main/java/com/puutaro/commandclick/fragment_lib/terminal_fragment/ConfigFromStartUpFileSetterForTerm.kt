@@ -93,7 +93,7 @@ object ConfigFromStartUpFileSetterForTerm {
             settingVariableListFromConfig,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
-            CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
+            SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.INHERIT.name,
             CommandClickScriptVariable.DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE,
             listOf(
                 SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name,
