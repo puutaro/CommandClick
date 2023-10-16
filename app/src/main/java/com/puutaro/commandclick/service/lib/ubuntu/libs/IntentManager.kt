@@ -15,7 +15,6 @@ object IntentManager {
         execIntent
             .setAction(Intent.ACTION_MAIN)
             .flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
-
         execIntent.putExtra(
             SharePrefferenceSetting.current_app_dir.name,
             fannelDirPath

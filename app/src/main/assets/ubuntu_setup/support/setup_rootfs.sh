@@ -15,7 +15,7 @@ export backup_dir_path="${APP_ROOT_PATH}/backup" \
 	--exclude=/host-rootfs \
 	--one-file-system \
 	/ \
-; mkdir -p "${backup_dir_path}"
+; mkdir -p "${backup_dir_path}" \
 ; cp -vf ${rootfsTarGz} \
 	"${backup_dir_path}/"
 

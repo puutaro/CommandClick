@@ -1,13 +1,62 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
+package com.puutaro.commandclick.util.Intent
 
+import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.net.Uri
 
-object IntentExtra {
+object IntentLauncher {
 
-    fun add (
+    fun send(
+        context: Context?,
+        action: String,
+        uriString: String,
+        extraListStrTabSepa: String,
+        extraListIntTabSepa: String,
+        extraListLongTabSepa: String,
+        extraListFloatTabSepa: String,
+        frag: Int? = null
+    ){
+        val intent = Intent()
+        if(
+            action.isNotEmpty()
+        ) intent.action = Intent.ACTION_INSERT
+
+        frag?.let {
+            intent.flags = it
+        }
+
+        val eventUri = Uri.parse(uriString)
+        if(
+            uriString.isNotEmpty()
+        ) intent.data = eventUri
+        add(
+            intent,
+            extraListStrTabSepa,
+            ConvertNumberType.String
+        )
+        add(
+            intent,
+            extraListIntTabSepa,
+            ConvertNumberType.Int
+        )
+        add(
+            intent,
+            extraListLongTabSepa,
+            ConvertNumberType.Long
+        )
+        add(
+            intent,
+            extraListFloatTabSepa,
+            ConvertNumberType.Float
+        )
+        context?.startActivity(intent)
+    }
+
+    private fun add (
         intent: Intent,
         extraString: String,
-        convertNumberType: ConvertNumberType
+        convertNumberType: ConvertNumberType,
     ){
         try {
             execAdd (
@@ -24,7 +73,7 @@ object IntentExtra {
     private fun execAdd (
         intent: Intent,
         extraString: String,
-        convertNumberType: ConvertNumberType
+        convertNumberType: ConvertNumberType,
     ){
         val extraStringList = extraString.split("\t")
         extraStringList.forEach {

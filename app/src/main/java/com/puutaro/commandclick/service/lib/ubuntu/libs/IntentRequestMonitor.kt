@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -145,9 +146,14 @@ object IntentRequestMonitor {
             "broadcastMap ${broadcastMap}"
         )
         val intentType = broadcastMap.get(
-            BroadcastMonitorFileScheme.intentType.name
+            BroadcastMonitorScheme.intentType.name
         ) ?: return
         when(intentType){
+            ReceiveIntentType.intent.name
+            -> intentSender(
+                ubuntuService,
+                broadcastMap,
+            )
             ReceiveIntentType.broadcast.name
             -> broadcastSender(
                 ubuntuService,
@@ -167,6 +173,60 @@ object IntentRequestMonitor {
 
             }
         }
+    }
+
+    private fun intentSender(
+        ubuntuService: UbuntuService,
+        broadcastMap: Map<String, String>,
+    ){
+        val helpOption = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpOption.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpConForIntent()}"
+        }
+        val action = broadcastMap.get(
+            IntentMonitorSchema.action.name
+        ) ?: String()
+        val uriStr = broadcastMap.get(
+            IntentMonitorSchema.uriStr.name
+        ) ?: String()
+        val extraStrListTabSepa = makeTabSepaListStr(
+            broadcastMap,
+            IntentMonitorSchema.extraStrs.name
+        )
+        val extraIntListTabSepa = makeTabSepaListStr(
+            broadcastMap,
+            IntentMonitorSchema.extraInts.name
+        )
+        val extraLongListTabSepa = makeTabSepaListStr(
+            broadcastMap,
+            IntentMonitorSchema.extraLongs.name
+        )
+        val extraFloatListTabSepa = makeTabSepaListStr(
+            broadcastMap,
+            IntentMonitorSchema.extraFloats.name
+        )
+        IntentLauncher.send(
+            ubuntuService.applicationContext,
+            action,
+            uriStr,
+            extraStrListTabSepa,
+            extraIntListTabSepa,
+            extraLongListTabSepa,
+            extraFloatListTabSepa,
+            Intent.FLAG_ACTIVITY_NEW_TASK
+        )
+
+    }
+
+    private fun makeTabSepaListStr(
+        broadcastMap: Map<String, String>,
+        extraShema: String
+    ): String {
+        return broadcastMap.get(
+            extraShema
+        )?.replace(keySeparator, "\t") ?: String()
     }
 
     private fun execToast(
@@ -252,7 +312,7 @@ object IntentRequestMonitor {
         }
         val typeLaunch = IntentMonitorNotificationType.launch.name
         val typeExit = IntentMonitorNotificationType.exit.name
-        val notificatinType = broadcastMap.get(BroadcastMonitorFileScheme.notificationType.name)
+        val notificatinType = broadcastMap.get(BroadcastMonitorScheme.notificationType.name)
             ?: return
         when(notificatinType) {
             typeLaunch
@@ -268,7 +328,7 @@ object IntentRequestMonitor {
             )
             else
             -> {
-                val notificationTypeOption = "${BroadcastMonitorFileScheme.notificationType.name.camelToShellArgsName()}/-t"
+                val notificationTypeOption = "${BroadcastMonitorScheme.notificationType.name.camelToShellArgsName()}/-t"
                 responseString +=
                     "\n${notificationTypeOption} must be \"${typeLaunch}\" or \"${typeExit}\""
             }
@@ -280,7 +340,7 @@ object IntentRequestMonitor {
         broadcastMap: Map<String, String>
     ){
         val context = ubuntuService.applicationContext
-        val channelNumStr = broadcastMap.get(BroadcastMonitorFileScheme.channelNum.name)
+        val channelNumStr = broadcastMap.get(BroadcastMonitorScheme.channelNum.name)
             ?: return
         val channelNum = toInt(channelNumStr) ?: return
         ubuntuService.notificationBuilderHashMap.remove(channelNum)
@@ -294,27 +354,27 @@ object IntentRequestMonitor {
         broadcastMap: Map<String, String>
     ){
         val context = ubuntuService.applicationContext
-        val channelNumKey = BroadcastMonitorFileScheme.channelNum.name
+        val channelNumKey = BroadcastMonitorScheme.channelNum.name
         val channeNumOptionName = "${channelNumKey.camelToShellArgsName()}/-cn"
         val channelNumStr = broadcastMap.get(channelNumKey)
             ?: return Unit.also {
                 responseString += "\n${requireArgsErrMessage.format(channeNumOptionName)}"
             }
         val notificationIdToImportance = decideImportance(
-            broadcastMap.get(BroadcastMonitorFileScheme.importance.name)
+            broadcastMap.get(BroadcastMonitorScheme.importance.name)
         )
         val notificationId = decideNotiIdByImportance(
             notificationIdToImportance
         )
-        val delete = broadcastMap.get(BroadcastMonitorFileScheme.delete.name)
+        val delete = broadcastMap.get(BroadcastMonitorScheme.delete.name)
         val channelNum = toInt(channelNumStr) ?: return Unit.also {
             responseString += "\n${channeNumOptionName} must be Int"
         }
-        val iconName = broadcastMap.get(BroadcastMonitorFileScheme.iconName.name)
-        val title = broadcastMap.get(BroadcastMonitorFileScheme.title.name)
-        val message = broadcastMap.get(BroadcastMonitorFileScheme.message.name)
+        val iconName = broadcastMap.get(BroadcastMonitorScheme.iconName.name)
+        val title = broadcastMap.get(BroadcastMonitorScheme.title.name)
+        val message = broadcastMap.get(BroadcastMonitorScheme.message.name)
         val alertOnce =
-            broadcastMap.get(BroadcastMonitorFileScheme.alertOnce.name)
+            broadcastMap.get(BroadcastMonitorScheme.alertOnce.name)
         val channel = NotificationChannel(
             notificationId,
             notificationId,
@@ -358,7 +418,7 @@ object IntentRequestMonitor {
         val buttonListSize = addButton(
             ubuntuService,
             notificationBuilder,
-            broadcastMap.get(BroadcastMonitorFileScheme.button.name)
+            broadcastMap.get(BroadcastMonitorScheme.button.name)
         )
         setStyle(
             notificationBuilder,
@@ -398,7 +458,7 @@ object IntentRequestMonitor {
         val buttonListTotalIndex = buttonListSize - 1
         val styleMap =
             broadcastMap.get(
-                BroadcastMonitorFileScheme.notificationStyle.name
+                BroadcastMonitorScheme.notificationStyle.name
             )?.let {
             createMap(
                 it,
@@ -617,10 +677,72 @@ object IntentRequestMonitor {
         return notiId.split(".").lastOrNull()
     }
 
+    private fun makeHelpConForIntent(): String {
+        val extraStrsOption = IntentMonitorSchema.extraStrs.name.camelToShellArgsName()
+        val extraIntsOption = IntentMonitorSchema.extraInts.name.camelToShellArgsName()
+        val extraLongsOption = IntentMonitorSchema.extraLongs.name.camelToShellArgsName()
+        val extraFloatsOption = IntentMonitorSchema.extraFloats.name.camelToShellArgsName()
+        val comaKeySeparator = ","
+
+        return """
+        
+        ### Intent sender in ${BuildConfig.APPLICATION_ID}
+        
+        ${IntentMonitorSchema.action.name.camelToShellArgsName()}
+        -a
+        : intent action string
+        
+        
+        ${IntentMonitorSchema.uriStr.name.camelToShellArgsName()}
+        -u
+        : uri string
+        
+        
+        ${extraStrsOption}
+        -s
+        : intent extra string
+        option
+            format: ${'$'}{key1}=${'$'}{valueStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueStr2}${comaKeySeparator}..
+
+        ex) 
+            ${extraStrsOption}="${'$'}{key1}=${'$'}{valueStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueStr2}${comaKeySeparator}.."
+        
+                
+        ${extraIntsOption}
+        -i
+        : intent extra int
+        option
+            format: ${'$'}{key1}=${'$'}{valueIntStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueIntStr2}${comaKeySeparator}..
+
+        ex) 
+            ${extraIntsOption}="${'$'}{key1}=${'$'}{valueIntStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueIntStr2}${comaKeySeparator}.."
+
+        
+        ${extraLongsOption}
+        -l
+        : intent extra long
+        option
+            format: ${'$'}{key1}=${'$'}{valueLongStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueLongStr2}${comaKeySeparator}..
+
+        ex) 
+            ${extraLongsOption}="${'$'}{key1}=${'$'}{valueLongStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueLongStr2}${comaKeySeparator}.."
+
+
+        ${extraFloatsOption}
+        -f
+        : intent extra string
+        option
+            format: ${'$'}{key1}=${'$'}{valueFloatStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueFloatStr2}${comaKeySeparator}..
+
+        ex) 
+            ${extraFloatsOption}="${'$'}{key1}=${'$'}{valueFloatStr2}${comaKeySeparator}${'$'}{key1}=${'$'}{valueFloatStr2}${comaKeySeparator}.."
+      
+    """.trimIndent()
+    }
     private fun makeHelpConForNotification(): String {
-        val deleteOption = BroadcastMonitorFileScheme.delete.name.camelToShellArgsName()
-        val notificationStyleOption = BroadcastMonitorFileScheme.notificationStyle.name.camelToShellArgsName()
-        val buttonOption = BroadcastMonitorFileScheme.button.name.camelToShellArgsName()
+        val deleteOption = BroadcastMonitorScheme.delete.name.camelToShellArgsName()
+        val notificationStyleOption = BroadcastMonitorScheme.notificationStyle.name.camelToShellArgsName()
+        val buttonOption = BroadcastMonitorScheme.button.name.camelToShellArgsName()
         val launch = IntentMonitorNotificationType.launch.name
         val exit = IntentMonitorNotificationType.exit.name
         val high = NotificationIdToImportance.HIGH.name
@@ -638,40 +760,40 @@ object IntentRequestMonitor {
         
         ### Notification management command in ${BuildConfig.APPLICATION_ID}
         
-        ${BroadcastMonitorFileScheme.notificationType.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.notificationType.name.camelToShellArgsName()}
         -t
         : ${launch}/${exit}
             ${launch} -> launch and update notification
             ${exit} -> exit notification
         
         
-        ${BroadcastMonitorFileScheme.channelNum.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.channelNum.name.camelToShellArgsName()}
         -cn
         : Int
         
         
-        ${BroadcastMonitorFileScheme.iconName.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.iconName.name.camelToShellArgsName()}
         -in
         : ${CmcClickIcons.values().joinToString(", ")}
         
         
-        ${BroadcastMonitorFileScheme.importance.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.importance.name.camelToShellArgsName()}
         -i
         : ${high}/${low}
             ${high} -> importance high
             ${low} -> importance low
         
-        ${BroadcastMonitorFileScheme.alertOnce.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.alertOnce.name.camelToShellArgsName()}
         -o
         : once alert
 
             
-        ${BroadcastMonitorFileScheme.title.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.title.name.camelToShellArgsName()}
         -t
         : String
         
         
-        ${BroadcastMonitorFileScheme.message.name.camelToShellArgsName()}
+        ${BroadcastMonitorScheme.message.name.camelToShellArgsName()}
         -m
         : String
 
@@ -834,7 +956,7 @@ private enum class BroadCastSenderSchema {
     extras,
 }
 
-private enum class BroadcastMonitorFileScheme {
+private enum class BroadcastMonitorScheme {
     intentType,
     notificationType,
     notificationStyle,
@@ -848,12 +970,21 @@ private enum class BroadcastMonitorFileScheme {
     button
 }
 
+private enum class IntentMonitorSchema{
+    action,
+    uriStr,
+    extraStrs,
+    extraInts,
+    extraLongs,
+    extraFloats,
+}
+
+
 private enum class NotificationStyleSchema {
     type,
     compactActionsInts
 }
 private enum class NotificationStyle{
-    normal,
     media
 }
 

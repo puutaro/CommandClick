@@ -11,7 +11,7 @@ import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHt
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.IntentExtra
+import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.Intent.IntentVarient
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -118,42 +118,20 @@ class JsIntent(
     fun launchApp(
         action: String,
         uriString: String,
-        extraString: String,
-        extraInt: String,
-        extraLong: String,
-        extraFloat: String,
+        extraListStrTabSepa: String,
+        extraListIntTabSepa: String,
+        extraListLongTabSepa: String,
+        extraListFloatTabSepa: String,
     ){
-
-        val intent = Intent()
-        if(
-            action.isNotEmpty()
-        ) intent.action = Intent.ACTION_INSERT
-
-        val eventUri = Uri.parse(uriString)
-        if(
-            uriString.isNotEmpty()
-        ) intent.data = eventUri
-        IntentExtra.add(
-            intent,
-            extraString,
-            IntentExtra.ConvertNumberType.String
+        IntentLauncher.send(
+            activity,
+            action,
+            uriString,
+            extraListStrTabSepa,
+            extraListIntTabSepa,
+            extraListLongTabSepa,
+            extraListFloatTabSepa,
         )
-        IntentExtra.add(
-            intent,
-            extraInt,
-            IntentExtra.ConvertNumberType.Int
-        )
-        IntentExtra.add(
-            intent,
-            extraLong,
-            IntentExtra.ConvertNumberType.Long
-        )
-        IntentExtra.add(
-            intent,
-            extraFloat,
-            IntentExtra.ConvertNumberType.Float
-        )
-        terminalFragment.activity?.startActivity(intent)
     }
 
     @JavascriptInterface

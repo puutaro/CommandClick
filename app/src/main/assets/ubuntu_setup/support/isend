@@ -1,0 +1,96 @@
+#!/bin/bash
+
+set -ue
+
+
+HELP=""
+ACTION=""
+URI_STR=""
+EXTRA_STRS=""
+EXTRA_INTS=""
+EXTRA_FLOATS=""
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--action|-a)
+			ACTION="${2}"
+			shift
+			;;
+		--uri|-u)
+			URI_STR="${2}"
+			shift
+			;;
+		--extra-strs|-s)
+			EXTRA_STRS="${2}"
+			shift
+			;;
+		--extra-ints|-i)
+			EXTRA_INTS="${2}"
+			shift
+			;;
+		--extra-longs|-l)
+			EXTRA_LONGS="${2}"
+			;;
+		--extra-floats|-f)
+			EXTRA_FLOATS="${2}"
+			shift
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+read_args "$@"
+
+noti(){
+	awk \
+	-v help="${HELP}" \
+	-v action="${ACTION}" \
+	-v uriStr="${URI_STR}" \
+	-v extraStrs="${EXTRA_STRS/\|/}" \
+	-v extraInts="${EXTRA_INTS/\|/}" \
+	-v extraLongs="${EXTRA_LONGS/\|/}" \
+	-v extraFloats="${EXTRA_FLOATS/\|/}" \
+	'function concat(val, val_name){
+		if(val) output_con = output_con""val_name"="val"\n"
+	}
+	BEGIN {
+		output_con=""
+		concat(help, "help")
+		output_con = output_con"intentType=notification\n"
+		concat(action, "action")
+		concat(uriStr, "uriStr")
+		concat(extraStrs, "extraStrs")
+		concat(extraInts, "extraInts")
+		concat(extraLongs, "extraLongs")
+		concat(extraFloats, "extraFloats")
+		gsub(",", "!", output_con)
+		gsub(/\n/, ",\n", output_con)
+		print output_con
+	}' 
+	# \
+	# | curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+}
+
+readonly output="$(noti)"
+case "${output}" in
+	"") exit 0;;
+	*) echo "${output}"
+esac
+test -n "${HELP}" \
+	&& exit 0 \
+	|| exit 1

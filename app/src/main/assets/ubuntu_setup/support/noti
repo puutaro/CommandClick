@@ -3,7 +3,6 @@
 set -ue
 
 
-readonly comma_string="comma_string"
 HELP=""
 NOTIFICATION_TYPE=""
 CHANNEL_NUM=""
@@ -92,7 +91,6 @@ noti(){
 	-v delete_key="${DELETE}" \
 	-v notificationStyle="${NOTIFICATION_STYLE}" \
 	-v button="${BUTTONS/\|/}" \
-	-v comma_string="${comma_string}" \
 	'function concat(val, val_name){
 		if(val) output_con = output_con""val_name"="val"\n"
 	}
