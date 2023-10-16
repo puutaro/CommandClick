@@ -24,7 +24,7 @@ readonly WAIT_QUIZ_TSV_CON_LINES="$(echo "${WAIT_QUIZ_TSV_CON}" | wc -l)"
 decide_message(){
 	for i in $(seq 1 5)
 	do
-		local rnd_line_num="$((${RANDOM} % WAIT_QUIZ_TSV_CON_LINES))"
+		local rnd_line_num="$((${RANDOM} % ${WAIT_QUIZ_TSV_CON_LINES}))"
 		local quiz_con_src=$(\
 			echo "${WAIT_QUIZ_TSV_CON}" \
 					| sed -n "${rnd_line_num}p"\

@@ -30,6 +30,58 @@ object WaitQuizPair {
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
+            "What notes to cancel backup?",
+            "-> After copy, to be corruption"
+        ),
+        Pair(
+            "What's advantage of backup?",
+            "-> Create current rootfs"
+        ),
+        Pair(
+            "What's advantage of backup?",
+            "-> fast re-installation"
+        ),
+        Pair(
+            "Shouldn't you use `grep | cut`?",
+            "-> No, awk. Due to proot process cost"
+        ),
+        Pair(
+            "How to watch sys log?",
+            "-> setting -> select term 2"
+        ),
+        Pair(
+            "Why set term_2 as sys log?",
+            "-> Debug easily"
+        ),
+        Pair(
+            "Why set term_2 as sys log?",
+            "-> Debug easily"
+        ),
+        Pair(
+            "How to debug ${appName}?",
+            "-> setting -> select term 2"
+        ),
+        Pair(
+            "What motif term number is?",
+            "-> Linux, stdout, stderr"
+        ),
+        Pair(
+            "What's default term number?",
+            "-> 1"
+        ),
+        Pair(
+            "How to change default term number?",
+            "-> setting -> 'defaultMonitorFile'"
+        ),
+        Pair(
+            "How set 'defaultMonitorFile' setting var?",
+            "-> For debug"
+        ),
+        Pair(
+            "How to create debug funnel?",
+            "-> Change 'defaultMonitorFile' by setting -> add"
+        ),
+        Pair(
             "What's env tsv ?",
             "-> Optional env var file"
         ),
@@ -377,7 +429,7 @@ object WaitQuizPair {
         ),
         Pair(
             "What's \"tsv env\" in shell?",
-            "-> Seconds env variable for ubuntu"
+            "-> Second env variable for ubuntu"
         ),
         Pair(
             "What's difference \"tsv env\" and normal env?",

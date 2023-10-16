@@ -98,8 +98,11 @@ case "${ARG[@]}" in
 	"") exit 1;;
 esac
 
-if [ -e "${ARG[0]}"  ];then
-	get_replace_variables "${ARG[0]}"
+ARG0="${ARG[0]}"
+ARG1="${ARG[1]}"
+
+if [ -e "${ARG0}"  ];then
+	get_replace_variables "${ARG0}"
 else 
-	grep_key "${ARG[0]}" "${ARG[1]}"
+	grep_key "${ARG0}" "${ARG1}"
 fi

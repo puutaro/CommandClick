@@ -37,7 +37,12 @@ get_help(){
 				print "## Usage"
 				print ""
 				print "# Get tsv env variables"
+				print ""
+				print "From tsv contents"
 				print "tsvar \x22${contents}\x22 \x22${variable name}\x22"
+				print ""
+				print "From tsv path"
+				print "cat \x22${tsv path}\x22 | tsvar \x22${variable name}\x22"
 				print ""
 			}'
 			exit 0
@@ -48,12 +53,16 @@ get_help(){
 tsvar(){
 	local con="${1}"
 	local key="${2}"
-	echo "${con}" | awk \
-		-F $'\t' \
+	awk \
+		-v con="${con}"\
 		-v key="${key}" \
-	 '{
-	 	if($1 == key) print $2
-	 }'
+	'BEGIN{
+		start_index = index(con, key);
+		grep_con = substr(con, start_index, length(con));
+		sub(/\n.*/, "", grep_con)
+		sub(/.*\t/, "", grep_con);
+		print grep_con
+	}'
 }
 
 
@@ -66,4 +75,11 @@ case "${ARG[@]}" in
 	"") exit 1;;
 esac
 
-tsvar "${ARG[0]}" "${ARG[1]}"
+ARG0="${ARG[0]}"
+ARG1="${ARG[1]}"
+
+if [ -p "/dev/stdin" ]; then
+    tsvar "$(cat -)" "${ARG0}"
+else 
+	tsvar "${ARG0}" "${ARG1}"
+fi
