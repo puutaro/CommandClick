@@ -26,9 +26,51 @@ object WaitQuizPair {
     private val toastCmd = "toast"
     private val getRvarCmd="get_rvar"
     private val tsvar = "tsvar"
+    private val isend = "isend"
+    private val killPtree = "kill_ptree"
     private val cmdTerminal = SystemFannel.cmdTerminal
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
+        Pair(
+            "How to relaod fannel?",
+            "-> history -> click fannel"
+        ),
+        Pair(
+            "What bug in ${cmdTerminal}?",
+            "-> history -> click ${cmdTerminal}"
+        ),
+        Pair(
+            "What restart in fannel?",
+            "-> history -> click fannel"
+        ),
+        Pair(
+            "How to ssh from pc terminal?",
+            "-> ssh -p 10022 cmdclick@${'$'}{ipv4}. pass: cmdclick"
+        ),
+        Pair(
+            "How to ssh from termux?",
+            "-> ssh -p 10022 cmdclick@${'$'}{ipv4}. pass: cmdclick"
+        ),
+        Pair(
+            "How to manipulate ubuntu from pc?",
+            "-> ssh -p 10022 cmdclick@${'$'}{ipv4}. pass: cmdclick"
+        ),
+        Pair(
+            "What's ssh password?",
+            "-> cmdclick"
+        ),
+        Pair(
+            "Do you tell me ssh pass?",
+            "-> cmdclick"
+        ),
+        Pair(
+            "What's ssh password?",
+            "-> cmdclick"
+        ),
+        Pair(
+            "How to ssh ubuntu?",
+            "-> ssh -p 10022 cmdclick@${'$'}{ipv4}"
+        ),
         Pair(
             "How to transfer other android?",
             "-> cp ${'$'}{documentDir}/cmdclick"
@@ -392,6 +434,18 @@ object WaitQuizPair {
             "-> \"command variables section\" in fannel script"
         ),
         Pair(
+            "What's usage for \"${killPtree}\" command?",
+            "-> Type \"${killPtree} -h\" in ${cmdTerminal}"
+        ),
+        Pair(
+            "What's \"${killPtree}\" command?",
+            "-> kill script process tree"
+        ),
+        Pair(
+            "How to kill script process tree?",
+            "-> Use \"${killPtree}\" command"
+        ),
+        Pair(
             "What's usage for \"${toastCmd}\" command?",
             "-> Type \"${toastCmd} -h\" in ${cmdTerminal}"
         ),
@@ -440,7 +494,7 @@ object WaitQuizPair {
             "-> shell and curl wrapper"
         ),
         Pair(
-            "What's usage for tsvar${tsvar}\" command?",
+            "What's usage for ${tsvar}\" command?",
             "-> Type \"${tsvar} -h\" in ${cmdTerminal}"
         ),
         Pair(
@@ -450,6 +504,26 @@ object WaitQuizPair {
         Pair(
             "How to get \"tsv env\" in shell?",
             "-> Use \"${tsvar}\" command"
+        ),
+        Pair(
+            "What's usage for ${isend}\" command?",
+            "-> Type \"${isend} -h\" in ${cmdTerminal}"
+        ),
+        Pair(
+            "What's \"${isend}\" command?",
+            "-> Send intent command"
+        ),
+        Pair(
+            "How to send intent from shell?",
+            "-> Use \"${isend}\" command"
+        ),
+        Pair(
+            "What's purpose shell command of ${appName}?",
+            "-> interface to os and ${appName}"
+        ),
+        Pair(
+            "What's purpose shell command of ${appName}?",
+            "-> Usability "
         ),
         Pair(
             "What's \"tsv env\" in shell?",
@@ -606,10 +680,6 @@ object WaitQuizPair {
         Pair(
             "There is no sleep setting in termux?",
             "-> This ubuntu is a PC specification"
-        ),
-        Pair(
-            "What's this ubuntu size?",
-            "-> About 2GB"
         ),
         Pair(
             "What's ${appName} concept?",

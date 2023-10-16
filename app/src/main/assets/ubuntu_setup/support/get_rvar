@@ -28,7 +28,6 @@ get_help(){
 		"") ;;
 		*) 
 			awk \
-			-v REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}" \
 			'BEGIN{
 				print "### Replace variables getter"
 				print ""

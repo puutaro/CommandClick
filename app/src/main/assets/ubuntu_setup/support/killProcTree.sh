@@ -32,6 +32,26 @@ killpstree(){
 	 done
 }
 
+get_help(){
+	awk \
+	'BEGIN{
+		print "### Replace variables getter"
+		print ""
+		print "* Kill All Process Tree"
+		print ""
+		print "## Usage"
+		print ""
+		print "kill_ptree \x22${shell path1 or keyword1}\x22 \x22${shell path2 or keyword2}\x22 .."
+		print ""
+	}'
+	exit 0
+}
+
+
+case "${1:-}" in
+	--help|-h) get_help;;
+	"") echo "no arg"; exit 0;;
+esac
 
 PROCESS_NAME_LIST=""
 for(( i=1; i<=$#; i++ )); do  
