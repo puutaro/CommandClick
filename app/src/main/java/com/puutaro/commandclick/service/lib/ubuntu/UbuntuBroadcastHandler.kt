@@ -16,7 +16,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServiceButton
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManager
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -129,7 +129,7 @@ object UbuntuBroadcastHandler {
         )
         ubuntuService.notificationBuilder?.build()?.let {
             ubuntuService.notificationManager?.notify(
-                ServiceNotificationId.ubuntuServer,
+                ServiceChannelNum.ubuntuServer,
                 it
             )
         }

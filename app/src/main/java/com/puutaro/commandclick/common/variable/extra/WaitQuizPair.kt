@@ -30,6 +30,30 @@ object WaitQuizPair {
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
+            "How to transfer other android?",
+            "-> cp ${'$'}{documentDir}/cmdclick"
+        ),
+        Pair(
+            "What's transfer concept?",
+            "-> Due to ${'$'}{documentDir}/cmdclick"
+        ),
+        Pair(
+            "What's ${'$'}{documentDir}/cmdclick?",
+            "-> All data"
+        ),
+        Pair(
+            "How to access ${'$'}{documentDir}/cmdclick by Ubuntu?",
+            "-> Default ok"
+        ),
+        Pair(
+            "What's env val of ${'$'}{documentDir}/cmdclick in Ubuntu?",
+            "-> ${'$'}{APP_ROOT_PATH}"
+        ),
+        Pair(
+            "What's ${'$'}{APP_ROOT_PATH} of Ubuntu?",
+            "->${'$'}{documentDir}/cmdclick"
+        ),
+        Pair(
             "What notes to cancel backup?",
             "-> After copy, to be corruption"
         ),

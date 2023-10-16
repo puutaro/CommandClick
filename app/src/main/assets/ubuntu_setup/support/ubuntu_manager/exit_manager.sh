@@ -16,19 +16,43 @@ readonly NOTIFICATION_CAHNEL_NUM="${1:-}"
 readonly REMOVE_ROOTFS="${2:-}"
 
 
-bash "${KILL_PROC_SHELL_PATH}" \
-	"${NOTI_BACKUP_SHELL_PATH}" \
->> "${MONITOR_FILE_PATH}"
+exit_background(){
+	local ps_aux_cmd="ps aux"
+	${ps_aux_cmd} \
+	| awk \
+	-v UBUNTU_BACKUP_TEMP_ROOTFS_PATH="${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}" \
+	-v ps_aux_cmd="${ps_aux_cmd}" \
+	'{
+		is_kill_gard_cmd=""
+		if(\
+			$0 ~ "cp"\
+			|| $0 ~ "rm"\
+		) is_kill_gard_cmd = "true"
+		if(\
+			is_kill_gard_cmd\
+			&& $0 ~ UBUNTU_BACKUP_TEMP_ROOTFS_PATH \
+			&& $0 !~ "awk " \
+			&& $0 !~ ps_aux_cmd \
+		) print $0
+	}' | test -n "$(cat)" \
+	&& return || e=$?
+	bash "${KILL_PROC_SHELL_PATH}" \
+		"${NOTI_BACKUP_SHELL_PATH}" \
+	>> "${MONITOR_FILE_PATH}"
 
-bash "${KILL_PROC_SHELL_PATH}" \
-	"${NOTI_UPDATE_SHELL_PATH}" \
->> "${MONITOR_FILE_PATH}"
+	bash "${KILL_PROC_SHELL_PATH}" \
+		"${NOTI_UPDATE_SHELL_PATH}" \
+	>> "${MONITOR_FILE_PATH}"
 
-noti \
-	-t exit \
-	-cn "${NOTIFICATION_CAHNEL_NUM}"
+	noti \
+		-t exit \
+		-cn "${NOTIFICATION_CAHNEL_NUM}"
 
-
-test -z "${REMOVE_ROOTFS}" \
-	&& exit 0 \
+	test -z "${REMOVE_ROOTFS}" \
+	&& return \
 	|| rm "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
+}
+
+
+exit_background
+

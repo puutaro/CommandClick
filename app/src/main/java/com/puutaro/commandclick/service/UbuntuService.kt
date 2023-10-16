@@ -15,7 +15,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
+import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
@@ -30,7 +30,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.Job
 import java.net.ServerSocket
@@ -60,8 +60,8 @@ class UbuntuService:
     var monitorScreenJob: Job? = null
     var notificationBuilder:  NotificationCompat.Builder? = null
     var ubuntuCoroutineJobsHashMap = HashMap<String, Job?>()
-    val notificationId = NotificationChanel.UBUNTU_NOTIFICATION.id
-    val chanelId = ServiceNotificationId.ubuntuServer
+    var notificationIdToImportance = NotificationIdToImportance.LOW
+    val chanelId = ServiceChannelNum.ubuntuServer
     var notificationManager: NotificationManagerCompat? = null
     var cancelUbuntuServicePendingIntent: PendingIntent? = null
     var screenOffKill = false
@@ -117,16 +117,15 @@ class UbuntuService:
             screenStatusReceiver,
         )
         val channel = NotificationChannel(
-            NotificationChanel.UBUNTU_NOTIFICATION.id,
-            NotificationChanel.UBUNTU_NOTIFICATION.name,
+            notificationIdToImportance.id,
+            notificationIdToImportance.id,
             NotificationManager.IMPORTANCE_LOW
         )
-        channel.setSound(null, null)
         notificationManager = NotificationManagerCompat.from(applicationContext)
         notificationManager?.createNotificationChannel(channel)
         notificationBuilder = NotificationCompat.Builder(
             applicationContext,
-            notificationId
+            notificationIdToImportance.id
         )
             .setSmallIcon(com.puutaro.commandclick.R.drawable.ic_terminal)
             .setAutoCancel(true)
@@ -137,7 +136,7 @@ class UbuntuService:
             )
         notificationBuilder?.build()?.let {
             notificationManager?.notify(
-                ServiceNotificationId.ubuntuServer,
+                ServiceChannelNum.ubuntuServer,
                 it
             )
             startForeground(
@@ -194,7 +193,7 @@ class UbuntuService:
             )
             notificationBuilder?.build()?.let {
                 notificationManager?.notify(
-                    ServiceNotificationId.ubuntuServer,
+                    ServiceChannelNum.ubuntuServer,
                     it
                 )
                 startForeground(

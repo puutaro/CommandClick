@@ -2,7 +2,6 @@ package com.puutaro.commandclick.service
 
 import android.R
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -18,9 +17,9 @@ import com.puutaro.commandclick.common.variable.intent.BroadCastIntentSchemeForC
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
+import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ScriptFileDescription
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText
@@ -33,7 +32,8 @@ import kotlin.math.ln
 
 class GitCloneService: Service() {
 
-    private val notificationId = ServiceNotificationId.gitClone
+    private val channelNum = ServiceChannelNum.gitClone
+    private val notificationIdToImportance =  NotificationIdToImportance.HIGH
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     private val descriptionFirstLineLimit = FannelListVariable.descriptionFirstLineLimit
     private var notificationManager: NotificationManagerCompat? = null
@@ -45,7 +45,7 @@ class GitCloneService: Service() {
         override fun onReceive(context: Context, intent: Intent) {
             gitCloneJob?.cancel()
             isProgressCancel = true
-            notificationManager?.cancel(notificationId)
+            notificationManager?.cancel(channelNum)
             stopForeground(Service.STOP_FOREGROUND_DETACH)
         }
     }
@@ -62,7 +62,7 @@ class GitCloneService: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         isProgressCancel = true
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         gitCloneJob?.cancel()
 
         val gitCloneStopIntent = Intent()
@@ -73,17 +73,16 @@ class GitCloneService: Service() {
                     or PendingIntent.FLAG_IMMUTABLE
         )
         val channel = NotificationChannel(
-            NotificationChanel.GIT_CLONE_NOTIFICATION.id,
-            NotificationChanel.GIT_CLONE_NOTIFICATION.name,
-            NotificationManager.IMPORTANCE_HIGH
+            notificationIdToImportance.id,
+            notificationIdToImportance.id,
+            notificationIdToImportance.importance
         )
-        channel.setSound(null, null);
         val context = applicationContext
 
         notificationManager = NotificationManagerCompat.from(context)
 
         notificationManager?.createNotificationChannel(channel)
-        val notificationBuilder = NotificationCompat.Builder(context, NotificationChanel.GIT_CLONE_NOTIFICATION.id)
+        val notificationBuilder = NotificationCompat.Builder(context,notificationIdToImportance.id)
         notificationBuilder.setSmallIcon(R.drawable.stat_sys_download)
         notificationBuilder.setContentTitle("Cloning...")
         notificationBuilder.setAutoCancel(true)
@@ -95,7 +94,7 @@ class GitCloneService: Service() {
             "cancel",
             pendingIntent
         )
-        startForeground(notificationId, notificationBuilder.build())
+        startForeground(channelNum, notificationBuilder.build())
 
         val cmdclickFannelAppsDirPath = UsePath.cmdclickFannelAppsDirPath
         val repoFileObj = File(cmdclickFannelAppsDirPath)
@@ -119,7 +118,7 @@ class GitCloneService: Service() {
                 notificationBuilder.setAutoCancel(true)
                 notificationBuilder.clearActions()
                 val notification = notificationBuilder.build()
-                notificationManager?.notify(notificationId, notification)
+                notificationManager?.notify(channelNum, notification)
             }
             withContext(Dispatchers.IO){
                 FileSystems.writeFile(
@@ -138,7 +137,7 @@ class GitCloneService: Service() {
                 )
             }
             withContext(Dispatchers.IO){
-                notificationManager?.cancel(notificationId)
+                notificationManager?.cancel(channelNum)
                 stopForeground(Service.STOP_FOREGROUND_DETACH)
                 stopSelf()
             }
@@ -158,7 +157,7 @@ class GitCloneService: Service() {
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         gitCloneJob?.cancel()
         stopForeground(Service.STOP_FOREGROUND_DETACH)
     }
@@ -170,7 +169,7 @@ class GitCloneService: Service() {
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         gitCloneJob?.cancel()
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         stopSelf()
@@ -252,7 +251,7 @@ class GitCloneService: Service() {
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                     notificationBuilder.setProgress(100, 0, true)
                     val notification = notificationBuilder.build()
-                    notificationManager.notify(notificationId, notification)
+                    notificationManager.notify(channelNum, notification)
                 }
 
                 override fun update(completed: Int) {
@@ -277,7 +276,7 @@ class GitCloneService: Service() {
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                     notificationBuilder.setProgress(100, displayPercentComplete, false)
                     val notification = notificationBuilder.build()
-                    notificationManager.notify(notificationId, notification)
+                    notificationManager.notify(channelNum, notification)
                 }
 
                 override fun endTask() {

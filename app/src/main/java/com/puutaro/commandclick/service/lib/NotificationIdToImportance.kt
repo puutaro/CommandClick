@@ -1,11 +1,12 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.variable
+package com.puutaro.commandclick.service.lib
 
 import android.app.NotificationManager
 
 enum class NotificationIdToImportance(
     val id: String,
     val importance: Int,
+    val isSound: Boolean
 ){
-    LOW( "com.puutaro.commandclick.low", NotificationManager.IMPORTANCE_LOW),
-    HIGH("com.puutaro.commandclick.high",NotificationManager.IMPORTANCE_HIGH),
+    LOW( "com.puutaro.commandclick.low", NotificationManager.IMPORTANCE_LOW, false),
+    HIGH("com.puutaro.commandclick.high",NotificationManager.IMPORTANCE_HIGH, true),
 }

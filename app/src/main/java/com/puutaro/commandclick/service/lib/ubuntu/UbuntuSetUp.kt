@@ -73,13 +73,6 @@ object UbuntuSetUp {
             )
             return
         }
-//        val isWifi = NetworkTool.isWifi(context)
-//        if(!isWifi) {
-//            val wifiNotiIntent = Intent()
-//            wifiNotiIntent.action = BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action
-//            context.sendBroadcast(wifiNotiIntent)
-//            return
-//        }
         FileSystems.removeAndCreateDir(
             ubuntuFiles.filesOneRootfs.absolutePath
         )

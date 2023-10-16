@@ -2,7 +2,6 @@ package com.puutaro.commandclick.service.lib.ubuntu.libs
 
 import android.R
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Intent
 import android.widget.Toast
@@ -14,6 +13,7 @@ import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
@@ -300,10 +300,12 @@ object IntentRequestMonitor {
             ?: return Unit.also {
                 responseString += "\n${requireArgsErrMessage.format(channeNumOptionName)}"
             }
-        val importance = decideImportance(
+        val notificationIdToImportance = decideImportance(
             broadcastMap.get(BroadcastMonitorFileScheme.importance.name)
         )
-        val notificationId = listOf(ubuntuService.packageName, importance.str).joinToString(".")
+        val notificationId = decideNotiIdByImportance(
+            notificationIdToImportance
+        )
         val delete = broadcastMap.get(BroadcastMonitorFileScheme.delete.name)
         val channelNum = toInt(channelNumStr) ?: return Unit.also {
             responseString += "\n${channeNumOptionName} must be Int"
@@ -316,7 +318,7 @@ object IntentRequestMonitor {
         val channel = NotificationChannel(
             notificationId,
             notificationId,
-            importance.int
+            notificationIdToImportance.importance
         )
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.createNotificationChannel(channel)
@@ -460,7 +462,6 @@ object IntentRequestMonitor {
         if(
             alertOnce.isNullOrEmpty()
         ) return
-        notificationBuilder
         notificationBuilder.setOnlyAlertOnce(true)
     }
     private fun addButton(
@@ -595,10 +596,25 @@ object IntentRequestMonitor {
 
     private fun decideImportance(
         importanceStr: String?,
-    ): NotificationImportanceType {
-        return NotificationImportanceType.values().filter {
-            it.str == importanceStr
-        }.firstOrNull() ?: NotificationImportanceType.LOW
+    ): NotificationIdToImportance {
+        return NotificationIdToImportance.values().filter {
+            getImportanceFromNotiId(it.id) == importanceStr
+        }.firstOrNull() ?: NotificationIdToImportance.LOW
+    }
+
+    private fun decideNotiIdByImportance(
+        notificationIdToImportance: NotificationIdToImportance
+    ): String {
+        val notiId = notificationIdToImportance.id
+        return NotificationIdToImportance.values().filter {
+            it.id == notiId
+        }.firstOrNull()?.id ?: NotificationIdToImportance.LOW.id
+    }
+
+    private fun getImportanceFromNotiId(
+        notiId: String
+    ): String? {
+        return notiId.split(".").lastOrNull()
     }
 
     private fun makeHelpConForNotification(): String {
@@ -607,8 +623,8 @@ object IntentRequestMonitor {
         val buttonOption = BroadcastMonitorFileScheme.button.name.camelToShellArgsName()
         val launch = IntentMonitorNotificationType.launch.name
         val exit = IntentMonitorNotificationType.exit.name
-        val high = NotificationImportanceType.HIGH.name
-        val low = NotificationImportanceType.LOW.name
+        val high = NotificationIdToImportance.HIGH.name
+        val low = NotificationIdToImportance.LOW.name
         val label = ButtonKey.label.name
         val shellPath = ButtonKey.shellPath.name
         val args = ButtonKey.args.name
@@ -836,15 +852,6 @@ private enum class NotificationStyleSchema {
     type,
     compactActionsInts
 }
-
-private enum class NotificationImportanceType(
-    val str: String,
-    val int: Int,
-){
-    LOW("low", NotificationManager.IMPORTANCE_LOW),
-    HIGH("high", NotificationManager.IMPORTANCE_HIGH),
-}
-
 private enum class NotificationStyle{
     normal,
     media

@@ -2,7 +2,6 @@ package com.puutaro.commandclick.service
 
 import android.R
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -14,11 +13,11 @@ import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.PulseServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
+import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,15 +31,15 @@ class PulseReceiverService:
     Service() {
     private var pulseRecieverJob: Job? = null
     private var pcPulseSetServerJob: Job? = null
-    private val notificationId = NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id
-    private val chanelId = ServiceNotificationId.pulseReciever
+    private val notificationIdToImportance =
+        NotificationIdToImportance.LOW
+    private val chanelId = ServiceChannelNum.pulseReciever
     private val notificationManager by lazy {
         val channel = NotificationChannel(
-            NotificationChanel.PULSE_RECIEVER_NOTIFICATION.id,
-            NotificationChanel.PULSE_RECIEVER_NOTIFICATION.name,
-            NotificationManager.IMPORTANCE_LOW
+            notificationIdToImportance.id,
+            notificationIdToImportance.id,
+            notificationIdToImportance.importance
         )
-        channel.setSound(null, null)
         val notificationManager = NotificationManagerCompat.from(this)
         notificationManager.createNotificationChannel(channel)
         notificationManager
@@ -100,7 +99,7 @@ class PulseReceiverService:
         val serverReceivingAddressPort = "${pcAddress}:${UsePort.pluseRecieverPort.num}"
         val notificationBuilder = NotificationCompat.Builder(
             applicationContext,
-            notificationId
+            notificationIdToImportance.id
         )
             .setSmallIcon(R.drawable.ic_media_play)
             .setAutoCancel(true)
@@ -135,7 +134,7 @@ class PulseReceiverService:
                     applicationContext,
                     pcAddress,
                     serverPort,
-                    notificationId,
+                    notificationIdToImportance.id,
                     chanelId,
                     serverReceivingAddressPort,
                     notificationManager,

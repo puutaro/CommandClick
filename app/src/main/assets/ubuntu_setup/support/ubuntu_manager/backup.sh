@@ -3,6 +3,7 @@
 readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_3"
 readonly NOTI_UPDATE_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_backuping.sh"
+bash "${NOTI_UPDATE_SHELL_PATH}" & 
 readonly NOTI_MANAGER_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_manager.sh"
 readonly KILL_PROC_SHELL_PATH="/support/killProcTree.sh"
 readonly support_dir_path="/support"
@@ -18,7 +19,6 @@ readonly UBUNTU_BACKUP_TEMP_ROOTFS_PATH="$(\
 )"
 readonly UBUNUT_BACKUP_TMP_DIR_PATH="$(dirname "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}")"
 
-bash "${NOTI_UPDATE_SHELL_PATH}" & 
 mkdir -p "${UBUNUT_BACKUP_TMP_DIR_PATH}"
 rm -f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
 cd / 

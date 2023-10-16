@@ -6,10 +6,8 @@ import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.intent.TextToMp3IntentExtra
 import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.service.TextToMp3Service
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
@@ -89,18 +87,18 @@ class JsTextToSpeech(
         outDir: String,
         atomicName: String
     ) {
-        try {
-            val intent = Intent(terminalFragment.activity, TextToMp3Service::class.java)
-            intent.putExtra(TextToMp3IntentExtra.text.scheme, text)
-            intent.putExtra(TextToMp3IntentExtra.outDir.scheme, outDir)
-            intent.putExtra(TextToMp3IntentExtra.atomicName.scheme, atomicName)
-            context?.startForegroundService(intent)
-        } catch (e: Exception) {
-            Toast.makeText(
-                terminalFragment.context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
-        }
+//        try {
+//            val intent = Intent(terminalFragment.activity, TextToMp3Service::class.java)
+//            intent.putExtra(TextToMp3IntentExtra.text.scheme, text)
+//            intent.putExtra(TextToMp3IntentExtra.outDir.scheme, outDir)
+//            intent.putExtra(TextToMp3IntentExtra.atomicName.scheme, atomicName)
+//            context?.startForegroundService(intent)
+//        } catch (e: Exception) {
+//            Toast.makeText(
+//                terminalFragment.context,
+//                e.toString(),
+//                Toast.LENGTH_LONG
+//            ).show()
+//        }
     }
 }

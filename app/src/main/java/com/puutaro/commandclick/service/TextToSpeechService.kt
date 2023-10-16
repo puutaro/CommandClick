@@ -18,10 +18,10 @@ import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.NotificationChanel
+import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
-import com.puutaro.commandclick.service.variable.ServiceNotificationId
+import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.StringLength
@@ -35,7 +35,9 @@ class TextToSpeechService:
     Service() {
     private val debugTemp = "/storage/emulated/0/Music/test/temp"
     private val speechingStr = "text to speech..."
-    private val notificationId = ServiceNotificationId.textToSpeech
+    private val channelNum = ServiceChannelNum.textToSpeech
+    private val notificationIdToImportance =
+        NotificationIdToImportance.HIGH
     private var textToSpeech: TextToSpeech? = null
     private var textToSpeechJob: Job? = null
     private var execTextToSpeechJob: Job? = null
@@ -104,7 +106,7 @@ class TextToSpeechService:
                 != BroadCastIntentScheme.STOP_TEXT_TO_SPEECH.action
             ) return
             textToSpeechJob?.cancel()
-            notificationManager?.cancel(notificationId)
+            notificationManager?.cancel(channelNum)
             textToSpeech?.stop()
             execTextToSpeechJob?.cancel()
             done = true
@@ -164,7 +166,7 @@ class TextToSpeechService:
             this,
             broadcastReceiverForTextToSpeechNext,
         )
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         textToSpeech?.stop()
         textToSpeechJob?.cancel()
         execTextToSpeechJob?.cancel()
@@ -188,7 +190,7 @@ class TextToSpeechService:
         } catch(e: Exception){
             println("pass")
         }
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         textToSpeech?.stop()
         textToSpeechJob?.cancel()
         done = true
@@ -197,7 +199,7 @@ class TextToSpeechService:
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
         textToSpeech?.stop()
         textToSpeechJob?.cancel()
         execTextToSpeechJob?.cancel()
@@ -225,21 +227,21 @@ class TextToSpeechService:
         )
 
         val channel = NotificationChannel(
-            NotificationChanel.TEXT_TO_SPEECH_NOTIFICATION.id,
-            NotificationChanel.TEXT_TO_SPEECH_NOTIFICATION.name,
-            NotificationManager.IMPORTANCE_LOW
+            notificationIdToImportance.id,
+            notificationIdToImportance.id,
+            notificationIdToImportance.importance
         )
-        channel.setSound(null, null);
         val context = applicationContext
 
         notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.createNotificationChannel(channel)
         val notificationBuilder = NotificationCompat.Builder(
             context,
-            NotificationChanel.TEXT_TO_SPEECH_NOTIFICATION.id
+            notificationIdToImportance.id
         )
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .setSmallIcon(R.drawable.ic_media_play)
+            .setOnlyAlertOnce(true)
             .addAction(
                 R.drawable.ic_menu_close_clear_cancel,
                 "cancel",
@@ -277,11 +279,11 @@ class TextToSpeechService:
             )
         val notificationInstance = notificationBuilder.build()
         notificationManager?.notify(
-            notificationId,
+            channelNum,
             notificationInstance
         )
         startForeground(
-            notificationId,
+            channelNum,
             notificationInstance
         )
         val listFilePath = intent?.getStringExtra(
@@ -343,7 +345,7 @@ class TextToSpeechService:
             notificationBuilder.setContentText(
                 noExistFile
             )
-            notificationManager?.notify(notificationId, notificationBuilder.build())
+            notificationManager?.notify(channelNum, notificationBuilder.build())
             return Service.START_NOT_STICKY
         }
         val fileList = makePlayList(
@@ -413,10 +415,10 @@ class TextToSpeechService:
                 ) {
                     textToSpeech?.stop()
                     notificationManager?.notify(
-                        notificationId, notificationBuilder.build()
+                        channelNum, notificationBuilder.build()
                     )
                     stopForeground(Service.STOP_FOREGROUND_DETACH)
-                    notificationManager?.cancel(notificationId)
+                    notificationManager?.cancel(channelNum)
                     break
                 }
 
@@ -426,7 +428,7 @@ class TextToSpeechService:
                         "play list size must be more zero"
                     )
                     notificationManager?.notify(
-                        notificationId, notificationBuilder.build()
+                        channelNum, notificationBuilder.build()
                     )
                     return@launch
                 }
@@ -462,9 +464,9 @@ class TextToSpeechService:
             }
             withContext(Dispatchers.IO){
                 textToSpeech?.stop()
-                notificationManager?.notify(notificationId, notificationBuilder.build())
+                notificationManager?.notify(channelNum, notificationBuilder.build())
                 stopForeground(Service.STOP_FOREGROUND_DETACH)
-                notificationManager?.cancel(notificationId)
+                notificationManager?.cancel(channelNum)
 
 //                FileSystems.writeFile(
 //                    listFilePathParentDir,
@@ -745,7 +747,7 @@ class TextToSpeechService:
             .setOngoing(false)
             .build()
         notificationManager?.notify(
-            notificationId,
+            channelNum,
             notificationInstance
         )
     }
@@ -833,11 +835,11 @@ class TextToSpeechService:
         notificationBuilder.setAutoCancel(true)
         notificationBuilder.clearActions()
         notificationManager?.notify(
-            notificationId,
+            channelNum,
             notificationBuilder.build()
         )
         stopForeground(Service.STOP_FOREGROUND_DETACH)
-        notificationManager?.cancel(notificationId)
+        notificationManager?.cancel(channelNum)
     }
 }
 
