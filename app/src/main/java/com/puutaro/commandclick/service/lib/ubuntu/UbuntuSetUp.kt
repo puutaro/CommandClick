@@ -31,14 +31,12 @@ object UbuntuSetUp {
     fun set(
         ubuntuService: UbuntuService,
         monitorFileName: String,
-        isUbuntuRestore: Boolean
     ): Job? {
        return try {
             CoroutineScope(Dispatchers.IO).launch {
                 execSet(
                     ubuntuService,
                     monitorFileName,
-                    isUbuntuRestore
                 )
             }
         } catch (e: Exception){
@@ -53,12 +51,12 @@ object UbuntuSetUp {
     private suspend fun execSet(
         ubuntuService: UbuntuService,
         monitorFileName: String,
-        isUbuntuRestore: Boolean,
     ) {
         val context  = ubuntuService.applicationContext
             ?: return
         val ubuntuFiles = ubuntuService.ubuntuFiles
             ?: return
+        val isUbuntuRestore = ubuntuService.isUbuntuRestore
         if(
             ubuntuFiles.ubuntuSetupCompFile.isFile
             && !isUbuntuRestore

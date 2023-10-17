@@ -8,7 +8,6 @@ import java.time.LocalDateTime
 object UbuntuInitProcess {
     fun launch(
         ubuntuService: UbuntuService,
-        isUbuntuRestore: Boolean,
         ){
         ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name]?.cancel()
         FileSystems.updateFile(
@@ -19,7 +18,6 @@ object UbuntuInitProcess {
         val setupUbuntuJob = UbuntuSetUp.set(
             ubuntuService,
             ubuntuService.cmdclickMonitorFileName,
-            isUbuntuRestore
         )
         ubuntuService.ubuntuCoroutineJobsHashMap[ProcessManager.UbuntuRunningSystemProcessType.SetUp.name] = setupUbuntuJob
     }

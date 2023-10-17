@@ -51,6 +51,7 @@ class UbuntuService:
     val settingSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
+    var isUbuntuRestore = false
 
     var isStartup = false
     val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
@@ -271,7 +272,7 @@ class UbuntuService:
         IntentRequestMonitor.launch(this)
         SetupMonitoring.launch(this)
         InnerPulseServer.launch(this)
-        UbuntuInitProcess.launch(this, false)
+        UbuntuInitProcess.launch(this)
         return START_NOT_STICKY
     }
 

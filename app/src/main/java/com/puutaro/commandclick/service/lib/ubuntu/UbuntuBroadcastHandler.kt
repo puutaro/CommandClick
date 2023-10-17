@@ -98,7 +98,7 @@ object UbuntuBroadcastHandler {
         ubuntuService: UbuntuService,
         intent: Intent
     ){
-        val isUbuntuRestore = !intent.getStringExtra(
+        ubuntuService.isUbuntuRestore = !intent.getStringExtra(
             UbuntuServerIntentExtra.ubuntuRestoreSign.schema
         ).isNullOrEmpty()
         val onSetUpNotificationIntent = Intent()
@@ -112,7 +112,6 @@ object UbuntuBroadcastHandler {
         )
         UbuntuInitProcess.launch(
             ubuntuService,
-            isUbuntuRestore
         )
     }
 
@@ -165,7 +164,13 @@ object UbuntuBroadcastHandler {
             cmdclickMonitorDirPath,
             cmdclickMonitorFileName
         ).textToList().lastOrNull() ?: return
-        ubuntuService.notificationBuilder?.setContentTitle("${UbuntuStateType.ON_SETUP.title}\t${monitorLastLine}")
+        val titleEntry = "${UbuntuStateType.ON_SETUP.title}\t${monitorLastLine}"
+        val restorePrefix = "[Re]"
+        val title = when(ubuntuService.isUbuntuRestore) {
+            true -> "${restorePrefix} ${titleEntry}"
+            false -> titleEntry
+        }
+        ubuntuService.notificationBuilder?.setContentTitle(title)
         ubuntuService.notificationBuilder?.setContentText(
             ubuntuService.waitQuiz.echoQorA()
         )
