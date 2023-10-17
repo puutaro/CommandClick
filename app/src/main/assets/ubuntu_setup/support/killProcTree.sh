@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 execKillpstree(){
 	case "$1" in
 	 "") return;;
@@ -22,7 +21,6 @@ killpstree(){
 				print "ps aux | grep -e \x22"$0"\x22 | grep -v grep | grep -v eval | awk \x27{print $2}\x27"
 			}' \
 	)
-	echo "${grep_process_id}"
 	local parent_process_list=$(\
 		eval "${grep_process_id}"
 	)
@@ -57,5 +55,6 @@ PROCESS_NAME_LIST=""
 for(( i=1; i<=$#; i++ )); do  
 	PROCESS_NAME_LIST+=$'\t'"${!i}"
 done
+
 
 killpstree

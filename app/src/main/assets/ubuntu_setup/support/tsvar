@@ -41,9 +41,6 @@ get_help(){
 				print "From tsv contents"
 				print "tsvar \x22${contents}\x22 \x22${variable name}\x22"
 				print ""
-				print "From tsv path"
-				print "cat \x22${tsv path}\x22 | tsvar \x22${variable name}\x22"
-				print ""
 			}'
 			exit 0
 		;;
@@ -78,8 +75,4 @@ esac
 ARG0="${ARG[0]}"
 ARG1="${ARG[1]}"
 
-if [ -p "/dev/stdin" ]; then
-    tsvar "$(cat -)" "${ARG0}"
-else 
-	tsvar "${ARG0}" "${ARG1}"
-fi
+tsvar "${ARG0}" "${ARG1}"

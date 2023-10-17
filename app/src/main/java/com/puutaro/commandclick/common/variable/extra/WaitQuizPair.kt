@@ -32,6 +32,26 @@ object WaitQuizPair {
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
+            "How to repair ${appName} ",
+            "-> Restart"
+        ),
+        Pair(
+            "What restart in ${appName}",
+            "-> Master repair method"
+        ),
+        Pair(
+            "What's repair concept ",
+            "-> Restart like zombi"
+        ),
+        Pair(
+            "How to reset ubuntu?",
+            "-> Backup -> Restore in notification"
+        ),
+        Pair(
+            "How to reset ubuntu?",
+            "-> Remove /support/ubuntuSetupComp.txt"
+        ),
+        Pair(
             "How to relaod fannel?",
             "-> history -> click fannel"
         ),
