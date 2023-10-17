@@ -229,7 +229,7 @@ startup_launch_system(){
 	copy_cmd "noti"
 	copy_cmd "send-broadcast"
 	copy_cmd "toast"
-	copy_cmd "killProcTree.sh" "kill_ptree"
+	copy_cmd "kill_ptree"
 	chmod -R +x "${USR_LOCAL_BIN}"
 
 	su - "${CMDCLICK_USER}" <<-EOF

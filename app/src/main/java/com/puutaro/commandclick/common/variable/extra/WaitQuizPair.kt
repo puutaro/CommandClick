@@ -32,11 +32,23 @@ object WaitQuizPair {
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
+            "What's alternative fakeroot",
+            "-> green-green-avk/build-proot-android in recent android"
+        ),
+        Pair(
+            "Why select fakeroot",
+            "-> Steady on many device"
+        ),
+        Pair(
+            "Why does not exist pipe cmd",
+            "-> No steady sdtin judge"
+        ),
+        Pair(
             "How to repair ${appName} ",
             "-> Restart"
         ),
         Pair(
-            "What restart in ${appName}",
+            "What 'Restart' in ${appName}",
             "-> Master repair method"
         ),
         Pair(

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+
+readonly SUPPORT_DIR_PATH="/support"
+readonly KILL_PROC_TREE_PATH="${SUPPORT_DIR_PATH}/killProcTree.sh"
+
+bash "${KILL_PROC_TREE_PATH}" \
+"$@" \
+2>/dev/null \
+|| exit 0
