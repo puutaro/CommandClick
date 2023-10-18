@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.BufferedReader
@@ -63,12 +64,13 @@ object LinuxCmd {
             subFrontSystemPList(packageName)
         )
     }
-    fun killAllProcess(
-        packageName: String,
-    ){
-        execKillProcess(
-            pListOutput(packageName)
+    fun killAllProcess(){
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "allkill"
         )
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     fun killProcess(
@@ -79,15 +81,34 @@ object LinuxCmd {
         )
     }
 
-    fun execKillProcess(
+    private fun execKillProcess(
         pListOutputCmd: String,
     ){
+        val plistcmd00 = "ps -ef"
+        val psOutput0 = execCommand(
+            listOf("sh" , "-c", plistcmd00).joinToString("\t")
+        )
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "psOutput0 ${psOutput0}"
+        )
         val psOutput = execCommand(
             listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
+        )
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "psOutput ${psOutput}"
         )
         val pListOutput = psOutput.split("\n").map {
             it.split("\t").getOrNull(1) ?: String()
         }.joinToString("  ")
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "pListOutput ${pListOutput}"
+        )
         val killCmd = "kill -9 ${pListOutput}"
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
@@ -108,40 +129,68 @@ object LinuxCmd {
         )
     }
 
-    private fun pListOutput(
+    private fun makePListOutput0(
         packageName: String
     ): String {
-        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+        return "app_pname=\$(ps -ef | grep '${packageName}' | tail -1 | sed 's/ .*//g' ); " +
                 "ps -ef " +
-                "| grep \${app_pname} " +
+                "| grep '\${app_pname}' "
+    }
+
+    private fun makePListOutput(
+        packageName: String
+    ): String {
+        return if(BuildConfig.DEBUG) {
+            "app_pname=\$(ps -ef | grep '${packageName}' | sed 's/ .*//g' ); " +
+                "ps -ef " +
+                "| grep '\${app_pname}' " +
                 "| sed 's/  */\\t/g'"
+        } else {
+            "ps -ef | sed 's/  */\\t/g'"
+        }
     }
     private fun pListOutputExcludeApp(
         packageName: String
     ): String {
-        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+        return if(BuildConfig.DEBUG){
+            "app_pname=\$(ps -ef | grep -E '${packageName}$' | sed 's/ .*//g' );" +
                 "ps -ef " +
                 "| grep -v '${packageName}$' " +
                 "| grep \${app_pname} " +
                 "| sed 's/  */\\t/g'"
+        } else {
+            "ps -ef | sed 's/  */\\t/g'"
+        }
     }
 
     private fun frontSystemPList(
         packageName: String
     ): String {
-        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
-                "ps -ef | grep -v '${packageName}$' " +
-                "| grep -e 'wssh --address=' -e 'shell2http' " +
-                "| sed 's/  */\\t/g'"
+        return if(BuildConfig.DEBUG){
+            "app_pname=\$(ps -ef | grep -E '${packageName}$' | sed 's/ .*//g' ); " +
+                    "ps -ef | grep -v '${packageName}$' " +
+                    "| grep -e 'wssh --address=' -e 'shell2http' " +
+                    "| sed 's/  */\\t/g'"
+        } else {
+            "ps -ef " +
+                    "| grep -e 'wssh --address=' -e 'shell2http' " +
+                    "| sed 's/  */\\t/g'"
+        }
     }
 
     private fun subFrontSystemPList(
         packageName: String
     ): String {
-        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
-                "ps -ef | grep -v '${packageName}$' " +
-                "| grep -e 'pulseaudio' " +
-                "| sed 's/  */\\t/g'"
+        return if(BuildConfig.DEBUG) {
+            "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+                    "ps -ef | grep -v '${packageName}$' " +
+                    "| grep -e 'pulseaudio' " +
+                    "| sed 's/  */\\t/g'"
+        } else {
+            "ps -ef " +
+                    "| grep 'pulseaudio' " +
+                    "| sed 's/  */\\t/g'"
+        }
     }
 
     fun execCommand(

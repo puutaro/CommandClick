@@ -18,7 +18,6 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -31,7 +30,6 @@ object AppProcessManager {
 
     private var killDialog: Dialog? = null
     private val icons8Wheel = R.drawable.icons8_wheel
-    private const val cmdClickMonitorFileName = UsePath.cmdClickMonitorFileName_2
 
     fun killDialog(
         fragment: Fragment,
@@ -167,15 +165,9 @@ object AppProcessManager {
         currentAppDirPath: String,
         fannelName: String,
     ){
-        val context = fragment.context
-            ?: return
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            ubuntuFiles
-        )
         when(selectedProcess){
             KillType.KILL_ALL.str
-            -> LinuxCmd.killAllProcess(context.packageName)
+            -> LinuxCmd.killAllProcess()
             KillType.KILL_THIS.str -> execKillThis(
                 fragment,
                 currentAppDirPath,
