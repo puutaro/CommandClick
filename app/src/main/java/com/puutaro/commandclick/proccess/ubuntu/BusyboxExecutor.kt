@@ -230,9 +230,11 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
 
     fun getBusyboxEnv(): HashMap<String, String> {
         return hashMapOf(
-                "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
-                "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
-                "ROOTFS_PATH" to ubuntuFiles.filesOneRootfs.absolutePath,
+            "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
+            "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
+            "ROOTFS_PATH" to ubuntuFiles.filesOneRootfs.absolutePath,
+            "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
+
         )
     }
 

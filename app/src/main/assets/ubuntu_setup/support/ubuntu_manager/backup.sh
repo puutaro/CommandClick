@@ -51,8 +51,16 @@ rm -f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
 cd / 
 sudo tar \
 	-cvpzf "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}" \
-	--exclude=/storage \
+	--exclude=/sys \
+	--exclude=/dev \
+	--exclude=/proc \
+	--exclude=data \
+	--exclude=/mnt \
 	--exclude=/host-rootfs \
+	--exclude=/support  \
+	--exclude=/etc/mtab \
+	--exclude=/storage \
+	--exclude=/etc/profile.d/userland_profile.sh \
 	--one-file-system \
 	/ \
 	>> "${MONITOR_FILE_PATH}" || e=$?

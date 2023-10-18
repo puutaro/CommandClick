@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
@@ -16,7 +15,6 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LinuxCmd
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -29,10 +27,6 @@ class JsUbuntu(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
     private val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
