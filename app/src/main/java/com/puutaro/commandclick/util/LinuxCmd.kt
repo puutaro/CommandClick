@@ -137,18 +137,6 @@ object LinuxCmd {
                 "| grep '\${app_pname}' "
     }
 
-    private fun makePListOutput(
-        packageName: String
-    ): String {
-        return if(BuildConfig.DEBUG) {
-            "app_pname=\$(ps -ef | grep '${packageName}' | sed 's/ .*//g' ); " +
-                "ps -ef " +
-                "| grep '\${app_pname}' " +
-                "| sed 's/  */\\t/g'"
-        } else {
-            "ps -ef | sed 's/  */\\t/g'"
-        }
-    }
     private fun pListOutputExcludeApp(
         packageName: String
     ): String {
@@ -159,7 +147,7 @@ object LinuxCmd {
                 "| grep \${app_pname} " +
                 "| sed 's/  */\\t/g'"
         } else {
-            "ps -ef | sed 's/  */\\t/g'"
+            "ps -ef | grep -v ' ${packageName}' | sed 's/  */\\t/g'"
         }
     }
 
