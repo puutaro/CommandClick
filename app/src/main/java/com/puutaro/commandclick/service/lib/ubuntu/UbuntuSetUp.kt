@@ -2,6 +2,8 @@ package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Context
 import android.content.Intent
+import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
+import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -61,102 +63,151 @@ object UbuntuSetUp {
             ubuntuFiles.ubuntuSetupCompFile.isFile
             && !isUbuntuRestore
         ) {
-            val busyboxExecutor = BusyboxExecutor(
+            withContext(Dispatchers.IO) {
+                val busyboxExecutor = BusyboxExecutor(
+                    context,
+                    ubuntuFiles,
+                )
+                busyboxExecutor.executeProotCommand(
+                    listOf("bash", startupFilePath),
+                    monitorFileName = monitorFileName
+                )
+            }
+            return
+        }
+        withContext(Dispatchers.IO) {
+            FileSystems.removeAndCreateDir(
+                ubuntuFiles.filesOneRootfs.absolutePath
+            )
+        }
+        when(isUbuntuRestore){
+            true
+            -> {
+                withContext(Dispatchers.IO) {
+                    FileSystems.updateFile(
+                        cmdclickMonitorDirPath,
+                        UsePath.cmdClickMonitorFileName_2,
+                        "copy start"
+                    )
+                    FileSystems.copyFile(
+                        ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
+                        "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+                    )
+                }
+            }
+            else
+            -> {
+                withContext(Dispatchers.IO) {
+                    downloadUbuntu(
+                        context,
+                        ubuntuFiles,
+                        monitorFileName
+                    )
+                    delay(200)
+                    FileSystems.copyFile(
+                        UbuntuFiles.downloadRootfsTarGzPath,
+                        "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
+                    )
+                }
+            }
+
+        }
+        withContext(Dispatchers.IO) {
+            initSetup(
                 context,
                 ubuntuFiles,
+                monitorFileName
+            )
+        }
+        withContext(Dispatchers.IO) {
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "\nextract file"
+            )
+        }
+        withContext(Dispatchers.IO) {
+            val err4 = LinuxCmd.execCommand(
+                listOf(
+                    "chmod",
+                    "-R",
+                    "777",
+                    ubuntuFiles.supportDir
+                ).joinToString("\t")
+            )
+        }
+
+        val busyboxExecutor = withContext(Dispatchers.IO) {
+            BusyboxExecutor(
+                context,
+                ubuntuFiles,
+            )
+        }
+        withContext(Dispatchers.IO) {
+            busyboxExecutor.executeScript(
+                "support/extractRootfs.sh",
+                monitorFileName
+            )
+        }
+        withContext(Dispatchers.IO) {
+            FileSystems.removeFiles(
+                ubuntuFiles.filesDir.absolutePath,
+                UbuntuFiles.rootfsTarGzName
+            )
+            ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
+
+            ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
+            ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
+            ubuntuFiles.filesOneRootfsStorageDir.mkdir()
+            ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()
+        }
+        withContext(Dispatchers.IO){
+            AssetsFileManager.copyFileOrDirFromAssets(
+                context,
+                AssetsFileManager.ubunutSupportDirPath,
+                "ubuntu_setup",
+                ubuntuFiles.filesOneRootfs.absolutePath
+            )
+            FileSystems.copyDirectory(
+                ubuntuFiles.filesOneRootfsSupportCmdDir.absolutePath,
+                ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+            )
+            val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
+            FileSystems.writeFile(
+                filesOneRootfsSupportDirPath,
+                UbuntuFiles.waitQuizTsvName,
+                WaitQuizPair.makeQuizPairCon()
+            )
+            FileSystems.writeFile(
+                filesOneRootfsSupportDirPath,
+                UbuntuFiles.ubuntuEnvTsvName,
+                UbuntuEnvTsv.makeTsv()
+            )
+        }
+        withContext(Dispatchers.IO) {
+            LinuxCmd.execCommand(
+                listOf(
+                    "chmod",
+                    "-R",
+                    "777",
+                    ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                ).joinToString("\t")
+            )
+        }
+        withContext(Dispatchers.IO) {
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "\nexec setup"
+            )
+            FileSystems.createDirs(
+                ubuntuFiles.filesOneRootfsSupportDir.absolutePath
             )
             busyboxExecutor.executeProotCommand(
                 listOf("bash", startupFilePath),
                 monitorFileName = monitorFileName
             )
-            return
         }
-        FileSystems.removeAndCreateDir(
-            ubuntuFiles.filesOneRootfs.absolutePath
-        )
-        when(isUbuntuRestore){
-            true
-            -> {
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    UsePath.cmdClickMonitorFileName_2,
-                    "copy start"
-                )
-                FileSystems.copyFile(
-                    ubuntuFiles.ubuntuBackupRootfsFile.absolutePath,
-                    "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
-                )
-            }
-            else
-            -> {
-                downloadUbuntu(
-                    context,
-                    ubuntuFiles,
-                    monitorFileName
-                )
-                delay(200)
-                FileSystems.copyFile(
-                    UbuntuFiles.downloadRootfsTarGzPath,
-                    "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
-                )
-            }
-
-        }
-        initSetup(
-            context,
-            ubuntuFiles,
-            monitorFileName
-        )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
-            "\nextract file"
-        )
-        val err4 = LinuxCmd.execCommand(
-            listOf(
-                "chmod",
-                "-R",
-                "777",
-                ubuntuFiles.supportDir
-            ).joinToString("\t")
-        )
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            ubuntuFiles,
-        )
-        busyboxExecutor.executeScript(
-            "support/extractRootfs.sh",
-            monitorFileName
-        )
-        FileSystems.removeFiles(
-            ubuntuFiles.filesDir.absolutePath,
-            UbuntuFiles.rootfsTarGzName
-        )
-        ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
-
-        ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
-//        AssetsFileManager.copyFileOrDirFromAssets(
-//            context,
-//            AssetsFileManager.ubunutSupportDirPath,
-//            "ubuntu_setup",
-//            ubuntuFiles.filesOneRootfs.absolutePath
-//        )
-        ubuntuFiles.filesOneRootfsSupportCommonDir.mkdirs()
-        ubuntuFiles.filesOneRootfsStorageDir.mkdir()
-//        ulaFiles.filesOneRootfsStorageEmurated0Dir.mkdirs()
-        ubuntuFiles.filesOneRootfsUsrLocalBinSudo.mkdirs()
-        ubuntuFiles.filesOneRootfsEtcDProfileDir.mkdir()
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
-            "\nsupport copy start"
-        )
-        val rootfsSupportDir =  File("${ubuntuFiles.filesOneRootfs}/support")
-        if(!rootfsSupportDir.isDirectory) rootfsSupportDir.mkdir()
-        busyboxExecutor.executeProotCommand(
-            listOf("bash", startupFilePath),
-            monitorFileName = monitorFileName
-        )
     }
 
     private suspend fun downloadUbuntu(

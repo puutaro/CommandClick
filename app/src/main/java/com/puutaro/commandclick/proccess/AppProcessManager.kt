@@ -23,6 +23,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
@@ -174,7 +175,7 @@ object AppProcessManager {
         )
         when(selectedProcess){
             KillType.KILL_ALL.str
-            -> busyboxExecutor.executeKillApp(cmdClickMonitorFileName)
+            -> LinuxCmd.killAllProcess(context.packageName)
             KillType.KILL_THIS.str -> execKillThis(
                 fragment,
                 currentAppDirPath,

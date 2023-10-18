@@ -93,10 +93,6 @@ object UbuntuServiceManager {
         activity: Activity?
     ){
         if(activity == null) return
-        UbuntuFiles(activity).let {
-            BusyboxExecutor(activity, it).executeKillAllProcess(
-                UsePath.cmdClickMonitorFileName_2
-            )
-        }
+        LinuxCmd.killProcess(activity.packageName)
     }
 }

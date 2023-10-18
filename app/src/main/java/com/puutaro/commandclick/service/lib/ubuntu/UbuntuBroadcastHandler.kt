@@ -18,10 +18,12 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManager
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object UbuntuBroadcastHandler {
     fun handle(
@@ -239,10 +241,15 @@ object UbuntuBroadcastHandler {
     private fun execStopUbuntuService(
         ubuntuService: UbuntuService
     ){
-        ProcessManager.killAllProot(ubuntuService)
+//        ProcessManager.killAllProot(ubuntuService)
+        LinuxCmd.killProcess(ubuntuService.packageName)
         ProcessManager.finishProcess(ubuntuService)
-        ubuntuService.stopSelf()
-        UbuntuServerServiceManager.reLaunchUbuntuService(ubuntuService)
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                ubuntuService.stopSelf()
+                UbuntuServerServiceManager.reLaunchUbuntuService(ubuntuService)
+            }
+        }
     }
 
     private fun execUpdateProcessNumNotification(

@@ -4,9 +4,9 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,20 +93,12 @@ object ScreenMonitor {
     private fun killFrontProcess(
         ubuntuService: UbuntuService
     ){
-        ubuntuService.ubuntuFiles?.let {
-            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillFrontProcess(
-                ubuntuService.cmdclickMonitorFileName
-            )
-        }
+        LinuxCmd.killFrontProcess(ubuntuService.packageName)
     }
 
     private fun killSubFrontProcess(
         ubuntuService: UbuntuService
     ){
-        ubuntuService.ubuntuFiles?.let {
-            BusyboxExecutor(ubuntuService.applicationContext, it).executeKillSubFrontProcess(
-                ubuntuService.cmdclickMonitorFileName
-            )
-        }
+        LinuxCmd.killSubFrontProcess(ubuntuService.packageName)
     }
 }

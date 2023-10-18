@@ -48,6 +48,102 @@ object LinuxCmd {
                 && isPulseAudioProcess
     }
 
+    fun killFrontProcess(
+        packageName: String,
+    ){
+        execKillProcess(
+            frontSystemPList(packageName)
+        )
+    }
+
+    fun killSubFrontProcess(
+        packageName: String,
+    ){
+        execKillProcess(
+            subFrontSystemPList(packageName)
+        )
+    }
+    fun killAllProcess(
+        packageName: String,
+    ){
+        execKillProcess(
+            pListOutput(packageName)
+        )
+    }
+
+    fun killProcess(
+        packageName: String,
+    ){
+        execKillProcess(
+            pListOutputExcludeApp(packageName)
+        )
+    }
+
+    fun execKillProcess(
+        pListOutputCmd: String,
+    ){
+        val psOutput = execCommand(
+            listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
+        )
+        val pListOutput = psOutput.split("\n").map {
+            it.split("\t").getOrNull(1) ?: String()
+        }.joinToString("  ")
+        val killCmd = "kill -9 ${pListOutput}"
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "killCmd ${killCmd}"
+        )
+        val killOutput = execCommand(
+            listOf(
+                "sh",
+                "-c",
+                killCmd
+            ).joinToString("\t")
+        )
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "kill output ${killOutput}"
+        )
+    }
+
+    private fun pListOutput(
+        packageName: String
+    ): String {
+        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+                "ps -ef " +
+                "| grep \${app_pname} " +
+                "| sed 's/  */\\t/g'"
+    }
+    private fun pListOutputExcludeApp(
+        packageName: String
+    ): String {
+        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+                "ps -ef " +
+                "| grep -v '${packageName}$' " +
+                "| grep \${app_pname} " +
+                "| sed 's/  */\\t/g'"
+    }
+
+    private fun frontSystemPList(
+        packageName: String
+    ): String {
+        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+                "ps -ef | grep -v '${packageName}$' " +
+                "| grep -e 'wssh --address=' -e 'shell2http' " +
+                "| sed 's/  */\\t/g'"
+    }
+
+    private fun subFrontSystemPList(
+        packageName: String
+    ): String {
+        return "app_pname=\$(ps -ef | grep -i '${packageName}$' | sed 's/ .*//g' ); " +
+                "ps -ef | grep -v '${packageName}$' " +
+                "| grep -e 'pulseaudio' " +
+                "| sed 's/  */\\t/g'"
+    }
+
     fun execCommand(
         cmdList: String
     ): String {

@@ -29,17 +29,6 @@ object ProcessManager {
         MonitoringProcessNum,
         IntentRequestMonitor
     }
-    fun killAllProot(
-        ubuntuService: UbuntuService
-    ){
-        val context = ubuntuService.applicationContext
-        val cmdclickMonitorFileName = ubuntuService.cmdclickMonitorFileName
-        ubuntuService.ubuntuFiles?.let {
-            BusyboxExecutor(context, it).executeKillAllProcess(
-                cmdclickMonitorFileName
-            )
-        }
-    }
 
     fun finishProcess(
         ubuntuService: UbuntuService

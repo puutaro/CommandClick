@@ -35,11 +35,10 @@ class UbuntuFiles(
     val busybox = File(supportDir, "busybox")
     val proot = File(supportDir, "proot")
     val filesOneRootfs = File("${filesDir}/1/rootfs")
-//    val filesOneRootfsHomeCmdclickCmdDir =
-//        File("${filesOneRootfs.absolutePath}/home/cmdclick/cmd")
-//    val cmdShell = "cmd.sh"
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
+    val filesOneRootfsSupportCmdDir =
+        File("${filesOneRootfsSupportDir.absolutePath}/cmd")
     val ubuntuManagerDirPath =
         File("${filesOneRootfsSupportDir.absolutePath}/ubuntu_manager")
     val ubuntuManagerShellPath =
@@ -50,8 +49,8 @@ class UbuntuFiles(
         File("${filesOneRootfs.absolutePath}/etc")
     val filesOneRootfsEtcDProfileDir =
         File("${filesOneRootfsEtcDir.absolutePath}/profile.d")
-    val filesOneRootfsUsrLocalBinSudo =
-        File("${filesOneRootfs.absolutePath}/usr/local/bin/sudo")
+    val filesOneRootfsUsrLocalBin =
+        File("${filesOneRootfs.absolutePath}/usr/local/bin/")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
     val ubuntuRootfsDownloadCompFile = File(

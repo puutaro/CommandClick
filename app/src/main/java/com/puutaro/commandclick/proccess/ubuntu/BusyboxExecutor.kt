@@ -10,9 +10,7 @@ import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -84,70 +82,6 @@ class BusyboxExecutor(
         }
     }
 
-    fun executeKillApp(
-        monitorFileName: String
-    ){
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO){
-                executeKillAllProcess(monitorFileName)
-                delay(200)
-            }
-            withContext(Dispatchers.IO){
-                executeProotCommand(
-                    listOf("bash", "-c", "echo kill;kill -9 $(ps aux | awk '{print $2}' );kill end"),
-                    monitorFileName = monitorFileName
-                )
-            }
-        }
-    }
-
-    fun executeKillAllProcess(
-        monitorFileName: String
-    ){
-        val packageName = context?.packageName ?: String()
-        executeProotCommand(
-            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
-            monitorFileName = monitorFileName
-        )
-    }
-
-    fun executeStartFrontProcess(
-        monitorFileName: String
-    ){
-        executeProotCommand(
-            listOf("bash", "/support/restartup.sh"),
-            monitorFileName = monitorFileName
-        )
-    }
-    fun executeKillFrontProcess(
-        monitorFileName: String
-    ){
-        executeProotCommand(
-            listOf("bash", "/support/kill_front_process.sh"),
-            monitorFileName = monitorFileName
-        )
-    }
-
-    fun executeKillSubFrontProcess(
-        monitorFileName: String
-    ){
-        executeProotCommand(
-            listOf("bash", "/support/kill_sub_front_process.sh"),
-            monitorFileName = monitorFileName
-        )
-    }
-
-    fun executeKillProcess(
-        targetProcessName: String,
-        monitorFileName: String
-    ){
-        val packageName = context?.packageName ?: String()
-        executeProotCommand(
-            listOf("bash", "-c", "echo kill;kill -9 $(ps aux | grep '${targetProcessName}' | grep bash | grep -v \"$packageName\" | awk '{print $2}' );kill end"),
-            monitorFileName = monitorFileName
-        )
-    }
-
     fun executeKillProcessFromList(
         targetProcessNameList: List<String>,
         monitorFileName: String
@@ -192,25 +126,6 @@ class BusyboxExecutor(
                 )
                 return
             }
-        }
-        AssetsFileManager.copyFileOrDirFromAssets(
-            context,
-            AssetsFileManager.ubunutSupportDirPath,
-            "ubuntu_setup",
-            ubuntuFiles.filesOneRootfs.absolutePath
-        )
-        val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
-        CoroutineScope(Dispatchers.IO).launch {
-            FileSystems.writeFile(
-                filesOneRootfsSupportDirPath,
-                UbuntuFiles.waitQuizTsvName,
-                WaitQuizPair.makeQuizPairCon()
-            )
-            FileSystems.writeFile(
-                filesOneRootfsSupportDirPath,
-                UbuntuFiles.ubuntuEnvTsvName,
-                UbuntuEnvTsv.makeTsv()
-            )
         }
         val updatedCommand = busyboxWrapper.addBusyboxAndProot(command)
         val filesystemDir = File(
