@@ -208,29 +208,9 @@ setup_dropbear_sshserver(){
     dropbearkey -t ecdsa -s 521 -f /etc/dropbear/dropbear_ecdsa_host_key
 }
 
-copy_cmd(){
-	local src_file_name="${1}"
-	local cmd_name="${2:-}"
-	echo "### ${FUNCNAME}: ${src_file_name}"
-	case "${cmd_name}" in
-		"") cmd_name="${src_file_name}";;
-	esac
-	cp -vf \
-		"${SUPPORT_DIR_PATH}/${src_file_name}" \
-		"${USR_LOCAL_BIN}/${cmd_name}"
-}
-
 startup_launch_system(){
 	echo "### $FUNCNAME"
-	rm -rf  /tmp/pulse*
-	copy_cmd "noti"
-	copy_cmd "get_rvar"
-	copy_cmd "tsvar"
-	copy_cmd "noti"
-	copy_cmd "send-broadcast"
-	copy_cmd "toast"
-	copy_cmd "kill_ptree"
-	chmod -R +x "${USR_LOCAL_BIN}"
+	rm -rf  /tmp/pulse* &
 
 	su - "${CMDCLICK_USER}" <<-EOF
 	export APP_ROOT_PATH="${APP_ROOT_PATH}"
