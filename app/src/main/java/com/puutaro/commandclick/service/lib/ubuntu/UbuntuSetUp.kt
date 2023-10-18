@@ -10,10 +10,10 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
+import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
-import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -100,7 +100,7 @@ object UbuntuSetUp {
                 withContext(Dispatchers.IO) {
                     downloadUbuntu(
                         context,
-                        ubuntuFiles,
+                        ubuntuService,
                         monitorFileName
                     )
                     delay(200)
@@ -212,12 +212,12 @@ object UbuntuSetUp {
 
     private suspend fun downloadUbuntu(
         context: Context,
-        ubuntuFiles: UbuntuFiles,
+        ubuntuService: UbuntuService,
         monitorFileName: String,
     ){
         try {
             execDownloadUbuntu(
-                ubuntuFiles,
+                ubuntuService,
                 monitorFileName
             )
         } catch (e: Exception){
@@ -229,9 +229,10 @@ object UbuntuSetUp {
     }
 
     private suspend fun execDownloadUbuntu(
-        ubuntuFiles: UbuntuFiles,
+        ubuntuService: UbuntuService,
         monitorFileName: String,
     ){
+        val ubuntuFiles = ubuntuService.ubuntuFiles ?: return
         val supportDirPath = ubuntuFiles.supportDir.absolutePath
         val downloadCompTxt = ubuntuFiles.ubuntuRootfsDownloadCompFile.name
         FileSystems.createDirs(
@@ -265,13 +266,21 @@ object UbuntuSetUp {
             var total: Long = 0
             var count: Int
             var progress = 0L
-            var previoutDisplayProgress: Long = 0
+            var previousDisplayProgress: Long = 0
             while (input.read(data).also { count = it } != -1) {
+                val processNum = ProcessManager.processNumCalculator(ubuntuService)
+                if(processNum == 0) {
+                    FileSystems.removeFiles(
+                        UbuntuFiles.downloadDirPath,
+                        UbuntuFiles.rootfsTarGzName
+                    )
+                    break
+                }
                 total += count
-                previoutDisplayProgress = progress
+                previousDisplayProgress = progress
                 progress = total * 100 / lenghtOfFile
                 output.write(data, 0, count)
-                if(progress <= previoutDisplayProgress) continue
+                if (progress <= previousDisplayProgress) continue
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
                     monitorFileName,
@@ -285,6 +294,11 @@ object UbuntuSetUp {
             input.close()
         }
         withContext(Dispatchers.IO){
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "\ndownlaod comp"
+            )
             FileSystems.writeFile(
                 supportDirPath,
                 downloadCompTxt,
@@ -304,12 +318,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
-            "${
-                ReadText(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                ).readText()
-            }\nsupport copy start"
+            "support copy start"
         )
         AssetsFileManager.copyFileOrDirFromAssets(
             context,
@@ -320,12 +329,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
-            "${
-                ReadText(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                ).readText()
-            }\nchmod start"
+            "chmod start"
         )
         ubuntuFiles.supportDir.listFiles()?.forEach {
             ubuntuFiles.makePermissionsUsable(
@@ -339,12 +343,7 @@ object UbuntuSetUp {
         FileSystems.updateFile(
             cmdclickMonitorDirPath,
             monitorFileName,
-            "${
-                ReadText(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
-                ).readText()
-            }\nrootfs copy start"
+            "rootfs copy start"
         )
         if(
             !UbuntuInfo.onForDev

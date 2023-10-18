@@ -12,7 +12,7 @@ object UbuntuInfo {
     private const val devFalseInRelease = false
     val onForDev = if(
         buildConfigDebug
-    ) true
+    ) false
     else devFalseInRelease
 
     private val createImageSwitchOffInRelease = CreateImageSwitch.off.name
