@@ -15,7 +15,10 @@ import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentManager
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServiceButton
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.libs.RestoreLabel
 import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManager
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
@@ -125,7 +128,7 @@ object UbuntuBroadcastHandler {
         ubuntuService.notificationBuilder?.clearActions()
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
-            ButtonLabel.RESTART.label,
+            UbuntuNotiButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent,
         )
         ubuntuService.notificationBuilder?.build()?.let {
@@ -140,12 +143,16 @@ object UbuntuBroadcastHandler {
         ubuntuService: UbuntuService
     ) {
         val chanelId = ubuntuService.chanelId
-        ubuntuService.notificationBuilder?.setContentTitle(UbuntuStateType.ON_SETUP.title)
+        val title = RestoreLabel.decide(
+            ubuntuService,
+            UbuntuStateType.ON_SETUP.title
+        )
+        ubuntuService.notificationBuilder?.setContentTitle(title)
         ubuntuService.notificationBuilder?.setContentText(UbuntuStateType.ON_SETUP.message)
         ubuntuService.notificationBuilder?.clearActions()
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
-            ButtonLabel.RESTART.label,
+            UbuntuNotiButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent
         )
         ubuntuService.notificationBuilder?.build()?.let {
@@ -167,11 +174,10 @@ object UbuntuBroadcastHandler {
             cmdclickMonitorFileName
         ).textToList().lastOrNull() ?: return
         val titleEntry = "${UbuntuStateType.ON_SETUP.title}\t${monitorLastLine}"
-        val restorePrefix = "[Re]"
-        val title = when(ubuntuService.isUbuntuRestore) {
-            true -> "${restorePrefix} ${titleEntry}"
-            false -> titleEntry
-        }
+        val title = RestoreLabel.decide(
+            ubuntuService,
+            titleEntry
+        )
         ubuntuService.notificationBuilder?.setContentTitle(title)
         ubuntuService.notificationBuilder?.setContentText(
             ubuntuService.waitQuiz.echoQorA()
@@ -202,7 +208,7 @@ object UbuntuBroadcastHandler {
         ubuntuService.notificationBuilder?.clearActions()
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
-            ButtonLabel.RESTART.label,
+            UbuntuNotiButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent
         )
         UbuntuServiceButton.addOpenTerminal(ubuntuService)
@@ -272,7 +278,7 @@ object UbuntuBroadcastHandler {
         ubuntuService.notificationBuilder?.clearActions()
         ubuntuService.notificationBuilder?.addAction(
             R.drawable.icons8_cancel,
-            ButtonLabel.RESTART.label,
+            UbuntuNotiButtonLabel.RESTART.label,
             ubuntuService.cancelUbuntuServicePendingIntent
         )
         UbuntuServiceButton.addOpenTerminal(ubuntuService)

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu.libs
 
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.service.lib.ubuntu.ButtonLabel
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
 
 object UbuntuServiceButton {
     fun addOpenTerminal(
@@ -13,7 +13,7 @@ object UbuntuServiceButton {
         ) return
         ubuntuService.notificationBuilder?.addAction(
             com.puutaro.commandclick.R.drawable.ic_terminal,
-            ButtonLabel.TERMINAL.label,
+            UbuntuNotiButtonLabel.TERMINAL.label,
             PendingIntentForUbuntu.createOpenTerminal(ubuntuService)
         )
     }
@@ -27,7 +27,7 @@ object UbuntuServiceButton {
         ) return
         ubuntuService.notificationBuilder?.addAction(
             com.puutaro.commandclick.R.drawable.icons8_support,
-            ButtonLabel.BACKUP.label,
+            UbuntuNotiButtonLabel.BACKUP.label,
             PendingIntentForUbuntu.createManager(ubuntuService)
         )
     }

@@ -372,28 +372,3 @@ object UbuntuSetUp {
         ubuntuFiles.setupLinks()
     }
 }
-
-enum class UbuntuStateType(
-    val title: String,
-    val message: String,
-) {
-    WAIT("Wait..", "Wait.."),
-    UBUNTU_SETUP_WAIT(
-        "Ubuntu Setup, Ok?",
-        "Take 5 minutes for install"
-    ),
-    WIFI_WAIT("Connect wifi!", "Connect wifi! and restart"),
-    ON_SETUP("Ubuntu Setup..", "Ubuntu Setup..(take 5 minutes)"),
-    RUNNING("Ubuntu running..", "%d process.."),
-}
-
-enum class ButtonLabel(
-    val label: String,
-){
-    CANCEL("CANCEL"),
-    RESTART("RESTART"),
-    SETUP("SETUP"),
-    RESTORE("RESTORE"),
-    TERMINAL("TERMINAL"),
-    BACKUP("BACKUP"),
-}

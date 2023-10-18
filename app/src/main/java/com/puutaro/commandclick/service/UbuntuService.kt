@@ -20,16 +20,16 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.ubuntu.BroadcastScreenSwitchHandler
-import com.puutaro.commandclick.service.lib.ubuntu.ButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.ForegroundContinue
 import com.puutaro.commandclick.service.lib.ubuntu.InnerPulseServer
 import com.puutaro.commandclick.service.lib.ubuntu.SetupMonitoring
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuBroadcastHandler
 import com.puutaro.commandclick.service.lib.ubuntu.UbuntuInitProcess
-import com.puutaro.commandclick.service.lib.ubuntu.UbuntuStateType
 import com.puutaro.commandclick.service.lib.ubuntu.WaitQuiz
 import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
+import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.Job
@@ -189,7 +189,7 @@ class UbuntuService:
             notificationBuilder?.clearActions()
             notificationBuilder?.addAction(
                 com.puutaro.commandclick.R.drawable.icons8_cancel,
-                ButtonLabel.RESTART.label,
+                UbuntuNotiButtonLabel.RESTART.label,
                 cancelUbuntuServicePendingIntent,
             )
             notificationBuilder?.build()?.let {
@@ -216,7 +216,7 @@ class UbuntuService:
             notificationBuilder?.clearActions()
             notificationBuilder?.addAction(
                 com.puutaro.commandclick.R.drawable.icons8_cancel,
-                ButtonLabel.SETUP.label,
+                UbuntuNotiButtonLabel.SETUP.label,
                 startUbuntuServicePendingIntent
             )
             if(
@@ -232,7 +232,7 @@ class UbuntuService:
                 )
                 notificationBuilder?.addAction(
                     com.puutaro.commandclick.R.drawable.icons8_cancel,
-                    ButtonLabel.RESTORE.label,
+                    UbuntuNotiButtonLabel.RESTORE.label,
                     restorebuntuServicePendingIntent
                 )
             }
@@ -254,7 +254,7 @@ class UbuntuService:
         notificationBuilder?.clearActions()
         notificationBuilder?.addAction(
             com.puutaro.commandclick.R.drawable.icons8_cancel,
-            ButtonLabel.RESTART.label,
+            UbuntuNotiButtonLabel.RESTART.label,
             cancelUbuntuServicePendingIntent
         )
         val notificationInstance = notificationBuilder?.build()
