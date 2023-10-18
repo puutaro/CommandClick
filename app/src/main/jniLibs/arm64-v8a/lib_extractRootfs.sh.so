@@ -11,7 +11,7 @@ wait_spin(){
 	do
 	  i=$(( (i+1) %4 ))
 	  printf "\r ${wait_message} ${spin:$i:1} "
-	  sleep .1
+	  sleep 1
 	done
 	printf "\r ${wait_message} ok "
 	echo ""

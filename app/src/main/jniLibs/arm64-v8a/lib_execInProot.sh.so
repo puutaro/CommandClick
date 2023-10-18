@@ -37,7 +37,6 @@ if [ ! -f "${ubuntuCompFile}" ]; then
     echo "nameserver 1.1.1.1" > "${ROOTFS_PATH}/etc/resolv.conf"
 fi
 
-echo "## execCmd" >> "${term2Path}"
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 PROOT_TMP_DIR=$ROOTFS_PATH/support/ \
 PROOT_LOADER=$LIB_PATH/loader \
@@ -48,7 +47,6 @@ $PROOT -r $ROOTFS_PATH -p \
 --kill-on-exit \
 -b /sys -b /dev -b /proc -b /data -b /mnt -b /proc/mounts:/etc/mtab \
 -b $ROOTFS_PATH/support/:/support \
--b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
 -b $ROOTFS_PATH/support/userland_profile.sh:/etc/profile.d/userland_profile.sh \
 -b $ROOTFS_PATH/support/ld.so.preload:/etc/ld.so.preload \
 -b $ROOT_PATH/support:/support/common \
@@ -79,6 +77,7 @@ $EXTRA_BINDINGS \
     DEBIAN_FRONTEND=noninteractive \
     "$@"
 
+# -b $ROOTFS_PATH/support/nosudo:/usr/local/bin/sudo \
 # -b /:/host-rootfs
 # -b /storage/:/storage \
 
