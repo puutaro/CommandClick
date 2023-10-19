@@ -77,5 +77,4 @@ sudo rm \
 bash "${KILL_PROC_SHELL_PATH}" \
 	"${NOTI_UPDATE_SHELL_PATH}"
 kill "${UPDATE_SHELL_PID}" || e=$?
-sleep 2
 bash "${NOTI_MANAGER_SHELL_PATH}"

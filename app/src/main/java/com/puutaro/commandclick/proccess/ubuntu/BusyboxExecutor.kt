@@ -7,10 +7,12 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -101,6 +103,26 @@ class BusyboxExecutor(
 
     ) {
         val functionName = object{}.javaClass.enclosingMethod?.name
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                AssetsFileManager.copyFileOrDirFromAssets(
+                    context,
+                    AssetsFileManager.ubunutSupportCmdDirPath,
+                    AssetsFileManager.ubunutSupportCmdDirPath,
+                    ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                )
+            }
+            withContext(Dispatchers.IO) {
+                LinuxCmd.execCommand(
+                    listOf(
+                        "chmod",
+                        "-R",
+                        "777",
+                        ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
+                    ).joinToString("\t")
+                )
+            }
+        }
         when {
             !busyboxWrapper.busyboxIsPresent() -> {
                 FileSystems.updateFile(

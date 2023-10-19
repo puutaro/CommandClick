@@ -18,11 +18,10 @@ object AssetsFileManager {
     const val assetsHighlightCopy =
         "${assetsDialogWebViewDirPath}/highlightCopy.js"
     const val fannelShellDirPath = "${assetsFannelsDirName}/shell"
-    const val ubunutSupportDirPath = "ubuntu_setup/support"
-    const val ubunutStartupScriptPath = "ubuntu_setup/startup.sh"
-    const val etcPulseDefaultPa = "ubuntu_setup/support/default.pa"
+    const val ubuntuSetupDirPath = "ubuntu_setup"
+    const val ubunutSupportDirPath = "${ubuntuSetupDirPath}/support"
+    const val ubunutSupportCmdDirPath = "${ubunutSupportDirPath}/cmd"
     const val cmdTerminalDirPath = "${assetsFannelsDirName}/cmdTerminal"
-    const val cmdFannelListDir = "${cmdTerminalDirPath}/list"
     const val cmdListTxt = "${cmdTerminalDirPath}/list/cmdList.txt"
     const val extraKeyListTxt = "${cmdTerminalDirPath}/list/extraKeyList.txt"
 

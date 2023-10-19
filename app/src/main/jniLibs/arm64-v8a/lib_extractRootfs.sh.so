@@ -53,9 +53,7 @@ fi
 
 
 PROOT="$LIB_PATH/proot"
-#launch PRoot
 unset LD_PRELOAD
-echo proot cc start
 cd "${ROOTFS_PATH}"
 chmod -R 777 "${ROOTFS_PATH}"
 cd "${ROOT_PATH}"

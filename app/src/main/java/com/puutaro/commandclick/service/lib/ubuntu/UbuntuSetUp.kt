@@ -17,7 +17,6 @@ import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -30,6 +29,9 @@ object UbuntuSetUp {
 
     private val startupFilePath = "/support/startup.sh"
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
+    private val downLoadCompPercent = 100L
+    private var downloadProgress = 100L
+
     fun set(
         ubuntuService: UbuntuService,
         monitorFileName: String,
@@ -58,6 +60,7 @@ object UbuntuSetUp {
             ?: return
         val ubuntuFiles = ubuntuService.ubuntuFiles
             ?: return
+        downloadProgress = 100L
         val isUbuntuRestore = ubuntuService.isUbuntuRestore
         if(
             ubuntuFiles.ubuntuSetupCompFile.isFile
@@ -103,15 +106,29 @@ object UbuntuSetUp {
                         ubuntuService,
                         monitorFileName
                     )
-                    delay(200)
                     FileSystems.copyFile(
                         UbuntuFiles.downloadRootfsTarGzPath,
                         "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
                     )
                 }
+                if(
+                    !File(
+                        UbuntuFiles.downloadDirPath,
+                        UbuntuFiles.rootfsTarGzName
+                    ).isFile
+                ) {
+                    FileSystems.updateFile(
+                        cmdclickMonitorDirPath,
+                        monitorFileName,
+                        "\nno download"
+                    )
+                    return
+                }
             }
-
         }
+        if(
+            judgeDownloadInvalid(monitorFileName)
+        ) return
         withContext(Dispatchers.IO) {
             initSetup(
                 context,
@@ -143,6 +160,9 @@ object UbuntuSetUp {
                 ubuntuFiles,
             )
         }
+        if(
+            judgeDownloadInvalid(monitorFileName)
+        ) return
         withContext(Dispatchers.IO) {
             busyboxExecutor.executeScript(
                 "support/extractRootfs.sh",
@@ -165,11 +185,13 @@ object UbuntuSetUp {
             AssetsFileManager.copyFileOrDirFromAssets(
                 context,
                 AssetsFileManager.ubunutSupportDirPath,
-                "ubuntu_setup",
+                AssetsFileManager.ubuntuSetupDirPath,
                 ubuntuFiles.filesOneRootfs.absolutePath
             )
-            FileSystems.copyDirectory(
-                ubuntuFiles.filesOneRootfsSupportCmdDir.absolutePath,
+            AssetsFileManager.copyFileOrDirFromAssets(
+                context,
+                AssetsFileManager.ubunutSupportCmdDirPath,
+                AssetsFileManager.ubunutSupportCmdDirPath,
                 ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
             )
             val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
@@ -194,6 +216,9 @@ object UbuntuSetUp {
                 ).joinToString("\t")
             )
         }
+        if(
+            judgeDownloadInvalid(monitorFileName)
+        ) return
         withContext(Dispatchers.IO) {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
@@ -208,6 +233,21 @@ object UbuntuSetUp {
                 monitorFileName = monitorFileName
             )
         }
+    }
+
+    private fun judgeDownloadInvalid(
+        monitorFileName: String
+    ): Boolean {
+        val isInvalidDownload = downloadProgress != downLoadCompPercent
+        if(isInvalidDownload) {
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorFileName,
+                "invalid download ${downloadProgress}% end"
+            )
+        }
+        return isInvalidDownload
+
     }
 
     private suspend fun downloadUbuntu(
@@ -234,18 +274,12 @@ object UbuntuSetUp {
     ){
         val ubuntuFiles = ubuntuService.ubuntuFiles ?: return
         val supportDirPath = ubuntuFiles.supportDir.absolutePath
-        val downloadCompTxt = ubuntuFiles.ubuntuRootfsDownloadCompFile.name
         FileSystems.createDirs(
             supportDirPath
         )
         withContext(Dispatchers.IO) {
             if(
                 UbuntuInfo.onForDev
-            ) return@withContext
-            if(
-                File(
-                    "${supportDirPath}/${downloadCompTxt}",
-                ).isFile
             ) return@withContext
             FileSystems.removeFiles(
                 UbuntuFiles.downloadDirPath,
@@ -265,7 +299,6 @@ object UbuntuSetUp {
             val data = ByteArray(1024)
             var total: Long = 0
             var count: Int
-            var progress = 0L
             var previousDisplayProgress: Long = 0
             while (input.read(data).also { count = it } != -1) {
                 val processNum = ProcessManager.processNumCalculator(ubuntuService)
@@ -277,14 +310,25 @@ object UbuntuSetUp {
                     break
                 }
                 total += count
-                previousDisplayProgress = progress
-                progress = total * 100 / lenghtOfFile
+                previousDisplayProgress = downloadProgress
+                downloadProgress = total * 100 / lenghtOfFile
                 output.write(data, 0, count)
-                if (progress <= previousDisplayProgress) continue
+                if (downloadProgress <= previousDisplayProgress) continue
                 FileSystems.updateFile(
                     cmdclickMonitorDirPath,
                     monitorFileName,
-                    "download ${progress}%"
+                    "download ${downloadProgress}%"
+                )
+            }
+            if(downloadProgress != downLoadCompPercent){
+                FileSystems.removeFiles(
+                    UbuntuFiles.downloadDirPath,
+                    UbuntuFiles.rootfsTarGzName
+                )
+                FileSystems.updateFile(
+                    cmdclickMonitorDirPath,
+                    monitorFileName,
+                    "invalid download: ${downloadProgress}%"
                 )
             }
             // flushing output
@@ -297,12 +341,7 @@ object UbuntuSetUp {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 monitorFileName,
-                "\ndownlaod comp"
-            )
-            FileSystems.writeFile(
-                supportDirPath,
-                downloadCompTxt,
-                String()
+                "\ndownload comp"
             )
         }
     }

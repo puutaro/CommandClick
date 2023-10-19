@@ -53,9 +53,6 @@ class UbuntuFiles(
         File("${filesOneRootfs.absolutePath}/usr/local/bin/")
     val filesOneRootfsStorageDir =
         File("${filesOneRootfs.absolutePath}/storage")
-    val ubuntuRootfsDownloadCompFile = File(
-        "${filesOneRootfsSupportDir.absolutePath}/downloadComp.txt"
-    )
     val ubuntuSetupCompFile = File(
         "${filesOneRootfsSupportDir.absolutePath}/ubuntuSetupComp.txt"
     )

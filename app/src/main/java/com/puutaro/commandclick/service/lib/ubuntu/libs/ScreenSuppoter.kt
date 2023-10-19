@@ -24,6 +24,8 @@ object ScreenMonitor {
         val noSleepSignal = 0L
         val settingSectionStart = ubuntuService.settingSectionStart
         val settingSectionEnd = ubuntuService.settingSectionEnd
+        val ubuntuLaunchCompFile = ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
+            ?: return
         ubuntuService.monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 val sleepDelayMinutes = makeSleepDelayMinutes(
@@ -32,6 +34,9 @@ object ScreenMonitor {
                 )
                 if(sleepDelayMinutes == noSleepSignal) return@withContext
                 delay(sleepDelayMinutes)
+                if (
+                    !ubuntuLaunchCompFile.isFile
+                ) return@withContext
                 val processNum = ProcessManager.processNumCalculator(ubuntuService)
                 if (
                     processNum > ubuntuRunningProcessNum

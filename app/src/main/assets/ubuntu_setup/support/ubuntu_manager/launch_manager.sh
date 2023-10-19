@@ -5,23 +5,16 @@ readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_2"
 readonly NOTI_EXIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/exit_manager.sh"
 readonly NOTI_BACKUP_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/backup.sh"
-readonly EXEC_RESTORE_OK_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_restore.sh"
+readonly EXEC_INIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_init.sh"
 readonly NOTIFICATION_CAHNEL_NUM=$(\
 	bash "${NOTI_SHELL_DIR_PATH}/echo_channel_num.sh"\
 )
 readonly support_dir_path="/support"
 readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
 readonly UBUNTU_ENV_TSV_CON="$(cat "${ubuntu_env_tsv_path}")"
-readonly UBUNTU_BACKUP_ROOTFS_PATH="$(\
-	tsvar "${UBUNTU_ENV_TSV_CON}" "UBUNTU_BACKUP_ROOTFS_PATH" \
-)"
 
 readonly title="Ubuntu backup manager"
 readonly message="Press bellow button"
-RESTORE_BUTTON_OPTION=""
-if [ -f "${UBUNTU_BACKUP_ROOTFS_PATH}" ];then
-	RESTORE_BUTTON_OPTION="--button \"label=RESTORE,shellPath=${EXEC_RESTORE_OK_SHELL_PATH}\""
-fi
 
 noti \
 	-t launch \
@@ -34,6 +27,5 @@ noti \
 	--delete "shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
 	--button "label=CLOSE,shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
 	--button "label=BACKUP,shellPath=${NOTI_BACKUP_SHELL_PATH},execType=back" \
-	${RESTORE_BUTTON_OPTION} \
+	--button "label=INIT,shellPath=${EXEC_INIT_SHELL_PATH}" \
 >/dev/null 2>&1
-
