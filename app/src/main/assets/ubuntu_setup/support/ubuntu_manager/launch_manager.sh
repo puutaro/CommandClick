@@ -13,7 +13,7 @@ readonly support_dir_path="/support"
 readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
 readonly UBUNTU_ENV_TSV_CON="$(cat "${ubuntu_env_tsv_path}")"
 
-readonly title="Ubuntu backup manager"
+readonly title="Ubuntu rootfs backup manager"
 readonly message="Press bellow button"
 
 noti \
