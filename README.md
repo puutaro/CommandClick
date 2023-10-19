@@ -58,7 +58,8 @@ CommandClick
 [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 ![GitHub release (with filter)](https://img.shields.io/github/v/release/puutaro/CommandClick)
 ![GitHub repo size](https://img.shields.io/github/repo-size/puutaro/CommandClick)
-<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">
+<img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
+![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
 - Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
 - Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also ubuntu and android os. Therefore, this has wide spread usage
