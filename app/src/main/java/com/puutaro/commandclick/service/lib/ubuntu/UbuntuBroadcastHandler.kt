@@ -430,7 +430,7 @@ object UbuntuBroadcastHandler {
             }
             return
         }
-        val defaultTimeoutMiliSec = 200
+        val defaultTimeoutMiliSec = 2000
         val foregroundShellPath = intent.getStringExtra(
             UbuntuServerIntentExtra.foregroundShellPath.schema
         ) ?: return

@@ -42,6 +42,14 @@ get_help(){
 				print "# Get variable by variable name"
 				print "get_rvar \x22${contents}\x22 \x22${replace variables name}\x22"
 				print ""
+				print "* pre reaserved word for only shell"
+				print ""
+				print "\t ${00} -> app_root_path"
+				print "\t ${01} -> current_app_dir_path"
+				print "\t ${001} -> fannel_dir_name"
+				print "\t ${02} -> fannel_shell_name"
+				print "\t ${0} -> fannel_shell_path"
+				print ""
 			}'
 			exit 0
 		;;
@@ -74,16 +82,40 @@ get_replace_variables(){
 grep_key(){
 	local con="${1}"
 	local key="${2}"
+	local current_file_path="${3:-}"
 	awk \
 		-v con="${con}" \
 		-v key="${key}" \
+		-v current_file_path="${current_file_path}"\
+		-v APP_ROOT_PATH="${APP_ROOT_PATH}" \
+		-v APP_DIR_PATH="${APP_ROOT_PATH}/AppDir" \
 		'BEGIN {
+			# make pre reserved word for shell
+			if(current_file_path){
+				app_dir_relative_path = current_file_path
+				gsub(APP_DIR_PATH"/", "", app_dir_relative_path)
+				size = split( app_dir_relative_path , app_dir_relative_path_array, "/" )
+				current_app_dir_name = app_dir_relative_path_array[1]
+				current_app_dir_path = APP_DIR_PATH"/"app_dir_relative_path_array[1]
+				fannel_dir_name = app_dir_relative_path_array[2]
+				fannnel_dir_relative_path = current_app_dir_name"/"fannel_dir_name
+				fannel_dir_path = APP_DIR_PATH"/"fannnel_dir_relative_path
+				fannel_shell_name = fannel_dir_name
+				sub(/Dir$/, ".sh", fannel_shell_name)
+				fannel_shell_path = current_app_dir_path"/"fannel_shell_name
+			}
+			# grep
 			grep_key = key"\t"
 			index_grep_key = index(con, grep_key)
 			if(index_grep_key < 0) exit
 			slice_con = substr(con, index_grep_key, length(con))
 			sub(/\n.*/, "", slice_con)
 			sub(/.*\t/, "", slice_con)
+			gsub("\${00}", APP_ROOT_PATH, slice_con)
+			gsub("\${01}", current_app_dir_path, slice_con)
+			gsub("\${001}", fannel_dir_name, slice_con)
+			gsub("\${02}", fannel_shell_name, slice_con)
+			gsub("\${0}", fannel_shell_path, slice_con)
 			print slice_con
 		}'
 }
@@ -98,10 +130,11 @@ case "${ARG[@]}" in
 esac
 
 ARG0="${ARG[0]}"
-ARG1="${ARG[1]}"
+KEY_NAME="${ARG[1]}"
+CURRENT_FILE_PATH="${ARG[2]:-}"
 
 if [ -e "${ARG0}"  ];then
 	get_replace_variables "${ARG0}"
 else 
-	grep_key "${ARG0}" "${ARG1}"
+	grep_key "${ARG0}" "${KEY_NAME}" "${CURRENT_FILE_PATH}"
 fi
