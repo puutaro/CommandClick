@@ -111,19 +111,6 @@ object UbuntuSetUp {
                         "${ubuntuFiles.filesDir}/${UbuntuFiles.rootfsTarGzName}"
                     )
                 }
-                if(
-                    !File(
-                        UbuntuFiles.downloadDirPath,
-                        UbuntuFiles.rootfsTarGzName
-                    ).isFile
-                ) {
-                    FileSystems.updateFile(
-                        cmdclickMonitorDirPath,
-                        monitorFileName,
-                        "\nno download"
-                    )
-                    return
-                }
             }
         }
         if(
@@ -144,13 +131,8 @@ object UbuntuSetUp {
             )
         }
         withContext(Dispatchers.IO) {
-            val err4 = LinuxCmd.execCommand(
-                listOf(
-                    "chmod",
-                    "-R",
-                    "777",
-                    ubuntuFiles.supportDir
-                ).joinToString("\t")
+            val err4 = LinuxCmd.chmod(
+                ubuntuFiles.supportDir.absolutePath
             )
         }
 
@@ -207,13 +189,8 @@ object UbuntuSetUp {
             )
         }
         withContext(Dispatchers.IO) {
-            LinuxCmd.execCommand(
-                listOf(
-                    "chmod",
-                    "-R",
-                    "777",
-                    ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
-                ).joinToString("\t")
+            LinuxCmd.chmod(
+                ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
             )
         }
         if(
@@ -243,7 +220,7 @@ object UbuntuSetUp {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 monitorFileName,
-                "invalid download ${downloadProgress}% end"
+                "retry, invalid download"
             )
         }
         return isInvalidDownload

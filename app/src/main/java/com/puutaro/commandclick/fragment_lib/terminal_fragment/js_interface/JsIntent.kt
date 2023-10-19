@@ -7,10 +7,10 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForFzHtml
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.EditSiteBroadCast
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.Intent.IntentVarient
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -23,49 +23,20 @@ class JsIntent(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
+    private val editSiteBroadCast = EditSiteBroadCast(terminalFragment)
 
 
     @JavascriptInterface
     fun launchEditSite(
         editPath: String,
-        srcPath: String? = null,
-        onClickSort: String = "true",
-        onSortableJs: String = "true",
-        onClickUrl: String = "true",
-        filterCode: String? = null,
-        onDialog: String
+        extraMapStr: String,
+        filterCode: String,
     ) {
-        val jsIntent = Intent()
-        jsIntent.action = BroadCastIntentScheme.HTML_LAUNCH.action
-        jsIntent.putExtra(
-            BroadCastIntentScheme.HTML_LAUNCH.scheme,
-            editPath
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.SCR_PATH.scheme,
-            srcPath
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.ON_CLICK_SORT.scheme,
-            onClickSort
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.ON_SORTABLE_JS.scheme,
-            onSortableJs
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.ON_CLICK_URL.scheme,
-            onClickUrl
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.FILTER_CODE.scheme,
+        editSiteBroadCast.send(
+            editPath,
+            extraMapStr,
             filterCode
         )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForHtml.ON_DIALOG.scheme,
-            onDialog
-        )
-        terminalFragment.activity?.sendBroadcast(jsIntent)
     }
 
     @JavascriptInterface

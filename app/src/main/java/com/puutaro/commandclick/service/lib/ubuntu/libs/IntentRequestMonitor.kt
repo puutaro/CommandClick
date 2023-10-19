@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.CmdClickMap
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
@@ -286,7 +287,7 @@ object IntentRequestMonitor {
         val extraPairList = broadcastMap.get(
             BroadCastSenderSchema.extras.name
         )?.let {
-            createMap(
+            CmdClickMap.createMap(
                 it,
                 keySeparator
             )
@@ -460,7 +461,7 @@ object IntentRequestMonitor {
             broadcastMap.get(
                 BroadcastMonitorScheme.notificationStyle.name
             )?.let {
-            createMap(
+                CmdClickMap.createMap(
                 it,
                 keySeparator
             ).toMap()
@@ -500,7 +501,7 @@ object IntentRequestMonitor {
         if(
             onDeleteMapStr.isNullOrEmpty()
         ) return
-        val onDeleteMap = createMap(
+        val onDeleteMap = CmdClickMap.createMap(
             onDeleteMapStr,
             keySeparator
         ).toMap()
@@ -545,7 +546,7 @@ object IntentRequestMonitor {
             if(
                 buttonMapEl.isEmpty()
             ) return@forEach
-            val buttonTypeMap = createMap(
+            val buttonTypeMap = CmdClickMap.createMap(
                 buttonMapEl,
                 keySeparator
             ).toMap()
@@ -639,7 +640,7 @@ object IntentRequestMonitor {
             .split("\n").let {
             SettingFile.formSettingContents(it)
         }.let {
-            createMap(
+                CmdClickMap.createMap(
                 it,
                 fieldSeparator
             )
@@ -910,18 +911,6 @@ private fun toInt(numStr: String?): Int? {
         null
     }
 
-}
-
-private fun createMap(
-    mapEntryStr: String,
-    sepalator: String
-):List<Pair<String, String>> {
-    return mapEntryStr.split(sepalator).map {
-        CcScript.makeKeyValuePairFromSeparatedString(
-            it,
-            "="
-        )
-    }
 }
 
 private enum class ToastSchema {

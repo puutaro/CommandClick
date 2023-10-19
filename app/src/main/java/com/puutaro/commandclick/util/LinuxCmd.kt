@@ -49,6 +49,24 @@ object LinuxCmd {
                 && isPulseAudioProcess
     }
 
+    fun chmod(
+        dirPath: String
+    ) {
+        val result = execCommand(
+            listOf(
+                "chmod",
+                "-R",
+                "777",
+                dirPath
+            ).joinToString("\t")
+        )
+        FileSystems.updateFile(
+            cmdclickMonitorDirPath,
+            cmdClickMonitorFileName,
+            "chmod ${result}"
+        )
+    }
+
     fun killFrontProcess(
         packageName: String,
     ){
