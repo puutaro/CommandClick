@@ -264,7 +264,7 @@ You can create shortcut for current `App directory` or `script`
 
 1. Press `BACKUP` button in Notification  
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/6b3cdcdb-e6e8-4475-b57f-86ae1b5d54c7" width="200">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/f2e0b09b-3724-410a-b3a5-38ac5ed96e3d" width="250">  
 
 2. Launch ubuntu rootfs backup manager  
 3. Press `BACKUP` button  
@@ -272,11 +272,11 @@ You can create shortcut for current `App directory` or `script`
 
 5. Press `INIT` button  
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/7ca76b74-7e50-4376-ada2-e8f24404852c" width="200">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/677a7634-0145-4569-824b-457a0d602c79" width="250">  
 
 6. Press `RESTORE`  
   
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/b067b9c5-3c5b-4606-a931-4a80231bc912" width="200">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/15bfaadb-bb6d-454b-86a0-f4f11c196423" width="250">  
 
 
 
