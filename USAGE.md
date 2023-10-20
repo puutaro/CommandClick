@@ -29,6 +29,7 @@ Table of Contents
   * [Change app dir](#change-app-dir)
   * [Create shortcut](#create-shortcut)
   * [Setup ubuntu](#setup-ubuntu)
+  * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
   * [Install fannel](#install-fannel)
   * [Config](#config)
   * [Termux setting](#termux-setting)
@@ -240,7 +241,7 @@ You can create shortcut for current `App directory` or `script`
 
 ### Setup ubuntu
 
-'CommandClick' is enable ubuntu as backend with with sound.
+'CommandClick' is enable ubuntu as backend with sound.
 
 [Procedure]  
 
@@ -253,6 +254,31 @@ You can create shortcut for current `App directory` or `script`
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
 
 - `Restart` -> Press button when ubuntu not working
+
+### Backup ubuntu rootfs
+
+'CommandClick' is enable current rootfs backup.
+
+[Procedure]  
+
+
+1. Press `BACKUP` button in Notification  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/6b3cdcdb-e6e8-4475-b57f-86ae1b5d54c7" width="200">  
+
+2. Launch ubuntu rootfs backup manager  
+3. Press `BACKUP` button  
+4. Wait backup comp  
+
+5. Press `INIT` button  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/7ca76b74-7e50-4376-ada2-e8f24404852c" width="200">  
+
+6. Press `RESTORE`  
+  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/b067b9c5-3c5b-4606-a931-4a80231bc912" width="200">  
+
+
 
 ### Install fannel
 
