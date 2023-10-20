@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -19,6 +20,11 @@ object ScreenMonitor {
     fun killInMonitorOff(
         ubuntuService: UbuntuService
     ){
+        FileSystems.writeFile(
+            UsePath.cmdclickTempUbuntuServiceDirPath,
+            UsePath.cmdclickTmpUbuntuMonitorOff,
+            String()
+        )
         val ubuntuRunningProcessNum =
             ProcessManager.UbuntuRunningSystemProcessType.values().size
         val noSleepSignal = 0L
@@ -51,6 +57,10 @@ object ScreenMonitor {
     fun launchScreenRestart(
         ubuntuService: UbuntuService
     ){
+        FileSystems.removeFiles(
+            UsePath.cmdclickTempUbuntuServiceDirPath,
+            UsePath.cmdclickTmpUbuntuMonitorOff
+        )
         if(!ubuntuService.screenOffKill) return
         ubuntuService.notificationBuilderHashMap.clear()
         ubuntuService.monitorScreenJob?.cancel()

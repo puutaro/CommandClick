@@ -17,6 +17,7 @@ import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -220,7 +221,7 @@ object UbuntuSetUp {
             FileSystems.updateFile(
                 cmdclickMonitorDirPath,
                 monitorFileName,
-                "retry, invalid download"
+                "retry, invalid download ${downloadProgress}%"
             )
         }
         return isInvalidDownload
@@ -264,11 +265,11 @@ object UbuntuSetUp {
             )
             // put your url.this is sample url.
             val url = URL(UbuntuInfo.arm64UbuntuRootfsUrl)
-            val conection = url.openConnection()
-            conection.connect()
-            val lenghtOfFile = conection.contentLength
+            val connection = url.openConnection()
+            connection.connect()
+            val lenghtOfFile = connection.contentLength
             // download the file
-            val input = conection.getInputStream()
+            val input = connection.getInputStream()
             //catalogfile is your destenition folder
             val output: OutputStream = FileOutputStream(
                 UbuntuFiles.downloadRootfsTarGzPath
@@ -277,9 +278,21 @@ object UbuntuSetUp {
             var total: Long = 0
             var count: Int
             var previousDisplayProgress: Long = 0
+            val cmdclickTmpUbuntuMonitorOffFile = File(
+                UsePath.cmdclickTempUbuntuServiceDirPath,
+                UsePath.cmdclickTmpUbuntuMonitorOff,
+            )
+            var processNum = 10
             while (input.read(data).also { count = it } != -1) {
-                val processNum = ProcessManager.processNumCalculator(ubuntuService)
-                if(processNum == 0) {
+                for (i in 1..3) {
+                    processNum = ProcessManager.processNumCalculator(ubuntuService)
+                    if(processNum != 0) break
+                    delay(500)
+                }
+                if (
+                    processNum == 0
+                    && !cmdclickTmpUbuntuMonitorOffFile.isFile
+                ) {
                     FileSystems.removeFiles(
                         UbuntuFiles.downloadDirPath,
                         UbuntuFiles.rootfsTarGzName
