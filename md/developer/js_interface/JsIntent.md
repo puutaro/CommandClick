@@ -10,7 +10,7 @@ Enable launch intent from javascript
 
 jsIntent.launchEditSite(
 	editPath: String,
-	extraMapStr: String,
+	extraMapStr: format string (${key1}=value1|${key2}=value2|..),
 	filterCode: javascipt code,
   )
 	- ref: [html automaticaly creation command to edit target edit file]
@@ -21,6 +21,12 @@ jsIntent.launchEditSite(
 		"srcPath=${src path}|onClickSort=true|onSortableJs=true|onClickUrl=true|onDialog=false",
 		"urlString.startsWith('http');",
 	  )
+	- extraMapStr has key bellow
+	 srcPath: src path for add url
+	 onClickSort: boolean str
+	 onSortableJs: boolean str
+	 onClickUrl: boolean str
+	 onDialog: boolean str
 
 
 jsIntent.launchUrl(
