@@ -9,7 +9,6 @@ jsCsv.read(
   tag: String,
   csvPath: String,
   withNoHeader: String,
-  csvOrTsv: String,
   limitRowNumSource: Int
   )
   - save csv or tsv instance with tag, also header   
