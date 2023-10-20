@@ -25,7 +25,7 @@ jsCsv.outPutTsvForDRow(
 
 ## Result
 
-row oriented tsv for search  
+String converted row oriented tsv for search  
 
 
 ex1) 
