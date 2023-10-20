@@ -15,6 +15,14 @@ jsIntent.launchEditSite(
   )
 	- ref: [html automaticaly creation command to edit target edit file]
 
+	ex)
+	jsIntent.launchEditSite(
+		"${edit tsv path}",
+		"srcPath=${src path}|onClickSort=true|onSortableJs=true|onClickUrl=true|onDialog=false",
+		"urlString.startsWith('http');",
+	  )
+
+
 jsIntent.launchUrl(
 	urlString: String
   )
