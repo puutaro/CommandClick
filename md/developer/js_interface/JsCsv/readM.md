@@ -5,11 +5,11 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-
+* [Result](#result)
 
 ## Overview
 
-Read csv from memoy 
+Read csv from string 
 
 ```js.js
 jsCsv.readM(
@@ -28,6 +28,9 @@ jsCsv.readM(
 | csvString | string | csv data string |
 | csvOrTsv | string | `CSV`/`TSV` switch csv or tsv |
 
+## Result
+
+Read csv or tsv instance with tag, also header   
 
 
 ex1) 
