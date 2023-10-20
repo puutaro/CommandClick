@@ -16,7 +16,7 @@ jsCsv.toHeaderRow(
   startColNumSource: Int,
   endColNumSource: Int,
 )
-  -> headerList sepalated by tab sepalated 
+  -> headerList sepalated by tab 
 ```
 
 ## Argument
@@ -29,7 +29,7 @@ jsCsv.toHeaderRow(
 
 ## Result
 
-Get headerList sepalated by tab sepalated
+Get headerList sepalated by tab  
 
 
 ex1) 
