@@ -9,7 +9,7 @@ Table
 
 ## Overview
 
-Get filterd tsv instance with tag, also header  
+Save filterd tsv instance with tag, also header  
 
 ```js.js
 jsCsv.filter(
@@ -44,7 +44,7 @@ jsCsv.filter(
 
 ## Result
 
-filterd tsv instance with tag, also header  
+Save filterd tsv instance with tag, also header  
 
 
 ex1) 
