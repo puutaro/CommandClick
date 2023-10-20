@@ -35,19 +35,20 @@ jsCsv.read(
 ex1) with header
 
 ```js.js
-jsDialog.prompt(
-    "title",
-    "message",
-    "",
-);
-```
+jsCsv.read(
+		"$srcTagName}",
+		"${inputCTsvPath}", 
+		"", 
+		10,
+	);```
 
 ex2) wighout header
 
 ```js.js
-jsDialog.prompt(
-    "title",
-    "message",
-    "on",
-);
+jsCsv.read(
+		"${srcTagName}",
+		"${inputCTsvPath}", 
+		"on", 
+		10,
+	);
 ```
