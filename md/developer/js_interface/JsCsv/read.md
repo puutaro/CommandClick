@@ -9,7 +9,7 @@ Table
 
 ## Overview
 
-Read csv from file  
+Save csv or tsv instance with tag, also header    
 
 ```js.js
 jsCsv.read(
@@ -18,7 +18,7 @@ jsCsv.read(
   withNoHeader: String,
   limitRowNumSource: Int
   )
-  - save csv or tsv instance with tag, also header   
+  
 ```
 
 ## Argument
