@@ -268,9 +268,10 @@ You can create shortcut for current `App directory` or `script`
 
 2. Launch ubuntu rootfs backup manager  
 3. Press `BACKUP` button  
-4. Wait backup comp  
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/677a7634-0145-4569-824b-457a0d602c79" width="250">  
+
+4. Wait backup comp  
 
 5. Press `INIT` button  
 
