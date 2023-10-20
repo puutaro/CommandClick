@@ -9,7 +9,7 @@ Table
 
 ## Overview
 
-Read csv from string 
+Save csv or tsv instance with tag, also header  from string 
 
 ```js.js
 jsCsv.readM(
@@ -30,7 +30,7 @@ jsCsv.readM(
 
 ## Result
 
-Read csv or tsv instance with tag, also header   
+Save csv or tsv instance with tag, also header  from string
 
 
 ex1) 
