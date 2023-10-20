@@ -4,7 +4,8 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-
+* [Result](#result)
+  
 
 ## Overview
 
@@ -22,6 +23,11 @@ jsCsv.takeRowSize(
 | -------- | -------- | -------- |
 | tag | string | csv data tag that you want to take |
 
+## Result
+
+| result value | type | description |
+| -------- | -------- | -------- |
+| row size | int | row size |
 
 
 ex1) 
