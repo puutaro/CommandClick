@@ -25,7 +25,7 @@ jsCsv.outPutTsvForDCol(
 
 ## Result
 
-tsv to col oriented tsv for search 
+String converted tsv to col oriented tsv for search 
 
 
 ex1) 
