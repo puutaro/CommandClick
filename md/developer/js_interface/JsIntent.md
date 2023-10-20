@@ -10,12 +10,8 @@ Enable launch intent from javascript
 
 jsIntent.launchEditSite(
 	editPath: String,
-	srcPath: String,
-	onClickSort: String(true/false),
-	onSortableJs: String(true/false),
-	onClickUrl: String(true/false),
-	filterCode: String,
-	onDialog: String(true/false)
+	extraMapStr: String,
+	filterCode: javascipt code,
   )
 	- ref: [html automaticaly creation command to edit target edit file]
 
