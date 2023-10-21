@@ -1,4 +1,4 @@
-# Directory_feature
+# Directory structure
 
 `CommandClick` main data is located share storage on android
 Here introduce feature by directory 
