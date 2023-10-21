@@ -2,19 +2,23 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
   
 
-## Overview
+## Result
 
 take row size
+
+| result value | type | description |
+| -------- | -------- | -------- |
+| row size | int | row size |
+
 
 ```js.js
 jsCsv.takeRowSize(
   tag: String
-    )
+)
 ```
 
 ## Argument
@@ -22,12 +26,6 @@ jsCsv.takeRowSize(
 | arg name | type | description |
 | -------- | -------- | -------- |
 | tag | string | csv data tag that you want to take |
-
-## Result
-
-| result value | type | description |
-| -------- | -------- | -------- |
-| row size | int | row size |
 
 
 ex1) 
