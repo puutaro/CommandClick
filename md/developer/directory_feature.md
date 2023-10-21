@@ -8,7 +8,7 @@ Here introduce feature by directory
 
 Table
 -----------------
-* [/storage/emulated/0/Documents/cmdclick](#root-dir-path)
+* [/storage/emulated/0/Documents/cmdclick](#root_dir_path)
 * [Argument](#argument)
 * 
 
