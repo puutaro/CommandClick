@@ -2,14 +2,17 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
 
-## Overview
+## Result
 
 take col size 
+
+| result value | type | description |
+| -------- | -------- | -------- |
+| col size | int | col size |
 
 ```js.js
 jsCsv.takeColSize(
@@ -23,14 +26,6 @@ jsCsv.takeColSize(
 | arg name | type | description |
 | -------- | -------- | -------- |
 | tag | string | csv data tag that you want to take |
-
-## Result
-
-| result value | type | description |
-| -------- | -------- | -------- |
-| col size | int | col size |
-
-
 
 
 ex1) 
