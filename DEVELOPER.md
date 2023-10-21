@@ -15,6 +15,7 @@ Table of Contents
 * [Labeling section](#labeling-section)
 * [Cmd variables](#cmd-variables)
 * [Setting variables](#setting-variable)
+* [Directory structure](#directory-structure)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
@@ -29,6 +30,7 @@ Table of Contents
 * [Html tag output](#html-tag-output)
 * [Javascript TroubleShooting](#javascript-troubleshooting)
 * [CommandClick repository](#commandclick-repository)
+* [Glossary](#glossary)
 
 
 ### Structure
@@ -71,6 +73,9 @@ User difinition setting variables
   
   -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
+### Directory structure
+
+-> [About directory structure](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md)   
   
 
 ### Import library  
@@ -195,6 +200,8 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 [link](https://github.com/puutaro/commandclick-repository)  
 
 
+### Glossary
 
+-> [About glossary](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
 
 
