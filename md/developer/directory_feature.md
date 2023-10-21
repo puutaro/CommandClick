@@ -8,10 +8,11 @@ Here introduce feature by directory
 
 Table
 -----------------
-* [/storage/emulated/0/Documents/cmdclick](#root_dir_path)
+* [~](#root_dir_path)
 * [Argument](#argument)
 * 
 
+
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
@@ -20,19 +21,18 @@ Table
 ## `~/AppDir`
 v
 ## `~/AppDir`
-## `~/AppDir`
-v
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
 
-## `/storage/emulated/0/Documents/cmdclick` <a id="root_dir_path"></a>
+
+
+## `~` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
 
-In bellow, express as "~"
 
 
 ## `~/AppDir`
@@ -45,8 +45,6 @@ Include app directory
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
-v
-## `~/AppDir`
 ## `~/AppDir`
 v
 ## `~/AppDir`
@@ -54,5 +52,5 @@ v
 ## `~/AppDir`
 ## `~/AppDir`
 ## `~/AppDir`
-
+## `~/AppDir`
 
