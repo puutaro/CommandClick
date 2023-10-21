@@ -25,7 +25,7 @@ jsEdit.updateEditText(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| updateVariableName | string | variable name you wont to update |
+| updateVariableName | string | [cmd variable](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) name you wont to update |
 | updateVariableValue | string | update value string |
 
 
