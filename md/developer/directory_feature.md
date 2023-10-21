@@ -20,7 +20,7 @@ Table
 
 Root directory for cmdclick
 
-`~` is `/storage/emulated/0/Documents/cmdclick` here
+~ is `/storage/emulated/0/Documents/cmdclick` here
 
 
 ## `~/AppDir` <a id="app_dir"></a>
