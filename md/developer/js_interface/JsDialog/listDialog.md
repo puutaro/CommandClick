@@ -1,4 +1,4 @@
-# listJsDialog
+# listDialog
 
 
 Table
@@ -16,7 +16,7 @@ Show list dialog
 
 ```js.js
 
-jsDialog.listJsDialog(
+jsDialog.listDialog(
 	listSource: String(tab sepalate)
 )
 
@@ -31,7 +31,7 @@ jsDialog.listJsDialog(
 ex1)
 
 ```js.js
-jsDialog.listJsDialog(
+jsDialog.listDialog(
 	"${el1}\t${el2}\t${el3}\t.."
 );
 ```
