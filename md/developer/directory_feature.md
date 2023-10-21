@@ -9,7 +9,7 @@ Here introduce feature by directory
 Table
 -----------------
 * [~](#root_dir_path)
-* [~/AppDir](#app_dir)
+* [`~/AppDir`](#app_dir)
 * [Argument](#argument)
   
 
