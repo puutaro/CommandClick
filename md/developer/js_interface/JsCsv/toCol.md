@@ -2,11 +2,10 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
-## Overview
+## Result
 
 Get colList sepalated by tab  
 
@@ -16,7 +15,7 @@ jsCsv.toCol(
   colNum: Int,
   startRowNumSource: Int,
   endRowNumSource: Int,
-    )
+)
   -> colList sepalated by tab       
 ```
 
@@ -28,10 +27,6 @@ jsCsv.toCol(
 | colNum | int | get col index |
 | startRowNumSource | int | get row index: `0` -> start row index |
 | endRowNumSource | int | get row index: `0` -> end row index |
-
-## Result
-
-colList sepalated by tab  
 
 
 ex1) with header
