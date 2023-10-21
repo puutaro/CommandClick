@@ -2,13 +2,12 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
-## Overview
+## Result
 
-Get headerList sepalated by tab
+Get headerList sepalated by tab 
 
 ```js.js
 jsCsv.toHeaderRow(
@@ -25,11 +24,7 @@ jsCsv.toHeaderRow(
 | -------- | -------- | -------- |
 | tag | string | csv data tag that you want to take |
 | startColNumSource | int | start col index: `0` -> start index |
-| endColNumSource | int | end col index: `0` -> end index  |
-
-## Result
-
-Get headerList sepalated by tab  
+| endColNumSource | int | end col index: `0` -> end index  | 
 
 
 ex1) 
