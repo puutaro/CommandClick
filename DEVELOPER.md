@@ -13,6 +13,7 @@ Table of Contents
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
 * [Labeling section](#labeling-section)
+* [Cmd variable](#cmd-variable)
 * [Setting variable](#setting-variable)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
@@ -45,8 +46,10 @@ Table of Contents
 - setting variable contents  
   -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
-- cmd variable contents  
-  user difinition setting variables  
+- cmd variable contents
+
+  -> [cmd variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/cmd_variables.md)
+
 
 - script contents  
   `javascript`' or `shellscript`' contents
@@ -57,6 +60,10 @@ Table of Contents
 This section is description for `fannel`(js or shell file enforced by `CommandClick`).
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
+
+### Cmd variable
+
+User difinition setting variables  
 
 ### Setting variable 
 
