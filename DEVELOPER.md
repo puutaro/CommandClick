@@ -13,7 +13,7 @@ Table of Contents
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
 * [Labeling section](#labeling-section)
-* [Cmd variable](#cmd-variable)
+* [Cmd variable](#cmd-variables)
 * [Setting variable](#setting-variable)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
