@@ -25,7 +25,7 @@ jsEdit.removeFromEditHtml(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| editPath | string | [edit site](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md#html-automaticaly-creation-command-to-edit-target-edit-file) source tsv path |
+| editPath | string | [edit site](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/JsIntent/launchEditSite.md) source tsv path |
 | removeUri | string | remove uri |
 
 ex1)
