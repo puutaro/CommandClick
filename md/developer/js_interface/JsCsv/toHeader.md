@@ -2,11 +2,10 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
-## Overview
+## Result
 
 Get schema name in header
 
@@ -24,11 +23,7 @@ jsCsv.toHeader(
 | arg name | type | description |
 | -------- | -------- | -------- |
 | tag | string | csv data tag that you want to take |
-| colNum | int | schema index in header |
-
-## Result
-
-schema name   
+| colNum | int | schema index in header | 
 
 
 ex1) 
