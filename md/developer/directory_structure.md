@@ -20,10 +20,10 @@ Table
   * [`~/conf/monitor`](#conf_monitor)
   * [`~/conf/repository`](#conf_repository)
 * [`~/ubuntu`](#ubuntu)  
- * [`~/ubuntu/backup`](#ubuntu_backup)  
+  * [`~/ubuntu/backup`](#ubuntu_backup)  
 * [`~/temp`](#temp)
- * [`~/temp/cmd`](#temp_cmd)
- * [`~/temp/download`](#temp_download)
+  * [`~/temp/cmd`](#temp_cmd)
+  * [`~/temp/download`](#temp_download)
   
 ## `~` <a id="root_dir_path"></a>
 
