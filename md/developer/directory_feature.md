@@ -19,9 +19,12 @@ Table
   * [`~/conf/ccimport`](#conf_ccimport)
   * [`~/conf/monitor`](#conf_monitor)
   * [`~/conf/repository`](#conf_repository)
-
-
-
+* [`~/ubuntu`](#ubuntu)  
+ * [`~/ubuntu/backup`](#ubuntu_backup)  
+* [`~/temp`](#temp)
+ * [`~/temp/cmd`](#temp_cmd)
+ * [`~/temp/download`](#temp_download)
+  
 ## `~` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
@@ -81,6 +84,24 @@ Include [fannel](https://github.com/puutaro/CommandClick/blob/master/md/develope
 
 - [Install fannel](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)
 
-- 
+### `~/ubuntu` <a id="ubuntu"></a>
 
+Include about ubuntu
 
+### `~/ubuntu/backup` <a id="ubuntu_backup"></a>
+
+Include ubuntu' backup rootfs
+
+### `~/temp` <a id="temp"></a> 
+
+Include temp use directorys
+
+### `~/temp/cmd` <a id="temp_cmd"></a> 
+
+Include ubuntu's foreground exec shell file
+
+- `~/temp/cmd/cmd.sh` -> ubuntu's foreground exec shell file  
+
+### `~/temp/download` <a id="temp_download"></a> 
+
+temp download file to be removed in next download
