@@ -4,7 +4,7 @@
 Table
 -----------------
 * [Overview](#overview)
-* [Argument](#argument
+* [Argument](#argument)
 * [Result](#result)
 
 
