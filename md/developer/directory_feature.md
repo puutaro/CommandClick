@@ -9,48 +9,21 @@ Here introduce feature by directory
 Table
 -----------------
 * [~](#root_dir_path)
+* [~/AppDir](#app_dir)
 * [Argument](#argument)
-* 
-
-
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-v
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
+  
 
 
 
-## `~` <a id="root_dir_path"></a>
+
+## `/storage/emulated/0/Documents/cmdclick` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
 
+`~` is `/storage/emulated/0/Documents/cmdclick` here
 
 
-## `~/AppDir`
+## `~/AppDir` <a id="app_dir"></a>
 
 Include app directory
-
-
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-v
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
-## `~/AppDir`
 
