@@ -5,7 +5,6 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-* [Result](#result)
 
 ## Overview
 
@@ -29,10 +28,6 @@ jsCurl.get(
 | queryParameter | string | queryParameter to be sepalated by `&` |
 | header | string | header to be sepalated by tab |
 | Timeout | int | timeout mili sec |
-
-## Result
-
-`Get` request response string
 
 
 ex1) 
