@@ -7,9 +7,8 @@ Table
 
 ## Result
 
-Download text or pdf file image to `/storage/emulated/0/Document/cmdclick/temp/download`
+Download text or pdf file image to temp [download directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#temp_download)
 
-- `/storage/emulated/0/Document/cmdclick/temp/download` is temp downlaod directory to be delete automaticaly in next download
 
 
 ```js.js
