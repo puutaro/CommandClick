@@ -48,7 +48,7 @@ Table of Contents
 
 - cmd variable contents
 
-  -> [cmd variable](https://github.com/puutaro/CommandClick/edit/master/DEVELOPER.md#cmd-variables)
+  -> [cmd variable](#cmd-variables)
 
 
 - script contents  
