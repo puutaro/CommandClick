@@ -61,7 +61,7 @@ This section is description for `fannel`(js or shell file enforced by `CommandCl
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
-### Cmd variable
+### Cmd variables
 
 User difinition setting variables  
 
