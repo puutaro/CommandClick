@@ -2,12 +2,11 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
 
-## Overview
+## Result
 
 Get header string sliced with tab delimiter   
 
@@ -28,11 +27,6 @@ jsCsv.sliceHeader(
 | startColNumSource | string | start col index: `0` -> start index |
 | endColNumSource | string | end col index: `0` -> end index |
 | headerRow | string | header string sepalated by tab |
-
-## Result
-
-header string sliced with tab delimiter
-
 
 
 ex1) 
