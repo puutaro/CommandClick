@@ -7,7 +7,7 @@ Table
 
 ## Result
 
-Download text or pdf file image to temp [download directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#temp_download)
+Download text or pdf file image to [temp download directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#temp_download)
 
 
 
