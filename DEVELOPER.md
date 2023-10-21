@@ -13,8 +13,8 @@ Table of Contents
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
 * [Labeling section](#labeling-section)
-* [Cmd variable](#cmd-variables)
-* [Setting variable](#setting-variable)
+* [Cmd variables](#cmd-variables)
+* [Setting variables](#setting-variable)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
@@ -48,7 +48,7 @@ Table of Contents
 
 - cmd variable contents
 
-  -> [cmd variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/cmd_variables.md)
+  -> [cmd variable](https://github.com/puutaro/CommandClick/edit/master/DEVELOPER.md#cmd-variables)
 
 
 - script contents  
