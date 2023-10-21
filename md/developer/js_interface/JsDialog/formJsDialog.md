@@ -31,6 +31,9 @@ jsDialog.formDialog(
 | setVariableTypes  | string | tab sepalated [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) |
 | commandVariables | string | tab sepalated [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) |
 
+- In this feature, cannot use some [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) with dialog and button 
+
+
 ## Result
 
 form string with newline
