@@ -25,7 +25,7 @@ jsEdit.updateSpinner(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| updateVariableName | string | [cmd variable](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) you want to update |
+| updateVariableName | string | [cmd variable](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables) name you want to update |
 | variableValue | string | update spinner value string |
 
 
