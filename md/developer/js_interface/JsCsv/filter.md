@@ -4,7 +4,6 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-* [Result](#result)
 
 
 ## Overview
@@ -41,10 +40,7 @@ jsCsv.filter(
 
 - left, condition, right sepalated by `,` 
 - Each condition concat by tab
-
-## Result
-
-Save filterd tsv instance with tag, also header  
+ 
 
 
 ex1) 
