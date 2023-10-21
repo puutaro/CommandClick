@@ -2,12 +2,11 @@
 
 Table
 -----------------
-* [Overview](#overview)
-* [Argument](#argument)
 * [Result](#result)
+* [Argument](#argument)
 
 
-## Overview
+## Result
 
 Save column selected tsv instance with tag, also header  
 
@@ -32,11 +31,6 @@ jsCsv.selectColumn(
 ```
 {column1}\t{column2}\t{column3}\t..
 ```
-
-
-## Result
-
-Save column selected tsv instance with tag, also header  
 
 
 ex1) 
