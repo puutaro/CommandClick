@@ -14,8 +14,8 @@ Show multi select list dialog
 
 jsDialog.multiListDialog(
 	title: String,  
-	currentItemListStr: String(tab sepalate),  
-	preSelectedItemListStr: String(tab sepalate),  
+	currentItemListStr: String,  
+	preSelectedItemListStr: String,  
     )
 ```
 
@@ -23,7 +23,7 @@ jsDialog.multiListDialog(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| title | string | list string sepalated by tab |
+| title | string | title string |
 | currentItemListStr | string | list string sepalated by tab |
 | preSelectedItemListStr | string | selected elements string sepalated by tab |
 
