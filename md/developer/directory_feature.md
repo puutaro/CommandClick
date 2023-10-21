@@ -28,8 +28,7 @@ v
 ## `~/AppDir`
 ## `~/AppDir`
 
-<a id="root_dir_path"></a>
-## `/storage/emulated/0/Documents/cmdclick`
+## `/storage/emulated/0/Documents/cmdclick` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
 
