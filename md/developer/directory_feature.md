@@ -8,11 +8,11 @@ Here introduce feature by directory
 
 Table
 -----------------
-* [/storage/emulated/0/Documents/cmdclick](#/storage/emulated/0/documents/cmdclick)
+* [/storage/emulated/0/Documents/cmdclick](#|storage|emulated|0|documents|cmdclick)
 * [Argument](#argument)
 * 
 
-## `/storage/emulated/0/Documents/cmdclick`
+## `|storage|emulated|0|Documents|cmdclick`
 
 Root directory for cmdclick
 
