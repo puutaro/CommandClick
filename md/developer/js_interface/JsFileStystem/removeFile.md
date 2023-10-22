@@ -1,4 +1,4 @@
-# writeLocalFile
+# removeFile
 
 Table
 -----------------
@@ -9,13 +9,12 @@ Table
 
 ## Result
 
-Write [term](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#select-term) file
+Remove file
 
 
 ```js.js
-jsFileStystem.jsFile(
-	filename: String,
-	terminalOutPutOption: String
+jsFileStystem.removeFile(
+	path: String,
 )
 ```
 
@@ -23,17 +22,14 @@ jsFileStystem.jsFile(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| filename | string | display file name to [term](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#select-term) |
-| terminalOutPutOption | string | [terminalOutput](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md) string: `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` |
-
+| path | string | remove file path |
 
 
 ex1) 
 
 ```js.js
-jsFileStystem.jsFile(
-	"display file name",
-	"NORMAL"
+jsFileStystem.removeFile(
+	"${01}/${001}/removeFile"
 )
 ```
-
+- `${01}`, `${001}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
