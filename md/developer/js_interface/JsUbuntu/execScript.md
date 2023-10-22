@@ -9,7 +9,7 @@ Table
 
 ## Result
 
-Execute shell script on ubuntu fastly
+Execute shell script on ubuntu fastly  
 -> output string
 
 - std in and out to [term_2](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#select-term)
