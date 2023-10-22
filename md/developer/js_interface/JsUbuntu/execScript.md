@@ -1,4 +1,5 @@
 # execScript
+Execute shell script on ubuntu fastly
 
 Table
 -----------------
@@ -9,8 +10,7 @@ Table
 
 ## Result
 
-Execute shell script on ubuntu fastly
--> output string
+output string
 
 - std in and out to [term_2](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#select-term)
 - timeout by 2000 mili sec
