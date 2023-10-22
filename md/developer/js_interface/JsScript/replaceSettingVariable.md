@@ -10,12 +10,12 @@ Table
 ## Result
 
 Replace setting variable
--> [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) contents
+-> js contents
 
 
 ```js.js
 jsScript.replaceSettingVariable(
-  fannelContents: String,
+  jsContents: String,
   replaceTabList: String
 )
 
@@ -25,7 +25,7 @@ jsScript.replaceSettingVariable(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| fannelContents | string | js script contents |
+| jsContents | string | js script contents |
 | replaceTabList | string | variable name to value string list sepalated by tab |
 
 
@@ -34,10 +34,10 @@ ex1)
 
 ```js.js
 jsScript.replaceSettingVariable(
-  "$fannelContents}",
+  "$jsContents}",
   "replaceValName1=aa\treplaceValName2=bb"
 )
--> replaced fannel contents
+-> replaced js contents
 
 ```
 
