@@ -1,0 +1,38 @@
+# getFromEditText
+
+Table
+-----------------
+
+* [Result](#overview)
+* [Argument](#argument)
+
+
+## Result
+
+Get target variable value stirng  from view
+
+
+
+```js.js
+
+jsEdit.getFromEditText(
+  targetVariableName: String,
+)
+      
+```
+
+## Argument
+
+| arg name | type | description |
+| -------- | -------- | -------- |
+| targetVariable | string | target variable string |
+
+
+ex1)
+
+```js.js
+jsEdit.getFromEditText(
+  "targetVariableName1",
+);
+
+```

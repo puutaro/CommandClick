@@ -13,7 +13,9 @@ Table of Contents
 * [Structure](#structure)
 * [Fannel structure](#fannel-structure)
 * [Labeling section](#labeling-section)
-* [Setting variable](#setting-variable)
+* [Cmd variables](#cmd-variables)
+* [Setting variables](#setting-variable)
+* [Directory structure](#directory-structure)
 * [Import library](#import-library)
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
@@ -28,6 +30,7 @@ Table of Contents
 * [Html tag output](#html-tag-output)
 * [Javascript TroubleShooting](#javascript-troubleshooting)
 * [CommandClick repository](#commandclick-repository)
+* [Glossary](#glossary)
 
 
 ### Structure
@@ -45,8 +48,10 @@ Table of Contents
 - setting variable contents  
   -> [Setting variable](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
-- cmd variable contents  
-  user difinition setting variables  
+- cmd variable contents
+
+  -> [cmd variable](#cmd-variables)
+
 
 - script contents  
   `javascript`' or `shellscript`' contents
@@ -58,12 +63,19 @@ This section is description for `fannel`(js or shell file enforced by `CommandCl
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
+### Cmd variables
+
+User difinition setting variables  
+
 ### Setting variable 
 
   `CommandClick`'s system setting variables  
   
   -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
+### Directory structure
+
+-> [About directory structure](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md)   
   
 
 ### Import library  
@@ -188,6 +200,8 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 [link](https://github.com/puutaro/commandclick-repository)  
 
 
+### Glossary
 
+-> [About glossary](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel)
 
 

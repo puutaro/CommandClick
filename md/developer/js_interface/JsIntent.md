@@ -10,14 +10,24 @@ Enable launch intent from javascript
 
 jsIntent.launchEditSite(
 	editPath: String,
-	srcPath: String,
-	onClickSort: String(true/false),
-	onSortableJs: String(true/false),
-	onClickUrl: String(true/false),
-	filterCode: String,
-	onDialog: String(true/false)
+	extraMapStr: format string (${key1}=value1|${key2}=value2|..),
+	filterCode: javascipt code,
   )
 	- ref: [html automaticaly creation command to edit target edit file]
+
+	ex)
+	jsIntent.launchEditSite(
+		"${edit tsv path}",
+		"srcPath=${src path}|onClickSort=true|onSortableJs=true|onClickUrl=true|onDialog=false",
+		"urlString.startsWith('http');",
+	  )
+	- extraMapStr has key bellow
+	 srcPath: src path for add url
+	 onClickSort: boolean str
+	 onSortableJs: boolean str
+	 onClickUrl: boolean str
+	 onDialog: boolean str
+
 
 jsIntent.launchUrl(
 	urlString: String
