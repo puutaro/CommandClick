@@ -3,7 +3,7 @@
 
 Table
 -----------------
-* [Result](#overview)
+* [Result](#result)
 * [Argument](#argument)
   * [title](#title)
   * [message](#message)
