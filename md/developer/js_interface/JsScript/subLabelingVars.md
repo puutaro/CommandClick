@@ -9,7 +9,7 @@ Table
 
 ## Result
 
-Substitute labeling Section Contents 
+Substitute [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md) contents 
 
 
 ```js.js
