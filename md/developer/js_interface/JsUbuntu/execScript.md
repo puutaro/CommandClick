@@ -42,3 +42,5 @@ jsUbuntu.execScript(
 -> output string
 ```
 
+- `${01}`, `${001}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
+ 
