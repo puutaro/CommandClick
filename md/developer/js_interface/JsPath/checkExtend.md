@@ -10,7 +10,8 @@ Table
 
 ## Result
 
-Boolean (true when including tab separated extend String)
+Check extend  
+-> Boolean (true when including tab separated extend String)
 
 
 ```js.js
