@@ -35,7 +35,7 @@ ex1)
 ```js.js
 jsScript.replaceSettingVariable(
   "$jsContents}",
-  "replaceValName1=aa\treplaceValName2=bb"
+  "editExecute=ON\tonAdBlock=OFF"
 )
 -> replaced js contents
 
