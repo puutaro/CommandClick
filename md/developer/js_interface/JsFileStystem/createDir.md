@@ -1,4 +1,4 @@
-# removeFile
+# createDir
 
 Table
 -----------------
@@ -9,11 +9,11 @@ Table
 
 ## Result
 
-Remove file
+Create file
 
 
 ```js.js
-jsFileStystem.removeFile(
+jsFileStystem.createDir(
 	path: String,
 )
 ```
@@ -22,14 +22,14 @@ jsFileStystem.removeFile(
 
 | arg name | type | description |
 | -------- | -------- | -------- |
-| path | string | remove file path |
+| path | string | craete file path |
 
 
 ex1) 
 
 ```js.js
-jsFileStystem.removeFile(
-	"${01}/${001}/removeFile"
+jsFileStystem.createDir(
+	"${01}/${001}/createDir"
 )
 ```
 - `${01}`, `${001}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
