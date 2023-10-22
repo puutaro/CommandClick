@@ -16,8 +16,8 @@ Check extend
 
 ```js.js
 jsPath.checkExtend(  
-  tag: String,  
-  extendTabSeparateStr: String
+  path: String,  
+  prefix: String
 )
 
 ```
