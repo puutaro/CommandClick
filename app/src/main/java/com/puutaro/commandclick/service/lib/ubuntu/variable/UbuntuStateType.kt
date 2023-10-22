@@ -4,7 +4,7 @@ enum class UbuntuStateType(
     val title: String,
     val message: String,
 ) {
-    WAIT("Wait..", "Wait.."),
+    WAIT("Ubuntu wait..", "Ubuntu wait.."),
     UBUNTU_SETUP_WAIT(
         "Ubuntu Setup, Ok?",
         "Take 5 minutes for install"

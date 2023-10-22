@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.service
 
 import android.app.NotificationChannel
-import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.BroadcastReceiver
@@ -61,7 +60,7 @@ class UbuntuService:
     var monitorScreenJob: Job? = null
     var notificationBuilder:  NotificationCompat.Builder? = null
     var ubuntuCoroutineJobsHashMap = HashMap<String, Job?>()
-    var notificationIdToImportance = NotificationIdToImportance.LOW
+    var notificationIdToImportance = NotificationIdToImportance.HIGH
     val chanelId = ServiceChannelNum.ubuntuServer
     var notificationManager: NotificationManagerCompat? = null
     var cancelUbuntuServicePendingIntent: PendingIntent? = null
@@ -120,7 +119,7 @@ class UbuntuService:
         val channel = NotificationChannel(
             notificationIdToImportance.id,
             notificationIdToImportance.id,
-            NotificationManager.IMPORTANCE_LOW
+            notificationIdToImportance.importance
         )
         notificationManager = NotificationManagerCompat.from(applicationContext)
         notificationManager?.createNotificationChannel(channel)
@@ -130,6 +129,7 @@ class UbuntuService:
         )
             .setSmallIcon(com.puutaro.commandclick.R.drawable.ic_terminal)
             .setAutoCancel(true)
+            .setOnlyAlertOnce(true)
             .setContentTitle(UbuntuStateType.WAIT.title)
             .setContentText(UbuntuStateType.WAIT.message)
             .setDeleteIntent(
