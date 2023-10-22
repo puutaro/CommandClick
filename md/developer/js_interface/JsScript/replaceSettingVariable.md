@@ -9,7 +9,7 @@ Table
 
 ## Result
 
-Replace setting variable
+Replace [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 -> js contents
 
 
