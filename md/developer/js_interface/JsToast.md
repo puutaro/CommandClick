@@ -3,4 +3,4 @@
 
 Show toast message
 
--> Functions
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsToast)
