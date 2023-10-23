@@ -1,5 +1,6 @@
 # JsPdf
 
-Pdf interface
+Pdf interface  
+For example, extract text from pdf file.  
 
--> Functions
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsPdf)
