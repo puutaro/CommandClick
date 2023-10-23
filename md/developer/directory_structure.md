@@ -100,7 +100,7 @@ Include temp use directorys
 
 Include ubuntu's foreground exec shell file
 
-- `~/temp/cmd/cmd.sh` -> ubuntu's foreground exec shell file  
+- [ubuntu's foreground exec shell file](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#foreground_cmd_script)  
 
 ### `~/temp/download` <a id="temp_download"></a> 
 
