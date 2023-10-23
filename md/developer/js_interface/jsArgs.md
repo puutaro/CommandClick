@@ -3,7 +3,7 @@
 # JsArgs
 
 This interfce pass argment to script.  
-Mainly, this interface is used with 'BTN' option in `setVariable` .  
+Mainly, this interface is used with 'BTN' option in [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) .  
 
 
 ```js.js
@@ -19,6 +19,8 @@ jsArgs.set(
 	-> argment set (ex "{arg1}\t{arg2}\t..")  
 
 ```
+
+- `${0}` -> [pre reserved  word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
 
 
 - example 
