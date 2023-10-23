@@ -115,7 +115,7 @@ CommandClick is managed by files data
 So, each file data can use in CommandClick's development
 
 -> [fileApi](https://github.com/puutaro/CommandClick/blob/master/md/developer/apiFiles.md#apifiles)
-  
+
 
 ### JavaScript interface
 
@@ -128,6 +128,11 @@ This, so colled, android app row code library.
 ### Javascript pre reserved word
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+
+
+### Custom shell command  
+
+-> [Custom shell command]()
 
 
 ### am commands
