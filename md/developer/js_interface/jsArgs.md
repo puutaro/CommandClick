@@ -3,7 +3,7 @@
 # JsArgs
 
 This interfce pass argment to script.  
-Mainly, this interface is used with button `setVariable` option.  
+Mainly, this interface is used with 'BTN' option in [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) .  
 
 
 ```js.js
@@ -20,13 +20,15 @@ jsArgs.set(
 
 ```
 
+- `${0}` -> [pre reserved  word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
+
 
 - example 
 
 ```js.js
 
 /// SETTING_SECTION_START
-setVariableTypes="buttonText:BTN=cmd=jsf '${0}' firstArgs second args!label=this"
+setVariableTypes="buttonText:BTN=cmd=jsf '${0}' firstArgs second_args!label=this"
 /// SETTING_SECTION_END
 
 
@@ -36,7 +38,7 @@ buttonText=""
 
 
 let args = jsArgs.get().split("\t");
-const firstArgs = args.at(0);
-const secondArgs = args.at(0);
+const firstArgs = args.at(0); // firstArgs
+const secondArgs = args.at(0); // second_args
 
 ```
