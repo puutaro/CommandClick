@@ -13,7 +13,7 @@ Table
   * [`~/AppDir/../system`](#app_dir_system_dir)
     * [`~/AppDir/../system/url`](#app_dir_system_dir_url_dir)
     * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)  
-* [`~/conf`](#conf)(#conf)  
+* [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
   * [`~/conf/ccimport`](#conf_ccimport)
