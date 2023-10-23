@@ -1,35 +1,6 @@
 # JsListSelect
 
 
-This interface exist for `LSB`, `ELSB`, `GB` and `MSB` `setVariableTypes` option (ref [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types.md)
+This interface exist for `LSB`, `ELSB`, `GB` and `MSB` [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) option
 
- 
-```js.js
-
-
-
- 	- update or remove method for editable list file checkbox
- 	jsListSelect.updateListFileCon(
-		targetListFilePath: String,
-		itemText: String
-	  )
-		- update `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
-
-
-	jsListSelect.removeItemInListFileCon(
-		targetListFilePath: String,
-		itemText: String
-	  )
-		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` 
-
-
-	jsListSelect.wrapRemoveItemInListFileCon(
-                targetListFilePath: String,  
-                removeTargetItem: String,  
-                currentScriptPath: String,  
-                replaceTargetVariable: String = String(),  
-                defaultVariable: String = String()  
-          )
-		- remove item text from `listPath` file in `LSB`, `ELSB`, `GB` and `MSB` and update View
-
-```
+ -> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsListSelect)

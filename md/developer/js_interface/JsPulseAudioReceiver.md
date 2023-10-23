@@ -1,19 +1,6 @@
 
 # JsPulseAudioReceiver
 
-Pulse audio receiver
+Pulse audio receiver  
 
-
-```js.js
-
-JsPulseAudioReceiver.start(
-  pcIpv4Address: string,
-  )
-  -> start pulse audio receiver
-
-
-JsPulseAudioReceiver.stop()
-  -> stop pulse audio receiver
-
-```
-
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsPulseAudioReceiver)

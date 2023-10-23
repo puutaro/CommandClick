@@ -1,22 +1,7 @@
 
 # JsUrl
 
-Interface about intarnet url.  
+Interface about intarnet url.   
+For example, load url, and convert javascript to bookmarklet, and etc.   
 
-```js.js
-
-jsUrl.makeJsUrl(
-  jsPath: String
-  )
-  -> javascript:(
-    function() { ${jsPathCoontents} }
-       )();
-
-
-jsUrl.loadUrl(
-  urlString: String
-        )
-  -> load url by webview  
-
-
-```
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsUrl)

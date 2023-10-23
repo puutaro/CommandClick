@@ -3,17 +3,4 @@
 
 Show toast message
 
-
-```js.js
-
-jsToast.short(
-  contents: string
-  )
-  - short toast
-
-jsToast.long(
-  contents: string
-  )
-  - long toast
-
-```
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsToast)

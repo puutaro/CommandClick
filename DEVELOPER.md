@@ -20,10 +20,10 @@ Table of Contents
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
 	* [WEB import](#web-import)
-* [am commands](#am-commands)
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
+* [am commands](#am-commands)
 * [Include Javascript Library](#include-javascript-library)
 * [Include css Library](#include-css-library)
 * [Html tag output](#html-tag-output)
@@ -108,25 +108,18 @@ ccimport {URL}
 
 * It is possible to download by curl {URL}
 
-### am commands
-
-`CommandClick` has broadcast am command bellow.
-
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
-
 
 ### File api  
-`CommandClick` automaticaly create files in `App directory`/`system`/`url`. This is used by system, alse is userinterface for app signal.  
-- `cmdclickUrlHistory`   
-	- CommandClick use recent used url launch etc.  
-- `urlLoadFinished`  
-	- This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.]  
-- monitor update file path  
-	- `/storage/emulated/0/Documents/cmdclick/temp/monitor/updateMonitor.txt`   
+
+CommandClick is managed by files data
+So, each file data can use in CommandClick's development
+
+-> [fileApi](https://github.com/puutaro/CommandClick/blob/master/md/developer/apiFiles.md#apifiles)
+
 
 ### JavaScript interface
 
--> [javascript interface directory](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface)  
+-> [javascript interfaces](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface)  
 
 `CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
 This, so colled, android app row code library.
@@ -135,6 +128,18 @@ This, so colled, android app row code library.
 ### Javascript pre reserved word
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+
+
+### Custom shell command  
+
+-> [Custom shell command]()
+
+
+### am commands
+
+`CommandClick` has broadcast am command bellow.
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
 
 
 ### Include Javascript Library  

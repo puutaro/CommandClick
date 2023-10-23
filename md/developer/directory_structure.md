@@ -13,7 +13,7 @@ Table
   * [`~/AppDir/../system`](#app_dir_system_dir)
     * [`~/AppDir/../system/url`](#app_dir_system_dir_url_dir)
     * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)  
-* [`~/conf`](#conf)(#conf)  
+* [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
   * [`~/conf/ccimport`](#conf_ccimport)
@@ -24,7 +24,10 @@ Table
 * [`~/temp`](#temp)
   * [`~/temp/cmd`](#temp_cmd)
   * [`~/temp/download`](#temp_download)
-  
+  * [`~/temp/monitor`](#temp_monitor)
+  * [`~/temp/ubuntuService`](#temp_ubuntu_service)
+
+
 ## `~` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
@@ -100,8 +103,22 @@ Include temp use directorys
 
 Include ubuntu's foreground exec shell file
 
-- `~/temp/cmd/cmd.sh` -> ubuntu's foreground exec shell file  
+- [ubuntu's foreground exec shell file](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#foreground_cmd_script)  
 
 ### `~/temp/download` <a id="temp_download"></a> 
 
 temp download file to be removed in next download
+
+
+### `~/temp/monitor` <a id="temp_monitor"></a>  
+
+Include temp monitor update contents file 
+
+- [updateMonitor.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#update_monitor)
+
+### `~/temp/ubuntuService` <a id="temp_ubuntu_service"></a>  
+
+Include ubuntu service temp files 
+
+- [isActiveUbuntuService.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#is_active_ubuntu_service)
+

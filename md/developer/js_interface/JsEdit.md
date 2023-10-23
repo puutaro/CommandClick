@@ -1,37 +1,7 @@
 # JsEdit
 
-`edit component` like `setVariableType` edit interface  
+Component made by [setVariableType](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) edit interface  
+For example, replace edit field text with new text, change selected value in select box, and etc. 
 
-```js.js
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsEdit)
 
-jsEdit.getFromEditText(
-  targetVariableName: String,
-    )
-  -> get target variable value stirng  from view
-    
-jsEdit.updateEditText(
-  updateVariableName: String,
-  updateVariableValue: String
-  )
-  - update `updateVariableName` view value
-
-jsEdit.updateSpinner(
-  updateVariableName: String,
-  variableValue: String
-  )
-  - update `updateVariableName` spinner view selected value
-
-jsEdit.updateByVariable(
-  fannelScriptPath: String,
-  targetVariableName: String,
-  updateVariableValue: String,
-    ) 
-      -> update target variable  value
-
-jsEdit.removeFromEditHtml(
-  editPath: String(edit site source path),
-  removeUri: String(remove uri)
-)
-  -> remoev uri from edit site source  
-
-```

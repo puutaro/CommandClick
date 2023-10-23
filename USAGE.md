@@ -207,12 +207,7 @@ More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/mast
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/b49cc5ff-27e4-4362-a3d7-b12ba5af2eb4" width="250">  
 
-| type | description |
-| --------- | --------- |
-| `term_1` | starndard output |
-| `term_2` | error and system output |
-| `term_3` | free |
-| `term_4` | /dev/null |
+- [term type](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#output_monitor)
 
 ### Change app dir
   

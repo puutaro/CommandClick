@@ -1,14 +1,6 @@
 # JsPdf
 
-Pdf interface
+Pdf interface  
+For example, extract text from pdf file.  
 
-
-```js.js
-
-jsPath.extractText(  
-    path: pdf path string  
-     )
-  -> extracted text
-
-```
-
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsPdf)

@@ -1,26 +1,7 @@
 
 # JsUtil
 
+This is utility.  
+For example, copy & set clipboard, and etc.  
 
-```js.js
-
-jsUtil.sleep(
-  sleepMiriTime: Int
-  )
-  - sleep miri seconds
-
-jsUtil.copyToClipboard(
-  copyString: String,
-  fontSize: Int
-  )
-  - copy to clipboard
-
-jsUtil.echoFromClipboard()
-  -> primary clipboard string
-
-jsUtil.convertDateTimeToMiliTime(
-  datetime: String(YYYY-MM-DDThh:mm)
-   )
-  -> militime
-
-```
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsUtil)
