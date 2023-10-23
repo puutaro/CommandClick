@@ -25,6 +25,7 @@ Table
   * [`~/temp/cmd`](#temp_cmd)
   * [`~/temp/download`](#temp_download)
   * [`~/temp/monitor`](#temp_monitor)
+  * [`~/temp/ubuntuService`](#temp_ubuntu_service)
 
 
 ## `~` <a id="root_dir_path"></a>
@@ -114,3 +115,10 @@ temp download file to be removed in next download
 Include temp monitor update contents file 
 
 - [updateMonitor.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#update_monitor)
+
+### `~/temp/ubuntuService` <a id="temp_ubuntu_service"></a>  
+
+Include ubuntu service temp files 
+
+- [isActiveUbuntuService.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#is_active_ubuntu_service)
+
