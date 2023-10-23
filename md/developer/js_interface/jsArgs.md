@@ -3,7 +3,7 @@
 # JsArgs
 
 This interfce pass argment to script.  
-Mainly, this interface is used with button `setVariable` option.  
+Mainly, this interface is used with 'BTN' option in `setVariable` .  
 
 
 ```js.js
