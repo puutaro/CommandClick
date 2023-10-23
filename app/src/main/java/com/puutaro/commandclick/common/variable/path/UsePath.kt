@@ -38,7 +38,7 @@ object UsePath {
     private const val cmdclickTmpUbuntuServiceDirName = "ubuntuService"
     private const val cmdclickTempUbuntuServiceRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpUbuntuServiceDirName"
     val cmdclickTempUbuntuServiceDirPath = "$rootPath/$cmdclickTempUbuntuServiceRelativeDirPath"
-    const val cmdclickTmpUbuntuServiceActiveFileName = "isActinveUbuntuService.txt"
+    const val cmdclickTmpUbuntuServiceActiveFileName = "isActiveUbuntuService.txt"
     const val cmdclickTmpUbuntuMonitorOff = "isMonitorOff.txt"
     const val cmdclickTmpUpdateMonitorFileName = "updateMonitor.txt"
     private const val cmdclickTmpCreateDirName = "create"

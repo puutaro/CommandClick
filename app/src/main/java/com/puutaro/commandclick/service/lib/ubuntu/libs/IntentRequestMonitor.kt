@@ -815,7 +815,6 @@ object IntentRequestMonitor {
         : Specify about button
         option
             * enable this option by concat '${comaKeySeparator}'
-            * enable multiple spedified up to 5 with concat ${elementSeparator}
             ${label}: button label
                 spedify icon by bellow MACRO in media style
                 MACRO: ${ButtonNameToIcon.values().joinToString(", ")}
