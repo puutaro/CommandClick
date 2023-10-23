@@ -1,4 +1,4 @@
-# ubuntuFileApi
+# ubuntuFileApis
 
 Support file for `CommandClick`'s ubuntu
 For example, alternative data base, etc..
