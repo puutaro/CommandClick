@@ -40,5 +40,5 @@ const secondArgs = args.at(0); // second_args
 
 ```
 
-- `jsArgs.get` -> [jsArgs.get](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/JsArgs/get.md)
+- `jsArgs.get` -> [jsArgs.get](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsArgs/get.md)
 - `${0}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
