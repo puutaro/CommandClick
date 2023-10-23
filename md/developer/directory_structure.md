@@ -24,7 +24,9 @@ Table
 * [`~/temp`](#temp)
   * [`~/temp/cmd`](#temp_cmd)
   * [`~/temp/download`](#temp_download)
-  
+  * [`~/temp/monitor`](#temp_monitor)
+
+
 ## `~` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
@@ -105,3 +107,10 @@ Include ubuntu's foreground exec shell file
 ### `~/temp/download` <a id="temp_download"></a> 
 
 temp download file to be removed in next download
+
+
+### `~/temp/monitor` <a id="temp_monitor"></a>  
+
+Include temp monitor update contents file 
+
+- [updateMonitor.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#update_monitor)
