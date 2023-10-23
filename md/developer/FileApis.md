@@ -15,6 +15,7 @@ Table
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
+* [`~/temp/monitor/updateMonitor.txt`](#update_monitor)  
   
 ## `~` <a id="root_dir_path"></a>
 
@@ -75,4 +76,7 @@ Ubuntu' backup rootfs compressed tar
 
 Ubuntu's foreground exec shell file
 
+### `~/temp/monitor/updateMonitor.txt` <a id="update_monitor"></a>  
+
+temp monitor update contents file 
 
