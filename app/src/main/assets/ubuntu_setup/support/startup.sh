@@ -261,21 +261,21 @@ pulseaudioSetup(){
 		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
 		sleep 2
 	done
-	sleep 2
-	retry_times=5
-	for i in \$(seq \${retry_times})
-	do
-		shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
-		case "\${shellCon}" in
-			"") ;;
-			*)	
-				sh -c "\${shellCon}"
-				break
-				;;
-		esac
-		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
-		sleep 2
-	done
+	# sleep 2
+	# retry_times=5
+	# for i in \$(seq \${retry_times})
+	# do
+	# 	shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
+	# 	case "\${shellCon}" in
+	# 		"") ;;
+	# 		*)	
+	# 			sh -c "\${shellCon}"
+	# 			break
+	# 			;;
+	# 	esac
+	# 	echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
+	# 	sleep 2
+	# done
 	# espeak "sound quality test sound quality test"
 	EOF
 }
@@ -317,7 +317,7 @@ install_require_pacakges(){
 install_shell2http(){
 	local package_name="shell2http_1.16.0_linux_arm64.deb"
 	curl \
-		-L https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_arm64.deb \
+		-L "https://github.com/msoap/shell2http/releases/download/v1.16.0/shell2http_1.16.0_linux_arm64.deb" \
 		> "${package_name}"
 	dpkg -i "${package_name}"
 	rm -f "${package_name}"
