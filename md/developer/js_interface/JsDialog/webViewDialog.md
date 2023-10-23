@@ -92,7 +92,7 @@ Support certain js script name macro
 
 - enable 'iconName
 
-copy, search, wheel, history, oeverflow, cancel, file, ok, puzzle, terminal, down, reflesh, edit, setup, shortcut, folda, setting, plus, support, play, share, launch, update
+copy, search, wheel, history, oeverflow, cancel, file, ok, puzzle, terminal, down, reflesh, edit, setup, shortcut, folda, setting, plus, support, play, share, launch, update, info, about
 
 #### Format
 
