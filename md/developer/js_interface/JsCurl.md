@@ -1,7 +1,8 @@
 
 # JsCurl
 
-Execute curl  by javasript
+Execute curl  by javasript  
+For example, download file, send `GET` request
 
 
--> [functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsCurl)
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsCurl)
