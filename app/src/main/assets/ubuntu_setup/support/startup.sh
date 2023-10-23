@@ -266,22 +266,6 @@ pulseaudioSetup(){
 		echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
 		sleep 2
 	done
-	# sleep 2
-	# retry_times=5
-	# for i in \$(seq \${retry_times})
-	# do
-	# 	shellCon="\$(curl 127.0.0.1:${PULSE_HANDLE_SERVER_PORT})"
-	# 	case "\${shellCon}" in
-	# 		"") ;;
-	# 		*)	
-	# 			sh -c "\${shellCon}"
-	# 			break
-	# 			;;
-	# 	esac
-	# 	echo  "[\${i}/\${retry_times}] re-try pulseaudio --start"
-	# 	sleep 2
-	# done
-	# espeak "sound quality test sound quality test"
 	EOF
 }
 
