@@ -26,7 +26,7 @@ jsArgs.set(
 ```js.js
 
 /// SETTING_SECTION_START
-setVariableTypes="buttonText:BTN=cmd=jsf '${0}' firstArgs second args!label=this"
+setVariableTypes="buttonText:BTN=cmd=jsf '${0}' firstArgs second_args!label=this"
 /// SETTING_SECTION_END
 
 
@@ -36,7 +36,7 @@ buttonText=""
 
 
 let args = jsArgs.get().split("\t");
-const firstArgs = args.at(0);
-const secondArgs = args.at(0);
+const firstArgs = args.at(0); // firstArgs
+const secondArgs = args.at(0); // second_args
 
 ```
