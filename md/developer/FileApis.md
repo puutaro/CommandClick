@@ -15,8 +15,10 @@ Table
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
-* [`~/temp/monitor/updateMonitor.txt`](#update_monitor)  
+* [`~/temp/monitor/updateMonitor.txt`](#update_monitor)
+* [`~/temp/ubuntuService/isActiveUbuntuService.txt`](#is_active_ubuntu_service)
   
+
 ## `~` <a id="root_dir_path"></a>
 
 Root directory for cmdclick
@@ -79,4 +81,8 @@ Ubuntu's foreground exec shell file
 ### `~/temp/monitor/updateMonitor.txt` <a id="update_monitor"></a>  
 
 temp monitor update contents file 
+
+### `~/temp/ubuntuService/isActiveUbuntuService.txt` <a id="is_active_ubuntu_service"></a>  
+
+Ubuntu service active check. On active, put  
 
