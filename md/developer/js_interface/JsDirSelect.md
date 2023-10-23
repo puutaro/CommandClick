@@ -1,19 +1,6 @@
 # JsDirSelect
 
-This interface exist for `FCB`, `FSB` setVariableTypes` option (ref [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types.md)
+This interface exist for `FCB`, `FSB` [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/set_variable_types.md) option 
 
+-> [Functions](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface/functions/JsDirSelect)
 
-```js.js
-
-execEditTargetFileName(  
-        targetVariable: rename target command variable string,  
-        renameVariable: rename destination command variable String,  
-        targetDirPath: file select direcoty path,  
-        settingVariables: setting variable with tab sepalator,   
-        commandVariables: command variable with tab sepalator, 
-        scriptFilePath: fannel path string,
-  title: title string
-    )
-  - edit targetVariable value(directory name) and update view by form dialog
-
-```
