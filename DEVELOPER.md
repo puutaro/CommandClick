@@ -110,13 +110,12 @@ ccimport {URL}
 
 
 ### File api  
-`CommandClick` automaticaly create files in `App directory`/`system`/`url`. This is used by system, alse is userinterface for app signal.  
-- `cmdclickUrlHistory`   
-	- CommandClick use recent used url launch etc.  
-- `urlLoadFinished`  
-	- This is made when url load finished. When you make `fannenl`(javascript, shell, and html application), you may use this.]  
-- monitor update file path  
-	- `/storage/emulated/0/Documents/cmdclick/temp/monitor/updateMonitor.txt`   
+
+CommandClick is managed by files data
+So, each file data can use in CommandClick's development
+
+-> [fileApi](https://github.com/puutaro/CommandClick/blob/master/md/developer/apiFiles.md#apifiles)
+  
 
 ### JavaScript interface
 
