@@ -20,10 +20,10 @@ Table of Contents
 	* [Local path import](#local-path-import)
 	* [Assets import](#assets-import)
 	* [WEB import](#web-import)
-* [am commands](#am-commands)
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
+* [am commands](#am-commands)
 * [Include Javascript Library](#include-javascript-library)
 * [Include css Library](#include-css-library)
 * [Html tag output](#html-tag-output)
@@ -108,12 +108,6 @@ ccimport {URL}
 
 * It is possible to download by curl {URL}
 
-### am commands
-
-`CommandClick` has broadcast am command bellow.
-
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
-
 
 ### File api  
 `CommandClick` automaticaly create files in `App directory`/`system`/`url`. This is used by system, alse is userinterface for app signal.  
@@ -135,6 +129,13 @@ This, so colled, android app row code library.
 ### Javascript pre reserved word
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+
+
+### am commands
+
+`CommandClick` has broadcast am command bellow.
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
 
 
 ### Include Javascript Library  
