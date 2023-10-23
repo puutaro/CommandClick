@@ -12,6 +12,7 @@ import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
@@ -26,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
+import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -37,6 +39,7 @@ class ToolBarSettingButtonControl(
     readSharePreffernceMap: Map<String, String>,
 ){
     private val context = cmdIndexFragment.context
+    private val cmdSearchEditText = binding.cmdSearchEditText
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -195,7 +198,13 @@ class ToolBarSettingButtonControl(
                         String()
                     )
                 }
-
+                MenuEnums.USAGE.itemName -> {
+                    UrlTexter.launch(
+                        cmdIndexFragment,
+                        cmdSearchEditText,
+                        WebUrlVariables.commandClickUsageUrl
+                    )
+                }
                 MenuEnums.EDIT_STARTUP.itemName -> {
                     ScriptFileEdit.edit(
                         cmdIndexFragment,
@@ -226,6 +235,7 @@ private enum class MenuEnums(
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
+    USAGE("usage", R.drawable.icons8_info),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     SETTING("setting",R.drawable.icons8_setting),
     //    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),

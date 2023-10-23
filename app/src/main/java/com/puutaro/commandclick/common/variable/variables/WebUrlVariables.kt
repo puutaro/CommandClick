@@ -13,7 +13,9 @@ class WebUrlVariables {
         val filePrefix = "file:"
         val slashPrefix = "/"
         val jsPrefix = "javascript:"
-        val commandClickGitUrl =
+        val commandClickUsageUrl =
+            "https://github.com/puutaro/CommandClick/blob/master/USAGE.md#command-click-usage"
+        val commandClickFirstLaunchUrl =
             "https://github.com/puutaro/CommandClick/tree/master#setup-ubuntu"
         val commandClickRepositoryUrl =
             "https://github.com/puutaro/commandclick-repository.git"
@@ -24,7 +26,7 @@ class WebUrlVariables {
         fun makeUrlHistoryFile(
             dirPath: String,
         ){
-            val urlHistoryContents = "CommandClick\t$commandClickGitUrl\n"
+            val urlHistoryContents = "CommandClick\t$commandClickFirstLaunchUrl\n"
             val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
             if(
                 File(

@@ -9,20 +9,21 @@ import com.puutaro.commandclick.fragment.EditFragment
 object UrlTexter {
     fun launch(
         fragment: Fragment,
-        cmdSearchEditText: AutoCompleteTextView,
+        cmdSearchEditText: AutoCompleteTextView? = null,
         inputUrl: String?
     ){
         if(inputUrl.isNullOrEmpty()) return
         val queryUrl = WebUrlVariables.queryUrl
-        val enableStartHttp = inputUrl.startsWith("http") == true
+        val enableStartHttp = inputUrl.startsWith("http")
         val searchUrl = if(
             enableStartHttp
         ) inputUrl
         else queryUrl + inputUrl
         if(
             enableStartHttp
+            && cmdSearchEditText != null
         ) cmdSearchEditText.setText(inputUrl)
-        else cmdSearchEditText.setText(inputUrl)
+//        else cmdSearchEditText.setText(inputUrl)
         when(fragment) {
             is CommandIndexFragment -> {
                 val listener = fragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener

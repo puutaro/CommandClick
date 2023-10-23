@@ -13,6 +13,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
@@ -39,6 +40,7 @@ class ToolbarButtonProducerForEdit(
 ) {
 
     private val context = editFragment.context
+    private val cmdWebSearchEditText = binding.webSearch.cmdWebSearchEditText
     private val insertImageButtonParam = LinearLayout.LayoutParams(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -566,6 +568,13 @@ class ToolbarButtonProducerForEdit(
                 MenuEnumsForEdit.SELECT_TERM.itemName -> {
                     SelectTermDialog.launch(editFragment)
                 }
+                MenuEnumsForEdit.USAGE.itemName -> {
+                    UrlTexter.launch(
+                        editFragment,
+                        null,
+                        WebUrlVariables.commandClickUsageUrl
+                    )
+                }
                 MenuEnumsForEdit.RESTART_UBUNTU.itemName -> {
                     UbuntuServiceManager.launch(
                         editFragment.activity
@@ -586,5 +595,6 @@ private enum class MenuEnumsForEdit(
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     KILL("kill", R.drawable.cancel),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
+    USAGE("usage", R.drawable.icons8_info),
     SETTING("setting", R.drawable.icons8_setting),
 }
