@@ -126,7 +126,7 @@ ccimport {URL}
 
 ### JavaScript interface
 
--> [javascript interface directory](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface)  
+-> [javascript interfaces](https://github.com/puutaro/CommandClick/tree/master/md/developer/js_interface)  
 
 `CommandClick` is javascript framework for andorid. Particularly, this methods strongly support your android app development(`fannel` development).  
 This, so colled, android app row code library.
