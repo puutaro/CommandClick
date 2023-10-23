@@ -1,7 +1,7 @@
 
 # JsDialog
 
-Launch dialog 
+Launch dialog   
 This interface is one of the most used interface, becuase dialog is basic intaractive feature.
 
 
