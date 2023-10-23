@@ -1,4 +1,4 @@
-# apiFiles
+# FileApis
 
 `CommandClick` is managed by files data  
 So, each file data can use in CommandClick's development  
