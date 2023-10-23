@@ -15,7 +15,7 @@ Write string contents to file
 ```js.js
 jsFileStystem.writeLocalFile(
 	path: String,
-  contents: String
+	contents: String
 )
 	
 ```
@@ -34,7 +34,7 @@ ex1)
 ```js.js
 jsFileStystem.writeLocalFile(
 	"${01}/${001}/file.txt",
-  `${save contents}`
+	`${save contents}`
 )
 ```
 
