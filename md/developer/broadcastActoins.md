@@ -46,7 +46,7 @@ Launch url in `CommandClick`
 | url | string | url string |
 
 
-## `com.puutaro.commandclick.html.launch` <a id="launch_edit_site_schema"></a>
+## `com.puutaro.commandclick.html.launch` <a id="launch_edit_site"></a>
 
 Launch html to enable edit bellow tsv.  
 
@@ -74,7 +74,7 @@ add src title2\turl2
   
 <img src="https://user-images.githubusercontent.com/55217593/222952726-f5ce0753-f299-44cd-a9b0-a021c56d3b4c.png" width="400">  
 
-### Schema <a id="launch_edit_site"></a>
+### Schema <a id="launch_edit_site_schema"></a>
 
 | schema | type | description | 
 | --------- | --------- | --------- |
