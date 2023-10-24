@@ -132,7 +132,10 @@ This, so colled, android app row code library.
 
 ### Custom shell command  
 
--> [Custom shell command]()
+It is a useful tool for `CommandClick`.
+For example, send broadcast, toast, and etc.  
+
+-> [Custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
 
 
 ### am commands
