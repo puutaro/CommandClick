@@ -12,7 +12,8 @@ Table
 * [`~/AppDir`](#app_dir)
   * [`~/AppDir/../system`](#app_dir_system_dir)
     * [`~/AppDir/../system/url`](#app_dir_system_dir_url_dir)
-    * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)  
+    * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)
+  * [`~/AppDir/../{fannelDir}`](#fannel_dir)
 * [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
@@ -54,6 +55,13 @@ This dir include y-scroll history [app directory](https://github.com/puutaro/Com
 to resotre y-position when you visit site in url history, 
 
 - [No scrill url](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#no-scroll-save-url)
+
+## `~/AppDir/../{fannelDir}`  <a id="fannel_dir"></a>
+
+[Fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) directory path
+
+All fannel main direcotry must be ${fannel name without extend} + "Dir", otherwise cannot controll by `CommandClick`
+
 
 ## `~/conf` <a id="conf"></a>
 
