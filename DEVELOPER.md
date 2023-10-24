@@ -17,9 +17,6 @@ Table of Contents
 * [Setting variables](#setting-variable)
 * [Directory structure](#directory-structure)
 * [Import library](#import-library)
-	* [Local path import](#local-path-import)
-	* [Assets import](#assets-import)
-	* [WEB import](#web-import)
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
@@ -80,34 +77,11 @@ User difinition setting variables
 
 ### Import library  
 
+-> [CC import](https://github.com/puutaro/CommandClick/blob/master/md/developer/cc_import.md)
+
 `CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
 `CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!  
-
-#### Local path import
-
-```js.js
-ccimport {path}   
-```
-
-* current directory -> `./`  
-* move parent direcoty -> ../  
-* other check [Javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)   
-
-#### Assets import
-
-```js.js
-ccimport /android_asset/{relative path}  
-```
-
-#### WEB import
-
-```js.js
-ccimport {URL}  
-```
-
-* It is possible to download by curl {URL}
-
 
 ### File api  
 
