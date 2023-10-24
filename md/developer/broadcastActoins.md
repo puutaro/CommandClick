@@ -7,7 +7,7 @@ Here, introduce these.
 
 Table
 -----------------
-* [`com.puutaro.commandclick.html.launch`](#launch_url)
+* [`com.puutaro.commandclick.url.launch`](#launch_url)
     * [Schema](#launch_url_schema) 
 * [`com.puutaro.commandclick.html.launch`](#launch_edit_site)
     * [Schema](#launch_edit_site_schema) 
@@ -33,7 +33,7 @@ Table
 * [`com.puutaro.commandclick.ubuntu_service.shell2http`](#ubuntu_service_shell2http)
     * [Schema](#ubuntu_service_shell2http_schema)   
 
-## `com.puutaro.commandclick.html.launch` <a id="launch_url"></a>
+## `com.puutaro.commandclick.url.launch` <a id="launch_url"></a>
 
 Launch url in `CommandClick` 
 
@@ -45,8 +45,10 @@ Launch url in `CommandClick`
 | --------- | --------- | --------- |
 | url | string | url string |
 
+- [am command example](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md#url-command)
 
-## `com.puutaro.commandclick.html.launch` <a id="launch_edit_site_schema"></a>
+
+## `com.puutaro.commandclick.html.launch` <a id="launch_edit_site"></a>
 
 Launch html to enable edit bellow tsv.  
 
@@ -74,7 +76,7 @@ add src title2\turl2
   
 <img src="https://user-images.githubusercontent.com/55217593/222952726-f5ce0753-f299-44cd-a9b0-a021c56d3b4c.png" width="400">  
 
-### Schema <a id="launch_edit_site"></a>
+### Schema <a id="launch_edit_site_schema"></a>
 
 | schema | type | description | 
 | --------- | --------- | --------- |
@@ -85,6 +87,8 @@ add src title2\turl2
 | on_click_url | boolean string | enable to jump on click element: `true`/`false` |
 | on_dialog | boolean string | edit target tsv path: `true`/`false` |
 | filter_code | js code to return boolean | js code to filter adding url |
+
+- [am command example](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md#html-automaticaly-creation-command-to-edit-target-edit-file)
 
 ## `com.puutaro.commandclick.url.monitor_text_path` <a id="monitor_text_path"></a>
 

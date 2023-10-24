@@ -14,6 +14,7 @@ Table
   * [delete](#delete)
   * [button](#button)
   * [notification_style](#notification_style)
+  * [example](#example)
   
 
 ## Overview

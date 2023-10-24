@@ -17,18 +17,17 @@ Table of Contents
 * [Setting variables](#setting-variable)
 * [Directory structure](#directory-structure)
 * [Import library](#import-library)
-	* [Local path import](#local-path-import)
-	* [Assets import](#assets-import)
-	* [WEB import](#web-import)
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
-* [am commands](#am-commands)
 * [Include Javascript Library](#include-javascript-library)
-* [Include css Library](#include-css-library)
-* [Html tag output](#html-tag-output)
-* [Html tag output](#html-tag-output)
 * [Javascript TroubleShooting](#javascript-troubleshooting)
+* [Include css Library](#include-css-library)
+* [Custom shell command](#custom-shell-command)
+* [Ubuntu env variables](#ubuntu-env-variables)
+* [Broadcast actions](#broadcast-actions)
+* [Use port](#use-port)
+* [Html tag output](#html-tag-output)
 * [CommandClick repository](#commandclick-repository)
 * [Glossary](#glossary)
 
@@ -61,7 +60,7 @@ Table of Contents
 
 This section is description for `fannel`(js or shell file enforced by `CommandClick`).
 
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
+-> [About labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 ### Cmd variables
 
@@ -71,7 +70,7 @@ User difinition setting variables
 
   `CommandClick`'s system setting variables  
   
-  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+  -> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 ### Directory structure
 
@@ -80,34 +79,11 @@ User difinition setting variables
 
 ### Import library  
 
+-> [CC import](https://github.com/puutaro/CommandClick/blob/master/md/developer/cc_import.md)
+
 `CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
 `CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    
 Bellow is how to import. You can enjoy this all range import application!  
-
-#### Local path import
-
-```js.js
-ccimport {path}   
-```
-
-* current directory -> `./`  
-* move parent direcoty -> ../  
-* other check [Javascript pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)   
-
-#### Assets import
-
-```js.js
-ccimport /android_asset/{relative path}  
-```
-
-#### WEB import
-
-```js.js
-ccimport {URL}  
-```
-
-* It is possible to download by curl {URL}
-
 
 ### File api  
 
@@ -127,82 +103,66 @@ This, so colled, android app row code library.
 
 ### Javascript pre reserved word
 
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+-> [About js pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
 
-
-### Custom shell command  
-
--> [Custom shell command]()
-
-
-### am commands
-
-`CommandClick` has broadcast am command bellow.
-
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
+Like `${0}` in shell, `CommandClick`'s js has pre reserved word
 
 
 ### Include Javascript Library  
 
+-> [About include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
+
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
-- Sortable.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/Sortable.js"></script>`  
-- jquery-ui -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-ui.min.js"></script>`  
-- jquery-3.6.3.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-3.6.3.min.js"></script>`  
-- long-press-event.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/long-press-event.min.js"></script>`  
-- chart.min.js -> Add html with `<script src="file:///android_asset/js/chart.min.js" ></script>`  
-- chartjs-adapter-date-fns.bundle.min.js -> Add html with `<script src="file:///android_asset/js/chartjs-adapter-date-fns.bundle.min.js"></script>`  
-
-
 ### Include css Library  
+
+-> [About include css Library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_css_library.md)
 
 First, I respect bellow css package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
-- jquery-ui.css -> Add html with `<link rel="stylesheet" href="file:///android_asset/css/jquery-ui.css">`  
-
-
-
 ### Html tag output
 
-`CommandClick` script output trminal as html, so html tag is valid. You can use tag by bellow.
- - `<` -> `cmdclickLeastTag`
- - `>` -> `cmdclickGreatTag`
+-> [About html tag output](https://github.com/puutaro/CommandClick/blob/master/md/developer/html_tag_output.md)
 
-   - `Span tag` no working in script output. If you wont to use this, launch html file.
-   - Url string automaticaly change anchor tag, but if you put 'href="' prefix in front of this string, no auto change.
-
-
-
+`CommandClick` script output trminal as html, so html tag is valid. You can use tag .
+ 
 ### Javascript TroubleShooting  
 
+-> [About js trouble shouting](https://github.com/puutaro/CommandClick/blob/master/md/developer/javascript_trouble_shooting.md)
 
-- When your javascript's file cannot execute, you confirm how script step semicolon(`;`) exist except for function argument.  
-	- Becuase javaxcript file convert one linear script string, as it, javascript:(function() { `${js contents}` })(); and webvoew.loadUrl().  
+### Custom shell command  
 
-- Javascript's `while roop` ocationaly cuase crush. add bellow code to the roop.  
+It is a useful tool for `CommandClick`.
+For example, send broadcast, toast, and etc.  
 
-```js.js
-	if(
-		jsStop.how().includes("true")
-	) throw new Error('exit');
-```  
+-> [About custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
 
+### Ubuntu env variables
 
-- Optinaly may replace delay function with `jsUtil.sleep($milisecond);`
-	- The `Roop crush` is occur by memory leak.
+-> [About environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
 
+### File api for ubuntu
 
+-> [About ubuntu file api](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntuFileApis.md)
+
+Support file for CommandClick's ubuntu For example, alternative data base, etc..
+
+### Broadcast actions
+
+-> [About broadcast actions & schema](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md)
+
+### Use port
+
+-> [About use port](https://github.com/puutaro/CommandClick/blob/master/md/developer/usePort.md)
 
 ### Commandclick-repository
 
-CommandClick's fannel repository
+-> [About CommandClick's fannel repository](https://github.com/puutaro/commandclick-repository)
 
 `fannel` is ComamndClick using script (javascript, and shellscript)
 For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
-  
-[link](https://github.com/puutaro/commandclick-repository)  
 
 
 ### Glossary
