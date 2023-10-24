@@ -105,7 +105,7 @@ This, so colled, android app row code library.
 
 -> [About js pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
 
-Like `${0}` in shell, `CommandClick` has pre reserved word
+Like `${0}` in shell, `CommandClick`'s js has pre reserved word
 
 
 ### Include Javascript Library  
