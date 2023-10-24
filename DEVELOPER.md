@@ -20,12 +20,13 @@ Table of Contents
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
-* [Custom shell command](#custom-shell-command)
 * [Include Javascript Library](#include-javascript-library)
-* [Include css Library](#include-css-library)
-* [Html tag output](#html-tag-output)
-* [Html tag output](#html-tag-output)
 * [Javascript TroubleShooting](#javascript-troubleshooting)
+* [Include css Library](#include-css-library)
+* [Custom shell command](#custom-shell-command)
+* [Ubuntu env variables](#ubuntu-env-variables)
+* [Broadcast actions](#broadcast-actions)
+* [Use port](#use-port)* [Html tag output](#html-tag-output)
 * [CommandClick repository](#commandclick-repository)
 * [Glossary](#glossary)
 
@@ -103,22 +104,12 @@ This, so colled, android app row code library.
 
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
 
-
-### Custom shell command  
-
-It is a useful tool for `CommandClick`.
-For example, send broadcast, toast, and etc.  
-
--> [Custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
-
-
 ### Include Javascript Library  
 
 -> [Include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
 
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
-
 
 ### Include css Library  
 
@@ -127,19 +118,34 @@ Bellow respectable package is inclided assets. you can import like bellow.
 First, I respect bellow css package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
-
-
 ### Html tag output
 
 -> [Html tag output](https://github.com/puutaro/CommandClick/blob/master/md/developer/html_tag_output.md)
 
 `CommandClick` script output trminal as html, so html tag is valid. You can use tag .
  
-
-
 ### Javascript TroubleShooting  
 
 -> [Js trouble shouting](https://github.com/puutaro/CommandClick/blob/master/md/developer/javascript_trouble_shooting.md)
+
+### Custom shell command  
+
+It is a useful tool for `CommandClick`.
+For example, send broadcast, toast, and etc.  
+
+-> [Custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
+
+### Ubuntu env variables
+
+-> [Environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
+
+### Broadcast actions
+
+-> [Broadcast actions & schema](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md)
+
+### Use port
+
+-> [Use port](https://github.com/puutaro/CommandClick/blob/master/md/developer/usePort.md)
 
 ### Commandclick-repository
 
