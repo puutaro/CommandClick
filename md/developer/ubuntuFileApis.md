@@ -29,6 +29,8 @@ UBUNTU_BACKUP_TEMP_ROOTFS_PATH\t/storage/emulated/0/Documents/cmdclcik/ubuntu/ba
 .
 ```
 
+- Get value by [tsvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/tsvar.md)
+
 ## `/support/wait_quiz.tsv` <a id="wait_quiz_tsv"></a>
 
 Wait quizes about `CommandClick` like Q tab A
