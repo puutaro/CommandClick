@@ -1,5 +1,7 @@
 # Javascript pre order word
 
+Like `${0}` in shell, `CommandClick` has pre reserved word
+
 
 | sinbol | meaning |
 | --------- | --------- |
