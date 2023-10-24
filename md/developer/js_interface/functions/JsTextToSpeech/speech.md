@@ -32,27 +32,27 @@ Setting ${key}=${value} pair to concat by `|`
 
 | key | type | description |
 | -------- | -------- | -------- |
-| playMode | string | play mode switch: `ordinaly`, `shuffle`, `reverse`, `number` |
-| onRoop | string | some string: roop, `""`: no roop |
-| playNumber | string | play list order number  string |
-| toLang | string | Select language: `en`(english), `zw`(chinese), `sp`(spanish), `ko`(korean), `ja`(japanese) |
-| onTrack | string | save track switch: `""`, `on` |
-| speed | string | speech speed int string, base '50',  |
-| pitch | string | speech pitch int string, base '50' |
+| playMode | string | [Optional] play mode switch: `ordinaly`(default), `shuffle`, `reverse`, `number` |
+| onRoop | string | [Optional] some string: roop, `""`: no roop |
+| playNumber | string | [Optional] play list order number  string |
+| toLang | string | [Optional] Select language: `en`(english), `zw`(chinese), `sp`(spanish), `ko`(korean), `ja`(japanese) |
+| onTrack | string | [Optional] save track switch: `""`, `on` |
+| speed | string | [Optional] speech speed int string, base '50',  |
+| pitch | string | [Optional] speech pitch int string, base '50' |
 
 
 ex1) speech from play list 
 
 ```js.js
 let extraSettingMapStr = [
-		`playMode=shuffle`,
-		`onRoop=on`,
-		`playNumber=`,
-		`transMode=en`,
-		`onTrack=on`,
-		`speed=50`,
-		`pitch=50`,
-	].join("|");
+	`playMode=shuffle`,
+	`onRoop=on`,
+	`playNumber=`,
+	`transMode=en`,
+	`onTrack=on`,
+	`speed=50`,
+	`pitch=50`,
+].join("|");
 jsTextToSpeech.speech(  
   "${01}/${001}/playListFile.txt",    
   extraSettingMapStr,  
@@ -77,12 +77,12 @@ ex2) speech from number
 ```js.js
 
 let extraSettingMapStr = [
-		`playMode=ordinaly`,
-		`playNumber=1`,
-		`transMode=en`,
-		`speed=50`,
-		`pitch=50`,
-	].join("|");
+	`playMode=ordinaly`,
+	`playNumber=1`,
+	`transMode=en`,
+	`speed=50`,
+	`pitch=50`,
+].join("|");
 
 jsTextToSpeech.speech(  
   "${01}/${001}/playListFile.txt",    
