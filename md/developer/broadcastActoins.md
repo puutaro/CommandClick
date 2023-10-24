@@ -7,7 +7,7 @@ Here, introduce these.
 
 Table
 -----------------
-* [`com.puutaro.commandclick.html.launch`](#launch_url)
+* [`com.puutaro.commandclick.url.launch`](#launch_url)
     * [Schema](#launch_url_schema) 
 * [`com.puutaro.commandclick.html.launch`](#launch_edit_site)
     * [Schema](#launch_edit_site_schema) 
