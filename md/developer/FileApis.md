@@ -12,6 +12,7 @@ Table
 * [~](#root_dir_path)
 * [`~/AppDir/${app directory}/system/url/cmdclickUrlHistory`](#url_history)
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
+* [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
@@ -55,6 +56,21 @@ ur2\tscroll y-position2
 .
 .
 ```
+
+## `~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv` <a id="replace_variables_table"></a>
+
+Tsv to convert [replace variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) to tsv like key to value
+
+```
+variable name1\tvariable value1
+variable name2\tvariable value2
+variable name3\tvariable value3
+.
+.
+.
+```
+
+- Auto create & convert [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) in js use
 
 
 ## `~/conf/monitor/term_[1-4]` <a id="output_monitor"></a>
