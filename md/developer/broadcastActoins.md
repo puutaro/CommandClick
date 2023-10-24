@@ -45,6 +45,8 @@ Launch url in `CommandClick`
 | --------- | --------- | --------- |
 | url | string | url string |
 
+- [am command example](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md#url-command)
+
 
 ## `com.puutaro.commandclick.html.launch` <a id="launch_edit_site"></a>
 
@@ -85,6 +87,8 @@ add src title2\turl2
 | on_click_url | boolean string | enable to jump on click element: `true`/`false` |
 | on_dialog | boolean string | edit target tsv path: `true`/`false` |
 | filter_code | js code to return boolean | js code to filter adding url |
+
+- [am command example](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md#html-automaticaly-creation-command-to-edit-target-edit-file)
 
 ## `com.puutaro.commandclick.url.monitor_text_path` <a id="monitor_text_path"></a>
 
