@@ -4,9 +4,6 @@
 Table
 -----------------
 * [Overview](#overview)
-* [Argument](#argument)
-  * [broadcast_action](#broadcast_action)
-  * [extras](#extras)
 * [example](#example)
   
 
