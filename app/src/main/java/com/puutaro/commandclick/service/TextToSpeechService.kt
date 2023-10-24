@@ -558,9 +558,14 @@ class TextToSpeechService:
                     return null
                 }
             }
-            else -> (0..repeatTimes).map {
-                fileListBeforePlayMode
-            }.flatten()
+            else -> {
+                if(
+                    onRoop.isNullOrEmpty()
+                ) return fileListBeforePlayMode
+                (0..repeatTimes).map {
+                    fileListBeforePlayMode
+                }.flatten()
+            }
         }
     }
 
