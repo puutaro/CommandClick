@@ -33,7 +33,7 @@ Table
 * [`com.puutaro.commandclick.ubuntu_service.shell2http`](#ubuntu_service_shell2http)
     * [Schema](#ubuntu_service_shell2http_schema)   
 
-## `com.puutaro.commandclick.html.launch` <a id="launch_url"></a>
+## `com.puutaro.commandclick.url.launch` <a id="launch_url"></a>
 
 Launch url in `CommandClick` 
 
