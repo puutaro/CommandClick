@@ -103,54 +103,57 @@ This, so colled, android app row code library.
 
 ### Javascript pre reserved word
 
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+-> [About js pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) 
+
+Like `${0}` in shell, `CommandClick` has pre reserved word
+
 
 ### Include Javascript Library  
 
--> [Include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
+-> [About include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
 
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
 ### Include css Library  
 
--> [Include css Library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_css_library.md)
+-> [About include css Library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_css_library.md)
 
 First, I respect bellow css package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
 ### Html tag output
 
--> [Html tag output](https://github.com/puutaro/CommandClick/blob/master/md/developer/html_tag_output.md)
+-> [About html tag output](https://github.com/puutaro/CommandClick/blob/master/md/developer/html_tag_output.md)
 
 `CommandClick` script output trminal as html, so html tag is valid. You can use tag .
  
 ### Javascript TroubleShooting  
 
--> [Js trouble shouting](https://github.com/puutaro/CommandClick/blob/master/md/developer/javascript_trouble_shooting.md)
+-> [About js trouble shouting](https://github.com/puutaro/CommandClick/blob/master/md/developer/javascript_trouble_shooting.md)
 
 ### Custom shell command  
 
 It is a useful tool for `CommandClick`.
 For example, send broadcast, toast, and etc.  
 
--> [Custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
+-> [About custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
 
 ### Ubuntu env variables
 
--> [Environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
+-> [About environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
 
 ### Broadcast actions
 
--> [Broadcast actions & schema](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md)
+-> [About broadcast actions & schema](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md)
 
 ### Use port
 
--> [Use port](https://github.com/puutaro/CommandClick/blob/master/md/developer/usePort.md)
+-> [About use port](https://github.com/puutaro/CommandClick/blob/master/md/developer/usePort.md)
 
 ### Commandclick-repository
 
--> [CommandClick's fannel repository](https://github.com/puutaro/commandclick-repository)
+-> [About CommandClick's fannel repository](https://github.com/puutaro/commandclick-repository)
 
 `fannel` is ComamndClick using script (javascript, and shellscript)
 For instance, your click script in CommandClick. One thing I can say that CommandClick is developed for the purpose of changing javaxcript and shellscript to gui appication. That applies to click script. It's so called Gui application. We can say so. I call the gui application `fannel`
