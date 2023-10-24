@@ -143,12 +143,7 @@ For example, send broadcast, toast, and etc.
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
 
-- Sortable.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/Sortable.js"></script>`  
-- jquery-ui -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-ui.min.js"></script>`  
-- jquery-3.6.3.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/jquery-3.6.3.min.js"></script>`  
-- long-press-event.min.js -> Add html with `<script type="text/javascript" src="file:///android_asset/js/long-press-event.min.js"></script>`  
-- chart.min.js -> Add html with `<script src="file:///android_asset/js/chart.min.js" ></script>`  
-- chartjs-adapter-date-fns.bundle.min.js -> Add html with `<script src="file:///android_asset/js/chartjs-adapter-date-fns.bundle.min.js"></script>`  
+[Include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
 
 
 ### Include css Library  
