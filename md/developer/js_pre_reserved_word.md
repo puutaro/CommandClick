@@ -1,6 +1,6 @@
 # Javascript pre order word
 
-Like `${0}` in shell, `CommandClick` has pre reserved word
+Like `${0}` in shell, `CommandClick's js  has pre reserved word
 
 
 | sinbol | meaning |
