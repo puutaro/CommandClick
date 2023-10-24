@@ -14,6 +14,8 @@ Table
 
 ## By alert
 
+-> [By alert, hello world](https://github.com/puutaro/CommandClick/blob/master/md/developer/tutorial/by_alert_hello_world.md)
+
 
 ## By text to speech
 
