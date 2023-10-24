@@ -26,7 +26,8 @@ Table of Contents
 * [Custom shell command](#custom-shell-command)
 * [Ubuntu env variables](#ubuntu-env-variables)
 * [Broadcast actions](#broadcast-actions)
-* [Use port](#use-port)* [Html tag output](#html-tag-output)
+* [Use port](#use-port)
+* [Html tag output](#html-tag-output)
 * [CommandClick repository](#commandclick-repository)
 * [Glossary](#glossary)
 
