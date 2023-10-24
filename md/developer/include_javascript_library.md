@@ -1,4 +1,4 @@
-# include_javascript_library
+# Include javascript library
 
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
