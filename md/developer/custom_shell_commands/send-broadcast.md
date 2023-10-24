@@ -6,7 +6,7 @@ Table
 * [Argument](#argument)
   * [broadcast_action](#broadcast_action)
   * [extras](#extras)
-  * [example](#example)
+* [example](#example)
   
 
 ## Overview
