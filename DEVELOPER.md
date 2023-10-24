@@ -60,7 +60,7 @@ Table of Contents
 
 This section is description for `fannel`(js or shell file enforced by `CommandClick`).
 
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
+-> [About labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 ### Cmd variables
 
@@ -70,7 +70,7 @@ User difinition setting variables
 
   `CommandClick`'s system setting variables  
   
-  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+  -> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 ### Directory structure
 
