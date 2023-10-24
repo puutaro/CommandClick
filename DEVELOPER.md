@@ -23,7 +23,7 @@ Table of Contents
 * [File api](#file-api)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
-* [am commands](#am-commands)
+* [Custom shell command](#custom-shell-command)
 * [Include Javascript Library](#include-javascript-library)
 * [Include css Library](#include-css-library)
 * [Html tag output](#html-tag-output)
@@ -136,13 +136,6 @@ It is a useful tool for `CommandClick`.
 For example, send broadcast, toast, and etc.  
 
 -> [Custom shell command](https://github.com/puutaro/CommandClick/tree/master/md/developer/custom_shell_commands)
-
-
-### am commands
-
-`CommandClick` has broadcast am command bellow.
-
--> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/am_commands.md)
 
 
 ### Include Javascript Library  
