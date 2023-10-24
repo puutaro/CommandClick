@@ -32,7 +32,7 @@ ex)
 
   --action "com.puutaro.commandclick.url.launch"
 
-### --extras, -e <a id="extras"></a>
+### [Optional] --extras, -e <a id="extras"></a>
 
 Intent's extra string
 
