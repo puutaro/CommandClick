@@ -143,6 +143,12 @@ For example, send broadcast, toast, and etc.
 
 -> [About environment variable in ubuntu](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntu_env_variables.md)
 
+### File api for ubuntu
+
+-> [About ubuntu file api](https://github.com/puutaro/CommandClick/blob/master/md/developer/ubuntuFileApis.md)
+
+Support file for CommandClick's ubuntu For example, alternative data base, etc..
+
 ### Broadcast actions
 
 -> [About broadcast actions & schema](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md)
