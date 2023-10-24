@@ -140,10 +140,10 @@ For example, send broadcast, toast, and etc.
 
 ### Include Javascript Library  
 
+-> [Include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
+
 First, I respect bellow javascript package author.  
 Bellow respectable package is inclided assets. you can import like bellow.
-
-[Include javascript library](https://github.com/puutaro/CommandClick/blob/master/md/developer/include_javascript_library.md)
 
 
 ### Include css Library  
