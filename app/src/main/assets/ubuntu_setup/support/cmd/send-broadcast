@@ -55,7 +55,7 @@ send-broadcast(){
 		gsub(/\n/, ",\n", ouput_con)
 		print ouput_con
 	}' \
-	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
 }
 
 readonly output="$(send-broadcast)"

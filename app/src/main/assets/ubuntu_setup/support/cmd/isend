@@ -8,6 +8,7 @@ ACTION=""
 URI_STR=""
 EXTRA_STRS=""
 EXTRA_INTS=""
+EXTRA_LONGS=""
 EXTRA_FLOATS=""
 
 read_args(){
@@ -56,7 +57,7 @@ read_args(){
 
 read_args "$@"
 
-noti(){
+isend(){
 	awk \
 	-v help="${HELP}" \
 	-v action="${ACTION}" \
@@ -71,7 +72,7 @@ noti(){
 	BEGIN {
 		output_con=""
 		concat(help, "help")
-		output_con = output_con"intentType=notification\n"
+		output_con = output_con"intentType=intent\n"
 		concat(action, "action")
 		concat(uriStr, "uriStr")
 		concat(extraStrs, "extraStrs")
@@ -81,12 +82,11 @@ noti(){
 		gsub(",", "!", output_con)
 		gsub(/\n/, ",\n", output_con)
 		print output_con
-	}' 
-	# \
-	# | curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+	}' \
+	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
 }
 
-readonly output="$(noti)"
+readonly output="$(isend)"
 case "${output}" in
 	"") exit 0;;
 	*) echo "${output}"

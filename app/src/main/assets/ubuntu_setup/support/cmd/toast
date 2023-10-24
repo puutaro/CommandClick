@@ -57,8 +57,7 @@ toast(){
 		gsub(/\n/, ",\n", ouput_con)
 		print ouput_con
 	}' \
-	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" \
-	>/dev/null 2>&1
+	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}"
 }
 
 readonly output="$(toast)"

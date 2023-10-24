@@ -33,9 +33,7 @@ killpstree(){
 get_help(){
 	awk \
 	'BEGIN{
-		print "### Replace variables getter"
-		print ""
-		print "* Kill All Process Tree"
+		print "### Kill All Process Tree"
 		print ""
 		print "## Usage"
 		print ""

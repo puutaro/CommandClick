@@ -18,7 +18,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
-import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.CmdClickMap
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems

@@ -112,7 +112,7 @@ noti(){
 		gsub(/\n/, ",\n", output_con)
 		print output_con
 	}' \
-	| curl -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
 }
 
 readonly output="$(noti)"

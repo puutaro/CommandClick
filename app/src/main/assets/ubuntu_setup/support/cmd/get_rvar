@@ -35,7 +35,7 @@ get_help(){
 				print "## Usage"
 				print ""
 				print "# Get replace variables contents"
-				print "get_rvar \x22${contents}\x22 \x22${replace variables name}\x22"
+				print "get_rvar \x22${0}\x22"
 				print ""
 				print ""
 				print " js -> shell"
