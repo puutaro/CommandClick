@@ -4,15 +4,13 @@
 Table
 -----------------
 
-* [Simple code](#by-alert)
-* [By text to speech](#by-text-to-speech)
+* [Step 1](#step-1)
+    * [Code](#dode)
 * [By notification](#by-notification)
 
 
-## By alert
+## Step 1
+
+### Code
 
 
-## By text to speech
-
-
-## By notification
