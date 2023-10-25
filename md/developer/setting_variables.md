@@ -50,8 +50,6 @@ Table of Contents
 * [terminalDo](#terminal_do)
 
  
- - Follow bellow setting variable table  
-
 ## editExecute
 
 Edit mode change  
