@@ -4,53 +4,364 @@
 `CommandClick`'s pre-reserved system setting variables to enable edit by gui    
 If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display secondly.
 
+Table of Contents
+-----------------
+<!-- vim-markdown-toc GFM -->
 
+* [editExecute](#editexecute)
+* [scriptFileName](#scriptfilename)
+* [terminalSizeType](#terminalsizetype)
+* [terminalOutputMode](#terminaloutputmode)
+* [onAutoExec](#onautoexec) 
+* [onUpdateLastModify](#onupdatelastmodify)
+* [historySwitch](#historyswitch)
+* [onAdBlock](#onadblock)
+* [onUrlHistoryRegister](#onurlhistoryregister)
+* [onUrlLaunchMacro](#onurllaunchmacro)
+* [onTermBackendWhenStart](#ontermbackendwhenstart)
+* [onTermVisibleWhenKeyboard](#ontermvisiblewhenkeyboard)
+* [onTermShortWhenLoad](#ontermshortwhenload)
+* [disableShowToolbarWhenHighlight](#disableshowtoolbarwhenhighlight)
+* [disableEditButton](#disableeditbutton)
+* [disablePlayButton](#disableplaybutton)
+* [defaultMonitorFile](#defaultmonitorfile)
+* [execPlayBtnLongPress](#execplaybtnlongpress)
+* [execEditBtnLongPress](#execeditbtnlongpress)
+* [execJsOrHtmlPath](#execjsorhtmlpath)
+* [setReplaceVariables](#setreplacevariables)
+* [setVariableTypes](#setvariabletypes)
+* [hideSettingVariables](#hidesettingvariables)
+* [ignoreHistoryPaths](#ignorehistorypaths)
+* [homeScriptUrlsPath](#homescripturlspath)
+* [homeFannelsPath](#homefannelspath)
+* [srcImageAnchorLongPressMenuFilePath](#srcimageanchorlongpressmenufilepath)
+* [srcAnchorLongPressMenuFilePath](#srcanchorlongpressmenufilepath)
+* [imageLongPressMenuFilePath](#imagelongpressmenufilepath)
+* [noScrollSaveUrls](#noscrollsaveurls)
+* [terminalFontZoom](#terminalfontzoom)
+* [terminalFontColor](#terminalfontcolor)
+* [terminalColor](#terminalcolor)
+* [ubuntuSleepDelayMinInScreenOff](#ubuntusleepdelaymininscreenoff)
+* [passCmdVariableEdit](#passcmdvariableedit)
+* [urlHistoryOrButtonExec](#urlhistoryorbuttonexec)
+* [onHistoryUrlTitle](#on_history_url_title)
+* [beforeCommand](#before_command)
+* [afterCommand](#after_command)
+* [terminalDo](#terminal_do)
+
+ 
  - Follow bellow setting variable table  
+
+## editExecute
+
+Edit mode change  
+Particularly, `ALWAYS` is most used value in order to make execute box.
+
+
+| Value| Description |
+| -------- | --------- |
+| `NO` | normal edit (default) |
+| `ALWAYS` | always edit -> execute |
+| `ONCE` | one time edit and execute (deprecated) |
+
+## scriptFileName
+
+Enable rename script file name
+
+## terminalSizeType
+
+Decide web terminal view size;
+
+| Value| Description |
+| -------- | --------- |
+| `OFF` | no sizing (default) |
+| `LONG` | long size |
+| `SHORT` | short size |
+
+## terminalOutputMode
+
+Switch mode to output script result 
+
+| Value | Description |
+| -------- | --------- |
+| `NORMAL` | Normal terminal output (default) |
+| `REFLASH` | Before terminal output, screen resflesh |
+| `REFLASH_AND_FIRST_ROW` | Before terminal output, screen resflesh and focus first row |
+| `DEBUG` | stdr + stderr |
+| `NO` | no output (bacground exec) |
+
+## onAutoExec
+
+Auto exec js script on startup     
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default) |
+| `NO` | on |
+
+## onUpdateLastModify
+
+Switch updating file last modified status when executing     
+
+| Value | Description |
+| -------- | --------- |
+| `NO` | on (default) |
+| `OFF` | off |
+
+## historySwitch
+
+Switch app history with url history     
+
+| Value | Description |
+| -------- | --------- |
+| `NO` | on |
+| `OFF` | off (default) |
+
+## onAdBlock
+
+Switch adBlock     
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default) |
+| `NO` | on |
+| `INHERIT` | inherit config setting |
+
+## onUrlHistoryRegister
+
+Switch url history update     
+
+| Value | Description |
+| -------- | --------- |
+| `NO` | on (default) |
+| `OFF` | off  |
+
+## onUrlLaunchMacro
+
+Url launch macro (When set, cmdclick web terminal don't output)
+
+| Value | Description |
+| -------- | --------- |
+| `RECENT` | Recent use url launch  |
+| `FREAQUENCY` | Most use url launch  |
+| `OFF` |  No launch |
+| `{js file path}` | js script path |
+
+## onTermBackendWhenStart
+
+Switch display terminal backend when start
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+| `Inherit` | Inherit config setting |
+
+## onTermVisibleWhenKeyboard
+
+Switch terminal visible when keyboard open
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+| `Inherit` | Inherit config setting |
+
+## onTermShortWhenLoad
+
+Switch terminal sizging short when load url
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+| `Inherit` | Inherit config setting |
+    
+## disableShowToolbarWhenHighlight
+
+Switch disable to show toolbar when highlight text in webview  
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+
+## disableEditButton
+
+Switch disable to edit button
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+
+## disablePlayButton
+
+Switch disable to play button
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+
+## defaultMonitorFile
+
+Select default monitor file for screen
+
+| Value | Description |
+| -------- | --------- |
+| `term_[1-4]` | [term type](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#output_monitor)  |
+
+## execPlayBtnLongPress
+
+Execute when play button long press in `editExecute=EditExecute`
+
+| Value | Description |
+| -------- | --------- |
+| `WEB_SEARCH` | Appear web search bar |
+| `PAGE_SEARCH` | Appear page search bar |
+| `{js file path}` | Execute js file |
+
+## execEditBtnLongPress
+
+Execute when edit button long press in `editExecute=EditExecute`
+
+| Value | Description |
+| -------- | --------- |
+| `WEB_SEARCH` | Appear web search bar |
+| `PAGE_SEARCH` | Appear page search bar |
+| `{js file path}` | Execute js file |
+
+## execJsOrHtmlPath
+
+Execute javascript or html file path
+
+## setReplaceVariables
+
+String replaced with certain string.   
+
+You also have multiple specifing this.
+
+ex)   
+
+```js.js
+setReplaceVariables="{replaceVariablle1}={repalce string1}   
+or setReplaceVariables="file://{file path}"    
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) 
+```
+
+## setVariableTypes
+
+when edit, whether to set variable type to [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables).   
+
+You also have multiple specifing this.   
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md)
+
+## hideSettingVariables
+
+Specified [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md) you want to hidden when edit (hidden variable in default)   
+
+```js.js
+${setting variable name}="..."
+or hideSettingVariables="file://{file path} 
+```
+
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md) |    
+
+
+## ignoreHistoryPaths
+
+Ignore history path like grep -v 
+
+```js.js
+${setting variable name}="..."   
+or ignoreHistoryPaths="file://{file path} 
+```
+-> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/ignore_history_paths.md)
+
+## homeScriptUrlsPath
+
+Specified script path, url and html path to put always bottom in url history
+
+## homeFannelsPath
+
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) path to put always bottom in app history  
+
+## srcImageAnchorLongPressMenuFilePath
+
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
+
+## srcAnchorLongPressMenuFilePath
+
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
+
+## imageLongPressMenuFilePath
+
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
+ 
+## noScrollSaveUrls
+
+Ignore scroll yPosition site domain saved       
+    
+## terminalFontZoom
+
+Adjust terminal font size (percentage)      
+    
+## terminalFontColor
+
+Adjust terminal font color      
+    
+## terminalColor
+
+Adjust terminal background color      
+
+## ubuntuSleepDelayMinInScreenOff
+
+Ubuntu Sleep delay minutes in screen off, Config only value.  
+
+- 0: no sleep  
+
+## passCmdVariableEdit
+
+Switch pass [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit) for [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables)
+
+- `ON`: pass cmd variable edit 
+
+## urlHistoryOrButtonExec
+
+Switch url history or button script exec  
+
+| Value | Description |
+| -------- | --------- |
+| `INHERIT` | Inherit config setting |
+| `URL_HISTORY` | Switch url history |
+| `BUTTON_EXEC` | Switch url button script exec |
+
+## onHistoryUrlTitle (deprecated) <a id="on_history_url_title"></a>
+
+Switch adding url title to history  
+
+| Value | Description |
+| -------- | --------- |
+| `OFF` | off (default)  |
+| `NO` | on |
+
+## beforeCommand (only termux, deprecated) <a id="before_command"></a>
+
+Before run shellscript, run command  
+
+## afterCommand (only termux, deprecated) <a id="after_command"></a>
+
+After run shellscript, run command  
+
    
+## terminalDo (only termux, deprecated) <a id="terminal_do"></a>
 
-    | settingVariable| set value | description  |
-    | --------- | --------- | ------------ |
-    | `terminalDo` | `ON`/`Termux`/`OFF` | where to run in terminal; `ON`: in web terminal view, `Termux`: in termux (only shell), `OFF`: backgrond exe (only shell)  |
-    | `terminalSizeType` | `LONG`/`SHORT`/`OFF` | decide web terminal view size; `LONG`: long size, `SHORT`: short size, `OFF`: no sizing   |
-    | `editExecute`  | `NO`/`ONCE`/`ALWAYS` | edit mode change; `NO`: normal edit, `ONCE`: one time edit and execute, `ALWAYS`: always edit and execute
-    | `terminalOutputMode`  | `NORMAL`/`REFLASH`/`REFLASH_AND_FIRST_ROW`/`DEBUG`/`NO` | `NORMAL`: normal terminal output, `REFLASH`: Before terminal output, screen resflesh, `REFLASH_AND_FIRST_ROW`: Before terminal output, screen resflesh and focus first row, `DEBUG`: stdr + stderr, `NO`: no output (bacground exec)
-    | `onAutoExec`  | `NO`/`OFF` | ready for start and end script; `ON`: start or end exec on, `OFF`: exec off (default)
-    | `onUpdateLastModify`  | `NO`/`OFF` | how updating file last modified status when executing; `ON`: update this, `OFF`: no update this
-    | `onHistoryUrlTitle`  | `ON`/`OFF` | how adding url title to history; `ON`: add, `OFF`: no
-    | `historySwitch`  | `ON`/`OFF` | switch app history with url history; `ON`: switch, `OFF`: no switch, `INHERIT`: inherit config setting
-    | `urlHistoryOrButtonExec`  | `INHERIT`/`URL_HISTORY`/`BUTTON_EXEC` | switch url history or button script exec; `INHERIT`: inherit config setting, `URL_HISTORY`: switch url history, `BUTTON_EXEC`: switch url button script exec
-    | `onAdBlock`  | `INHERIT`/`ON`/`OFF` | sadblock switch; `INHERIT`: inherit config setting, `ON`: on, `OFF`: off
-    | `onUrlHistoryRegister`  | `ON`/`OFF` | url history update signal; `ON`: update, `OFF`: no update
-    | `onUrlLaunchMacro`  | `OFF`/`RECENT`/`FREAQUENCY` | url launch macro(when set, cmdclick web terminal don't output); `OFF`: no launch, `RECENT`: recent use url launch, `FREAQUENCY`: most use url launch
-    | `onAutoExec`  | `ON`/`OFF` | Auto execute script when fannel launch; `ON`: on, `OFF`: off
-    | `onTermBackendWhenStart`  | `ON`/`OFF` | Display terminal backend when start; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
-    | `onTermVisibleWhenKeyboard`  | `ON`/`OFF` | terminal visible when keyboard open; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
-    | `onTermShortWhenLoad`  | `ON`/`OFF` | Terminal short sizging when load; `Inherit`: inherit config setting, `ON`: on, `OFF`: off
-    | `disableShowToolbarWhenHighlight`  | `ON`/`OFF` | Disable show toolbar when highlight text in webview; `ON`: on, `OFF`: off
-    | `disableEditButton`  | `ON`/`OFF` | edit button diable; `ON`: on, `OFF`: off  
-    | `disablePlayButton`  | `ON`/`OFF` | play button diable; `ON`: on, `OFF`: off  
-    | `defaultMonitorFile`  | `term_*` | Select default monitor file for screen; `term_1`: stdour, `term_2`: stderr and syslog, 'term_3': free, 'term_4': dev/null    
-    | `execPlayBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when play button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
-    | `execEditBtnLongPress`  | `WEB_SEARCH`/`PAGE_SEARCH`/`{js file path}` | execute when edit button long press in `editExecute=EditExecute`; `WEB_SEARCH`: apear web search bar `PAGE_SEARCH`: apear page search bar `{js file path}`: execute js file   
-    | `execJsOrHtmlPath`  | `string` | execute javascript or html file path
-    | `setReplaceVariables`  | `string` | string replaced with certain string. You also have multiple specifing this. ex) setReplaceVariables="{replaceVariablle1}={repalce string1} or setReplaceVariables="file://{file path}"  -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) 
-    | `setVariableTypes` | `string`  | when edit, whether to set variable type to commandVariable. You also have multiple specifing this. -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md) |
-    | `hideSettingVariables` | `string` | specified setting varialle you want to hidden when edit(hidden variable in default) ${setting variable name}="..." or hideSettingVariables="file://{file path} [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md) |
-   | `ignoreHistoryPaths` | `string` |  ignore history path like grep -v ${setting variable name}="..." or ignoreHistoryPaths="file://{file path} [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/ignore_history_paths.md) |
-    | `homeScriptUrlsPath`  | `path strings` | specified `script`, url and html put always bottom in url history |
-    | `homeFannelsPath` | `path strings` | specified `fannel` put always bottom in app history |
-    | `srcImageAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
-    | `srcAnchorLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
-    | `imageLongPressMenuFilePath` | `fannnel name` | specified `fannel` to set menu for src image anchor long press |
-    | `noScrollSaveUrls` | `file path string` | ignore scroll yPosition save |
-    | `terminalFontZoom` | `number` | adjust terminal font size (percentage) |
-    | `terminalFontColor` | `string` | adjust terminal font color |
-    | `terminalColor` | `string` | adjust terminal background color |
-    | `ubuntuSleepDelayMinInScreenOff`  | `number` | Ubuntu Sleep delay minutes in screen off, Config only value; 0: no sleep  
-    | `beforeCommand` | `shell command string` | before run shellscript, run command |
-    | `afterCommand` | `shell command string` | after run shellscript, run command |
-    | `scriptFileName`  | `string` | shellscript file name  |
-    | `passCmdVariableEdit`  | `string` | ON: pass cmd variable edit  |
+Where to display script result
 
+| Value| Description |
+| -------- | --------- |
+| `ON` | In web terminal view |
+| `Termux` | In termux (only shell) |
+| `OFF` | backgrond exec (only shell) |
 
-   
