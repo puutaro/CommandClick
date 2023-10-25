@@ -8,7 +8,7 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [editExecute](#edit-execute)
+* [editExecute](#editexecute)
 * [scriptFileName](#scriptfilename)
 * [terminalSizeType](#terminalsizetype)
 * [terminalOutputMode](#terminaloutputmode)
