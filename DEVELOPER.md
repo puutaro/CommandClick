@@ -64,11 +64,13 @@ This section is description for `fannel`(js or shell file enforced by `CommandCl
 
 ### Cmd variables
 
-User difinition setting variables  
+User difinition setting variables to enable edit by gui  
+If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display firstly. 
 
 ### Setting variable 
 
-  `CommandClick`'s system setting variables  
+`CommandClick`'s pre-reserved system setting variables to enable edit by gui    
+If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display secondlyly. 
   
   -> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
