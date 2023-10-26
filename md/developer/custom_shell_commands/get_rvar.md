@@ -21,7 +21,7 @@ get_rvar \
 
 ## js -> shell usage <a id="js_shell_usage"></a>
 
-Basicaliy, this cmd is called in `js` -> `shell` flow by [execScript](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScript.md), [runByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/runByBackground.md).  
+Basicaliy, this cmd is called in `js` -> `shell` flow by [execScript](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScript.md), [runScriptByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScriptByBackground.md).  
 
 
 ### Get replace variables contents
