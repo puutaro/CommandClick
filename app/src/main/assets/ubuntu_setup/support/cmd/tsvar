@@ -29,12 +29,16 @@ get_help(){
 		"") ;;
 		*) 
 			awk \
-			-v REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}" \
 			'BEGIN{
 				print "### tsv env variables getter"
 				print ""
 				print ""
 				print "## Usage"
+				print ""
+				print "# Create tsv con like key tab value"
+				print ""
+				print "From "${k1}=${v1}\t${k2}=${v2}\t.."
+				print "tsvar \x22${ktoVcon}\x22"
 				print ""
 				print "# Get tsv env variables"
 				print ""
@@ -62,6 +66,23 @@ tsvar(){
 	}'
 }
 
+ctsv(){
+	awk \
+		-v in_con="${1:-}" \
+		'
+		BEGIN {
+			out_con = ""
+			arg_num = split(in_con , arg_array, "\t" )
+			for(i=1; i<=arg_num; i++){
+				arg = arg_array[i]
+				sub("=", "\t", arg)
+				out_con = "\n"out_con"\n"arg
+			}
+			sub(/^\n\n*/, "", out_con)
+			print out_con
+		}'
+}
+
 
 HELP=""
 ARG=()
@@ -73,6 +94,13 @@ case "${ARG[@]}" in
 esac
 
 ARG0="${ARG[0]}"
-ARG1="${ARG[1]}"
+ARG1="${ARG[1]:-}"
 
-tsvar "${ARG0}" "${ARG1}"
+case "${ARG1}" in
+	"")
+		ctsv "${ARG0}"
+		;;
+	*)
+		tsvar "${ARG0}" "${ARG1}"
+		;;
+esac
