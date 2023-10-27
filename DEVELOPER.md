@@ -58,19 +58,21 @@ Table of Contents
 
 ### Labeling section
 
-This section is description for `fannel`(js or shell file enforced by `CommandClick`).
-
 -> [About labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
+
+This section is description for `fannel`(js or shell file enforced by `CommandClick`).
 
 ### Cmd variables
 
-User difinition setting variables  
+User difinition setting variables to enable edit by gui  
+If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display firstly. 
 
 ### Setting variable 
 
-  `CommandClick`'s system setting variables  
-  
-  -> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+-> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+
+`CommandClick`'s pre-reserved system setting variables to enable edit by gui   
+If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display secondly. 
 
 ### Directory structure
 

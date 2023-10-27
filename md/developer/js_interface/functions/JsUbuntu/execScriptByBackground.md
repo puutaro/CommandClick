@@ -1,4 +1,4 @@
-# runByBackground
+# execScriptByBackground
 
 Table
 -----------------
