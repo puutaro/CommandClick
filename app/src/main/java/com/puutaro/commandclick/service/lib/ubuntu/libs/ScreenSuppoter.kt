@@ -32,13 +32,21 @@ object ScreenMonitor {
         val settingSectionEnd = ubuntuService.settingSectionEnd
         val ubuntuLaunchCompFile = ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
             ?: return
+        ubuntuService.monitorScreenJob?.cancel()
         ubuntuService.monitorScreenJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 val sleepDelayMinutes = makeSleepDelayMinutes(
                     settingSectionStart,
                     settingSectionEnd
                 )
-                if(sleepDelayMinutes == noSleepSignal) return@withContext
+                if(sleepDelayMinutes == noSleepSignal) {
+                    FileSystems.writeFile(
+                        UsePath.cmdclickDefaultAppDirPath,
+                        "nosignal.txt",
+                        String()
+                    )
+                    return@withContext
+                }
                 delay(sleepDelayMinutes)
                 if (
                     !ubuntuLaunchCompFile.isFile
@@ -61,9 +69,9 @@ object ScreenMonitor {
             UsePath.cmdclickTempUbuntuServiceDirPath,
             UsePath.cmdclickTmpUbuntuMonitorOff
         )
+        ubuntuService.monitorScreenJob?.cancel()
         if(!ubuntuService.screenOffKill) return
         ubuntuService.notificationBuilderHashMap.clear()
-        ubuntuService.monitorScreenJob?.cancel()
         ProcessManager.removeLaunchCompFile(ubuntuService)
         val sleepingIntent = Intent()
         sleepingIntent.action = BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action

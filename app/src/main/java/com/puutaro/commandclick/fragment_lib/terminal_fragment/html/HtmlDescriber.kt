@@ -1,12 +1,32 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
+import com.puutaro.commandclick.util.ReadText
+
 object HtmlDescriber {
+
     fun make(
         terminalColor: String,
         terminalFontColor: String,
-        text:String,
+        textSrc:String,
         onBottomScrollByJs: Boolean
     ): String {
+        val leavesLineForTerm = ReadText.leavesLineForTerm
+        val sb = StringBuilder("％")
+        val percentZenkakuChar = sb[0]
+        sb.setCharAt(0, percentZenkakuChar - 0xFEE0)
+        val percentHankakuChar = sb.toString()
+        val bodyText = textSrc
+            .split("\n").takeLast(leavesLineForTerm).joinToString("\n")
+            .replace("％", "CMDCLICK_PERCENT_CHAR")
+            .replace(
+                "((https?|ftp|file)://[^ 　\t]*)".toRegex(),
+                "<a href='$1' target='_blank'>$1</a>"
+            )
+            .replace("CMDCLICK_PERCENT_CHAR", percentHankakuChar)
+            .replace("cmdclickLeastTagspan", "<a")
+            .replace("cmdclickLeastTag/span", "</a")
+            .replace("cmdclickLeastTag", "<")
+            .replace("cmdclickGreatTag", ">")
         return """
         <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
         <html>
@@ -42,30 +62,25 @@ object HtmlDescriber {
         </head>
         <body class="body_foreground body_background" style="font-size: normal;" >
         <p>---</p>
-        <pre id="onCmdClickFilter" class="ansi2html-content">${text}</pre>
+        <pre id="onCmdClickFilter" class="ansi2html-content">${bodyText}</pre>
+        <script>
+            setTimeout(function(){
+                    const scrollingFirstElement = (document.scrollingElement || document.body);
+                    if(${onBottomScrollByJs}) {
+                        scrollingFirstElement.scrollTop = document.body.offsetHeight;
+                    }
+                },
+                200
+            );
+        </script>
         </body>
         <script src="file:///android_asset/js/bootstrap.bundle.min.js"></script>
         <script src="file:///android_asset/js/jquery-3.6.3.min.js"></script>
         <script>
         const scrollingElement = (document.scrollingElement || document.body);
-        if(%b){
-            scrollingElement.scrollTop = document.body.offsetHeight;
-        }
         let toFilterSource = ${'$'}('#onCmdClickFilter');
         const percent = String.fromCharCode('％'.charCodeAt(0) - 0xFEE0);
         let exp = /[^href=\"](\b(https?|ftp|file):\/\/[^ 　\t]*)/ig;
-        ${'$'}('#onCmdClickFilter')
-            .html(
-                ${'$'}('#onCmdClickFilter')
-                .html().replaceAll(percent, "CMDCLICK_PERCENT_CHAR")
-                .replace(exp,"<a href='${'$'}1' target='_blank'>${'$'}1</a>")
-                .replaceAll("CMDCLICK_PERCENT_CHAR", percent)
-                .replace(/cmdclickLeastTagspan/g, "<a")
-                .replace(/cmdclickLeastTag\/span/g, "</a")
-                .replace(/cmdclickLeastTag/g, "<")
-                .replace(/cmdclickGreatTag/g, ">")
-            );
-           
         
         function terminalFilter(thisInput){
             var thisInputValue = thisInput.toLowerCase().trim()
@@ -104,6 +119,7 @@ object HtmlDescriber {
         
         </script>
         </html>
-        """.trimMargin().format(onBottomScrollByJs)
+        """.trimMargin()
     }
+
 }

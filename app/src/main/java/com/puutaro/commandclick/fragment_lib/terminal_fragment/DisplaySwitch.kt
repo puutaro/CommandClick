@@ -124,7 +124,6 @@ private fun setWebView(
     terminalViewModel: TerminalViewModel,
     launchUrl: String? = null
 ) {
-    val leavesLineForTerm = ReadText.leavesLineForTerm
     try {
         val webView = terminalFragment.binding.terminalWebView
         if(
@@ -157,7 +156,7 @@ private fun setWebView(
             HtmlDescriber.make(
                 terminalFragment.terminalColor,
                 terminalFragment.terminalFontColor,
-                text.split("\n").takeLast(leavesLineForTerm).joinToString("\n"),
+                text,
                 terminalViewModel.onBottomScrollbyJs
             ),
             "text/html",

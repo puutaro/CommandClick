@@ -36,9 +36,6 @@ class ReadText(
         return try{
            targetFile
                .readText()
-               .split("\n")
-               .takeLast(leavesLineForTerm)
-               .joinToString("\n")
                .replace("<", "&lt;")
                .replace(">", "&gt;")
                .replace("%", "&#37;")
