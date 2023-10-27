@@ -13,9 +13,12 @@ import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.TextToSpeechIntentSender
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.TextToSpeechSchema
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.util.CmdClickMap
@@ -169,10 +172,60 @@ object IntentRequestMonitor {
                 ubuntuService,
                 broadcastMap,
             )
-            ReceiveIntentType.intent.name -> {
-
-            }
+            ReceiveIntentType.textToSpeech.name
+            -> execTextToSpeech(
+                ubuntuService,
+                broadcastMap,
+            )
         }
+    }
+
+    private fun execTextToSpeech(
+        ubuntuService: UbuntuService,
+        broadcastMap: Map<String, String>,
+    ){
+        val helpOption = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpOption.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpConForTextToSpeech()}"
+        }
+        val launchType = broadcastMap.get(TextToSpeechCliSchema.launchType.name)
+            ?: return
+        when(launchType){
+            TextToSpeechLaunchType.launch.name
+            -> textToSpeechLauncher(
+                ubuntuService,
+                broadcastMap,
+            )
+            TextToSpeechLaunchType.exit.name
+            -> ubuntuService.applicationContext.let {
+                    ubuntuService.applicationContext.stopService(
+                        Intent(it, TextToSpeechService::class.java)
+                    )
+                }
+        }
+    }
+
+    private fun textToSpeechLauncher(
+        ubuntuService: UbuntuService,
+        broadcastMap: Map<String, String>,
+    ){
+        val listFilePath = broadcastMap.get(TextToSpeechCliSchema.listFilePath.name)
+            ?: return
+        val currentAppDirName = broadcastMap.get(TextToSpeechCliSchema.currentAppDirName.name)
+            ?: String()
+        val fannelRawName = broadcastMap.get(TextToSpeechCliSchema.fannelRawName.name)
+            ?: String()
+        val extraSettingMapStr = broadcastMap.get(TextToSpeechCliSchema.extraSettingMapStr.name)
+            ?: String()
+        TextToSpeechIntentSender.send(
+            ubuntuService.applicationContext,
+            currentAppDirName,
+            fannelRawName,
+            listFilePath,
+            extraSettingMapStr,
+        )
     }
 
     private fun intentSender(
@@ -739,6 +792,64 @@ object IntentRequestMonitor {
       
     """.trimIndent()
     }
+
+    private fun makeHelpConForTextToSpeech(): String {
+        val verticalBarSepalator = "|"
+        val playModeSchema = TextToSpeechSchema.playMode.name
+        val onRoopSchema = TextToSpeechSchema.onRoop.name
+        val playNumberSchema = TextToSpeechSchema.onRoop.name
+        val transModeSchema = TextToSpeechSchema.transMode.name
+        val onTrackSchema = TextToSpeechSchema.onTrack.name
+        val speedSchema = TextToSpeechSchema.speed.name
+        val pitchSchema = TextToSpeechSchema.pitch.name
+        return """
+        
+        ### TextToSpeech manager
+        
+        ${TextToSpeechCliSchema.launchType.name.camelToShellArgsName()}
+        -t
+         : ${TextToSpeechLaunchType.launch.name}/${TextToSpeechLaunchType.exit.name}
+        
+        ${TextToSpeechCliSchema.listFilePath.name.camelToShellArgsName()}
+        -l
+        : play list path
+        
+        ${TextToSpeechCliSchema.extraSettingMapStr.name.camelToShellArgsName()}
+        -e
+        : extra map str
+        option
+            format: ${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}..
+        
+        optional key
+            ${playModeSchema}: Play mode switch: ordinaly(default), shuffle, reverse, number
+            ${onRoopSchema}: Some string: roop, "": no roop
+            ${playNumberSchema}:  Play list order number string
+            ${transModeSchema}: Select language: en(english), zw(chinese), sp(spanish), ko(korean), ja(japanese)
+            ${onTrackSchema}: Save track switch: "", on
+            ${speedSchema}: Speech speed int string, base '50',
+            ${pitchSchema}: Speech pitch int string, base '50'
+        
+        ${TextToSpeechCliSchema.currentAppDirName.name.camelToShellArgsName()}
+        -d
+        : current app direcotry(fannel parent directory)
+        
+        ${TextToSpeechCliSchema.fannelRawName.name.camelToShellArgsName()}
+        -f
+        : fannle name without extend
+        
+        ex)
+            tspeech \
+                -t "${TextToSpeechLaunchType.launch.name} \
+                -l "{play list path}" \
+                -e "${playModeSchema}=shuffle" \
+                -e "${onRoopSchema}=on" \
+                -e "${transModeSchema}=en" \
+                -e "${onTrackSchema}=on" \
+                -e "${pitchSchema}=50"
+            
+    """.trimIndent()
+    }
+
     private fun makeHelpConForNotification(): String {
         val deleteOption = BroadcastMonitorScheme.delete.name.camelToShellArgsName()
         val notificationStyleOption = BroadcastMonitorScheme.notificationStyle.name.camelToShellArgsName()
@@ -911,6 +1022,21 @@ private fun toInt(numStr: String?): Int? {
 
 }
 
+
+private enum class TextToSpeechCliSchema {
+    launchType,
+    currentAppDirName,
+    fannelRawName,
+    listFilePath,
+    extraSettingMapStr,
+}
+
+private enum class TextToSpeechLaunchType {
+    launch,
+    exit,
+}
+
+
 private enum class ToastSchema {
     message,
     span
@@ -934,6 +1060,7 @@ private enum class ReceiveIntentType {
     broadcast,
     notification,
     intent,
+    textToSpeech,
     toast
 }
 

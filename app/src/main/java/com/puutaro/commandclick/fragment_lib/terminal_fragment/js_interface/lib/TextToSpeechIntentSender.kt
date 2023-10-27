@@ -4,31 +4,31 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.CmdClickMap
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-import java.io.File
 
 object TextToSpeechIntentSender {
 
-    private val keySeparator = "|"
+    private const val keySeparator = "|"
 
     fun send(
-        terminalFragment: TerminalFragment,
+        context: Context?,
+        currentAppDirName: String,
+        fannelRawName: String,
         listFilePath: String,
         extraSettingMapStr: String,
     ){
         try {
             exeSend(
-                terminalFragment,
+                context,
+                currentAppDirName,
+                fannelRawName,
                 listFilePath,
                 extraSettingMapStr,
             )
         }catch (e: Exception){
             Toast.makeText(
-                terminalFragment.context,
+                context,
                 e.toString(),
                 Toast.LENGTH_LONG
             ).show()
@@ -36,25 +36,13 @@ object TextToSpeechIntentSender {
     }
 
     private fun exeSend(
-        terminalFragment: TerminalFragment,
+        context: Context?,
+        currentAppDirName: String,
+        fannelRawName: String,
         listFilePath: String,
         extraSettingMapStr: String,
     ){
-        val sharePref = terminalFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirName = SharePreffrenceMethod.getStringFromSharePreffrence(
-            sharePref,
-            SharePrefferenceSetting.current_app_dir
-        ).let {
-            File(it).name
-        }
-        val fannelRawName = SharePreffrenceMethod.getStringFromSharePreffrence(
-            sharePref,
-            SharePrefferenceSetting.current_script_file_name
-        ).replace(
-            Regex("\\.[a-zA-Z0-9]*$"),
-            ""
-        )
-        val textToSpeechIntent = Intent(terminalFragment.activity, TextToSpeechService::class.java)
+        val textToSpeechIntent = Intent(context, TextToSpeechService::class.java)
         val extraSettingMap = CmdClickMap.createMap(
             extraSettingMapStr,
             keySeparator
@@ -64,44 +52,44 @@ object TextToSpeechIntentSender {
             TextToSpeechIntentExtra.listFilePath.scheme,
             listFilePath
         )
-        extraSettingMap.get(TextToSpeechShema.playMode.name).let {
+        extraSettingMap.get(TextToSpeechSchema.playMode.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.playMode.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechShema.onRoop.name).let {
+        extraSettingMap.get(TextToSpeechSchema.onRoop.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.onRoop.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechShema.playNumber.name).let {
+        extraSettingMap.get(TextToSpeechSchema.playNumber.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.playNumber.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechShema.transMode.name).let {
+        extraSettingMap.get(TextToSpeechSchema.transMode.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.transMode.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechShema.onTrack.name).let {
+        extraSettingMap.get(TextToSpeechSchema.onTrack.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.onTrack.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechShema.speed.name)?.let {
+        extraSettingMap.get(TextToSpeechSchema.speed.name)?.let {
             val floatSpeed = toFloatStr(it)
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.speed.scheme,
                 floatSpeed
             )
         }
-        extraSettingMap.get(TextToSpeechShema.pitch.name)?.let {
+        extraSettingMap.get(TextToSpeechSchema.pitch.name)?.let {
             val floatPitch = toFloatStr(it)
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.pitch.scheme,
@@ -116,7 +104,7 @@ object TextToSpeechIntentSender {
             TextToSpeechIntentExtra.scriptRawName.scheme,
             fannelRawName
         )
-        terminalFragment.context?.startForegroundService(textToSpeechIntent)
+        context?.startForegroundService(textToSpeechIntent)
     }
 
     private fun toFloatStr(
@@ -132,7 +120,7 @@ object TextToSpeechIntentSender {
     }
 }
 
-private enum class TextToSpeechShema {
+enum class TextToSpeechSchema {
     playMode,
     onRoop,
     playNumber,

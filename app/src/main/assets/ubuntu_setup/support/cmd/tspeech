@@ -1,0 +1,91 @@
+#!/bin/bash
+
+set -ue
+
+
+HELP=""
+LAUNCH_TYPE=""
+CURRENT_APP_DIR_NAME=""
+FANNEL_RAW_NAME=""
+LIST_FILE_PATH=""
+EXTRA_SETTING_MAP_STR=""
+
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--launch-type|-t)
+			LAUNCH_TYPE="${2}"
+			shift
+			;;
+		--current-app-dir-name|-d)
+			CURRENT_APP_DIR_NAME="${2}"
+			shift
+			;;
+		--fannel-row-name|-f)
+			FANNEL_RAW_NAME="${2}"
+			shift
+			;;
+		--list-file-path|-l)
+			LIST_FILE_PATH="${2}"
+			shift
+			;;
+		--extra-setting-map-str|-e)
+			EXTRA_SETTING_MAP_STR="${EXTRA_SETTING_MAP_STR}|${2}"
+			shift
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+read_args "$@"
+
+tspeech(){
+	awk \
+	-v help="${HELP}" \
+	-v launchType="${LAUNCH_TYPE}" \
+	-v currentAppDirName="${CURRENT_APP_DIR_NAME}" \
+	-v fannelRawName="${FANNEL_RAW_NAME}" \
+	-v listFilePath="${LIST_FILE_PATH}" \
+	-v extraSettingMapStr="${EXTRA_SETTING_MAP_STR/\|/}" \
+	'function concat(val, val_name){
+		if(val) output_con = output_con""val_name"="val"\n"
+	}
+	BEGIN {
+		output_con=""
+		concat(help, "help")
+		output_con = output_con"intentType=textToSpeech\n"
+		concat(launchType, "launchType")
+		concat(currentAppDirName, "currentAppDirName")
+		concat(fannelRawName, "fannelRawName")
+		concat(listFilePath, "listFilePath")
+		concat(extraSettingMapStr, "extraSettingMapStr")
+		gsub(",", "!", output_con)
+		gsub(/\n/, ",\n", output_con)
+		print output_con
+	}' \
+	| curl -s -X POST -d @- "${INTENT_MONITOR_ADDRESS}" 
+}
+
+readonly output="$(tspeech)"
+case "${output}" in
+	"") exit 0;;
+	*) echo "${output}"
+esac
+test -n "${HELP}" \
+	&& exit 0 \
+	|| exit 1
