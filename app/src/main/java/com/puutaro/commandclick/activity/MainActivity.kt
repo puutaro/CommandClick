@@ -56,6 +56,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import kotlinx.coroutines.Job
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -98,6 +99,7 @@ class MainActivity:
 
     lateinit var activityMainBinding: ActivityMainBinding
     private var filePath: ValueCallback<Array<Uri>>? = null
+    private var adBlockJob: Job? = null
     var savedInstanceStateVal: Bundle? = null
     private val getFile = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -157,11 +159,12 @@ class MainActivity:
             false
         )
         InitManager(this).invoke()
+        adBlockJob?.cancel()
+        adBlockJob = AdBlocker.init(this)
     }
 
     override fun onStart() {
         super.onStart()
-        AdBlocker.init(this)
     }
 
     override fun onResume() {
@@ -171,6 +174,7 @@ class MainActivity:
 
     override fun onDestroy() {
         super.onDestroy()
+        adBlockJob?.cancel()
         val intent = Intent(this, GitCloneService::class.java)
         this.stopService(intent)
         BroadcastManager.unregisterBroadcastReceiverForActivity(
