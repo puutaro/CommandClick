@@ -59,6 +59,10 @@ tsvar(){
 		-v key="${key}" \
 	'BEGIN{
 		start_index = index(con, key);
+		if(start_index <= 0) {
+			print ""
+			exit
+		}
 		grep_con = substr(con, start_index, length(con));
 		sub(/\n.*/, "", grep_con)
 		sub(/.*\t/, "", grep_con);
@@ -69,17 +73,47 @@ tsvar(){
 ctsv(){
 	awk \
 		-v in_con="${1:-}" \
-		'
-		BEGIN {
+		'function comma_comp_in_double_quote(input){
+			in_con_array_char_len = split(input , in_con_char_array, "" )
+			double_quote_count = 0
+			for(i=1;i<=in_con_array_char_len;i++){
+					char = in_con_char_array[i]
+					if(char == "\x22") double_quote_count++
+					if(\
+						double_quote_count > 0\
+						&& char == "," \
+					) in_con_char_array[i] = comma_comp_string
+					if(\
+						double_quote_count % 2 == 0\
+					) double_quote_count = 0
+			}
+			update_in_con = ""
+			for(i=1;i<=in_con_array_char_len;i++){
+				update_in_con = update_in_con""in_con_char_array[i]
+			}
+			gsub("\x22", "", update_in_con)
+			gsub(/,,*/, ",", update_in_con)
+			return update_in_con
+		}
+		function make_tsv(input){
 			out_con = ""
-			arg_num = split(in_con , arg_array, "\t" )
+			arg_num = split(input , arg_array, "," )
 			for(i=1; i<=arg_num; i++){
 				arg = arg_array[i]
 				sub("=", "\t", arg)
 				out_con = "\n"out_con"\n"arg
 			}
+			gsub("\\${00}", APP_ROOT_PATH, slice_con)
 			sub(/^\n\n*/, "", out_con)
-			print out_con
+			sub(/^ /, "", out_con)
+			gsub(/\n */, "\n", out_con)
+			gsub(comma_comp_string, ",", out_con)
+			return out_con
+		}
+		BEGIN {
+			comma_comp_string = "CMDCLICK_COMMA"
+			update_in_con = comma_comp_in_double_quote(in_con)
+			print make_tsv(update_in_con)
 		}'
 }
 

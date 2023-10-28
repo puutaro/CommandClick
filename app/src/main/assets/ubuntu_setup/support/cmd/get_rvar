@@ -113,15 +113,15 @@ grep_key(){
 			# grep
 			grep_key = key"\t"
 			index_grep_key = index(con, grep_key)
-			if(index_grep_key < 0) exit
+			if(index_grep_key <= 0) exit
 			slice_con = substr(con, index_grep_key, length(con))
 			sub(/\n.*/, "", slice_con)
 			sub(/.*\t/, "", slice_con)
-			gsub("\${00}", APP_ROOT_PATH, slice_con)
-			gsub("\${01}", current_app_dir_path, slice_con)
-			gsub("\${001}", fannel_dir_name, slice_con)
-			gsub("\${02}", fannel_shell_name, slice_con)
-			gsub("\${0}", fannel_shell_path, slice_con)
+			gsub("\x24{00}", APP_ROOT_PATH, slice_con)
+			gsub("\x24{01}", current_app_dir_path, slice_con)
+			gsub("\x24{001}", fannel_dir_name, slice_con)
+			gsub("\x24{02}", fannel_shell_name, slice_con)
+			gsub("\x24{0}", fannel_shell_path, slice_con)
 			print slice_con
 		}'
 }
