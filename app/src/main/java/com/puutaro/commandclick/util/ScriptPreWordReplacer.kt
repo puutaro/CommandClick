@@ -25,7 +25,7 @@ object ScriptPreWordReplacer {
             currentScriptNameMark,
         ).map {
             "$it\t" + replace(
-                currentScriptPathMark,
+                it,
                 currentAppDirPath,
                 fannelDirName,
                 scriptName,
