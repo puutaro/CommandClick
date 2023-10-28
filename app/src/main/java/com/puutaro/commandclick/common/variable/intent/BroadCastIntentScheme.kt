@@ -8,6 +8,10 @@ enum class BroadCastIntentScheme(
         "com.puutaro.commandclick.url.monitor_text_path",
         "monitor_text_path"
     ),
+    IS_MONITOR_SCROLL(
+        "com.puutaro.commandclick.url.is_monitor_scroll",
+        "is_monitor_scroll"
+    ),
     ULR_LAUNCH(
         "com.puutaro.commandclick.url.launch",
         "url",

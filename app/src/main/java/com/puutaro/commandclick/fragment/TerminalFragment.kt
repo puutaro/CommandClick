@@ -26,9 +26,6 @@ import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
@@ -79,30 +76,11 @@ class   TerminalFragment: Fragment() {
     var dialogInstance: Dialog? = null
 
 
-    private var broadcastReceiverForUrl: BroadcastReceiver = object : BroadcastReceiver() {
+    var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
-            BroadcastHtmlReceiveHandler.handle(
+            BroadcastHandlerForTerm.handle(
                 this@TerminalFragment,
-                intent,
-            )
-        }
-    }
-
-    private var broadcastReceiverForMonitorText: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            MonitorTextLauncher.handle(
-                this@TerminalFragment,
-                intent,
-            )
-        }
-    }
-
-    var broadcastReceiverForHtml: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            HtmlLauncher.launch(
-                intent,
-                context,
-                this@TerminalFragment,
+                intent
             )
         }
     }
@@ -180,15 +158,7 @@ class   TerminalFragment: Fragment() {
         activity?.intent?.action = String()
         BroadcastManager.unregisterBroadcastReceiverForTerm(
             this,
-            broadcastReceiverForUrl
-        )
-        BroadcastManager.unregisterBroadcastReceiverForTerm(
-            this,
-            broadcastReceiverForHtml
-        )
-        BroadcastManager.unregisterBroadcastReceiverForTerm(
-            this,
-            broadcastReceiverForMonitorText
+            broadcastReceiverForTerm
         )
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
@@ -220,20 +190,15 @@ class   TerminalFragment: Fragment() {
             this,
             terminalViewModel,
         )
-        BroadcastManager.registerBroadcastReceiver(
+        BroadcastManager.registerBroadcastReceiverMultiActions(
             this,
-            broadcastReceiverForUrl,
-            BroadCastIntentScheme.ULR_LAUNCH.action
-        )
-        BroadcastManager.registerBroadcastReceiver(
-            this,
-            broadcastReceiverForHtml,
-            BroadCastIntentScheme.HTML_LAUNCH.action
-        )
-        BroadcastManager.registerBroadcastReceiver(
-            this,
-            broadcastReceiverForMonitorText,
-            BroadCastIntentScheme.MONITOR_TEXT_PATH.action
+            broadcastReceiverForTerm,
+            listOf(
+                BroadCastIntentScheme.HTML_LAUNCH.action,
+                BroadCastIntentScheme.ULR_LAUNCH.action,
+                BroadCastIntentScheme.MONITOR_TEXT_PATH.action,
+                BroadCastIntentScheme.IS_MONITOR_SCROLL.action,
+            )
         )
         previousTerminalTag = tag
     }

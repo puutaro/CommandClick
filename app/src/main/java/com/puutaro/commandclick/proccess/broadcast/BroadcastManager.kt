@@ -41,6 +41,25 @@ object BroadcastManager {
         }
     }
 
+    fun registerBroadcastReceiverMultiActions(
+        fragment: Fragment,
+        broadcastReceiver: BroadcastReceiver,
+        actionNameList: List<String>
+    ){
+        try {
+            val intentFilter = IntentFilter()
+            actionNameList.forEach {
+                intentFilter.addAction(it)
+            }
+            fragment.activity?.registerReceiver(
+                broadcastReceiver,
+                intentFilter
+            )
+        } catch(e: Exception){
+            return
+        }
+    }
+
 
     fun unregisterBroadcastReceiverForActivity(
         activity: MainActivity,

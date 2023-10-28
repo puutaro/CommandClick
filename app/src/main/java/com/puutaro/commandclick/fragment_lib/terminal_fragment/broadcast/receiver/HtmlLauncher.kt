@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
-import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
@@ -15,9 +14,9 @@ object HtmlLauncher{
 
     fun launch(
         intent: Intent,
-        context: Context,
         terminalFragment: TerminalFragment,
     ) {
+        val context = terminalFragment.context
         val binding = terminalFragment.binding
         val editFilePath = intent.getStringExtra(
             BroadCastIntentScheme.HTML_LAUNCH.scheme
