@@ -500,7 +500,13 @@ class TextToSpeechService:
                 status != TextToSpeech.SUCCESS
             ) return@OnInitListener
             textToSpeech?.let { tts ->
-                if (tts.isLanguageAvailable(lang) > TextToSpeech.LANG_AVAILABLE) {
+                val isEnableLanguage = try {
+                    tts.isLanguageAvailable(lang)
+                } catch (e: Exception){
+                    tts.language = Locale.ENGLISH
+                    return@let
+                }
+                if (isEnableLanguage > TextToSpeech.LANG_AVAILABLE) {
                     tts.language = lang
                 } else {
                     tts.language = Locale.ENGLISH

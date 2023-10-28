@@ -7,6 +7,7 @@ import android.icu.util.Calendar
 import android.webkit.JavascriptInterface
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import java.util.Locale
 
 class JsUtil(
     private val fragment: Fragment
@@ -64,5 +65,10 @@ class JsUtil(
         val calenderDatetime: Calendar = Calendar.getInstance()
         calenderDatetime.set(year, month, day, hour, minute)
         return calenderDatetime.timeInMillis.toString()
+    }
+
+    @JavascriptInterface
+    fun lang(): String {
+        return Locale.getDefault().language
     }
 }
