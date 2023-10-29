@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -86,6 +87,13 @@ class JsFileSystem(
             fileObj.name,
             echoContents
         )
+    }
+
+    @JavascriptInterface
+    fun errLog(
+        con: String
+    ){
+        LogSystems.stdErr(con)
     }
 
     @JavascriptInterface
