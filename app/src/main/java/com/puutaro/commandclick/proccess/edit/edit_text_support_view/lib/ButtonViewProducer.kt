@@ -65,7 +65,7 @@ object ButtonViewProducer {
         editParameters: EditParameters,
         weight: Float,
         currentComponentIndex: Int,
-        isInsertTextViewVisible: Boolean = false
+//        isInsertTextViewVisible: Boolean = false
     ): Button {
         val context = editParameters.context
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
@@ -104,7 +104,7 @@ object ButtonViewProducer {
             context,
             insertButton
         )
-        insertTextView.isVisible = isInsertTextViewVisible
+//        insertTextView.isVisible = isInsertTextViewVisible
 
         when(getIsConsec(buttonMap)) {
             true -> buttonTouchListener(

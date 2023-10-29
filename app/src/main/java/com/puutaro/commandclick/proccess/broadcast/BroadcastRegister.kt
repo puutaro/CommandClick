@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
 
-object BroadcastManager {
+object BroadcastRegister {
 
     fun registerBroadcastReceiverForActivity(
         activity: MainActivity,

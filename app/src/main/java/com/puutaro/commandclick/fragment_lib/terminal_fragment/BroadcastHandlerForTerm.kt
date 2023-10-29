@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorScrollManager
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 
 object BroadcastHandlerForTerm {
@@ -30,8 +30,8 @@ object BroadcastHandlerForTerm {
                 terminalFragment,
                 intent,
             )
-            BroadCastIntentScheme.IS_MONITOR_SCROLL.action
-            -> MonitorScrollManager.handle(
+            BroadCastIntentScheme.MONITOR_MANAGER.action
+            -> MonitorBroadcastManager.handle(
                 terminalFragment,
                 intent
             )
