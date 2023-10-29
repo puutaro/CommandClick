@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -ue 
+
+wmsg(){
+	local target_pid="${1}"
+	local wait_message="${2:-}"
+	local wait_simbol="${3:-.}"
+	while kill -0 "${target_pid}" 2>/dev/null
+	do
+	  wait_simbol="${wait_simbol}."
+	  toast "${wait_message}${wait_simbol}"
+	  sleep 3
+	done
+	toast "${wait_message} ok"
+}
+
+help(){
+	awk 'BEGIN{
+		print "### Wait message for backgrond process comp"
+		print ""
+		print "# Format"
+		print "wmsg \x24{arg1} \x24{arg2} \x24{arg3}"
+		print ""
+		print "\targ1 -> pid"
+		print "\targ2 -> message"
+		print "\targ3 -> wait increasing simbol"
+		print ""
+	}'
+	exit 0
+}
+
+
+case "${1}" in
+	"--help") help;;
+esac
+		
+
+
+wmsg "${@}"
