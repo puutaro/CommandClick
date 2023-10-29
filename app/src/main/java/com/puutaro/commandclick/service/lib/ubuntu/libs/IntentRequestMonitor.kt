@@ -13,8 +13,10 @@ import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.TextToSpeechIntentSender
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.TextToSpeechSchema
+import com.puutaro.commandclick.proccess.broadcast.BroadCastSenderSchemaForCommon
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
+import com.puutaro.commandclick.proccess.intent.TextToSpeechSchema
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -158,9 +160,10 @@ object IntentRequestMonitor {
                 broadcastMap,
             )
             ReceiveIntentType.broadcast.name
-            -> broadcastSender(
+            -> BroadcastSender.send(
                 ubuntuService,
                 broadcastMap,
+                keySeparator
             )
             ReceiveIntentType.notification.name
             -> notificationHandler(
@@ -319,38 +322,6 @@ object IntentRequestMonitor {
                 }
             }
         }
-    }
-
-    private fun broadcastSender(
-        ubuntuService: UbuntuService,
-        broadcastMap: Map<String, String>,
-    ){
-        val helpOption = broadcastMap.get(HelpKey.help.name)
-        if(
-            !helpOption.isNullOrEmpty()
-        ) return Unit.also {
-            responseString += "\n${makeHelpConForBroadcast()}"
-        }
-        val broadcastIntent = Intent()
-        val action = broadcastMap.get(
-            BroadCastSenderSchema.action.name
-        ) ?: return
-        broadcastIntent.action = action
-        val extraPairList = broadcastMap.get(
-            BroadCastSenderSchema.extras.name
-        )?.let {
-            CmdClickMap.createMap(
-                it,
-                keySeparator
-            )
-        }
-        extraPairList?.forEach {
-            broadcastIntent.putExtra(
-                it.first,
-                it.second
-            )
-        }
-        ubuntuService.sendBroadcast(broadcastIntent)
     }
 
     private fun notificationHandler(
@@ -691,8 +662,7 @@ object IntentRequestMonitor {
             .trimSeparatorGap(valueSeparator)
             .split("\n").let {
             SettingFile.formSettingContents(it)
-        }.let {
-                CmdClickMap.createMap(
+        }.let { CmdClickMap.createMap(
                 it,
                 fieldSeparator
             )
@@ -959,11 +929,11 @@ object IntentRequestMonitor {
         
         ### Broadcast sender
         
-        ${BroadCastSenderSchema.action.name.camelToShellArgsName()}
+        ${BroadCastSenderSchemaForCommon.action.name.camelToShellArgsName()}
         -a
         : Intent action in broadcast
         
-        ${BroadCastSenderSchema.extras.name.camelToShellArgsName()}
+        ${BroadCastSenderSchemaForCommon.extras.name.camelToShellArgsName()}
         -e
         : Intent extra string in broadcast
         option
@@ -1062,12 +1032,6 @@ private enum class ReceiveIntentType {
     intent,
     textToSpeech,
     toast
-}
-
-
-private enum class BroadCastSenderSchema {
-    action,
-    extras,
 }
 
 private enum class BroadcastMonitorScheme {
