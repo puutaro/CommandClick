@@ -13,10 +13,12 @@ class JsBroadcast(
 
     @JavascriptInterface
     fun send(
+        action: String,
         broadCastMapStr: String
     ){
         val kyeSepalator = "|"
-        val broadcastMap = mapOf<String, String>(
+        val broadcastMap = mapOf(
+            BroadCastSenderSchemaForCommon.action.name to action,
             BroadCastSenderSchemaForCommon.extras.name to broadCastMapStr
         )
         BroadcastSender.send(
