@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.util.Log
-import android.view.Gravity
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
 import kotlinx.coroutines.*
 import java.io.File

@@ -30,7 +30,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsTo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsValEdit
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 
 
