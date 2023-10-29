@@ -89,14 +89,6 @@ class WithEditComponent(
             insertTextView,
             horizontalLinearLayout,
         )
-        val isInsertTextViewVisible = !variableTypeList.contains(
-            EditTextSupportViewName.HIDDEN_LABEL.str
-        )
-        insertTextView.isVisible = isInsertTextViewVisible
-        val isInVisible = !variableTypeList.contains(
-            EditTextSupportViewName.INVISIBLE.str
-        )
-        horizontalLinearLayout.isVisible = isInVisible
         (variableTypeList.indices).forEach {
             val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
             val currentComponentIndex = variableTypeListUntilCurrent.filter {
@@ -496,12 +488,23 @@ class WithEditComponent(
 //        if(
 //            tag?.startsWith(FragmentTagManager.Prefix.settingEditPrefix.str) != true
 //        ) return
-        val isHidden = !editParameters.hideSettingVariableList.contains(
+        val isVisible = !editParameters.hideSettingVariableList.contains(
             editParameters.currentVariableName
         )
-
-        horizontalLinearLayout.isVisible = isHidden
-        insertTextView.isVisible = isHidden
+        if(!isVisible) {
+            horizontalLinearLayout.isVisible = isVisible
+            insertTextView.isVisible = isVisible
+            return
+        }
+        val variableTypeList = editParameters.variableTypeList
+        val isInsertTextViewVisible = !variableTypeList.contains(
+            EditTextSupportViewName.HIDDEN_LABEL.str
+        )
+        insertTextView.isVisible = isInsertTextViewVisible
+        val isInVisible = !variableTypeList.contains(
+            EditTextSupportViewName.INVISIBLE.str
+        )
+        horizontalLinearLayout.isVisible = isInVisible
     }
 }
 
