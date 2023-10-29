@@ -6,7 +6,7 @@ import android.speech.tts.TextToSpeech
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.TextToSpeechIntentSender
+import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File

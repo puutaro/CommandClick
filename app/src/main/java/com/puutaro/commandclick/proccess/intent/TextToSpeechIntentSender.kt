@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
+package com.puutaro.commandclick.proccess.intent
 
 import android.content.Context
 import android.content.Intent
