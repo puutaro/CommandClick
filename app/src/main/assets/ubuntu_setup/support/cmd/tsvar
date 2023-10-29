@@ -37,7 +37,7 @@ get_help(){
 				print ""
 				print "# Create tsv con like key tab value"
 				print ""
-				print "From "${k1}=${v1}\t${k2}=${v2}\t.."
+				print "From "${k1}=${v1},${k2}=${v2}\t.."
 				print "tsvar \x22${ktoVcon}\x22"
 				print ""
 				print "# Get tsv env variables"
