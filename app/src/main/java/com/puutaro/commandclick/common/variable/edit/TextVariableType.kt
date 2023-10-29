@@ -8,6 +8,7 @@ object TypeVariable {
     )
     private val textLabelTypeList = listOf(
         EditTextSupportViewName.HIDDEN_LABEL.str,
+        EditTextSupportViewName.INVISIBLE.str,
     )
     private val otherLabelTypeList = listOf(
         EditTextSupportViewName.DIRECTORY_PICKER.str,

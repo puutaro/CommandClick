@@ -26,6 +26,7 @@ enum class EditTextSupportViewName(
     READ_ONLY_EDIT_TEXT("RO"),
     PASSWORD("H"),
     HIDDEN_LABEL("HL"),
+    INVISIBLE("IV"),
     DATE("DT"),
     TIME("TM"),
     COLOR("CLR"),
