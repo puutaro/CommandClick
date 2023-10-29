@@ -503,13 +503,13 @@ class TextToSpeechService:
                 val isEnableLanguage = try {
                     tts.isLanguageAvailable(lang)
                 } catch (e: Exception){
-                    tts.language = Locale.ENGLISH
+                    tts.language = defaultLocale
                     return@let
                 }
                 if (isEnableLanguage > TextToSpeech.LANG_AVAILABLE) {
                     tts.language = lang
                 } else {
-                    tts.language = Locale.ENGLISH
+                    tts.language = defaultLocale
                 }
             }
         })
