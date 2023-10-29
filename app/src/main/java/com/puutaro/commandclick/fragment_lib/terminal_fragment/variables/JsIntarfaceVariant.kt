@@ -14,6 +14,7 @@ enum class JsInterfaceVariant {
     jsScript,
     jsListSelect,
     jsEdit,
+    jsValEdit,
     jsFileSelect,
     jsDirSelect,
     jsCsv,

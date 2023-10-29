@@ -301,7 +301,7 @@ class JsFileSelect(
             parentDirPath,
             scriptFileName
         ).readText()
-        val replaceContents = jsScript.replaceComamndVariable(
+        val replaceContents = jsScript.replaceCommandVariable(
             scriptContents,
             replaceString,
         )

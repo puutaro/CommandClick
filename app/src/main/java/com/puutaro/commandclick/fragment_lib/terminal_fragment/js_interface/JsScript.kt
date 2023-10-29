@@ -119,7 +119,7 @@ class JsScript(
     }
 
     @JavascriptInterface
-    fun replaceComamndVariable(
+    fun replaceCommandVariable(
         scriptContents: String,
         replaceTabList: String,
     ): String {

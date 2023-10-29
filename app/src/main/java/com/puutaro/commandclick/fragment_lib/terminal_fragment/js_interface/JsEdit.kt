@@ -41,7 +41,7 @@ class JsEdit(
             parentDirPath,
             scriptName
         ).readText()
-        val updateJsContents = jsScript.replaceComamndVariable(
+        val updateJsContents = jsScript.replaceCommandVariable(
             jsContents,
             "${targetVariableName}=${updateVariableValue}"
         )
@@ -135,6 +135,5 @@ class JsEdit(
             editFileName,
             removedUrlList
         )
-
     }
 }

@@ -165,14 +165,14 @@ class JsListSelect(
         val replacedScriptContentsTargetVariable = if(
             replaceTargetVariable.isEmpty()
         ) scriptContents
-        else jsScript.replaceComamndVariable(
+        else jsScript.replaceCommandVariable(
                 scriptContents,
                 "${replaceTargetVariable}=\"${recentItem}\"",
             )
         val replacedScriptContents = if(
             defaultVariable.isEmpty()
         ) replacedScriptContentsTargetVariable
-        else jsScript.replaceComamndVariable(
+        else jsScript.replaceCommandVariable(
             replacedScriptContentsTargetVariable,
                 "${defaultVariable}=",
             )
