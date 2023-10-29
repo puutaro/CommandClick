@@ -15,8 +15,9 @@ wmsg(){
 	toast "${wait_message} ok"
 }
 
-help(){
+echo_help(){
 	awk 'BEGIN{
+		print ""
 		print "### Wait message for backgrond process comp"
 		print ""
 		print "# Format"
@@ -32,7 +33,7 @@ help(){
 
 
 case "${1}" in
-	"--help") help;;
+	"--help") echo_help;;
 esac
 		
 

@@ -1,0 +1,76 @@
+#!/bin/bash
+
+set -ue
+
+readonly support_dir_path="/support"
+readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
+readonly ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
+readonly wait_quiz_tsv_name=$(\
+	tsvar "${ubuntu_env_tsv_con}" "WAIT_QUIZ_TSV_NAME" \
+)
+readonly wait_quiz_tsv_path="${support_dir_path}/${wait_quiz_tsv_name}"
+readonly WAIT_QUIZ_TSV_CON="$(cat "${wait_quiz_tsv_path}")"
+readonly WAIT_QUIZ_TSV_CON_LINES="$(echo "${WAIT_QUIZ_TSV_CON}" | wc -l)"
+
+decide_message(){
+	for i in $(seq 1 5)
+	do
+		local rnd_line_num="$((${RANDOM} % ${WAIT_QUIZ_TSV_CON_LINES}))"
+		local quiz_con_src=$(\
+			echo "${WAIT_QUIZ_TSV_CON}" \
+					| sed -n "${rnd_line_num}p"\
+		)
+		case "${quiz_con_src}" in
+			"") 
+				sleep 0.1
+				continue
+				;;
+		esac
+		echo "${quiz_con_src}"
+		break;
+	done
+}
+
+wait_quiz(){
+	local target_pid=${1}
+	local wait_sec=3
+	local current_times=1
+	local answer=""
+	while kill -0 "${target_pid}" 2>/dev/null
+	do
+		if [ $((${current_times} % 2)) -eq 0 ];then
+			toast "${answer/-/=}"
+		else 
+			quiz_con="$(decide_message)"
+			answer="$(echo "${quiz_con}" | cut -f 2)"
+			local current_sec=$((current_times * ${wait_sec}))
+			toast \
+				"[${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)"
+		fi
+		sleep ${wait_sec}
+		current_times=$((${current_times} + 1))
+	done
+	toast "ok"
+}
+
+echo_help(){
+	awk 'BEGIN{
+		print ""
+		print "### Wait quiz for backgrond process comp"
+		print ""
+		print "# Format"
+		print "wqmsg \x24{arg1}"
+		print ""
+		print "\targ1 -> pid"
+		print ""
+	}'
+	exit 0
+}
+
+
+case "${1}" in
+	"--help"|"-h")
+		echo_help;;
+esac
+
+wait_quiz "${1}"
