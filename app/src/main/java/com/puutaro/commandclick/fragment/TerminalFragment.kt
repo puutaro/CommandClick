@@ -25,7 +25,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
-import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
@@ -156,7 +156,7 @@ class   TerminalFragment: Fragment() {
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
-        BroadcastManager.unregisterBroadcastReceiverForTerm(
+        BroadcastRegister.unregisterBroadcastReceiverForTerm(
             this,
             broadcastReceiverForTerm
         )
@@ -190,14 +190,14 @@ class   TerminalFragment: Fragment() {
             this,
             terminalViewModel,
         )
-        BroadcastManager.registerBroadcastReceiverMultiActions(
+        BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,
             broadcastReceiverForTerm,
             listOf(
                 BroadCastIntentScheme.HTML_LAUNCH.action,
                 BroadCastIntentScheme.ULR_LAUNCH.action,
                 BroadCastIntentScheme.MONITOR_TEXT_PATH.action,
-                BroadCastIntentScheme.IS_MONITOR_SCROLL.action,
+                BroadCastIntentScheme.MONITOR_MANAGER.action,
             )
         )
         previousTerminalTag = tag

@@ -25,7 +25,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.*
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.receiver.BroadcastReceiveHandlerForCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
-import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -261,7 +261,7 @@ class CommandIndexFragment: Fragment() {
         cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
         installFannelDialog?.dismiss()
         showTerminalJobWhenReuse?.cancel()
-        BroadcastManager.unregisterBroadcastReceiver(
+        BroadcastRegister.unregisterBroadcastReceiver(
             this,
             broadcastReceiverForCmdIndex,
         )
@@ -274,7 +274,7 @@ class CommandIndexFragment: Fragment() {
         EditTextWhenReuse.focus(this)
         installFannelDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-        BroadcastManager.registerBroadcastReceiver(
+        BroadcastRegister.registerBroadcastReceiver(
             this,
             broadcastReceiverForCmdIndex,
             BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
