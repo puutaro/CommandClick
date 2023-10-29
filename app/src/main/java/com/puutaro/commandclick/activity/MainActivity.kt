@@ -52,7 +52,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButto
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
-import com.puutaro.commandclick.proccess.broadcast.BroadcastManager
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
@@ -148,7 +148,7 @@ class MainActivity:
         val actionBar = supportActionBar
         actionBar?.hide()
         volumeControlStream = AudioManager.STREAM_MUSIC
-        BroadcastManager.registerBroadcastReceiverForActivity(
+        BroadcastRegister.registerBroadcastReceiverForActivity(
             this,
             broadcastReceiverForRestartUbuntuService,
             BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
@@ -177,7 +177,7 @@ class MainActivity:
         adBlockJob?.cancel()
         val intent = Intent(this, GitCloneService::class.java)
         this.stopService(intent)
-        BroadcastManager.unregisterBroadcastReceiverForActivity(
+        BroadcastRegister.unregisterBroadcastReceiverForActivity(
             this,
             broadcastReceiverForRestartUbuntuService,
         )
