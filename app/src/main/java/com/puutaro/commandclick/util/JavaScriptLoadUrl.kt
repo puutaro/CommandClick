@@ -184,7 +184,7 @@ object JavaScriptLoadUrl {
             loadJsUrl.isEmpty()
             || loadJsUrl.isBlank()
         ) return null
-        return "javascript:(function() { ${loadJsUrl} })();"
+        return makeLastJsCon(loadJsUrl)
     }
 
 
@@ -309,6 +309,18 @@ object JavaScriptLoadUrl {
             loadJsUrl.isEmpty()
             || loadJsUrl.isBlank()
         ) return null
-        return "javascript:(function() { ${loadJsUrl} })();"
+        return makeLastJsCon(loadJsUrl)
+    }
+
+    private fun makeLastJsCon(
+        loadJsUrl: String
+    ): String {
+        return "javascript:(function() { " +
+                    "try{${loadJsUrl}} catch(error){" +
+                        "const errMessage = error.message;" +
+                        "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
+                        "jsFileSystem.errLog(errMessage)" +
+                    "};" +
+                "})();"
     }
 }
