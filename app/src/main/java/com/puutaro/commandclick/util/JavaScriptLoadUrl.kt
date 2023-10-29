@@ -318,6 +318,7 @@ object JavaScriptLoadUrl {
         return "javascript:(function() { " +
                     "try{${loadJsUrl}} catch(error){" +
                         "const errMessage = error.message;" +
+                        "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
                         "jsFileSystem.errLog(errMessage)" +
                     "};" +
