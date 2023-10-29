@@ -83,7 +83,7 @@ class WithEditComponent(
         )
         val horizontalLinearLayout = makeHorizontalLayout(context)
         horizontalLinearLayout.addView(insertEditText)
-        hideSettingVariableWhenSettingEdit(
+        hideVariables(
             editFragment,
             editParameters,
             insertTextView,
@@ -478,16 +478,12 @@ class WithEditComponent(
 //        })
 //    }
 
-    private fun hideSettingVariableWhenSettingEdit(
+    private fun hideVariables(
         editFragment: EditFragment,
         editParameters: EditParameters,
         insertTextView: TextView,
         horizontalLinearLayout: LinearLayout,
     ){
-//        val tag = editFragment.tag
-//        if(
-//            tag?.startsWith(FragmentTagManager.Prefix.settingEditPrefix.str) != true
-//        ) return
         val isVisible = !editParameters.hideSettingVariableList.contains(
             editParameters.currentVariableName
         )
@@ -501,10 +497,6 @@ class WithEditComponent(
             EditTextSupportViewName.HIDDEN_LABEL.str
         )
         insertTextView.isVisible = isInsertTextViewVisible
-        val isInVisible = !variableTypeList.contains(
-            EditTextSupportViewName.INVISIBLE.str
-        )
-        horizontalLinearLayout.isVisible = isInVisible
     }
 }
 
