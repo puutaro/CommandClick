@@ -92,6 +92,11 @@ class WithEditComponent(
         val isInsertTextViewVisible = !variableTypeList.contains(
             EditTextSupportViewName.HIDDEN_LABEL.str
         )
+        insertTextView.isVisible = isInsertTextViewVisible
+        val isInVisible = !variableTypeList.contains(
+            EditTextSupportViewName.INVISIBLE.str
+        )
+        horizontalLinearLayout.isVisible = isInVisible
         (variableTypeList.indices).forEach {
             val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
             val currentComponentIndex = variableTypeListUntilCurrent.filter {
@@ -106,7 +111,7 @@ class WithEditComponent(
                         editParameters,
                         otherComponentWeight,
                         currentComponentIndex,
-                        isInsertTextViewVisible
+//                        isInsertTextViewVisible
                     )
                     horizontalLinearLayout.addView(insertButton)
                 }
