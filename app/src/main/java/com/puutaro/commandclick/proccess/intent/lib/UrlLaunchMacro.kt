@@ -21,7 +21,7 @@ object UrlLaunchMacro {
                     UsePath.cmdclickUrlHistoryFileName
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.check(
+                        EnableUrlPrefix.isHttpOrFilePrefix(
                             it.split("\t").lastOrNull()
                         )
                     }
@@ -34,7 +34,7 @@ object UrlLaunchMacro {
                     UsePath.cmdclickUrlHistoryFileName
                 ).textToList()
                     .filter {
-                        EnableUrlPrefix.check(
+                        EnableUrlPrefix.isHttpOrFilePrefix(
                             it.split("\t").lastOrNull()
                         )
                     }

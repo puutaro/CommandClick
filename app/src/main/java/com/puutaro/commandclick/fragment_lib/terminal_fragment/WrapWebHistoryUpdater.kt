@@ -60,7 +60,11 @@ object WrapWebHistoryUpdater {
             withContext(Dispatchers.Main) {
                 webView.evaluateJavascript("(function() {  return document.title;})()",
                     ValueCallback<String?> { siteTitle ->
-                        urlTitleString = siteTitle
+                        urlTitleString = if(
+                            siteTitle.isEmpty()
+                            && EnableUrlPrefix.isHttpPrefix(webViewUrl)
+                        ) webViewUrl
+                        else siteTitle
                     })
             }
             delay(500)
@@ -116,7 +120,7 @@ object WrapWebHistoryUpdater {
         val escapeStr = WebUrlVariables.escapeStr
         if (ulrTitle.endsWith("\t${escapeStr}")) return
 
-        val urlCheckResult = EnableUrlPrefix.check(webViewUrl)
+        val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(webViewUrl)
         if(!urlCheckResult) return
         val searchViewTextSource = if(
             webViewUrl?.startsWith(WebUrlVariables.queryUrl) == true

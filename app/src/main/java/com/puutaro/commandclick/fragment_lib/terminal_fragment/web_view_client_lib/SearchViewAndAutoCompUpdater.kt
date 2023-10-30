@@ -49,7 +49,7 @@ object SearchViewAndAutoCompUpdater {
         val escapeStr = WebUrlVariables.escapeStr
         if (ulrTitle.endsWith("\t${escapeStr}")) return
 
-        val urlCheckResult = EnableUrlPrefix.check(url)
+        val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(url)
         if(!urlCheckResult) return
         val searchViewTextSource = if(
             url?.startsWith(WebUrlVariables.queryUrl) == true

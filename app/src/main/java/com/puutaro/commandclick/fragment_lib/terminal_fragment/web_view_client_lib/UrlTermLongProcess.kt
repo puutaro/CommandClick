@@ -15,7 +15,7 @@ object UrlTermLongProcess {
         webView: WebView?,
         url: String?
     ){
-        val urlCheckResult = EnableUrlPrefix.check(url)
+        val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(url)
         terminalViewModel.onDisplayUpdate = !urlCheckResult
         terminalViewModel.onExecInternetButtonShell = urlCheckResult
         if(!urlCheckResult) return
