@@ -28,6 +28,7 @@ object StartFileMaker {
     private val cmdBookmaker = UrlFileSystems.cmdBookmaker
     private val webSearcher = UrlFileSystems.webSearcher
     private val askGpt35 = UrlFileSystems.askGpt35
+    private val copyLink = UrlFileSystems.copyLink
 
     fun makecmdTerminalListFiles(
         fragment: Fragment,
@@ -63,6 +64,12 @@ object StartFileMaker {
             withContext(Dispatchers.IO){
                 UrlFileSystems.createFile(
                     urlIntender,
+                    currentAppDirPath,
+                )
+            }
+            withContext(Dispatchers.IO){
+                UrlFileSystems.createFile(
+                    copyLink,
                     currentAppDirPath,
                 )
             }
@@ -132,6 +139,7 @@ object StartFileMaker {
                 UrlFileSystems.getFileNameFromUrl(siteSummaryUrl),
                 UrlFileSystems.getFileNameFromUrl(shareImage),
                 UrlFileSystems.getFileNameFromUrl(urlIntender),
+                UrlFileSystems.getFileNameFromUrl(copyLink),
                 UrlFileSystems.getFileNameFromUrl(webSearcher),
             )
         )
@@ -151,6 +159,7 @@ object StartFileMaker {
             listOf(
                 UrlFileSystems.getFileNameFromUrl(siteSummaryUrl),
                 UrlFileSystems.getFileNameFromUrl(urlIntender),
+                UrlFileSystems.getFileNameFromUrl(copyLink),
                 UrlFileSystems.getFileNameFromUrl(webSearcher),
             )
         )

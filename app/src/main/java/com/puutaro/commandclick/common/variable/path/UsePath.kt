@@ -134,6 +134,8 @@ object UsePath {
 
 
     private const val cmdclickSystemDirName = "system"
+    private const val cmdclickJsSystemDirName = "js"
+    const val cmdclickJsSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickJsSystemDirName"
     private const val cmdclickUrlSystemDirName = "url"
     const val cmdclickUrlSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickUrlSystemDirName"
     private const val cmdclickScrollSystemDirName = "scroll"

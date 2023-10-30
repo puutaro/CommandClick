@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSea
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.StartFileMaker
 import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import kotlinx.coroutines.CoroutineScope
@@ -124,6 +125,12 @@ object IndexInitHandler {
             ConfigFromStartUpFileSetter.set(
                 cmdIndexFragment,
                 currentAppDirPath,
+            )
+
+            AssetsFileManager.copyFileToDirFromAssets(
+                cmdIndexFragment.context,
+                "${currentAppDirPath}/${UsePath.cmdclickJsSystemDirRelativePath}",
+                AssetsFileManager.assetsClipToHistoryForBookmark
             )
         }
 

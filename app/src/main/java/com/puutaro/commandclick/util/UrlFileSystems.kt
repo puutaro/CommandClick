@@ -34,6 +34,9 @@ object UrlFileSystems {
     val askGpt35 =
             "https://raw.githubusercontent.com/" +
                     "puutaro/commandclick-repository/master/fannel/askGpt35.js"
+    val copyLink =
+        "https://raw.githubusercontent.com/" +
+                "puutaro/commandclick-repository/master/fannel/copyLink.js"
 
     fun getFileNameFromUrl(
         urlStr: String

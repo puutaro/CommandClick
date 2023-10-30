@@ -12,7 +12,9 @@ object AssetsFileManager {
     private const val assetsFannelsDirName = "fannels"
     const val textImagePingPath = "res/png/text_image.png"
     const val pdfImagePingPath = "res/png/pdf_image.png"
-    private const val assetsDialogWebViewDirPath = "fannels/dialog_webview"
+    private const val assetsBookmarkDirPath = "${assetsFannelsDirName}/bookmark"
+    const val assetsClipToHistoryForBookmark = "${assetsBookmarkDirPath}/clipToHistory.js"
+    private const val assetsDialogWebViewDirPath = "${assetsFannelsDirName}/dialog_webview"
     const val assetsHighlightSchForDialogWebViewPath =
         "${assetsDialogWebViewDirPath}/highlightSchForDialogWebView.js"
     const val assetsHighlightCopy =
@@ -138,5 +140,22 @@ object AssetsFileManager {
         }
     }
 
-
+    fun copyFileToDirFromAssets(
+        context: Context?,
+        targetDirPath: String,
+        assetsFilePath: String,
+    ){
+        val clipToHistoryCon = readFromAssets(
+            context,
+            assetsClipToHistoryForBookmark
+        )
+        val fileName = File(assetsFilePath).name
+        val assetsFileObj = File("$targetDirPath/$fileName")
+        if(assetsFileObj.isFile) return
+        FileSystems.writeFile(
+            targetDirPath,
+            fileName,
+            clipToHistoryCon
+        )
+    }
 }
