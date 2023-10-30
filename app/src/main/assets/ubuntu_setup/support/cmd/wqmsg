@@ -31,8 +31,17 @@ decide_message(){
 	done
 }
 
+echo_prefix(){
+	local prefix_src="${1}"
+	case "${prefix_src}" in
+		"") echo "" ;;
+		*) echo "${prefix_src} " ;;
+	esac
+}
+
 wait_quiz(){
 	local target_pid=${1}
+	local mark="${2:-}"
 	local wait_sec=3
 	local current_times=1
 	local answer=""
@@ -44,8 +53,9 @@ wait_quiz(){
 			quiz_con="$(decide_message)"
 			answer="$(echo "${quiz_con}" | cut -f 2)"
 			local current_sec=$((current_times * ${wait_sec}))
+			local prefix=$(echo_prefix "${mark}")
 			toast \
-				"[${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)"
+				"[${prefix}${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)"
 		fi
 		sleep ${wait_sec}
 		current_times=$((${current_times} + 1))
@@ -59,9 +69,10 @@ echo_help(){
 		print "### Wait quiz for backgrond process comp"
 		print ""
 		print "# Format"
-		print "wqmsg \x24{arg1}"
+		print "wqmsg \x24{arg1}  \x24{arg2}"
 		print ""
 		print "\targ1 -> pid"
+		print "\targ2 -> mark str"
 		print ""
 	}'
 	exit 0
@@ -73,4 +84,4 @@ case "${1}" in
 		echo_help;;
 esac
 
-wait_quiz "${1}"
+wait_quiz "${@}"
