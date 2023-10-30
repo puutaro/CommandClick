@@ -26,6 +26,7 @@
          <div class="button-field">
             <input type="button" class="save_button" onClick="saveTitleAndUrl()" value="Save">
             <input type="button" class="launch_button" onClick="launchUrl(this)" value="Jump">
+            <input type="button" class="extra_button" id="extra_button" onClick="launchExtraMenu(this)" value="Extra">
          </div>
       </form>
       
@@ -147,7 +148,11 @@
       margin-left: 10px;
    }
 
-   .save_button, .launch_button {
+   .extra_button {
+      margin-left: 20px;
+   }
+
+   .save_button, .launch_button, .extra_button {
       border: none;
       width: 80px;
       font-size: 1.1em;
@@ -217,6 +222,10 @@
       top: 0px;
       left: 20px;
    }
+
+   .in_visible {
+      display: none;
+   }
    </style>
    <script src="file:///android_asset/js/Sortable.js"></script>
    <script src="file:///android_asset/js/suggest.js"></script>
@@ -229,6 +238,7 @@
    const onSortableJs = true;
    const onClickUrl = true;
    const onDialog = false;
+   const extraJsPathList = "CMDCLICK_EXTRA_JS_PATH_LIST";
    let url = document.querySelector("[name='url']");
    let view_bookmarksSection = document.querySelector(
       ".view_bookmarks"
@@ -374,6 +384,10 @@
    }
 
    window.onload = function() {
+      if(!extraJsPathList.includes("/")){
+         const extra_button_el = document.getElementById("extra_button");
+         extra_button_el.classList.add("in_visible");
+      };
       document.title = CommandClickSiteTitle;
       document.getElementsByTagName("h1")[0].textContent = CommandClickSiteTitle;
       var headerHeight = document.getElementById("header").offsetHeight;
@@ -414,6 +428,7 @@
       );
       return false
    }
+
 
    function bookmarkListClickListner(){
       var trigger = document.querySelectorAll(".url-launch");
@@ -482,6 +497,43 @@
          onDialog
       ) jsWebViewDialogManager.dismiss();
       jsUrl.sLoadUrl(addUrl);
+   };
+
+   function launchExtraMenu(thisItem){
+      if(!extraJsPathList.includes("/")) return;
+      const title="Select from bellow";
+      let menuTabSepaFullPathStringList = extraJsPathList.split("\t");
+      let menuTabsepaStringList = menuTabSepaFullPathStringList.map(function(path){
+         return path.split("/").at(-1);
+      });
+      const menuTabsepaStringListLength = 
+         menuTabsepaStringList.length;
+      if(!menuTabsepaStringList) exitZero();
+      const menuTabsepaString = 
+         menuTabsepaStringList.join("\t");
+      const selectedMenu = jsDialog.listDialog(
+         "Select bellow list",
+         "",
+         menuTabsepaString
+      );
+      if(!selectedMenu) exitZero();
+      const selectedJsPath = menuTabSepaFullPathStringList.filter(
+         function(path){
+            return path.split("/").at(-1) == selectedMenu;
+         }).at(0);
+      if(!selectedJsPath) exitZero();
+      launchJsFile(
+         selectedJsPath,
+      );
+   };
+
+   function launchJsFile(
+      selectedJsPath
+   ){
+      const jsUrlString = jsUrl.makeJsUrl(
+         selectedJsPath
+      );
+      jsUrl.loadUrl(jsUrlString);   
    };
    </script>
 </body>
