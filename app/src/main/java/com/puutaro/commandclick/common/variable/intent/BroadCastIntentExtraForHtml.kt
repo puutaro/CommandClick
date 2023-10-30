@@ -4,21 +4,24 @@ enum class BroadCastIntentExtraForHtml(
     val scheme: String
 ) {
     SCR_PATH(
-    "src_path"
+    "srcPath"
     ),
     ON_CLICK_SORT(
-    "on_click_sort"
+    "onClickSort"
     ),
     ON_SORTABLE_JS(
-        "on_sortable_js"
+        "onSortableJs"
     ),
     ON_CLICK_URL(
-        "on_click_url"
+        "onClickUrl"
     ),
     FILTER_CODE(
-        "filter_code"
+        "filterCode"
     ),
     ON_DIALOG(
-        "on_dialog"
+        "onDialog"
     ),
+    EXTRA_JS_PATH_LIST(
+        "extraJsPathList"
+    )
 }

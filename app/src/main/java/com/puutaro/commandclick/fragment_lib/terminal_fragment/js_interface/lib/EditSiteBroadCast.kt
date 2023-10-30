@@ -27,35 +27,45 @@ class EditSiteBroadCast(
             extraMapStr,
             keySeparator
         ).toMap()
-        editSiteMap.get(extraEditSiteKey.srcPath.name).let {
+        val srcPath = BroadCastIntentExtraForHtml.SCR_PATH.scheme
+        editSiteMap.get(srcPath).let {
             editSiteIntent.putExtra(
-                BroadCastIntentExtraForHtml.SCR_PATH.scheme,
+                srcPath,
                 it
             )
         }
-        editSiteMap.get(extraEditSiteKey.onClickSort.name).let {
+        val onClickSortSchema = BroadCastIntentExtraForHtml.ON_CLICK_SORT.scheme
+        editSiteMap.get(onClickSortSchema).let {
             editSiteIntent.putExtra(
-                BroadCastIntentExtraForHtml.ON_CLICK_SORT.scheme,
+                onClickSortSchema,
                 it
             )
         }
-
-        editSiteMap.get(extraEditSiteKey.onSortableJs.name).let {
+        val onSortableJsSchema = BroadCastIntentExtraForHtml.ON_SORTABLE_JS.scheme
+        editSiteMap.get(onSortableJsSchema).let {
             editSiteIntent.putExtra(
-                BroadCastIntentExtraForHtml.ON_SORTABLE_JS.scheme,
+                onSortableJsSchema,
                 it
             )
         }
-
-        editSiteMap.get(extraEditSiteKey.onClickUrl.name).let {
+        val onClickUrlSchema = BroadCastIntentExtraForHtml.ON_CLICK_URL.scheme
+        editSiteMap.get(onClickUrlSchema).let {
             editSiteIntent.putExtra(
-                BroadCastIntentExtraForHtml.ON_CLICK_URL.scheme,
+                onClickUrlSchema,
                 it
             )
         }
-        editSiteMap.get(extraEditSiteKey.onDialog.name).let {
+        val onDialogSchema = BroadCastIntentExtraForHtml.ON_DIALOG.scheme
+        editSiteMap.get(onDialogSchema).let {
             editSiteIntent.putExtra(
-                BroadCastIntentExtraForHtml.ON_DIALOG.scheme,
+                onDialogSchema,
+                it
+            )
+        }
+        val extraJsPathListSchema = BroadCastIntentExtraForHtml.EXTRA_JS_PATH_LIST.scheme
+        editSiteMap.get(extraJsPathListSchema).let {
+            editSiteIntent.putExtra(
+                extraJsPathListSchema,
                 it
             )
         }
@@ -65,12 +75,4 @@ class EditSiteBroadCast(
         )
         context?.sendBroadcast(editSiteIntent)
     }
-}
-
-private enum class extraEditSiteKey {
-    srcPath,
-    onClickSort,
-    onSortableJs,
-    onClickUrl,
-    onDialog,
 }

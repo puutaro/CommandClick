@@ -52,6 +52,9 @@ object HtmlLauncher{
         val onDialog = intent.getStringExtra(
             BroadCastIntentExtraForHtml.ON_DIALOG.scheme
         ) ?: "false"
+        val extraJsPathList = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.EXTRA_JS_PATH_LIST.scheme
+        ) ?: String()
         val htmlContentsSource = AssetsFileManager.readFromAssets(
             context,
             "html/edit_urls_template.html"
@@ -92,6 +95,10 @@ object HtmlLauncher{
                 .replace(
                     Regex("const onDialog =.*"),
                     "const onDialog = ${onDialog}"
+                )
+                .replace(
+                    "CMDCLICK_EXTRA_JS_PATH_LIST",
+                    extraJsPathList,
                 )
         FileSystems.writeFile(
             parentDir,

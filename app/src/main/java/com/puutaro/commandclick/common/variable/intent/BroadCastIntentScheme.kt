@@ -18,7 +18,7 @@ enum class BroadCastIntentScheme(
     ),
     HTML_LAUNCH(
     "com.puutaro.commandclick.html.launch",
-    "edit_path",
+    "editPath",
     ),
     FZHTML_LAUNCH(
         "com.puutaro.commandclick.fzhtml.launch",
