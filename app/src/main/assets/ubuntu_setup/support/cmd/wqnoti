@@ -1,0 +1,195 @@
+#!/bin/bash
+
+set -ue
+
+
+HELP=""
+PROCESS_PID=""
+CHANNEL_NUM=""
+CANCEL_SHELL_PATH=""
+ICON_NAME="download"
+IMPORTANCE="low"
+TITLE="wait.."
+MARK=""
+
+read_args(){
+	local STR=""
+	while (( $# > 0 ))
+	do
+	case "${1}" in
+		--help|-h)
+			HELP="${1}"
+			;;
+		--pid|-p)
+			PROCESS_PID="${2}"
+			shift
+			;;
+		--channel-num|-cn)
+			CHANNEL_NUM="${2}"
+			shift
+			;;
+		--icon-name|-in)
+			ICON_NAME="${2}"
+			shift
+			;;
+		--importance|-i)
+			IMPORTANCE="${2}"
+			shift
+			;;
+		--title|-t)
+			TITLE="${2//\,/\.}"
+			shift
+			;;
+		--cancel-shell-path|-cs)
+			CANCEL_SHELL_PATH="${2}"
+			shift
+			;;
+		-*)
+			echo "no option: ${1}"
+			exit 1
+			;;
+		*)	
+			;;
+	esac
+	shift
+	done <<- END
+	$STR
+	END
+}
+
+echo_help(){
+	case "${HELP}" in
+		"") return ;;
+	esac
+	awk 'BEGIN{
+		print ""
+		print "### Wait quiz notification for backgrond process comp"
+		print ""
+		print "## Format"
+		print "wqmsg {args}"
+		print ""
+		print "## args"
+		print ""
+		print "--help|-h"
+		print "\t-> help"
+		print "--pid|-p"
+		print "\t-> monitor pid"
+		print "--channel-num|-cn"
+		print "\t-> notification chunnel num"
+		print "--cancel-shell-path|-cs"
+		print "\t-> canncel shell path"
+		print "[Optional]"
+		print "--icon-name|-in"
+		print "\t-> notification icon macro name: detail noti -h"
+		print "[Optional]"
+		print "--importance|-i"
+		print "\t-> notification importance: low (default) / high"
+		print "[Optional]"
+		print "--title|-t"
+		print "\t-> notification title"
+		print ""
+	}'
+	exit 0
+}
+
+exit_by_arg(){
+	local val_name="${1}"
+	local val_value="${2}"
+	case "${val_value}" in
+	"") 
+		echo "must be specify ${val_name}"
+		exit 1
+		;;
+	esac
+}
+
+exit_noti(){
+	noti \
+		-t exit \
+		-cn "${CHANNEL_NUM}"
+}
+
+launch_noti(){
+	local message="${1}"
+	noti \
+		-t launch \
+		-cn "${CHANNEL_NUM}" \
+		--icon-name "${ICON_NAME}" \
+		--importance "${IMPORTANCE}" \
+		--title "${TITLE}" \
+		--message "${message}" \
+		--alert-once \
+		--delete "shellPath=${CANCEL_SHELL_PATH}" \
+		--button "label=CANCEL,shellPath=${CANCEL_SHELL_PATH}" \
+	>/dev/null 2>&1
+}
+
+decide_message(){
+	for i in $(seq 1 5)
+	do
+		local rnd_line_num="$((${RANDOM} % ${WAIT_QUIZ_TSV_CON_LINES}))"
+		local wait_quiz_tsv_con_d_q_replace="${WAIT_QUIZ_TSV_CON//\,/\.}"
+		local quiz_con_src=$(\
+			echo "${wait_quiz_tsv_con_d_q_replace//\"/\'}" \
+					| sed -n "${rnd_line_num}p"\
+		)
+		case "${quiz_con_src}" in
+			"") 
+				sleep 0.1
+				continue
+				;;
+		esac
+		echo "${quiz_con_src}"
+		break;
+	done
+}
+
+wait_quiz(){
+	local target_pid=${PROCESS_PID}
+	local wait_sec=3
+	local current_times=1
+	local answer=""
+	while kill -0 "${target_pid}" 2>/dev/null
+	do
+		local current_sec=$((current_times * ${wait_sec}))
+		if [ $((${current_times} % 2)) -eq 0 ];then
+			launch_noti "[${current_sec}s] ${answer/-/=}"
+		else 
+			quiz_con="$(decide_message)"
+			answer="$(echo "${quiz_con}" | cut -f 2)"
+			launch_noti \
+				"[${current_sec}s] Q. $(echo "${quiz_con}" | cut -f 1)"
+		fi
+		sleep ${wait_sec}
+		current_times=$((${current_times} + 1))
+	done
+	exit_noti
+}
+
+
+read_args "$@"
+echo_help
+exit_by_arg \
+	"${!PROCESS_PID@}" \
+	"${PROCESS_PID}"
+exit_by_arg \
+	"${!CHANNEL_NUM@}" \
+	"${CHANNEL_NUM}"
+exit_by_arg \
+	"${!CANCEL_SHELL_PATH@}" \
+	"${CANCEL_SHELL_PATH}"
+
+
+readonly support_dir_path="/support"
+readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
+readonly ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
+readonly wait_quiz_tsv_name=$(\
+	tsvar "${ubuntu_env_tsv_con}" "WAIT_QUIZ_TSV_NAME" \
+)
+readonly wait_quiz_tsv_path="${support_dir_path}/${wait_quiz_tsv_name}"
+readonly WAIT_QUIZ_TSV_CON="$(cat "${wait_quiz_tsv_path}")"
+readonly WAIT_QUIZ_TSV_CON_LINES="$(echo "${WAIT_QUIZ_TSV_CON}" | wc -l)"
+
+
+
+wait_quiz
