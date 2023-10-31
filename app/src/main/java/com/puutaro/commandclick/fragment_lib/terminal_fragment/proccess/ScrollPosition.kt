@@ -64,6 +64,9 @@ object ScrollPosition {
         if(
             url.isNullOrEmpty()
         ) return
+        if(
+            url.startsWith(WebUrlVariables.monitorUrlPath)
+        ) return
         val oldCurrYDff = oldPositionY - rawY
         if(
             -20 < oldCurrYDff
