@@ -193,7 +193,7 @@ object WaitQuizPair {
         ),
         Pair(
             "How to extract var value form tsv?",
-            "-> grep ${'$'}{val name} | cut -f 2"
+            "-> Use tsvar cmd"
         ),
         Pair(
             "How can you move ubuntu to sdcard",
