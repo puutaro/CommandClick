@@ -19,6 +19,7 @@ class WebUrlVariables {
             "https://github.com/puutaro/CommandClick/tree/master#setup-ubuntu"
         val commandClickRepositoryUrl =
             "https://github.com/puutaro/commandclick-repository.git"
+        val monitorUrlPath = "file://monitor_path"
         val base64Prefix = "data:image/"
         val base64JpegPrefix = "${base64Prefix}jpeg;base64"
         val base64PngPrefix = "${base64Prefix}png;base64"

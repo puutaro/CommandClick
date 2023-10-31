@@ -133,7 +133,7 @@ object WebViewClientSetter {
                         ScrollPosition.execScroll(
                             terminalFragment,
                             webview,
-                            it
+                            it,
                         )
                     }
                 }

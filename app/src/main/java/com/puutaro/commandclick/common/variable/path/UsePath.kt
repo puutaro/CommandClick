@@ -148,6 +148,7 @@ object UsePath {
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory$tsvExtend"
     val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"
     val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi$tsvExtend"
+    val cmdclickMonitorScrollPosiFileName = "monitorScrollPosi$tsvExtend"
     const val assetsFannelsReplacePrefix = "fannels/startUp"
     const val startUpFannelAsetsDirPath = assetsFannelsReplacePrefix
     const val startUpFannleAssetsPath = assetsFannelsReplacePrefix

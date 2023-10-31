@@ -1,15 +1,22 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.html
 
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object HtmlDescriber {
 
     fun make(
-        terminalColor: String,
-        terminalFontColor: String,
+        terminalFragment: TerminalFragment,
         textSrc:String,
-        onBottomScrollByJs: Boolean
+        terminalViewModel: TerminalViewModel
     ): String {
+        val terminalColor = terminalFragment.terminalColor
+        val terminalFontColor = terminalFragment.terminalFontColor
+        val onBottomScrollbyJs = terminalViewModel.onBottomScrollbyJs
+        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val scrollPosiFilePath = "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/${UsePath.cmdclickMonitorScrollPosiFileName}"
         val leavesLineForTerm = ReadText.leavesLineForTerm
         val sb = StringBuilder("％")
         val percentZenkakuChar = sb[0]
@@ -20,7 +27,7 @@ object HtmlDescriber {
             .replace("％", "CMDCLICK_PERCENT_CHAR")
             .replace(
                 "((https?|ftp|file)://[^ 　\t]*)".toRegex(),
-                "<a href='$1' target='_blank'>$1</a>"
+                "<a href=\"javascript:void(0);\" target='_blank' onclick=\"saveScrollPosi(this);\">$1</a>"
             )
             .replace("CMDCLICK_PERCENT_CHAR", percentHankakuChar)
             .replace("cmdclickLeastTagspan", "<a")
@@ -66,7 +73,18 @@ object HtmlDescriber {
         <script>
             setTimeout(function(){
                     const scrollingFirstElement = (document.scrollingElement || document.body);
-                    if(${onBottomScrollByJs}) {
+                    const isHistoryMove = window.performance.navigation.type == 2
+                    if(isHistoryMove
+                    ) {  
+                        const scrollPosiStr = jsFileSystem.readLocalFile(
+                            "${scrollPosiFilePath}"
+                        );
+                        const scrollPosi = parseFloat(scrollPosiStr);
+                        if(!scrollPosi) return
+                        scrollingFirstElement.scrollTop = scrollPosi;
+                        return
+                    }
+                    if(${onBottomScrollbyJs}) {
                         scrollingFirstElement.scrollTop = document.body.offsetHeight;
                     }
                 },
@@ -81,6 +99,16 @@ object HtmlDescriber {
         let toFilterSource = ${'$'}('#onCmdClickFilter');
         const percent = String.fromCharCode('％'.charCodeAt(0) - 0xFEE0);
         let exp = /[^href=\"](\b(https?|ftp|file):\/\/[^ 　\t]*)/ig;
+        
+        function saveScrollPosi(thisItem){
+            const loadUrl = thisItem.textContent
+            var scrollPosition = scrollingElement.scrollTop;            
+            jsFileSystem.writeLocalFile(
+                "${scrollPosiFilePath}",
+                scrollPosition
+            );
+            location.href = loadUrl
+        };
         
         function terminalFilter(thisInput){
             var thisInputValue = thisInput.toLowerCase().trim()

@@ -1,11 +1,15 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
+import android.webkit.ValueCallback
 import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 object ScrollPosition {
 
@@ -14,7 +18,7 @@ object ScrollPosition {
     fun execScroll(
         terminalFragment: TerminalFragment,
         webView: WebView,
-        currentUrl: String
+        currentUrl: String,
     ) {
         val scrollY = webView.scrollY
         if(
@@ -26,9 +30,24 @@ object ScrollPosition {
                 currentUrl
             )
         ) return
+        if(
+            currentUrl.startsWith(WebUrlVariables.monitorUrlPath)
+        ) return
+        execScrollByMemory(
+            terminalFragment,
+            webView,
+            currentUrl,
+        )
+    }
+
+    private fun execScrollByMemory(
+        terminalFragment: TerminalFragment,
+        webView: WebView,
+        currentUrl: String,
+    ){
         webView.scrollY = readYPosi(
             terminalFragment,
-            currentUrl
+            currentUrl,
         ).toInt()
     }
 
@@ -50,24 +69,29 @@ object ScrollPosition {
             -20 < oldCurrYDff
             && oldCurrYDff < 20
         ) return
-        execSave(
-            terminalFragment,
-            url,
-            scrollY
-        )
-    }
-
-    private fun execSave(
-        terminalFragment: TerminalFragment,
-        url: String,
-        scrollY: Int,
-    ){
         saveYPosi(
             terminalFragment,
             url,
             scrollY.toString(),
         )
+        if(!url.startsWith(WebUrlVariables.monitorUrlPath)) return
+        val scrollPosiSaveDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}/"
+        val cmdclickMonitorScrollPosiFileName = UsePath.cmdclickMonitorScrollPosiFileName
+        CoroutineScope(Dispatchers.Main).launch {
+            terminalFragment.binding.terminalWebView.evaluateJavascript(
+                "(function() {  " +
+                        "return (document.scrollingElement || document.body).scrollTop;" +
+                        "})()",
+                ValueCallback<String?> { scrollY ->
+                    FileSystems.writeFile(
+                        scrollPosiSaveDirPath,
+                        cmdclickMonitorScrollPosiFileName,
+                        scrollY
+                    )
+                })
+        }
     }
+
 
     private fun saveYPosi(
         terminalFragment: TerminalFragment,
@@ -117,7 +141,7 @@ object ScrollPosition {
 
     private fun readYPosi(
         terminalFragment: TerminalFragment,
-        currentUrl: String
+        currentUrl: String,
     ): Float {
         if(
             currentUrl.isEmpty()

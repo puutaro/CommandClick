@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import androidx.lifecycle.*
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
@@ -104,14 +105,13 @@ private fun firstSetWebView(
         webView.loadDataWithBaseURL(
             "",
             HtmlDescriber.make(
-                terminalFragment.terminalColor,
-                terminalFragment.terminalFontColor,
+                terminalFragment,
                 text,
-                terminalViewModel.onBottomScrollbyJs
+                terminalViewModel
             ),
             "text/html",
             "utf-8",
-            null
+            WebUrlVariables.monitorUrlPath
         )
     } catch(e: Exception){
         return
@@ -154,14 +154,13 @@ private fun setWebView(
         webView.loadDataWithBaseURL(
             "",
             HtmlDescriber.make(
-                terminalFragment.terminalColor,
-                terminalFragment.terminalFontColor,
+                terminalFragment,
                 text,
-                terminalViewModel.onBottomScrollbyJs
+                terminalViewModel
             ),
             "text/html",
             "utf-8",
-            null
+            WebUrlVariables.monitorUrlPath
         )
     } catch(e: Exception){
         return
