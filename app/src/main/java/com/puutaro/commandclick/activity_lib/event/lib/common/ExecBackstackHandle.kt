@@ -127,9 +127,10 @@ internal fun execBack(
         )
         return
     }
-    if (webVeiw.canGoBack()) {
+    val enableGoback = webVeiw.canGoBack()
+    if (enableGoback) {
         webVeiw.goBack()
-        terminalViewModel.goBackFlag = true
+        terminalViewModel.goBackFlag = enableGoback
         return
     }
     val targetFragmentInstance = TargetFragmentInstance()
