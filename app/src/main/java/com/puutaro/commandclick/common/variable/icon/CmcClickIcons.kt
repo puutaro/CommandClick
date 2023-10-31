@@ -18,6 +18,7 @@ enum class CmcClickIcons(
     PUZZLE("puzzle", R.drawable.icons8_puzzle),
     TERMINAL("terminal", R.drawable.ic_terminal),
     DOWN("down", R.drawable.ic_down_allow),
+    DOWNLOAD("download", android.R.drawable.stat_sys_download),
     REFLESH("reflesh", R.drawable.icons8_refresh),
     EDIT("edit", R.drawable.icons8_edit),
     SET_UP("setup", R.drawable.icons8_setup),
