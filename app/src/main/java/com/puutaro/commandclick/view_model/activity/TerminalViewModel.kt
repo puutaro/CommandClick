@@ -17,7 +17,6 @@ class TerminalViewModel: ViewModel() {
     var editExecuteOnceCurrentShellFileName: String? = null
     var launchUrl: String? = null
     var onExecInternetButtonShell = false
-    var goBackFlag = false
     var onDialog = false
     var dialogReturnValue = String()
     var jsArguments = String()

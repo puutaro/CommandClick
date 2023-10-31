@@ -74,6 +74,7 @@ class   TerminalFragment: Fragment() {
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
     var dialogInstance: Dialog? = null
+    var goBackFlag = false
 
 
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {

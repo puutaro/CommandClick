@@ -104,10 +104,10 @@ object WebViewClientSetter {
                 webview: WebView?,
                 url: String?
             ) {
-                val goBackFlag = terminalViewModel.goBackFlag
+                val goBackFlag = terminalFragment.goBackFlag
                 if (
-                    terminalViewModel.goBackFlag
-                ) terminalViewModel.goBackFlag = false
+                    terminalFragment.goBackFlag
+                ) terminalFragment.goBackFlag = false
                 if(
                     goBackFlag
                     && (

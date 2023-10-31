@@ -24,12 +24,12 @@ object ExecBackstackHandle {
         activity: MainActivity,
     ) {
         if(keyCode != KeyEvent.KEYCODE_BACK) return
-        DoEexecBackstack(activity)
+        doEexecBackstack(activity)
         return
     }
 
 
-    private fun DoEexecBackstack(
+    private fun doEexecBackstack(
         activity: MainActivity
     ){
         val supportFragmentManager = activity.supportFragmentManager
@@ -127,10 +127,10 @@ internal fun execBack(
         )
         return
     }
-    val enableGoback = webVeiw.canGoBack()
-    if (enableGoback) {
+    val enableGoBack = webVeiw.canGoBack()
+    if (enableGoBack) {
         webVeiw.goBack()
-        terminalViewModel.goBackFlag = enableGoback
+        terminalFragment.goBackFlag = enableGoBack
         return
     }
     val targetFragmentInstance = TargetFragmentInstance()
