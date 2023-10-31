@@ -52,44 +52,56 @@ object TextToSpeechIntentSender {
             TextToSpeechIntentExtra.listFilePath.scheme,
             listFilePath
         )
-        extraSettingMap.get(TextToSpeechSchema.playMode.name).let {
+        extraSettingMap.get(TextToSpeechIntentExtra.importance.name).let {
+            textToSpeechIntent.putExtra(
+                TextToSpeechIntentExtra.importance.scheme,
+                it
+            )
+        }
+        extraSettingMap.get(TextToSpeechIntentExtra.playMode.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.playMode.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.onRoop.name).let {
+        extraSettingMap.get(TextToSpeechIntentExtra.playMode.name).let {
+            textToSpeechIntent.putExtra(
+                TextToSpeechIntentExtra.playMode.scheme,
+                it
+            )
+        }
+        extraSettingMap.get(TextToSpeechIntentExtra.onRoop.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.onRoop.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.playNumber.name).let {
+        extraSettingMap.get(TextToSpeechIntentExtra.playNumber.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.playNumber.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.transMode.name).let {
+        extraSettingMap.get(TextToSpeechIntentExtra.transMode.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.transMode.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.onTrack.name).let {
+        extraSettingMap.get(TextToSpeechIntentExtra.onTrack.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.onTrack.scheme,
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.speed.name)?.let {
+        extraSettingMap.get(TextToSpeechIntentExtra.speed.name)?.let {
             val floatSpeed = toFloatStr(it)
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.speed.scheme,
                 floatSpeed
             )
         }
-        extraSettingMap.get(TextToSpeechSchema.pitch.name)?.let {
+        extraSettingMap.get(TextToSpeechIntentExtra.pitch.name)?.let {
             val floatPitch = toFloatStr(it)
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.pitch.scheme,
@@ -118,14 +130,4 @@ object TextToSpeechIntentSender {
             "1"
         }
     }
-}
-
-enum class TextToSpeechSchema {
-    playMode,
-    onRoop,
-    playNumber,
-    transMode,
-    onTrack,
-    speed,
-    pitch,
 }

@@ -11,12 +11,12 @@ import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
+import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadCastSenderSchemaForCommon
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
-import com.puutaro.commandclick.proccess.intent.TextToSpeechSchema
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -765,13 +765,14 @@ object IntentRequestMonitor {
 
     private fun makeHelpConForTextToSpeech(): String {
         val verticalBarSepalator = "|"
-        val playModeSchema = TextToSpeechSchema.playMode.name
-        val onRoopSchema = TextToSpeechSchema.onRoop.name
-        val playNumberSchema = TextToSpeechSchema.onRoop.name
-        val transModeSchema = TextToSpeechSchema.transMode.name
-        val onTrackSchema = TextToSpeechSchema.onTrack.name
-        val speedSchema = TextToSpeechSchema.speed.name
-        val pitchSchema = TextToSpeechSchema.pitch.name
+        val playModeSchema = TextToSpeechIntentExtra.playMode.name
+        val onRoopSchema = TextToSpeechIntentExtra.onRoop.name
+        val playNumberSchema = TextToSpeechIntentExtra.onRoop.name
+        val transModeSchema = TextToSpeechIntentExtra.transMode.name
+        val onTrackSchema = TextToSpeechIntentExtra.onTrack.name
+        val speedSchema = TextToSpeechIntentExtra.speed.name
+        val pitchSchema = TextToSpeechIntentExtra.pitch.name
+        val importance = TextToSpeechIntentExtra.importance.name
         return """
         
         ### TextToSpeech manager
@@ -791,6 +792,7 @@ object IntentRequestMonitor {
             format: ${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}..
         
         optional key
+            ${importance}: Notification importance, high/low
             ${playModeSchema}: Play mode switch: ordinaly(default), shuffle, reverse, number
             ${onRoopSchema}: Some string: roop, "": no roop
             ${playNumberSchema}:  Play list order number string

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.common.variable.intent
 enum class TextToSpeechIntentExtra(
     val scheme: String
 ) {
+    importance("importance"),
     listFilePath("list_file_path"),
     playMode("play_mode"),
     onRoop("on_roop"),
@@ -11,6 +12,6 @@ enum class TextToSpeechIntentExtra(
     onTrack("on_track"),
     speed("speed"),
     pitch("pitch"),
-    currentAppDirName("currentAppDirName"),
-    scriptRawName("scriptRawName"),
+    currentAppDirName("current_app_dir_name"),
+    scriptRawName("script_raw_name"),
 }

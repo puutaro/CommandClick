@@ -36,7 +36,7 @@ class TextToSpeechService:
     private val debugTemp = "/storage/emulated/0/Music/test/temp"
     private val speechingStr = "text to speech..."
     private val channelNum = ServiceChannelNum.textToSpeech
-    private val notificationIdToImportance =
+    private var notificationIdToImportance =
         NotificationIdToImportance.HIGH
     private var textToSpeech: TextToSpeech? = null
     private var textToSpeechJob: Job? = null
@@ -225,6 +225,13 @@ class TextToSpeechService:
             applicationContext,
             BroadCastIntentScheme.NEXT_TEXT_TO_SPEECH.action,
         )
+
+        val importance = intent?.getStringExtra(
+            TextToSpeechIntentExtra.importance.scheme
+        )
+        notificationIdToImportance = NotificationIdToImportance.values().filter {
+            it.name.lowercase() == importance
+        }.firstOrNull() ?: NotificationIdToImportance.HIGH
 
         val channel = NotificationChannel(
             notificationIdToImportance.id,

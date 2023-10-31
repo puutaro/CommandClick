@@ -36,11 +36,11 @@ jsIntent.launchEditSite(
 
 | key name | type | description |
 | -------- | ------- | -------- |
-| srcPath  | string | add src path |
-| onClickSort | boolean string | Sort on click: default is "false" |
-| onSortableJs | boolean string | Enable sort: default is "true" |
-| onClickUrl | boolean string | Enable jump url: default is "true" |
-| onDialog | boolean string | Enable dialog mode: default is "false" |
+| src_path  | string | add src path |
+| on_click_sort | boolean string | Sort on click: default is "false" |
+| on_sortable_js | boolean string | Enable sort: default is "true" |
+| on_click_url | boolean string | Enable jump url: default is "true" |
+| on_dialog | boolean string | Enable dialog mode: default is "false" |
 
 
 ex1)
@@ -48,7 +48,7 @@ ex1)
 ```js.js
 jsIntent.launchEditSite(
 	"${01}/${001}"/editSite.tsv,
-	"srcPath=${src path}|onClickSort=true|onSortableJs=true|onClickUrl=true|onDialog=false",
+	"srcPath=${src path}|on_click_sort=true|on_sortable_js=true|on_click_url=true|on_dialog=false",
 	"urlString.startsWith('http');",
 );
 

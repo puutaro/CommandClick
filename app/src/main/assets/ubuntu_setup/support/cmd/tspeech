@@ -5,6 +5,7 @@ set -ue
 
 HELP=""
 LAUNCH_TYPE=""
+IMPORTANCE=""
 CURRENT_APP_DIR_NAME=""
 FANNEL_RAW_NAME=""
 LIST_FILE_PATH=""
@@ -21,6 +22,10 @@ read_args(){
 			;;
 		--launch-type|-t)
 			LAUNCH_TYPE="${2}"
+			shift
+			;;
+		--importance|-i)
+			IMPORTANCE="${2}"
 			shift
 			;;
 		--current-app-dir-name|-d)
@@ -58,6 +63,7 @@ tspeech(){
 	awk \
 	-v help="${HELP}" \
 	-v launchType="${LAUNCH_TYPE}" \
+	-v importance="${IMPORTANCE}" \
 	-v currentAppDirName="${CURRENT_APP_DIR_NAME}" \
 	-v fannelRawName="${FANNEL_RAW_NAME}" \
 	-v listFilePath="${LIST_FILE_PATH}" \
@@ -70,6 +76,7 @@ tspeech(){
 		concat(help, "help")
 		output_con = output_con"intentType=textToSpeech\n"
 		concat(launchType, "launchType")
+		concat(importance, "importance")
 		concat(currentAppDirName, "currentAppDirName")
 		concat(fannelRawName, "fannelRawName")
 		concat(listFilePath, "listFilePath")
