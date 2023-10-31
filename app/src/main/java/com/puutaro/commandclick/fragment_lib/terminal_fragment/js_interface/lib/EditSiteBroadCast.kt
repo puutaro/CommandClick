@@ -27,10 +27,10 @@ class EditSiteBroadCast(
             extraMapStr,
             keySeparator
         ).toMap()
-        val srcPath = BroadCastIntentExtraForHtml.SCR_PATH.scheme
-        editSiteMap.get(srcPath).let {
+        val srcPathSchema = BroadCastIntentExtraForHtml.SCR_PATH.scheme
+        editSiteMap.get(srcPathSchema).let {
             editSiteIntent.putExtra(
-                srcPath,
+                srcPathSchema,
                 it
             )
         }
@@ -73,6 +73,13 @@ class EditSiteBroadCast(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme,
             filterCode
         )
+        val extraLabelSchema = BroadCastIntentExtraForHtml.EXTRA_LABEL.scheme
+        editSiteMap.get(extraLabelSchema)?.let {
+            editSiteIntent.putExtra(
+                extraLabelSchema,
+                it
+            )
+        }
         context?.sendBroadcast(editSiteIntent)
     }
 }

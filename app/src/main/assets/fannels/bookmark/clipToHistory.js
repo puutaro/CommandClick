@@ -20,5 +20,6 @@ function clipToHistory(){
 		historyPath,
 		saveHisCon
 	);
+	jsToast.short("write ok");
 	location.reload();
 };

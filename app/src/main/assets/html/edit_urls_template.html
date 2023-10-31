@@ -239,6 +239,7 @@
    const onClickUrl = true;
    const onDialog = false;
    const extraJsPathList = "CMDCLICK_EXTRA_JS_PATH_LIST";
+   const extraLabel = "";
    let url = document.querySelector("[name='url']");
    let view_bookmarksSection = document.querySelector(
       ".view_bookmarks"
@@ -384,9 +385,12 @@
    }
 
    window.onload = function() {
+      const extra_button_el = document.getElementById("extra_button");
       if(!extraJsPathList.includes("/")){
-         const extra_button_el = document.getElementById("extra_button");
          extra_button_el.classList.add("in_visible");
+      };
+      if(extraLabel){
+         extra_button_el.value = extraLabel;
       };
       document.title = CommandClickSiteTitle;
       document.getElementsByTagName("h1")[0].textContent = CommandClickSiteTitle;
@@ -509,13 +513,18 @@
       const menuTabsepaStringListLength = 
          menuTabsepaStringList.length;
       if(!menuTabsepaStringList) exitZero();
-      const menuTabsepaString = 
-         menuTabsepaStringList.join("\t");
-      const selectedMenu = jsDialog.listDialog(
-         "Select bellow list",
-         "",
-         menuTabsepaString
-      );
+      var selectedMenu = "";
+      if(menuTabsepaStringListLength == 1){
+         selectedMenu = menuTabsepaStringList.at(0);
+      } else {
+         const menuTabsepaString = 
+            menuTabsepaStringList.join("\t");
+         selectedMenu = jsDialog.listDialog(
+            "Select bellow list",
+            "",
+            menuTabsepaString
+         );
+      };
       if(!selectedMenu) exitZero();
       const selectedJsPath = menuTabSepaFullPathStringList.filter(
          function(path){

@@ -55,6 +55,9 @@ object HtmlLauncher{
         val extraJsPathList = intent.getStringExtra(
             BroadCastIntentExtraForHtml.EXTRA_JS_PATH_LIST.scheme
         ) ?: String()
+        val extraLabel = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.EXTRA_LABEL.scheme
+        ) ?: String()
         val htmlContentsSource = AssetsFileManager.readFromAssets(
             context,
             "html/edit_urls_template.html"
@@ -99,6 +102,10 @@ object HtmlLauncher{
                 .replace(
                     "CMDCLICK_EXTRA_JS_PATH_LIST",
                     extraJsPathList,
+                )
+                .replace(
+                    Regex("const extraLabel =.*"),
+                    "const extraLabel = \"${extraLabel}\";",
                 )
         FileSystems.writeFile(
             parentDir,
