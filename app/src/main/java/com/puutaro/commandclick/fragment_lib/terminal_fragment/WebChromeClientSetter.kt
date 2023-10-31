@@ -1,23 +1,16 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.R
-import android.app.AlertDialog
 import android.app.Dialog
-import android.content.DialogInterface
 import android.graphics.Bitmap
 import android.net.Uri
-import android.text.InputType
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
 import android.widget.AutoCompleteTextView
-import android.widget.EditText
 import android.widget.ProgressBar
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.view.isVisible
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
