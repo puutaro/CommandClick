@@ -16,8 +16,9 @@ decide_message(){
 	for i in $(seq 1 5)
 	do
 		local rnd_line_num="$((${RANDOM} % ${WAIT_QUIZ_TSV_CON_LINES}))"
+		local wait_quiz_tsv_con_d_q_replace="${WAIT_QUIZ_TSV_CON//\,/\.}"
 		local quiz_con_src=$(\
-			echo "${WAIT_QUIZ_TSV_CON}" \
+			echo "${wait_quiz_tsv_con_d_q_replace//\"/\'}" \
 					| sed -n "${rnd_line_num}p"\
 		)
 		case "${quiz_con_src}" in
