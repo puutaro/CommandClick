@@ -51,6 +51,7 @@ class TextToSpeechService:
     private var transMode: String = String()
     private val languageLocaleMap = Translate.languageLocaleMap
     private val noTransMark = "-"
+    private var isInitComp = false
 
     private var broadcastReceiverForTextToSpeechPrevious: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -412,6 +413,12 @@ class TextToSpeechService:
         )
         val roopNumExtend = 1000
         textToSpeechJob = CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                for(i in 1..100){
+                    if(isInitComp) break
+                    delay(100)
+                }
+            }
             for (roopNum in 0 .. fileListSize + roopNumExtend) {
                 nextRoop = false
                 if(
@@ -511,6 +518,7 @@ class TextToSpeechService:
                     tts.isLanguageAvailable(lang)
                 } catch (e: Exception){
                     tts.language = defaultLocale
+                    isInitComp = true
                     return@let
                 }
                 if (isEnableLanguage > TextToSpeech.LANG_AVAILABLE) {
@@ -518,6 +526,7 @@ class TextToSpeechService:
                 } else {
                     tts.language = defaultLocale
                 }
+                isInitComp = true
             }
         })
     }
