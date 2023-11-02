@@ -9,7 +9,8 @@ object ExecJsOrSellHandler {
         currentFragment: Fragment,
         recentAppDirPath: String,
         selectedScriptFileName: String,
-        scriptContentsListSource: List<String>? = null
+        scriptContentsListSource: List<String>? = null,
+        args: String = String()
     ){
         when(
             CommandClickVariables.judgeJsOrShellFromSuffix(
@@ -29,7 +30,8 @@ object ExecJsOrSellHandler {
                     currentFragment,
                     recentAppDirPath,
                     selectedScriptFileName,
-                    scriptContentsListSource
+                    scriptContentsListSource,
+                    args
                 )
             }
         }

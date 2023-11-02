@@ -15,6 +15,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -239,6 +240,7 @@ class UrlHistoryButtonEvent(
             fragment,
             parentDirPath,
             shellFileObj.name,
+            args = ScriptArgs.URL_HISTORY_CLICK.str
         )
     }
 

@@ -69,7 +69,9 @@ class ListJsDialog(
         val dialogListView =  listDialog?.findViewById<ListView>(
             com.puutaro.commandclick.R.id.list_dialog_list_view
         )
-        val dialogList = listSource.split("\t").map {
+        val dialogList = listSource.split("\t").filter{
+            it.trim().isNotEmpty()
+        }.map {
             it to icons8Wheel
         }
         val dialogListAdapter = subMenuAdapter(

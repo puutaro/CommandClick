@@ -5,13 +5,14 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
 
 object AutoShellExecManager {
 
-    private val onAutoExecArg = "onAutoExec"
+    private val onAutoExecArg = ScriptArgs.ON_AUTO_EXEC.str
 
     fun fire(
         terminalFrgment: TerminalFragment,
