@@ -54,7 +54,7 @@ sudo tar \
 	--exclude=/sys \
 	--exclude=/dev \
 	--exclude=/proc \
-	--exclude=data \
+	--exclude=/data \
 	--exclude=/mnt \
 	--exclude=/host-rootfs \
 	--exclude=/support  \
