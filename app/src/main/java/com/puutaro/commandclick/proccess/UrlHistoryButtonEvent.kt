@@ -320,19 +320,31 @@ class UrlHistoryButtonEvent(
             is CommandIndexFragment -> {
                 fragment.bottomScriptUrlList.map {
                         url ->
+                    val replaceUrl = ScriptPreWordReplacer.replace(
+                        url,
+                        currentAppDirPath,
+                        String(),
+                        String()
+                    )
                     val title = url.split("/")
                         .lastOrNull()
                         ?: String()
-                    "${title}\t${url}"
+                    "${title}\t${replaceUrl}"
                 }.reversed()
             }
             is EditFragment -> {
                 fragment.bottomScriptUrlList.map {
                     url ->
+                    val replaceUrl = ScriptPreWordReplacer.replace(
+                        url,
+                        currentAppDirPath,
+                        String(),
+                        String()
+                    )
                     val title = url.split("/")
                         .lastOrNull()
                         ?: String()
-                    "${title}\t${url}"
+                    "${title}\t${replaceUrl}"
                 }
             }
             else -> emptyList()
