@@ -2,8 +2,7 @@
 
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_2"
 readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
-readonly NOTI_UPDATE_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_backuping.sh"
-readonly NOTI_BACKUP_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/backup.sh"
+readonly NOTI_BACKUP_CONTROLLER_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/backup_controller.sh"
 readonly NOTI_EXIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/exit_manager.sh"
 readonly support_dir_path="/support"
 readonly UBUNTU_ENV_TSV_PATH="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
@@ -36,11 +35,7 @@ exit_background(){
 	}' | test -n "$(cat)" \
 	&& return || e=$?
 	kill_ptree \
-		"${NOTI_BACKUP_SHELL_PATH}" \
-	>> "${MONITOR_FILE_PATH}"
-
-	kill_ptree \
-		"${NOTI_UPDATE_SHELL_PATH}" \
+		"${NOTI_BACKUP_CONTROLLER_SHELL_PATH}" \
 	>> "${MONITOR_FILE_PATH}"
 
 	noti \

@@ -2,7 +2,6 @@
 
 readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_3"
-readonly NOTI_UPDATE_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_backuping.sh"
 readonly NOTI_MANAGER_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_manager.sh"
 readonly KILL_PROC_SHELL_PATH="/support/killProcTree.sh"
 readonly support_dir_path="/support"
@@ -42,9 +41,6 @@ stop_in_exist_same_process(){
 }
 stop_in_exist_same_process
 echo "start.." >> "${MONITOR_FILE_PATH}"
-UPDATE_SHELL_PID=""
-bash "${NOTI_UPDATE_SHELL_PATH}" & 
-UPDATE_SHELL_PID=$!
 echo "extract.." >> "${MONITOR_FILE_PATH}"
 mkdir -p "${UBUNUT_BACKUP_TMP_DIR_PATH}"
 rm -f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
@@ -74,7 +70,4 @@ sudo cp -vf \
 echo "crean up.." >> "${MONITOR_FILE_PATH}"
 sudo rm \
 	-f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
-bash "${KILL_PROC_SHELL_PATH}" \
-	"${NOTI_UPDATE_SHELL_PATH}"
-kill "${UPDATE_SHELL_PID}" || e=$?
 bash "${NOTI_MANAGER_SHELL_PATH}"

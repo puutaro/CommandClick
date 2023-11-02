@@ -1,6 +1,7 @@
 #!/bin/bash
 
 
+readonly BACKUP_PID="${1}"
 readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_3"
 readonly MONITOR_DEBUG_FILE_PATH="${MONITOR_DIR_PATH}/term_1"
@@ -59,7 +60,7 @@ launch_backuping(){
 
 CURRENT_TIMES=1
 ANSWER=""
-while :
+while kill -0 "${BACKUP_PID}" 2>/dev/null
 do
 	if [ $((${CURRENT_TIMES} % 2)) -eq 0 ];then
 		launch_backuping "${ANSWER}"

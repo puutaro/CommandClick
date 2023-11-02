@@ -4,7 +4,7 @@
 readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
 readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_2"
 readonly NOTI_EXIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/exit_manager.sh"
-readonly NOTI_BACKUP_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/backup.sh"
+readonly NOTI_BACKUP_CONTROLLER_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/backup_controller.sh"
 readonly EXEC_INIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/launch_init.sh"
 readonly NOTIFICATION_CAHNEL_NUM=$(\
 	bash "${NOTI_SHELL_DIR_PATH}/echo_channel_num.sh"\
@@ -26,6 +26,6 @@ noti \
 	--alert-once \
 	--delete "shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
 	--button "label=CLOSE,shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}" \
-	--button "label=BACKUP,shellPath=${NOTI_BACKUP_SHELL_PATH},execType=back" \
+	--button "label=BACKUP,shellPath=${NOTI_BACKUP_CONTROLLER_SHELL_PATH},execType=back" \
 	--button "label=INIT,shellPath=${EXEC_INIT_SHELL_PATH}" \
 >/dev/null 2>&1
