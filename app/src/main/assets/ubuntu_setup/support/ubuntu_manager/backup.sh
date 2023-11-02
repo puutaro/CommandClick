@@ -17,30 +17,6 @@ readonly UBUNTU_BACKUP_TEMP_ROOTFS_PATH="$(\
 )"
 readonly UBUNUT_BACKUP_TMP_DIR_PATH="$(dirname "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}")"
 
-stop_in_exist_same_process(){
-	local ps_aux_cmd="ps aux"
-	${ps_aux_cmd} \
-	| awk \
-	-v UBUNTU_BACKUP_TEMP_ROOTFS_PATH="${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}" \
-	-v ps_aux_cmd="${ps_aux_cmd}" \
-	'{
-		is_exec_gard_cmd=""
-		if(\
-			$0 ~ "cp"\
-			|| $0 ~ "rm"\
-			|| $0 ~ "tar"\
-		) is_exec_gard_cmd = "true"
-		if(\
-			is_exec_gard_cmd\
-			&& $0 ~ UBUNTU_BACKUP_TEMP_ROOTFS_PATH \
-			&& $0 !~ "awk " \
-			&& $0 !~ ps_aux_cmd \
-		) print $0
-	}' | test -n "$(cat)" \
-	&& exit 0 || e=$?
-}
-stop_in_exist_same_process
-echo "start.." >> "${MONITOR_FILE_PATH}"
 echo "extract.." >> "${MONITOR_FILE_PATH}"
 mkdir -p "${UBUNUT_BACKUP_TMP_DIR_PATH}"
 rm -f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
