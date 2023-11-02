@@ -13,9 +13,11 @@ import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object IndexInitHandler {
     fun handle(
@@ -93,8 +95,11 @@ object IndexInitHandler {
                 currentAppDirPath,
             )
         )
-
+        val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                urlFileSystems.getFannelList()
+            }
             StartFileMaker.makeForConfig(
                 cmdIndexFragment
             )
@@ -107,19 +112,20 @@ object IndexInitHandler {
                 UsePath.cmdclickInternetButtonExecJsFileName,
                 UsePath.selectMenuFannelPath
             )
+            UrlFileSystems.Companion.FirstCreateFannels.values().forEach {
+                CoroutineScope(Dispatchers.IO).launch {
+                    urlFileSystems.createFile(
+                        currentAppDirPath,
+                        it.str
+                    )
+                }
+            }
             StartFileMaker.makeForStartupScript(
                 cmdIndexFragment,
                 currentAppDirPath
             )
-            StartFileMaker.makeForSelectMenu(
-                cmdIndexFragment,
-                currentAppDirPath
-            )
-            StartFileMaker.makeForWebSearcher(
-                cmdIndexFragment,
-                currentAppDirPath
-            )
-            StartFileMaker.makecmdTerminalListFiles(
+
+            StartFileMaker.makeCmdTerminalListFiles(
                 cmdIndexFragment,
             )
             ConfigFromStartUpFileSetter.set(

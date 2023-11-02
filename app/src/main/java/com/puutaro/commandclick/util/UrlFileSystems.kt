@@ -5,38 +5,36 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
 
-object UrlFileSystems {
+class UrlFileSystems {
 
-    val siteSummaryUrl =
+    private var fannelListCon = String()
+
+    private val gitUserContentPrefix =
         "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/siteSummary.js"
-    val urlIntender =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/urlIntender.js"
-    val shareImage =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/shareImage.js"
-    val urlTrans =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/urlTrans.js"
-    val textToSpeech =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/textToSpeech.js"
-    val selectMenu =
-        "https://raw.githubusercontent.com/puutaro/" +
-                "commandclick-repository/master/fannel/selectMenu.js"
-    val cmdBookmaker =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/cmdBookmaker.js"
-    val webSearcher =
-            "https://raw.githubusercontent.com/" +
-                    "puutaro/commandclick-repository/master/fannel/webSearcher.js"
-    val askGpt35 =
-            "https://raw.githubusercontent.com/" +
-                    "puutaro/commandclick-repository/master/fannel/askGpt35.js"
-    val copyLink =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master/fannel/copyLink.js"
+                "puutaro/commandclick-repository/master"
+
+    private val gitUserContentManagePrefix =
+        "$gitUserContentPrefix/manage"
+
+    private val gitUserContentFannelPrefix =
+        "$gitUserContentPrefix/fannel"
+
+    companion object {
+        enum class FirstCreateFannels(
+            val str: String,
+        ) {
+            SiteSummary("siteSummary"),
+            UrlIntender("urlIntender"),
+            ShareImage("shareImage"),
+            UrlTrans("urlTrans"),
+            TextToSpeech("textToSpeech"),
+            SelectMenu("selectMenu"),
+            CmdBookmaker("cmdBookmaker"),
+            WebSearcher("webSearcher"),
+            AskGpt35("askGpt35"),
+            CopyLink("copyLink"),
+        }
+    }
 
     fun getFileNameFromUrl(
         urlStr: String
@@ -47,32 +45,51 @@ object UrlFileSystems {
             ?: String()
     }
 
-    suspend fun createFile(
-        srcUrl: String,
-        destiDirPath: String,
-        fileNameSrc: String = String(),
-    ){
-        val fileName = if(fileNameSrc.isEmpty()) {
-            getFileNameFromUrl(srcUrl)
-        } else fileNameSrc
+    suspend fun getFannelList(){
         if(
-            File(
-                "${destiDirPath}/${fileName}"
-            ).isFile
+            fannelListCon.isNotEmpty()
         ) return
-        val contents = withContext(Dispatchers.IO) {
+        val fannelListUrl =
+            "$gitUserContentManagePrefix/fannels/list/fannels.txt"
+        fannelListCon = withContext(Dispatchers.IO) {
             CurlManager.get(
-                srcUrl,
+                fannelListUrl,
                 String(),
                 String(),
                 2000,
             )
         }
-        withContext(Dispatchers.IO){
+    }
+
+    suspend fun createFile(
+        destiDirPath: String,
+        fannelRawName: String = String(),
+    ){
+
+        withContext(Dispatchers.IO) {
+            getFannelList()
+        }
+        fannelListCon.split("\n").filter {
+            it.startsWith(fannelRawName)
+        }.forEach {
+            val destiFileObj = File("$destiDirPath/$it")
+            if(
+                destiFileObj.isFile
+            ) return@forEach
+            val destiFileParentDirPath = destiFileObj.parent
+                ?: return
+            val destiFileName = destiFileObj.name
+            val downloadUrl = "$gitUserContentFannelPrefix/$it"
+            val con = CurlManager.get(
+                downloadUrl,
+                String(),
+                String(),
+                2000,
+            )
             FileSystems.writeFile(
-                destiDirPath,
-                fileName,
-                contents
+                destiFileParentDirPath,
+                destiFileName,
+                con
             )
         }
     }

@@ -56,4 +56,26 @@ object NetworkTool {
         ) return true
         return false
     }
+
+    fun isOnline(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val capabilities =
+            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+                ?: return false
+        if (
+            capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_CELLULAR
+            )
+        ) return true
+        else if (
+            capabilities.hasTransport(
+                NetworkCapabilities.TRANSPORT_WIFI
+            )
+        ) return true
+        else if (
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
+        ) return true
+        return false
+    }
 }

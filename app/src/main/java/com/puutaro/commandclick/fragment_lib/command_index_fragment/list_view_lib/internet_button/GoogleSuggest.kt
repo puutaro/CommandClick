@@ -12,6 +12,7 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.*
 import org.json.JSONArray
 import org.json.JSONObject
@@ -46,7 +47,7 @@ class GoogleSuggest(
         mDispText = String()
         if(searchEditable.isNullOrEmpty()) return
         if(
-            !isOnline(context)
+            !NetworkTool.isOnline(context)
         ) return
         val localLanguage = Locale.getDefault().toString()
         val searchWord = searchEditable.toString()
@@ -168,29 +169,6 @@ class GoogleSuggest(
             i++
         }
     }
-
-    private fun isOnline(context: Context): Boolean {
-        val connectivityManager =
-            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        val capabilities =
-            connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-                ?: return false
-        if (
-            capabilities.hasTransport(
-                NetworkCapabilities.TRANSPORT_CELLULAR
-            )
-        ) return true
-        else if (
-            capabilities.hasTransport(
-                NetworkCapabilities.TRANSPORT_WIFI
-            )
-        ) return true
-        else if (
-            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)
-        ) return true
-        return false
-    }
-
 }
 
 

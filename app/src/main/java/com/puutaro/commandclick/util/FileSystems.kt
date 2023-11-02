@@ -56,9 +56,7 @@ object FileSystems {
             || fileName.isEmpty()
         ) return
         val dirObj = File(dirPath)
-        if(
-            !dirObj.isDirectory
-        ) createDirs(dirPath)
+        createDirs(dirPath)
         val filePath = File(dirPath, fileName)
         try {
             filePath.writeText(contents)
