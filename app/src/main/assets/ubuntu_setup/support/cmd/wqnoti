@@ -63,7 +63,7 @@ echo_help(){
 	esac
 	awk 'BEGIN{
 		print ""
-		print "### Wait quiz notification for backgrond process comp"
+		print "### Launch wait quiz notification until backgrond process complete by 3 seconds"
 		print ""
 		print "## Format"
 		print "wqmsg {args}"

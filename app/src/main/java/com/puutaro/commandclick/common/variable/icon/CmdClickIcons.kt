@@ -2,7 +2,7 @@ package com.puutaro.commandclick.common.variable.icon
 
 import com.puutaro.commandclick.R
 
-enum class CmcClickIcons(
+enum class CmdClickIcons(
         val str: String,
         val id: Int,
 ) {

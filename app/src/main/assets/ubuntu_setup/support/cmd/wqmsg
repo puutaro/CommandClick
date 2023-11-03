@@ -67,7 +67,7 @@ wait_quiz(){
 echo_help(){
 	awk 'BEGIN{
 		print ""
-		print "### Wait quiz for backgrond process comp"
+		print "### Toast wait quiz until backgrond process complete by 3 seconds"
 		print ""
 		print "# Format"
 		print "wqmsg \x24{arg1}  \x24{arg2}"

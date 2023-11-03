@@ -18,14 +18,14 @@ wmsg(){
 echo_help(){
 	awk 'BEGIN{
 		print ""
-		print "### Wait message for backgrond process comp"
+		print "### Toast wait message until backgrond process complete by 3 seconds"
 		print ""
 		print "# Format"
 		print "wmsg \x24{arg1} \x24{arg2} \x24{arg3}"
 		print ""
 		print "\targ1 -> pid"
 		print "\targ2 -> message"
-		print "\targ3 -> wait increasing simbol"
+		print "\targ3 -> wait increasing symbol"
 		print ""
 	}'
 	exit 0

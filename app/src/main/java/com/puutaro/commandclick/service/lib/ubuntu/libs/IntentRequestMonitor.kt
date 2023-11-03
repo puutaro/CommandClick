@@ -10,7 +10,7 @@ import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
-import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -463,7 +463,7 @@ object IntentRequestMonitor {
         if(
             iconName.isNullOrEmpty()
         ) return
-        val iconId = CmcClickIcons.values().filter {
+        val iconId = CmdClickIcons.values().filter {
             it.str == iconName
         }.firstOrNull()?.id ?: return Unit.also {
             LogSystems.stdWarn("no macro icon name ${iconName}")
@@ -765,17 +765,17 @@ object IntentRequestMonitor {
 
     private fun makeHelpConForTextToSpeech(): String {
         val verticalBarSepalator = "|"
-        val playModeSchema = TextToSpeechIntentExtra.playMode.name
-        val onRoopSchema = TextToSpeechIntentExtra.onRoop.name
-        val playNumberSchema = TextToSpeechIntentExtra.onRoop.name
-        val transModeSchema = TextToSpeechIntentExtra.transMode.name
-        val onTrackSchema = TextToSpeechIntentExtra.onTrack.name
-        val speedSchema = TextToSpeechIntentExtra.speed.name
-        val pitchSchema = TextToSpeechIntentExtra.pitch.name
-        val importance = TextToSpeechIntentExtra.importance.name
+        val playModeSchema = TextToSpeechIntentExtra.playMode.scheme
+        val onRoopSchema = TextToSpeechIntentExtra.onRoop.scheme
+        val playNumberSchema = TextToSpeechIntentExtra.onRoop.scheme
+        val transModeSchema = TextToSpeechIntentExtra.transMode.scheme
+        val onTrackSchema = TextToSpeechIntentExtra.onTrack.scheme
+        val speedSchema = TextToSpeechIntentExtra.speed.scheme
+        val pitchSchema = TextToSpeechIntentExtra.pitch.scheme
+        val importance = TextToSpeechIntentExtra.importance.scheme
         return """
         
-        ### TextToSpeech manager
+        ### TextToSpeech management command
         
         ${TextToSpeechCliSchema.launchType.name.camelToShellArgsName()}
         -t
@@ -857,7 +857,7 @@ object IntentRequestMonitor {
         
         ${BroadcastMonitorScheme.iconName.name.camelToShellArgsName()}
         -in
-        : ${CmcClickIcons.values().joinToString(", ")}
+        : ${CmdClickIcons.values().map{ it.str }.joinToString(", ")}
         
         
         ${BroadcastMonitorScheme.importance.name.camelToShellArgsName()}
