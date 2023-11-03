@@ -4,7 +4,7 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-  * [help](#help)
+  * [--help](#--help)
   * [pid](#pid)
   * [message](#message)
   * [wait increasing symbol](#wait-increasing-symbol)
@@ -24,7 +24,7 @@ wmsg \
 
 ## Argument
 
-### help
+### --help
 
 help contents
 
