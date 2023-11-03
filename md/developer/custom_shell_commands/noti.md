@@ -42,7 +42,7 @@ noti \
 ### --channel-num, -cn <a id="channel_num"></a>
 
 channel num (int)
-Specify 20+ number, becuase of 1 ~ 20 system channel num 
+Specify 30+ number, becuase of 1 ~ 30 system channel num 
 
 ### [Optional] --importance, -i <a id="importance"></a>
 
