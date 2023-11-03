@@ -32,14 +32,14 @@ object AdBlocker {
 //            terminalFragment.loadAssetCoroutineJob != null
 //        ) return
         if(
-            terminalViewModel.blocklist.size > 0
+            terminalViewModel.blocklist.isNotEmpty()
         ) return null
 //        terminalFragment.loadAssetCoroutineJob =
         return terminalFragment.lifecycleScope.launch(Dispatchers.IO) {
             delay(3000)
             withContext(Dispatchers.IO) {
                 if(
-                    terminalViewModel.blocklist.size > 0
+                    terminalViewModel.blocklist.isNotEmpty()
                 ) return@withContext
                 loadFromAssets(
                     terminalFragment,
@@ -59,7 +59,7 @@ object AdBlocker {
                 AssetsFileManager.readFromAssets(
                     terminalFragment,
                     AD_HOSTS_FILE
-                ).split("\n").toHashSet()
+                )
         } catch (e: IOException) {
             e.printStackTrace()
         }
