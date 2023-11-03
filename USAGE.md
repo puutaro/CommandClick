@@ -146,9 +146,14 @@ Kill proccess
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/72d1f628-ee6f-43eb-8e8c-6b43860ec03b" width="300">  
 
-- `kill app` -> **kill all app process**  
-- `kill this process` -> kill this fannel(script) process  
-- `select kill` -> kill process selected from process list dialog
+- kill type
+
+| type | description |
+| --------- | --------- |
+| `kill app` | **Kill all app process** |
+|  `kill this process` | Kill this fannel(script) process  |
+| `select kill` | Kill process selected from process list dialog  |
+
   
 
 ### Description
@@ -219,11 +224,15 @@ Start `App directory` Manager
 2. Click `setting` -> "change_app_dir" in popup menu
   
 `App directory` is directory which index mode retreive
-- when item long press, poupu `add`, `delete`, `copy` and `rename` menu 
-    - `add`: add `App directory` 
-    - `delete`: delete `App directory`
-    - `rename`: rename `App directory` name
-    - `copy`: copy `App directory`
+- when item long press, poupu like bellow menu table `add`, `delete`, `copy` and `rename` menu
+- 
+| menu | description |
+| --------- | --------- |
+| `add` | Add `App directory` |
+| `delete` | Delete `App directory` |
+| `rename` | Rename `App directory` name |
+| `copy` | Copy `App directory` |
+
 
 
 ### Create shortcut
@@ -515,19 +524,7 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 - App not working -> [**kill all process**](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
     - Although this is frequently, incident is unknown
 
-- When url load slow in different than before, probably due to cache, so click it's url from `url history`.
-    - In many cases, occur in google search result page.
-
-
-- Ocationaly first start proccess crush, try, don't worry, just reboot.  
-    - Becuase app resoruce prefetch is busy, it's occur. Therefore, it' s instant problem. Rarely happens after the second time.
-
-- When `websearch suggest` is not working, press space. if suggest  exist, fly.  
-    - Prabably due to `AutovompleteTextView`'s specification.  　　
-    
-- When frequently crush, your smartphone reboot, or `onAdBlock` setting variable set `OFF`  
-    - Becuase of low memory, as a side note when `onAdBlock` is `ON`, `CommandClick` make block list on activiry reboot. Therefore 
-Crashes easily when memory is low    
+f  　　 
 
 - When `fannel` suddenly not working, update latest `CommandClick` and `fannel`.
     - `CommandClick` and `fannel` is new baby. Therefre, these is frequetly updated without backwards compatible.　I continuly enforce usability and fanctionality. Before long, if these grow up adult, I weight stability. But, please feel at ease, most often even now, latest version works fine.  
