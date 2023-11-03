@@ -5,7 +5,7 @@ Table
 * [Overview](#overview)
 * [Argument](#argument)
   * [--help, -h](#help) 
-  * [--launch-type|-t](#launch-type)
+  * [--launch-type, -t](#launch-type)
   * [--importance, -i](#importance)
   * [--list-file-path, -l](#list-file-path)
   * [--extra-setting-map-str, -e](#extra-setting-map-str)
