@@ -46,7 +46,7 @@ Wait target pid
 
 -> [About icon name](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md#icon_name)
 
-- default icon name `DOWNLOAD`
+- default icon name `download`
 
 ### [Optional] --title, -t <a id="title"></a>
 
