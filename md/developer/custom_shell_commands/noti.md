@@ -60,7 +60,7 @@ Can specify　bellow pre reserved icon names
 
 - pre reserved icon names
 
-`COPY`, `SEARCH`, `BACK`, `WHEEL`, `HISTORY`, `OVERFLOW`, `CANCEL`, `FILE`, `OK`, `PUZZLE`, `TERMINAL`, `DOWN`, `REFLESH`, `EDIT`, `SET`_`UP`, `SHORTCUT`, `FOLDA`, `SETTING`, `PLUS`, `SUPPORT`, `PLAY`, `SHARE`, `LAUNCH`, `UPDATE`, `INFO`, `ABOUT`, `DOWNLOAD`
+`copy`, `search`, `back`, `wheel`, `history`, `overflow`, `cancel`, `file`, `ok`, `puzzle`, `terminal`, `down`, `reflesh`, `edit`, `set`_`up`, `shortcut`, `folda`, `setting`, `plus`, `support`, `play`, `share`, `launch`, `update`, `info`, `about`, `download`
 
 ### [Optional] --alert-once, -o <a id="alert_once"></a>
 
