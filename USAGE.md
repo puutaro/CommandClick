@@ -315,7 +315,7 @@ You can setting `CommandClick` Configration
 
 ### Termux Setting
 
--> [About termux setup](#https://github.com/puutaro/CommandClick/blob/master/md/usage/termux_setup.md)
+-> [About termux setup](https://github.com/puutaro/CommandClick/blob/master/md/usage/termux_setup.md)
 
 
 [detail](https://wiki.termux.com/wiki/Termux-setup-storage)
