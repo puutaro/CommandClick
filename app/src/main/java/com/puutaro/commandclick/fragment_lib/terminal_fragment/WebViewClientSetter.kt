@@ -94,7 +94,7 @@ object WebViewClientSetter {
                 ) return super.shouldInterceptRequest(view, request)
                 val empty3 = ByteArrayInputStream("".toByteArray())
                 val blocklist = terminalViewModel.blocklist
-                if (blocklist.contains(":::::" + request?.url?.host)) {
+                if (blocklist.contains(":::::${request?.url?.host}")) {
                     return WebResourceResponse("text/plain", "utf-8", empty3)
                 }
                 return super.shouldInterceptRequest(view, request)

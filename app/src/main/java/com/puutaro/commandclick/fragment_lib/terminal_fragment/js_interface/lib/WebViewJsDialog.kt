@@ -21,7 +21,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.common.variable.icon.CmcClickIcons
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -552,7 +552,7 @@ class WebViewJsDialog(
             ?.get(
                 WebViewMenuMapType.iconName.name
             ) ?: String()
-        val iconId = CmcClickIcons.values().filter {
+        val iconId = CmdClickIcons.values().filter {
             val curIconName = it.str
             curIconName == iconName
         }.firstOrNull()?.id ?: return
