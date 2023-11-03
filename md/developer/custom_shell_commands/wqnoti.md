@@ -4,8 +4,8 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-  * [help](#help) 
-  * [pid](#pid)
+  * [--help, -h](#help) 
+  * [--pid, -p](#pid)
   * [--channel-num, -cn](#channel-num)
   * [--importance, -i](#importance)
   * [--icon-name, -in](#icon-name)
@@ -26,11 +26,11 @@ wqmsg \
 
 ## Argument
 
-### help
+### --help, -h <a id="help"></a>
 
 help contents
 
-### pid
+### --pid, -p <a id="pid"></a>
 
 Wait target pid
 
