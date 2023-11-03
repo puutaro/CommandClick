@@ -317,18 +317,6 @@ You can setting `CommandClick` Configration
 
 -> [About termux setup](https://github.com/puutaro/CommandClick/blob/master/md/usage/termux_setup.md)
 
-
-[detail](https://wiki.termux.com/wiki/Termux-setup-storage)
-
-5. Set `Draw Over Apps permission` in `android 11+` (Optinal)
-
-> You can grant Termux the Draw Over Apps permission from its App Info activity:
-> `Android Settings` -> `Apps` -> `Termux` -> `Advanced` -> `Draw over other apps`.
-
-[detail](https://github.com/termux/termux-app/wiki/RUN_COMMAND-Intent/06f1de1b262d7612497e76463d8cc34ba7f49832#draw-over-apps-permission-optional)
-
-- When above method cannot settle down, `CommandClick` or `Termux` restart, and system reboot.
-
 ### Edit startup
 
 Edit `statup script` contenst.  
