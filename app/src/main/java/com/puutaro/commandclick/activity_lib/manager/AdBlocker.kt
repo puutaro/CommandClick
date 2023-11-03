@@ -5,7 +5,6 @@ import androidx.lifecycle.lifecycleScope
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -32,14 +31,14 @@ object AdBlocker {
 //            terminalFragment.loadAssetCoroutineJob != null
 //        ) return
         if(
-            terminalViewModel.blocklist.isNotEmpty()
+            terminalViewModel.blockListCon.isNotEmpty()
         ) return null
 //        terminalFragment.loadAssetCoroutineJob =
         return terminalFragment.lifecycleScope.launch(Dispatchers.IO) {
             delay(3000)
             withContext(Dispatchers.IO) {
                 if(
-                    terminalViewModel.blocklist.isNotEmpty()
+                    terminalViewModel.blockListCon.isNotEmpty()
                 ) return@withContext
                 loadFromAssets(
                     terminalFragment,
@@ -49,13 +48,22 @@ object AdBlocker {
         }
     }
 
+    fun judgeBlock(
+        urlHost: String?,
+        blockListCon: String,
+    ): Boolean {
+        if(urlHost.isNullOrEmpty()) return false
+        val hostPrefix = ":::::"
+        return blockListCon.contains("${hostPrefix}${urlHost}")
+    }
+
 
     private fun loadFromAssets(
         terminalFragment: MainActivity,
         terminalViewModel: TerminalViewModel,
     ) {
         try {
-            terminalViewModel.blocklist =
+            terminalViewModel.blockListCon =
                 AssetsFileManager.readFromAssets(
                     terminalFragment,
                     AD_HOSTS_FILE

@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
@@ -19,6 +20,9 @@ import java.io.ByteArrayInputStream
 
 
 object WebViewClientSetter {
+
+    private val filePrefix = WebUrlVariables.filePrefix
+    private val slashPrefix= WebUrlVariables.slashPrefix
     fun set(
         terminalFragment: TerminalFragment
     ){
@@ -93,12 +97,17 @@ object WebViewClientSetter {
                     terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
                 ) return super.shouldInterceptRequest(view, request)
                 val empty3 = ByteArrayInputStream("".toByteArray())
-                val blocklist = terminalViewModel.blocklist
-                if (blocklist.contains(":::::${request?.url?.host}")) {
+                val blockListCon = terminalViewModel.blockListCon
+                val isBlock = AdBlocker.judgeBlock(
+                    request?.url?.host,
+                    blockListCon
+                )
+                if (isBlock) {
                     return WebResourceResponse("text/plain", "utf-8", empty3)
                 }
                 return super.shouldInterceptRequest(view, request)
             }
+
 
             override fun onPageFinished(
                 webview: WebView?,

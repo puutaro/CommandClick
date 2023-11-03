@@ -19,6 +19,7 @@ import android.widget.PopupMenu
 import android.widget.ProgressBar
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
@@ -365,8 +366,12 @@ class WebViewJsDialog(
                     terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
                 ) return super.shouldInterceptRequest(view, request)
                 val empty3 = ByteArrayInputStream("".toByteArray())
-                val blocklist = terminalViewModel.blocklist
-                if (blocklist.contains(":::::" + request?.url?.host)) {
+                val blockListCon = terminalViewModel.blockListCon
+                val isBlock = AdBlocker.judgeBlock(
+                    request?.url?.host,
+                    blockListCon
+                )
+                if (isBlock) {
                     return WebResourceResponse("text/plain", "utf-8", empty3)
                 }
                 return super.shouldInterceptRequest(view, request)

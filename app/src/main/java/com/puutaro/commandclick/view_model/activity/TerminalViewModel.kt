@@ -20,7 +20,7 @@ class TerminalViewModel: ViewModel() {
     var onDialog = false
     var dialogReturnValue = String()
     var jsArguments = String()
-    var blocklist = String()
+    var blockListCon = String()
     var isStop = false
     var multiSelectTabString = String()
     var jsExecuteJob: Job? = null
