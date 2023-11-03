@@ -225,7 +225,7 @@ Start `App directory` Manager
   
 `App directory` is directory which index mode retreive
 - when item long press, poupu like bellow menu table `add`, `delete`, `copy` and `rename` menu
-- 
+
 | menu | description |
 | --------- | --------- |
 | `add` | Add `App directory` |
