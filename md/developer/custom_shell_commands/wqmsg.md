@@ -4,7 +4,7 @@ Table
 -----------------
 * [Overview](#overview)
 * [Argument](#argument)
-  * [help](#help) 
+  * [--help](#--help) 
   * [pid](#pid)
   * [mark string](#mark-string)
 * [example](#example)
@@ -22,7 +22,7 @@ wqmsg \
 
 ## Argument
 
-### help
+### --help
 
 help contents
 
