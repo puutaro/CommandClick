@@ -512,8 +512,8 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 
 ### Generally TroubleShooting  
 
-- App not working -> [kill all process](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
-    - Incident is unknown
+- App not working -> [**kill all process**](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
+    - Although this is frequently, incident is unknown
 
 - When url load slow in different than before, probably due to cache, so click it's url from `url history`.
     - In many cases, occur in google search result page.
