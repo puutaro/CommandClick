@@ -146,7 +146,7 @@ Kill proccess
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/72d1f628-ee6f-43eb-8e8c-6b43860ec03b" width="300">  
 
-- `kill app` -> kill all app process  
+- `kill app` -> **kill all app process**  
 - `kill this process` -> kill this fannel(script) process  
 - `select kill` -> kill process selected from process list dialog
   
