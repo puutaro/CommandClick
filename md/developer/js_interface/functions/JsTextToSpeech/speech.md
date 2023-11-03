@@ -32,6 +32,7 @@ Setting ${key}=${value} pair to concat by `|`
 
 | key | type | description |
 | -------- | -------- | -------- |
+| importance | string | notification importance: `high` (default) / `low`
 | playMode | string | [Optional] play mode switch: `ordinaly`(default), `shuffle`, `reverse`, `number` |
 | onRoop | string | [Optional] some string: roop, `""`: no roop |
 | playNumber | string | [Optional] play list order number  string |
