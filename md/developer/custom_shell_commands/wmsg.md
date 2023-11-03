@@ -7,7 +7,7 @@ Table
   * [pid](#pid)
   * [message](#message)
   * [wait increasing symbol](#wait-increasing-symbol)
-  * [example](#example)
+* [example](#example)
 
 ## Overview
 
@@ -37,7 +37,7 @@ Wait increasing simbol
 
 - default value -> `.`
 
-### example
+## example
 
 ```sh.sh
 
