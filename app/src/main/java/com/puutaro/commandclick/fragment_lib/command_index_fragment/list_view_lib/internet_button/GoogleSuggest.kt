@@ -51,6 +51,7 @@ class GoogleSuggest(
         ) return
         val localLanguage = Locale.getDefault().toString()
         val searchWord = searchEditable.toString()
+            .trim()
             .replace(Regex("　　*"), " ")
             .replace("　", " ")
         if(
