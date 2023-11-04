@@ -24,7 +24,7 @@ alert("hello world");
 
 - Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is require `;` by each line
 
-- `hello_world_by_alert.js`'s code is equal bellow code
+- This code is equal bellow code
 
 ```js.js
 /// SETTING_SECTION_START
