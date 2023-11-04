@@ -60,7 +60,7 @@ alert("hello world")
 
 ## Step 3
 
-### Code <a id="code_1"></a>
+### Code <a id="code_3"></a>
 
 ```js.js
 alert("hello world")
