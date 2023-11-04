@@ -22,7 +22,7 @@ alert("hello world");
 
 - `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is require `;` by each line
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
 
 - This code is equal bellow code
 
