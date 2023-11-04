@@ -105,7 +105,9 @@ Usage
 For Developer
 --------
 
-<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p> 
+<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
+
+<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p>   
 
 
 Acknowledge
