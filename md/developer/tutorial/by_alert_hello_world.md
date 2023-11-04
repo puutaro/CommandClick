@@ -43,8 +43,18 @@ alert("hello world");
 
 Copy `hello_world_by_alert.js` to `/storage/emulated/0/Documents/cmdclick/default` directory
 
+- [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
+
 ## Step 3
 
 Execute by [run](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
+
+- Enable to execute from [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) by bellow step
+
+1. Click [edit startup](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit-startup) in `setting`
+2. Click `add` button in [homeScriptUrlsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homescripturlspath)
+3. Click `hello_world_by_alert.js` in grid box
+4. Close edit box.
+5. Click `hello_world_by_alert.js` in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
 
 
