@@ -108,7 +108,7 @@ Switch updating file last modified status when executing
 
 ## historySwitch
 
-Switch app history with url history     
+Switch app history with [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)     
 
 | Value | Description |
 | -------- | --------- |
