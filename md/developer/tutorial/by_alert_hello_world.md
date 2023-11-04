@@ -5,14 +5,14 @@ Table
 -----------------
 
 * [Step 1](#step-1)
-    * [Code](#code)
-    * [Description](#description)
+    * [Code](#code_1)
+    * [Description](#description_1)
 * [Step 2](#step-2)
-    * [Code](#code)
-    * [Description](#description)
+    * [Code](#code_2)
+    * [Description](#description_2)
 * [Step 3](#step-3)
-    * [Code](#code)
-    * [Description](#description)
+    * [Code](#code_3)
+    * [Description](#description_3)
 
 
 
@@ -22,7 +22,7 @@ This step require step if you want to `CommandClick`'s [fannel](https://github.c
 [Funnels](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) are surprisingly easy to make.  
 You experience `CommandClick`'s impact as low code tool.  
 
-### Code
+### Code <a id="code_1"></a>
 
 hello_world_by_alert.js
 
@@ -30,7 +30,7 @@ hello_world_by_alert.js
 alert("hello world")
 ```
 
-### Description
+### Description <a id="description_1"></a>
 
 - Above code is equal bellow code
 
@@ -50,19 +50,19 @@ alert("hello world")
 
 ## Step 2
 
-### Code
+### Code <a id="code_2"></a>
 
 ```js.js
 alert("hello world")
 ```
 
-### Description
+### Description <a id="description_2"></a>
 
 ## Step 3
 
-### Code
+### Code <a id="code_1"></a>
 
 ```js.js
 alert("hello world")
 ```
-### Description
+### Description <a id="description_3"></a>
