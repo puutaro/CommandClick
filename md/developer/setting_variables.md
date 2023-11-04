@@ -52,13 +52,13 @@ Table of Contents
  
 ## editExecute
 
-Edit mode change  
+Edit and Execute on click play button.  
 Particularly, `ALWAYS` is most used value in order to make execute box.
 
 
 | Value| Description |
 | -------- | --------- |
-| `NO` | normal edit (default) |
+| `NO` | only edit (default) |
 | `ALWAYS` | always edit -> execute |
 | `ONCE` | one time edit and execute (deprecated) |
 
