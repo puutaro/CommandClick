@@ -14,9 +14,7 @@ Table
 
 ## Step 1
 
-Create bellow js file.
-
-`hello_world_by_alert.js`
+Create `hello_world_by_alert.js`.  
 
 ```js.js
 alert("hello world");
