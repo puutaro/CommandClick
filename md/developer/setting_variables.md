@@ -52,13 +52,13 @@ Table of Contents
  
 ## editExecute
 
-Edit mode change  
+Edit and Execute on click play button.  
 Particularly, `ALWAYS` is most used value in order to make execute box.
 
 
 | Value| Description |
 | -------- | --------- |
-| `NO` | normal edit (default) |
+| `NO` | only edit (default) |
 | `ALWAYS` | always edit -> execute |
 | `ONCE` | one time edit and execute (deprecated) |
 
@@ -108,7 +108,7 @@ Switch updating file last modified status when executing
 
 ## historySwitch
 
-Switch app history with url history     
+Switch app history with [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)     
 
 | Value | Description |
 | -------- | --------- |
@@ -127,7 +127,7 @@ Switch adBlock
 
 ## onUrlHistoryRegister
 
-Switch url history update     
+Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) update     
 
 | Value | Description |
 | -------- | --------- |
@@ -279,7 +279,7 @@ or ignoreHistoryPaths="file://{file path}
 
 ## homeScriptUrlsPath
 
-Specified script path, url and html path to put always bottom in url history
+Specified script path, url and html path to put always bottom in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
 
 ## homeFannelsPath
 
@@ -327,12 +327,12 @@ Switch pass [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#
 
 ## urlHistoryOrButtonExec
 
-Switch url history or button script exec  
+Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) or button script exec  
 
 | Value | Description |
 | -------- | --------- |
 | `INHERIT` | Inherit config setting |
-| `URL_HISTORY` | Switch url history |
+| `URL_HISTORY` | Switch [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) |
 | `BUTTON_EXEC` | Switch url button script exec |
 
 ## onHistoryUrlTitle (deprecated) <a id="on_history_url_title"></a>

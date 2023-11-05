@@ -10,11 +10,11 @@
 <br>
 <br>
 
-`CommandClick` is ubuntu browser on android without root access and termux.  
+`CommandClick` is android browser powered by ubuntu without root access and termux.  
 <br>
 <br>
 <br>
-This is "both" end browser from backend + frontend. 
+This is "fullend" browser from backend + frontend. 
 <br>
 <br>
 <br>
@@ -105,7 +105,9 @@ Usage
 For Developer
 --------
 
-<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p> 
+<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
+
+<p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md" target="_blank">DEVELOPER.md</a></p>   
 
 
 Acknowledge
