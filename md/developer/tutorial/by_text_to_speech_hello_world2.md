@@ -279,5 +279,5 @@ Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#r
 
 Click Play button in toolbar
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/23572700-540e-4ac9-9911-342cdb0acb97" width="400">  
+<img src="https://github.com/puutaro//assets/55217593/23572700-540e-4ac9-9911-342cdb0acb97" width="400">  
 
