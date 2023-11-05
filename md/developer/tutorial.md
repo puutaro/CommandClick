@@ -9,10 +9,10 @@ The less effort, the better.
 Do you play date to prety girl and delicious lunch to decrease time for code implementation time?    
 Becuase `CommmandClick` itself include ubuntu and web browser, due to effort, you can do everything.   
 But, it's is worst.  
-`CommandClick`'s significance is `effortless` development.  
-Although this tool require understanding specification ofcourse, it's aime is less efforts. 
+`CommandClick`'s significance is less `effort` development.  
+Although this tool require understanding specification ofcourse, it's aime save your effort. 
 This tutorial tell you knowlege for low cost.  
-I hope your development life will be confortable.  
+I hope your android development life will become easy and fast.  
 
 Requirement
 -----------------
