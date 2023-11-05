@@ -9,7 +9,7 @@
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-## Table of Contents
+Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
@@ -55,8 +55,8 @@
 
 
 
-## Usage
------
+Usage
+-----------------
 
 ### Index mode
 
@@ -455,7 +455,7 @@ Also whether click or long click torigger, due to `historySwitch` setting  (refe
 ).
 
 
-## Developer page
+Developer page
 -----------------
 
 -> [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md)
@@ -468,7 +468,7 @@ I mean, `CommandClick` is low code tool. You can make andorid application by les
 Welcome to above developer page that expands depending on you.  
 
 
-## Commandclick-repository
+Commandclick-repository
 -----------------
 
 -> [CommandClick's fannel repository](https://github.com/puutaro/commandclick-repository)
@@ -479,7 +479,7 @@ For instance, your click script in CommandClick. One thing I can say that Comman
 
 
 
-## Generally TroubleShooting  
+Generally TroubleShooting  
 -----------------
 
 - App not working -> [**kill all process**](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#kill)
