@@ -18,20 +18,26 @@ Create `hello_world_by_alert.js`.
 
 ```js.js
 
-
+// [1]
 /// SETTING_SECTION_START
+// [2]
 editExecute="ALWAYS"
+// [1]
 setReplaceVariables="TXT_LABEL=label"
+// [3]
 setReplaceVariables="FANNEL_PATH=${0}"
 setReplaceVariables="FANNEL_DIR_PATH=${01}/${001}"
 setReplaceVariables="PLAY_TXT_PATH=${FANNEL_DIR_PATH}/playText.txt"
 setReplaceVariables="PLAY_LIST_TSV_PATH=${FANNEL_DIR_PATH}/playList.tsv"
-setVariableTypes="speechText:TXT:LBL=${TXT_LABEL}=this"
+// [4]
+setVariableTypes="speechText:TXT:LBL=${TXT_LABEL}=this" 
+// [5]
 scriptFileName="textToSpeechTutorial1.js"
 /// SETTING_SECTION_END
 
-
+// [6]
 /// CMD_VARIABLE_SECTION_START
+// [7]
 speechText="hello world"
 /// CMD_VARIABLE_SECTION_END
 
@@ -39,16 +45,19 @@ speechText="hello world"
 execTextToSpeech();
 
 function execTextToSpeech(){
+    // [8]
     jsFileSystem.createDir("${FANNEL_DIR_PATH}");
+    // [9]
     jsFileSystem.writeLocalFile(
         "${PLAY_TXT_PATH}",
         speechText
     );
-
+    // [10]
     jsFileSystem.writeLocalFile(
         "${PLAY_LIST_TSV_PATH}",
        "${PLAY_TXT_PATH}"
     );
+    // [11]
     let extraSettingMapStr = [
         `importance=low`,
         `pitch=50`,
