@@ -14,7 +14,7 @@
 <br>
 <br>
 <br>
-This is "both" end browser from backend + frontend. 
+This is "fullend" browser from backend + frontend. 
 <br>
 <br>
 <br>
