@@ -86,12 +86,12 @@ function execTextToSpeech(){
 -> [`TXT`, `LBL`](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#setvariabletypes-options-table)  
 -> [This option can be compined](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#this-option-can-be-combined)  
 [10]  
--> [jsFileSystem](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/jsFileSystem.md)
--> [createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)
+-> [jsFileSystem](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/jsFileSystem.md)  
+-> [createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)  
 [11]
--> [writeLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/writeLocalFile.md)
+-> [writeLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/writeLocalFile.md)  
 [12]
--> [TextToSpeech](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsTextToSpeech/speech.md)
+-> [TextToSpeech](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsTextToSpeech/speech.md)  
 
 - `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
