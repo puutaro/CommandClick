@@ -21,23 +21,24 @@ Create `hello_world_by_alert.js`.
 // [1]
 /// SETTING_SECTION_START
 // [2]
-editExecute="ALWAYS"
-// [1]
-setReplaceVariables="TXT_LABEL=label"
+scriptFileName="textToSpeechTutorial1.js"
 // [3]
+editExecute="ALWAYS"
+// [4]
+setReplaceVariables="TXT_LABEL=label"
+// [5]
 setReplaceVariables="FANNEL_PATH=${0}"
+// [6]
 setReplaceVariables="FANNEL_DIR_PATH=${01}/${001}"
 setReplaceVariables="PLAY_TXT_PATH=${FANNEL_DIR_PATH}/playText.txt"
 setReplaceVariables="PLAY_LIST_TSV_PATH=${FANNEL_DIR_PATH}/playList.tsv"
-// [4]
+// [7]
 setVariableTypes="speechText:TXT:LBL=${TXT_LABEL}=this" 
-// [5]
-scriptFileName="textToSpeechTutorial1.js"
 /// SETTING_SECTION_END
 
-// [6]
+// [8]
 /// CMD_VARIABLE_SECTION_START
-// [7]
+// [9]
 speechText="hello world"
 /// CMD_VARIABLE_SECTION_END
 
@@ -45,19 +46,18 @@ speechText="hello world"
 execTextToSpeech();
 
 function execTextToSpeech(){
-    // [8]
+    // [10]
     jsFileSystem.createDir("${FANNEL_DIR_PATH}");
-    // [9]
+    // [11]
     jsFileSystem.writeLocalFile(
         "${PLAY_TXT_PATH}",
         speechText
     );
-    // [10]
+    // [12]
     jsFileSystem.writeLocalFile(
         "${PLAY_LIST_TSV_PATH}",
        "${PLAY_TXT_PATH}"
     );
-    // [11]
     let extraSettingMapStr = [
         `importance=low`,
         `pitch=50`,
@@ -70,41 +70,47 @@ function execTextToSpeech(){
 
 ```
 
+
+[1] -> [setting section](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
+[2] -> [scriptFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
+[3] -> [editExecute](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editexecute)  
+[4] -> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
+[5] -> [pre order word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)  
+[6]
+-> [fannel dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#fannel_dir)  
+[8] -> [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables)  
+[9] -> edit text cmd variable  
+[7]  
+-> [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#overview)  
+-> [`TXT`, `LBL`](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#setvariabletypes-options-table)  
+-> [This option can be compined](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#this-option-can-be-combined)  
+[10]  
+-> [jsFileSystem](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/jsFileSystem.md)
+-> [createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)
+[11]
+-> [writeLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/writeLocalFile.md)
+[12]
+-> [TextToSpeech](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsTextToSpeech/speech.md)
+
 - `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
 - Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
 
 - This code is equal bellow code
 
-```js.js
-/// SETTING_SECTION_START // [1]
-editExecute="NO" // [2]
-scriptFileName="hello_world_by_alert.js" // [3]
-/// SETTING_SECTION_END
-
-alert("hello world");
-```
-
-[1] -> [setting section](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
-[2] -> [editExecute](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editexecute)  
-[3] -> [scriptFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
 
 ## Step 2
 
-Copy `hello_world_by_alert.js` to `/storage/emulated/0/Documents/cmdclick/default`<sub>[1]</sub> directory 
+Copy `textToSpeechTutorial1.js` to `/storage/emulated/0/Documents/cmdclick/default`<sub>[1]</sub> directory 
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
+## Step 4
+
+Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
+
 ## Step 3
 
-Execute by [run](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
+Click Play button in toolabar
 
-- Enable to execute from [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) by bellow step
-
-1. Click [edit startup](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit-startup) in `setting`
-2. Click `add` button in [homeScriptUrlsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homescripturlspath)
-3. Click `hello_world_by_alert.js` in grid box
-4. Close edit box.
-5. Click `hello_world_by_alert.js` in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
-
-
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/d932c31b-0987-429a-a5dc-59f2e65cad41" width="400">  
