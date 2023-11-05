@@ -84,7 +84,7 @@ function execTextToSpeech(){
 [7]  
 -> [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#overview)  
 -> [`TXT`, `LBL`](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#setvariabletypes-options-table)  
--> [This option can be compined](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#this-option-can-be-combined)  
+-> [This option can be combined](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#this-option-can-be-combined)  
 [10]  
 -> [jsFileSystem](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/jsFileSystem.md)  
 -> [createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)  
@@ -96,8 +96,6 @@ function execTextToSpeech(){
 - `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
 - Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
-
-- This code is equal bellow code
 
 
 ## Step 2
