@@ -27,9 +27,12 @@ alert("hello world");
 - This code is equal bellow code
 
 ```js.js
-/// SETTING_SECTION_START // [1]
-editExecute="NO" // [2]
-scriptFileName="hello_world_by_alert.js" // [3]
+// [1]
+/// SETTING_SECTION_START
+// [2]
+editExecute="NO"
+// [3]
+scriptFileName="hello_world_by_alert.js"
 /// SETTING_SECTION_END
 
 alert("hello world");
