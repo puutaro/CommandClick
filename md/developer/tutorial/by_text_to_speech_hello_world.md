@@ -11,6 +11,7 @@ Table
 * [Step 1](#step-1)
 * [Step 2](#step-2)
 * [Step 3](#step-3)
+* [Step 4](#step-4)
 
 ## Step 1
 
@@ -105,11 +106,11 @@ Copy `textToSpeechTutorial1.js` to `/storage/emulated/0/Documents/cmdclick/defau
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
-## Step 4
+## Step 3
 
 Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
 
-## Step 3
+## Step 4
 
 Click Play button in toolabar
 
