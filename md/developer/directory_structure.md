@@ -60,7 +60,7 @@ to resotre y-position when you visit site in url history,
 
 [Fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) directory path
 
-All fannel main direcotry must be `${fannel name without extend}` + "Dir", otherwise cannot controll by `CommandClick`
+All fannel main direcotry must be `${fannel name without extend} + "Dir"`, otherwise cannot controll by `CommandClick`
 
 
 ## `~/conf` <a id="conf"></a>
