@@ -730,10 +730,28 @@ class TextToSpeechService:
         val endLength = if (
             endPosiEntry <= stringLength
         ) endPosiEntry
-        else stringLength - 1
-        return text.substring(
-                i, endLength
+        else stringLength
+        return subtituteText(
+            text,
+            i,
+            endLength,
+        )
+    }
+
+    private fun subtituteText(
+        text: String,
+        startPosi: Int,
+        endLength: Int,
+    ): String {
+        return try {
+            text.substring(
+                startPosi, endLength
             )
+        } catch (e: Exception){
+            text.substring(
+                startPosi, endLength - 1
+            )
+        }
     }
 
     private fun makeDisplayTitle(
