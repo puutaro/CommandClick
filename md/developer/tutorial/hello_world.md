@@ -19,5 +19,6 @@ Table
 
 ## By text to speech
 
+-> [by_text_to_speech_hello_world](https://github.com/puutaro/CommandClick/blob/master/md/developer/tutorial/by_text_to_speech_hello_world.md)
 
 ## By notification
