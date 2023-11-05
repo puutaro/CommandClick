@@ -19,7 +19,7 @@ I hope your android development life will become easy and fast.
 Requirement
 -----------------
 
-javascript code basic knowledge.   
+Javascript code basic knowledge.   
 In [By notification](#by-notification) section, require shellscript basic knowledge.  
 
 
