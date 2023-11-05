@@ -1,9 +1,10 @@
 # By text to speech, hello world2
 
-This section is jump board in order to become `CommandClick` standard developer.  
-This point include common use essence for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.   
-Therefore, if you complete here, you acquire `CommandClick` development standard skill.  
-　　
+Thsi section serve you standard skill for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.  
+Although `CommandClick` is wide spread option for low code: file split, multiple option combination, and etc, here include common usecase.  
+If you use this section knowledge, you develop wide spread UI, and feature for less low cost.  
+I hope you live easily devevlopement life.　　
+
 
 Table
 -----------------
