@@ -102,7 +102,7 @@ function execTextToSpeech(){
 
 ## Step 2
 
-Copy `textToSpeechTutorial1.js` to `/storage/emulated/0/Documents/cmdclick/default`<sub>[1]</sub> directory 
+Copy `textToSpeechTutorial1.js` to `/storage/emulated/0/Documents/cmdclick/default` directory<sub>[1]</sub>   
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
