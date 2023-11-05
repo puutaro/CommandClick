@@ -12,10 +12,6 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Hello world](#hello-world)
+* [Best 3 hello world](https://github.com/puutaro/CommandClick/blob/master/md/developer/tutorial/hello_world.md)
 
-
-## Hello world
-
--> [Best 3 hello world](https://github.com/puutaro/CommandClick/blob/master/md/developer/tutorial/hello_world.md)
 
