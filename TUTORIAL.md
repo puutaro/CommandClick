@@ -11,7 +11,7 @@ Becuase `CommmandClick` itself include ubuntu and web browser, due to effort, yo
 But, it's is worst.  
 `CommandClick`'s significance is less `effort` development.  
 Although this tool require understanding specification ofcourse, it's aime save your effort. 
-This tutorial tell you knowlege for low cost.  
+This tutorial tell you knowledge for low cost.  
 I hope your android development life will become easy and fast.  
 
 Requirement
