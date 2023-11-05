@@ -1,9 +1,9 @@
 # By text to speech, hello world
 
-This is required section if you want to `CommandClick`'s [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) creator.    
-[Funnels](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) are surprisingly easy to make.  
-You experience `CommandClick`'s impact as low code tool.  
-
+This section is jump board in order to become `CommandClick` core developer.  
+This point include common use essence for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.   
+Therefore, if you complete here, you acquire `CommandClick` development base skill.  
+　　
 
 Table
 -----------------
@@ -15,7 +15,7 @@ Table
 
 ## Step 1
 
-Create `hello_world_by_alert.js`.  
+Create `textToSpeechTutorial1.js`.  
 
 ```js.js
 
@@ -112,6 +112,6 @@ Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#r
 
 ## Step 4
 
-Click Play button in toolabar
+Click Play button in toolbar
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/d932c31b-0987-429a-a5dc-59f2e65cad41" width="400">  
