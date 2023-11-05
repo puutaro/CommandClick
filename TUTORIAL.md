@@ -1,5 +1,7 @@
 # Tutorial
 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e4e6f75b-a35e-47f1-bb41-144d8ea88185" width="500">  
+
 `CommandClick`'s true value is low code tool.  
 Ofcourse, `CommandClick` can use as web browser, mobile ubuntu terminal. These feature is very useful.  
 However that alone don't know `CommandClick`'s true aim.   
