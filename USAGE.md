@@ -492,7 +492,7 @@ Generally TroubleShooting
 
 
 
-## Ubuntu, debian and windows version
+Ubuntu, debian and windows version
 -----------------
 
 -> [ubuntu, debian or windows version](https://github.com/puutaro/cmdclick)  
