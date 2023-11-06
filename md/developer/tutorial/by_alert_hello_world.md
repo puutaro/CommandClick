@@ -17,19 +17,12 @@ Table
 Create `hello_world_by_alert.js`.  
 
 ```js.js
-alert("hello world");
-```
-
-- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
-
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
-
-- This code is equal bellow code
-
-```js.js
-/// SETTING_SECTION_START // [1]
-editExecute="NO" // [2]
-scriptFileName="hello_world_by_alert.js" // [3]
+// [1]
+/// SETTING_SECTION_START
+// [2]
+editExecute="NO"
+// [3]
+scriptFileName="hello_world_by_alert.js"
 /// SETTING_SECTION_END
 
 alert("hello world");
@@ -39,15 +32,28 @@ alert("hello world");
 [2] -> [editExecute](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#editexecute)  
 [3] -> [scriptFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
 
+
+- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
+
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
+
+- This code is equal bellow code
+
+```js.js
+alert("hello world");
+```
+
 ## Step 2
 
-Copy `hello_world_by_alert.js` to `/storage/emulated/0/Documents/cmdclick/default`<sub>[1]</sub> directory 
+Copy `hello_world_by_alert.js` to `/storage/emulated/0/Documents/cmdclick/default` directory<sub>[1]</sub> 
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
 ## Step 3
 
 Execute by [run](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/dda94eb8-e865-4672-9b33-93df9e7e83f9" width="400">  
 
 - Enable to execute from [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history) by bellow step
 
@@ -56,5 +62,6 @@ Execute by [run](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#ru
 3. Click `hello_world_by_alert.js` in grid box
 4. Close edit box.
 5. Click `hello_world_by_alert.js` in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
+
 
 
