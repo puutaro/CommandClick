@@ -30,9 +30,23 @@ class JsUbuntu(
     private val cmdTerminalUrl = "http://127.0.0.1:${UsePort.WEB_SSH_TERM_PORT}"
 
     @JavascriptInterface
-        fun execScript(
+    fun execScript(
         executeShellPath:String,
         tabSepaArgs: String = String(),
+    ): String {
+        return execScriptF(
+            executeShellPath,
+            tabSepaArgs,
+            2000,
+        )
+    }
+
+
+    @JavascriptInterface
+    fun execScriptF(
+        executeShellPath:String,
+        tabSepaArgs: String = String(),
+        timeMilisec: Int,
     ): String {
         if (
             context == null
@@ -50,7 +64,7 @@ class JsUbuntu(
         return Shell2Http.runCmd(
             executeShellPath,
             tabSepaArgs,
-            2000,
+            timeMilisec,
         )
     }
 

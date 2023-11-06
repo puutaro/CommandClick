@@ -6,16 +6,16 @@ import com.puutaro.commandclick.BuildConfig
 object UbuntuInfo {
     val user = "cmdclick"
 
+    private const val devFalseInRelease = false
+    private val createImageSwitchOffInRelease = CreateImageSwitch.off.name
     private val buildConfigDebug = BuildConfig.DEBUG
 
     //  for development
-    private const val devFalseInRelease = false
     val onForDev = if(
         buildConfigDebug
     ) false
     else devFalseInRelease
 
-    private val createImageSwitchOffInRelease = CreateImageSwitch.off.name
     val createImageSwitch = if(
         buildConfigDebug
     ) CreateImageSwitch.off.name
@@ -32,7 +32,7 @@ object UbuntuInfo {
             -> "https://partner-images.canonical.com/core/jammy/" +
                     "current/ubuntu-jammy-core-cloudimg-arm64-root.tar.gz"
             else
-            -> "https://github.com/puutaro/CommandClick-Linux/releases/download/v1.1.1/rootfs.tar.gz"
+            -> "https://github.com/puutaro/CommandClick-Linux/releases/download/v1.1.2/rootfs.tar.gz"
         }
     }
 
