@@ -220,6 +220,7 @@ startup_launch_system(){
     export INTENT_MONITOR_ADDRESS="${INTENT_MONITOR_ADDRESS}"
     export REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
    	export UBUNTU_ENV_TSV_NAME="${UBUNTU_ENV_TSV_NAME}"
+   	export UBUNTU_SERVICE_TEMP_DIR_PATH="${UBUNTU_SERVICE_TEMP_DIR_PATH}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -236,7 +237,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_ENV_TSV_NAME \
+		-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_ENV_TSV_NAME,UBUNTU_SERVICE_TEMP_DIR_PATH \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -298,6 +299,8 @@ install_require_pacakges(){
 			dropbear
 			espeak
 			python3-pip
+			translate-shell
+			bsdmainutils
 			" \
 	)
 	apt-get install -y ${require_packages}
@@ -360,6 +363,9 @@ launch_setup(){
 		"${profile_path}"
 	insert_str_to_file \
 		'export UBUNTU_ENV_TSV_NAME="'${UBUNTU_ENV_TSV_NAME}'"' \
+		"${profile_path}"
+	insert_str_to_file \
+		'export UBUNTU_SERVICE_TEMP_DIR_PATH="'${UBUNTU_SERVICE_TEMP_DIR_PATH}'"' \
 		"${profile_path}"
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo

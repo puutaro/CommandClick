@@ -1,0 +1,50 @@
+#!/bin/bash
+
+
+set -ue
+
+readonly HELP_ARG="${1:-}"
+readonly TRANS_DATETIME_PATH="${UBUNTU_SERVICE_TEMP_DIR_PATH}/trans_date.txt"
+readonly TRANS_DELAY_SEC=10
+readonly TRANS_WAIT_ROOP_TIMES=20
+
+
+function echo_date_plus10_sec(){
+	date \
+	'+%s' \
+	-d '10 second' 
+}
+
+
+function trans_delay(){
+	case "${HELP_ARG}" in
+		"-h"|"--help") return ;;
+	esac
+	mkdir -p "${UBUNTU_SERVICE_TEMP_DIR_PATH}"
+	local plus10_past_datetime=$(cat "${TRANS_DATETIME_PATH}" 2>/dev/null)
+	case "${plus10_past_datetime}" in
+		"") return;;
+	esac
+	if [[ ! "${plus10_past_datetime}" =~ ^[0-9]+$ ]]; then
+		plus10_past_datetime=$(echo_date_plus10_sec)
+	fi
+	for i in $(seq ${TRANS_WAIT_ROOP_TIMES})
+	do
+		local current_datetime=$(date  '+%s')
+		local datetime_diff=$(( ${plus10_past_datetime} - ${current_datetime} ))
+		if [ ${datetime_diff}  -le 0  ]; then
+			return
+		fi
+		sleep 1
+	done
+	exit 1
+}
+
+trans_delay
+
+trans "$@" 
+
+
+echo_date_plus10_sec \
+	> "${TRANS_DATETIME_PATH}"
+
