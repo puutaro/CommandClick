@@ -13,7 +13,7 @@ class JsSendKey(
 
     private val context = terminalFragment.context
     private val mKeyCharacterMap = KeyCharacterMap.load(KeyCharacterMap.VIRTUAL_KEYBOARD)
-    private val makeModifierSepalator = "___"
+    private val makeModifierSeparator = "___"
 
 
     @JavascriptInterface
@@ -108,12 +108,12 @@ class JsSendKey(
     private fun judgeModifer(
         str: String
     ): ModifierKeyName {
-        val ctrlShiftAltPrefix = "${ModifierKeyName.ctrl_shift_alt.name}${makeModifierSepalator}"
-        val ctrlShiftPrefix = "${ModifierKeyName.ctrl_shift.name}${makeModifierSepalator}"
-        val ctrlAltPrefix = "${ModifierKeyName.ctrl_alt.name}${makeModifierSepalator}"
-        val ctrlPrefix = "${ModifierKeyName.ctrl.name}${makeModifierSepalator}"
-        val shiftPrefix = "${ModifierKeyName.shift.name}${makeModifierSepalator}"
-        val altPrefix = "${ModifierKeyName.alt.name}${makeModifierSepalator}"
+        val ctrlShiftAltPrefix = "${ModifierKeyName.ctrl_shift_alt.name}${makeModifierSeparator}"
+        val ctrlShiftPrefix = "${ModifierKeyName.ctrl_shift.name}${makeModifierSeparator}"
+        val ctrlAltPrefix = "${ModifierKeyName.ctrl_alt.name}${makeModifierSeparator}"
+        val ctrlPrefix = "${ModifierKeyName.ctrl.name}${makeModifierSeparator}"
+        val shiftPrefix = "${ModifierKeyName.shift.name}${makeModifierSeparator}"
+        val altPrefix = "${ModifierKeyName.alt.name}${makeModifierSeparator}"
 
         val isCtrlShiftAltPrefix = str.startsWith(ctrlShiftAltPrefix)
         val isCtrlShiftPrefix = str.startsWith(ctrlShiftPrefix)
@@ -121,7 +121,7 @@ class JsSendKey(
         val isCtrlPrefix = str.startsWith(ctrlPrefix)
         val isShiftPrefix = str.startsWith(shiftPrefix)
         val isAltPrefix = str.startsWith(altPrefix)
-        val isOneSepalator = str.split(makeModifierSepalator).size == 2
+        val isOneSepalator = str.split(makeModifierSeparator).size == 2
 
         if(isCtrlShiftAltPrefix && isOneSepalator) return ModifierKeyName.ctrl_shift_alt
         if(isCtrlShiftPrefix && isOneSepalator) return ModifierKeyName.ctrl_shift
@@ -136,7 +136,7 @@ class JsSendKey(
         modifierConbiStr: String,
         metaKeyCode: Int,
     ){
-        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
+        val modifierNormalPair = modifierConbiStr.split(makeModifierSeparator)
         val normalKey = modifierNormalPair.lastOrNull()
             ?: return
         val keyCode = SpecialKeys.values().filter {
