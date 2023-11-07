@@ -20,22 +20,15 @@ class JsSendKey(
     fun send(
         keyName: String,
     ){
-        when(keyName){
-            "paste" -> paste()
-            "enter" -> enter()
-            "down" -> down()
-            "up" -> up()
-            "left" -> left()
-            "right" -> right()
-            "pageDown" -> pageDown()
-            "pageUp" -> pageUp()
-            "esc" -> esc()
-            "home" -> home()
-            "end" -> end()
-            "backspace" -> backspace()
-            "space" -> space()
-            else -> normalOrModiferHandler(keyName)
+        SpecialKeys.values().filter {
+            it.str == keyName
+        }.firstOrNull()?.let {
+            keyDownEvent(
+                it.keyCode
+            )
+            return
         }
+        normalOrModiferHandler(keyName)
     }
 
     private fun keyDownEvent(
@@ -65,84 +58,6 @@ class JsSendKey(
         )
     }
 
-    private fun up(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_DPAD_UP,
-        )
-    }
-
-    private fun down(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_DPAD_DOWN,
-        )
-    }
-
-    private fun left(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_DPAD_LEFT,
-        )
-    }
-
-    private fun right(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_DPAD_RIGHT,
-        )
-    }
-
-    private fun pageDown(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_PAGE_DOWN,
-        )
-    }
-
-    private fun pageUp(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_PAGE_UP,
-        )
-    }
-
-    private fun esc(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_ESCAPE,
-        )
-    }
-
-    private fun home(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_MOVE_HOME,
-        )
-    }
-
-    private fun end(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_MOVE_END,
-        )
-    }
-    private fun backspace(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_DEL,
-        )
-    }
-
-    private fun space(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_SPACE,
-        )
-    }
-
-    private fun paste(){
-        keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
-            KeyEvent.KEYCODE_V,
-        )
-    }
-
-    private fun enter(){
-        keyDownEvent(
-            KeyEvent.KEYCODE_ENTER
-        )
-    }
-
     private fun normalOrModiferHandler(
         str: String,
     ){
@@ -150,20 +65,43 @@ class JsSendKey(
             judgeModifer(str)
         ) {
             ModifierKeyName.ctrl_shift_alt
-            -> makeCtrlShiftAltNormal(str)
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_CTRL_ON
+                        or KeyEvent.META_SHIFT_ON
+                        or KeyEvent.META_ALT_ON,
+            )
             ModifierKeyName.ctrl_shift
-            -> makeCtrlShiftNormal(str)
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_CTRL_ON
+                        or KeyEvent.META_SHIFT_ON,
+            )
             ModifierKeyName.ctrl_alt
-            -> makeCtrlAltNormal(str)
-            ModifierKeyName.ctrl,
-            ModifierKeyName.shift,
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_CTRL_ON
+                        or KeyEvent.META_ALT_ON,
+            )
+            ModifierKeyName.ctrl
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_CTRL_ON
+            )
+            ModifierKeyName.shift
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_SHIFT_ON
+            )
             ModifierKeyName.alt
-            -> makeOneModifierKeyConbi(str)
+            -> execModifierPlusNormal(
+                str,
+                KeyEvent.META_ALT_ON
+            )
             else
             -> typeStr(
                 str
             )
-
         }
     }
 
@@ -192,65 +130,23 @@ class JsSendKey(
         if(isShiftPrefix && isOneSepalator) return ModifierKeyName.shift
         if(isAltPrefix && isOneSepalator) return ModifierKeyName.alt
         return ModifierKeyName.normalStr
-
-
     }
 
-    private fun makeOneModifierKeyConbi(
+    private fun execModifierPlusNormal(
         modifierConbiStr: String,
+        metaKeyCode: Int,
     ){
         val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
-        val modifierKey = modifierNormalPair.firstOrNull()
-            ?: return
         val normalKey = modifierNormalPair.lastOrNull()
             ?: return
-        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
-        when(modifierKey) {
-            ModifierKeyName.ctrl.name -> keyDownWithMeta(
-                KeyEvent.META_CTRL_ON,
-                keyEvent.keyCode
-            )
-            ModifierKeyName.shift.name -> keyDownWithMeta(
-                KeyEvent.META_SHIFT_ON,
-                keyEvent.keyCode
-            )
-            ModifierKeyName.alt.name -> keyDownWithMeta(
-                KeyEvent.META_ALT_ON,
-                keyEvent.keyCode
-            )
+        val keyCode = SpecialKeys.values().filter {
+            it.str == normalKey
+        }.firstOrNull()?.keyCode ?: let {
+            mKeyCharacterMap.getEvents(normalKey.toCharArray()).first().keyCode
         }
-    }
-
-    private fun makeCtrlShiftAltNormal(modifierConbiStr: String){
-        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
-        val normalKey = modifierNormalPair.lastOrNull()
-            ?: return
-        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
         keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON  or KeyEvent.META_ALT_ON,
-            keyEvent.keyCode,
-        )
-    }
-
-    private fun makeCtrlShiftNormal(modifierConbiStr: String){
-        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
-        val normalKey = modifierNormalPair.lastOrNull()
-            ?: return
-        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
-        keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_SHIFT_ON,
-            keyEvent.keyCode,
-        )
-    }
-
-    private fun makeCtrlAltNormal(modifierConbiStr: String){
-        val modifierNormalPair = modifierConbiStr.split(makeModifierSepalator)
-        val normalKey = modifierNormalPair.lastOrNull()
-            ?: return
-        val keyEvent = mKeyCharacterMap.getEvents(normalKey.toCharArray()).first()
-        keyDownWithMeta(
-            KeyEvent.META_CTRL_ON or KeyEvent.META_ALT_ON,
-            keyEvent.keyCode,
+            metaKeyCode,
+            keyCode,
         )
     }
 
@@ -275,4 +171,23 @@ private enum class ModifierKeyName {
     ctrl_alt,
     ctrl_shift_alt,
     normalStr,
+}
+
+private enum class SpecialKeys(
+    val str: String,
+    val keyCode: Int,
+){
+    Enter("enter", KeyEvent.KEYCODE_ENTER),
+    Down("down", KeyEvent.KEYCODE_DPAD_DOWN),
+    Up("up", KeyEvent.KEYCODE_DPAD_UP),
+    Left("left", KeyEvent.KEYCODE_DPAD_LEFT),
+    Right("right", KeyEvent.KEYCODE_DPAD_RIGHT),
+    PageDown("pageDown", KeyEvent.KEYCODE_PAGE_DOWN),
+    PageUp("pageUp", KeyEvent.KEYCODE_PAGE_UP),
+    Esc("esc", KeyEvent.KEYCODE_ESCAPE),
+    Home("home", KeyEvent.KEYCODE_MOVE_HOME),
+    End("end", KeyEvent.KEYCODE_MOVE_END),
+    Backspace("backspace", KeyEvent.KEYCODE_DEL),
+    Space("space", KeyEvent.KEYCODE_SPACE),
+    Tab("tab", KeyEvent.KEYCODE_TAB),
 }
