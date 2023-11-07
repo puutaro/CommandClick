@@ -46,5 +46,5 @@ sudo cp -vf \
 echo "crean up.." >> "${MONITOR_FILE_PATH}"
 sudo rm \
 	-f "${UBUNTU_BACKUP_TEMP_ROOTFS_PATH}"
-echo "Comp & Press CANCEL" >> "${MONITOR_FILE_PATH}"
+echo "Comp & Click CANCEL" >> "${MONITOR_FILE_PATH}"
 bash "${NOTI_MANAGER_SHELL_PATH}"
