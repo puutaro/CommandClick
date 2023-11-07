@@ -3,8 +3,8 @@ package com.puutaro.commandclick.common.variable.icon
 import com.puutaro.commandclick.R
 
 enum class CmdClickIcons(
-        val str: String,
-        val id: Int,
+    val str: String,
+    val id: Int,
 ) {
     COPY("copy", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
     SEARCH("search", R.drawable.icons8_search),
