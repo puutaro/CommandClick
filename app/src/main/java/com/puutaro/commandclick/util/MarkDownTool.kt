@@ -24,39 +24,6 @@ object MarkDownTool {
 <!-- ◆シンタックスハイライト用 css （好きなテーマを選んで指定する） -->
 <link rel="stylesheet" href="file:///android_asset/js/highlight.js_9.9.0_styles_ir-black.min.css">
 
-<script>
-    ${'$'}(function() {
-
-        // ★marked.js の設定
-        marked.setOptions({
-            breaks : true,
-
-            // highlight.js でハイライトする
-            highlight: function(code, lang) {
-                return hljs.highlightAuto(code, [lang]).value;
-            }
-        });
-
-        // highlight.js の初期処理
-        hljs.initHighlightingOnLoad(); 
-
-        // ★マークダウンを HTML に変換して再セット
-        var md = marked(getHtml("#markdown"));
-        ${'$'}("#markdown").html(md);
-
-    });
-
-    // 比較演算子が &lt; 等になるので置換
-    function getHtml(selector) {
-        var html = ${'$'}(selector).html();
-        html = html.replace(/&lt;/g, '<');
-        html = html.replace(/&gt;/g, '>');
-        html = html.replace(/&amp;/g, '&');
-
-        return html;
-    }
-
-</script>
 <style>
     table  { border-collapse: collapse; }
     th, td { border:1px solid #999; padding:2px 5px; }
@@ -88,6 +55,38 @@ object MarkDownTool {
 ${contents}
 
 </div>
+<script>
+    ${'$'}(function() {
+        // ★marked.js の設定
+        marked.setOptions({
+            breaks : true,
+
+            // highlight.js でハイライトする
+            highlight: function(code, lang) {
+                return hljs.highlightAuto(code, [lang]).value;
+            }
+        });
+
+        // highlight.js の初期処理
+        hljs.initHighlightingOnLoad(); 
+
+        // ★マークダウンを HTML に変換して再セット
+        var md = marked(getHtml("#markdown"));
+        ${'$'}("#markdown").html(md);
+
+    });
+
+    // 比較演算子が &lt; 等になるので置換
+    function getHtml(selector) {
+        var html = ${'$'}(selector).html();
+        html = html.replace(/&lt;/g, '<');
+        html = html.replace(/&gt;/g, '>');
+        html = html.replace(/&amp;/g, '&');
+
+        return html;
+    }
+
+</script>
 </body>
 </html>        
         
