@@ -7,7 +7,7 @@ Table of Contents
 	* [Keyboard](#keyboard)
 	* [cmdInput](#cmdinput)
 		* [How to register cmd](#how-to-register-cmd)
-		* [How to exc registered cmd](#how-to-exc-registered-cmd)
+		* [How to exec registered cmd](#how-to-exec-registered-cmd)
 	* [REGISTER_EXTRA_KEY](#register_extra_key)
 		* [Modifier kind table](#modifier-kind-table)
 * [Acknowledge](#acknowledge)
@@ -32,9 +32,9 @@ Retrieve pre-registerd command.
 #### How to register cmd
 
 1. Type one linear command you wont to register.
-2. Press "rg" button 
+2. Press "RG" button 
 
-#### How to exc registered cmd
+#### How to exec registered cmd
 
 1. Tap dropdown.
 2. Select one from command list.
@@ -42,7 +42,7 @@ Retrieve pre-registerd command.
 - "-" is escape that you execute command in drop down.
 - If you wont to edit keys file, this is bellow.
 
-/Documents/cmdclick/AppDir/${your app dir}/cmdTerminalDir/list/cmdList.txt
+[cmdTerminalDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#fannel_dir)/list/cmdList.txt
 
 
 
@@ -56,7 +56,7 @@ Register user difinition key.
 - If you wont to edit keys file, this is bellow.
 
 
-/Documents/cmdclick/AppDir/${your app dir}/cmdTerminalDir/list/extraKeyList.txt
+[cmdTerminalDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#fannel_dir)/list/extraKeyList.txt
 
 
 #### Modifier kind table
@@ -76,4 +76,3 @@ Register user difinition key.
 ----------
 This Fannel is used to bellow repo as core library.
 [webssh](https://github.com/huashengdun/webssh)
-
