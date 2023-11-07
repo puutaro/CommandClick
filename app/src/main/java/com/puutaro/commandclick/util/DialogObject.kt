@@ -19,7 +19,13 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 object DialogObject {
@@ -27,6 +33,7 @@ object DialogObject {
     private var simpleTextDialogObj: Dialog? = null
     private var descWebDialog: Dialog? = null
     private val defaultFontPercentage = 140
+    private val positionHashMap = hashMapOf<String, Int>()
 
     fun simpleTextShow(
         contextSrc: Context?,
@@ -97,6 +104,7 @@ object DialogObject {
             ?: return
         val activity = fragment.activity
             ?: return
+        positionHashMap.clear()
         descWebDialog = Dialog(
             context
         )
@@ -114,15 +122,16 @@ object DialogObject {
             fragment,
             webView
         )
+        val descDialogUrl = "${WebUrlVariables.filePrefix}///descMd.txt"
         webView.loadDataWithBaseURL(
-            "",
+            descDialogUrl,
             MarkDownTool.convertMdToHtml(
                 scriptName,
                 contents
             ),
             "text/html",
             "utf-8",
-            null
+            descDialogUrl
         )
         val progressBar = descWebDialog?.findViewById<ProgressBar>(
             R.id.desc_dialog_webview_progressBar
@@ -224,6 +233,7 @@ object DialogObject {
                     progressBar?.progress = newProgress
                 }
             }
+
         }
     }
 
@@ -250,10 +260,29 @@ object DialogObject {
                         activity.startActivity(intent)
                         return true
                     }
-
                 }
+                positionHashMap.put(
+                    "${webView.url}",
+                    view?.scrollY ?: 0
+                )
                 return false
             }
+
+            override fun onPageFinished(
+                webview: WebView?,
+                url: String?
+            ) {
+                positionHashMap.get(url)?.let {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        withContext(Dispatchers.IO){
+                            delay(300)
+                        }
+                        webView.scrollY = it
+                    }
+                }
+                super.onPageFinished(webview, url)
+            }
+
         }
     }
 }

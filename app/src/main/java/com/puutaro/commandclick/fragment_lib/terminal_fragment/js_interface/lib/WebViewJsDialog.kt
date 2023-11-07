@@ -62,6 +62,7 @@ class WebViewJsDialog(
     private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
+    private val positionHashMap = hashMapOf<String, Int>()
 
     fun create(
         urlStrSrc: String,
@@ -69,6 +70,7 @@ class WebViewJsDialog(
         menuMapStrListStr: String,
         longPressMenuMapListStr: String,
     ) {
+        positionHashMap.clear()
         val urlStr = if(
             urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
             || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
@@ -353,8 +355,11 @@ class WebViewJsDialog(
                         activity?.startActivity(intent)
                         return true
                     }
-
                 }
+                positionHashMap.put(
+                    "${webView.url}",
+                    view?.scrollY ?: 0
+                )
                 return false
             }
 
@@ -375,6 +380,21 @@ class WebViewJsDialog(
                     return WebResourceResponse("text/plain", "utf-8", empty3)
                 }
                 return super.shouldInterceptRequest(view, request)
+            }
+
+            override fun onPageFinished(
+                webview: WebView?,
+                url: String?
+            ) {
+                positionHashMap.get(url)?.let {
+                    CoroutineScope(Dispatchers.Main).launch {
+                        withContext(Dispatchers.IO){
+                            delay(300)
+                        }
+                        webView.scrollY = it
+                    }
+                }
+                super.onPageFinished(webview, url)
             }
         }
     }
@@ -679,13 +699,14 @@ class WebViewJsDialog(
         val trimUrlCon = urlCon.trim()
         when(true){
             trimUrlCon.startsWith(textConUriPrefix) -> {
+                val textUrl = "${WebUrlVariables.filePrefix}///textCon.txt"
                 val removePrefixCon = trimUrlCon.removePrefix(textConUriPrefix)
                 webView.loadDataWithBaseURL(
-                    "",
+                    textUrl,
                     removePrefixCon,
                     "text/html",
                     "utf-8",
-                    null
+                    textUrl
                 )
             }
             else -> webView.loadUrl(trimUrlCon)
