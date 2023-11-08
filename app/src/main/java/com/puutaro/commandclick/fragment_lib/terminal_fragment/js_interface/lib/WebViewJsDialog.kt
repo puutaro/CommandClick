@@ -76,7 +76,7 @@ class WebViewJsDialog(
             || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
-            || urlStrSrc.startsWith(UriPrefix.TEXT_CON.str)
+            || urlStrSrc.startsWith(UriPrefix.TEXT_CON.prefix)
         ) urlStrSrc
         else "${WebUrlVariables.queryUrl}${urlStrSrc}"
         CoroutineScope(Dispatchers.Main).launch{
@@ -695,11 +695,12 @@ class WebViewJsDialog(
         webView: WebView,
         urlCon: String,
     ){
-        val textConUriPrefix = UriPrefix.TEXT_CON.str
+        val textConUriPrefix = UriPrefix.TEXT_CON.prefix
+        val mdConUriPrefix = UriPrefix.MD_CON.prefix
         val trimUrlCon = urlCon.trim()
         when(true){
             trimUrlCon.startsWith(textConUriPrefix) -> {
-                val textUrl = "${WebUrlVariables.filePrefix}///textCon.txt"
+                val textUrl = UriPrefix.TEXT_CON.url
                 val removePrefixCon = trimUrlCon.removePrefix(textConUriPrefix)
                 webView.loadDataWithBaseURL(
                     textUrl,
@@ -707,6 +708,17 @@ class WebViewJsDialog(
                     "text/html",
                     "utf-8",
                     textUrl
+                )
+            }
+            trimUrlCon.startsWith(mdConUriPrefix) -> {
+                val mdUrl = UriPrefix.MD_CON.url
+                val removePrefixCon = trimUrlCon.removePrefix(mdConUriPrefix)
+                webView.loadDataWithBaseURL(
+                    mdUrl,
+                    removePrefixCon,
+                    "text/html",
+                    "utf-8",
+                    mdUrl
                 )
             }
             else -> webView.loadUrl(trimUrlCon)
@@ -754,7 +766,9 @@ enum class JsMacroType(val str: String,) {
 }
 
 private enum class UriPrefix(
-    val str: String
+    val prefix: String,
+    val url: String,
 ) {
-    TEXT_CON("textCon://")
+    TEXT_CON("textCon://", "${WebUrlVariables.filePrefix}///textCon.txt"),
+    MD_CON("mdCon://", "${WebUrlVariables.filePrefix}///descMd.txt"),
 }
