@@ -55,7 +55,6 @@ object FileSystems {
             fileName == "-"
             || fileName.isEmpty()
         ) return
-        val dirObj = File(dirPath)
         createDirs(dirPath)
         val filePath = File(dirPath, fileName)
         try {
