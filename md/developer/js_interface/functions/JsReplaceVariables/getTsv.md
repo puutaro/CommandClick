@@ -9,7 +9,7 @@ Table
 
 ## Result
 
-Get [replace variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) tsv contents
+Get [replace variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) from [tsv contents](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#replace_variables_table)
 
 
 
@@ -36,4 +36,4 @@ jsReplaceVariables.getTsv(
 );
 ```
 
-- `${0}` -> https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md
+- `${0}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
