@@ -1,7 +1,7 @@
 
 
 /// LABELING_SECTION_START
-// ccImport admin fannel @puutaro
+// jsImport admin fannel @puutaro
 // --
 // --
 // bellow setting variable main line up
@@ -28,14 +28,14 @@ setReplaceVariables="LIST_PREFIX=prefix"
 setReplaceVariables="LIST_SUFFIX=suffix"
 setReplaceVariables="CMDCLICK_ROOT_DIR_PATH=${00}"
 setReplaceVariables="CMDCLICK_CONF_DIR_PATH=${CMDCLICK_ROOT_DIR_PATH}/conf"
-setReplaceVariables="CMDCLICK_CCIMPORT_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/ccimport"
-setVariableTypes="ccImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_CCIMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!get!sync!util&add&write&cat!copy&copy_file&copy_path"
-scriptFileName="ccImportManager.js"
+setReplaceVariables="CMDCLICK_JS_IMPORT_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/jsimport"
+setVariableTypes="jsImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_JS_IMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!get!sync!util&add&write&cat!copy&copy_file&copy_path"
+scriptFileName="jsImportManager.js"
 /// SETTING_SECTION_END
 
 
 /// CMD_VARIABLE_SECTION_START
-ccImportList=""
+jsImportList=""
 /// CMD_VARIABLE_SECTION_END
 
 

@@ -1,7 +1,7 @@
 
 
 /// LABELING_SECTION_START
-// ccImport admin fannel @puutaro
+// App directory manager @puutaro
 // --
 // --
 // bellow setting variable main line up

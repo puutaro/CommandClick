@@ -61,9 +61,9 @@ object UsePath {
     val cmdclickAppHistoryDirAdminPath =  "$rootPath/$cmdclickAppHistoryDirRelativePath"
     val cmdclickButtonExecShellFileName = "cmdclickButtonExec$JS_FILE_SUFFIX"
     val cmdclickInternetButtonExecJsFileName = "internetButtonExec$JS_FILE_SUFFIX"
-    private const val cmdclickCcimportDirName = "ccimport"
-    private val cmdclickCcimportRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickCcimportDirName"
-    val cmdclickCcimportDirPath =  "$rootPath/$cmdclickCcimportRelativeDirPath"
+    private const val cmdclickJsImportDirName = "jsimport"
+    private val cmdclickJsImportRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickJsImportDirName"
+    val cmdclickJsImportDirPath =  "$rootPath/$cmdclickJsImportRelativeDirPath"
     private const val cmdclickNonitorDirName = "monitor"
     private val cmdclickMonitorRelativeDirPath = "$cmdclickConfRelativePath/$cmdclickNonitorDirName"
     val cmdclickMonitorDirPath =  "$rootPath/$cmdclickMonitorRelativeDirPath"
@@ -127,8 +127,8 @@ object UsePath {
     val fannelSettingDirPath = "\${01}/\${001}/setting"
     val homeFannelsFilePath =
         "${fannelSettingDirPath}/homeFannelsFilePaths.txt"
-    val ccImportManagerFannelName = "ccImportManager.js"
-    val ccImportAdminFannelPath = "$cmdclickSystemAppDirPath/$ccImportManagerFannelName"
+    val jsImportManagerFannelName = "jsImportManager.js"
+    val jsImportAdminFannelPath = "$cmdclickSystemAppDirPath/$jsImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"
     val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
 

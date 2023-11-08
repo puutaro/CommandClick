@@ -97,7 +97,7 @@ class CommandIndexFragment: Fragment() {
             cmdclickAppHistoryDirAdminPath
         )
         FileSystems.createDirs(
-            UsePath.cmdclickCcimportDirPath
+            UsePath.cmdclickJsImportDirPath
         )
         FileSystems.createFiles(
             cmdclickAppHistoryDirAdminPath,

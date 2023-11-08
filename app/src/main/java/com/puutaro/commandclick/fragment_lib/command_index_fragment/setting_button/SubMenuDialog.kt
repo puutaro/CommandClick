@@ -110,11 +110,11 @@ object SubMenuDialog {
                         UsePath.appDirManagerFannelName
                     )
                 }
-                SettingSubMenuEnums.CC_IMPORT.itemName -> {
+                SettingSubMenuEnums.JS_IMPORT.itemName -> {
                     SystemFannelLauncher.launch(
                         commandIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
-                        UsePath.ccImportManagerFannelName
+                        UsePath.jsImportManagerFannelName
                     )
                 }
                 SettingSubMenuEnums.SHORTCUT.itemName -> {
@@ -145,11 +145,11 @@ object SubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
-        CHDIR("change_app_dir", R.drawable.icons8_support),
-        CC_IMPORT("cc_import_manager", R.drawable.icons8_folda),
-        SHORTCUT("create_short_cut", R.drawable.icons8_shortcut),
-        TERM_REFRESH("term_refresh", R.drawable.icons8_refresh),
-        TERMUX_SETUP("termux_setup", R.drawable.icons8_setup),
+        CHDIR("change app dir", R.drawable.icons8_support),
+        JS_IMPORT("js import manager", R.drawable.icons8_folda),
+        SHORTCUT("create short cut", R.drawable.icons8_shortcut),
+        TERM_REFRESH("term refresh", R.drawable.icons8_refresh),
+        TERMUX_SETUP("termux setup", R.drawable.icons8_setup),
         CONFIG("config", R.drawable.icons8_edit),
     }
 

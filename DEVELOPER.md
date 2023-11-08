@@ -81,7 +81,7 @@ If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#e
 
 ### Import library  
 
--> [CC import](https://github.com/puutaro/CommandClick/blob/master/md/developer/cc_import.md)
+-> [js import](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_import.md)
 
 `CommandClick` can import all file with uri. We can use javascript all of the world. This is `CommandClick` basic idea.  
 `CommandClick` is open world app, as is, web browser, termux client, applicatoin maker,  applicatoin store, and library terminal.    

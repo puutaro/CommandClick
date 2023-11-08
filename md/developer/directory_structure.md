@@ -17,7 +17,7 @@ Table
 * [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
-  * [`~/conf/ccimport`](#conf_ccimport)
+  * [`~/conf/jsimport`](#conf_jsimport)
   * [`~/conf/monitor`](#conf_monitor)
   * [`~/conf/repository`](#conf_repository)
 * [`~/ubuntu`](#ubuntu)  
@@ -79,9 +79,9 @@ Include [fannel](https://github.com/puutaro/CommandClick/blob/master/md/develope
 
 [App history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#history)
 
-### `~/conf/ccimport` <a id="conf_ccimport"></a>
+### `~/conf/jsimport` <a id="conf_jsimport"></a>
 
-Include [cc imported](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#import-library) js library.
+Include [js imported](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#import-library) js library.
 
 ### `~/conf/monitor` <a id="conf_monitor"></a>
 

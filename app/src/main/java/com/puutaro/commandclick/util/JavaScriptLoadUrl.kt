@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.import.CcImportManager
+import com.puutaro.commandclick.proccess.import.JsImportManager
 import java.io.File
 
 object JavaScriptLoadUrl {
@@ -66,7 +66,7 @@ object JavaScriptLoadUrl {
             scriptFileName,
             )
 
-        val setReplaceVariableCompleteMap = makeReplaceVariableTableTsvForCcimport(
+        val setReplaceVariableCompleteMap = makeReplaceVariableTableTsvForJsImport(
             recentAppDirPath,
             fannelDirName,
             setReplaceVariableMap,
@@ -77,37 +77,37 @@ object JavaScriptLoadUrl {
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
         val loadJsUrl = jsList.map {
-            val afterCcImport = CcImportManager.replace(
+            val afterJsImport = JsImportManager.replace(
                 context,
                 it,
                 execJsPath,
                 setReplaceVariableCompleteMap
             )
             if(
-                afterCcImport.startsWith(settingSectionStart)
-                && afterCcImport.endsWith(settingSectionStart)
+                afterJsImport.startsWith(settingSectionStart)
+                && afterJsImport.endsWith(settingSectionStart)
             ) countSettingSectionStart++
             if(
-                afterCcImport.startsWith(settingSectionEnd)
-                && afterCcImport.endsWith(settingSectionEnd)
+                afterJsImport.startsWith(settingSectionEnd)
+                && afterJsImport.endsWith(settingSectionEnd)
             ) countSettingSectionEnd++
             if(
-                afterCcImport.startsWith(commandSectionStart)
-                && afterCcImport.endsWith(commandSectionStart)
+                afterJsImport.startsWith(commandSectionStart)
+                && afterJsImport.endsWith(commandSectionStart)
             ) countCmdSectionStart++
             if(
-                afterCcImport.startsWith(commandSectionEnd)
-                && afterCcImport.endsWith(commandSectionEnd)
+                afterJsImport.startsWith(commandSectionEnd)
+                && afterJsImport.endsWith(commandSectionEnd)
             ) countCmdSectionEnd++
             if(
                 countSettingSectionStart > 0
                 && countSettingSectionEnd == 0
-            ) "$afterCcImport;"
+            ) "$afterJsImport;"
             else if(
                 countCmdSectionStart > 0
                 && countCmdSectionEnd == 0
-            ) "$afterCcImport;"
-            else afterCcImport
+            ) "$afterJsImport;"
+            else afterJsImport
         }.joinToString("\n").split("\n").map {
             val trimJsRow = it
                 .trim(' ')
@@ -330,7 +330,7 @@ object JavaScriptLoadUrl {
         )
     }
 
-    private fun makeReplaceVariableTableTsvForCcimport(
+    private fun makeReplaceVariableTableTsvForJsImport(
         recentAppDirPath: String,
         fannelDirName: String,
         setReplaceVariableMap:  Map<String, String>?,

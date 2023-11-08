@@ -13,9 +13,9 @@ import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import kotlinx.coroutines.*
 import java.io.File
 
-object CcImportManager {
+object JsImportManager {
 
-    private val importPreWord = "ccimport"
+    private val importPreWord = "jsimport"
     private val assetsPrefix = "/android_asset/"
 
     fun replace(
