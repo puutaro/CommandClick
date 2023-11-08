@@ -29,6 +29,7 @@ enum class JsInterfaceVariant {
     jsHtml,
     jsUbuntu,
     jsLinux,
+    jsReplaceVariables,
     jsProcess,
     jsTrans,
 }

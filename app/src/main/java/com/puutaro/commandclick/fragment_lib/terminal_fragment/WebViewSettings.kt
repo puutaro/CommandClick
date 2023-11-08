@@ -22,6 +22,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPa
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPdf
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPulseAudioReceiver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsRecordToText
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsReplaceVariables
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsScript
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsSendKey
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsStop
@@ -165,6 +166,10 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsLinux(terminalFragment),
             JsInterfaceVariant.jsLinux.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsReplaceVariables(terminalFragment),
+            JsInterfaceVariant.jsReplaceVariables.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),

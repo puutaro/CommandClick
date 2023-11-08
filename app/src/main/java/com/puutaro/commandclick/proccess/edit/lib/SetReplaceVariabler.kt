@@ -4,7 +4,9 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
@@ -132,5 +134,97 @@ object SetReplaceVariabler {
             setReplaceVariableConfigDirPath,
             setReplaceVariableConfigName
         )
+    }
+
+    fun execReplaceByReplaceVariables(
+        replacingContents: String,
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        recentAppDirPath: String,
+        fannelDirName: String,
+        scriptFileName: String
+    ):String {
+        var loadJsUrlSource = replacingContents
+        setReplaceVariableCompleteMap?.forEach {
+            val replaceVariable = "\${${it.key}}"
+            val replaceString = it.value
+                .let {
+                    ScriptPreWordReplacer.replace(
+                        it,
+                        recentAppDirPath,
+                        fannelDirName,
+                        scriptFileName
+                    )
+                }
+            loadJsUrlSource = loadJsUrlSource.replace(
+                replaceVariable,
+                replaceString
+            )
+        }
+        return loadJsUrlSource
+    }
+
+    fun getReplaceVariablesTsv(
+        currentPath: String,
+    ): String {
+        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+        val fannelDirListLength = 2
+        val pathListStartAppDirName = currentPath.replace(
+            "${cmdclickAppDirPath}/",
+            ""
+        ).split("/")
+        if(
+            pathListStartAppDirName.size < fannelDirListLength
+        ) {
+            LogSystems.stdErr("fannel dir not found: ${currentPath}")
+            return String()
+        }
+        val fannelDirRelativePath =
+            pathListStartAppDirName.take(2).joinToString("/")
+        val replaceVariablesTsvRelativePath = UsePath.replaceVariablesTsvRelativePath
+        val replaceVariablesTsvPath =
+            listOf(
+                cmdclickAppDirPath,
+                fannelDirRelativePath,
+                replaceVariablesTsvRelativePath
+            ).joinToString("/")
+        val replaceVariablesTsvPathObj = File(replaceVariablesTsvPath)
+        if(
+            !replaceVariablesTsvPathObj.isFile
+        ) {
+            LogSystems.stdErr(
+                "replace variable tsv not found: ${replaceVariablesTsvPath}"
+            )
+            return String()
+        }
+        val settingVariablesDirPath = replaceVariablesTsvPathObj.parent ?: let{
+            LogSystems.stdErr(
+                "settingVarialesDirPath not found: ${replaceVariablesTsvPath}"
+            )
+            return String()
+        }
+        val replaceVariableTsvName = replaceVariablesTsvPathObj.name
+        return ReadText(
+            settingVariablesDirPath,
+            replaceVariableTsvName
+        ).readText()
+    }
+
+    fun getReplaceVariablesValue(
+        tsvCon: String,
+        targetKey: String,
+    ): String {
+        tsvCon.split("\n").map {
+            val keyValueList = it.split("\t")
+            if(keyValueList.size < 2) return String()
+            val key = keyValueList.firstOrNull()
+                ?: return String()
+            if(
+                key == targetKey
+            ) {
+                return keyValueList.lastOrNull()
+                    ?: String()
+            }
+        }
+        return String()
     }
 }
