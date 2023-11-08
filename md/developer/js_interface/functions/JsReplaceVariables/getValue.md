@@ -9,7 +9,7 @@ Table
 
 ## Result
 
-Get variable value in [replace variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) tsv contents
+Get variable value from [tsv contens](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#replace_variables_table) in [replace variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) 
 
 
 
@@ -51,6 +51,6 @@ variableName3\tvariableValue3
 .
 .
 ```
+- [replace variable tsv](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#replace_variables_table)
 
-
-- `${0}` -> https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md
+- `${0}` -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
