@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
-import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -22,6 +21,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Gri
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ListDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -65,7 +65,6 @@ object ButtonViewProducer {
         editParameters: EditParameters,
         weight: Float,
         currentComponentIndex: Int,
-//        isInsertTextViewVisible: Boolean = false
     ): Button {
         val context = editParameters.context
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
@@ -126,8 +125,6 @@ object ButtonViewProducer {
                     currentSetVariableValue
                 )
         }
-
-
         return insertButton
     }
 
@@ -532,24 +529,13 @@ object ButtonViewProducer {
                     currentScriptName
                 )
             }.let {
-            var innerExecCmd = it
-            setReplaceVariableMap?.forEach {
-                val replaceVariable = "\${${it.key}}"
-                val replaceString = it.value
-                    .let {
-                        ScriptPreWordReplacer.replace(
-                            it,
-                            currentAppDirPath,
-                            fannelDirName,
-                            currentScriptName
-                        )
-                    }
-                innerExecCmd = innerExecCmd.replace(
-                    replaceVariable,
-                    replaceString
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    setReplaceVariableMap,
+                    currentAppDirPath,
+                    fannelDirName,
+                    currentScriptName
                 )
-            }
-            innerExecCmd
         }
     }
 
