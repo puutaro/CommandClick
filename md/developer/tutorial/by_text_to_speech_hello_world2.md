@@ -191,7 +191,7 @@ Rename script name
 
 ```
 
--> [labeling section]https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md
+-> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 ### Step 4
 
