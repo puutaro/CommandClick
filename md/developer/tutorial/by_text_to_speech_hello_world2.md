@@ -1,4 +1,4 @@
-# By text to speech, hello world2
+# By text to speech, hello world2 Game
 
 Thsi section serve you standard skill for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.  
 Although `CommandClick` is wide spread option for low code: file split, multiple option combination, and etc, here include common usecase.  
@@ -277,7 +277,8 @@ Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#r
 
 ## Step 8
 
-Click Play button in toolbar
+Click Play button in toolbar.  
+Change `Pich` and quiz to ours!  
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/489ee2f7-3e20-4d1a-9f34-bc686a11265a" width="400">  
 
