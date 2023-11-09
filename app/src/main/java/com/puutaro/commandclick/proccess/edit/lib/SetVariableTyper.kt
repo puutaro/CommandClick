@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHo
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
@@ -30,6 +31,10 @@ object SetVariableTyper {
             val currentFetchSetVariableTypeLength = currentFetchSetVariableType.length
             val equalIndex = currentFetchSetVariableType.indexOf('=')
             if(equalIndex == -1) {
+                LogSystems.stdErr(
+                    "not found '=': " +
+                            currentFetchSetVariableType
+                )
                 return null
             }
             val variableNameAddType = currentFetchSetVariableType.substring(
@@ -38,6 +43,10 @@ object SetVariableTyper {
             val variableNameAddTypeLength = variableNameAddType.length;
             val colonIndex = variableNameAddType.indexOf(':')
             if(colonIndex == -1) {
+                LogSystems.stdErr(
+                    "not found ':': " +
+                            currentFetchSetVariableType
+                )
                 return null
             }
             val variableName = variableNameAddType.substring(
