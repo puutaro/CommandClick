@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 
 import android.content.Context
-import android.text.Editable
 import android.text.InputType
 import android.view.ViewGroup
 import android.widget.EditText
@@ -426,57 +425,6 @@ class WithEditComponent(
         return textAndLabelOtherCompLength
     }
 
-//    private fun addTextChangeListenerForEditText(
-//        insertEditText: EditText,
-//        currentOrder: Int,
-//    ){
-//        insertEditText.addTextChangedListener(object : TextWatcher {
-//            override fun afterTextChanged(
-//                s: Editable?
-//            ) {}
-//
-//            override fun beforeTextChanged(
-//                s: CharSequence?, start: Int, count: Int, after: Int
-//            ) {}
-//
-//            override fun onTextChanged(
-//                s: CharSequence?,
-//                start: Int,
-//                before: Int,
-//                count: Int
-//            ) {
-//                val currentText = insertEditText.text
-//                val includeBothQuoteInMiddle = checkMiddleText(currentText)
-//                val includeForbbidenStr = "\\" in currentText
-//                if (includeForbbidenStr ||
-//                    includeBothQuoteInMiddle
-//                ) {
-//                    insertEditText.setError("\\ or both quote is used")
-//
-//                    buttonViewHowActive.buttonViewHowActive(
-//                        ToolbarButtonBariantForEdit.OK.str,
-//                        false
-//                    )
-//                    buttonViewHowActive.buttonViewHowActive(
-//                        ToolbarButtonBariantForEdit.EDIT.str,
-//                        false
-//                    )
-//                    validateErrEditTextNumberSet.add(currentOrder)
-//                    return
-//                }
-//                validateErrEditTextNumberSet.remove(currentOrder)
-//                if(validateErrEditTextNumberSet.size > 0) return
-//                buttonViewHowActive.buttonViewHowActive(
-//                    ToolbarButtonBariantForEdit.OK.str,
-//                    true
-//                )
-//                buttonViewHowActive.buttonViewHowActive(
-//                    ToolbarButtonBariantForEdit.EDIT.str,
-//                    enableCmdEdit
-//                )
-//            }
-//        })
-//    }
 
     private fun hideVariables(
         editFragment: EditFragment,
@@ -498,17 +446,6 @@ class WithEditComponent(
         )
         insertTextView.isVisible = isInsertTextViewVisible
     }
-}
-
-private fun checkMiddleText(
-    currentText: Editable,
-): Boolean{
-    val currentTextLength = currentText.length
-    if(currentTextLength <= 2) return false
-    val currentTextLengthMinus = currentText.length - 1
-    val middleCurrentText = currentText.substring(1, currentTextLengthMinus)
-    return (middleCurrentText.indexOf('\'') != -1
-            && middleCurrentText.indexOf('"') != -1 )
 }
 
 fun culcTextLabelMarkIndex(
