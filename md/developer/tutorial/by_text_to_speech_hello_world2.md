@@ -217,7 +217,7 @@ PLAY_TXT_PATH="${FANNEL_DIR_PATH}/playText.txt",
 PLAY_LIST_TSV_PATH="${FANNEL_DIR_PATH}/playList.tsv",
 
 ```
-setReplaceVariables
+setReplaceVariables  
 -> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
 -> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path)    
 [1], [2] -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
