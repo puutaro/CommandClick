@@ -13,6 +13,7 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ColorPickerViewProducer
@@ -35,7 +36,12 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.TimePickerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.VariableLabelAdder
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.view_model.activity.EditViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class WithEditComponent(
     private val editFragment: EditFragment,
@@ -88,6 +94,10 @@ class WithEditComponent(
             insertTextView,
             horizontalLinearLayout,
         )
+        checkIndexNum(
+            editParameters,
+            noIndexTypeList
+        )
         (variableTypeList.indices).forEach {
             val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
             val currentComponentIndex = variableTypeListUntilCurrent.filter {
@@ -102,7 +112,6 @@ class WithEditComponent(
                         editParameters,
                         otherComponentWeight,
                         currentComponentIndex,
-//                        isInsertTextViewVisible
                     )
                     horizontalLinearLayout.addView(insertButton)
                 }
@@ -425,7 +434,6 @@ class WithEditComponent(
         return textAndLabelOtherCompLength
     }
 
-
     private fun hideVariables(
         editFragment: EditFragment,
         editParameters: EditParameters,
@@ -445,6 +453,49 @@ class WithEditComponent(
             EditTextSupportViewName.HIDDEN_LABEL.str
         )
         insertTextView.isVisible = isInsertTextViewVisible
+    }
+}
+
+fun checkIndexNum(
+    editParameters: EditParameters,
+    noIndexTypeList: List<String>,
+){
+    CoroutineScope(Dispatchers.IO).launch {
+        val variableTypeList =
+            withContext(Dispatchers.IO) {
+                editParameters.variableTypeList
+            }
+        val currentSetVariableValue =
+            withContext(Dispatchers.IO) {
+                editParameters.setVariableMap?.get(
+                    SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
+                )
+            }
+        val variableTypeIsIndexList =
+            withContext(Dispatchers.IO) {
+                variableTypeList.filter {
+                    !noIndexTypeList.contains(it)
+                }
+            }
+        val variableTypeIsIndexListSize =
+            withContext(Dispatchers.IO) {
+                variableTypeIsIndexList.size
+            }
+        val currentSetVariableValueIndexSize =
+            withContext(Dispatchers.IO) {
+                currentSetVariableValue?.split("|")
+                    ?.size ?: 0
+            }
+        if (variableTypeIsIndexListSize == currentSetVariableValueIndexSize) return@launch
+        withContext(Dispatchers.IO) {
+            LogSystems.stdWarn(
+                "not match ${CommandClickScriptVariable.SET_VARIABLE_TYPE}; " +
+                        "options / values -> " +
+                        "$variableTypeIsIndexListSize / $currentSetVariableValueIndexSize -> " +
+                        "( ${variableTypeIsIndexList.joinToString(":")} ) / " +
+                        "( ${currentSetVariableValue} )"
+            )
+        }
     }
 }
 

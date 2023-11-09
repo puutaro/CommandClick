@@ -11,6 +11,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.checkIndexNum
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.culcTextLabelMarkIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
@@ -64,6 +65,12 @@ class WithEditComponentForFormJsDialog {
         val isInsertTextViewVisible = !editParameters.variableTypeList.contains(
             EditTextSupportViewName.HIDDEN_LABEL.str
         )
+
+        checkIndexNum(
+            editParameters,
+            noIndexTypeList
+        )
+
         insertTextView.isVisible = isInsertTextViewVisible
         val horizontalLinearLayout = makeHorizontalLayout(context)
         horizontalLinearLayout.addView(insertEditText)
