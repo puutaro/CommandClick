@@ -20,6 +20,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -300,7 +301,12 @@ class FormJsDialog(
             val variableTypeList = editParameters.setVariableMap?.get(
                 SetVariableTypeColumn.VARIABLE_TYPE.name
             )?.split(":")?.filter {
-                variableTypeDefineListForMiniEdit.contains(it)
+                val isContain = variableTypeDefineListForMiniEdit.contains(it)
+                if (
+                    isContain
+                ) return@filter isContain
+                LogSystems.stdWarn("Irregular option: ${it}")
+                false
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
             val horizontalLinearLayout = withEditComponentForFormJsDialog.insert(

@@ -15,8 +15,13 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class EditTextProducerForEdit(
@@ -171,7 +176,12 @@ class EditTextProducerForEdit(
             val variableTypeList = editParameters.setVariableMap?.get(
                 SetVariableTypeColumn.VARIABLE_TYPE.name
             )?.split(":")?.filter {
-                editTextSupportViewNameList.contains(it)
+                val isContain = editTextSupportViewNameList.contains(it)
+                if (
+                    isContain
+                ) return@filter isContain
+                LogSystems.stdWarn("Irregular option: ${it}")
+                false
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
             val isListIndex = variableTypeList.contains(
