@@ -10,9 +10,10 @@ Table
 
 ## Overview
 
-- This option is one of the most use option
-- This option is set global variable  
-- This option can specify multiply  
+- This setting is one of the most use setting
+- This setting is set global variable  
+- So colled "model" in `MVC` and `MVVM`.  
+- This setting can specify multiply
 
 ex)
 
