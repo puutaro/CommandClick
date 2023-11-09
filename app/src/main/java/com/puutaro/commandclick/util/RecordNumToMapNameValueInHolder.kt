@@ -6,17 +6,17 @@ import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHo
 
 object RecordNumToMapNameValueInHolder {
     fun parse(
-        shellContentsList: List<String>,
+        scriptContentsList: List<String>,
         startHolderName: String,
         endHolderName: String,
         onForSetting: Boolean = false,
-        currentShellFileName: String? = null
+        currentScriptName: String? = null
     ): Map<Int, Map<String, String>?>? {
-        if(shellContentsList.isEmpty()) return null
-        val commandPromptStartNum = shellContentsList.indexOf(
+        if(scriptContentsList.isEmpty()) return null
+        val commandPromptStartNum = scriptContentsList.indexOf(
             startHolderName
         )
-        val commandPromptEndNum = shellContentsList.indexOf(
+        val commandPromptEndNum = scriptContentsList.indexOf(
             endHolderName
         )
         val substituteCmdStartEndContentList = if(
@@ -24,7 +24,7 @@ object RecordNumToMapNameValueInHolder {
             && commandPromptEndNum > 0
             && commandPromptStartNum < commandPromptEndNum
         ) {
-            shellContentsList.slice(
+            scriptContentsList.slice(
                 commandPromptStartNum..commandPromptEndNum
             )
         } else {
@@ -60,7 +60,7 @@ object RecordNumToMapNameValueInHolder {
                 substituteCmdStartEndContentStr,
                 filteredSubstituteCmdStartEndContentList,
                 onForSetting,
-                currentShellFileName
+                currentScriptName
             )
         }.toMap().filterValues {
             it != null
