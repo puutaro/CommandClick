@@ -4,9 +4,12 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
@@ -32,7 +35,13 @@ object SetReplaceVariabler {
         var lastSetVariableMapStringList = firstSetVariableMapStringList
         (0 until firstSetVariableMapStringListSize).forEach {
             val valRepList = lastSetVariableMapStringList.get(it).split("\t")
-            if(valRepList.size != 2) return null
+            if(valRepList.size != 2) {
+                LogSystems.stdErr(
+                    "not found '=': " +
+                            lastSetVariableMapStringList.joinToString("\t")
+                )
+                return null
+            }
 
             val replaceVariable = "\${${valRepList.first()}}"
             val replaceString = valRepList.last()
@@ -45,7 +54,13 @@ object SetReplaceVariabler {
         }
         return lastSetVariableMapStringList.map {
             val valRepList = it.split("\t")
-            if(valRepList.size != 2) return null
+            if(valRepList.size != 2) {
+                LogSystems.stdErr(
+                    "not found pair: " +
+                            lastSetVariableMapStringList.joinToString("\t")
+                )
+                return null
+            }
             valRepList.first() to valRepList.last()
         }.toMap()
     }
@@ -133,7 +148,14 @@ object SetReplaceVariabler {
         return SettingFile.read(
             setReplaceVariableConfigDirPath,
             setReplaceVariableConfigName
-        )
+        ).let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                fannelDirName,
+                currentShellFileName,
+            )
+        }
     }
 
     fun execReplaceByReplaceVariables(
@@ -161,6 +183,64 @@ object SetReplaceVariabler {
             )
         }
         return loadJsUrlSource
+    }
+
+
+    fun  makeSetReplaceVariableMapFromSubFannel(
+        currentSubFannelPath: String
+    ): Map<String, String>? {
+        val mainFannlePath = CcPathTool.getMainFannelFilePath(
+            currentSubFannelPath
+        )
+        val currentMainFannelPathObj = File(mainFannlePath)
+        if(!currentMainFannelPathObj.isFile) {
+            LogSystems.stdWarn("not found file: ${mainFannlePath}")
+            return null
+        }
+        val currentAppDirPath = currentMainFannelPathObj.parent
+            ?: let {
+                LogSystems.stdWarn("not found dir: ${mainFannlePath}")
+                return null
+            }
+        val mainFannelName = currentMainFannelPathObj.name
+        val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
+        val mainFannelConList = ReadText(
+            currentAppDirPath,
+            mainFannelName,
+        ).readText().let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                mainFannelDirName,
+                mainFannelName
+            )
+        }.split("\n")
+        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                languageType
+            )
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+            mainFannelConList,
+            settingSectionStart,
+            settingSectionEnd,
+            onForSetting = false,
+            currentScriptName = mainFannelName
+        )
+        return makeSetReplaceVariableMap(
+            recordNumToMapNameValueInSettingHolder,
+            currentAppDirPath,
+            mainFannelDirName,
+            mainFannelName,
+        )
     }
 
     fun getReplaceVariablesTsv(

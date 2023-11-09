@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -125,10 +126,21 @@ object ExecJsLoad {
         JavascriptExecuter.enableJsLoadInWebView(
             terminalViewModel
         )
+
+        val execJsPath = decideLoadJsPath(
+            recentAppDirPath,
+            selectedJsFileName,
+            jsArgs,
+        )
+        val loadJsContentsList =  ScriptArgs.values().filter {
+            it.str == jsArgs
+        }.firstOrNull()?.let {
+            emptyList()
+        } ?: jsContentsList
         val launchUrlString = JavaScriptLoadUrl.make(
             context,
-            "${recentAppDirPath}/${selectedJsFileName}",
-            jsContentsList
+            execJsPath,
+            loadJsContentsList
         ).toString()
 
         terminalViewModel.jsArguments = jsArgs
@@ -208,6 +220,23 @@ object ExecJsLoad {
                 currentFragment.binding.terminalWebView.loadUrl(launchUrlString)
             }
         }
+    }
+
+    private fun decideLoadJsPath(
+        scriptDirPath: String,
+        scriptName: String,
+        jsArgs: String,
+    ): String {
+        val currentScriptPath = "$scriptDirPath/$scriptName"
+        return ScriptArgs.values().filter {
+            it.str == jsArgs
+        }.firstOrNull()?.let {
+            val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
+            val exeJsPath = "${scriptDirPath}/$fannelDirName/${it.dirName}/${it.jsName}"
+            val urlHistoryClickPathObj = File(exeJsPath)
+            if(!urlHistoryClickPathObj.isFile) return currentScriptPath
+            exeJsPath
+        } ?: currentScriptPath
     }
 
     private suspend fun launchUrlByWebView(

@@ -6,6 +6,9 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.JsImportManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JavaScriptLoadUrl {
@@ -52,25 +55,31 @@ object JavaScriptLoadUrl {
             settingSectionEnd,
             true
         )
-        val setReplaceVariableMap =
-            SetReplaceVariabler.makeSetReplaceVariableMap(
-                recordNumToMapNameValueInSettingHolder,
-                recentAppDirPath,
-                fannelDirName,
-                scriptFileName
-            )
-        makeReplaceVariableTableTsv(
-            setReplaceVariableMap,
+        val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
+            recordNumToMapNameValueInSettingHolder,
             recentAppDirPath,
             fannelDirName,
             scriptFileName,
-            )
-
-        val setReplaceVariableCompleteMap = makeReplaceVariableTableTsvForJsImport(
-            recentAppDirPath,
-            fannelDirName,
-            setReplaceVariableMap,
         )
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val currentJsPath = "$recentAppDirPath/$scriptFileName"
+            val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
+                currentJsPath
+            )
+            val mainFannelName = File(
+                    CcPathTool.getMainFannelFilePath(
+                    currentJsPath
+                )
+            ).name
+            val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
+            makeReplaceVariableTableTsv(
+                setReplaceVariableMap,
+                mainCurrentAppDirPath,
+                mainFannelDirName,
+                mainFannelName,
+            )
+        }
 
         var countSettingSectionStart = 0
         var countSettingSectionEnd = 0
@@ -81,7 +90,7 @@ object JavaScriptLoadUrl {
                 context,
                 it,
                 execJsPath,
-                setReplaceVariableCompleteMap
+                setReplaceVariableMap
             )
             if(
                 afterJsImport.startsWith(settingSectionStart)
@@ -146,7 +155,7 @@ object JavaScriptLoadUrl {
             }.let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
-                    setReplaceVariableCompleteMap,
+                    setReplaceVariableMap,
                     recentAppDirPath,
                     fannelDirName,
                     scriptFileName
@@ -258,24 +267,13 @@ object JavaScriptLoadUrl {
                     String()
                 )
             }.let {
-                var loadJsUrlSource = it
-                setReplaceVariableMap?.forEach {
-                    val replaceVariable = "\${${it.key}}"
-                    val replaceString = it.value
-                        .let {
-                            ScriptPreWordReplacer.replace(
-                                it,
-                                String(),
-                                String(),
-                                String()
-                            )
-                        }
-                    loadJsUrlSource = loadJsUrlSource.replace(
-                        replaceVariable,
-                        replaceString
-                    )
-                }
-                loadJsUrlSource
+                SetReplaceVariabler.execReplaceByReplaceVariables(
+                    it,
+                    setReplaceVariableMap,
+                    String(),
+                    String(),
+                    String()
+                )
             }
         if(
             loadJsUrl.isEmpty()
@@ -330,26 +328,24 @@ object JavaScriptLoadUrl {
         )
     }
 
-    private fun makeReplaceVariableTableTsvForJsImport(
+    private fun createMakeReplaceVariableMapHandler(
+        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
         recentAppDirPath: String,
         fannelDirName: String,
-        setReplaceVariableMap:  Map<String, String>?,
+        scriptFileName:  String,
     ): Map<String, String>? {
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMap(
+                recordNumToMapNameValueInSettingHolder,
+                recentAppDirPath,
+                fannelDirName,
+                scriptFileName
+            )
         if(
             !setReplaceVariableMap.isNullOrEmpty()
         ) return setReplaceVariableMap
-        val replaceVariableTsvCon = SetReplaceVariabler.getReplaceVariablesTsv(
-            "$recentAppDirPath/$fannelDirName"
+        return SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            "${recentAppDirPath}/${scriptFileName}",
         )
-        if(replaceVariableTsvCon.isEmpty()) return null
-        return replaceVariableTsvCon.split("\n").map {
-            val keyValueList = it.split("\t")
-            if(
-                keyValueList.size < 2
-            ) return@map String() to String()
-            val key = keyValueList.firstOrNull() ?: String()
-            val value = keyValueList.lastOrNull() ?: String()
-            key to value
-        }.toMap().filterKeys { it.isNotEmpty() }
     }
 }

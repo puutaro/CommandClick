@@ -168,25 +168,8 @@ object UsePath {
     val noScrollSaveUrlsFilePath =
         "$settingsDirPath/noScrollSaveUrls.txt"
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
-    val menuListDirPathForSelectMenuFannel = "\${01}/\${001}/menuList"
-    val menuListFilePathForSelectMenu =
-        "$menuListDirPathForSelectMenuFannel/menu.txt"
-    val leftMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/leftMenuList$TXT_FILE_SUFFIX"
-    val leftLongPressMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/leftLongPressMenuList$TXT_FILE_SUFFIX"
-    val centerMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/centerMenuList$TXT_FILE_SUFFIX"
-    val centerLongPressMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/centerLongPressMenuList$TXT_FILE_SUFFIX"
-    val rightMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/rightMenuList$TXT_FILE_SUFFIX"
-    val srcImageAnchorMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/srcImageAnchorMenuList$TXT_FILE_SUFFIX"
-    val srcAnchorListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/srcAnchorMenuList$TXT_FILE_SUFFIX"
-    val imageMenuListFilePathForWebSearher =
-        "$menuListDirPathForSelectMenuFannel/imageMenuList$TXT_FILE_SUFFIX"
+    val systemExecJsDirName = "systemJs"
+
     fun makeOmitPath(
         path: String
     ): String {

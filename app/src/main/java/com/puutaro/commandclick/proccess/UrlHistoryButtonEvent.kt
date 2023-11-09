@@ -172,7 +172,7 @@ class UrlHistoryButtonEvent(
                     UsePath.JSX_FILE_SUFFIX,
                 )
             ) {
-                execShellFile(selectedUrl)
+                execScriptFile(selectedUrl)
                 return@setOnItemClickListener
             }
 
@@ -229,7 +229,7 @@ class UrlHistoryButtonEvent(
             }
     }
 
-    private fun execShellFile(
+    private fun execScriptFile(
         selectedUrlSource: String
     ) {
         val shellFileObj = File(selectedUrlSource)
