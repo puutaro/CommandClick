@@ -14,7 +14,12 @@ Table
 
 
 ## Overview
+
 This setting variable exist in order to transform command variable into specified edit component. 
+Also, give special mean to each variable: select box, grid box, button, etc.   
+Especialy, in button case, work as controller in `MVC` or view model in `MVVM`.  
+In any way, this setting is one of the most used setting and importance in `CommandClick` [fannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) development.   
+
 
 ex) Transform `editText` command variable into select box  
 
