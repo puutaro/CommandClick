@@ -317,8 +317,7 @@ Adjust terminal background color
 
 Ubuntu Sleep delay minutes in screen off, Config only value.  
 
-- 20: default
-- 0: no sleep  
+-> [ubuntuSleepDelayMinInScreenOff](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#change-ubuntu-sleep-minutes)
 
 ## passCmdVariableEdit
 
