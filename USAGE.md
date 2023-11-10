@@ -258,6 +258,17 @@ You can create shortcut for current `App directory` or `script`
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
 
 - `Restart` -> Press button when ubuntu not working
+- ssh username & password: `cmdclick`
+
+ex)
+
+
+```sh.sh
+
+sshpass -p cmdclick \
+	ssh -p 10022 "cmdclick@${android ipv4 address}"
+
+```
 
 ### Backup ubuntu rootfs
 
