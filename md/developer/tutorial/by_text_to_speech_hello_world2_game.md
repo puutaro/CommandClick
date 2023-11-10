@@ -18,6 +18,7 @@ Table
 * [Step 6](#step-6)
 * [Step 7](#step-7)
 * [Step 8](#step-8)
+* [Step 9](#step-9)
 
 ## Sample
 
@@ -158,44 +159,7 @@ Paste bellow code to `textToSpeechTutorial2.js`
 [9] -> edit text cmd variable  
 
 
-Paste bellow to `./textToSpeechTutorial2Dir/textToSpeechTutorial2.md`  
-
-```md.md
-text to speech game @{your name}
-
-Table of Contents
--------
-<!-- vim-markdown-toc GFM --> 
-* [Aim](#aim)
-* [Cmd Variables](#cmd-variables)
-	* [speechText](#speechText)
-	* [pitch](#pitch)
-* [Setting variables](#setting-variables)
-	* [scriptFileName](#scriptfilename)
-
-## Aim
-
-Play Qize with change `speechText` or `pitch`
-
-## Cmd Variables
---------
-
-### speechText
-
-Speech text
-
-### pitch 
-
-Speech pich
-
-## Setting variables
----------
-
-### scriptFileName
-
-Rename script name
-
-```
+Paste [this markdown contents](https://github.com/puutaro/CommandClick-Tutorial/blob/master/fannels/textToSpeechTutorial2/textToSpeechTutorial2Dir/textToSpeechTutorial2.md) to `./textToSpeechTutorial2Dir/textToSpeechTutorial2.md`  
 
 -> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
@@ -231,7 +195,7 @@ setReplaceVariables
 
 ### Step 5
 
-Paste bellow to ./textToSpeechTutorial2Dir/settingVariables/setReplaceVariables.js
+Paste bellow to ./textToSpeechTutorial2Dir/settingVariables/setVariableTypes.js
 
 ```js.js
 
@@ -250,6 +214,16 @@ pitch:
 
 ```
 
+setVariableTypes
+-> [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#overview)  
+-> [Specify config](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#specify-config)  
+
+
+- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
+
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.
+
+## Step 6
 ./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js
 
 ```js.js
@@ -261,27 +235,19 @@ hideSettingVariables,
 
 ```
 
-setVariableTypes
--> [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#overview)  
--> [Specify config](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#specify-config)  
+-> [hideSettingVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md)
 
-
-- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
-
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
-
-
-## Step 6
+## Step 7
 
 Copy this direcotry tree to `/storage/emulated/0/Documents/cmdclick/default` directory<sub>[1]</sub>   
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
-## Step 7
+## Step 8
 
 Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
 
-## Step 8
+## Step 9
 
 Click Play button in toolbar.  
 Change `Pich` and quiz to ours!  
