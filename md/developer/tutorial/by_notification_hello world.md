@@ -391,7 +391,7 @@ espeak "${MESSAGE}"
 
 [1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md)   
 [3] -> [tsvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/tsvar.md)  
-[4] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]  
+[4] -> [noti](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md)  
 
 ### Step 12
 
