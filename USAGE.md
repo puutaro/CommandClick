@@ -329,7 +329,7 @@ Edit `statup script` contenst.
 
 ### Restart ubuntu
 
-Restart ubuntu Forcibly
+Restart ubuntu forcibly
 
 
 ### No scroll save url
