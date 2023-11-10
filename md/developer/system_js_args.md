@@ -12,7 +12,7 @@ Table
 * [onAutoExec](#onautoexec)
   
 
-## `urlHistoryClick
+## urlHistoryClick
 
 On click [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history), add this arg.  
 
@@ -33,7 +33,7 @@ switch(firstArgs){
 ```
 
 
-## `onAutoExec
+## onAutoExec
 
 When set `ON` to [oAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#setting-variable), add this arg.  
 
