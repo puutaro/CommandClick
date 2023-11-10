@@ -1,4 +1,4 @@
-# By text to speech, hello world2
+# By text to speech, hello world2 Game
 
 Thsi section serve you standard skill for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.  
 Although `CommandClick` is wide spread option for low code: file split, multiple option combination, and etc, here include common usecase.  
@@ -191,7 +191,7 @@ Rename script name
 
 ```
 
--> [labeling section]https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md
+-> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 ### Step 4
 
@@ -217,7 +217,7 @@ PLAY_TXT_PATH="${FANNEL_DIR_PATH}/playText.txt",
 PLAY_LIST_TSV_PATH="${FANNEL_DIR_PATH}/playList.tsv",
 
 ```
-setReplaceVariables
+setReplaceVariables  
 -> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
 -> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path)    
 [1], [2] -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
@@ -277,7 +277,9 @@ Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#r
 
 ## Step 8
 
-Click Play button in toolbar
+Click Play button in toolbar.  
+Change `Pich` and quiz to ours!  
 
-<img src="https://github.com/puutaro//assets/55217593/23572700-540e-4ac9-9911-342cdb0acb97" width="400">  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/489ee2f7-3e20-4d1a-9f34-bc686a11265a" width="400">  
+
 
