@@ -224,7 +224,8 @@ setVariableTypes
 
 
 ## Step 6
-./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js
+
+Paste bellow to  `./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js`
 
 ```js.js
 
