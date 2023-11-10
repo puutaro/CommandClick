@@ -13,6 +13,7 @@ Table
 * [`~/AppDir/${app directory}/system/url/cmdclickUrlHistory`](#url_history)
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
