@@ -281,7 +281,7 @@ function saveArgsTsv(
 };
 ```
 
-[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)
+[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)  
 
 
 ### Step 9
@@ -342,8 +342,8 @@ jsUbuntu.execScriptByBackground(
 [1]  
 -> [js import](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_import.md)  
 -> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
-[2] -> [jsListSelect.updateListFileCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsListSelect/updateListFileCon.md)
-[3] -> [jsUbuntu.execScriptByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScriptByBackground.md)
+[2] -> [jsListSelect.updateListFileCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsListSelect/updateListFileCon.md)  
+[3] -> [jsUbuntu.execScriptByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScriptByBackground.md)  
 
 ### Step 11
 
@@ -389,9 +389,9 @@ noti \
 espeak "${MESSAGE}"
 ```
 
-[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md) 
-[3] -> [tsvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/tsvar.md)
-[4] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]
+[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md)   
+[3] -> [tsvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/tsvar.md)  
+[4] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]  
 
 ### Step 12
 
@@ -415,7 +415,7 @@ noti \
 ```
 
 
-[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md) 
+[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md)   
 [3] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]
 
 ### Step 13
