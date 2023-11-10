@@ -77,7 +77,13 @@ variable name3\tvariable value3
 
 Trigger this js script primarlily on click [url history](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick) than [`urlHistoryClick` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick)  
 
-- [systemJs directory](#https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js` <a id="on_auto_exec"></a>
+
+Trigger this js script primarlily than [`onAutoExec` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#onautoexec) when set `ON` to [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#setting-variable)   
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
 
 
 ## `~/conf/monitor/term_[1-4]` <a id="output_monitor"></a>
