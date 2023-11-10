@@ -49,6 +49,7 @@ Create bellow directory tree
 
 ### Step 2
 
+
 Paste bellow code to `byNotificationHelloWorld.js`  
 
 ```js.js
@@ -104,9 +105,13 @@ MESSAGE=""
 [10] -> [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables)    
 
 
+- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
+
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.
+
 ### Step 3
 
-Paste [his markdown contents](https://github.com/puutaro/CommandClick-Tutorial/blob/master/fannels/byNotificationHelloWorld/byNotificationHelloWorldDir/by_notification_hello_world.md) to ``./textToSpeechTutorial2Dir/textToSpeechTutorial2.md`  `  
+Paste [his markdown contents](https://github.com/puutaro/CommandClick-Tutorial/blob/master/fannels/byNotificationHelloWorld/byNotificationHelloWorldDir/by_notification_hello_world.md) to ``./byNotificationHelloWorldDir/by_notification_hello_world.md`  `  
 
 
 [8] -> [pre order word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)  
@@ -115,33 +120,67 @@ Paste [his markdown contents](https://github.com/puutaro/CommandClick-Tutorial/b
 
 [9] -> edit text cmd variable  
 
-
+-> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
 
 
 ### Step 4
 
-Paste bellow contents to `./textToSpeechTutorial2Dir/settingVariables/setReplaceVariables.js`
+Paste bellow contents to `./byNotificationHelloWorldDir/settingVariables/setReplaceVariables.js`
 
 ```js.js
 
-// for edit component
-BTN_LABEL=label,
+// basic
+TXT_LABEL=label,
 BTN_CMD=cmd,
+BTN_LABEL=label,
+LIST_PATH=listPath,
+LIMIT_NUM=limitNum,
 
 // setting
-PICH_INIT_MODE=pichInitMode,
+HELLO_WORLD_CHANNEL_NUM=30,
 
 // dir path
 // [1]
-FANNEL_DIR_PATH="${01}/${001}",
+HELLO_WORLD_FANNEL_DIR_PATH=
+	"${01}/${001}",
+HELLO_WORLD_LIBS_DIR_PATH=
+	"${HELLO_WORLD_FANNEL_DIR_PATH}/libs",
+HELLO_WORLD_JS_DIR_PATH=
+	"${HELLO_WORLD_FANNEL_DIR_PATH}/js",
+HELLO_WORLD_SHELL_DIR_PATH=
+	"${HELLO_WORLD_FANNEL_DIR_PATH}/shell",
+HELLO_WORLD_LIST_DIR_PATH=
+	"${HELLO_WORLD_FANNEL_DIR_PATH}/list",
+HELLO_WORLD_TEMP_DIR_PATH=
+	"${HELLO_WORLD_FANNEL_DIR_PATH}/temp",
 
-// file path
+
+// libs path
+HELLO_WORLD_SAVE_ARGS_TSV_JS_PATH=
+	"${HELLO_WORLD_LIBS_DIR_PATH}/saveArgsTsv.js",
+HELLO_WORLD_READ_MESSAGE_JS_PATH=
+	"${HELLO_WORLD_LIBS_DIR_PATH}/readMessage.js",
+
+// js path
 // [2]
-FANNEL_PATH="${0}",
-PLAY_TXT_PATH="${FANNEL_DIR_PATH}/playText.txt",
-PLAY_LIST_TSV_PATH="${FANNEL_DIR_PATH}/playList.tsv",
+HELLO_WORLD_FANNEL_PATH=
+	"${0}",
+HELLO_WORLD_TRIGGER_JS_PATH=
+	"${HELLO_WORLD_JS_DIR_PATH}/triggerHelloWorld.js",
 
+// shell path
+HELLO_WORLD_LAUNCH_SHELL_PATH=
+	"${HELLO_WORLD_SHELL_DIR_PATH}/launch_hello_world.sh",
+HELLO_WORLD_EXIT_SHELL_PATH=
+	"${HELLO_WORLD_SHELL_DIR_PATH}/exit_hello_world.sh",
+
+// other
+HELLO_WORLD_TEMP_ARGS_TSV_PATH=
+	"${HELLO_WORLD_TEMP_DIR_PATH}/args.tsv",
+HELLO_WORLD_MESSAGE_LIST_PATH=
+	"${HELLO_WORLD_LIST_DIR_PATH}/messageList.txt",
 ```
+
 setReplaceVariables  
 -> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
 -> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path)    
@@ -150,34 +189,21 @@ setReplaceVariables
 
 ### Step 5
 
-Paste bellow to ./textToSpeechTutorial2Dir/settingVariables/setReplaceVariables.js
+Paste bellow to ./byNotificationHelloWorldDir/settingVariables/setVariableTypes.js
 
 ```js.js
 
-speechText:
-	TXT:LBL=
-		${TXT_LABEL}=this,
+PLAY:
+	:BTN:HL=
+		${BTN_CMD}=jsf '${HELLO_WORLD_TRIGGER_JS_PATH}' 
+			!${BTN_LABEL}=this,
 
-pitch:
-	LBL:TXT:NUM:BTN=
-		${TXT_LABEL}=this
+MESSAGE:
+	LBL:TXT:ELSB=
+		${TXT_LABEL}=THIS
 		|
-			!1..500!1
-		|
-			${BTN_CMD}=jsf '${0}' ${PICH_INIT_MODE}
-				!${BTN_LABEL}=INIT,
-
-```
-
-./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js
-
-```js.js
-
-editExecute,
-setReplaceVariables,
-setVariableTypes,
-hideSettingVariables,
-
+			${LIST_PATH}=${HELLO_WORLD_MESSAGE_LIST_PATH}
+				!${LIMIT_NUM}=10,
 ```
 
 setVariableTypes
@@ -185,9 +211,96 @@ setVariableTypes
 -> [Specify config](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#specify-config)  
 
 
-- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line. 
+### Step 6
+
+Paste bellow to `./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js`
+
+```js.js
+editExecute,
+onAutoExec,
+setReplaceVariables,
+setVariableTypes,
+```
+
+-> [hideSettingVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md)
+
+
+### Step 7
+
+Paste bellow to `./textToSpeechTutorial2Dir/libs/readMessage.js`
+
+```js.js
+
+function readMessage(){
+				// [1]
+	const mainFannelCon = jsFileSystem.readLocalFile(
+		// [2]
+		"${HELLO_WORLD_FANNEL_PATH}" 
+	);
+			// [3]
+	const cmdCon = jsScript.subCmdVars(
+		mainFannelCon
+	);
+			// [4]
+	return jsScript.subValOnlyValue(
+		"MESSAGE",
+		cmdCon,
+	);
+};
+
+```
+[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)
+[2] -> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)
+[3] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)
+[4] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)
+
+### Step 8
+
+Paste bellow to `./textToSpeechTutorial2Dir/libs/saveArgsTsv.js`
+
+```js.js
+function saveArgsTsv(
+	message
+){
+	const argsTsvCon = [
+		`MESSAGE\t${message}`,
+	].join("\n");
+			// [1]
+	jsFileSystem.writeLocalFile(
+		"${HELLO_WORLD_TEMP_ARGS_TSV_PATH}",
+		argsTsvCon
+	);
+};
+```
+
+[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)
+
+
+### Step 9
+
+Paste bellow to `./textToSpeechTutorial2Dir/systemJs/onAutoExec.js`
+
+```js.js
+		// [1]
+jsFileSystem.createDir(
+	"${HELLO_WORLD_LIST_DIR_PATH}"
+);
+jsFileSystem.createDir(
+	"${HELLO_WORLD_TEMP_DIR_PATH}"
+);
+// [2]
+jsUbuntu.boot();
+
+```
+
+-> [on auto exec script](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#on_auto_exec)
+[1] -> [jsFileStystem.createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)
+[2] -> [jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/boot.md)
+
+
+### Step 10
+
 
 
 ## Step 6
