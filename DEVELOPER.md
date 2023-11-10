@@ -109,6 +109,13 @@ This, so colled, android app row code library.
 
 Like `${0}` in shell, `CommandClick`'s js has pre reserved word
 
+### Javascript system args
+
+-> [About javascript system args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md)
+
+
+Add arg on CommandClick's certain action for [js](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsArgs/get.md).  
+For example, `urlHistoryClick`, `onAutoExec` action.  
 
 ### Include Javascript Library  
 
