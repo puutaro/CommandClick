@@ -32,6 +32,7 @@ Table of Contents
   * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
   * [Install fannel](#install-fannel)
   * [Config](#config)
+    * [Change ubuntu sleep minutes](change-ubuntu-sleep-minutes)
   * [Termux setting](#termux-setting)
   * [Edit startup](#edit-startup)
   * [Restart ubuntu](#restart-ubuntu)
@@ -323,6 +324,18 @@ You can setting `CommandClick` Configration
 1. Long press right buttom gear button  
 2. Click `setting` -> "config" in popup menu
 
+### Change ubuntu sleep minutes
+  
+[Ubuntu Sleep delay minutes](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#ubuntusleepdelaymininscreenoff) is set for battery life.  default `20` min   
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `setting` -> "config" in popup menu
+3. Change `ubuntuSleepDelayMinInScreenOff`
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/fd4c5304-6cbe-4d22-92f3-732c9345e638" width="400">  
+
+- 0: no sleep
 
 ### Termux Setting
 
