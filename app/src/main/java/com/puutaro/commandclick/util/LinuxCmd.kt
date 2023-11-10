@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
-import java.time.LocalDateTime
 
 
 object LinuxCmd {
@@ -37,11 +36,6 @@ object LinuxCmd {
         val isPulseAudioProcess =
             psResult.contains("pulseaudio --start")
 
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "debut.txt",
-            "\n${LocalDateTime.now()}\n$psResult"
-        )
         return isProotProcess
                 && isWsshProcess
                 && isHttp2ShellProcess

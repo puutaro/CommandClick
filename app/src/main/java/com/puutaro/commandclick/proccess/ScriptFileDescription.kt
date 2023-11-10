@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -115,11 +114,6 @@ object ScriptFileDescription {
                 fannelName
             )
         }
-        FileSystems.writeFile(
-            currentAppDirName,
-            "debug.txt",
-            mdPath
-        )
         val mdPathObj = File(mdPath)
         if(
             !mdPathObj.isFile

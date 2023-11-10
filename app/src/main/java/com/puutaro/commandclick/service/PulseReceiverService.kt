@@ -11,20 +11,17 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.intent.PulseServerIntentExtra
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
-import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
 
 
 class PulseReceiverService:
@@ -125,11 +122,6 @@ class PulseReceiverService:
         )
         pcPulseSetServerJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "pcSetPulseStart.txt",
-                    LocalDateTime.now().toString()
-                )
                 PcPulseSetServer.launch(
                     applicationContext,
                     pcAddress,
