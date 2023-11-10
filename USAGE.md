@@ -326,7 +326,7 @@ You can setting `CommandClick` Configration
 
 ### Change ubuntu sleep minutes
   
-[Ubuntu Sleep delay minutes](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#ubuntusleepdelaymininscreenoff) is set for battery life.  default `20` min   
+Ubuntu Sleep delay minutes is set for battery life.  default `20` min   
 
 [Procedure]  
 1. Long press right buttom gear button  
