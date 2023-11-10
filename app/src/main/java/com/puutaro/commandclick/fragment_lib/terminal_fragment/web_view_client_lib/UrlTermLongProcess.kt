@@ -23,7 +23,7 @@ object UrlTermLongProcess {
         val title = webView?.title ?: return
         if(title.isBlank() || title.isEmpty() ) return
         if (
-            title.trim(' ').contains(WebUrlVariables.escapeStr)
+            title.trim().contains(WebUrlVariables.escapeStr)
         ) return
         val isTermShortWhenLoad =
             terminalFragment.onTermShortWhenLoad ==

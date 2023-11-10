@@ -131,7 +131,7 @@ object WebViewClientSetter {
                 }
                 if(
                     goBackFlag
-                    && webview?.title?.trim(' ') == WebUrlVariables.escapeStr
+                    && webview?.title?.trim() == WebUrlVariables.escapeStr
                 ) {
                     terminalViewModel.onDisplayUpdate = true
                     return

@@ -163,7 +163,7 @@ object ExecJsLoad {
         val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickScriptVariable.TERMINAL_OUTPUT_MODE,
-        )?.trim(' ') ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+        )?.trim() ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
         terminalViewModel.onBottomScrollbyJs = !(
                 terminalOutputMode ==
                         SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name

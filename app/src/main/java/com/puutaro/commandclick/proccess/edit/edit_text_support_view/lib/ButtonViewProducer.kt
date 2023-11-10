@@ -266,7 +266,7 @@ object ButtonViewProducer {
                 .replace(termOutMacro, "")
                 .replace(noJsTermOut, "")
                 .replace(termLong, "")
-                .trim(' ')
+                .trim()
                 .replace(Regex("\t\t*"), " ")
                 .replace("\t", " ")
                 .replace(Regex(";;*"), ";")

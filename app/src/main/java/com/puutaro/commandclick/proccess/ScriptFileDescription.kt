@@ -72,7 +72,7 @@ object ScriptFileDescription {
             }?.map {
                 line ->
                 val inputDescLine = line
-                    .trim(' ')
+                    .trim()
                     .removePrefix(removePrefix)
                     .removePrefix(" ")
                     .let {

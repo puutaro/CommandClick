@@ -26,7 +26,7 @@ class MakeExecCmdForTermux {
             val terminalOutputMode = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
                 CommandClickScriptVariable.TERMINAL_OUTPUT_MODE,
-            )?.trim(' ') ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
+            )?.trim() ?: CommandClickScriptVariable.TERMINAL_OUTPUT_MODE_DEFAULT_VALUE
             val normalOutputMark = OutputMark.NORMAL_OUTPUT_MARK.str
             val refleshOutputMark = OutputMark.REFLESH_OUTPUT_MARK.str
             val monitorFileReDirectMark = when(terminalOutputMode) {
@@ -49,14 +49,14 @@ class MakeExecCmdForTermux {
                 CommandClickScriptVariable.BEFORE_COMMAND,
             )?.let{
                 trimBothEdgeQuote(it)
-            }?.trim(' ') ?: String()
+            }?.trim() ?: String()
 
             val afterCommandSource = CommandClickVariables.substituteCmdClickVariable(
                 substituteSettingVariableList,
                 CommandClickScriptVariable.AFTER_COMMAND,
             )?.let{
                 trimBothEdgeQuote(it)
-            }?.trim(' ') ?: String()
+            }?.trim() ?: String()
 
             val execBashScript = "${recentAppdirPath}/" +
                     selectedShellFileName
@@ -80,7 +80,7 @@ class MakeExecCmdForTermux {
                         "${factExecCmd} ${normalOutputMark} \"${outputPath}\"${debugSign};" +
                         "${afterCommandSource} ${normalOutputMark} \"${outputPath}\"${debugSign};"
             }
-            return execCmdSource.trim(' ').trim(';').replace(";;", ";")
+            return execCmdSource.trim().trim(';').replace(";;", ";")
         }
     }
 }

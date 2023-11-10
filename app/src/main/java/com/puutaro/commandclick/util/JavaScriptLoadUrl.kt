@@ -118,11 +118,7 @@ object JavaScriptLoadUrl {
             ) "$afterJsImport;"
             else afterJsImport
         }.joinToString("\n").split("\n").map {
-            val trimJsRow = it
-                .trim(' ')
-                .trim('\t')
-                .trim(' ')
-                .trim('\t')
+            val trimJsRow = it.trim()
             if(
                 trimJsRow.startsWith(commentOutMark)
             ) return@map String()
@@ -233,10 +229,7 @@ object JavaScriptLoadUrl {
             else it
         }.joinToString("\n").split("\n").map {
             val trimJsRow = it
-                .trim(' ')
-                .trim('\t')
-                .trim(' ')
-                .trim('\t')
+                .trim()
             if(
                 trimJsRow.startsWith(commentOutMark)
             ) return@map String()

@@ -8,8 +8,7 @@ object QuoteTool {
         targetStr: String?,
     ): String {
         return targetStr
-            ?.trim(' ')
-            ?.trim('　')
+            ?.trim()
             .let {
             execTrim(
                 it,
