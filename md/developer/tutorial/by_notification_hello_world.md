@@ -23,7 +23,7 @@ Table
 * [Step 12](#step-12)
 * [Step 13](#step-13)
 * [Step 14](#step-14)
-* [Step 13](#step-15)
+* [Step 15](#step-15)
 
 ## Sample
 
