@@ -1,10 +1,10 @@
 # By notification, hello_world
 
 This section serve you practical skill for [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) development.  
-You can acquire MVVC architecture in js, and base skill for shellscript. 
-With finishing this section, you can use MVVC architecture in js, and ubuntu in `CommandClick`  
-`CommandClick`'s most different point from other row code tool is that this can use ubnutu. 
-By ubuntu, you enable to develop in wide spread scene: apt, python, golang, etc. 
+You can acquire MVVC architecture in js, and base skill for shellscript.   
+With finishing this section, you can use MVVC architecture in js, and ubuntu in `CommandClick`.    
+`CommandClick`'s most different point from other row code tool is that this can use ubnutu.   
+By ubuntu, you enable to develop in wide spread scene: apt, python, golang, etc.   
 
 
 Table
