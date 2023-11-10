@@ -77,6 +77,8 @@ variable name3\tvariable value3
 
 Trigger this js script primarlily on click [url history](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick) than [`urlHistoryClick` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick)  
 
+- [systemJs directory](#https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
 
 ## `~/conf/monitor/term_[1-4]` <a id="output_monitor"></a>
 
