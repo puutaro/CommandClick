@@ -11,7 +11,8 @@ Table
 ## Overview
 
 - This setting is one of the most use setting
-- This setting is set global variable  
+- This setting is set global variable by replace varaiableb name to value
+- Fast about replace velocity: `2000` varaibles -> `0.06` secoonds.   
 - So colled "model" in `MVC` and `MVVM`.  
 - This setting can specify multiply
 
