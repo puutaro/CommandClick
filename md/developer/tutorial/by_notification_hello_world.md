@@ -17,6 +17,13 @@ Table
 * [Step 6](#step-6)
 * [Step 7](#step-7)
 * [Step 8](#step-8)
+* [Step 9](#step-9)
+* [Step 10](#step-10)
+* [Step 11](#step-11)
+* [Step 12](#step-12)
+* [Step 13](#step-13)
+* [Step 14](#step-14)
+* [Step 13](#step-15)
 
 ## Sample
 
@@ -79,7 +86,7 @@ scriptFileName="by_notification_hello_world.js"
 // [10]
 /// CMD_VARIABLE_SECTION_START
 PLAY=""
-MESSAGE=""
+MESSAGE="hello world"
 /// CMD_VARIABLE_SECTION_END
 
 
@@ -101,13 +108,13 @@ MESSAGE=""
 [8]
 -> [hideSettingVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md#overview)  
 -> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md#specify-file-path)  
-[9] -> [scriptFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename) 
+[9] -> [scriptFileName](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#scriptfilename)  
 [10] -> [cmd variables](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#cmd-variables)    
 
 
 - `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
 
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.  
 
 ### Step 3
 
@@ -116,11 +123,11 @@ Paste [his markdown contents](https://github.com/puutaro/CommandClick-Tutorial/b
 
 [8] -> [pre order word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)  
 [6]
--> [fannel dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#fannel_dir)  
+-> [fannel dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#fannel_dir)    
 
 [9] -> edit text cmd variable  
 
--> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)
+-> [labeling section](https://github.com/puutaro/CommandClick/blob/master/md/developer/labeling_section.md)  
 
 
 ### Step 4
@@ -182,9 +189,9 @@ HELLO_WORLD_MESSAGE_LIST_PATH=
 ```
 
 setReplaceVariables  
--> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
--> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path)    
-[1], [2] -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
+-> [setReplaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)    
+-> [Specify file path](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path)      
+[1], [2] -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)  
 
 
 ### Step 5
@@ -214,7 +221,7 @@ setVariableTypes
 
 ### Step 6
 
-Paste bellow to `./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js`
+Paste bellow to `./byNotificationHelloWorldDir/settingVariables/hideSettingVariables.js`
 
 ```js.js
 editExecute,
@@ -223,12 +230,12 @@ setReplaceVariables,
 setVariableTypes,
 ```
 
--> [hideSettingVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md)
+-> [hideSettingVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/hide_setting_variables.md)  
 
 
 ### Step 7
 
-Paste bellow to `./textToSpeechTutorial2Dir/libs/readMessage.js`
+Paste bellow to `./byNotificationHelloWorldDir/libs/readMessage.js`
 
 ```js.js
 
@@ -250,14 +257,14 @@ function readMessage(){
 };
 
 ```
-[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)
-[2] -> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)
-[3] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)
-[4] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)
+[1] -> [jsFileStystem.readLocalFile](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/readLocalFile.md)  
+[2] -> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
+[3] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)  
+[4] -> [jsScript.subCmdVars](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/subCmdVars.md)  
 
 ### Step 8
 
-Paste bellow to `./textToSpeechTutorial2Dir/libs/saveArgsTsv.js`
+Paste bellow to `./byNotificationHelloWorldDir/libs/saveArgsTsv.js`
 
 ```js.js
 function saveArgsTsv(
@@ -279,45 +286,152 @@ function saveArgsTsv(
 
 ### Step 9
 
-Paste bellow to `./textToSpeechTutorial2Dir/systemJs/onAutoExec.js`
+Paste bellow to `./byNotificationHelloWorldDir/systemJs/onAutoExec.js`
 
 ```js.js
 		// [1]
 jsFileSystem.createDir(
+	// [2]
 	"${HELLO_WORLD_LIST_DIR_PATH}"
 );
 jsFileSystem.createDir(
+	// [3]
 	"${HELLO_WORLD_TEMP_DIR_PATH}"
 );
-// [2]
+// [4]
 jsUbuntu.boot();
 
 ```
 
--> [on auto exec script](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#on_auto_exec)
-[1] -> [jsFileStystem.createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)
-[2] -> [jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/boot.md)
+-> [on auto exec script](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#on_auto_exec)  
+[1] -> [jsFileStystem.createDir](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsFileStystem/createDir.md)  
+[2], [3] -> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
+[4] -> [jsUbuntu.boot](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/boot.md)  
 
 
 ### Step 10
 
+Paste bellow to `./byNotificationHelloWorldDir/js/triggerHelloWorld.js`
+
+```js.js
+
+// [1]
+jsimport "${HELLO_WORLD_SAVE_ARGS_TSV_JS_PATH}";
+jsimport "${HELLO_WORLD_READ_MESSAGE_JS_PATH}";
 
 
-## Step 6
+const message = readMessage();
+if(!message) exitZero();
+// [2]
+jsListSelect.updateListFileCon(
+	"${HELLO_WORLD_MESSAGE_LIST_PATH}",
+	message,
+);
+
+saveArgsTsv(message);
+
+// [3]
+jsUbuntu.execScriptByBackground(
+	"${HELLO_WORLD_LAUNCH_SHELL_PATH}",
+	"",
+	1,
+);
+
+```
+
+[1]  
+-> [js import](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_import.md)  
+-> [replaceVariables](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#overview)  
+[2] -> [jsListSelect.updateListFileCon](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsListSelect/updateListFileCon.md)
+[3] -> [jsUbuntu.execScriptByBackground](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsUbuntu/execScriptByBackground.md)
+
+### Step 11
+
+Paste bellow to `./byNotificationHelloWorldDir/shell/launch_hello_world.sh`
+
+```sh.sh
+#!/bin/bash
+
+set -ue
+			# [1]
+readonly REPLACE_VARS_CON="$(get_rvar "${0}")"
+	# [2]
+readonly HELLO_WORLD_CHANNEL_NUM="$(\
+	get_rvar "${REPLACE_VARS_CON}" HELLO_WORLD_CHANNEL_NUM \
+)"
+readonly HELLO_WORLD_EXIT_SHELL_PATH="$(\
+	get_rvar "${REPLACE_VARS_CON}" HELLO_WORLD_EXIT_SHELL_PATH \
+)"
+readonly HELLO_WORLD_TEMP_ARGS_TSV_PATH="$(\
+	get_rvar "${REPLACE_VARS_CON}" HELLO_WORLD_TEMP_ARGS_TSV_PATH \
+)"
+readonly ARGS_CON="$(\
+	cat "${HELLO_WORLD_TEMP_ARGS_TSV_PATH}"
+)"
+# [3]
+readonly MESSAGE=$(\
+	tsvar "${ARGS_CON}" MESSAGE\
+)
+
+# [4]
+noti \
+	--notification-type launch \
+	-cn ${HELLO_WORLD_CHANNEL_NUM} \
+	--icon-name play \
+	--importance high \
+	--title "Hello world" \
+	--message "${MESSAGE}" \
+	--alert-once \
+	--delete "shellPath=${HELLO_WORLD_EXIT_SHELL_PATH}" \
+	--button "label=CANCEL,shellPath=${HELLO_WORLD_EXIT_SHELL_PATH}" \
+>/dev/null 2>&1
+
+espeak "${MESSAGE}"
+```
+
+[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md) 
+[3] -> [tsvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/tsvar.md)
+[4] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]
+
+### Step 12
+
+Paste bellow to `./byNotificationHelloWorldDir/shell/exit_hello_world.sh`
+
+```sh.sh
+#!/bin/bash
+
+set -ue
+			# [1]
+readonly REPLACE_VARS_CON="$(get_rvar "${0}")"
+	# [2]
+readonly HELLO_WORLD_CHANNEL_NUM="$(\
+	get_rvar "${REPLACE_VARS_CON}" HELLO_WORLD_CHANNEL_NUM \
+)"
+# [3]
+noti \
+	--notification-type exit \
+	-cn ${HELLO_WORLD_CHANNEL_NUM} 
+
+```
+
+
+[1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md) 
+[3] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]
+
+### Step 13
 
 Copy this direcotry tree to `/storage/emulated/0/Documents/cmdclick/default` directory<sub>[1]</sub>   
 
 [1] -> [app directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory)
 
-## Step 7
+## Step 14
 
 Click with [this](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#run)  
 
-## Step 8
+## Step 15
 
-Click Play button in toolbar.  
-Change `Pich` and quiz to ours!  
+Click `PLAY` button in toolbar.  
+Change `Message` and click `PLAY` !  
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/489ee2f7-3e20-4d1a-9f34-bc686a11265a" width="400">  
-
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/e473667e-0e99-4f79-b35f-dea7d954d8a4" width="400">  
 
