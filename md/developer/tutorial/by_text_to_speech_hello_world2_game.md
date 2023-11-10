@@ -9,6 +9,7 @@ I hope you live easily devevlopement life.　　
 Table
 -----------------
 
+* [Sample](#sample)
 * [Step 1](#step-1)
 * [Step 2](#step-2)
 * [Step 3](#step-3)
@@ -17,6 +18,11 @@ Table
 * [Step 6](#step-6)
 * [Step 7](#step-7)
 * [Step 8](#step-8)
+
+## Sample
+
+-> [textToSpeechTutorial2](https://github.com/puutaro/CommandClick-Tutorial/tree/master/fannels/textToSpeechTutorial2)
+
 
 ## Step 1
 
