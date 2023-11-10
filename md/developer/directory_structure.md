@@ -63,7 +63,7 @@ to resotre y-position when you visit site in url history,
 
 All fannel main direcotry must be `${fannel name without extend} + "Dir"`, otherwise cannot controll by `CommandClick`
 
-## `~/AppDir/../${fannel_dir}/systemJs` <a id="system_js"></a>
+## `~/AppDir/../${fannel_dir}/systemJs`  <a id="system_js"></a>
 
 System exec js script for certain action.  
 
