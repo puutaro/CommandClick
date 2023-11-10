@@ -147,6 +147,10 @@ function execTextToSpeech(){
 -> [TextToSpeech](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsTextToSpeech/speech.md)  
 
 
+- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
+
+- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.
+
 ### Step 3
 
 Paste bellow code to `textToSpeechTutorial2.js`  
@@ -218,10 +222,6 @@ setVariableTypes
 -> [setVariableTypes](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#overview)  
 -> [Specify config](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types.md#specify-config)  
 
-
-- `CommandClick` js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) is bookmarklet.  
-
-- Js [fannel](https://github.com/puutaro/commandclick-repository/blob/master/README.md#commandclick-repository) require `;` by each line.
 
 ## Step 6
 ./textToSpeechTutorial2Dir/settingVariables/hideSettingVariables.js
