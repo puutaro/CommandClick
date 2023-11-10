@@ -416,7 +416,7 @@ noti \
 
 
 [1], [2] -> [get_rvar](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/get_rvar.md)   
-[3] -> [noti][https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md]
+[3] -> [noti](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md)
 
 ### Step 13
 
