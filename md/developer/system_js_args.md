@@ -1,8 +1,8 @@
-# system_args
+# System js args
 
 
 Add arg on CommandClick's certain action for [js](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsArgs/get.md).  
-For example, urlHistoryClick, onAutoExec action.  
+For example, `urlHistoryClick`, `onAutoExec` action.  
 
 
 
