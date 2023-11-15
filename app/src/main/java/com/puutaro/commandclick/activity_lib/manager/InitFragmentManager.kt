@@ -12,9 +12,11 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
@@ -107,7 +109,9 @@ class InitFragmentManager(
     private fun execUrlIntent() {
         val execIntent = Intent(activity, activity::class.java)
         execIntent.setAction(Intent.ACTION_VIEW).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-        execIntent.data = Uri.parse(intent?.dataString)
+        setDataString(intent)?.let {
+            execIntent.data = it
+        }
         SharePreffrenceMethod.putSharePreffrence(
             startUpPref,
             mapOf(
@@ -176,5 +180,31 @@ class InitFragmentManager(
             startUpScriptFileName
         )
 
+    }
+
+    private fun setDataString(
+        intent: Intent?,
+    ): Uri? {
+        intent?.dataString?.let {
+           val urlStr = makeUrlStr(it)
+           return Uri.parse(urlStr)
+        }
+        return intent
+            ?.extras
+            ?.getString(android.app.SearchManager.QUERY)
+            ?.let {
+                val urlStr = makeUrlStr(it)
+                return Uri.parse(urlStr)
+        }
+    }
+
+    private fun makeUrlStr(urlSrcStr: String?): String? {
+        if(
+            urlSrcStr.isNullOrEmpty()
+        ) return null
+        if (
+            LoadUrlPrefixSuffix.judge(urlSrcStr)
+        ) return urlSrcStr
+        return "${WebUrlVariables.queryUrl}${urlSrcStr}"
     }
 }

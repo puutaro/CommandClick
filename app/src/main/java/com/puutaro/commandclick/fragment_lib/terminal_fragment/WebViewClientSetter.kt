@@ -21,8 +21,6 @@ import java.io.ByteArrayInputStream
 
 object WebViewClientSetter {
 
-    private val filePrefix = WebUrlVariables.filePrefix
-    private val slashPrefix= WebUrlVariables.slashPrefix
     fun set(
         terminalFragment: TerminalFragment
     ){
