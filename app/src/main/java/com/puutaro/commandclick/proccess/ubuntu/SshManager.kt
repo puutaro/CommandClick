@@ -5,9 +5,8 @@ import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.StreamWrapper
-import java.time.LocalDateTime
 import java.util.Properties
 
 
@@ -41,11 +40,7 @@ object SshManager {
         var channel: ChannelExec? = null
         var session: Session? = null
         try {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ${LocalDateTime.now()} ssh start"
-            )
+//            LogSystems.stdSys("ssh start")
             val jsch = JSch()
             session = jsch.getSession(
                 ubuntuUser,
@@ -59,64 +54,29 @@ object SshManager {
             session.setConfig(prop)
             session.connect()
             channel = session.openChannel("exec") as ChannelExec
-
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh exec command.."
-            )
+//            LogSystems.stdSys("ssh exec command..")
             channel.setCommand(command)
-
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh channel connect.."
-            )
+//            LogSystems.stdSys("ssh channel connect..")
             channel.connect()
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh set err stream.."
-            )
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh output.."
-            )
+//            LogSystems.stdSys("ssh set err stream..")
+//            LogSystems.stdSys("ssh output..")
             val output = outputHandler(
                 channel,
                 monitorFileName,
                 isOutput
             )
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh channel disconnect.."
-            )
+//            LogSystems.stdSys("ssh channel disconnect..")
             channel.disconnect()
 
-
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ssh disconnect.."
-            )
+//            LogSystems.stdSys("ssh disconnect..")
             // Close the connection to the SSH server
             session.disconnect()
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### ${LocalDateTime.now()} ssh comp"
-            )
+//            LogSystems.stdSys("ssh comp")
             return output
         } catch (e: java.lang.Exception) {
             channel?.disconnect()
             session?.disconnect()
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "${e}"
-            )
+            LogSystems.stdErr(e.toString())
             return String()
         }
     }
@@ -154,19 +114,11 @@ object SshManager {
                 monitorFileName,
             )
         } finally {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "## writeInputStream end"
-            )
+            //            LogSystems.stdErr("writeInputStream end")
             if(channel.inputStream != null) {
                 channel.inputStream.close()
             }
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "## writeInputStream end2"
-            )
+            //            LogSystems.stdErr("writeInputStream end2")
         }
     }
 
@@ -177,32 +129,16 @@ object SshManager {
     ): String {
         var output = String()
         try {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### start extractInputStream..0"
-            )
+            //            LogSystems.stdSys("start extractInputStream..0")
             output = StreamWrapper.extractByReader(
                 channel.inputStream.bufferedReader(Charsets.UTF_8)
             )
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                sysMonitorFileName,
-                "### after extractInputStream.."
-            )
+            //            LogSystems.stdSys("after extractInputStream..")
         } finally {
             if(channel.inputStream != null) {
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    sysMonitorFileName,
-                    "### close inputstream extractInputStream.."
-                )
+//            LogSystems.stdSys("close inputstream extractInputStream..")
                 channel.inputStream.close()
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    sysMonitorFileName,
-                    "### close ok inputstream extractInputStream"
-                )
+//                LogSystems.stdSys(" close ok inputstream extractInputStream")
             }
         }
         return output

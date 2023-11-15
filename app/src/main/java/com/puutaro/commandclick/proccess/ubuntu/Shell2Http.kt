@@ -4,12 +4,9 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
-import java.time.LocalDateTime
+import com.puutaro.commandclick.util.LogSystems
 
 object Shell2Http {
-
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val currentMonitorFileName = UsePath.cmdClickMonitorFileName_2
 
     fun runCmd(
         executeShellPath:String,
@@ -28,11 +25,6 @@ object Shell2Http {
                 UsePath.cmdclickTempCmdShellName,
                 shellCon
             )
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                currentMonitorFileName,
-                "### ${LocalDateTime.now()} ${this::class.java.name}\n curl start"
-            )
             val shellOutput = CurlManager.get(
                 cmdUrl,
                 String(),
@@ -42,25 +34,16 @@ object Shell2Http {
             if (
                 shellOutput.isEmpty()
             ) {
-                FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    currentMonitorFileName,
-                    "### ${LocalDateTime.now()} ${this::class.java.name}\n no output"
-                )
+//                LogSystems.stdErr(
+//                    "no output executeShellPath: ${executeShellPath}, " +
+//                            "tabSepaArgs: ${tabSepaArgs}, " +
+//                            "timeoutMiliSec: ${timeoutMiliSec}"
+//                )
                 return String()
             }
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                currentMonitorFileName,
-                "### ${LocalDateTime.now()} ${this::class.java.name}\n ${shellOutput}"
-            )
             return shellOutput
         } catch (e: Exception) {
-            FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                currentMonitorFileName,
-                "### ${LocalDateTime.now()} ${this::class.java.name}\n${e.toString()}"
-            )
+            LogSystems.stdErr(e.toString())
             return String()
         }
     }

@@ -40,11 +40,6 @@ object ScreenMonitor {
                     settingSectionEnd
                 )
                 if(sleepDelayMinutes == noSleepSignal) {
-                    FileSystems.writeFile(
-                        UsePath.cmdclickDefaultAppDirPath,
-                        "nosignal.txt",
-                        String()
-                    )
                     return@withContext
                 }
                 delay(sleepDelayMinutes)
