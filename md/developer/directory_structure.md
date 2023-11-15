@@ -14,6 +14,7 @@ Table
     * [`~/AppDir/../system/url`](#app_dir_system_dir_url_dir)
     * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)
   * [`~/AppDir/../{fannelDir}`](#fannel_dir)
+  * [`~/AppDir/../${fannel_dir}/systemJs`](#system_js)
 * [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
@@ -62,6 +63,9 @@ to resotre y-position when you visit site in url history,
 
 All fannel main direcotry must be `${fannel name without extend} + "Dir"`, otherwise cannot controll by `CommandClick`
 
+## `~/AppDir/../${fannel_dir}/systemJs`  <a id="system_js"></a>
+
+System exec js script for certain action.  
 
 ## `~/conf` <a id="conf"></a>
 

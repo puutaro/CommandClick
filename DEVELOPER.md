@@ -65,14 +65,14 @@ This section is description for `fannel`(js or shell file enforced by `CommandCl
 ### Cmd variables
 
 User difinition setting variables to enable edit by gui  
-If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display firstly. 
+If set, display firstly in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit). 
 
 ### Setting variable 
 
 -> [About setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
 
 `CommandClick`'s pre-reserved system setting variables to enable edit by gui   
-If set, in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit), display secondly. 
+If set, display secondly in [edit](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#edit). 
 
 ### Directory structure
 
@@ -109,6 +109,13 @@ This, so colled, android app row code library.
 
 Like `${0}` in shell, `CommandClick`'s js has pre reserved word
 
+### Javascript system args
+
+-> [About javascript system args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md)
+
+
+Add arg on CommandClick's certain action for [js](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsArgs/get.md).  
+For example, `urlHistoryClick`, `onAutoExec` action.  
 
 ### Include Javascript Library  
 

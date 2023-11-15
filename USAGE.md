@@ -32,6 +32,7 @@ Table of Contents
   * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
   * [Install fannel](#install-fannel)
   * [Config](#config)
+    * [Change ubuntu sleep minutes](change-ubuntu-sleep-minutes)
   * [Termux setting](#termux-setting)
   * [Edit startup](#edit-startup)
   * [Restart ubuntu](#restart-ubuntu)
@@ -258,6 +259,17 @@ You can create shortcut for current `App directory` or `script`
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
 
 - `Restart` -> Press button when ubuntu not working
+- ssh username & password: `cmdclick`
+
+ex)
+
+
+```sh.sh
+
+sshpass -p cmdclick \
+	ssh -p 10022 "cmdclick@${android ipv4 address}"
+
+```
 
 ### Backup ubuntu rootfs
 
@@ -312,6 +324,18 @@ You can setting `CommandClick` Configration
 1. Long press right buttom gear button  
 2. Click `setting` -> "config" in popup menu
 
+### Change ubuntu sleep minutes
+  
+Ubuntu Sleep delay minutes is set for battery life.  default `20` min   
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `setting` -> "config" in popup menu
+3. Change `ubuntuSleepDelayMinInScreenOff`
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/fd4c5304-6cbe-4d22-92f3-732c9345e638" width="400">  
+
+- 0: no sleep
 
 ### Termux Setting
 
@@ -329,7 +353,7 @@ Edit `statup script` contenst.
 
 ### Restart ubuntu
 
-Restart ubuntu Forcibly
+Restart ubuntu forcibly
 
 
 ### No scroll save url

@@ -13,6 +13,8 @@ Table
 * [`~/AppDir/${app directory}/system/url/cmdclickUrlHistory`](#url_history)
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js`](#on_auto_exec)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
@@ -71,6 +73,18 @@ variable name3\tvariable value3
 ```
 
 - Auto create & convert [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) in js use
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js` <a id="url_history_click"></a>
+
+Trigger this js script primarlily on click [url history](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick) than [`urlHistoryClick` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick)  
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js` <a id="on_auto_exec"></a>
+
+Trigger this js script primarlily than [`onAutoExec` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#onautoexec) when set `ON` to [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#setting-variable)   
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
 
 
 ## `~/conf/monitor/term_[1-4]` <a id="output_monitor"></a>
