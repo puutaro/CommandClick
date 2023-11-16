@@ -580,7 +580,7 @@ object CommandClickScriptVariable {
             |
             |# ### $HOME_SCRIPT_URLS_PATH
             |# Specified script, url and html put always bottom in url history
-            |# ex) $HOME_SCRIPT_URLS_PATH=$\{file_path}
+            |# ex) $HOME_SCRIPT_URLS_PATH=
             |
             |# | Button type | usage | 
             |# | $mdDash | $mdDash |
@@ -765,7 +765,7 @@ object CommandClickScriptVariable {
         |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH="$srcImageAnchorLongPressMenuFilePath"
         |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH="$srcAnchorLongPressMenuFilePath
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH="$imageLongPressMenuFilePath
-        |$NO_SCROLL_SAVE_URLS="$noScrollSaveUrlsFilePath"
+        |$NO_SCROLL_SAVE_URLS=""
         |$OVERRIDE_ITEM_CLICK_EXEC="$OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE
         |$ON_URL_HISTORY_REGISTER="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
         |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
@@ -922,7 +922,7 @@ object CommandClickScriptVariable {
         |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
         |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
         |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
-        |$CMDCLICK_HOME_FANNELS_PATH="$homeFannelsFilePath"
+        |$CMDCLICK_HOME_FANNELS_PATH=""
         |$CMDCLICK_TERMINAL_FONT_ZOOM="$CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE"
         |$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF="20"
         |$TERMINAL_COLOR="$TERMINAL_COLOR_DEFAULT_VALUE"
@@ -989,8 +989,8 @@ object CommandClickScriptVariable {
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH="${UsePath.imageLongPressMenuFilePath}"
         |$IGNORE_HISTORY_PATHS=""
         |$EXEC_JS_OR_HTML_PATH=""
-        |$HOME_SCRIPT_URLS_PATH="$homeScriptUrlsFilePath"
-        |$NO_SCROLL_SAVE_URLS="$noScrollSaveUrlsFilePath"
+        |$HOME_SCRIPT_URLS_PATH=""
+        |$NO_SCROLL_SAVE_URLS=""
         |$CMDCLICK_TERMINAL_FONT_ZOOM=""
         |$TERMINAL_FONT_COLOR=""
         |$TERMINAL_COLOR=""

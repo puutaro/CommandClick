@@ -124,7 +124,7 @@ object UsePath {
     val setVariableTypesConfig = "setVariableTypes.js"
     val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
-    val fannelSettingDirPath = "\${01}/\${001}/setting"
+    val fannelSettingDirPath = "\${01}/\${001}/settings"
     val homeFannelsFilePath =
         "${fannelSettingDirPath}/homeFannelsFilePaths.txt"
     val jsImportManagerFannelName = "jsImportManager.js"
@@ -156,8 +156,7 @@ object UsePath {
     val cmdclickFirstHistoryTitle = "firstHistoryTitle$tsvExtend"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
-    val settingsDirPath = "\${01}/\${001}/settings"
-    val homeScriptUrlsFilePath =  "$settingsDirPath/homeScriptUrlsPath.txt"
+    val homeScriptUrlsFilePath =  "$fannelSettingDirPath/homeScriptUrlsPath.txt"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"
@@ -166,7 +165,7 @@ object UsePath {
     val imageLongPressMenuFilePath =
         "$longPressMenuDirPath/imageLongPressMenu.txt"
     val noScrollSaveUrlsFilePath =
-        "$settingsDirPath/noScrollSaveUrls.txt"
+        "$fannelSettingDirPath/noScrollSaveUrls.txt"
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val systemExecJsDirName = "systemJs"
 
