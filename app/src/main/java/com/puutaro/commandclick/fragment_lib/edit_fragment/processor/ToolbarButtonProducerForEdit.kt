@@ -26,6 +26,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowBy
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
@@ -281,8 +282,8 @@ class ToolbarButtonProducerForEdit(
 
     private fun execForOkLongClick(
         shellContentsList: List<String>,
-        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
-        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         existIndexList: Boolean
     ) {
         if(!existIndexList) {
@@ -292,6 +293,28 @@ class ToolbarButtonProducerForEdit(
                 recordNumToMapNameValueInSettingHolder,
             )
         }
+        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+        val recordNumToMapNameValueInSettingHolderForLongPress = RecordNumToMapNameValueInHolder.parse(
+            shellContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+            true,
+            currentScriptFileName
+        )
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+            recordNumToMapNameValueInSettingHolderForLongPress,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptFileName
+        )
+        editFragment.execPlayBtnLongPress = SetReplaceVariabler.execReplaceByReplaceVariables(
+            editFragment.execPlayBtnLongPress,
+            setReplaceVariableMap,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptFileName
+        )
+
         EditToolbarSwitcher.switch(
             editFragment,
             editFragment.execPlayBtnLongPress

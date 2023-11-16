@@ -36,6 +36,9 @@ object ConfigFromStartUpFileSetter {
             settingSectionStart,
             settingSectionEnd
         )
+        val startupDirName = CcPathTool.makeFannelDirName(
+            cmdclickStartupJsName
+        )
 
         cmdIndexFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
             settingVariableList,
@@ -103,16 +106,24 @@ object ConfigFromStartUpFileSetter {
             cmdIndexFragment.terminalColor
         )
         val bottomScriptUrlList = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH
+            ScriptPreWordReplacer.replace(
+                UsePath.homeScriptUrlsFilePath,
+                currentAppDirPath,
+                startupDirName,
+                cmdclickStartupJsName,
+            )
         )
         if(
             bottomScriptUrlList.isNotEmpty()
         ) cmdIndexFragment.bottomScriptUrlList = bottomScriptUrlList
 
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
+            ScriptPreWordReplacer.replace(
+                UsePath.homeFannelsFilePath,
+                currentAppDirPath,
+                startupDirName,
+                cmdclickStartupJsName,
+            )
         )
         if(
             homeFannelHistoryNameList.isNotEmpty()

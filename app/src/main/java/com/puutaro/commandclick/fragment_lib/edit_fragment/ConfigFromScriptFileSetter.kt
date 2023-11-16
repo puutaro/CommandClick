@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.provider.UserDictionary.Words
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -184,8 +186,12 @@ object ConfigFromScriptFileSetter {
         )
 
         val bottomScriptUrlList = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH
+            ScriptPreWordReplacer.replace(
+                UsePath.homeScriptUrlsFilePath,
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptFileName,
+            )
         )
         if(
             bottomScriptUrlList.isNotEmpty()
@@ -193,8 +199,12 @@ object ConfigFromScriptFileSetter {
 
 
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
+            ScriptPreWordReplacer.replace(
+                UsePath.homeFannelsFilePath,
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptFileName,
+            )
         )
         if(
             homeFannelHistoryNameList.isNotEmpty()

@@ -23,10 +23,15 @@ object ConfigFromConfigFileSetter {
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
+        val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
+        val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
+        val configDirName = CcPathTool.makeFannelDirName(
+            cmdclickConfigFileName
+        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             CommandClickVariables.makeScriptContentsList(
-                UsePath.cmdclickSystemAppDirPath,
-                UsePath.cmdclickConfigFileName
+                cmdclickSystemAppDirPath,
+                cmdclickConfigFileName
             ),
             settingSectionStart,
             settingSectionEnd
@@ -78,10 +83,13 @@ object ConfigFromConfigFileSetter {
                 SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
-
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH
+            ScriptPreWordReplacer.replace(
+                UsePath.homeFannelsFilePath,
+                cmdclickSystemAppDirPath,
+                configDirName,
+                cmdclickConfigFileName,
+            )
         )
         if(
             homeFannelHistoryNameList.isNotEmpty()

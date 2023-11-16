@@ -138,6 +138,7 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.currentAppDirPath
         )
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
+        val startupDirName = CcPathTool.makeFannelDirName(cmdclickStartupJsName)
         val currentScriptFileName = if (
             terminalFragment.tag ==
             terminalFragment.context?.getString(
@@ -145,6 +146,7 @@ object ConfigFromStartUpFileSetterForTerm {
             )
         ) cmdclickStartupJsName
         else currentScriptFileNameSource
+        val currentScriptDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
 
         if(
             currentScriptFileName != cmdclickStartupJsName
@@ -176,8 +178,12 @@ object ConfigFromStartUpFileSetterForTerm {
             )
 
             terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
-                settingVariableListFromStartup,
-                CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
+                ScriptPreWordReplacer.replace(
+                    UsePath.noScrollSaveUrlsFilePath,
+                    terminalFragment.currentAppDirPath,
+                    startupDirName,
+                    cmdclickStartupJsName,
+                )
             )
 
             terminalFragment.defaultMonitorFile = SettingVariableReader.getCbValue(
@@ -360,8 +366,12 @@ object ConfigFromStartUpFileSetterForTerm {
             imageLongPressMenuFilePathSource
 
         val noScrollSaveUrls = SettingVariableReader.setListFromPath(
-            settingVariableList,
-            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
+            ScriptPreWordReplacer.replace(
+                UsePath.noScrollSaveUrlsFilePath,
+                terminalFragment.currentAppDirPath,
+                currentScriptDirName,
+                currentScriptFileName,
+            )
         )
         if(
             noScrollSaveUrls.isNotEmpty()

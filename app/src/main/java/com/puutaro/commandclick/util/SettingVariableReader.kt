@@ -90,14 +90,8 @@ object SettingVariableReader {
     }
 
     fun setListFromPath(
-        settingVariableList: List<String>?,
-        settingValName: String,
+        setListFilePath: String,
     ): List<String> {
-        val setListFilePath = getStrValue(
-            settingVariableList,
-            settingValName,
-            String(),
-        )
         val setListFilePathObj = File(setListFilePath)
         val setListFileDirPath = setListFilePathObj.parent
             ?: String()
