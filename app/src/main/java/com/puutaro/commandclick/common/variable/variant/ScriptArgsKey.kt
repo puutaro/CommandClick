@@ -16,5 +16,10 @@ enum class ScriptArgs(
         "urlHistoryClick",
         UsePath.systemExecJsDirName,
         "urlHistoryClick.js",
+    ),
+    NO_ARG(
+        String(),
+        UsePath.systemExecJsDirName,
+    "noArg.js",
     )
 }

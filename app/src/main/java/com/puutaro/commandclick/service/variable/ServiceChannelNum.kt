@@ -10,4 +10,5 @@ object ServiceChannelNum {
     val cmdYouTuber = 20
     val cmdMusicPlayer = 21
     val newsSpeacherPlayer = 22
+    val fileManager = 23
 }
