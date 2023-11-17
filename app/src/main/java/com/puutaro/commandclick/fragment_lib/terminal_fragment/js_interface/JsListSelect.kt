@@ -35,11 +35,20 @@ class JsListSelect(
         val findSearchText = listContentsList.find {
             it == itemText
         }
-        if(
-            !findSearchText.isNullOrEmpty()
-        ) return
-        val lastListContentsSourceList =
-            listOf(itemText) + listContentsList
+//        if(
+//            !findSearchText.isNullOrEmpty()
+//        ) {
+//            listOf(itemText) + listContentsList.filter {
+//                it != itemText
+//            }
+//            return
+//        }
+        val lastListContentsSourceList = makeUpdatedListCon(
+            findSearchText,
+            listContentsList,
+            itemText
+        )
+//            listOf(itemText) + listContentsList
         val lastListContents = lastListContentsSourceList.filter {
             it.isNotEmpty()
                     || it != escapeCharHyphen
@@ -49,7 +58,6 @@ class JsListSelect(
             searchListFileName,
             lastListContents
         )
-
     }
 
     @JavascriptInterface
@@ -194,5 +202,20 @@ class JsListSelect(
             replaceTargetVariable,
             recentItem,
         )
+    }
+
+    private fun makeUpdatedListCon(
+        findSearchText: String?,
+        listContentsList: List<String>,
+        itemText: String
+    ): List<String> {
+        if(
+            !findSearchText.isNullOrEmpty()
+        ) {
+            return listOf(itemText) + listContentsList.filter {
+                it != itemText
+            }
+        }
+        return listOf(itemText) + listContentsList
     }
 }
