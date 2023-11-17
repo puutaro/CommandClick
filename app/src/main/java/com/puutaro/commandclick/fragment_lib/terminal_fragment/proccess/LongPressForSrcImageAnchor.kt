@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
@@ -188,7 +189,8 @@ class LongPressForSrcImageAnchor(
             terminalFragment,
             currentAppDirPath,
             selectedScript,
-            jsContentsListSource
+            jsContentsListSource,
+            ScriptArgs.LONG_PRESS.str
         )
     }
 }

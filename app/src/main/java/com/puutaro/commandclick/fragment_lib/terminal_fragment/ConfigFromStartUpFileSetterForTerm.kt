@@ -159,22 +159,25 @@ object ConfigFromStartUpFileSetterForTerm {
                 settingSectionStart,
                 settingSectionEnd
             )
-            terminalFragment.srcImageAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
-                settingVariableListFromStartup,
-                CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-                String()
+            terminalFragment.srcImageAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
+                UsePath.srcImageAnchorLongPressMenuFilePath,
+                terminalFragment.currentAppDirPath,
+                startupDirName,
+                cmdclickStartupJsName,
             )
 
-            terminalFragment.srcAnchorLongPressMenuFilePath = SettingVariableReader.getStrValue(
-                settingVariableListFromStartup,
-                CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-                String()
+            terminalFragment.srcAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
+                UsePath.srcAnchorLongPressMenuFilePath,
+                terminalFragment.currentAppDirPath,
+                startupDirName,
+                cmdclickStartupJsName,
             )
 
-            terminalFragment.imageLongPressMenuFilePath = SettingVariableReader.getStrValue(
-                settingVariableListFromStartup,
-                CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
-                String()
+            terminalFragment.imageLongPressMenuFilePath = ScriptPreWordReplacer.replace(
+                UsePath.imageLongPressMenuFilePath,
+                terminalFragment.currentAppDirPath,
+                startupDirName,
+                cmdclickStartupJsName,
             )
 
             terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
@@ -334,36 +337,48 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR,
             terminalFragment.terminalFontColor
         )
-        val srcImageAnchorLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
+        val isSrcImageAnchorLongPressMenuFilePathVal = SettingVariableReader.isExist(
             settingVariableList,
             CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-            String()
         )
         if(
-            srcImageAnchorLongPressMenuFilePathSource.isNotEmpty()
+            isSrcImageAnchorLongPressMenuFilePathVal
         ) terminalFragment.srcImageAnchorLongPressMenuFilePath =
-            srcImageAnchorLongPressMenuFilePathSource
+            ScriptPreWordReplacer.replace(
+                UsePath.srcImageAnchorLongPressMenuFilePath,
+                terminalFragment.currentAppDirPath,
+                currentScriptDirName,
+                currentScriptFileName,
+            )
 
-        val srcAnchorLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
+        val isSrcAnchorLongPressMenuFilePathVal = SettingVariableReader.isExist(
             settingVariableList,
             CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
-            String()
         )
         if(
-            srcAnchorLongPressMenuFilePathSource.isNotEmpty()
+            isSrcAnchorLongPressMenuFilePathVal
         ) terminalFragment.srcAnchorLongPressMenuFilePath =
-            srcAnchorLongPressMenuFilePathSource
+            ScriptPreWordReplacer.replace(
+                UsePath.srcAnchorLongPressMenuFilePath,
+                terminalFragment.currentAppDirPath,
+                currentScriptDirName,
+                currentScriptFileName,
+            )
 
 
-        val imageLongPressMenuFilePathSource = SettingVariableReader.getStrValue(
+        val isImageLongPressMenuFilePathVal = SettingVariableReader.isExist(
             settingVariableList,
             CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
-            String()
         )
         if(
-            imageLongPressMenuFilePathSource.isNotEmpty()
+            isImageLongPressMenuFilePathVal
         ) terminalFragment.imageLongPressMenuFilePath =
-            imageLongPressMenuFilePathSource
+                ScriptPreWordReplacer.replace(
+                    UsePath.imageLongPressMenuFilePath,
+                    terminalFragment.currentAppDirPath,
+                    currentScriptDirName,
+                    currentScriptFileName,
+                )
 
         val noScrollSaveUrls = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(

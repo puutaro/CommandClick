@@ -21,5 +21,10 @@ enum class ScriptArgs(
         String(),
         UsePath.systemExecJsDirName,
     "noArg.js",
+    ),
+    LONG_PRESS(
+        "longPress",
+        String(),
+        String(),
     )
 }
