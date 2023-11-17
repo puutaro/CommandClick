@@ -293,26 +293,10 @@ class ToolbarButtonProducerForEdit(
                 recordNumToMapNameValueInSettingHolder,
             )
         }
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-        val recordNumToMapNameValueInSettingHolderForLongPress = RecordNumToMapNameValueInHolder.parse(
+
+        editFragment.execPlayBtnLongPress = replaceLongPressMacroInToolBar(
             shellContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-            true,
-            currentScriptFileName
-        )
-        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolderForLongPress,
-            currentAppDirPath,
-            fannelDirName,
-            currentScriptFileName
-        )
-        editFragment.execPlayBtnLongPress = SetReplaceVariabler.execReplaceByReplaceVariables(
             editFragment.execPlayBtnLongPress,
-            setReplaceVariableMap,
-            currentAppDirPath,
-            fannelDirName,
-            currentScriptFileName
         )
 
         EditToolbarSwitcher.switch(
@@ -334,9 +318,40 @@ class ToolbarButtonProducerForEdit(
                 recordNumToMapNameValueInSettingHolder,
             )
         }
+        editFragment.execEditBtnLongPress = replaceLongPressMacroInToolBar(
+            shellContentsList,
+            editFragment.execEditBtnLongPress,
+        )
         EditToolbarSwitcher.switch(
             editFragment,
             editFragment.execEditBtnLongPress
+        )
+    }
+
+    private fun replaceLongPressMacroInToolBar(
+        shellContentsList: List<String>,
+        execLongPressMacro: String,
+    ): String {
+        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+        val recordNumToMapNameValueInSettingHolderForLongPress = RecordNumToMapNameValueInHolder.parse(
+            shellContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+            true,
+            currentScriptFileName
+        )
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+            recordNumToMapNameValueInSettingHolderForLongPress,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptFileName
+        )
+        return SetReplaceVariabler.execReplaceByReplaceVariables(
+            execLongPressMacro,
+            setReplaceVariableMap,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptFileName
         )
     }
     private fun execScriptSave(
