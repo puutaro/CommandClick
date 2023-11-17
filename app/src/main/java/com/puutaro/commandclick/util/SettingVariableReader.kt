@@ -19,6 +19,16 @@ object SettingVariableReader {
         else runShellSourceTrim
     }
 
+    fun isExist(
+        cmdVariableList: List<String>?,
+        variableName: String,
+    ): Boolean {
+        return CommandClickVariables.isExist(
+            cmdVariableList,
+            variableName
+        )
+    }
+
     fun getCbValue(
         cmdVariableList: List<String>?,
         variableName: String,

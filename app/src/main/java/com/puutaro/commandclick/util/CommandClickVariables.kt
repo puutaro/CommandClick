@@ -24,6 +24,17 @@ object CommandClickVariables {
         }
     }
 
+    fun isExist(
+        substituteSettingVariableList: List<String>?,
+        substituteVariableName: String,
+    ): Boolean {
+        if(substituteSettingVariableList == null) return false
+        return !substituteSettingVariableList.firstOrNull {
+            it.startsWith("${substituteVariableName}=")
+        }.isNullOrEmpty()
+
+    }
+
     fun substituteCmdClickVariableList(
         substituteSettingVariableList: List<String>?,
         substituteVariableName: String,
