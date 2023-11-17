@@ -103,7 +103,7 @@ class   TerminalFragment: Fragment() {
         false
         )
 
-        if(savedInstanceState!=null) {
+        if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
 
@@ -123,6 +123,7 @@ class   TerminalFragment: Fragment() {
         )
         UrlHistoryBackUp.backup(this)
         ScrollYPosiBackUp.backup(this)
+        AddBlockerHandler.handle(this)
 //        AdBlocker.init(this)
 
         WebChromeClientSetter.set(
@@ -298,5 +299,9 @@ class   TerminalFragment: Fragment() {
 
     interface OnTermSizeMinimumListenerForTerm {
         fun onTermSizeMinimumForTerm()
+    }
+
+    interface OnAdBlockListener {
+        fun exeOnAdblock()
     }
 }

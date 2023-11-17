@@ -75,6 +75,7 @@ class MainActivity:
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
     TerminalFragment.OnTermSizeMinimumListenerForTerm,
+    TerminalFragment.OnAdBlockListener,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -159,8 +160,8 @@ class MainActivity:
             false
         )
         InitManager(this).invoke()
-        adBlockJob?.cancel()
-        adBlockJob = AdBlocker.init(this)
+//        adBlockJob?.cancel()
+//        adBlockJob = AdBlocker.init(this)
     }
 
     override fun onStart() {
@@ -584,5 +585,10 @@ class MainActivity:
             currentAppDirPath,
             fannelName
         )
+    }
+
+    override fun exeOnAdblock() {
+        adBlockJob?.cancel()
+        adBlockJob = AdBlocker.init(this)
     }
  }
