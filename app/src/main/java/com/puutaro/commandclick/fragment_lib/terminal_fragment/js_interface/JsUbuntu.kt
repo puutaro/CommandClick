@@ -261,6 +261,11 @@ class JsUbuntu(
             ).show()
             return
         }
+        if(
+            LinuxCmd.isBasicProcess()
+        ){
+            return
+        }
         UbuntuBootManager.boot(terminalFragment)
         runBlocking {
             withContext(Dispatchers.IO) {
@@ -296,5 +301,12 @@ class JsUbuntu(
             "boot ok",
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    @JavascriptInterface
+    fun isProc(
+        processName: String
+    ): Boolean {
+        return LinuxCmd.isProcessCheck(processName)
     }
 }

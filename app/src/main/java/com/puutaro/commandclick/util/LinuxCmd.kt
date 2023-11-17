@@ -43,6 +43,23 @@ object LinuxCmd {
                 && isPulseAudioProcess
     }
 
+    fun isProcessCheck(
+        processName: String
+    ): Boolean {
+        if(
+            processName.isEmpty()
+        ) return false
+        val psResult = execCommand(
+            listOf(
+                "sh",
+                "-c",
+                "ps -ef | grep -v grep"
+            ).joinToString("\t")
+        )
+        return psResult.contains(processName)
+
+    }
+
     fun chmod(
         dirPath: String
     ) {
