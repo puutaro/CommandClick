@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.GridView
 import android.widget.LinearLayout
@@ -145,6 +146,10 @@ class MultiSelectGridViewJsDialog(
                 .show()
         }
         alertDialog = terminalFragment.alertDialogInstance
+        alertDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.getButton(DialogInterface.BUTTON_POSITIVE)?.setTextColor(
             context.getColor(android.R.color.black)

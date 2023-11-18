@@ -6,6 +6,7 @@ import android.content.DialogInterface
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -118,6 +119,10 @@ class ListJsDialog(
             listDialog?.dismiss()
             terminalViewModel.onDialog = false
         }
+        listDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         listDialog?.window?.setGravity(Gravity.BOTTOM)
         listDialog?.show()
 

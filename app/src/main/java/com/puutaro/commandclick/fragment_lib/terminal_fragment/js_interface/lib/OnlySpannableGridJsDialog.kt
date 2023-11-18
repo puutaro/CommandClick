@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
@@ -129,6 +130,10 @@ class OnlySpannableGridJsDialog(
                 .create()
         }
         alertDialog = terminalFragment.alertDialogInstance
+        alertDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         alertDialog?.window?.setGravity(Gravity.BOTTOM)
         alertDialog?.show()
         alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
