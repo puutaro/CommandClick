@@ -168,6 +168,7 @@ object UsePath {
         "$fannelSettingDirPath/noScrollSaveUrls.txt"
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val systemExecJsDirName = "systemJs"
+    val appHistoryClickJsName = "appHistoryClick.js"
 
     fun makeOmitPath(
         path: String

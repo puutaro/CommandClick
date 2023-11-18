@@ -18,15 +18,20 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.AppHistoryAdminEvent
+import com.puutaro.commandclick.proccess.AppHistoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.proccess.AppHistoryJsEvent
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 
 
@@ -191,18 +196,29 @@ class CmdClickHistoryButtonEvent (
                 if(
                     !resultBool
                 ) return
-                if(fragment is CommandIndexFragment) {
-                    val listener = context
-                            as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                    listener?.onLongClickMenuItemsforCmdIndex(
-                        LongClickMenuItemsforCmdIndex.EXEC_HISTORY
-                    )
-                } else {
-                    val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                    listener?.onToolbarMenuCategoriesForEdit(
-                        ToolbarMenuCategoriesVariantForCmdIndex.HISTORY
-                    )
+                val isJsExec = AppHistoryJsEvent.run(
+                    fragment,
+                    selectedHistoryFile
+                )
+                val jsExecWaitTime =
+                    if(isJsExec) 200L
+                    else 0L
+                CoroutineScope(Dispatchers.Main).launch {
+                    delay(jsExecWaitTime)
+                    if(fragment is CommandIndexFragment) {
+                        val listener = context
+                                as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
+                        listener?.onLongClickMenuItemsforCmdIndex(
+                            LongClickMenuItemsforCmdIndex.EXEC_HISTORY
+                        )
+                    } else {
+                        val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+                        listener?.onToolbarMenuCategoriesForEdit(
+                            ToolbarMenuCategoriesVariantForCmdIndex.HISTORY
+                        )
+                    }
                 }
+
             }
         }
     }

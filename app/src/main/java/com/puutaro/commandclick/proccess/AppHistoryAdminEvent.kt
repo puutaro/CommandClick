@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
+package com.puutaro.commandclick.proccess
 
 import android.content.SharedPreferences
 import android.widget.Toast
@@ -15,15 +15,15 @@ object AppHistoryAdminEvent {
     fun invoke(
         fragment: Fragment,
         sharedPref: SharedPreferences?,
-        selectedShellFileName: String,
+        selectedScriptFileName: String,
     ): Boolean {
 
         FileSystems.updateLastModified(
             UsePath.cmdclickAppHistoryDirAdminPath,
-            selectedShellFileName
+            selectedScriptFileName
         )
         val selectedAppDirName = AppHistoryManager.getAppDirNameFromAppHistoryFileName(
-            selectedShellFileName
+            selectedScriptFileName
         )
         val selectedAppDirPath = "${UsePath.cmdclickAppDirPath}/${selectedAppDirName}"
         if(!File(selectedAppDirPath).isDirectory) {
@@ -41,7 +41,7 @@ object AppHistoryAdminEvent {
 
         val selectedAppShellFileName = AppHistoryManager
             .getScriptFileNameFromAppHistoryFileName(
-                selectedShellFileName
+                selectedScriptFileName
             )
 
         val scriptContentsList = ReadText(
