@@ -6,12 +6,14 @@ Here introduce feature by file path
 
 - "~" -> `/storage/emulated/0/Documents/cmdclick`
 
-
 Table
 -----------------
 * [~](#root_dir_path)
 * [`~/AppDir/${app directory}/system/url/cmdclickUrlHistory`](#url_history)
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt`](#src_anchor_long_press_menu)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt`](#src_image_anchor_long_press_menu)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt`](#image_long_press_menu)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js`](#app_history_click)
@@ -75,6 +77,55 @@ variable name3\tvariable value3
 ```
 
 - Auto create & convert [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) in js use
+
+## `~/AppDir/${app directory}/${fannel_dir}/settings/homeScriptUrlsPath.txt` <a id="home_script_urls_path"></a>
+
+fannel list for [homeScriptUrlsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homescripturlspath) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+
+```
+fannel path 1
+fannel path 2
+.
+.
+.
+```
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt` <a id="src_anchor_long_press_menu"></a>
+
+fannel list for [srcAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcanchorlongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt` <a id="src_image_anchor_long_press_menu"></a>
+
+fannel list for [srcImageAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcimageanchorlongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt` <a id="image_long_press_menu"></a>
+
+fannel list for [imageAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#imagelongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
 
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js` <a id="url_history_click"></a>
 
