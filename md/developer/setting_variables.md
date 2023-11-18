@@ -279,11 +279,11 @@ or ignoreHistoryPaths="file://{file path}
 
 ## homeScriptUrlsPath
 
-Specified script path, url and html path to put always bottom in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
+Put [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) always bottom in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
 
 ## homeFannelsPath
 
-Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) path to put always bottom in app history  
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) to put always bottom in app history  
 
 ## srcImageAnchorLongPressMenuFilePath
 
