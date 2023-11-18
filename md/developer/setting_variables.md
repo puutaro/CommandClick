@@ -289,13 +289,19 @@ Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/deve
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
 
+- [srcImageAnchorLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#src_image_anchor_long_press_menu)
+
 ## srcAnchorLongPressMenuFilePath
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
 
+- [srcAnchorLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#src_anchor_long_press_menu)
+
 ## imageLongPressMenuFilePath
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
+
+- [imageLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#image_long_press_menu)
  
 ## noScrollSaveUrls
 
