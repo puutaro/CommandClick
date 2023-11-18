@@ -14,6 +14,7 @@
 /// SETTING_SECTION_START
 terminalDo="OFF"
 editExecute="ALWAYS"
+onAdBlock="OFF"
 overrideItemClickExec="ON"
 disableSettingButton="ON"
 disableEditButton="ON"

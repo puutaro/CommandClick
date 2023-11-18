@@ -1,5 +1,6 @@
 editExecute,
 onAutoExec,
+onAdBlock,
 onTermVisibleWhenKeyboard,
 onTermShortWhenLoad,
 onUrlHistoryRegister,

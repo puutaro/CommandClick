@@ -8,6 +8,7 @@
 /// SETTING_SECTION_START
 editExecute="ALWAYS"
 onAutoExec="ON"
+onAdBlock="OFF"
 onTermBackendWhenStart="OFF"
 onTermVisibleWhenKeyboard="ON"
 onTermShortWhenLoad="ON"
