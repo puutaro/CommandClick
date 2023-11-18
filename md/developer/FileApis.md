@@ -16,6 +16,7 @@ Table
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js`](#app_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js`](#on_auto_exec)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/noArg.js`](#no_arg)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
@@ -90,6 +91,13 @@ Trigger this js script on click [app history](https://github.com/puutaro/Command
 
 
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js` <a id="on_auto_exec"></a>
+
+Trigger this js script primarlily than no js args
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/noArg.js` <a id="no_arg"></a>
 
 Trigger this js script primarlily than [`onAutoExec` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#onautoexec) when set `ON` to [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#setting-variable)   
 
