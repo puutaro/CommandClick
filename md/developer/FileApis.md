@@ -14,6 +14,7 @@ Table
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js`](#app_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js`](#on_auto_exec)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
@@ -79,6 +80,14 @@ variable name3\tvariable value3
 Trigger this js script primarlily on click [url history](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick) than [`urlHistoryClick` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick)  
 
 - [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js` <a id="app_history_click"></a>
+
+Trigger this js script on click [app history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#history) 
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
 
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js` <a id="on_auto_exec"></a>
 
