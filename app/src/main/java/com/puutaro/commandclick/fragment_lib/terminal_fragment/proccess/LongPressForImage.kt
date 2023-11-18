@@ -10,10 +10,10 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
 
@@ -178,12 +178,15 @@ class LongPressForImage(
                 currentUrl
             )
             .split("\n")
-        ExecJsLoad.execJsLoad(
+        val loadLongPressJsCon = JavaScriptLoadUrl.make(
+            context,
+            "${currentAppDirPath}/${selectedScript}",
+            jsContentsListSource
+        ) ?: return
+        ExecJsLoad.jsUrlLaunchHandler(
             terminalFragment,
-            currentAppDirPath,
-            selectedScript,
-            jsContentsListSource,
-            ScriptArgs.LONG_PRESS.str
+            loadLongPressJsCon
         )
     }
+
 }

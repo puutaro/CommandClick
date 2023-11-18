@@ -21,7 +21,6 @@ import java.io.File
 
 object ExecJsLoad {
 
-    private val longPressArgs = ScriptArgs.LONG_PRESS.str
 
     fun execJsLoad(
         currentFragment: androidx.fragment.app.Fragment,
@@ -137,7 +136,6 @@ object ExecJsLoad {
         )
         val loadJsContentsList = ScriptArgs.values().filter {
             it.str == jsArgs
-                    && jsArgs != longPressArgs
         }.firstOrNull()?.let {
             emptyList()
         } ?: jsContentsList
@@ -234,7 +232,6 @@ object ExecJsLoad {
         val currentScriptPath = "$scriptDirPath/$scriptName"
         return ScriptArgs.values().filter {
             it.str == jsArgs
-                    && jsArgs != longPressArgs
         }.firstOrNull()?.let {
             val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
             val exeJsPath = "${scriptDirPath}/$fannelDirName/${it.dirName}/${it.jsName}"
