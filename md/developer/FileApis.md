@@ -89,6 +89,8 @@ fannel path 2
 .
 .
 ```
+- [settings directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#settings)
+
 
 ## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt` <a id="src_anchor_long_press_menu"></a>
 
@@ -102,6 +104,8 @@ fannel name 2
 .
 ```
 
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
+
 ## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt` <a id="src_image_anchor_long_press_menu"></a>
 
 fannel list for [srcImageAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcimageanchorlongpressmenufilepath)
@@ -113,6 +117,8 @@ fannel name 2
 .
 .
 ```
+
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
 
 ## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt` <a id="image_long_press_menu"></a>
 
@@ -126,6 +132,7 @@ fannel name 2
 .
 ```
 
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
 
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js` <a id="url_history_click"></a>
 
