@@ -49,9 +49,9 @@ object ExecReload {
 
 
 private fun execReload(
-    targetFragment: TerminalFragment
+    targetTerminalFragment: TerminalFragment
 ){
-    val webView = targetFragment.binding.terminalWebView
+    val webView = targetTerminalFragment.binding.terminalWebView
     if (!webView.isVisible) return
     val reloadUrl = webView.url
         ?: return

@@ -186,7 +186,7 @@ object SetReplaceVariabler {
     }
 
 
-    fun  makeSetReplaceVariableMapFromSubFannel(
+    fun makeSetReplaceVariableMapFromSubFannel(
         currentSubFannelPath: String
     ): Map<String, String>? {
         val mainFannlePath = CcPathTool.getMainFannelFilePath(

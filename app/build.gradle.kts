@@ -21,7 +21,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 12
+        versionCode = 13
         versionName = "${versionMajor}.${versionMinor}.${versionCode}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -109,6 +109,12 @@ dependencies {
     implementation("org.rauschig:jarchivelib:0.8.0")
     implementation("org.apache.commons:commons-compress:1.20")
     implementation("com.github.mwiede:jsch:0.2.11")
+
+    implementation("com.github.yuriy-budiyev:code-scanner:2.3.2")
+
+//    implementation("androidx.camera:camera-camera2:1.2.2")
+//    implementation("androidx.camera:camera-lifecycle:1.2.2")
+//    implementation("androidx.camera:camera-view:1.2.2")
 
 //    implementation("org.nanohttpd:nanohttpd:2.2.0")
 }

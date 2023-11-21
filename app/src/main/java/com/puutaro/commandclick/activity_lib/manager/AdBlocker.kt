@@ -16,32 +16,21 @@ import java.io.*
 object AdBlocker {
     private const val AD_HOSTS_FILE = "hosts.txt"
 
-    fun init(terminalFragment: MainActivity): Job? {
+    fun init(activity: MainActivity): Job? {
         val terminalViewModel: TerminalViewModel =
-            ViewModelProvider(terminalFragment).get(TerminalViewModel::class.java)
+            ViewModelProvider(activity).get(TerminalViewModel::class.java)
 
-
-//        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-//        val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-//        terminalFragment.loadAssetCoroutineJob?.cancel()
-//        if(
-//            terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
-//        ) return
-//        if(
-//            terminalFragment.loadAssetCoroutineJob != null
-//        ) return
         if(
             terminalViewModel.blockListCon.isNotEmpty()
         ) return null
-//        terminalFragment.loadAssetCoroutineJob =
-        return terminalFragment.lifecycleScope.launch(Dispatchers.IO) {
+        return activity.lifecycleScope.launch(Dispatchers.IO) {
             delay(3000)
             withContext(Dispatchers.IO) {
                 if(
                     terminalViewModel.blockListCon.isNotEmpty()
                 ) return@withContext
                 loadFromAssets(
-                    terminalFragment,
+                    activity,
                     terminalViewModel
                 )
             }

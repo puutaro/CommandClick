@@ -17,7 +17,7 @@ class FragmentManagerForActivity(
     }
 
     fun deleteAllBackStack(){
-        for (i in 0..supportFragmentManager.getBackStackEntryCount()) {
+        for (i in 0..supportFragmentManager.backStackEntryCount) {
             supportFragmentManager.popBackStack()
         }
     }
@@ -32,16 +32,16 @@ class FragmentManagerForActivity(
         terminalFragment: String,
         commandIndexFragment: String
     ) {
-        val CommandIndexFragmentBottom = CommandIndexFragment()
-        val sampleFragmentTop = TerminalFragment()
+        val commandIndexFragmentBottom = CommandIndexFragment()
+        val sampleTerminalFragmentTop = TerminalFragment()
         transaction.replace(
             R.id.main_container,
-            sampleFragmentTop,
+            sampleTerminalFragmentTop,
             terminalFragment
         )
         transaction.add(
             R.id.main_container,
-            CommandIndexFragmentBottom,
+            commandIndexFragmentBottom,
             commandIndexFragment
         )
     }

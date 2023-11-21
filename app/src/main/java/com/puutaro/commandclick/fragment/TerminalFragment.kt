@@ -304,4 +304,10 @@ class   TerminalFragment: Fragment() {
     interface OnAdBlockListener {
         fun exeOnAdblock()
     }
+
+    interface OnGetPermissionListenerForTerm {
+        fun onGetPermission(
+            permissionStr: String
+        )
+    }
 }

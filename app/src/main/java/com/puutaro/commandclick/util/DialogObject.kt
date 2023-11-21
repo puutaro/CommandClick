@@ -20,7 +20,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.fragment.TerminalFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -174,7 +173,7 @@ object DialogObject {
         }
     }
     private fun webViewSetting(
-        fragment: Fragment,
+        fragment: androidx.fragment.app.Fragment,
         webView: WebView
     ){
         val settings = webView.settings
@@ -192,12 +191,12 @@ object DialogObject {
     }
 
     private fun getFontZoomPercentage(
-        fragment: Fragment
+        fragment: androidx.fragment.app.Fragment
     ): Int {
         val context = fragment.context
             ?: return defaultFontPercentage
         val cmdIndexTerminal = TargetFragmentInstance(
-        ).getFromFragment<TerminalFragment>(
+        ).getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             fragment.activity,
             context.getString(R.string.index_terminal_fragment)
         )
@@ -207,7 +206,7 @@ object DialogObject {
         ) return cmdIndexTerminal.fontZoomPercent
 
         val editExecuteTerminal = TargetFragmentInstance(
-        ).getFromFragment<TerminalFragment>(
+        ).getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             fragment.activity,
             context.getString(R.string.edit_execute_terminal_fragment)
         )

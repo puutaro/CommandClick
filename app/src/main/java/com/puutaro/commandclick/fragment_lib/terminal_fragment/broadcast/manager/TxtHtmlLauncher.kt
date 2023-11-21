@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager
 
-import android.content.Intent
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment

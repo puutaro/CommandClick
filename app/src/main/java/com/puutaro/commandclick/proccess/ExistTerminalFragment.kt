@@ -1,20 +1,17 @@
 package com.puutaro.commandclick.proccess
 
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.TargetFragmentInstance
 
 
 class ExistTerminalFragment {
     companion object {
         fun how (
-            fragment: Fragment,
+            fragment: androidx.fragment.app.Fragment,
             terminalFragmentTag: String?
-        ): TerminalFragment? {
+        ): com.puutaro.commandclick.fragment.TerminalFragment? {
             val terminalFragmentSource =
                 TargetFragmentInstance()
-                    .getFromFragment<TerminalFragment>(
+                    .getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
                         fragment.activity,
                         terminalFragmentTag
                     )

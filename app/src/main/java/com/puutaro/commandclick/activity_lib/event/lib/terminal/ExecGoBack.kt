@@ -49,9 +49,9 @@ object ExecGoBack {
 
 
 private fun execBack(
-    targetFragment: TerminalFragment
+    targetTerminalFragment: TerminalFragment
 ){
-    val webView = targetFragment.binding.terminalWebView
+    val webView = targetTerminalFragment.binding.terminalWebView
     if (!webView.isVisible) return
     if(webView.canGoBack()) webView.goBack()
 }

@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
 import android.widget.LinearLayout
-import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment

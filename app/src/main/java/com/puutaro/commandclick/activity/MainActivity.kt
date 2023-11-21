@@ -50,6 +50,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
+import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
@@ -75,6 +76,7 @@ class MainActivity:
     TerminalFragment.OnEditableSpinnerUpdateListenerForTermFragment,
     TerminalFragment.OnMultiSelectListenerForTerm,
     TerminalFragment.OnTermSizeMinimumListenerForTerm,
+    TerminalFragment.OnGetPermissionListenerForTerm,
     TerminalFragment.OnAdBlockListener,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
@@ -128,6 +130,9 @@ class MainActivity:
     val getNotifierSetterLaunch =
         NotifierSetter.set(this)
 
+    val getCameraSetterLaunch =
+        CameraSetter.set(this)
+
     private var broadcastReceiverForRestartUbuntuService: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if(
@@ -160,12 +165,6 @@ class MainActivity:
             false
         )
         InitManager(this).invoke()
-//        adBlockJob?.cancel()
-//        adBlockJob = AdBlocker.init(this)
-    }
-
-    override fun onStart() {
-        super.onStart()
     }
 
     override fun onResume() {
@@ -590,5 +589,14 @@ class MainActivity:
     override fun exeOnAdblock() {
         adBlockJob?.cancel()
         adBlockJob = AdBlocker.init(this)
+    }
+
+    override fun onGetPermission(
+        permissionStr: String
+    ){
+        ExecGetPermission.get(
+            this,
+            permissionStr
+        )
     }
  }

@@ -12,6 +12,9 @@ import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.fragment.TerminalFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 
 object WebChromeClientSetter {
@@ -60,6 +63,26 @@ object WebChromeClientSetter {
                     50,
                     Bitmap.Config.ARGB_8888
                 )
+            }
+
+            override fun onPermissionRequest(request: PermissionRequest) {
+                // UIスレッドから別スレッドに切り離して処理をしてその結果をViewで表示
+                CoroutineScope(Dispatchers.Main).launch {
+                    // Android 5.0 以上のバージョンの処理
+                    // WebViewに必要なアクセス権限を設定
+                    val PERMISSIONS = arrayOf(
+                        // マイクなどのオーディオキャプチャデバイス
+                        PermissionRequest.RESOURCE_AUDIO_CAPTURE,
+                        // カメラなどのビデオキャプチャデバイス
+                        PermissionRequest.RESOURCE_VIDEO_CAPTURE
+                    )
+
+                    /**
+                     * 指定されたリソースにアクセスする許可を origin に与えます。
+                     * 付与されたアクセス許可は、この WebView に対してのみ有効
+                     */
+                    request.grant(PERMISSIONS)
+                }
             }
 
             override fun onJsAlert(

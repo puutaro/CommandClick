@@ -20,7 +20,9 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsLi
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsNetTool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPdf
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPermission
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPulseAudioReceiver
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsQr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsRecordToText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsReplaceVariables
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsScript
@@ -53,6 +55,8 @@ object WebViewSettings {
         )
         settings.builtInZoomControls = true
         settings.displayZoomControls = false
+        settings.mediaPlaybackRequiresUserGesture = false
+
         terminalWebView.addJavascriptInterface(
             JsFileSystem(terminalFragment),
             JsInterfaceVariant.jsFileSystem.name
@@ -170,6 +174,14 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsReplaceVariables(terminalFragment),
             JsInterfaceVariant.jsReplaceVariables.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsPermission(terminalFragment),
+            JsInterfaceVariant.jsPermission.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsQr(terminalFragment),
+            JsInterfaceVariant.jsQr.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),

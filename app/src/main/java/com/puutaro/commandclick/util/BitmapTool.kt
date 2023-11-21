@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.util.Log
 import android.view.View
-import com.puutaro.commandclick.fragment.TerminalFragment
+import androidx.fragment.app.Fragment
 import java.nio.ByteBuffer
 import java.util.Arrays
 
@@ -20,11 +20,11 @@ object BitmapTool {
     }
 
     fun resizeByScreenWidth(
-        terminalFragment: TerminalFragment,
+        fragment: Fragment,
         imagePath: String,
     ): Bitmap {
         val beforeResizeBitMap = BitmapFactory.decodeFile(imagePath)
-        val baseWidth = ScreenSizeCalculator.dpWidth(terminalFragment)
+        val baseWidth = ScreenSizeCalculator.dpWidth(fragment)
 //                                    resizeScale = 180.0 / beforeResizeBitMap.width
         val resizeScale: Double =
             (baseWidth / beforeResizeBitMap.width).toDouble()

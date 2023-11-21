@@ -37,10 +37,12 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPres
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJsInterfaceVariant
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -59,14 +61,13 @@ class WebViewJsDialog(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-    private val currentAppDirPath = terminalFragment.currentAppDirPath
     private val longpressMenuGroupId = 110000
     private val clickMenuGroupId = 120000
     private val positionHashMap = hashMapOf<String, Int>()
 
     fun create(
         urlStrSrc: String,
-        currentFannelPath: String,
+        currentScriptPath: String,
         menuMapStrListStr: String,
         longPressMenuMapListStr: String,
     ) {
@@ -118,13 +119,14 @@ class WebViewJsDialog(
             ) ?: return@launch
             menuMapStrList.forEach {
                 val btnMenuMap = makeBtnOptionMap(
-                    currentFannelPath,
+                    currentScriptPath,
                     it
                 )
                 val imageButton = webViewBtnSetter(
                     webView,
                     btnMenuMap,
-                    btnWeight
+                    btnWeight,
+                    currentScriptPath
                 )
                 firstBottomLinearLayout.addView(imageButton)
             }
@@ -136,7 +138,7 @@ class WebViewJsDialog(
             )
             webViewLongClickListener(
                 webView,
-                currentFannelPath,
+                currentScriptPath,
                 longPressMenuMapListStr
             )
         }
@@ -180,6 +182,7 @@ class WebViewJsDialog(
         webView: WebView,
         targetMenuMap: Map<String, String>?,
         culcBtnWeight: Float,
+        currentScriptPath: String,
     ): ImageButton {
         val targetBtn = makeImageButton(
             targetMenuMap,
@@ -203,6 +206,7 @@ class WebViewJsDialog(
                 webView,
                 DismissType.click.name,
                 clickMenuGroupId,
+                currentScriptPath
             )
         }
         targetBtn.setOnLongClickListener{
@@ -215,6 +219,7 @@ class WebViewJsDialog(
                 webView,
                 DismissType.longpress.name,
                 longpressMenuGroupId,
+                currentScriptPath
             )
             true
         }
@@ -229,13 +234,15 @@ class WebViewJsDialog(
         webView: WebView,
         dismissType: String,
         menuGroupId: Int,
+        currentScriptPath: String,
     ){
         launchMenu(
             contextSrc,
             targetBtn,
             menuList,
             webView,
-            menuGroupId
+            menuGroupId,
+            currentScriptPath,
         )
         dismissHandler(
             btnOptionMap,
@@ -278,6 +285,7 @@ class WebViewJsDialog(
         menuList: List<String>,
         webView: WebView,
         menuGroupId: Int,
+        currentScriptPath: String,
     ){
         if (
             menuList.isEmpty()
@@ -285,7 +293,8 @@ class WebViewJsDialog(
         if(menuList.size == 1){
             jsOrMacroHandler(
                 context,
-                menuList.first(),
+                currentScriptPath,
+                getJsPathFromMenuSrc(menuList.first()),
                 webView,
             )
             return
@@ -303,7 +312,7 @@ class WebViewJsDialog(
             popupMenu.menu
         )
         (menuList.indices).forEach {
-            val menuName = menuList[it]
+            val menuName = getJsPathFromMenuSrc(menuList[it])
             val itemId = menuGroupId + it * 100
             popupMenu.menu.add(
                 menuGroupId,
@@ -314,24 +323,53 @@ class WebViewJsDialog(
         }
         popupMenuItemSelected(
             popupMenu,
+            menuList,
             webView,
+            currentScriptPath,
         )
         popupMenu.show()
     }
 
     private fun popupMenuItemSelected(
         popup: PopupMenu,
+        menuList: List<String>,
         webView: WebView,
+        currentScriptPath: String,
     ){
         popup.setOnMenuItemClickListener {
                 menuItem ->
+            val selectedMenuStr = menuItem.title.toString()
+            val selectedJsPath = getJsPathFromSelectedMenuStr(
+                selectedMenuStr,
+                menuList,
+            )
             jsOrMacroHandler(
                 context,
-                menuItem.title.toString(),
+                currentScriptPath,
+                selectedJsPath,
                 webView,
             )
             true
         }
+    }
+
+    private fun getJsPathFromSelectedMenuStr(
+        selectedMenuStr: String,
+        menuList: List<String>,
+    ): String {
+        val selectedMenuLine =  menuList.filter {
+            it.split("\t").firstOrNull() == selectedMenuStr
+        }.firstOrNull() ?: return String()
+        return getJsPathFromMenuSrc(selectedMenuLine)
+    }
+
+
+    private fun getJsPathFromMenuSrc(
+        menuText: String
+    ): String {
+        return menuText.split("\t").lastOrNull()?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        } ?: String()
     }
 
     private fun webViewClientSetter(
@@ -400,19 +438,19 @@ class WebViewJsDialog(
     }
 
     private fun makeBtnOptionMap(
-        currentFannelPath: String,
+        currentScriptPath: String,
         centerMenuMapStr: String
     ): Map<String, String>? {
-        val currentFannelPathObj = File(currentFannelPath)
+        val currentScriptPathObj = File(currentScriptPath)
         if(
-            !currentFannelPathObj.isFile
-            && currentFannelPath.isNotEmpty()
+            !currentScriptPathObj.isFile
+            && currentScriptPath.isNotEmpty()
         ) return null
         val currentAppDirPath =
-            currentFannelPathObj.parent
+            currentScriptPathObj.parent
                 ?: String()
         val fannelName =
-            currentFannelPathObj.name
+            currentScriptPathObj.name
                 ?: String()
         val fannelDirName = CcPathTool.makeFannelDirName(
             fannelName
@@ -435,7 +473,7 @@ class WebViewJsDialog(
 
     private fun webViewLongClickListener(
         webView: WebView,
-        currentFannelPath: String,
+        currentScriptPath: String,
         longPressMenuMapListStr: String,
     ){
         webView.setOnLongClickListener() { view ->
@@ -444,7 +482,7 @@ class WebViewJsDialog(
             val title = webView.title
             val currentPageUrl = webView.url
             val longPressMenuMap = makeBtnOptionMap(
-                currentFannelPath,
+                currentScriptPath,
                 longPressMenuMapListStr
             )
             val httpsStartStr = WebUrlVariables.httpsPrefix
@@ -528,14 +566,14 @@ class WebViewJsDialog(
     }
 
     private fun makeLongPressMenu(
-        currentFannelPath: String,
+        currentScriptPath: String,
         imageMapStr: String?
     ): String {
         if(
             imageMapStr.isNullOrEmpty()
         ) return String()
         val imageMenuMap = makeBtnOptionMap(
-            currentFannelPath,
+            currentScriptPath,
             imageMapStr
         )
         return imageMenuMap
@@ -654,10 +692,11 @@ class WebViewJsDialog(
 
     private fun jsOrMacroHandler(
         context: Context?,
-        scriptName: String,
+        currentScriptPath: String,
+        jsPath: String,
         webView: WebView,
     ){
-        when(scriptName){
+        when(jsPath){
             JsMacroType.GO_BACK_JS.str
             -> execGoBack(webView)
             JsMacroType.HIGHLIGHT_SCH_JS.str -> highLightSearch(
@@ -672,14 +711,51 @@ class WebViewJsDialog(
             -> assetsCopy(
                 webView
             )
-            else -> {
-                val jsScriptUrl = JavaScriptLoadUrl.make(
-                    context,
-                    "${currentAppDirPath}/${scriptName}",
-                ) ?: return
-                webView.loadUrl(jsScriptUrl)
-            }
+            else
+            -> execLoadJs(
+                currentScriptPath,
+                jsPath,
+                webView,
+            )
         }
+    }
+
+
+    private fun execLoadJs(
+        currentScriptPath: String,
+        jsPath: String,
+        webView: WebView,
+    ){
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            currentScriptPath,
+        )
+        val fannelPath = CcPathTool.getMainFannelFilePath(currentScriptPath)
+        val fannelPathObj = File(fannelPath)
+        if(!fannelPathObj.isFile) return
+        val currentAppDirPath = fannelPathObj.parent
+            ?: return
+        val fannelName = fannelPathObj.name
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            fannelName
+        )
+        val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
+            ScriptPreWordReplacer.replace(
+                jsPath,
+                currentAppDirPath,
+                fannelDirName,
+                fannelName
+            ),
+            setReplaceVariableMap,
+            currentAppDirPath,
+            fannelDirName,
+            fannelName
+        )
+        val jsScriptUrl = JavaScriptLoadUrl.make(
+            context,
+            execJsPath,
+            setReplaceVariableMapSrc = setReplaceVariableMap
+        ) ?: return
+        webView.loadUrl(jsScriptUrl)
     }
 
     private fun execGoBack(
@@ -743,7 +819,11 @@ enum class WebViewMenuMapType {
     longPressMenuFilePath,
     dismissType,
     dismissDelayMiliTime,
-    iconName
+    iconName,
+}
+
+enum class WebViewRequireExtraMapType {
+    currentScriptPath
 }
 
 private enum class WebDialogLongPressType {

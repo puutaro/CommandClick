@@ -28,14 +28,4 @@ class JsUrl(
             urlStr
         )
     }
-
-    @JavascriptInterface
-    fun sLoadUrl(
-        urlStr: String
-    ) {
-        BroadCastIntent.sendUrlCon(
-            terminalFragment,
-            urlStr
-        )
-    }
 }

@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess
 
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -10,16 +9,16 @@ import com.puutaro.commandclick.util.TargetFragmentInstance
 object EnableNavForWebView {
 
     fun checkForGoBack(
-        fragment: Fragment
+        fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
         val context = fragment.context
         val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_execute_terminal_fragment)
         )
@@ -45,16 +44,16 @@ object EnableNavForWebView {
     }
 
     fun checkForReload(
-        fragment: Fragment
+        fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
         val context = fragment.context
         val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_execute_terminal_fragment)
         )
@@ -80,16 +79,16 @@ object EnableNavForWebView {
     }
 
     fun checkForGoForward(
-        fragment: Fragment
+        fragment: androidx.fragment.app.Fragment
     ): Boolean {
         val activity = fragment.activity
         val context = fragment.context
         val targetFragmentInstance = TargetFragmentInstance()
-        val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val indexTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.index_terminal_fragment)
         )
-        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
+        val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
             activity?.getString(R.string.edit_execute_terminal_fragment)
         )

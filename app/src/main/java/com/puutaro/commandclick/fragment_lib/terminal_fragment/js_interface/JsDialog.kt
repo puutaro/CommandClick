@@ -9,6 +9,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.AsciiArtJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.CopyJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsConfirm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectGridViewJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.MultiSelectOnlyImageGridViewJsDialog
@@ -16,6 +17,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlyImageGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.OnlySpannableGridJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.PromptJsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.QrScanJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
 import com.puutaro.commandclick.util.QuoteTool
 
@@ -25,6 +27,10 @@ class JsDialog(
     val context = terminalFragment.context
 
     private val promptJsDialog = PromptJsDialog(
+        terminalFragment
+    )
+
+    private val jsConfirm = JsConfirm(
         terminalFragment
     )
 
@@ -73,6 +79,10 @@ class JsDialog(
     )
 
     private val webViewJsDialog = WebViewJsDialog(
+        terminalFragment
+    )
+
+    private val qrScanJsDialog = QrScanJsDialog(
         terminalFragment
     )
 
@@ -279,6 +289,32 @@ class JsDialog(
             terminalFragment,
             contents,
             scrollBottom
+        )
+    }
+
+    @JavascriptInterface
+    fun qrScan(
+        title: String,
+        currentScriptPath: String,
+        callBackJsPath: String,
+        menuMapStrListStr: String,
+    ) {
+        qrScanJsDialog.create(
+            title,
+            currentScriptPath,
+            callBackJsPath,
+            menuMapStrListStr
+        )
+    }
+
+    @JavascriptInterface
+    fun confirm(
+        title: String,
+        body: String,
+    ): Boolean {
+        return jsConfirm.create(
+            title,
+            body,
         )
     }
 }

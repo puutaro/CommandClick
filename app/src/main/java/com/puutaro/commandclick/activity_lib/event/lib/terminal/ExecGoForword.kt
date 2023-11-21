@@ -48,9 +48,9 @@ object ExecGoForword {
 
 
 private fun execForward(
-    targetFragment: TerminalFragment
+    targetTerminalFragment: TerminalFragment
 ){
-    val webView = targetFragment.binding.terminalWebView
+    val webView = targetTerminalFragment.binding.terminalWebView
     if (!webView.isVisible) return
     if(webView.canGoForward()) webView.goForward()
 }

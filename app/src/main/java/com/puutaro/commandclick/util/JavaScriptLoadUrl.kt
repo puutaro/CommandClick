@@ -12,31 +12,34 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 object JavaScriptLoadUrl {
+
+    private val languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
+    private val settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+    ) as String
+    private val settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    private val commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+    ) as String
+    private val commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+    ) as String
     fun make (
         context: Context?,
         execJsPath: String,
-        jsListSource: List<String>? = null
+        jsListSource: List<String>? = null,
+        setReplaceVariableMapSrc: Map<String, String>? = null,
     ):String? {
         val commentOutMark = "//"
         val jsFileObj = File(execJsPath)
         if(!jsFileObj.isFile) return null
         val recentAppDirPath = jsFileObj.parent
         if(recentAppDirPath.isNullOrEmpty()) return null
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
 
-        val commandSectionStart = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-        ) as String
-        val commandSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-        ) as String
         val scriptFileName = jsFileObj.name
         val fannelDirName = CcPathTool.makeFannelDirName(
             scriptFileName
@@ -49,17 +52,12 @@ object JavaScriptLoadUrl {
                 scriptFileName
             ).textToList()
         } else jsListSource
-        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
-            jsList,
-            settingSectionStart,
-            settingSectionEnd,
-            true
-        )
         val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
-            recordNumToMapNameValueInSettingHolder,
+            jsList,
             recentAppDirPath,
             fannelDirName,
             scriptFileName,
+            setReplaceVariableMapSrc,
         )
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -321,12 +319,22 @@ object JavaScriptLoadUrl {
         )
     }
 
-    private fun createMakeReplaceVariableMapHandler(
-        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+    fun createMakeReplaceVariableMapHandler(
+        jsList: List<String>,
         recentAppDirPath: String,
         fannelDirName: String,
         scriptFileName:  String,
+        setReplaceVariableMapSrc: Map<String, String>? = null,
     ): Map<String, String>? {
+        if(
+            !setReplaceVariableMapSrc.isNullOrEmpty()
+        ) return setReplaceVariableMapSrc
+        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+            jsList,
+            settingSectionStart,
+            settingSectionEnd,
+            true
+        )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 recordNumToMapNameValueInSettingHolder,
