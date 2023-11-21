@@ -279,23 +279,29 @@ or ignoreHistoryPaths="file://{file path}
 
 ## homeScriptUrlsPath
 
-Specified script path, url and html path to put always bottom in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
+Put [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) always bottom in [url history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#url-history)
 
 ## homeFannelsPath
 
-Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) path to put always bottom in app history  
+Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) to put always bottom in app history  
 
 ## srcImageAnchorLongPressMenuFilePath
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
 
+- [srcImageAnchorLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#src_image_anchor_long_press_menu)
+
 ## srcAnchorLongPressMenuFilePath
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
 
+- [srcAnchorLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#src_anchor_long_press_menu)
+
 ## imageLongPressMenuFilePath
 
 Specified [`fannel`](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#fannel) name in [current app dir](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#app-directory) to set menu for src image anchor long press  
+
+- [imageLongPressMenuFilePath.txt](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#image_long_press_menu)
  
 ## noScrollSaveUrls
 

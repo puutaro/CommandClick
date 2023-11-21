@@ -15,6 +15,8 @@ Table
     * [`~/AppDir/../system/scroll`](#app_dir_system_dir_scroll_dir)
   * [`~/AppDir/../{fannelDir}`](#fannel_dir)
   * [`~/AppDir/../${fannel_dir}/systemJs`](#system_js)
+  * [`~/AppDir/../${fannel_dir}/settings`](#settings)
+  * [`~/AppDir/../${fannel_dir}/longPressMenuDir`](#long_press_menu_dir)
 * [`~/conf`](#conf)  
   * [`~/conf/AppDirAdmin`](#conf_app_dir_admin)
   * [`~/conf/AppHistoryDir`](#conf_app_history_dir)
@@ -65,7 +67,18 @@ All fannel main direcotry must be `${fannel name without extend} + "Dir"`, other
 
 ## `~/AppDir/../${fannel_dir}/systemJs`  <a id="system_js"></a>
 
-System exec js script for certain action.  
+Include  exec js script for system action.  
+For example, [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec), [urlHIstoryClick](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#url_history_click), [appHistoryClick](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#app_history_click)    
+
+## `~/AppDir/../${fannel_dir}/settings`  <a id="settings"></a>
+
+Include js script for history action  
+For example, [homeScriptUrlsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homescripturlspath), [homeFannelsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homefannelspath)  
+
+## `~/AppDir/../${fannel_dir}/longPressMenuDir`  <a id="long_press_menu_dir"></a>
+
+Include js script for Long press  
+For example, [srcImageAnchorLongPressMenuFilePath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcimageanchorlongpressmenufilepath), [srcAnchorLongPressMenuFilePath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcanchorlongpressmenufilepath), [imageLongPressMenuFilePath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#imagelongpressmenufilepath)  
 
 ## `~/conf` <a id="conf"></a>
 

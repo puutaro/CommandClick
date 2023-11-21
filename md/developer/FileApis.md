@@ -6,15 +6,19 @@ Here introduce feature by file path
 
 - "~" -> `/storage/emulated/0/Documents/cmdclick`
 
-
 Table
 -----------------
 * [~](#root_dir_path)
 * [`~/AppDir/${app directory}/system/url/cmdclickUrlHistory`](#url_history)
 * [`~/AppDir/../system/scroll/scrollPosi.tsv`](#scroll_position)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt`](#src_anchor_long_press_menu)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt`](#src_image_anchor_long_press_menu)
+* [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt`](#image_long_press_menu)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js`](#app_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js`](#on_auto_exec)
+* [`~/AppDir/${app directory}/${fannel_dir}/systemJs/noArg.js`](#no_arg)
 * [`~/conf/monitor/term_[1-4]`](#output_monitor)
 * [`~/ubuntu/backup/rootfs.tar.gz`](#ubuntu_backup_rootfs)
 * [`~/temp/cmd/cmd.sh`](#foreground_cmd_script)
@@ -74,13 +78,84 @@ variable name3\tvariable value3
 
 - Auto create & convert [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md) in js use
 
+## `~/AppDir/${app directory}/${fannel_dir}/settings/homeScriptUrlsPath.txt` <a id="home_script_urls_path"></a>
+
+fannel list for [homeScriptUrlsPath](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#homescripturlspath) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md)
+
+```
+fannel path 1
+fannel path 2
+.
+.
+.
+```
+- [settings directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#settings)
+
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt` <a id="src_anchor_long_press_menu"></a>
+
+fannel list for [srcAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcanchorlongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt` <a id="src_image_anchor_long_press_menu"></a>
+
+fannel list for [srcImageAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#srcimageanchorlongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
+
+## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt` <a id="image_long_press_menu"></a>
+
+fannel list for [imageAnchorLongPressMenu](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#imagelongpressmenufilepath)
+
+```
+fannel name 1
+fannel name 2
+.
+.
+.
+```
+
+- [longPressMenu directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#long_press_menu_dir)
+
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js` <a id="url_history_click"></a>
 
 Trigger this js script primarlily on click [url history](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick) than [`urlHistoryClick` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#urlhistoryclick)  
 
 - [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
 
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js` <a id="app_history_click"></a>
+
+Trigger this js script on click [app history](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#history) 
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+
 ## `~/AppDir/${app directory}/${fannel_dir}/systemJs/onAutoExec.js` <a id="on_auto_exec"></a>
+
+Trigger this js script primarlily than no js args
+
+- [systemJs directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#system_js)
+
+
+## `~/AppDir/${app directory}/${fannel_dir}/systemJs/noArg.js` <a id="no_arg"></a>
 
 Trigger this js script primarlily than [`onAutoExec` js args](https://github.com/puutaro/CommandClick/blob/master/md/developer/system_js_args.md#onautoexec) when set `ON` to [onAutoExec](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#onautoexec) in [setting variables](https://github.com/puutaro/CommandClick/blob/master/md/developer/setting_variables.md#setting-variable)   
 
