@@ -130,10 +130,11 @@ object IntentRequestMonitor {
                     )
                     writer.write(response.toByteArray())
                 }catch (e: Exception){
-                    client.close()
                     LogSystems.stdErr(
                         "inuptstream err ${e}"
                     )
+                } finally {
+                    client.close()
                 }
             }
         }
