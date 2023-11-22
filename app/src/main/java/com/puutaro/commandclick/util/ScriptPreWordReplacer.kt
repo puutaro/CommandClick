@@ -64,6 +64,15 @@ object ScriptPreWordReplacer {
             .replace(currentScriptNameMark, currentScriptName)
     }
 
+    fun replaceForQr(
+        tergetString: String,
+        currentAppDirPath: String,
+    ): String {
+        return tergetString
+            .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
+            .replace(currentAppDirPathMark, currentAppDirPath)
+    }
+
     fun settingValreplace(
         tergetString: String,
         currentAppDirPath: String,
