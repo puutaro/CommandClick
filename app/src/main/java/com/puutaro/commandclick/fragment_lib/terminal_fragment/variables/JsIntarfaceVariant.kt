@@ -32,4 +32,5 @@ enum class JsInterfaceVariant {
     jsReplaceVariables,
     jsPermission,
     jsQr,
+    jsDirect,
 }

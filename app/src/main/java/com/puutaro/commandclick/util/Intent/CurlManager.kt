@@ -2,7 +2,9 @@ package com.puutaro.commandclick.util.Intent
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import java.io.BufferedReader
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -62,13 +64,78 @@ object CurlManager {
             connection.disconnect()
             responseBody
         } catch (e: Exception) {
-            connection.disconnect()
-            FileSystems.updateFile(
-                UsePath.cmdclickMonitorDirPath,
-                UsePath.cmdClickMonitorFileName_2,
-                errPrefix + "invalid url\n" + e.toString()
-            )
+            LogSystems.stdErr(e.toString())
             String()
+        } finally {
+            connection.disconnect()
         }
+    }
+
+
+
+    fun post(
+        mainUrl: String,
+        header: String = String(),
+        bodyStr: String,
+        timeout: Int
+    ): String {
+        // Bodyのデータ（サンプル）
+        val sendDataJson = bodyStr
+//            "{\"id\":\"1234567890\",\"name\":\"hogehoge\"}"
+        val bodyData = sendDataJson.toByteArray(Charsets.UTF_8)
+
+
+
+        // HttpURLConnectionの作成
+        LogSystems.stdSys(bodyStr)
+        val url = URL(mainUrl)
+        val connection = url.openConnection() as HttpURLConnection
+        try {
+            // ミリ秒単位でタイムアウトを設定
+            connection.connectTimeout = timeout
+            connection.readTimeout = timeout
+//            connection.requestMethod = "POST"
+            // Bodyへ書き込むを行う
+            connection.doOutput = true
+
+            // リクエストBodyのストリーミング有効化（どちらか片方を有効化）
+            connection.setFixedLengthStreamingMode(bodyData.size)
+//            connection.setChunkedStreamingMode(0)
+            // プロパティの設定
+//            connection.setRequestProperty("Content-type", "text/plain")
+//            connection.setRequestProperty("Connection", "close");
+            val headerList = header.split(',')
+            headerList.forEach {
+                val headerRow = it.trim().split("\t")
+                if (headerRow.size < 2) return@forEach
+                connection.addRequestProperty(headerRow.first(), headerRow[1])
+            }
+
+            connection.connect()
+            // Bodyの書き込み
+            val outputStream = connection.outputStream
+            outputStream.write(bodyData)
+            outputStream.flush()
+            outputStream.close()
+
+            // Responseの読み出し
+            val statusCode = connection.responseCode
+            if (statusCode == HttpURLConnection.HTTP_OK) {
+                return readStream(connection.inputStream)
+            }
+        } catch (e: Exception) {
+            LogSystems.stdErr(e.toString())
+        } finally {
+            connection.disconnect()
+        }
+        return String()
+    }
+
+    private fun readStream(inputStream: InputStream): String {
+        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+        val responseBody = bufferedReader.use { it.readText() }
+        bufferedReader.close()
+        return responseBody
+//        Log.d("レスポンスデータ : ", responseBody)
     }
 }

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Job
 import java.io.File
+import java.net.ServerSocket
 
 
 class TerminalViewModel: ViewModel() {

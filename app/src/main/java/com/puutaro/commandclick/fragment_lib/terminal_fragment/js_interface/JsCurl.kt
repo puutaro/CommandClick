@@ -33,6 +33,21 @@ class JsCurl(
     }
 
     @JavascriptInterface
+    fun post(
+        mainUrl: String,
+        header: String = String(),
+        bodyStr: String,
+        timeout: Int
+    ): String {
+        return CurlManager.post(
+            mainUrl,
+            header,
+            bodyStr,
+            timeout
+        )
+    }
+
+    @JavascriptInterface
     fun getTextOrPdf(
         url: String
     ) {
