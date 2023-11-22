@@ -1,4 +1,8 @@
 package com.puutaro.commandclick.common.variable.variables
 
-class QrType {
+enum class QrLaunchType(
+    val prefix: String,
+) {
+    JsDesc("jsDesc:"),
+    CpFannel("cpFannel:")
 }

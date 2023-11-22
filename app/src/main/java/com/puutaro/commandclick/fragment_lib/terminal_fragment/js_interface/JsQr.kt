@@ -8,10 +8,11 @@ import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.qr.CopyFannelServer
 
 
 class JsQr(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     @JavascriptInterface
     fun scanFromImage(
@@ -32,5 +33,20 @@ class JsQr(
         val result = reader.decode(bitmap)
         return result.getText()
     }
+
+    @JavascriptInterface
+    fun launchCopyFannelServer(){
+        CopyFannelServer.launch(
+            terminalFragment
+        )
+    }
+
+    @JavascriptInterface
+    fun exitCopyFannelServer(){
+        CopyFannelServer.exit(
+            terminalFragment
+        )
+    }
+
 
 }
