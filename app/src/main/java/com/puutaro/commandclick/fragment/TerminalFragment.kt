@@ -32,6 +32,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeT
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
+import java.net.ServerSocket
 
 
 class   TerminalFragment: Fragment() {
@@ -75,6 +76,7 @@ class   TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var dialogInstance: Dialog? = null
     var goBackFlag = false
+    var copyFannelSocket: ServerSocket? = null
 
 
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
@@ -287,6 +289,8 @@ class   TerminalFragment: Fragment() {
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
         firstDisplayUpdate = true
+        val terminalViewModel: TerminalViewModel by activityViewModels()
+        copyFannelSocket?.close()
     }
 
     interface OnMultiSelectListenerForTerm {
