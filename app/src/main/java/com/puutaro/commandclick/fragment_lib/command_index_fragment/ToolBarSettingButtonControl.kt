@@ -7,7 +7,6 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
@@ -194,11 +193,6 @@ class ToolBarSettingButtonControl(
                     )
                 }
                 MenuEnums.QR_SCAN.itemName -> {
-                    Toast.makeText(
-                        context,
-                        "qr_scan",
-                        Toast.LENGTH_SHORT
-                    ).show()
                     Scanner(
                         cmdIndexFragment,
                         currentAppDirPath,
@@ -244,7 +238,7 @@ private enum class MenuEnums(
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    QR_SCAN("scan qr", R.drawable.qr_code),
+    QR_SCAN("scan QR", R.drawable.qr_code),
     USAGE("usage", R.drawable.icons8_info),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     SETTING("setting",R.drawable.icons8_setting),
