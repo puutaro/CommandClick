@@ -529,13 +529,14 @@ private fun registerQrUriToHistory(
     title: String,
     selectedQrUri: String,
 ){
+    val qrHistoryLimitRowSize = 50
     val qrHistoryParentDirPath =
         "${currentAppDirPath}/${UsePath.cmdclickQrSystemDirRelativePath}"
     val cmdclickQrHistoryFileName = UsePath.cmdclickQrHistoryFileName
     val qrHistoryList = ReadText(
         qrHistoryParentDirPath,
         cmdclickQrHistoryFileName
-    ).textToList()
+    ).textToList().take(qrHistoryLimitRowSize)
     val registerHistoryList = listOf("$title\t$selectedQrUri") + qrHistoryList.filter {
         val hisTitleUriList = it.split("\t")
         val hisTitle = hisTitleUriList.firstOrNull() ?: String()
