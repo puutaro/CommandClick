@@ -9,29 +9,23 @@ import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.CopyFannelServer
+import com.puutaro.commandclick.proccess.qr.Scanner
 
 
 class JsQr(
     private val terminalFragment: TerminalFragment
 ) {
+    val scanner = Scanner(
+        terminalFragment,
+        terminalFragment.currentAppDirPath
+    )
     @JavascriptInterface
     fun scanFromImage(
         qrImagePath: String
     ): String {
-        val bMap = BitmapFactory.decodeFile(qrImagePath)
-        var contents: String? = null
-
-        val intArray = IntArray(bMap.width * bMap.height)
-//copy pixel data from the Bitmap into the 'intArray' array
-        bMap.getPixels(intArray, 0, bMap.width, 0, 0, bMap.width, bMap.height)
-
-        val source: LuminanceSource =
-            RGBLuminanceSource(bMap.width, bMap.height, intArray)
-        val bitmap = BinaryBitmap(HybridBinarizer(source))
-
-        val reader = MultiFormatReader()
-        val result = reader.decode(bitmap)
-        return result.getText()
+        return scanner.scanFromImage(
+            qrImagePath
+        )
     }
 
     @JavascriptInterface
