@@ -28,11 +28,11 @@ object SubMenuDialog {
     private var subMenuDialog: Dialog? = null
 
     fun launch(
-        commandIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
-        val context = commandIndexFragment.context
+        val context = cmdIndexFragment.context
             ?: return
-        val terminalViewModel: TerminalViewModel by commandIndexFragment.activityViewModels()
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
         subMenuDialog = Dialog(
             context
@@ -41,7 +41,7 @@ object SubMenuDialog {
             R.layout.submenu_dialog
         )
         setListView(
-            commandIndexFragment,
+            cmdIndexFragment,
             terminalViewModel
         )
         setCancelListener()
@@ -67,10 +67,10 @@ object SubMenuDialog {
     }
 
     private fun setListView(
-        commandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         terminalViewModel: TerminalViewModel
     ) {
-        val context = commandIndexFragment.context
+        val context = cmdIndexFragment.context
             ?: return
         val subMenuListView =
             subMenuDialog?.findViewById<ListView>(
@@ -85,14 +85,14 @@ object SubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            commandIndexFragment,
+            cmdIndexFragment,
             terminalViewModel,
             subMenuListView
         )
     }
 
     private fun subMenuItemClickListener(
-        commandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         terminalViewModel: TerminalViewModel,
         subMenuListView: ListView?
     ){
@@ -105,20 +105,20 @@ object SubMenuDialog {
             when(selectedSubMenu){
                 SettingSubMenuEnums.CHDIR.itemName -> {
                     SystemFannelLauncher.launch(
-                        commandIndexFragment,
+                        cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
                         UsePath.appDirManagerFannelName
                     )
                 }
                 SettingSubMenuEnums.JS_IMPORT.itemName -> {
                     SystemFannelLauncher.launch(
-                        commandIndexFragment,
+                        cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
                         UsePath.jsImportManagerFannelName
                     )
                 }
                 SettingSubMenuEnums.SHORTCUT.itemName -> {
-                    val listener = commandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
                     )
@@ -129,13 +129,13 @@ object SubMenuDialog {
                     )
                 }
                 SettingSubMenuEnums.TERMUX_SETUP.itemName -> {
-                    val listener = commandIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
                     )
                 }
                 SettingSubMenuEnums.CONFIG.itemName -> {
-                    configEdit(commandIndexFragment)
+                    configEdit(cmdIndexFragment)
                 }
             }
         }
@@ -154,7 +154,7 @@ object SubMenuDialog {
     }
 
     private fun configEdit(
-        cmdIndexCommandIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
         val configDirPath = UsePath.cmdclickSystemAppDirPath
         val configShellName = UsePath.cmdclickConfigFileName
@@ -167,21 +167,21 @@ object SubMenuDialog {
             configShellName
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
-            cmdIndexCommandIndexFragment,
+            cmdIndexFragment,
             shellContentsList,
             configShellName
         )
         if(validateErrMessage.isNotEmpty()){
             val shellScriptPath = "${configDirPath}/${configShellName}"
             VariationErrDialog.show(
-                cmdIndexCommandIndexFragment,
+                cmdIndexFragment,
                 shellScriptPath,
                 validateErrMessage
             )
             return
         }
         val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val sharedPref = cmdIndexCommandIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreffrenceMethod.putSharePreffrence(
             sharedPref,
             mapOf(
@@ -199,7 +199,7 @@ object SubMenuDialog {
             cmdclickConfigFileName,
             FragmentTagManager.Suffix.ON.name
         )
-        val listener = cmdIndexCommandIndexFragment.context
+        val listener = cmdIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,

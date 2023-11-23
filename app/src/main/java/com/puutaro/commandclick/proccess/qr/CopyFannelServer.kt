@@ -1,7 +1,11 @@
 package com.puutaro.commandclick.proccess.qr
 
 import com.puutaro.commandclick.common.variable.network.UsePort
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +24,7 @@ object CopyFannelServer {
     private const val keySeparator = "!"
     private var responseString = String()
     private var intentRequestMonitorJob: Job? = null
+    private val macroSeparator = QrSeparator.sepalator.str
 
     fun exit(
         terminalFragment: TerminalFragment
@@ -119,12 +124,13 @@ object CopyFannelServer {
         currentAppDirPath: String,
         receivePath: String,
     ): String {
-        return  when(receivePath){
-            ReceivePathMacroType.GET_FILE_LIST.name
+        return  when {
+            receivePath.startsWith(ReceivePathMacroType.GET_FILE_LIST.name)
             -> catFileList(
-                currentAppDirPath
+                currentAppDirPath,
+                receivePath
             )
-            ReceivePathMacroType.CLOSE_COPY_SERVER.name
+            ReceivePathMacroType.CLOSE_COPY_SERVER.name == receivePath
             -> closeCopyServer(
                 terminalFragment
             )
@@ -136,18 +142,29 @@ object CopyFannelServer {
     }
 
     private fun catFileList(
-        currentAppDirPath: String
+        currentAppDirPath: String,
+        receivePath: String,
     ): String {
-        return File(currentAppDirPath).walk().map{
+        val parentDirPath = makeParentDirPath(
+            currentAppDirPath,
+            receivePath,
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrParentDirPath.txt",
+            parentDirPath
+        )
+        return File(parentDirPath).walk().map{
             if(!it.isFile) return@map String()
             it.absolutePath
         }.joinToString("\n")
             .trim()
-            .removePrefix("$currentAppDirPath/")
-            .removePrefix(currentAppDirPath)
-            .replace("\n$currentAppDirPath/", "\n")
             .replace(Regex("\n\n*"), "\n")
-            .trim()
+//            .removePrefix("$currentAppDirPath/")
+//            .removePrefix(currentAppDirPath)
+//            .replace("\n$currentAppDirPath/", "\n")
+//            .replace(Regex("\n\n*"), "\n")
+//            .trim()
     }
 
     private fun closeCopyServer(
@@ -162,28 +179,36 @@ object CopyFannelServer {
         currentAppDirPath: String,
         receivePath: String
     ): String {
-        val catFilePath = "$currentAppDirPath/$receivePath"
+
+//        .removePrefix("$currentAppDirPath/")
+//            .removePrefix(currentAppDirPath)
+//            .replace("\n$currentAppDirPath/", "\n")
+//            .replace(Regex("\n\n*"), "\n")
+//            .trim()
+        val catFilePath = convertServerFilePath(
+            currentAppDirPath,
+            receivePath,
+        )
         val catFilePathObj = File(catFilePath)
-        val logAbsoluteFilePath =  catFilePathObj.absolutePath
         if(!catFilePathObj.isFile)  {
-            LogSystems.stdErr("not found $logAbsoluteFilePath")
+            LogSystems.stdErr("not found $catFilePath")
             return String()
         }
         val limitHandredMegaByte = 100000000
         val catFileSize = catFilePathObj.length()
         if(catFileSize == 0L) {
-            LogSystems.stdWarn("Blank file  $logAbsoluteFilePath")
+            LogSystems.stdWarn("Blank file  $catFilePath")
             return String()
         }
         if(
             catFileSize > limitHandredMegaByte
         ) {
-            LogSystems.stdErr("file size too many ${catFileSize} / $logAbsoluteFilePath")
+            LogSystems.stdErr("file size too many ${catFileSize} / $catFilePath")
             return String()
         }
         val parentDirPath = catFilePathObj.parent
             ?: let {
-                LogSystems.stdErr("not found $logAbsoluteFilePath")
+                LogSystems.stdErr("not found $catFilePath")
                 return String()
             }
         val fileName = catFilePathObj.name
@@ -191,6 +216,66 @@ object CopyFannelServer {
             parentDirPath,
             fileName
         ).readText()
+    }
+
+    private fun makeParentDirPath(
+        currentAppDirPath: String,
+        receivePathAndArg: String,
+    ): String {
+        val parentDirSrc =
+            receivePathAndArg
+                .removeSuffix("/")
+                .split(macroSeparator)
+                .getOrNull(1)
+                ?.trim()
+        if(
+            parentDirSrc.isNullOrEmpty()
+        ) return currentAppDirPath
+//        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+        return CcPathTool.convertAppDirPathToLocal(
+            parentDirSrc,
+            currentAppDirPath
+        )
+//        if(
+//            !parentDirSrc.startsWith(cmdclickAppDirPath)
+//        ) return parentDirSrc
+//        val parentDirSrcObj = File(parentDirSrc)
+//        val relativeParentDirPath = parentDirSrc.removePrefix(cmdclickAppDirPath)
+//        val relativeParentDirPathList = relativeParentDirPath.split("/")
+//        val relativeParentDirPathListSize = relativeParentDirPathList.size
+//        if(
+//            relativeParentDirPathListSize < 1
+//        ) return parentDirSrc
+//        val currentAppDirName = File(currentAppDirPath).name
+//        if(
+//            relativeParentDirPathListSize == 1
+//        ) return "${parentDirSrcObj.parent}/${currentAppDirName}"
+//        val relativeChildDirPath = relativeParentDirPathList.subList(1, relativeParentDirPathListSize)
+//        return "${parentDirSrcObj.parent}/${currentAppDirName}/${relativeChildDirPath}"
+    }
+
+    private fun convertServerFilePath(
+        currentAppDirPath: String,
+        receivePath: String,
+    ): String {
+        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+        if(
+            !receivePath.startsWith(cmdclickAppDirPath)
+        ) return receivePath
+        val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
+        return receivePath.replace(
+            currentAppDirPathRegex,
+            currentAppDirPath
+        )
+//        val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
+//        val relativeFilePath = receivePath.removePrefix(cmdclickAppDirPath)
+//        val relativeParentDirPathList = relativeFilePath.split("/")
+//        val relativeParentDirPathListSize = relativeParentDirPathList.size
+//        if(
+//            relativeParentDirPathListSize <= 1
+//        ) return receivePath
+//        val relativeChildDirPath = relativeParentDirPathList.subList(1, relativeParentDirPathListSize)
+//        return "${currentAppDirPath}/${relativeChildDirPath}"
     }
 }
 
