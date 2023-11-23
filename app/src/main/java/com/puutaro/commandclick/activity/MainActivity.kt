@@ -87,6 +87,7 @@ class MainActivity:
     CommandIndexFragment.OnFilterWebViewListener,
     CommandIndexFragment.OnPageSearchToolbarClickListener,
     CommandIndexFragment.OnUpdateNoSaveUrlPathsListener,
+    CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
     EditFragment.onToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -98,7 +99,8 @@ class MainActivity:
     EditFragment.OnMultiSelectListenerForEdit,
     EditFragment.OnLongPressPlayOrEditButtonListener,
     EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit,
-    EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit {
+    EditFragment.OnUpdateNoSaveUrlPathsListenerForEdit,
+    EditFragment.OnGetPermissionListenerForEdit {
 
     lateinit var activityMainBinding: ActivityMainBinding
     private var filePath: ValueCallback<Array<Uri>>? = null
@@ -594,6 +596,22 @@ class MainActivity:
     override fun onGetPermission(
         permissionStr: String
     ){
+        ExecGetPermission.get(
+            this,
+            permissionStr
+        )
+    }
+
+    override fun onGetPermissionForCmdIndex(
+        permissionStr: String
+    ){
+        ExecGetPermission.get(
+            this,
+            permissionStr
+        )
+    }
+
+    override fun onGetPermissionForEdit(permissionStr: String) {
         ExecGetPermission.get(
             this,
             permissionStr

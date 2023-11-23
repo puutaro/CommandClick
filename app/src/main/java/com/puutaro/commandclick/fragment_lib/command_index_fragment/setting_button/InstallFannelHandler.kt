@@ -23,7 +23,7 @@ object InstallFannelHandler {
 
     private fun getNotificationPermissionLauncher(
         activity: Activity,
-        cmdIndexIndexFragment: CommandIndexFragment
+        cmdIndexFragment: CommandIndexFragment
     ){
         if(Build.VERSION.SDK_INT < 33) return
         val firstPermissionCheck =
@@ -35,7 +35,7 @@ object InstallFannelHandler {
             firstPermissionCheck == PackageManager.PERMISSION_GRANTED
         ) return
         val listener =
-            cmdIndexIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+            cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.INSTALL_FANNEL
         )

@@ -7,6 +7,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
@@ -28,6 +29,7 @@ import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.UrlTexter
+import com.puutaro.commandclick.proccess.qr.Scanner
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -191,6 +193,17 @@ class ToolBarSettingButtonControl(
                         installFromFannelRepo
                     )
                 }
+                MenuEnums.QR_SCAN.itemName -> {
+                    Toast.makeText(
+                        context,
+                        "qr_scan",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    Scanner(
+                        cmdIndexFragment,
+                        currentAppDirPath,
+                    ).scanFromCamera()
+                }
                 MenuEnums.NO_SCROLL_SAVE_URL.itemName -> {
                     NoScrollUrlSaver.save(
                         cmdIndexFragment,
@@ -228,16 +241,14 @@ private enum class MenuEnums(
 ) {
     ADD("add", R.drawable.icons8_plus),
     SELECTTERM("select term", R.drawable.icons8_file),
-//    TERM1("term_1"),
-//    TERM2("term_2"),
-//    TERM3("term_3"),
-//    TERM4("term_4"),
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
+    QR_SCAN("scan qr", R.drawable.qr_code),
     USAGE("usage", R.drawable.icons8_info),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     SETTING("setting",R.drawable.icons8_setting),
     //    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),
 }
+
 

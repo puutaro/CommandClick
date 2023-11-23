@@ -1,4 +1,7 @@
 package com.puutaro.commandclick.common.variable.variables
 
-class QrSeparator {
+enum class QrSeparator(
+    val str: String,
+) {
+    sepalator("&&&")
 }

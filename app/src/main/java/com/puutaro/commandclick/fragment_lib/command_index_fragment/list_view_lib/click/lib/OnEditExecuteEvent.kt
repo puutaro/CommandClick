@@ -11,7 +11,7 @@ import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 object OnEditExecuteEvent {
     fun invoke(
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
         editFragmentTag: String,
         sharedPref: SharedPreferences?,
         selectedShellFileName: String,
@@ -25,13 +25,13 @@ object OnEditExecuteEvent {
                         to FragmentTagManager.Suffix.ON.name
             )
         )
-        val listener = cmdIndexCommandIndexFragment.context
+        val listener = cmdIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
             editFragmentTag,
             true,
-            cmdIndexCommandIndexFragment.context?.getString(R.string.edit_execute_terminal_fragment)
+            cmdIndexFragment.context?.getString(R.string.edit_execute_terminal_fragment)
         )
     }
 }

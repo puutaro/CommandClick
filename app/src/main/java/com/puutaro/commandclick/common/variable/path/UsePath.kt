@@ -12,7 +12,8 @@ object UsePath {
     val HTML_FILE_SUFFIX = ".html"
     val HTM_FILE_SUFFIX = ".htm"
     val TXT_FILE_SUFFIX = ".txt"
-    val rootPath = Environment.getExternalStorageDirectory().absolutePath +
+    val emulatedPath = Environment.getExternalStorageDirectory().absolutePath
+    val rootPath = emulatedPath +
             "/" + Environment.DIRECTORY_DOCUMENTS
     private const val cmdclickDirName = "cmdclick"
     val cmdclickDirPath = "$rootPath/$cmdclickDirName"
@@ -138,6 +139,8 @@ object UsePath {
     const val cmdclickJsSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickJsSystemDirName"
     private const val cmdclickUrlSystemDirName = "url"
     const val cmdclickUrlSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickUrlSystemDirName"
+    private const val cmdclickQrSystemDirName = "qr"
+    const val cmdclickQrSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickQrSystemDirName"
     private const val cmdclickScrollSystemDirName = "scroll"
     const val cmdclickScrollSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickScrollSystemDirName"
     private const val cmdclickHitSystemDirName = "hit"
@@ -146,6 +149,8 @@ object UsePath {
     const val cmdclickTempSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickTempSystemDirName"
     val cmdclickUrlHistoryFileName = "cmdclickUrlHistory$tsvExtend"
     val cmdclickUrlHistoryBackupFileName = "cmdclickUrlBuckupHistory$tsvExtend"
+    val cmdclickQrHistoryFileName = "cmdclickQrHistory$tsvExtend"
+    val cmdclickQrHistoryBackupFileName = "cmdclickQrBuckupHistory$tsvExtend"
     val cmdclickSiteScrollPosiFileName = "scrollPosi$tsvExtend"
     val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi$tsvExtend"
     val cmdclickMonitorScrollPosiFileName = "monitorScrollPosi$tsvExtend"

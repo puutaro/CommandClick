@@ -95,4 +95,32 @@ object CcPathTool {
             mainFannelDirName,
         ).joinToString("/")
     }
+
+    fun convertIfFunnelRawNamePathToFullPath(
+        currentAppDirPath: String,
+        path: String
+    ): String {
+        return path.replace(
+            Regex("^([^/])"),
+            "${currentAppDirPath}/$1"
+        ).replace(
+            Regex("\n([^/])"),
+            "\n${currentAppDirPath}/$1"
+        )
+    }
+
+    fun convertAppDirPathToLocal(
+        path: String,
+        currentAppDirPath: String
+    ): String {
+        val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
+        val currentAppDirPathRegexNewLine = Regex("\n${UsePath.cmdclickAppDirPath}/[^/]*")
+        return path.replace(
+            currentAppDirPathRegex,
+            currentAppDirPath
+        ).replace(
+            currentAppDirPathRegexNewLine,
+            "\n$currentAppDirPath"
+        )
+    }
 }

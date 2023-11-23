@@ -5,25 +5,23 @@ import android.widget.LinearLayout
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 
-class ExecCmdListAjustForKeyboard {
-    companion object {
-        fun ajust(
-            cmdIndexfragmentTag: String,
-            supportFragmentManager: FragmentManager,
-            weight: Float
-        ){
-            val targetFragment = try {
-                supportFragmentManager.findFragmentByTag(cmdIndexfragmentTag) as CommandIndexFragment
-            } catch(e: java.lang.Exception){
-                Log.d(this.toString(), "not exist ${cmdIndexfragmentTag}")
-                return
-            }
-            val param = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0
-            )
-            param.weight = weight
-            targetFragment.view?.layoutParams = param
+object ExecCmdListAjustForKeyboard {
+    fun ajust(
+        cmdIndexfragmentTag: String,
+        supportFragmentManager: FragmentManager,
+        weight: Float
+    ){
+        val targetCmdIndexFragment = try {
+            supportFragmentManager.findFragmentByTag(cmdIndexfragmentTag) as CommandIndexFragment
+        } catch(e: java.lang.Exception){
+            Log.d(this.toString(), "not exist ${cmdIndexfragmentTag}")
+            return
         }
+        val param = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            0
+        )
+        param.weight = weight
+        targetCmdIndexFragment.view?.layoutParams = param
     }
 }

@@ -13,10 +13,10 @@ object KeyboardForCmdIndex {
 
     fun historyAndSearchHideShow(
         isOpen: Boolean,
-        cmdIndexCommandIndexFragment: CommandIndexFragment,
+        cmdIndexFragment: CommandIndexFragment,
     ){
 
-        val binding = cmdIndexCommandIndexFragment.binding
+        val binding = cmdIndexFragment.binding
         val cmdIndexHistory = binding.cmdindexHistoryButton
         val cmdIndexSetting = binding.cmdindexSettingButton
         val cmdSearchEditText = binding.cmdSearchEditText

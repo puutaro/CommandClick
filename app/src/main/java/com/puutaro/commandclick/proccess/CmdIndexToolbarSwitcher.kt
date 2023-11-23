@@ -12,22 +12,22 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object CmdIndexToolbarSwitcher {
     fun switch(
-        cmdIndexCommandIndexFragment: CommandIndexFragment?,
+        cmdIndexFragment: CommandIndexFragment?,
         onPageSearch: Boolean
     ) {
-        if(cmdIndexCommandIndexFragment == null) return
-        if(!cmdIndexCommandIndexFragment.isVisible) return
-        val context = cmdIndexCommandIndexFragment.context
-        if(cmdIndexCommandIndexFragment.tag != context?.getString(
+        if(cmdIndexFragment == null) return
+        if(!cmdIndexFragment.isVisible) return
+        val context = cmdIndexFragment.context
+        if(cmdIndexFragment.tag != context?.getString(
                 R.string.command_index_fragment
             )
         ) return
-        val terminalViewModel: TerminalViewModel by cmdIndexCommandIndexFragment.activityViewModels()
+        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         if(
-            cmdIndexCommandIndexFragment.WebSearchSwitch
+            cmdIndexFragment.WebSearchSwitch
             && terminalViewModel.readlinesNum == ReadLines.SHORTH
         ) return
-        val binding = cmdIndexCommandIndexFragment.binding
+        val binding = cmdIndexFragment.binding
         val pageSearch = binding.pageSearch
         val cmdclickPageSearchToolBar = pageSearch.cmdclickPageSearchToolBar
         if(cmdclickPageSearchToolBar.isVisible == onPageSearch) return

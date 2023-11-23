@@ -2,13 +2,13 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.R
 import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.os.Build
 import android.text.Editable
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
@@ -27,7 +27,7 @@ import java.util.zip.GZIPInputStream
 
 
 class GoogleSuggest(
-    private val fragment: androidx.fragment.app.Fragment,
+    private val fragment: Fragment,
     private val cmdSearchEditText: AutoCompleteTextView
 ){
     private val context = fragment.context
@@ -78,7 +78,7 @@ class GoogleSuggest(
         )
 
         when(fragment) {
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> {
+            is CommandIndexFragment -> {
                 fragment.suggestJob?.cancel()
                     fragment.suggestJob = launchSuggestCoroutine(connection)
             }

@@ -398,4 +398,10 @@ class EditFragment: Fragment() {
             fannelName: String,
         )
     }
+
+    interface OnGetPermissionListenerForEdit {
+        fun onGetPermissionForEdit(
+            permissionStr: String
+        )
+    }
 }
