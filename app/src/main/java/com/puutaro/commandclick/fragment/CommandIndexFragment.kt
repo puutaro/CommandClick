@@ -378,4 +378,10 @@ class CommandIndexFragment: Fragment() {
             fannelName: String,
         )
     }
+
+    interface OnGetPermissionListenerForCmdIndex {
+        fun onGetPermissionForCmdIndex(
+            permissionStr: String
+        )
+    }
 }
