@@ -5,24 +5,23 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.BufferedInputStream
 import java.io.BufferedReader
 import java.io.File
+import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
 
+
 object CopyFannelServer {
-    private const val keySeparator = "!"
-    private var responseString = String()
     private var intentRequestMonitorJob: Job? = null
     private val macroSeparator = QrSeparator.sepalator.str
 
@@ -49,8 +48,6 @@ object CopyFannelServer {
     private suspend fun execCopy (
         terminalFragment: TerminalFragment
     ){
-        val context = terminalFragment.context
-            ?: return
         withContext(Dispatchers.IO) {
             terminalFragment.copyFannelSocket?.close()
         }
@@ -60,7 +57,6 @@ object CopyFannelServer {
 
         while (true) {
             var isTerminated = false
-            responseString = String()
             val client = withContext(Dispatchers.IO) {
                 try {
                     LogSystems.stdSys(
@@ -81,7 +77,7 @@ object CopyFannelServer {
                     ?: return@withContext
                 try {
                     //code to read and print headers
-                    var headerLine: String? = null
+                    var headerLine: String?
                     var responseCon = String()
                     while (
                         br.readLine().also {
@@ -96,23 +92,30 @@ object CopyFannelServer {
                     }
                     delay(300)
                     val receivePath = payload.toString()
-                    responseString = catResponseHandler(
+                    val responseBodyByteArray = catResponseHandler(
                         terminalFragment,
                         terminalFragment.currentAppDirPath,
                         receivePath.trim(),
                     )
-//                    responseString = payload.toString()
-                    val response = String.format(
-                        "HTTP/1.1 200 OK\nContent-Length: %d\r\n\r\n%s",
-                        responseString.length,
-                        responseString
+
+                    val responseHeader = String.format(
+                        "HTTP/1.1 200 OK\n" +
+                                "Content-Length: %d\r\n\r\n%s",
+                        responseBodyByteArray.size,
+                        String()
                     )
-                    writer.write(response.toByteArray())
+                    writer.write(
+                        responseHeader.toByteArray() + responseBodyByteArray
+                    )
+                    writer.flush()
                 }catch (e: Exception){
                     LogSystems.stdErr(
-                        "inuptstream err ${e}"
+                        "input stream err ${e}"
                     )
                 } finally {
+                    isr.close()
+                    br.close()
+                    writer.close()
                     client.close()
                 }
             }
@@ -123,7 +126,7 @@ object CopyFannelServer {
         terminalFragment: TerminalFragment,
         currentAppDirPath: String,
         receivePath: String,
-    ): String {
+    ): ByteArray {
         return  when {
             receivePath.startsWith(ReceivePathMacroType.GET_FILE_LIST.name)
             -> catFileList(
@@ -144,22 +147,28 @@ object CopyFannelServer {
     private fun catFileList(
         currentAppDirPath: String,
         receivePath: String,
-    ): String {
+    ): ByteArray {
         val parentDirPath = makeParentDirPath(
             currentAppDirPath,
             receivePath,
         )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrParentDirPath.txt",
-            parentDirPath
-        )
-        return File(parentDirPath).walk().map{
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrParentDirPath.txt",
+//            parentDirPath
+//        )
+        val fileListCon = File(parentDirPath).walk().map{
             if(!it.isFile) return@map String()
             it.absolutePath
         }.joinToString("\n")
             .trim()
             .replace(Regex("\n\n*"), "\n")
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrFileList_inserver.txt",
+//            fileListCon
+//        )
+        return fileListCon.toByteArray()
 //            .removePrefix("$currentAppDirPath/")
 //            .removePrefix(currentAppDirPath)
 //            .replace("\n$currentAppDirPath/", "\n")
@@ -169,22 +178,17 @@ object CopyFannelServer {
 
     private fun closeCopyServer(
         terminalFragment: TerminalFragment
-    ): String {
+    ): ByteArray {
         terminalFragment.copyFannelSocket?.close()
         intentRequestMonitorJob?.cancel()
-        return String()
+        return byteArrayOf()
     }
 
     private fun catFileCon(
         currentAppDirPath: String,
         receivePath: String
-    ): String {
+    ): ByteArray {
 
-//        .removePrefix("$currentAppDirPath/")
-//            .removePrefix(currentAppDirPath)
-//            .replace("\n$currentAppDirPath/", "\n")
-//            .replace(Regex("\n\n*"), "\n")
-//            .trim()
         val catFilePath = convertServerFilePath(
             currentAppDirPath,
             receivePath,
@@ -192,30 +196,14 @@ object CopyFannelServer {
         val catFilePathObj = File(catFilePath)
         if(!catFilePathObj.isFile)  {
             LogSystems.stdErr("not found $catFilePath")
-            return String()
+            return byteArrayOf()
         }
-        val limitHandredMegaByte = 100000000
-        val catFileSize = catFilePathObj.length()
-        if(catFileSize == 0L) {
-            LogSystems.stdWarn("Blank file  $catFilePath")
-            return String()
-        }
-        if(
-            catFileSize > limitHandredMegaByte
-        ) {
-            LogSystems.stdErr("file size too many ${catFileSize} / $catFilePath")
-            return String()
-        }
-        val parentDirPath = catFilePathObj.parent
-            ?: let {
-                LogSystems.stdErr("not found $catFilePath")
-                return String()
-            }
-        val fileName = catFilePathObj.name
-        return ReadText(
-            parentDirPath,
-            fileName
-        ).readText()
+        val fis = FileInputStream(catFilePathObj)
+        val inputStream = BufferedInputStream(fis)
+        val fileBytes = ByteArray(catFilePathObj.length().toInt())
+        inputStream.read(fileBytes)
+        inputStream.close()
+        return fileBytes
     }
 
     private fun makeParentDirPath(
@@ -231,27 +219,10 @@ object CopyFannelServer {
         if(
             parentDirSrc.isNullOrEmpty()
         ) return currentAppDirPath
-//        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         return CcPathTool.convertAppDirPathToLocal(
             parentDirSrc,
             currentAppDirPath
         )
-//        if(
-//            !parentDirSrc.startsWith(cmdclickAppDirPath)
-//        ) return parentDirSrc
-//        val parentDirSrcObj = File(parentDirSrc)
-//        val relativeParentDirPath = parentDirSrc.removePrefix(cmdclickAppDirPath)
-//        val relativeParentDirPathList = relativeParentDirPath.split("/")
-//        val relativeParentDirPathListSize = relativeParentDirPathList.size
-//        if(
-//            relativeParentDirPathListSize < 1
-//        ) return parentDirSrc
-//        val currentAppDirName = File(currentAppDirPath).name
-//        if(
-//            relativeParentDirPathListSize == 1
-//        ) return "${parentDirSrcObj.parent}/${currentAppDirName}"
-//        val relativeChildDirPath = relativeParentDirPathList.subList(1, relativeParentDirPathListSize)
-//        return "${parentDirSrcObj.parent}/${currentAppDirName}/${relativeChildDirPath}"
     }
 
     private fun convertServerFilePath(
@@ -267,21 +238,13 @@ object CopyFannelServer {
             currentAppDirPathRegex,
             currentAppDirPath
         )
-//        val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
-//        val relativeFilePath = receivePath.removePrefix(cmdclickAppDirPath)
-//        val relativeParentDirPathList = relativeFilePath.split("/")
-//        val relativeParentDirPathListSize = relativeParentDirPathList.size
-//        if(
-//            relativeParentDirPathListSize <= 1
-//        ) return receivePath
-//        val relativeChildDirPath = relativeParentDirPathList.subList(1, relativeParentDirPathListSize)
-//        return "${currentAppDirPath}/${relativeChildDirPath}"
     }
 }
 
 
-enum class ReceivePathMacroType(
-){
+
+
+enum class ReceivePathMacroType {
     GET_FILE_LIST,
     CLOSE_COPY_SERVER,
 }

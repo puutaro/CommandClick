@@ -2,10 +2,12 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
+import org.apache.commons.io.FileUtils
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
 import java.io.IOException
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
 
 
@@ -325,5 +327,16 @@ object FileSystems {
             fileName,
             "${currentCon}\n${updateCon}"
         )
+    }
+
+    fun writeFromByteArray(
+        dirPath: String,
+        filePath: String,
+        byteArrayCon: ByteArray,
+    ){
+        val file = File(dirPath, filePath)
+        removeFiles(dirPath, filePath)
+        createDirs(dirPath)
+        FileUtils.writeByteArrayToFile(file, byteArrayCon)
     }
 }

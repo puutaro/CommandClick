@@ -129,11 +129,15 @@ object IntentRequestMonitor {
                         responseString
                     )
                     writer.write(response.toByteArray())
+                    writer.flush()
                 }catch (e: Exception){
                     LogSystems.stdErr(
                         "inuptstream err ${e}"
                     )
                 } finally {
+                    isr.close()
+                    br.close()
+                    writer.close()
                     client.close()
                 }
             }

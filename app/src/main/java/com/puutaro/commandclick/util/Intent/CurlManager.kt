@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.util.Intent
 
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import java.io.BufferedReader
-import java.io.InputStream
+import java.io.ByteArrayOutputStream
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -35,9 +33,9 @@ object CurlManager {
         //レスポンスデータ読み取りタイムアウトを設定する。
         connection.readTimeout = timeout
         connection.requestMethod = "GET"
-        connection.useCaches = false;// キャッシュ利用
-        connection.doOutput = false;// リクエストのボディの送信を許可(GETのときはfalse,POSTのときはtrueにする)
-        connection.doInput = true;// レスポンスのボディの受信を許可
+        connection.useCaches = false // キャッシュ利用
+        connection.doOutput = false // リクエストのボディの送信を許可(GETのときはfalse,POSTのときはtrueにする)
+        connection.doInput = true // レスポンスのボディの受信を許可
         val headerList = header.split(',')
         headerList.forEach {
             val headerRow = it.split("\t")
@@ -78,7 +76,7 @@ object CurlManager {
         header: String = String(),
         bodyStr: String,
         timeout: Int
-    ): String {
+    ): ByteArray {
         // Bodyのデータ（サンプル）
         val sendDataJson = bodyStr
 //            "{\"id\":\"1234567890\",\"name\":\"hogehoge\"}"
@@ -121,21 +119,19 @@ object CurlManager {
             // Responseの読み出し
             val statusCode = connection.responseCode
             if (statusCode == HttpURLConnection.HTTP_OK) {
-                return readStream(connection.inputStream)
+                val resOutputStream = ByteArrayOutputStream()
+                connection.inputStream.use { input ->
+                    resOutputStream.use { output ->
+                        input.copyTo(output)
+                    }
+                }
+                return resOutputStream.toByteArray()
             }
         } catch (e: Exception) {
             LogSystems.stdErr(e.toString())
         } finally {
             connection.disconnect()
         }
-        return String()
-    }
-
-    private fun readStream(inputStream: InputStream): String {
-        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-        val responseBody = bufferedReader.use { it.readText() }
-        bufferedReader.close()
-        return responseBody
-//        Log.d("レスポンスデータ : ", responseBody)
+        return byteArrayOf()
     }
 }

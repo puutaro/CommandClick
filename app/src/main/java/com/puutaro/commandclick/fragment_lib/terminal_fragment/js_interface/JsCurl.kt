@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class JsCurl(
@@ -44,7 +45,32 @@ class JsCurl(
             header,
             bodyStr,
             timeout
-        )
+        ).toString()
+    }
+
+    @JavascriptInterface
+    fun postAndSave(
+        path: String,
+        mainUrl: String,
+        header: String = String(),
+        bodyStr: String,
+        timeout: Int
+    ) {
+        val file = File(path)
+        val parentDirPath = file.parent ?: return
+        val fileName = file.name
+        return CurlManager.post(
+            mainUrl,
+            header,
+            bodyStr,
+            timeout
+        ).let {
+            FileSystems.writeFromByteArray(
+                parentDirPath,
+                fileName,
+                it
+            )
+        }
     }
 
     @JavascriptInterface

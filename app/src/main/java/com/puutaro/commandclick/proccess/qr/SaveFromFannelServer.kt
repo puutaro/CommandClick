@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.qr
 
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool
@@ -37,12 +36,13 @@ object SaveFromFannelServer {
             val fileListCon = withContext(Dispatchers.IO) {
                 var fileListConSrc = String()
                 for(i in 1..3) {
-                    fileListConSrc = CurlManager.post(
+                    val fileListByteArray = CurlManager.post(
                         mainUrl,
                         String(),
                         getFilePathAndArg,
                         2000
                     )
+                    fileListConSrc = String(fileListByteArray)
                     if(
                         fileListConSrc.isNotEmpty()
                     ) break
@@ -50,13 +50,13 @@ object SaveFromFannelServer {
                 }
                 fileListConSrc
             }
-            withContext(Dispatchers.IO){
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "qrFileList.txt",
-                    "### ${getFilePathAndArg}\n${fileListCon}"
-                )
-            }
+//            withContext(Dispatchers.IO){
+//                FileSystems.writeFile(
+//                    UsePath.cmdclickDefaultAppDirPath,
+//                    "qrFileList.txt",
+//                    "### ${getFilePathAndArg}\n${fileListCon.split("\n")}"
+//                )
+//            }
             withContext(Dispatchers.IO) {
                 execSaveFile(
                     terminalFragment,
@@ -97,26 +97,26 @@ object SaveFromFannelServer {
 //            "qr_fileList.txt",
 //            "### $fannelRawName\n---\n$fileList"
 //        )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qr_fileListCon.txt",
-            fileListCon
-        )
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qr_fileListCon.txt",
+//            fileListCon
+//        )
         val cpFileList = makeCpFileListCon(
             getPathOrFannelRawName,
             fileListCon,
             currentAppDirPath,
         )
-        withContext(Dispatchers.IO){
-            FileSystems.writeFile(
-                UsePath.cmdclickDefaultAppDirPath,
-                "qrFileList_execSaveFile.txt",
-                "${cpFileList.joinToString("\n")}"
-            )
-        }
-        return
+//        withContext(Dispatchers.IO){
+//            FileSystems.writeFile(
+//                UsePath.cmdclickDefaultAppDirPath,
+//                "qrFileList_execSaveFile.txt",
+//                cpFileList.joinToString("\n")
+//            )
+//        }
         val cpFileListIndexSize = cpFileList.size - 1
         (cpFileList.indices).forEach {
+            delay(100)
             val cpFilePath = cpFileList[it]
 
             val destiFileObj = withContext(Dispatchers.IO) {
@@ -135,7 +135,7 @@ object SaveFromFannelServer {
 //                        "qr_cplist.txt",
 //                        relativeCpFilePath
 //                    )
-                    var conSrc = String()
+                    var conSrc = byteArrayOf()
                     for (i in 1..3) {
                         conSrc = CurlManager.post(
                             mainUrl,
@@ -157,7 +157,12 @@ object SaveFromFannelServer {
 //                )
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
-                    FileSystems.writeFile(
+//                    FileSystems.writeFile(
+//                        destiFileParentDirPath,
+//                        destiFileName,
+//                        con
+//                    )
+                    FileSystems.writeFromByteArray(
                         destiFileParentDirPath,
                         destiFileName,
                         con
@@ -203,14 +208,14 @@ object SaveFromFannelServer {
         fileListCon: String,
         currentAppDirPath: String,
     ): List<String> {
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrStartWith.txt",
-            "${getPathOrFannelRawName}\n" + CcPathTool.convertIfFunnelRawNamePathToFullPath(
-                currentAppDirPath,
-                getPathOrFannelRawName
-            )
-        )
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrStartWith.txt",
+//            "${getPathOrFannelRawName}\n" + CcPathTool.convertIfFunnelRawNamePathToFullPath(
+//                currentAppDirPath,
+//                getPathOrFannelRawName
+//            )
+//        )
         return fileListCon.let {
             CcPathTool.convertIfFunnelRawNamePathToFullPath(
                 currentAppDirPath,
