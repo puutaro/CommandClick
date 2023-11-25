@@ -30,7 +30,7 @@ object Shell2Http {
                 String(),
                 String(),
                 timeoutMiliSec,
-            )
+            ).let { String(it) }
             if (
                 shellOutput.isEmpty()
             ) {

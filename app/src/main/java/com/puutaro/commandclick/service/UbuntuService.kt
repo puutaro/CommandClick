@@ -9,10 +9,10 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -90,26 +90,26 @@ class UbuntuService:
     override fun onCreate() {
         cancelUbuntuServicePendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
+            BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action,
         )
         BroadcastManagerForService.registerActionListBroadcastReceiver(
             this,
             broadcastReceiverForUbuntuServerProcess,
             listOf(
-                BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
-                BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action,
-                BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action,
-                BroadCastIntentScheme.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action,
-                BroadCastIntentScheme.ON_RUNNING_NOTIFICATION.action,
-                BroadCastIntentScheme.IS_ACTIVE_UBUNTU_SERVICE.action,
-                BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action,
-                BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action,
-                BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action,
-                BroadCastIntentScheme.OPEN_FANNEL.action,
-                BroadCastIntentScheme.ADMIN_CMD_START.action,
-                BroadCastIntentScheme.BACKGROUND_CMD_START.action,
-                BroadCastIntentScheme.FOREGROUND_CMD_START.action,
-                BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action,
+                BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action,
+                BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action,
+                BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action,
+                BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action,
+                BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION.action,
+                BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action,
+                BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action,
+                BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action,
+                BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action,
+                BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action,
+                BroadCastIntentSchemeUbuntu.ADMIN_CMD_START.action,
+                BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action,
+                BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action,
+                BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
             )
         )
         BroadcastManagerForService.registerScreenOnOffReceiver(
@@ -165,7 +165,7 @@ class UbuntuService:
             isTaskKill = false
             val processNumUpdateIntent = Intent()
             processNumUpdateIntent.action =
-                BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
+                BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action
             sendBroadcast(processNumUpdateIntent)
             return START_NOT_STICKY
         }
@@ -211,7 +211,7 @@ class UbuntuService:
         ) {
             val startUbuntuServicePendingIntent = PendingIntentCreator.create(
                 applicationContext,
-                BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
+                BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action,
             )
             notificationBuilder?.clearActions()
             notificationBuilder?.addAction(
@@ -227,7 +227,7 @@ class UbuntuService:
                 )
                 val restorebuntuServicePendingIntent = PendingIntentCreator.create(
                     applicationContext,
-                    BroadCastIntentScheme.START_UBUNTU_SERVICE.action,
+                    BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action,
                     extraList
                 )
                 notificationBuilder?.addAction(

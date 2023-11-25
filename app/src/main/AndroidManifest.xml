@@ -94,6 +94,8 @@
         <service android:name=".service.TextToSpeechService"/>
         <service android:name=".service.PulseReceiverService"/>
         <service android:name=".service.UbuntuService"/>
+        <service android:name=".service.FileDownloadService"/>
+        <service android:name=".service.FileUploadService"/>
     </application>
 
     <queries>

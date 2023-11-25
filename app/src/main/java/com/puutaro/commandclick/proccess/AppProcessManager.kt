@@ -12,10 +12,10 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -339,7 +339,7 @@ object AppProcessManager {
             Toast.LENGTH_SHORT
         ).show()
         val killProcessIntent = Intent()
-        killProcessIntent.action = BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
+        killProcessIntent.action = BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
         killProcessIntent.putExtra(
             UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema,
             selectedProcessTabSepa

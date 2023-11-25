@@ -13,8 +13,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.anggrayudi.storage.file.isEmpty
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTextToSpeech
+import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
@@ -57,7 +57,7 @@ class TextToSpeechService:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.PREVIOUS_TEXT_TO_SPEECH.action
+                != BroadCastIntentSchemeTextToSpeech.PREVIOUS_TEXT_TO_SPEECH.action
             ) return
             onCurrentRoopBreak = true
             if(
@@ -71,7 +71,7 @@ class TextToSpeechService:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action
+                != BroadCastIntentSchemeTextToSpeech.FROM_TEXT_TO_SPEECH.action
             ) return
             done = true
             currentBlockNum -= 2
@@ -81,7 +81,7 @@ class TextToSpeechService:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.TO_TEXT_TO_SPEECH.action
+                != BroadCastIntentSchemeTextToSpeech.TO_TEXT_TO_SPEECH.action
             ) return
             done = true
             onPressToButton = true
@@ -91,7 +91,7 @@ class TextToSpeechService:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.NEXT_TEXT_TO_SPEECH.action
+                != BroadCastIntentSchemeTextToSpeech.NEXT_TEXT_TO_SPEECH.action
             ) return
             onCurrentRoopBreak = true
             currentBlockNum = -1
@@ -104,7 +104,7 @@ class TextToSpeechService:
         ) {
             if(
                 intent.action
-                != BroadCastIntentScheme.STOP_TEXT_TO_SPEECH.action
+                != BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action
             ) return
             textToSpeechJob?.cancel()
             notificationManager?.cancel(channelNum)
@@ -121,27 +121,27 @@ class TextToSpeechService:
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForTextToSpeechStop,
-            BroadCastIntentScheme.STOP_TEXT_TO_SPEECH.action
+            BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForTextToSpeechPrevious,
-            BroadCastIntentScheme.PREVIOUS_TEXT_TO_SPEECH.action
+            BroadCastIntentSchemeTextToSpeech.PREVIOUS_TEXT_TO_SPEECH.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForTextToSpeechFrom,
-            BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action
+            BroadCastIntentSchemeTextToSpeech.FROM_TEXT_TO_SPEECH.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForTextToSpeechTo,
-            BroadCastIntentScheme.TO_TEXT_TO_SPEECH.action
+            BroadCastIntentSchemeTextToSpeech.TO_TEXT_TO_SPEECH.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForTextToSpeechNext,
-            BroadCastIntentScheme.NEXT_TEXT_TO_SPEECH.action
+            BroadCastIntentSchemeTextToSpeech.NEXT_TEXT_TO_SPEECH.action
         )
     }
 
@@ -208,23 +208,23 @@ class TextToSpeechService:
 
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.STOP_TEXT_TO_SPEECH.action,
+            BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action,
         )
         val previousPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.PREVIOUS_TEXT_TO_SPEECH.action,
+            BroadCastIntentSchemeTextToSpeech.PREVIOUS_TEXT_TO_SPEECH.action,
         )
         val fromPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.FROM_TEXT_TO_SPEECH.action,
+            BroadCastIntentSchemeTextToSpeech.FROM_TEXT_TO_SPEECH.action,
         )
         val toPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.TO_TEXT_TO_SPEECH.action,
+            BroadCastIntentSchemeTextToSpeech.TO_TEXT_TO_SPEECH.action,
         )
         val nextPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.NEXT_TEXT_TO_SPEECH.action,
+            BroadCastIntentSchemeTextToSpeech.NEXT_TEXT_TO_SPEECH.action,
         )
 
         val importance = intent?.getStringExtra(

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.service.lib.pulse
 
 import android.content.Context
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
@@ -154,7 +154,7 @@ object PcPulseSetServerForUbuntu {
             updateMonitorContents
         )
         val updateMonitorIntent = Intent()
-        updateMonitorIntent.action = BroadCastIntentScheme.MONITOR_TEXT_PATH.action
+        updateMonitorIntent.action = BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action
         context?.sendBroadcast(updateMonitorIntent)
     }
 }

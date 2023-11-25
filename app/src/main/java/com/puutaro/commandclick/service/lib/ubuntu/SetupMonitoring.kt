@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
 import com.puutaro.commandclick.util.FileSystems
@@ -51,7 +51,7 @@ object SetupMonitoring {
                     ) break
                     val onSetupQuizNotificationIntent = Intent()
                     onSetupQuizNotificationIntent.action =
-                        BroadCastIntentScheme.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action
+                        BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action
                     ubuntuService.sendBroadcast(onSetupQuizNotificationIntent)
                 }
             }
@@ -59,7 +59,7 @@ object SetupMonitoring {
                 delay(500)
                 val runningNotificationIntent = Intent()
                 runningNotificationIntent.action =
-                    BroadCastIntentScheme.ON_RUNNING_NOTIFICATION.action
+                    BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION.action
                 ubuntuService.sendBroadcast(runningNotificationIntent)
             }
         }

@@ -1,10 +1,11 @@
-package com.puutaro.commandclick.proccess.qr
+package com.puutaro.commandclick.service.lib.file_upload
 
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
-import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,50 +20,59 @@ import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
+import java.time.LocalDateTime
 
 
 object CopyFannelServer {
     private var intentRequestMonitorJob: Job? = null
     private val macroSeparator = QrSeparator.sepalator.str
+    private val limitFileMegaByteLength = 5000000
 
     fun exit(
-        terminalFragment: TerminalFragment
+        fileUploadService: FileUploadService
     ){
-        terminalFragment.copyFannelSocket?.close()
+        fileUploadService.copyFannelSocket?.close()
     }
 
     fun launch(
-        terminalFragment: TerminalFragment
+        fileUploadService: FileUploadService
     ){
-        terminalFragment.copyFannelSocket?.close()
+        fileUploadService.copyFannelSocket?.close()
         intentRequestMonitorJob?.cancel()
         intentRequestMonitorJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 execCopy (
-                    terminalFragment
+                    fileUploadService
                 )
             }
         }
     }
 
     private suspend fun execCopy (
-        terminalFragment: TerminalFragment
+        fileUploadService: FileUploadService
     ){
         withContext(Dispatchers.IO) {
-            terminalFragment.copyFannelSocket?.close()
+            fileUploadService.copyFannelSocket?.close()
         }
-        terminalFragment.copyFannelSocket = withContext(Dispatchers.IO) {
+        fileUploadService.copyFannelSocket = withContext(Dispatchers.IO) {
             ServerSocket(UsePort.COPY_FANNEL_PORT.num)
         }
+        val cmdclickTempFileTransferServiceDirPath = fileUploadService.cmdclickTempFileUploadServiceDirPath
+        val transferServiceAcceptTimeTxtName = fileUploadService.uploadServiceAcceptTimeTxtName
 
         while (true) {
             var isTerminated = false
             val client = withContext(Dispatchers.IO) {
                 try {
+                    FileSystems.writeFile(
+                        cmdclickTempFileTransferServiceDirPath,
+                        transferServiceAcceptTimeTxtName,
+                        LocalDateTime.now().toString()
+                    )
                     LogSystems.stdSys(
                         "accept start"
                     )
-                    terminalFragment.copyFannelSocket?.accept()
+                    fileUploadService.copyFannelSocket?.accept()
                 } catch (e:Exception){
                     LogSystems.stdErr("${e}")
                     isTerminated = true
@@ -93,8 +103,8 @@ object CopyFannelServer {
                     delay(300)
                     val receivePath = payload.toString()
                     val responseBodyByteArray = catResponseHandler(
-                        terminalFragment,
-                        terminalFragment.currentAppDirPath,
+                        fileUploadService,
+                        fileUploadService.currentAppDirPath,
                         receivePath.trim(),
                     )
 
@@ -123,7 +133,7 @@ object CopyFannelServer {
     }
 
     private fun catResponseHandler(
-        terminalFragment: TerminalFragment,
+        fileUploadService: FileUploadService,
         currentAppDirPath: String,
         receivePath: String,
     ): ByteArray {
@@ -135,7 +145,7 @@ object CopyFannelServer {
             )
             ReceivePathMacroType.CLOSE_COPY_SERVER.name == receivePath
             -> closeCopyServer(
-                terminalFragment
+                fileUploadService
             )
             else -> catFileCon(
                 currentAppDirPath,
@@ -152,35 +162,21 @@ object CopyFannelServer {
             currentAppDirPath,
             receivePath,
         )
-//        FileSystems.writeFile(
-//            UsePath.cmdclickDefaultAppDirPath,
-//            "qrParentDirPath.txt",
-//            parentDirPath
-//        )
         val fileListCon = File(parentDirPath).walk().map{
             if(!it.isFile) return@map String()
+            if(it.length() > limitFileMegaByteLength) return@map String()
             it.absolutePath
         }.joinToString("\n")
             .trim()
             .replace(Regex("\n\n*"), "\n")
-//        FileSystems.writeFile(
-//            UsePath.cmdclickDefaultAppDirPath,
-//            "qrFileList_inserver.txt",
-//            fileListCon
-//        )
+            .split("\n").sorted().joinToString("\n")
         return fileListCon.toByteArray()
-//            .removePrefix("$currentAppDirPath/")
-//            .removePrefix(currentAppDirPath)
-//            .replace("\n$currentAppDirPath/", "\n")
-//            .replace(Regex("\n\n*"), "\n")
-//            .trim()
     }
 
     private fun closeCopyServer(
-        terminalFragment: TerminalFragment
+        fileUploadService: FileUploadService
     ): ByteArray {
-        terminalFragment.copyFannelSocket?.close()
-        intentRequestMonitorJob?.cancel()
+        FileUploadFinisher.exit(fileUploadService)
         return byteArrayOf()
     }
 
@@ -240,9 +236,6 @@ object CopyFannelServer {
         )
     }
 }
-
-
-
 
 enum class ReceivePathMacroType {
     GET_FILE_LIST,

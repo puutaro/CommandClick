@@ -18,7 +18,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -32,7 +32,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeT
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
-import java.net.ServerSocket
 
 
 class   TerminalFragment: Fragment() {
@@ -76,7 +75,6 @@ class   TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var dialogInstance: Dialog? = null
     var goBackFlag = false
-    var copyFannelSocket: ServerSocket? = null
 
 
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
@@ -198,10 +196,10 @@ class   TerminalFragment: Fragment() {
             this,
             broadcastReceiverForTerm,
             listOf(
-                BroadCastIntentScheme.HTML_LAUNCH.action,
-                BroadCastIntentScheme.ULR_LAUNCH.action,
-                BroadCastIntentScheme.MONITOR_TEXT_PATH.action,
-                BroadCastIntentScheme.MONITOR_MANAGER.action,
+                BroadCastIntentSchemeTerm.HTML_LAUNCH.action,
+                BroadCastIntentSchemeTerm.ULR_LAUNCH.action,
+                BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,
+                BroadCastIntentSchemeTerm.MONITOR_MANAGER.action,
             )
         )
         previousTerminalTag = tag
@@ -289,8 +287,6 @@ class   TerminalFragment: Fragment() {
         this.onWebHistoryUpdaterJob?.cancel()
         _binding = null
         firstDisplayUpdate = true
-        val terminalViewModel: TerminalViewModel by activityViewModels()
-        copyFannelSocket?.close()
     }
 
     interface OnMultiSelectListenerForTerm {

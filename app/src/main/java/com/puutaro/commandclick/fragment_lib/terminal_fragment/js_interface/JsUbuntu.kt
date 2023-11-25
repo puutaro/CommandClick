@@ -3,8 +3,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -118,7 +118,7 @@ class JsUbuntu(
         }
         val monitorFileName = UsePath.decideMonitorName(monitorNum)
         val backgroundCmdIntent = Intent()
-        backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action
+        backgroundCmdIntent.action = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
         backgroundCmdIntent.putExtra(
             UbuntuServerIntentExtra.backgroundShellPath.schema,
             backgroundShellPath
@@ -142,7 +142,7 @@ class JsUbuntu(
             cmdName.isEmpty()
         ) return
         val intent = Intent()
-        intent.action = BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
+        intent.action = BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
         intent.putExtra(
             UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema,
             cmdName

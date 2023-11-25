@@ -8,10 +8,10 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.BuildConfig
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
-import com.puutaro.commandclick.common.variable.intent.TextToSpeechIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadCastSenderSchemaForCommon
@@ -614,10 +614,10 @@ object IntentRequestMonitor {
                 ?.replace(valueSeparator, "\t")
                 ?: String()
         val timeout = targetMap.get(ButtonKey.timeout.name) ?: "200"
-        val backgroundAction = BroadCastIntentScheme.BACKGROUND_CMD_START.action
+        val backgroundAction = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
         val execAction = when(execType){
             ExecType.back.name -> backgroundAction
-            else -> BroadCastIntentScheme.FOREGROUND_CMD_START.action
+            else -> BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
         }
         val extraList = when(execAction){
             backgroundAction -> listOf(

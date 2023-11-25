@@ -7,6 +7,8 @@ object ServiceChannelNum {
     val pulseReciever = 4
     val ubuntuServer = 5
     val ubuntuManager = 6
+    val fileDownload = 7
+    val fileUpload = 8
     val cmdYouTuber = 20
     val cmdMusicPlayer = 21
     val newsSpeacherPlayer = 22

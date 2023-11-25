@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent
+package com.puutaro.commandclick.common.variable.intent.scheme
 
 enum class BroadCastIntentSchemeForCmdIndex(
     val action: String,

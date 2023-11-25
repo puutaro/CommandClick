@@ -246,7 +246,9 @@ class Scanner(
                     "",
                     "",
                     2000
-                )
+                ).let {
+                    String(it)
+                }
             }
         val doc = Jsoup.parse(htmlString)
         val titleSrc = doc.title()

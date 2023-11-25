@@ -151,7 +151,9 @@ object JsImportManager {
                         String(),
                         String(),
                         2000,
-                    )
+                    ).let {
+                        String(it)
+                    }
                 }
                 withContext(Dispatchers.IO) {
                     downloadOk = true

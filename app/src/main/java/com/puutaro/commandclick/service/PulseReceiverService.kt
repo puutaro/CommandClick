@@ -9,8 +9,8 @@ import android.content.Intent
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.PulseServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.extra.PulseServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemePulseServer
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
@@ -45,19 +45,10 @@ class PulseReceiverService:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action
-                != BroadCastIntentScheme.STOP_PULSE_RECIEVER.action
+                != BroadCastIntentSchemePulseServer.STOP_PULSE_RECIEVER.action
             ) return
             finishProcess()
             stopSelf()
-        }
-    }
-    private var broadcastReceiverForPluseServerRestart: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            if(
-                intent.action
-                != BroadCastIntentScheme.RESTART_PULSE_RECIEVER.action
-            ) return
-            pcPulseSetServerJob?.cancel()
         }
     }
 
@@ -65,12 +56,12 @@ class PulseReceiverService:
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForPluseServerStop,
-            BroadCastIntentScheme.STOP_PULSE_RECIEVER.action
+            BroadCastIntentSchemePulseServer.STOP_PULSE_RECIEVER.action
         )
         BroadcastManagerForService.registerBroadcastReceiver(
             this,
             broadcastReceiverForPluseServerStop,
-            BroadCastIntentScheme.RESTART_PULSE_RECIEVER.action
+            BroadCastIntentSchemePulseServer.RESTART_PULSE_RECIEVER.action
         )
     }
 
@@ -90,7 +81,7 @@ class PulseReceiverService:
         ) ?: return START_NOT_STICKY
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
-            BroadCastIntentScheme.STOP_PULSE_RECIEVER.action,
+            BroadCastIntentSchemePulseServer.STOP_PULSE_RECIEVER.action,
         )
         val serverWaitAddressPort = "${pcAddress}:${UsePort.pcPulseSetServer.num}"
         val serverReceivingAddressPort = "${pcAddress}:${UsePort.pluseRecieverPort.num}"

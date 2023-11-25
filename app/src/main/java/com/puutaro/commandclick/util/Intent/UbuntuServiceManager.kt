@@ -3,12 +3,10 @@ package com.puutaro.commandclick.util.Intent
 import android.app.Activity
 import android.content.Intent
 import androidx.core.content.ContextCompat
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +43,7 @@ object UbuntuServiceManager {
             withContext(Dispatchers.IO){
                 delay(200)
                 val ubuntuIntent = Intent()
-                ubuntuIntent.action = BroadCastIntentScheme.IS_ACTIVE_UBUNTU_SERVICE.action
+                ubuntuIntent.action = BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action
                 for(i in 1..3) {
                     activity.sendBroadcast(ubuntuIntent)
                     delay(300)

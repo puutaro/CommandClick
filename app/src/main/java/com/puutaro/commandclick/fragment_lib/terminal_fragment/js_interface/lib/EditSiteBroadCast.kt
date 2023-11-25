@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForHtml
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CmdClickMap
 
@@ -18,9 +18,9 @@ class EditSiteBroadCast(
         filterCode: String,
     ){
         val editSiteIntent = Intent()
-        editSiteIntent.action = BroadCastIntentScheme.HTML_LAUNCH.action
+        editSiteIntent.action = BroadCastIntentSchemeTerm.HTML_LAUNCH.action
         editSiteIntent.putExtra(
-            BroadCastIntentScheme.HTML_LAUNCH.scheme,
+            BroadCastIntentSchemeTerm.HTML_LAUNCH.scheme,
             editPath
         )
         val editSiteMap = CmdClickMap.createMap(

@@ -12,8 +12,8 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitClone
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
@@ -52,7 +52,7 @@ class GitCloneService: Service() {
 
     override fun onCreate() {
         notificationManagefilter = IntentFilter()
-        notificationManagefilter?.addAction(BroadCastIntentScheme.STOP_GIT_CLONE.action)
+        notificationManagefilter?.addAction(BroadCastIntentSchemeGitClone.STOP_GIT_CLONE.action)
         try {
             registerReceiver(broadcastReceiverForGitCloneStop, notificationManagefilter)
         } catch(e: Exception){
@@ -66,7 +66,7 @@ class GitCloneService: Service() {
         gitCloneJob?.cancel()
 
         val gitCloneStopIntent = Intent()
-        gitCloneStopIntent.action = BroadCastIntentScheme.STOP_GIT_CLONE.action
+        gitCloneStopIntent.action = BroadCastIntentSchemeGitClone.STOP_GIT_CLONE.action
 
         val pendingIntent = PendingIntent.getBroadcast(
             applicationContext, 0, gitCloneStopIntent, PendingIntent.FLAG_UPDATE_CURRENT

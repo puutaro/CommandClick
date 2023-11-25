@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util
 
 import android.content.Intent
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 
 object BroadCastIntent {
     fun sendUrlCon(
@@ -13,9 +13,9 @@ object BroadCastIntent {
             urlCon.isNullOrEmpty()
         ) return
         val jsIntent = Intent()
-        jsIntent.action = BroadCastIntentScheme.ULR_LAUNCH.action
+        jsIntent.action = BroadCastIntentSchemeTerm.ULR_LAUNCH.action
         jsIntent.putExtra(
-            BroadCastIntentScheme.ULR_LAUNCH.scheme,
+            BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme,
             urlCon
         )
         fragment.activity?.sendBroadcast(jsIntent)

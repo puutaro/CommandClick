@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu.libs
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
@@ -69,7 +69,7 @@ object ScreenMonitor {
         ubuntuService.notificationBuilderHashMap.clear()
         ProcessManager.removeLaunchCompFile(ubuntuService)
         val sleepingIntent = Intent()
-        sleepingIntent.action = BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action
+        sleepingIntent.action = BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action
         ubuntuService.sendBroadcast(sleepingIntent)
         ubuntuService.screenOffKill = false
     }

@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
 import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -240,7 +240,7 @@ object UbuntuSetUp {
             )
         } catch (e: Exception){
             val setupIntent = Intent()
-            setupIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
+            setupIntent.action = BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action
             context.sendBroadcast(setupIntent)
             return
         }

@@ -6,8 +6,8 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForFzHtml
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForFzHtml
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.EditSiteBroadCast
@@ -48,9 +48,9 @@ class JsIntent(
         realTimeListSetJs: String
     ) {
         val jsIntent = Intent()
-        jsIntent.action = BroadCastIntentScheme.FZHTML_LAUNCH.action
+        jsIntent.action = BroadCastIntentSchemeTerm.FZHTML_LAUNCH.action
         jsIntent.putExtra(
-            BroadCastIntentScheme.FZHTML_LAUNCH.scheme,
+            BroadCastIntentSchemeTerm.FZHTML_LAUNCH.scheme,
             editPath
         )
         jsIntent.putExtra(

@@ -4,8 +4,8 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -157,7 +157,7 @@ object ExecShellScript {
         when(ubuntuExecMode){
             SettingVariableSelects.UbuntuExecModeSelects.background.name -> {
                 val backgroundCmdIntent = Intent()
-                backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action
+                backgroundCmdIntent.action = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
                 backgroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.backgroundShellPath.schema,
                     "${recentAppDirPath}/${selectedShellFileName}"
@@ -174,7 +174,7 @@ object ExecShellScript {
             }
             SettingVariableSelects.UbuntuExecModeSelects.foreground.name -> {
                 val foregroundCmdIntent = Intent()
-                foregroundCmdIntent.action = BroadCastIntentScheme.FOREGROUND_CMD_START.action
+                foregroundCmdIntent.action = BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
                 foregroundCmdIntent.putExtra(
                     UbuntuServerIntentExtra.foregroundShellPath.schema,
                     "${recentAppDirPath}/${selectedShellFileName}"

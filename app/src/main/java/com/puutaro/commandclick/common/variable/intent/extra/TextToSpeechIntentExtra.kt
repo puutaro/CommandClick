@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.intent
+package com.puutaro.commandclick.common.variable.intent.extra
 
 enum class TextToSpeechIntentExtra(
     val scheme: String

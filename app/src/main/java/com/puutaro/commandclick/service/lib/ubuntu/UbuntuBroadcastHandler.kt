@@ -3,8 +3,8 @@ package com.puutaro.commandclick.service.lib.ubuntu
 import android.content.Intent
 import android.widget.Toast
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
@@ -35,62 +35,62 @@ object UbuntuBroadcastHandler {
     ){
         val action = intent.action
         when(action){
-            BroadCastIntentScheme.START_UBUNTU_SERVICE.action
+            BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action
             -> execStartUbuntuService(
                 ubuntuService,
                 intent,
             )
-            BroadCastIntentScheme.ON_RUNNING_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_RUNNING_NOTIFICATION.action
             -> execRunningNotification(
                 ubuntuService
             )
-            BroadCastIntentScheme.WIFI_WAIT_NITIFICATION.action
+            BroadCastIntentSchemeUbuntu.WIFI_WAIT_NITIFICATION.action
             -> execWifiNotification(
                 ubuntuService,
             )
-            BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action
             -> execOnUbuntuSetupNotification(
                     ubuntuService
                 )
-            BroadCastIntentScheme.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_QUIZ_NOTIFICATION.action
             -> execOnUbuntuSetupQuizNotification(
                 ubuntuService
             )
-            BroadCastIntentScheme.IS_ACTIVE_UBUNTU_SERVICE.action
+            BroadCastIntentSchemeUbuntu.IS_ACTIVE_UBUNTU_SERVICE.action
             -> execIsActiveUbuntuService()
-            BroadCastIntentScheme.STOP_UBUNTU_SERVICE.action
+            BroadCastIntentSchemeUbuntu.STOP_UBUNTU_SERVICE.action
             -> execStopUbuntuService(
                 ubuntuService
             )
-            BroadCastIntentScheme.UPDATE_PROCESS_NUM_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.UPDATE_PROCESS_NUM_NOTIFICATION.action
             -> execUpdateProcessNumNotification(
                 ubuntuService
             )
-            BroadCastIntentScheme.ON_SLEEPING_NOTIFICATION.action
+            BroadCastIntentSchemeUbuntu.ON_SLEEPING_NOTIFICATION.action
             -> execSleepingNotification(
                 ubuntuService
             )
-            BroadCastIntentScheme.OPEN_FANNEL.action
+            BroadCastIntentSchemeUbuntu.OPEN_FANNEL.action
             -> execOpenFannel(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentScheme.ADMIN_CMD_START.action
+            BroadCastIntentSchemeUbuntu.ADMIN_CMD_START.action
             -> execAdminCmdStart(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentScheme.BACKGROUND_CMD_START.action
+            BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
             -> execBackGroundCmdStart(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentScheme.FOREGROUND_CMD_START.action
+            BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
             -> execSell2Http(
                 ubuntuService,
                 intent
             )
-            BroadCastIntentScheme.CMD_KILL_BY_ADMIN.action
+            BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
             -> execCmdKillByAdmin(
                 ubuntuService,
                 intent,
@@ -107,7 +107,7 @@ object UbuntuBroadcastHandler {
             UbuntuServerIntentExtra.ubuntuRestoreSign.schema
         ).isNullOrEmpty()
         val onSetUpNotificationIntent = Intent()
-        onSetUpNotificationIntent.action = BroadCastIntentScheme.ON_UBUNTU_SETUP_NOTIFICATION.action
+        onSetUpNotificationIntent.action = BroadCastIntentSchemeUbuntu.ON_UBUNTU_SETUP_NOTIFICATION.action
         ubuntuService.sendBroadcast(onSetUpNotificationIntent)
         SetupMonitoring.launch(
             ubuntuService,

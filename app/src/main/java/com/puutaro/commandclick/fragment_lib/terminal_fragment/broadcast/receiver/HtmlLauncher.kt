@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver
 
 import android.content.Intent
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentExtraForHtml
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForHtml
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewMenuMapType
@@ -19,7 +19,7 @@ object HtmlLauncher{
         val context = terminalFragment.context
         val binding = terminalFragment.binding
         val editFilePath = intent.getStringExtra(
-            BroadCastIntentScheme.HTML_LAUNCH.scheme
+            BroadCastIntentSchemeTerm.HTML_LAUNCH.scheme
         ) ?: return
         val title =
             editFilePath

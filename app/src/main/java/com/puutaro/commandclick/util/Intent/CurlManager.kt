@@ -1,32 +1,97 @@
 package com.puutaro.commandclick.util.Intent
 
 import com.puutaro.commandclick.util.LogSystems
-import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
+import java.util.Locale
+
 
 object CurlManager {
+
+    val invalidResponse = "cmdclickConnectionError"
+
+    fun isConnOk(
+        res: String
+    ): Boolean {
+        return res.isNotEmpty()
+                && res != invalidResponse
+    }
     fun get(
         mainUrl: String,
         queryParameter: String = String(),
         header: String = String(),
         timeout: Int
-    ): String {
-        val errPrefix = "err: "
+    ): ByteArray {
         if(
             mainUrl.isEmpty()
-        ) {
-            return errPrefix + "invalid url"
-        }
+        ) return byteArrayOf()
         val urlString = if(queryParameter.isEmpty()) {
             mainUrl
         } else {
             "${mainUrl}?${queryParameter}"
         }
 
+        val connection = setConnectionForGet(
+            urlString,
+            header,
+            timeout
+        )
+
+        try {
+            connection.connect()
+            return responseHandler(
+                connection,
+            )
+        } catch (e: Exception) {
+            LogSystems.stdErr(e.toString())
+        } finally {
+            connection.disconnect()
+        }
+        return invalidResponse.toByteArray()
+    }
+
+
+
+    fun post(
+        mainUrl: String,
+        header: String = String(),
+        bodyStr: String,
+        timeout: Int
+    ): ByteArray {
+        val bodyData = bodyStr.toByteArray(Charsets.UTF_8)
+
+        // HttpURLConnectionの作成
+        val connection = setConnectionForPost(
+            mainUrl,
+            header,
+            bodyData,
+            timeout
+        )
+        try {
+            connection.connect()
+            // Bodyの書き込み
+            val outputStream = connection.outputStream
+            outputStream.write(bodyData)
+            outputStream.flush()
+            outputStream.close()
+
+            return responseHandler(
+                connection,
+            )
+        } catch (e: Exception) {
+            LogSystems.stdErr(e.toString())
+        } finally {
+            connection.disconnect()
+        }
+        return invalidResponse.toByteArray()
+    }
+
+    private fun setConnectionForGet(
+        urlString: String,
+        header: String = String(),
+        timeout: Int
+    ): HttpURLConnection {
         val url = URL(urlString)
         val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
         connection.connectTimeout = timeout
@@ -43,95 +108,75 @@ object CurlManager {
             connection.addRequestProperty(headerRow.first(), headerRow[1])
         }
         connection.addRequestProperty("User-Agent", "Android")
+        connection.setRequestProperty("Connection", "close")
         connection.addRequestProperty(
             "Accept-Language",
             Locale.getDefault().toString()
         )
+        return connection
+    }
 
-        return try {
-            connection.connect()
-            val statusCode = connection.responseCode
-            if (statusCode != HttpURLConnection.HTTP_OK) {
+    private fun setConnectionForPost(
+        mainUrl: String,
+        header: String = String(),
+        bodyData: ByteArray,
+        timeout: Int
+    ): HttpURLConnection {
+        val url = URL(mainUrl)
+        val connection = url.openConnection() as HttpURLConnection
+        connection.connectTimeout = timeout
+        connection.readTimeout = timeout
+//            connection.requestMethod = "POST"
+        // Bodyへ書き込むを行う
+        connection.doOutput = true
+
+        // リクエストBodyのストリーミング有効化（どちらか片方を有効化）
+        connection.setFixedLengthStreamingMode(bodyData.size)
+//            connection.setChunkedStreamingMode(0)
+        // プロパティの設定
+//            connection.setRequestProperty("Content-type", "text/plain")
+        connection.addRequestProperty("User-Agent", "Android")
+        connection.setRequestProperty("Connection", "close")
+        connection.addRequestProperty(
+            "Accept-Language",
+            Locale.getDefault().toString()
+        )
+        val headerList = header.split(',')
+        headerList.forEach {
+            val headerRow = it.trim().split("\t")
+            if (headerRow.size < 2) return@forEach
+            connection.addRequestProperty(headerRow.first(), headerRow[1])
+        }
+        return connection
+    }
+
+    private fun responseHandler(
+        connection: HttpURLConnection,
+    ): ByteArray {
+        val statusCode = connection.responseCode
+        return when {
+            statusCode == HttpURLConnection.HTTP_OK
+            -> inputStreamToByteArray(
+                connection,
+            )
+            else -> {
                 connection.disconnect()
-                return errPrefix + statusCode.toString()
+                LogSystems.stdErr(statusCode.toString())
+                invalidResponse.toByteArray()
             }
-            val bufferedReader =
-                BufferedReader(InputStreamReader(connection.inputStream))
-            val responseBody = bufferedReader.use { it.readText() }
-            bufferedReader.close()
-            connection.disconnect()
-            responseBody
-        } catch (e: Exception) {
-            LogSystems.stdErr(e.toString())
-            String()
-        } finally {
-            connection.disconnect()
         }
     }
 
-
-
-    fun post(
-        mainUrl: String,
-        header: String = String(),
-        bodyStr: String,
-        timeout: Int
+    private fun inputStreamToByteArray(
+        connection: HttpURLConnection,
     ): ByteArray {
-        // Bodyのデータ（サンプル）
-        val sendDataJson = bodyStr
-//            "{\"id\":\"1234567890\",\"name\":\"hogehoge\"}"
-        val bodyData = sendDataJson.toByteArray(Charsets.UTF_8)
-
-
-
-        // HttpURLConnectionの作成
-        LogSystems.stdSys(bodyStr)
-        val url = URL(mainUrl)
-        val connection = url.openConnection() as HttpURLConnection
-        try {
-            // ミリ秒単位でタイムアウトを設定
-            connection.connectTimeout = timeout
-            connection.readTimeout = timeout
-//            connection.requestMethod = "POST"
-            // Bodyへ書き込むを行う
-            connection.doOutput = true
-
-            // リクエストBodyのストリーミング有効化（どちらか片方を有効化）
-            connection.setFixedLengthStreamingMode(bodyData.size)
-//            connection.setChunkedStreamingMode(0)
-            // プロパティの設定
-//            connection.setRequestProperty("Content-type", "text/plain")
-//            connection.setRequestProperty("Connection", "close");
-            val headerList = header.split(',')
-            headerList.forEach {
-                val headerRow = it.trim().split("\t")
-                if (headerRow.size < 2) return@forEach
-                connection.addRequestProperty(headerRow.first(), headerRow[1])
+        val resOutputStream = ByteArrayOutputStream()
+        connection.inputStream.use { input ->
+            resOutputStream.use { output ->
+                input.copyTo(output)
             }
-
-            connection.connect()
-            // Bodyの書き込み
-            val outputStream = connection.outputStream
-            outputStream.write(bodyData)
-            outputStream.flush()
-            outputStream.close()
-
-            // Responseの読み出し
-            val statusCode = connection.responseCode
-            if (statusCode == HttpURLConnection.HTTP_OK) {
-                val resOutputStream = ByteArrayOutputStream()
-                connection.inputStream.use { input ->
-                    resOutputStream.use { output ->
-                        input.copyTo(output)
-                    }
-                }
-                return resOutputStream.toByteArray()
-            }
-        } catch (e: Exception) {
-            LogSystems.stdErr(e.toString())
-        } finally {
-            connection.disconnect()
         }
-        return byteArrayOf()
+        connection.disconnect()
+        return resOutputStream.toByteArray()
     }
 }

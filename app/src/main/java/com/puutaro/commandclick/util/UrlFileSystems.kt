@@ -57,7 +57,9 @@ class UrlFileSystems {
                 String(),
                 String(),
                 2000,
-            )
+            ).let {
+                String(it)
+            }
         }
     }
 
@@ -80,16 +82,16 @@ class UrlFileSystems {
                 ?: return
             val destiFileName = destiFileObj.name
             val downloadUrl = "$gitUserContentFannelPrefix/$it"
-            val con = CurlManager.get(
+            val conByteArray = CurlManager.get(
                 downloadUrl,
                 String(),
                 String(),
                 2000,
             )
-            FileSystems.writeFile(
+            FileSystems.writeFromByteArray(
                 destiFileParentDirPath,
                 destiFileName,
-                con
+                conByteArray
             )
         }
     }

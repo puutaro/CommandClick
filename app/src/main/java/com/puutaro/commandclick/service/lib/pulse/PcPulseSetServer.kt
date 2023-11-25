@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
@@ -241,7 +241,7 @@ object PcPulseSetServer {
 
         )
         val updateMonitorIntent = Intent()
-        updateMonitorIntent.action = BroadCastIntentScheme.MONITOR_TEXT_PATH.action
+        updateMonitorIntent.action = BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action
         context?.sendBroadcast(updateMonitorIntent)
     }
 

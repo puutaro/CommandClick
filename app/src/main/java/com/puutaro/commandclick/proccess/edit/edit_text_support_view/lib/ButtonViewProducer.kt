@@ -4,14 +4,14 @@ import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.intent.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
@@ -423,7 +423,7 @@ object ButtonViewProducer {
                 execCmdAfterTrimButtonEditExecVariant,
             )
         val foregroundCmdIntent = Intent()
-        foregroundCmdIntent.action = BroadCastIntentScheme.FOREGROUND_CMD_START.action
+        foregroundCmdIntent.action = BroadCastIntentSchemeUbuntu.FOREGROUND_CMD_START.action
         foregroundCmdIntent.putExtra(
             UbuntuServerIntentExtra.foregroundShellPath.schema,
             cmdclickTempButtonExecShellPath
@@ -449,7 +449,7 @@ object ButtonViewProducer {
             )
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val backgroundCmdIntent = Intent()
-        backgroundCmdIntent.action = BroadCastIntentScheme.BACKGROUND_CMD_START.action
+        backgroundCmdIntent.action = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
         backgroundCmdIntent.putExtra(
             UbuntuServerIntentExtra.backgroundShellPath.schema,
             cmdclickTempButtonExecShellPath

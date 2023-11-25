@@ -38,7 +38,6 @@ import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
-import com.puutaro.commandclick.common.variable.intent.BroadCastIntentScheme
 import com.puutaro.commandclick.databinding.ActivityMainBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -51,6 +50,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
@@ -139,7 +139,7 @@ class MainActivity:
         override fun onReceive(context: Context, intent: Intent) {
             if(
                 intent.action !=
-                BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+                BroadCastIntentSchemeUbuntu.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
             ) return
             UbuntuServiceManager.monitoringAndLaunchUbuntuService(
                 this@MainActivity,
@@ -159,7 +159,7 @@ class MainActivity:
         BroadcastRegister.registerBroadcastReceiverForActivity(
             this,
             broadcastReceiverForRestartUbuntuService,
-            BroadCastIntentScheme.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
+            BroadCastIntentSchemeUbuntu.RESTART_UBUNTU_SERVICE_FROM_ACTIVITY.action
         )
         UbuntuServiceManager.monitoringAndLaunchUbuntuService(
             this,
