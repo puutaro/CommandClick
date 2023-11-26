@@ -34,6 +34,7 @@ import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.GCalendarKey
 import com.puutaro.commandclick.util.GmailKey
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.NetworkTool
@@ -237,6 +238,9 @@ class Scanner(
             scanCon.startsWith(QrLaunchType.MAIL2.prefix),
             scanCon.startsWith(QrLaunchType.MAIL2.prefix.uppercase()),
                 ->  createGmailTitle(scanCon)
+            scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix),
+            scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix.uppercase())
+                -> createGcalendarTitle(scanCon)
             else -> "Copy ok?: $scanCon"
         }
     }
@@ -275,13 +279,20 @@ class Scanner(
         val subject = gmailMap?.get(GmailKey.SUBJECT.key)
         if(
             !subject.isNullOrEmpty()
-        ) return subject
+        ) return "Gmail: $subject"
         val mailAd = gmailMap?.get(
             GmailKey.MAIL_AD.key
         )
         val body = gmailMap?.get(GmailKey.BODY.key)
         return "Ad ${mailAd} Body: ${body}"
             .take(displayTitleTextLimit)
+    }
+
+    private fun createGcalendarTitle(scanCon: String): String {
+        val gcalendarMap = NetworkTool.makeGCalendarMap(scanCon)
+        val title = gcalendarMap.get(GCalendarKey.TITLE.key)
+            ?: return scanCon.take(displayTitleTextLimit)
+        return "calendar: $title".take(displayTitleTextLimit)
     }
 
     private fun extractTitleForJsDesc(scanCon: String): String {

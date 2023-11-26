@@ -6,7 +6,6 @@ import android.net.ConnectivityManager
 import android.net.LinkProperties
 import android.net.Network
 import android.net.NetworkCapabilities
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import kotlinx.coroutines.delay
@@ -165,6 +164,23 @@ object NetworkTool {
             ?: return null
         return url to filePath
     }
+
+    fun makeGCalendarMap(
+        gCalendarStr: String
+    ): Map<String, String?> {
+        val gCalendarMapSrcStr =
+            gCalendarStr
+                .split(":")
+                .filterIndexed { index, _ ->
+                    index > 0
+                }.joinToString(":")
+        return gCalendarMapSrcStr.split(";").map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }.toMap()
+    }
 }
 
 enum class GmailKey(
@@ -173,4 +189,18 @@ enum class GmailKey(
     MAIL_AD("mail_ad"),
     SUBJECT("subject"),
     BODY("body"),
+}
+
+enum class GCalendarKey(
+    val key: String
+){
+    DATE("date"),
+    BIGIN_TIME("biginTime"),
+    END_TIME("endTime"),
+    TITLE("title"),
+    DESCRIPTION("description"),
+    EVENT_LOCATION("eventLocation"),
+    EMAIL("android.intent.extra.EMAIL")
+
+
 }

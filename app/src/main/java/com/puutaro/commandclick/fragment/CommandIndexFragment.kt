@@ -391,10 +391,4 @@ class CommandIndexFragment: Fragment() {
             pin: String
         )
     }
-
-    interface OnCallListenerForCmdIndex {
-        fun onCallWifiForCmdIndex(
-            telString: String,
-        )
-    }
 }

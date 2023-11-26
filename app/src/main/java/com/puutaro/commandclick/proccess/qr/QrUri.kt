@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.qr
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.CalendarContract
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.util.GCalendarKey
 import com.puutaro.commandclick.util.GmailKey
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
@@ -69,7 +71,12 @@ object QrUri {
                 fragment,
                 loadConSrc
             )
-
+            loadConSrc.startsWith(QrLaunchType.G_CALENDAR.prefix),
+            loadConSrc.startsWith(QrLaunchType.G_CALENDAR.prefix.uppercase()),
+            -> sendGCalendarIntent(
+                fragment,
+                loadConSrc
+            )
             else
             -> execCopy(
                 fragment,
@@ -131,10 +138,96 @@ object QrUri {
     ){
         val context = fragment.context
             ?: return
-        val listener = context as CommandIndexFragment.OnCallListenerForCmdIndex
-        listener.onCallWifiForCmdIndex(
-            telString
+        try {
+            val intent = Intent(
+                Intent.ACTION_DIAL,
+                Uri.parse(telString)
+            )
+            context.startActivity(intent)
+        }catch (e: Exception){
+            LogSystems.stdErr(e.toString())
+        }
+    }
+
+    private fun sendGCalendarIntent(
+        fragment: Fragment,
+        gCalendarStr: String,
+    ){
+        val context = fragment.context
+            ?: return
+        val intent = Intent()
+        intent.data = CalendarContract.Calendars.CONTENT_URI;
+        intent.action = Intent.ACTION_INSERT
+        val gCalendarMap = NetworkTool.makeGCalendarMap(
+            gCalendarStr
         )
+        val jsUtil = JsUtil(fragment)
+        gCalendarMap.get(GCalendarKey.TITLE.key)
+            ?: return
+        putExtraStr(
+            intent,
+            gCalendarMap,
+            GCalendarKey.TITLE.key,
+        )
+        putExtraStr(
+            intent,
+            gCalendarMap,
+            GCalendarKey.DESCRIPTION.key,
+        )
+        putExtraStr(
+            intent,
+            gCalendarMap,
+            GCalendarKey.EVENT_LOCATION.key,
+        )
+        putExtraStr(
+            intent,
+            gCalendarMap,
+            GCalendarKey.EMAIL.key,
+        )
+        putExtraDate(
+            intent,
+            gCalendarMap,
+            GCalendarKey.BIGIN_TIME.key,
+            jsUtil,
+        )
+        putExtraDate(
+            intent,
+            gCalendarMap,
+            GCalendarKey.END_TIME.key,
+            jsUtil,
+        )
+        context.startActivity(intent)
+    }
+
+    private fun putExtraStr(
+        intent: Intent,
+        map: Map<String, String?>?,
+        key: String,
+    ){
+        if(
+            map.isNullOrEmpty()
+        ) return
+        map.get(key)?.let {
+            intent.putExtra(
+                key,
+                it
+            )
+        }
+    }
+
+    private fun putExtraDate(
+        intent: Intent,
+        map: Map<String, String?>?,
+        key: String,
+        jsUtil: JsUtil,
+    ){
+        map?.get(key)?.let {
+            val miliTime =  jsUtil.convertDateTimeToMiliTime(it)
+            intent.putExtra(
+                key,
+                miliTime
+            )
+        }
     }
 
     private fun sendMail(

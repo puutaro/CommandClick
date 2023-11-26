@@ -12,6 +12,7 @@ enum class QrLaunchType(
     SMS("smsto:"),
     MAIL("mailto:"),
     MAIL2("matmsg:"),
-    TEL("tel:")
+    TEL("tel:"),
+    G_CALENDAR("gcalendar:"),
 
 }
