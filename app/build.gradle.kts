@@ -111,6 +111,7 @@ dependencies {
     implementation("com.github.mwiede:jsch:0.2.11")
 
     implementation("com.github.yuriy-budiyev:code-scanner:2.3.2")
+    implementation("io.github.thanosfisherman.wifiutils:wifiutils:1.6.6")
 
 //    implementation ("com.github.alexzhirkevich:custom-qr-generator:1.6.2")
 

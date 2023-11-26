@@ -384,4 +384,17 @@ class CommandIndexFragment: Fragment() {
             permissionStr: String
         )
     }
+
+    interface OnConnectWifiListenerForCmdIndex {
+        fun onConnectWifiForCmdIndex(
+            ssid: String,
+            pin: String
+        )
+    }
+
+    interface OnCallListenerForCmdIndex {
+        fun onCallWifiForCmdIndex(
+            telString: String,
+        )
+    }
 }

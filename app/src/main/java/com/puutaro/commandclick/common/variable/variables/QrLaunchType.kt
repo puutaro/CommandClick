@@ -7,5 +7,11 @@ enum class QrLaunchType(
     Https(WebUrlVariables.httpsPrefix),
     Javascript(WebUrlVariables.jsPrefix),
     JsDesc("jsDesc:"),
-    CpFannel("cpFannel:"),
+    CpFile("cpFile:"),
+    WIFI("wifi:"),
+    SMS("smsto:"),
+    MAIL("mailto:"),
+    MAIL2("matmsg:"),
+    TEL("tel:")
+
 }

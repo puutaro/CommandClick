@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.service.lib.file_download
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
 import com.puutaro.commandclick.service.FileDownloadService
@@ -137,6 +138,30 @@ object FileDownloader {
             fileListCon,
             currentAppDirPath,
         )
+        if(
+            cpFileList.isEmpty()
+        ){
+            fileDownloadService.notificationBuilder
+                ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
+                ?.setContentTitle(
+                    FileDownLoadStatus.FAILURE_GREP_FILE_LIST.title,
+                )
+                ?.setContentText(
+                    FileDownLoadStatus.FAILURE_GREP_FILE_LIST.message.format(getPathOrFannelRawName),
+                )
+            fileDownloadService.notificationBuilder?.clearActions()
+            fileDownloadService.notificationBuilder?.addAction(
+                com.puutaro.commandclick.R.drawable.icons8_cancel,
+                FileDownloadLabels.CLOSE.label,
+                fileDownloadService.cancelPendingIntent
+            )?.build()?.let {
+                fileDownloadService.notificationManager.notify(
+                    fileDownloadService.chanelId,
+                    it
+                )
+            }
+            return
+        }
         val cpFileListIndexSize = cpFileList.size - 1
         (cpFileList.indices).forEach {
             delay(100)

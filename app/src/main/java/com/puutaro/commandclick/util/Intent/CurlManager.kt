@@ -40,11 +40,13 @@ object CurlManager {
             "${mainUrl}?${queryParameter}"
         }
 
-        val connection = setConnectionForGet(
-            urlString,
-            header,
-            timeout
-        )
+        val connection =
+            setConnectionForGet(
+                urlString,
+                header,
+                timeout
+            ) ?: return invalidResponse.toByteArray()
+
 
         try {
             connection.connect()
@@ -75,7 +77,7 @@ object CurlManager {
             header,
             bodyData,
             timeout
-        )
+        ) ?: return invalidResponse.toByteArray()
         try {
             connection.connect()
             // Bodyの書き込み
@@ -99,29 +101,34 @@ object CurlManager {
         urlString: String,
         header: String = String(),
         timeout: Int
-    ): HttpURLConnection {
-        val url = URL(urlString)
-        val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
-        connection.connectTimeout = timeout
-        //レスポンスデータ読み取りタイムアウトを設定する。
-        connection.readTimeout = timeout
-        connection.requestMethod = "GET"
-        connection.useCaches = false // キャッシュ利用
-        connection.doOutput = false // リクエストのボディの送信を許可(GETのときはfalse,POSTのときはtrueにする)
-        connection.doInput = true // レスポンスのボディの受信を許可
-        val headerList = header.split(',')
-        headerList.forEach {
-            val headerRow = it.split("\t")
-            if (headerRow.size < 2) return@forEach
-            connection.addRequestProperty(headerRow.first(), headerRow[1])
+    ): HttpURLConnection? {
+        try {
+            val url = URL(urlString)
+            val connection: HttpURLConnection = url.openConnection() as HttpURLConnection
+            connection.connectTimeout = timeout
+            //レスポンスデータ読み取りタイムアウトを設定する。
+            connection.readTimeout = timeout
+            connection.requestMethod = "GET"
+            connection.useCaches = false // キャッシュ利用
+            connection.doOutput = false // リクエストのボディの送信を許可(GETのときはfalse,POSTのときはtrueにする)
+            connection.doInput = true // レスポンスのボディの受信を許可
+            val headerList = header.split(',')
+            headerList.forEach {
+                val headerRow = it.split("\t")
+                if (headerRow.size < 2) return@forEach
+                connection.addRequestProperty(headerRow.first(), headerRow[1])
+            }
+            connection.addRequestProperty("User-Agent", "Android")
+            connection.setRequestProperty("Connection", "close")
+            connection.addRequestProperty(
+                "Accept-Language",
+                Locale.getDefault().toString()
+            )
+            return connection
+        } catch (e: Exception){
+            LogSystems.stdErr(e.toString())
+            return null
         }
-        connection.addRequestProperty("User-Agent", "Android")
-        connection.setRequestProperty("Connection", "close")
-        connection.addRequestProperty(
-            "Accept-Language",
-            Locale.getDefault().toString()
-        )
-        return connection
     }
 
     private fun setConnectionForPost(
@@ -129,33 +136,38 @@ object CurlManager {
         header: String = String(),
         bodyData: ByteArray,
         timeout: Int
-    ): HttpURLConnection {
-        val url = URL(mainUrl)
-        val connection = url.openConnection() as HttpURLConnection
-        connection.connectTimeout = timeout
-        connection.readTimeout = timeout
+    ): HttpURLConnection? {
+        try {
+            val url = URL(mainUrl)
+            val connection = url.openConnection() as HttpURLConnection
+            connection.connectTimeout = timeout
+            connection.readTimeout = timeout
 //            connection.requestMethod = "POST"
-        // Bodyへ書き込むを行う
-        connection.doOutput = true
+            // Bodyへ書き込むを行う
+            connection.doOutput = true
 
-        // リクエストBodyのストリーミング有効化（どちらか片方を有効化）
-        connection.setFixedLengthStreamingMode(bodyData.size)
+            // リクエストBodyのストリーミング有効化（どちらか片方を有効化）
+            connection.setFixedLengthStreamingMode(bodyData.size)
 //            connection.setChunkedStreamingMode(0)
-        // プロパティの設定
+            // プロパティの設定
 //            connection.setRequestProperty("Content-type", "text/plain")
-        connection.addRequestProperty("User-Agent", "Android")
-        connection.setRequestProperty("Connection", "close")
-        connection.addRequestProperty(
-            "Accept-Language",
-            Locale.getDefault().toString()
-        )
-        val headerList = header.split(',')
-        headerList.forEach {
-            val headerRow = it.trim().split("\t")
-            if (headerRow.size < 2) return@forEach
-            connection.addRequestProperty(headerRow.first(), headerRow[1])
+            connection.addRequestProperty("User-Agent", "Android")
+            connection.setRequestProperty("Connection", "close")
+            connection.addRequestProperty(
+                "Accept-Language",
+                Locale.getDefault().toString()
+            )
+            val headerList = header.split(',')
+            headerList.forEach {
+                val headerRow = it.trim().split("\t")
+                if (headerRow.size < 2) return@forEach
+                connection.addRequestProperty(headerRow.first(), headerRow[1])
+            }
+            return connection
+        } catch (e: Exception){
+            LogSystems.stdErr(e.toString())
+            return null
         }
-        return connection
     }
 
     private fun responseHandler(

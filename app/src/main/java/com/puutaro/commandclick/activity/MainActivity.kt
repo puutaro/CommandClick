@@ -26,7 +26,9 @@ import com.puutaro.commandclick.activity_lib.event.*
 import com.puutaro.commandclick.activity_lib.event.lib.ExecInitForEditFragment
 import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.*
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecBackstackHandle
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecCall
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecUpdateNoSaveUrlPaths
+import com.puutaro.commandclick.activity_lib.event.lib.common.ExecWifiSet
 import com.puutaro.commandclick.activity_lib.event.lib.common.RestartWhenPreferenceCheckErr
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayOrEditButton
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
@@ -49,7 +51,9 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
+import com.puutaro.commandclick.activity_lib.permission.CallSetter
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
+import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
@@ -88,6 +92,8 @@ class MainActivity:
     CommandIndexFragment.OnPageSearchToolbarClickListener,
     CommandIndexFragment.OnUpdateNoSaveUrlPathsListener,
     CommandIndexFragment.OnGetPermissionListenerForCmdIndex,
+    CommandIndexFragment.OnConnectWifiListenerForCmdIndex,
+    CommandIndexFragment.OnCallListenerForCmdIndex,
     EditFragment.onToolBarButtonClickListenerForEditFragment,
     EditFragment.OnKeyboardVisibleListenerForEditFragment,
     EditFragment.OnToolbarMenuCategoriesListenerForEdit,
@@ -134,6 +140,12 @@ class MainActivity:
 
     val getCameraSetterLaunch =
         CameraSetter.set(this)
+
+    val getLocationSetterLaunch =
+        LocationSetter.set(this)
+
+    val getCallSetterLaunch =
+        CallSetter.set(this)
 
     private var broadcastReceiverForRestartUbuntuService: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -615,6 +627,21 @@ class MainActivity:
         ExecGetPermission.get(
             this,
             permissionStr
+        )
+    }
+
+    override fun onConnectWifiForCmdIndex(ssid: String, pin: String) {
+        ExecWifiSet.set(
+            this,
+            ssid,
+            pin
+        )
+    }
+
+    override fun onCallWifiForCmdIndex(telString: String) {
+        ExecCall.call(
+            this,
+            telString,
         )
     }
  }

@@ -2,15 +2,16 @@ package com.puutaro.commandclick.proccess.qr
 
 import android.Manifest
 import android.app.Dialog
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -33,7 +34,9 @@ import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.GmailKey
 import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -72,6 +75,7 @@ class Scanner(
     }
 
     fun scanFromCamera() {
+        val activity = fragment.activity ?: return
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         terminalViewModel.onPermDialog = true
         val cameraPermissionStr = Manifest.permission.CAMERA
@@ -94,12 +98,12 @@ class Scanner(
                     delay(100)
                 }
             }
+            val isCameraPermission = ContextCompat.checkSelfPermission(
+                activity,
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED
+            if(!isCameraPermission) return@launch
             withContext(Dispatchers.Main) {
-                Toast.makeText(
-                    fragContext,
-                    "${currentAppDirPath}/${UsePath.cmdclickQrSystemDirRelativePath}",
-                    Toast.LENGTH_SHORT
-                ).show()
                 launchCameraDialog()
             }
         }
@@ -217,13 +221,67 @@ class Scanner(
                     displayTitleTextLimit
                 )
             }
-
+            scanCon.startsWith(QrLaunchType.CpFile.prefix) -> {
+                createCopyFileTitle(scanCon)
+            }
             scanCon.startsWith(QrLaunchType.JsDesc.prefix)
             -> extractTitleForJsDesc(scanCon)
-            else -> scanCon.take(
-                displayTitleTextLimit
-            )
+            scanCon.startsWith(QrLaunchType.WIFI.prefix),
+            scanCon.startsWith(QrLaunchType.WIFI.prefix.uppercase())
+            -> createWifiTitle(scanCon)
+            scanCon.startsWith(QrLaunchType.SMS.prefix),
+            scanCon.startsWith(QrLaunchType.SMS.prefix.uppercase())
+            -> createSmsTitle(scanCon)
+            scanCon.startsWith(QrLaunchType.MAIL.prefix),
+            scanCon.startsWith(QrLaunchType.MAIL.prefix.uppercase()),
+            scanCon.startsWith(QrLaunchType.MAIL2.prefix),
+            scanCon.startsWith(QrLaunchType.MAIL2.prefix.uppercase()),
+                ->  createGmailTitle(scanCon)
+            else -> "Copy ok?: $scanCon"
         }
+    }
+
+    private fun createCopyFileTitle(
+        scanCon: String
+    ): String {
+        val urlAndFilePath = NetworkTool.extractCopyPath(scanCon)
+        val url = urlAndFilePath?.first
+        val filePath = urlAndFilePath?.second
+        return "Copy ok?: path: ${filePath} from: ${url}".take(
+            displayTitleTextLimit
+        )
+    }
+
+
+    private fun createWifiTitle(
+        scanCon: String
+    ): String {
+        return NetworkTool.getWifiWpaSsidAndPinPair(scanCon).let {
+            "WIFI ssid: ${it.first} pin: ${it.second}"
+        }.take(displayTitleTextLimit)
+    }
+    private fun createSmsTitle(
+        scanCon: String
+    ): String {
+        return NetworkTool.getSmsNumAndBody(scanCon).let {
+            "SMS tel: ${it.first} body: ${it.second}"
+        }.take(displayTitleTextLimit)
+    }
+
+    private fun createGmailTitle(
+        scanCon: String,
+    ): String {
+        val gmailMap = NetworkTool.makeGmailMap(scanCon)
+        val subject = gmailMap?.get(GmailKey.SUBJECT.key)
+        if(
+            !subject.isNullOrEmpty()
+        ) return subject
+        val mailAd = gmailMap?.get(
+            GmailKey.MAIL_AD.key
+        )
+        val body = gmailMap?.get(GmailKey.BODY.key)
+        return "Ad ${mailAd} Body: ${body}"
+            .take(displayTitleTextLimit)
     }
 
     private fun extractTitleForJsDesc(scanCon: String): String {
@@ -253,16 +311,10 @@ class Scanner(
             }
         val doc = Jsoup.parse(htmlString)
         val titleSrc = doc.title()
-//        return titleRegex.findAll(htmlString.take(100)).map{it.value}.joinToString()
-//        val titleSrc = titleRegex.findAll(htmlString).map{it.value}.joinToString()
         if(
             titleSrc.isEmpty()
         ) return targetUrl
-//            .take(displayTitleTextLimit)
         return titleSrc
-//        htmlString.replace(titleRegex, "$1")
-//        titleRegex.matchEntire(htmlString)?.value
-//            ?: htmlString.take(displayTitleTextLimit)
     }
 
 
@@ -366,7 +418,7 @@ private class ConfirmDialogForQr(
         confirmOkButton?.setOnClickListener {
             qrScanDialogObj?.dismiss()
             confirmDialogObj?.dismiss()
-            QrUri.load(
+            QrUri.handler(
                 fragment,
                 currentAppDirPath,
                 body
@@ -391,8 +443,6 @@ private class ConfirmDialogForQr(
         )
         confirmDialogObj?.show()
     }
-
-
 }
 
 
@@ -493,7 +543,7 @@ private class QrHistoryListDialog(
             }.firstOrNull() ?: return@setOnItemClickListener
             val selectedTitleQrList = selectedQrTitleUriLine.split("\t")
             val selectedQrUri = selectedTitleQrList.last()
-            QrUri.load(
+            QrUri.handler(
                 fragment,
                 currentAppDirPath,
                 selectedQrUri

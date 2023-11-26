@@ -24,6 +24,10 @@ enum class FileDownLoadStatus(
         "Download fail",
     "Cannot get file list: %s",
     ),
+    FAILURE_GREP_FILE_LIST(
+        "Download fail",
+        "No exist: %s",
+    ),
     CONNECTION_ERR(
     "Download fail",
     "Connection err: %s",

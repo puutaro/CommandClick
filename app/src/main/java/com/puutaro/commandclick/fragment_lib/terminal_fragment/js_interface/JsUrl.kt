@@ -34,23 +34,6 @@ class JsUrl(
             terminalFragment.currentAppDirPath,
             loadConSrc
         )
-//        val jsDesc = QrLaunchType.JsDesc.prefix
-//        val replaceLoadUrlSrc =
-//            ScriptPreWordReplacer.replaceForQr(
-//                loadConSrc,
-//                terminalFragment.currentAppDirPath
-//            )
-//        val loadUrl =
-//            if(
-//                replaceLoadUrlSrc.trim().startsWith(jsDesc)
-//            ) replaceLoadUrlSrc.split(jsDescSeparator).filterIndexed {
-//                        index, _ -> index > 0
-//                }.joinToString(jsDescSeparator)
-//            else replaceLoadUrlSrc
-//        BroadCastIntent.sendUrlCon(
-//            terminalFragment,
-//            loadUrl.trim()
-//        )
     }
 
     @JavascriptInterface
