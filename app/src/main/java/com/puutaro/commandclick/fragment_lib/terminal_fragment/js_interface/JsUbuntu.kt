@@ -220,7 +220,9 @@ class JsUbuntu(
                             String(),
                             String(),
                             200,
-                        ).isNotEmpty()
+                        ).let{
+                            CurlManager.convertResToStrByConn(it)
+                        }.isNotEmpty()
                     } catch (e: Exception){
                         false
                     }

@@ -25,13 +25,14 @@ class JsCurl(
         header: String = String(),
         timeout: Int
     ): String {
-        val resByteArray = CurlManager.get(
+        return CurlManager.get(
             mainUrl,
             queryParameter,
             header,
             timeout
-        )
-        return String(resByteArray)
+        ).let {
+            CurlManager.convertResToStrByConn(it)
+        }
     }
 
     fun getAndSave (
@@ -50,6 +51,9 @@ class JsCurl(
             header,
             timeout
         ).let {
+            if(
+                !CurlManager.isConnOk(it)
+            ) return@let
             FileSystems.writeFromByteArray(
                 parentDirPath,
                 fileName,
@@ -70,7 +74,9 @@ class JsCurl(
             header,
             bodyStr,
             timeout
-        ).toString()
+        ).let {
+            CurlManager.convertResToStrByConn(it)
+        }
     }
 
     @JavascriptInterface
@@ -90,6 +96,9 @@ class JsCurl(
             bodyStr,
             timeout
         ).let {
+            if(
+                !CurlManager.isConnOk(it)
+            ) return@let
             FileSystems.writeFromByteArray(
                 parentDirPath,
                 fileName,
@@ -149,6 +158,6 @@ class JsCurl(
 
     @JavascriptInterface
     fun isConnOk(res: String): Boolean {
-        return CurlManager.isConnOk(res)
+        return CurlManager.isConnOk(res.toByteArray())
     }
 }

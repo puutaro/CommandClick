@@ -12,10 +12,18 @@ object CurlManager {
     val invalidResponse = "cmdclickConnectionError"
 
     fun isConnOk(
-        res: String
+        resByteArray: ByteArray
     ): Boolean {
-        return res.isNotEmpty()
-                && res != invalidResponse
+        return !resByteArray.contentEquals(invalidResponse.toByteArray())
+    }
+
+    fun convertResToStrByConn(
+        resByteArray: ByteArray
+    ): String {
+        if (
+            !isConnOk(resByteArray)
+        ) return String()
+        return String(resByteArray)
     }
     fun get(
         mainUrl: String,

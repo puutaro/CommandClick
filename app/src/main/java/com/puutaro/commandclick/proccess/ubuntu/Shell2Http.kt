@@ -30,16 +30,8 @@ object Shell2Http {
                 String(),
                 String(),
                 timeoutMiliSec,
-            ).let { String(it) }
-            if (
-                shellOutput.isEmpty()
-            ) {
-//                LogSystems.stdErr(
-//                    "no output executeShellPath: ${executeShellPath}, " +
-//                            "tabSepaArgs: ${tabSepaArgs}, " +
-//                            "timeoutMiliSec: ${timeoutMiliSec}"
-//                )
-                return String()
+            ).let {
+                CurlManager.convertResToStrByConn(it)
             }
             return shellOutput
         } catch (e: Exception) {

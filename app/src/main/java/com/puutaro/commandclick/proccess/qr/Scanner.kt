@@ -231,6 +231,7 @@ class Scanner(
             .split(jsDescSeparator)
             .firstOrNull()?.trim()
             ?.removePrefix(QrLaunchType.JsDesc.prefix)
+            ?.trim()
             ?: scanCon.take(
                 displayTitleTextLimit
             )
@@ -247,7 +248,7 @@ class Scanner(
                     "",
                     2000
                 ).let {
-                    String(it)
+                    CurlManager.convertResToStrByConn(it)
                 }
             }
         val doc = Jsoup.parse(htmlString)

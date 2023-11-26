@@ -58,6 +58,9 @@ class UrlFileSystems {
                 String(),
                 2000,
             ).let {
+                if(
+                    !CurlManager.isConnOk(it)
+                ) return@let String()
                 String(it)
             }
         }
@@ -88,6 +91,9 @@ class UrlFileSystems {
                 String(),
                 2000,
             )
+            if(
+                !CurlManager.isConnOk(conByteArray)
+            ) return@forEach
             FileSystems.writeFromByteArray(
                 destiFileParentDirPath,
                 destiFileName,

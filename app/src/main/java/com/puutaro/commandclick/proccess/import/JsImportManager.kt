@@ -152,7 +152,7 @@ object JsImportManager {
                         String(),
                         2000,
                     ).let {
-                        String(it)
+                        CurlManager.convertResToStrByConn(it)
                     }
                 }
                 withContext(Dispatchers.IO) {

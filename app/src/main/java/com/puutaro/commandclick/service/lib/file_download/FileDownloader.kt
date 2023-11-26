@@ -46,17 +46,18 @@ object FileDownloader {
                 var fileListConSrc = String()
                 withContext(Dispatchers.IO) {
                     for (i in 1..3) {
-                        fileListConSrc = CurlManager.post(
+                        val fileListConSrcByteArray = CurlManager.post(
                             mainUrl,
                             String(),
                             getFilePathAndArg,
                             curlTimeoutMiliSec
-                        ).let {
-                            String(it)
-                        }
+                        )
                         if (
-                            CurlManager.isConnOk(fileListCon)
-                        ) break
+                            CurlManager.isConnOk(fileListConSrcByteArray)
+                        ) {
+                            fileListConSrc = String(fileListConSrcByteArray)
+                            break
+                        }
                         delay(retryDelayMiliSec)
                     }
                 }
@@ -84,7 +85,10 @@ object FileDownloader {
                 }
             }
             if(
-                !CurlManager.isConnOk(fileListCon)
+                !CurlManager.isConnOk(
+                    fileListCon.toByteArray()
+                )
+                || fileListCon.isEmpty()
             ) {
                 withContext(Dispatchers.IO){
                     fileDownloadService.notificationBuilder
@@ -228,7 +232,7 @@ object FileDownloader {
                         )
                         ?.setContentText(
                             FileDownLoadStatus.COMP.message.format(
-                                "Get comp ${getPathOrFannelRawName}"
+                                getPathOrFannelRawName
                             )
                         )
                     fileDownloadService.notificationBuilder?.clearActions()
