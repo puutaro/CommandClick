@@ -15,7 +15,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.Intent.IntentVarient
+import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
@@ -137,7 +137,7 @@ class AsciiArtJsDialog(
                     stream
                 )
             }
-            IntentVarient.sharePngImage(
+            IntentVariant.sharePngImage(
                 file,
                 activity
             )

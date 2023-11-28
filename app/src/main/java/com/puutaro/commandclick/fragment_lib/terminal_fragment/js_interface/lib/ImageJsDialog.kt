@@ -15,7 +15,8 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.Intent.IntentVarient
+import com.puutaro.commandclick.util.Intent.IntentVariant
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -50,10 +51,14 @@ class ImageJsDialog(
         terminalViewModel.onDialog = true
         runBlocking {
             withContext(Dispatchers.Main) {
-                execCreate(
-                    title,
-                    imageSrcFilePath
-                )
+                try {
+                    execCreate(
+                        title,
+                        imageSrcFilePath
+                    )
+                } catch (e: Exception){
+                    LogSystems.stdErr(e.toString())
+                }
             }
             withContext(Dispatchers.IO) {
                 while (true) {
@@ -141,7 +146,7 @@ class ImageJsDialog(
             FileOutputStream(file).use { stream ->
                 myBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
             }
-            IntentVarient.sharePngImage(
+            IntentVariant.sharePngImage(
                 file,
                 activity
             )

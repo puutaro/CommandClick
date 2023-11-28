@@ -12,7 +12,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.EditSiteBroadCast
 import com.puutaro.commandclick.util.Intent.IntentLauncher
-import com.puutaro.commandclick.util.Intent.IntentVarient
+import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -140,7 +140,7 @@ class JsIntent(
                 Toast.LENGTH_LONG
             ).show()
         }
-        IntentVarient.sharePngImage(
+        IntentVariant.sharePngImage(
             imageFilePathObj,
             activity
         )
