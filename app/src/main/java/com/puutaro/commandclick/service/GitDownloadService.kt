@@ -17,6 +17,7 @@ import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.git_download.ByCloneDownloader
 import com.puutaro.commandclick.service.lib.git_download.ByFannelListDownloader
 import com.puutaro.commandclick.service.lib.git_download.GitDownloadBroadcastHandler
+import com.puutaro.commandclick.service.lib.git_download.GitdownLoadServiceFinisher
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadLabels
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadStatus
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
@@ -174,6 +175,11 @@ class GitDownloadService: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GitdownLoadServiceFinisher.finish(this)
     }
 
     private fun startComamndNoti(){

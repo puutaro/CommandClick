@@ -34,10 +34,7 @@ import com.puutaro.commandclick.component.adapter.subMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.GCalendarKey
-import com.puutaro.commandclick.util.GmailKey
 import com.puutaro.commandclick.util.Intent.CurlManager
-import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -241,6 +238,8 @@ class Scanner(
             scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix),
             scanCon.startsWith(QrLaunchType.G_CALENDAR.prefix.uppercase())
                 -> createGcalendarTitle(scanCon)
+            scanCon.startsWith(QrLaunchType.ON_GIT.prefix)
+            -> createOnGitTitle(scanCon)
             else -> "Copy ok?: $scanCon"
         }
     }
@@ -248,7 +247,7 @@ class Scanner(
     private fun createCopyFileTitle(
         scanCon: String
     ): String {
-        val urlAndFilePath = NetworkTool.extractCopyPath(scanCon)
+        val urlAndFilePath = QrMapper.extractCopyPath(scanCon)
         val url = urlAndFilePath?.first
         val filePath = urlAndFilePath?.second
         return "Copy ok?: path: ${filePath} from: ${url}".take(
@@ -260,14 +259,14 @@ class Scanner(
     private fun createWifiTitle(
         scanCon: String
     ): String {
-        return NetworkTool.getWifiWpaSsidAndPinPair(scanCon).let {
+        return QrMapper.getWifiWpaSsidAndPinPair(scanCon).let {
             "WIFI ssid: ${it.first} pin: ${it.second}"
         }.take(displayTitleTextLimit)
     }
     private fun createSmsTitle(
         scanCon: String
     ): String {
-        return NetworkTool.getSmsNumAndBody(scanCon).let {
+        return QrMapper.getSmsNumAndBody(scanCon).let {
             "SMS tel: ${it.first} body: ${it.second}"
         }.take(displayTitleTextLimit)
     }
@@ -275,7 +274,7 @@ class Scanner(
     private fun createGmailTitle(
         scanCon: String,
     ): String {
-        val gmailMap = NetworkTool.makeGmailMap(scanCon)
+        val gmailMap = QrMapper.makeGmailMap(scanCon)
         val subject = gmailMap?.get(GmailKey.SUBJECT.key)
         if(
             !subject.isNullOrEmpty()
@@ -289,10 +288,19 @@ class Scanner(
     }
 
     private fun createGcalendarTitle(scanCon: String): String {
-        val gcalendarMap = NetworkTool.makeGCalendarMap(scanCon)
+        val gcalendarMap = QrMapper.makeGCalendarMap(scanCon)
         val title = gcalendarMap.get(GCalendarKey.TITLE.key)
             ?: return scanCon.take(displayTitleTextLimit)
         return "calendar: $title".take(displayTitleTextLimit)
+    }
+
+    private fun createOnGitTitle(
+        scanCon: String
+    ): String {
+        val onGitMap = QrMapper.makeOnGitMap(scanCon)
+        val title = onGitMap.get(OnGitKey.NAME.key)
+            ?: return scanCon.take(displayTitleTextLimit)
+        return "Git download: $title".take(displayTitleTextLimit)
     }
 
     private fun extractTitleForJsDesc(scanCon: String): String {

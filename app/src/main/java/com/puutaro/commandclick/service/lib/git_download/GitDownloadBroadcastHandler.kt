@@ -31,16 +31,7 @@ object GitDownloadBroadcastHandler {
         gitDownloadService: GitDownloadService,
         intent: Intent,
     ){
-        BroadcastManagerForService.unregisterBroadcastReceiver(
-            gitDownloadService,
-            gitDownloadService.broadcastReceiverForGitDownload,
-        )
-        gitDownloadService.notificationManager.cancel(
-            gitDownloadService.chanelId
-        )
-        gitDownloadService.gitDownloadJob?.cancel()
-        gitDownloadService.getListFileConJob?.cancel()
-        gitDownloadService.stopSelf()
+        GitdownLoadServiceFinisher.finish(gitDownloadService)
 
     }
 
