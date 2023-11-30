@@ -14,5 +14,6 @@ enum class QrLaunchType(
     MAIL2("matmsg:"),
     TEL("tel:"),
     G_CALENDAR("gcalendar:"),
+    ON_GIT("onGit:"),
 
 }

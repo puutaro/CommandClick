@@ -7,22 +7,25 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
+import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.service.FileDownloadService
+import com.puutaro.commandclick.service.GitDownloadService
+import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.util.BroadCastIntent
-import com.puutaro.commandclick.util.GCalendarKey
-import com.puutaro.commandclick.util.GmailKey
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.NetworkTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 
 
 object QrUri {
 
     private val jsDescSeparator = QrSeparator.sepalator.str
+    private val keyMissingErrStr = "Must specify %s"
 
     fun handler(
         fragment: Fragment,
@@ -77,6 +80,12 @@ object QrUri {
                 fragment,
                 loadConSrc
             )
+            loadConSrc.startsWith(QrLaunchType.ON_GIT.prefix)
+            -> execOnGit(
+                fragment,
+                currentAppDirPath,
+                loadConSrc,
+            )
             else
             -> execCopy(
                 fragment,
@@ -97,6 +106,7 @@ object QrUri {
         ).show()
     }
 
+
     private fun execCpFile(
         fragment: Fragment,
         currentAppDirPath: String,
@@ -104,7 +114,7 @@ object QrUri {
     ){
         val fileDownloadService = FileDownloadService::class.java
         val context = fragment.context
-        val urlAndPathPair = NetworkTool.extractCopyPath(cpQrString) ?: return
+        val urlAndPathPair = QrMapper.extractCopyPath(cpQrString) ?: return
         val mainUrl = urlAndPathPair.first
         val filePath = urlAndPathPair.second
         val intent = Intent(
@@ -122,6 +132,80 @@ object QrUri {
         intent.putExtra(
             FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
             currentAppDirPath
+        )
+        try {
+            context?.let {
+                ContextCompat.startForegroundService(context, intent)
+            }
+        }catch (e: Exception){
+            LogSystems.stdErr(e.toString())
+        }
+    }
+
+
+    private fun execOnGit(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        onGitCon: String
+    ){
+        val gitDownloadService = GitDownloadService::class.java
+        val context = fragment.context
+        val onGitMap = QrMapper.makeOnGitMap(onGitCon)
+        if(
+            onGitMap.isEmpty()
+        ) return
+        val prefix = onGitMap.get(OnGitKey.PREFIX.key)
+        if(
+            prefix.isNullOrEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                keyMissingErrStr.format(OnGitKey.PREFIX.key),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val fannelListPath = onGitMap.get(OnGitKey.LIST_PATH.key)
+        val parentDirRelativePathPATH = onGitMap.get(OnGitKey.DIR_PATH.key)
+        val fannelRawName = onGitMap.get(OnGitKey.NAME.key)
+        if(
+            fannelRawName.isNullOrEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                keyMissingErrStr.format(OnGitKey.NAME.key),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val intent = Intent(
+            context,
+            gitDownloadService
+        )
+        intent.putExtra(
+            GitDownloadExtra.PREFIX.schema,
+            prefix
+        )
+        intent.putExtra(
+            GitDownloadExtra.FANNEL_RAW_NAME.schema,
+            fannelRawName
+        )
+        intent.putExtra(
+            GitDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
+            currentAppDirPath
+        )
+        intent.putExtra(
+            GitDownloadExtra.FANNEL_LIST_PATH.schema,
+            fannelListPath
+        )
+        intent.putExtra(
+            GitDownloadExtra.PARENT_DIR_PATH_FOR_FILE_UPLOAD.schema,
+            parentDirRelativePathPATH
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrSchema.txt",
+            "prefix: $prefix\nfannelRawName: $fannelRawName\ncurrentAppDirPath: $currentAppDirPath\nparentDirRelativePathPATH: $parentDirRelativePathPATH\n"
         )
         try {
             context?.let {
@@ -156,9 +240,9 @@ object QrUri {
         val context = fragment.context
             ?: return
         val intent = Intent()
-        intent.data = CalendarContract.Calendars.CONTENT_URI;
+        intent.data = CalendarContract.Calendars.CONTENT_URI
         intent.action = Intent.ACTION_INSERT
-        val gCalendarMap = NetworkTool.makeGCalendarMap(
+        val gCalendarMap = QrMapper.makeGCalendarMap(
             gCalendarStr
         )
         val jsUtil = JsUtil(fragment)
@@ -238,7 +322,7 @@ object QrUri {
             ?: return
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("mailto:")
-        val gmailMap = NetworkTool.makeGmailMap(loadConSrc)
+        val gmailMap = QrMapper.makeGmailMap(loadConSrc)
         val mailAd = gmailMap?.get(
             GmailKey.MAIL_AD.key
         ) ?: return
@@ -261,7 +345,7 @@ object QrUri {
         loadConSrc: String
     ){
         val context = fragment.context ?: return
-        val numBodyPair = NetworkTool.getSmsNumAndBody(loadConSrc)
+        val numBodyPair = QrMapper.getSmsNumAndBody(loadConSrc)
         val number =  numBodyPair.first ?: return
         val body = numBodyPair.second
         val uri = Uri.parse("smsto:$number")
@@ -270,7 +354,7 @@ object QrUri {
             intent.putExtra("sms_body", body)
         }
         try {
-            context.startActivity(intent);
+            context.startActivity(intent)
         }catch (e: Exception){
             LogSystems.stdErr(e.toString())
         }
@@ -282,7 +366,7 @@ object QrUri {
         loadConSrc: String
     ){
         val context = fragment.context ?: return
-        val ssidPinPair = NetworkTool.getWifiWpaSsidAndPinPair(loadConSrc)
+        val ssidPinPair = QrMapper.getWifiWpaSsidAndPinPair(loadConSrc)
         val ssid = ssidPinPair.first ?: return
         val pin = ssidPinPair.second?: return
         val listener = context as? CommandIndexFragment.OnConnectWifiListenerForCmdIndex

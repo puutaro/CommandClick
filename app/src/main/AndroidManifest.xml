@@ -100,6 +100,7 @@
         <service android:name=".service.UbuntuService"/>
         <service android:name=".service.FileDownloadService"/>
         <service android:name=".service.FileUploadService"/>
+        <service android:name=".service.GitDownloadService"/>
     </application>
 
     <queries>

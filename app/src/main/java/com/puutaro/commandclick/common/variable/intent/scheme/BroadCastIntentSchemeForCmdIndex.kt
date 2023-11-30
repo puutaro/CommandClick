@@ -5,7 +5,11 @@ enum class BroadCastIntentSchemeForCmdIndex(
     val scheme: String
 ) {
     UPDATE_FANNEL_LIST(
-        "com.puutaro.commandclick.install.fannel",
-        "install",
+        "com.puutaro.commandclick.cmd_index.install_fannel",
+        "install_fannel",
+    ),
+    UPDATE_INDEX_FANNEL_LIST(
+    "com.puutaro.commandclick.cmd_index.update_index_fannel_list",
+    "update_index_fannel_list",
     )
 }
