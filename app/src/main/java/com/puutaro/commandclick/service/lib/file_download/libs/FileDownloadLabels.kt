@@ -5,5 +5,4 @@ enum class FileDownloadLabels(
 ) {
     CANCEL("CANCEL"),
     CLOSE("CLOSE")
-
 }

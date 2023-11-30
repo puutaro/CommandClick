@@ -1,10 +1,9 @@
 package com.puutaro.commandclick.service.lib.file_download
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
 import com.puutaro.commandclick.service.FileDownloadService
-import com.puutaro.commandclick.service.lib.file_download.libs.FileDownLoadStatus
+import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadStatus
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadLabels
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
@@ -76,7 +75,7 @@ object FileDownloader {
                     if(j % 30 != 0) continue
                     fileDownloadService.notificationBuilder
                         ?.setContentText(
-                            FileDownLoadStatus.GET_FILE_LIST.message.format("${j / 10}")
+                            FileDownloadStatus.GET_FILE_LIST.message.format("${j / 10}")
                         )?.build()?.let {
                             fileDownloadService.notificationManager.notify(
                                 fileDownloadService.chanelId,
@@ -95,10 +94,10 @@ object FileDownloader {
                     fileDownloadService.notificationBuilder
                         ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
                         ?.setContentTitle(
-                            FileDownLoadStatus.FAILURE_FILE_LIST.title,
+                            FileDownloadStatus.FAILURE_FILE_LIST.title,
                         )
                         ?.setContentText(
-                            FileDownLoadStatus.FAILURE_FILE_LIST.message.format(getPathOrFannelRawName),
+                            FileDownloadStatus.FAILURE_FILE_LIST.message.format(getPathOrFannelRawName),
                         )
                     fileDownloadService.notificationBuilder?.clearActions()
                     fileDownloadService.notificationBuilder?.addAction(
@@ -144,10 +143,10 @@ object FileDownloader {
             fileDownloadService.notificationBuilder
                 ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
                 ?.setContentTitle(
-                    FileDownLoadStatus.FAILURE_GREP_FILE_LIST.title,
+                    FileDownloadStatus.FAILURE_GREP_FILE_LIST.title,
                 )
                 ?.setContentText(
-                    FileDownLoadStatus.FAILURE_GREP_FILE_LIST.message.format(getPathOrFannelRawName),
+                    FileDownloadStatus.FAILURE_GREP_FILE_LIST.message.format(getPathOrFannelRawName),
                 )
             fileDownloadService.notificationBuilder?.clearActions()
             fileDownloadService.notificationBuilder?.addAction(
@@ -199,10 +198,10 @@ object FileDownloader {
                 fileDownloadService.notificationBuilder
                     ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
                     ?.setContentTitle(
-                        FileDownLoadStatus.CONNECTION_ERR.title
+                        FileDownloadStatus.CONNECTION_ERR.title
                     )
                     ?.setContentText(
-                        FileDownLoadStatus.CONNECTION_ERR.message.format(
+                        FileDownloadStatus.CONNECTION_ERR.message.format(
                             mainUrl
                         )
                     )
@@ -253,10 +252,10 @@ object FileDownloader {
                     fileDownloadService.notificationBuilder
                         ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
                         ?.setContentTitle(
-                            FileDownLoadStatus.COMP.title
+                            FileDownloadStatus.COMP.title
                         )
                         ?.setContentText(
-                            FileDownLoadStatus.COMP.message.format(
+                            FileDownloadStatus.COMP.message.format(
                                 getPathOrFannelRawName
                             )
                         )

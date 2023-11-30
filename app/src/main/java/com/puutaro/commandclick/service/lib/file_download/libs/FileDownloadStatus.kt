@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.service.lib.file_download.libs
 
-enum class FileDownLoadStatus(
+enum class FileDownloadStatus(
     val title: String,
     val message: String
 ) {

@@ -15,7 +15,7 @@ import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.lib.file_download.FileDownloader
 import com.puutaro.commandclick.service.lib.file_download.FileDownloadBroadcastHandler
-import com.puutaro.commandclick.service.lib.file_download.libs.FileDownLoadStatus
+import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadStatus
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadLabels
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import kotlinx.coroutines.Job
@@ -46,7 +46,7 @@ class FileDownloadService: Service() {
         )
     }
 
-    private var broadcastReceiverForFileDownlaod: BroadcastReceiver = object : BroadcastReceiver() {
+    var broadcastReceiverForFileDownlaod: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             FileDownloadBroadcastHandler.handle(
                 this@FileDownloadService,
@@ -71,8 +71,8 @@ class FileDownloadService: Service() {
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
-            .setContentTitle(FileDownLoadStatus.RUNNING.title)
-            .setContentText(FileDownLoadStatus.RUNNING.message)
+            .setContentTitle(FileDownloadStatus.RUNNING.title)
+            .setContentText(FileDownloadStatus.RUNNING.message)
             .setDeleteIntent(
                 cancelPendingIntent
             )
@@ -137,8 +137,8 @@ class FileDownloadService: Service() {
             .setSmallIcon(android.R.drawable.stat_sys_download)
             .setAutoCancel(true)
             .setOnlyAlertOnce(true)
-            .setContentTitle(FileDownLoadStatus.RUNNING.title)
-            .setContentText(FileDownLoadStatus.RUNNING.message)
+            .setContentTitle(FileDownloadStatus.RUNNING.title)
+            .setContentText(FileDownloadStatus.RUNNING.message)
             .setDeleteIntent(
                 cancelPendingIntent
             )

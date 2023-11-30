@@ -61,7 +61,7 @@ class FileUploadService: Service() {
         )
     }
 
-    private val broadcastReceiverForFileUplaod: BroadcastReceiver = object : BroadcastReceiver() {
+    val broadcastReceiverForFileUplaod: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             FileUploadBroadcastHandler.handle(
                 this@FileUploadService,

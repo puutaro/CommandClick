@@ -3,7 +3,8 @@ package com.puutaro.commandclick.service.lib.file_download
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeFileDownload
 import com.puutaro.commandclick.service.FileDownloadService
-import com.puutaro.commandclick.service.lib.file_download.libs.FileDownLoadStatus
+import com.puutaro.commandclick.service.lib.BroadcastManagerForService
+import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadStatus
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadLabels
 
 
@@ -31,6 +32,10 @@ object FileDownloadBroadcastHandler {
         fileDownloadService: FileDownloadService,
         intent: Intent,
     ){
+        BroadcastManagerForService.unregisterBroadcastReceiver(
+            fileDownloadService,
+            fileDownloadService.broadcastReceiverForFileDownlaod,
+        )
         fileDownloadService.notificationManager.cancel(
             fileDownloadService.chanelId
         )
@@ -49,8 +54,8 @@ object FileDownloadBroadcastHandler {
         fileDownloadService.notificationBuilder?.apply{
             setSmallIcon(android.R.drawable.stat_sys_download_done)
             setAutoCancel(true)
-            setContentTitle(FileDownLoadStatus.STAN.title)
-            setContentText(FileDownLoadStatus.STAN.message)
+            setContentTitle(FileDownloadStatus.STAN.title)
+            setContentText(FileDownloadStatus.STAN.message)
             setDeleteIntent(
                 cancelPendingIntent
             )
