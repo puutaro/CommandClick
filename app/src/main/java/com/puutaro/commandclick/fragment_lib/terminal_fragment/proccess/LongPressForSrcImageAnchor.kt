@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.ListView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
@@ -94,6 +95,10 @@ class LongPressForSrcImageAnchor(
         longPressSrcImageAnchorDialog?.setOnCancelListener {
             longPressSrcImageAnchorDialog?.dismiss()
         }
+        longPressSrcImageAnchorDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         longPressSrcImageAnchorDialog?.window?.setGravity(Gravity.BOTTOM)
         longPressSrcImageAnchorDialog?.show()
     }

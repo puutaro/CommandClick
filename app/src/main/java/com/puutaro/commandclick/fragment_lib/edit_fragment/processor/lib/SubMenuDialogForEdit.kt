@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
 import androidx.fragment.app.activityViewModels
@@ -45,6 +46,10 @@ object SubMenuDialogForEdit {
             terminalViewModel
         )
         setCancelListener()
+        subMenuDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         subMenuDialog
             ?.window
             ?.setGravity(Gravity.BOTTOM)
