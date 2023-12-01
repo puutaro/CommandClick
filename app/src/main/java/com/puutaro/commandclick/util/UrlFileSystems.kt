@@ -9,10 +9,6 @@ class UrlFileSystems {
 
     private var fannelListCon = String()
 
-    private val gitUserContentPrefix =
-        "https://raw.githubusercontent.com/" +
-                "puutaro/commandclick-repository/master"
-
     private val gitUserContentManagePrefix =
         "$gitUserContentPrefix/manage"
 
@@ -20,6 +16,10 @@ class UrlFileSystems {
         "$gitUserContentPrefix/fannel"
 
     companion object {
+
+        val gitUserContentPrefix =
+            "https://raw.githubusercontent.com/" +
+                    "puutaro/commandclick-repository/master"
         enum class FirstCreateFannels(
             val str: String,
         ) {

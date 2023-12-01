@@ -1,14 +1,19 @@
 package com.puutaro.commandclick.util
 
+import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.file.Files
-import java.nio.file.Paths
 import java.nio.file.StandardCopyOption
+import java.security.DigestInputStream
+import java.security.MessageDigest
+import kotlin.io.path.fileVisitor
 
 
 object FileSystems {
@@ -249,17 +254,11 @@ object FileSystems {
         sourceDirPath: String,
         destiDirPath: String,
     ){
-        val from = File(sourceDirPath)
-        val to = File(destiDirPath)
-        try {
-            Files.move(
-                from.toPath(),
-                to.toPath(),
-                StandardCopyOption.REPLACE_EXISTING
-            )
-        } catch (ex: IOException) {
-            ex.printStackTrace()
-        }
+        copyDirectory(
+            sourceDirPath,
+            destiDirPath
+        )
+        removeDir(sourceDirPath)
     }
 
     fun moveFile(
@@ -270,10 +269,16 @@ object FileSystems {
             !File(sourceShellFilePath).isFile
         ) return
         try {
-            Files.move(
-                File(sourceShellFilePath).toPath(),
-                File(destiShellFilePath).toPath(),
-                StandardCopyOption.REPLACE_EXISTING
+            copyFile(
+                sourceShellFilePath,
+                destiShellFilePath,
+            )
+            val removeFileObj = File(sourceShellFilePath)
+            val removeFileParentDirPath = removeFileObj.parent
+                ?: return
+            removeFiles(
+                removeFileParentDirPath,
+                removeFileObj.name
             )
         } catch (e: Exception) {
             return
@@ -338,5 +343,61 @@ object FileSystems {
         removeFiles(dirPath, filePath)
         createDirs(dirPath)
         FileUtils.writeByteArrayToFile(file, byteArrayCon)
+    }
+
+    fun savePngFromBitMap(
+        dirPath: String,
+        fileName: String,
+        bitmap: Bitmap
+    ){
+        try {
+            createDirs(
+                dirPath
+            )
+            removeFiles(
+                dirPath,
+                fileName
+            )
+            val maskFile = File(
+                dirPath,
+                fileName,
+            )
+            val outputStream = FileOutputStream(maskFile)
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
+            //outputStream.flush()
+            outputStream.close()
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+            LogSystems.stdErr(e.stackTrace.toString())
+        }
+    }
+
+    fun checkSum(
+        dirPath: String,
+        fileName: String
+    ): String {
+        val targetFile = File(dirPath, fileName)
+        val fullFilePath = "$dirPath/$fileName"
+        if(
+            !targetFile.isFile
+        ) return fullFilePath
+        try {
+            val inputStream = FileInputStream(targetFile)
+            return DigestInputStream(
+                inputStream,
+                MessageDigest.getInstance("MD5")
+            ).use { input ->
+                val buffer = ByteArray(1024 * 1024) // buffer size は任意のサイズ (ここでは1MB)
+                var read = 0
+                while (read != -1) {
+                    // ファイル末尾まで読み込む
+                    read = input.read(buffer)
+                }
+                input.messageDigest.digest().joinToString("") { "%02x".format(it) }
+            }
+        } catch (e: Exception){
+            LogSystems.stdErr(e.toString())
+            return fullFilePath
+        }
     }
 }
