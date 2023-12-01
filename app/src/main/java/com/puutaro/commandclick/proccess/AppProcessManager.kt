@@ -17,7 +17,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.subMenuAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -91,7 +91,7 @@ object AppProcessManager {
             killDialog?.findViewById<ListView>(
                 R.id.list_dialog_list_view
             ) ?: return
-        val killTypeListAdapter = subMenuAdapter(
+        val killTypeListAdapter = SubMenuAdapter(
             context,
             killTypeList.toMutableList()
         )
@@ -115,7 +115,7 @@ object AppProcessManager {
             killDialog?.findViewById<ListView>(
                 R.id.list_dialog_list_view
             ) ?: return
-        val processListAdapter = subMenuAdapter(
+        val processListAdapter = SubMenuAdapter(
             context,
             processList.toMutableList()
         )
@@ -144,7 +144,7 @@ object AppProcessManager {
                 parent, View, pos, id
             ->
             killDialog?.dismiss()
-            val menuListAdapter = dialogListView.adapter as subMenuAdapter
+            val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedProcess = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             killTypeHandler(
@@ -188,7 +188,7 @@ object AppProcessManager {
                 parent, View, pos, id
             ->
             killDialog?.dismiss()
-            val menuListAdapter = dialogListView.adapter as subMenuAdapter
+            val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedProcess = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             execKillProcess(
