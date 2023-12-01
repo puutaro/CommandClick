@@ -8,6 +8,7 @@ import android.content.pm.ShortcutManager
 import android.graphics.drawable.Icon
 import android.view.Gravity
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
@@ -106,7 +107,7 @@ class ShortCutManager(
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
-            shortcutNamePromptDialog?.findViewById<AppCompatEditText>(
+            shortcutNamePromptDialog?.findViewById<AutoCompleteTextView>(
                 com.puutaro.commandclick.R.id.prompt_dialog_input
             )
         val promptCancelButton =
