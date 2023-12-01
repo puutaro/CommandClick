@@ -15,7 +15,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.component.adapter.subMenuAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
@@ -496,7 +496,7 @@ class ToolbarButtonProducerForEdit(
                     this.findViewById<NoScrollListView>(
                         R.id.setting_menu_list_view
                     )
-                val menuListAdapter = subMenuAdapter(
+                val menuListAdapter = SubMenuAdapter(
                     settingButtonViewContext,
                     menuListMap.toMutableList()
                 )
@@ -577,7 +577,7 @@ class ToolbarButtonProducerForEdit(
         menuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
-            val menuListAdapter = menuListView.adapter as subMenuAdapter
+            val menuListAdapter = menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnumsForEdit.SETTING.itemName -> {
                     SubMenuDialogForEdit.launch(

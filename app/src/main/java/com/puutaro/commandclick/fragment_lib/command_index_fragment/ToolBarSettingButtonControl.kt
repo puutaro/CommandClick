@@ -13,7 +13,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.component.adapter.subMenuAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -87,7 +87,7 @@ class ToolBarSettingButtonControl(
                         this.findViewById<NoScrollListView>(
                             R.id.setting_menu_list_view
                         )
-                    val menuListAdapter = subMenuAdapter(
+                    val menuListAdapter = SubMenuAdapter(
                         settingButtonViewContext,
                         menuListMap.toMutableList()
                     )
@@ -171,7 +171,7 @@ class ToolBarSettingButtonControl(
                 parent, View, pos, id ->
             menuPopupWindow?.dismiss()
             val menuListAdapter =
-                menuListView.adapter as subMenuAdapter
+                menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnums.ADD.itemName -> {
                     AddScriptHandler(

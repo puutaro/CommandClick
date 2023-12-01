@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.subMenuAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.util.CcPathTool
@@ -84,7 +84,7 @@ class CopyFileEvent(
             copyFileDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
-        val subMenuAdapter = subMenuAdapter(
+        val subMenuAdapter = SubMenuAdapter(
             context,
             appDirList.toMutableList()
         )
@@ -100,7 +100,7 @@ class CopyFileEvent(
     ) {
         appDirListView.setOnItemClickListener {
                 parent, View, pos, id ->
-            val menuListAdapter = appDirListView.adapter as subMenuAdapter
+            val menuListAdapter = appDirListView.adapter as SubMenuAdapter
             val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             execInvokeItemSetClickListnerForCopyFile(
