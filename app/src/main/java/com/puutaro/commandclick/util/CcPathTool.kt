@@ -4,14 +4,23 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 
 object CcPathTool {
     fun makeFannelDirName(
-        fannelName: String
+        fannelNameSrc: String
     ): String {
-        return fannelName
-            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-            .removeSuffix(UsePath.SHELL_FILE_SUFFIX) +
-                "Dir"
+        val lastIndex = fannelNameSrc.lastIndexOf('.')
+        val fannelName = if (lastIndex != -1) {
+            fannelNameSrc.substring(0, lastIndex)
+        } else fannelNameSrc
+        return "${fannelName}Dir"
     }
 
+    fun makeFannelRawName(
+        fannelNameSrc: String
+    ): String {
+        val lastIndex = fannelNameSrc.lastIndexOf('.')
+        return if (lastIndex != -1) {
+            fannelNameSrc.substring(0, lastIndex)
+        } else fannelNameSrc
+    }
     fun getMainAppDirPath(
         currentSubFannelPath: String
     ): String {
