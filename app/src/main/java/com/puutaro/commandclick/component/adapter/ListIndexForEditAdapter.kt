@@ -3,12 +3,17 @@ package com.puutaro.commandclick.component.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -16,6 +21,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class ListIndexForEditAdapter(
@@ -27,9 +33,9 @@ class ListIndexForEditAdapter(
 
     val context = editFragment.context
     val activity = editFragment.activity
-    private val shortSizeThreshold = 50
-    private val middleSizeThreshold = 100
     private val maxTakeSize = 150
+    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
+    private val qrLogo = QrLogo(editFragment)
 
 
     class ListIndexListViewHolder(
@@ -37,9 +43,9 @@ class ListIndexForEditAdapter(
         val view: View
     ): RecyclerView.ViewHolder(view) {
 
-        val fannelContentsTextView =
-            view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_adapter_contents
+        val fannelContentsQrLogoView =
+            view.findViewById<AppCompatImageView>(
+                com.puutaro.commandclick.R.id.fannel_index_list_qr_log
             )
         val fannelNameTextView =
             view.findViewById<AppCompatTextView>(
@@ -87,17 +93,26 @@ class ListIndexForEditAdapter(
                     fannelName
                 ).textToList().take(maxTakeSize)
             }
+            val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+            val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            val qrPngPathObj = File(qrPngPath)
+
             withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.text =
-                    fannelConList.joinToString("\n")
-            }
-            val textSize = withContext(Dispatchers.IO) {
-                culCTextSize(
-                    fannelConList
-                )
-            }
-            withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.textSize = textSize
+                if(
+                    fannelName.isEmpty()
+                    || fannelName == "-"
+                ) return@withContext
+                if(qrPngPathObj.isFile){
+                    holder.fannelContentsQrLogoView.load(qrPngPath)
+                    return@withContext
+                }
+                qrLogo.createAndSaveRnd(
+                    "${currentAppDirPath}/${fannelName}",
+                    currentAppDirPath,
+                    fannelName,
+                )?.let {
+                    holder.fannelContentsQrLogoView.setImageDrawable(it)
+                }
             }
             val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
                 setFannelContentsBackColor(
@@ -106,7 +121,7 @@ class ListIndexForEditAdapter(
                 )
             }
             withContext(Dispatchers.Main){
-                holder.fannelContentsTextView.setBackgroundColor(
+                holder.fannelContentsQrLogoView.setBackgroundColor(
                     context?.getColor(fannelConBackGroundColorInt) as Int
                 )
                 withContext(Dispatchers.Main) {
@@ -125,11 +140,20 @@ class ListIndexForEditAdapter(
                             holder
                         )
                     }
-                    holder.fannelContentsTextView.setOnClickListener {
-                        fannelContentsClickListener?.onFannelContentsClick(
+                    val fannelContentsQrLogoView = holder.fannelContentsQrLogoView
+                    fannelContentsQrLogoView.setOnClickListener {
+                        fannelQrLogoClickListener?.onFannelQrLogoClick(
                             itemView,
                             holder
                         )
+                    }
+                    fannelContentsQrLogoView.setOnLongClickListener {
+                        qrLongClickListener?.onQrLongClick(
+                            fannelContentsQrLogoView,
+                            holder,
+                            position
+                        )
+                        true
                     }
                 }
             }
@@ -137,6 +161,7 @@ class ListIndexForEditAdapter(
     }
 
     var fannelNameClickListener: OnFannelNameItemClickListener? = null
+    var qrLongClickListener: OnQrLogoLongClickListener? = null
     interface OnFannelNameItemClickListener {
         fun onFannelNameClick(
             itemView: View,
@@ -144,9 +169,17 @@ class ListIndexForEditAdapter(
         )
     }
 
-    var fannelContentsClickListener: OnFannelContentsItemClickListener? = null
-    interface OnFannelContentsItemClickListener {
-        fun onFannelContentsClick(
+    interface OnQrLogoLongClickListener {
+        fun onQrLongClick(
+            imageView: AppCompatImageView,
+            holder: ListIndexListViewHolder,
+            position: Int
+        )
+    }
+
+    var fannelQrLogoClickListener: OnFannelQrLogoItemClickListener? = null
+    interface OnFannelQrLogoItemClickListener {
+        fun onFannelQrLogoClick(
             itemView: View,
             holder: ListIndexListViewHolder
         )
@@ -159,19 +192,6 @@ class ListIndexForEditAdapter(
             holder: ListIndexListViewHolder,
             position: Int
         )
-    }
-
-    private fun culCTextSize(
-        fannelConList: List<String>
-    ): Float {
-        val fannelConListSize = fannelConList.size
-        if (
-            fannelConListSize < shortSizeThreshold
-        ) return 2f
-        else if (
-            fannelConListSize < middleSizeThreshold
-        ) return 1f
-        return 0.5f
     }
 
     private fun setFannelContentsBackColor(

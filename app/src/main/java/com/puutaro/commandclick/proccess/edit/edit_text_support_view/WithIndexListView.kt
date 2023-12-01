@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +34,7 @@ import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
@@ -81,7 +83,7 @@ class WithIndexListView(
     )
     private var selectedItemForCopy = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
-    private val getDirectory = editFragment.registerForActivityResult(
+    private val getDirectoryAndCopy = editFragment.registerForActivityResult(
         ActivityResultContracts.OpenDocument()) { uri ->
         if (
             uri == null
@@ -203,6 +205,9 @@ class WithIndexListView(
             updateList: List<String>,
         ){
             val editListRecyclerView = editFragment.binding.editListRecyclerView
+            if(
+                !editListRecyclerView.isVisible
+            ) return
             val listIndexForEditAdapter =
                 editListRecyclerView.adapter as ListIndexForEditAdapter
             listIndexForEditAdapter.listIndexList.clear()
@@ -304,7 +309,8 @@ class WithIndexListView(
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
         invokeItemSetClickListenerForFileList()
-        invokeContentsSetClickListenerForFileList()
+        invokeQrLogoSetClickListenerForFileList()
+        invokeQrLogoSetLongClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForHistory(
             menuList
         )
@@ -341,11 +347,11 @@ class WithIndexListView(
         }
     }
 
-    private fun invokeContentsSetClickListenerForFileList() {
+    private fun invokeQrLogoSetClickListenerForFileList() {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.fannelContentsClickListener = object: ListIndexForEditAdapter.OnFannelContentsItemClickListener {
-            override fun onFannelContentsClick(
+        listIndexForEditAdapter.fannelQrLogoClickListener = object: ListIndexForEditAdapter.OnFannelQrLogoItemClickListener {
+            override fun onFannelQrLogoClick(
                 itemView: View,
                 holder: ListIndexForEditAdapter.ListIndexListViewHolder
             ) {
@@ -366,6 +372,14 @@ class WithIndexListView(
                 editListSearchEditText.setText(String())
             }
         }
+    }
+
+    private fun invokeQrLogoSetLongClickListenerForFileList(
+    ) {
+        FannelLogoLongClickDoForListIndex.invoke(
+            editFragment,
+            filterDir,
+        )
     }
 
     private fun makeSearchEditText(
@@ -687,29 +701,6 @@ class WithIndexListView(
                     selectedItem,
                     String()
                 )
-//                TODO delete scroll because of recycler view update speed depending on edge
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    withContext(Dispatchers.IO) {
-//                        for (i in 0..3000) {
-//                            delay(200)
-//                            if(
-//                                !terminalViewModel.onDialog
-//                            ) break
-//                        }
-//                    }
-//                    withContext(Dispatchers.Main){
-//                        listIndexListUpdateFileList(
-//                            editFragment,
-//                            makeFileList(),
-//                            false
-//                        )
-//                        delay(100)
-//                        val listIndexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
-//                        editListRecyclerView.layoutManager?.scrollToPosition(
-//                            listIndexForEditAdapter.itemCount - 1
-//                        )
-//                    }
-//                }
                 return
             }
             preMenuType.editS.name -> {
@@ -722,23 +713,6 @@ class WithIndexListView(
                     selectedItem,
                     "setting"
                 )
-//                TODO delete scroll because of recycler view update speed depending on edge
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    withContext(Dispatchers.IO) {
-//                        for (i in 0..3000) {
-//                            delay(200)
-//                            if(
-//                                !terminalViewModel.onDialog
-//                            ) break
-//                        }
-//                    }
-//                    withContext(Dispatchers.Main){
-//                        listIndexListUpdateFileList(
-//                            editFragment,
-//                            makeFileList()
-//                        )
-//                    }
-//                }
             }
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
@@ -776,7 +750,7 @@ class WithIndexListView(
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
-            promptDialog?.findViewById<AppCompatEditText>(
+            promptDialog?.findViewById<AutoCompleteTextView>(
                 com.puutaro.commandclick.R.id.prompt_dialog_input
             )
         val promptCancelButton =
@@ -859,7 +833,7 @@ class WithIndexListView(
             )
         promptMessageTextView?.text = "current app dir name: ${selectedItem}"
         val promptEditText =
-            promptDialog?.findViewById<AppCompatEditText>(
+            promptDialog?.findViewById<AutoCompleteTextView>(
                 com.puutaro.commandclick.R.id.prompt_dialog_input
             ) ?: return
         val promptCancelButton =
@@ -923,7 +897,7 @@ class WithIndexListView(
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
-            promptDialog?.findViewById<AppCompatEditText>(
+            promptDialog?.findViewById<AutoCompleteTextView>(
                 com.puutaro.commandclick.R.id.prompt_dialog_input
             )
         promptEditText?.setText(
@@ -961,6 +935,14 @@ class WithIndexListView(
             if(
                 selectedItem == renamedAppDirName
             ) return@setOnClickListener
+            val selectedItemFannelDirName = CcPathTool.makeFannelDirName(selectedItem)
+            val selectedItemFannelDirPath = "${UsePath.cmdclickAppDirAdminPath}/$selectedItemFannelDirName"
+            val renamedFannelDirName = CcPathTool.makeFannelDirName(renamedAppDirName)
+            val renamedFannelDirPath = "${UsePath.cmdclickAppDirAdminPath}/$renamedFannelDirName"
+            FileSystems.moveDirectory(
+                selectedItemFannelDirPath,
+                renamedFannelDirPath
+            )
             CommandClickScriptVariable.makeAppDirAdminFile(
                 UsePath.cmdclickAppDirAdminPath,
                 renamedAppDirName
@@ -1029,7 +1011,7 @@ class WithIndexListView(
             selectedItem == throughMark
         ) return
         selectedItemForCopy = selectedItem
-        getDirectory.launch(
+        getDirectoryAndCopy.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
         )
     }
@@ -1090,7 +1072,7 @@ class WithIndexListView(
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
-            promptDialog?.findViewById<AppCompatEditText>(
+            promptDialog?.findViewById<AutoCompleteTextView>(
                 com.puutaro.commandclick.R.id.prompt_dialog_input
             )
         val promptCancelButton =
@@ -1191,11 +1173,10 @@ class WithIndexListView(
                 filterDir,
                 selectedItem
             )
-            val deleteFannelName =
+            val deleteFannelDir =
                 CcPathTool.makeFannelDirName(
                     selectedItem
                 )
-            val deleteFannelDir = deleteFannelName + UsePath.fannelDirSuffix
             FileSystems.removeDir(
                 "${filterDir}/${deleteFannelDir}"
             )
