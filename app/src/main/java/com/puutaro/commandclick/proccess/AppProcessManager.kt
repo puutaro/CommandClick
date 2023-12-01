@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess
 import android.app.Dialog
 import android.content.Intent
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
@@ -74,6 +75,10 @@ object AppProcessManager {
         killDialog?.setOnCancelListener {
             killDialog?.dismiss()
         }
+        killDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         killDialog?.window?.setGravity(Gravity.BOTTOM)
         killDialog?.show()
     }

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.app.Dialog
 import android.content.Context
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
@@ -67,6 +68,10 @@ class CopyFileEvent(
         copyFileDialog?.setOnCancelListener {
             copyFileDialog?.dismiss()
         }
+        copyFileDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
         copyFileDialog?.window?.setGravity(Gravity.BOTTOM)
         copyFileDialog?.show()
     }

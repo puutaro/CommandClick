@@ -86,13 +86,16 @@ class ImageJsDialog(
         imageDialogObj?.setContentView(
             com.puutaro.commandclick.R.layout.image_dialog_layout
         )
+        val titleImageView = imageDialogObj?.findViewById<AppCompatImageView>(
+            com.puutaro.commandclick.R.id.image_dialog_title_image
+        )
         val titleTextView = imageDialogObj?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.image_dialog_title
         )
         if(
             title.isNotEmpty()
         ) titleTextView?.text = title
-        else titleTextView?.isVisible = false
+        else titleImageView?.isVisible = false
         val imageContentsView = imageDialogObj?.findViewById<AppCompatImageView>(
             com.puutaro.commandclick.R.id.image_dialog_image
         )

@@ -8,6 +8,7 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.bachors.img2ascii.Img2Ascii
@@ -77,13 +78,16 @@ class AsciiArtJsDialog(
         spannableDialogObj?.setContentView(
             com.puutaro.commandclick.R.layout.spannable_grid_dialog_layout
         )
+        val spannableTitleLinearLayout = spannableDialogObj?.findViewById<LinearLayoutCompat>(
+            com.puutaro.commandclick.R.id.spannable_dialog_title_linearlayout
+        )
         val titleTextView = spannableDialogObj?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.spannable_dialog_title
         )
         if(
             title.isNotEmpty()
         ) titleTextView?.text = title
-        else titleTextView?.isVisible = false
+        else spannableTitleLinearLayout?.isVisible = false
         val spannableTextView = spannableDialogObj?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.spannable_dialog_contents
         )

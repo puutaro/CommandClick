@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
@@ -98,6 +99,9 @@ class ListJsDialog(
             dialogList.size <= searchSwitchThreshold
         ) searchText?.isVisible = false
 
+        val listDialogTitleLinearlayout = listDialog?.findViewById<LinearLayoutCompat>(
+            com.puutaro.commandclick.R.id.list_dialog_title_linearlayout
+        )
         val titleTextView = listDialog?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.list_dialog_title
         )
@@ -107,7 +111,7 @@ class ListJsDialog(
         if(
             title.isNotEmpty()
         ) titleTextView?.text = title
-        else titleTextView?.isVisible = false
+        else listDialogTitleLinearlayout?.isVisible = false
         if(
             message.isNotEmpty()
         ) messageTextView?.text = message
