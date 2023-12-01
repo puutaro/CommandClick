@@ -10,7 +10,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 
 
-class subMenuAdapter(
+class SubMenuAdapter(
     context: Context,
     private val menuMapList: MutableList<Pair<String, Int>>
 ) : ArrayAdapter<String>(
