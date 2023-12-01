@@ -3,9 +3,12 @@ package com.puutaro.commandclick.service.lib.file_upload
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
+import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -135,32 +138,52 @@ object CopyFannelServer {
     private fun catResponseHandler(
         fileUploadService: FileUploadService,
         currentAppDirPath: String,
-        receivePath: String,
+        cpFileMapStr: String,
     ): ByteArray {
-        return  when {
-            receivePath.startsWith(ReceivePathMacroType.GET_FILE_LIST.name)
+        val cpFileMap = cpFileMapStr
+            .split("\t").map {
+                CcScript.makeKeyValuePairFromSeparatedString(
+                    it,
+                "="
+                )
+        }.toMap()
+        val cpFileMacro = cpFileMap.get(CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key)
+        return  when(cpFileMacro) {
+            ReceivePathMacroType.GET_FILE_LIST.name
             -> catFileList(
                 currentAppDirPath,
-                receivePath
+                cpFileMap
             )
-            ReceivePathMacroType.CLOSE_COPY_SERVER.name == receivePath
+            ReceivePathMacroType.CLOSE_COPY_SERVER.name
             -> closeCopyServer(
                 fileUploadService
             )
             else -> catFileCon(
                 currentAppDirPath,
-                receivePath
+                cpFileMap
             )
         }
     }
 
     private fun catFileList(
-        currentAppDirPath: String,
-        receivePath: String,
+        currentAppDirPathSrc: String,
+        cpFileMap: Map<String, String>,
     ): ByteArray {
+        val path = cpFileMap.get(
+            CpFileKey.PATH.key
+        ) ?: return byteArrayOf()
+        val currentAppDirPath = cpFileMap.get(
+            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
+        ).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let currentAppDirPathSrc
+            it
+        }
+
         val parentDirPath = makeParentDirPath(
             currentAppDirPath,
-            receivePath,
+            path,
         )
         val fileListCon = File(parentDirPath).walk().map{
             if(!it.isFile) return@map String()
@@ -181,18 +204,28 @@ object CopyFannelServer {
     }
 
     private fun catFileCon(
-        currentAppDirPath: String,
-        receivePath: String
+        currentAppDirPathSrc: String,
+        cpFileMap: Map<String, String>
     ): ByteArray {
-
+        val path = cpFileMap.get(
+            CpFileKey.PATH.key
+        ) ?: return byteArrayOf()
+        val currentAppDirPath = cpFileMap.get(
+            CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key
+        ).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let currentAppDirPathSrc
+            it
+        }
         val catFilePath = convertServerFilePath(
             currentAppDirPath,
-            receivePath,
+            path,
         )
         val catFilePathObj = File(catFilePath)
         if(!catFilePathObj.isFile)  {
             LogSystems.stdErr("not found $catFilePath")
-            return byteArrayOf()
+            return CurlManager.invalidResponse.toByteArray()
         }
         val fis = FileInputStream(catFilePathObj)
         val inputStream = BufferedInputStream(fis)
