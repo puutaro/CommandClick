@@ -60,7 +60,6 @@ object FannelNameClickListenerSetter {
                     )
                     updateLastModifiedListView(
                         cmdListView,
-                        fannelIndexListAdapter,
                         currentAppDirPath,
                         selectedShellFileName
                     )
@@ -171,7 +170,6 @@ object FannelNameClickListenerSetter {
 
 private fun updateLastModifiedListView (
     cmdListView: RecyclerView,
-    fannelIndexListAdapter: FannelIndexListAdapter,
     currentAppDirPath: String,
     selectecJsFileName: String
 ) {
