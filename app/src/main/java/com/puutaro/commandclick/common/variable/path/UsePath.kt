@@ -178,6 +178,9 @@ object UsePath {
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val systemExecJsDirName = "systemJs"
     val appHistoryClickJsName = "appHistoryClick.js"
+    val qrDirName = "qr"
+    val qrPngName = "qr.png"
+    val qrPngRelativePath = "$qrDirName/$qrPngName"
 
     fun makeOmitPath(
         path: String
