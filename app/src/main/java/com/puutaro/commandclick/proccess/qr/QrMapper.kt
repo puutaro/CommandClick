@@ -3,8 +3,16 @@ package com.puutaro.commandclick.proccess.qr
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.UrlFileSystems
 
 object QrMapper {
+
+    val onGitTemplate =
+        QrLaunchType.ON_GIT.prefix +
+                "${OnGitKey.PREFIX.key}=${UrlFileSystems.gitUserContentPrefix};" +
+                "${OnGitKey.LIST_PATH.key}=manage/fannels/list/fannels.txt;" +
+                "${OnGitKey.DIR_PATH.key}=fannel;" +
+                "${OnGitKey.NAME.key}=%s"
 
     fun getWifiWpaSsidAndPinPair(
         scanStr: String
@@ -64,29 +72,41 @@ object QrMapper {
         return mailAdMap + subjectBodyMap
     }
 
-    fun extractCopyPath(
-        cpQrString: String
-    ): Pair<String, String>? {
-        val httpPrefix = WebUrlVariables.httpPrefix
-        val cpFilePrefix = QrLaunchType.CpFile.prefix
-        val urlAndFilePath =
-            cpQrString
-                .trim()
-                .removePrefix(cpFilePrefix)
-                .trim()
-                .split(";")
-        val url =
-            urlAndFilePath.firstOrNull()?.trim()?.let {
-                if(
-                    it.startsWith(WebUrlVariables.httpPrefix)
-                    || it.startsWith(WebUrlVariables.httpsPrefix)
-                ) return@let it
-                "${httpPrefix}${it}"
-            } ?: return null
-        val filePath =
-            urlAndFilePath.getOrNull(1)?.trim()
-                ?: return null
-        return url to filePath
+    fun makeCpFileMap(
+        cpCpFileSrcCon: String
+    ): Map<String, String?> {
+        val cpCpFileMapSrcStr =
+            cpCpFileSrcCon
+                .split(":")
+                .filterIndexed { index, _ ->
+                    index > 0
+                }.joinToString(":")
+        return cpCpFileMapSrcStr.split(";").map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }.toMap()
+//        val httpPrefix = WebUrlVariables.httpPrefix
+//        val cpFilePrefix = QrLaunchType.CpFile.prefix
+//        val urlAndFilePath =
+//            cpCpFileSrcCon
+//                .trim()
+//                .removePrefix(cpFilePrefix)
+//                .trim()
+//                .split(";")
+//        val url =
+//            urlAndFilePath.firstOrNull()?.trim()?.let {
+//                if(
+//                    it.startsWith(WebUrlVariables.httpPrefix)
+//                    || it.startsWith(WebUrlVariables.httpsPrefix)
+//                ) return@let it
+//                "${httpPrefix}${it}"
+//            } ?: return null
+//        val filePath =
+//            urlAndFilePath.getOrNull(1)?.trim()
+//                ?: return null
+//        return url to filePath
     }
 
 
@@ -123,8 +143,30 @@ object QrMapper {
             )
         }.toMap()
     }
+
+    fun makeMainUrl(
+        mainUrlSrc: String?
+    ): String? {
+        if(
+            mainUrlSrc.isNullOrEmpty()
+        ) return null
+        val httpPrefix = WebUrlVariables.httpPrefix
+        if(
+            mainUrlSrc.startsWith(httpPrefix)
+            || mainUrlSrc.startsWith(WebUrlVariables.httpsPrefix)
+        ) return mainUrlSrc
+        return "${httpPrefix}${mainUrlSrc}"
+    }
 }
 
+enum class CpFileKey(
+    val key: String
+){
+    PATH("path"),
+    CURRENT_APP_DIR_PATH_FOR_SERVER("currentAppDirPathForServer"),
+    ADDRESS("address"),
+    CP_FILE_MACRO_FOR_SERVICE("cpFileMacro"),
+}
 
 enum class GmailKey(
     val key: String

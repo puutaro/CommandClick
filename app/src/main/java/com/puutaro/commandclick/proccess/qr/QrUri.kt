@@ -15,7 +15,6 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.GitDownloadService
-import com.puutaro.commandclick.service.lib.ubuntu.libs.IntentRequestMonitor
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
@@ -114,9 +113,33 @@ object QrUri {
     ){
         val fileDownloadService = FileDownloadService::class.java
         val context = fragment.context
-        val urlAndPathPair = QrMapper.extractCopyPath(cpQrString) ?: return
-        val mainUrl = urlAndPathPair.first
-        val filePath = urlAndPathPair.second
+        val cpFileMap = QrMapper.makeCpFileMap(cpQrString)
+        val mainUrl = QrMapper.makeMainUrl(
+            cpFileMap.get(CpFileKey.ADDRESS.key)
+        )
+        if(
+            mainUrl.isNullOrEmpty()
+        ){
+            Toast.makeText(
+                context,
+                keyMissingErrStr.format(CpFileKey.ADDRESS.key),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val filePath = cpFileMap.get(CpFileKey.PATH.key)
+        if(
+            filePath.isNullOrEmpty()
+        ){
+            Toast.makeText(
+                context,
+                keyMissingErrStr.format(CpFileKey.PATH.key),
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val parentDirPath =
+            cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val intent = Intent(
             context,
             fileDownloadService
@@ -130,9 +153,15 @@ object QrUri {
             filePath
         )
         intent.putExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
+            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
             currentAppDirPath
         )
+        parentDirPath?.let {
+            intent.putExtra(
+                FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+                currentAppDirPath
+            )
+        }
         try {
             context?.let {
                 ContextCompat.startForegroundService(context, intent)

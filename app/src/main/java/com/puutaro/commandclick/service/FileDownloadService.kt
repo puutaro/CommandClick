@@ -24,6 +24,10 @@ class FileDownloadService: Service() {
 
     var fileDownloadJob: Job? = null
     var getListFileConJob: Job? = null
+    var mainUrl: String = String()
+    var fullPathPrFannelRawName: String = String()
+    var currentAppDirPath: String = String()
+    var currentAppDirPathForUploader: String? = null
     private val notificationIdToImportance =
         NotificationIdToImportance.HIGH
     val chanelId = ServiceChannelNum.fileDownload
@@ -102,7 +106,7 @@ class FileDownloadService: Service() {
         fileDownloadJob?.cancel()
         val stanIntent = Intent()
         stanIntent.action = BroadCastIntentSchemeFileDownload.STAN_FILE_DOWNLOAD.action
-        val mainUrl = intent?.getStringExtra(
+        mainUrl = intent?.getStringExtra(
             FileDownloadExtra.MAIN_URL.schema
         ).let {
             if(
@@ -111,7 +115,7 @@ class FileDownloadService: Service() {
             applicationContext.sendBroadcast(stanIntent)
             return START_NOT_STICKY
         }
-        val fullPathPrFannelRawName = intent?.getStringExtra(
+        fullPathPrFannelRawName = intent?.getStringExtra(
             FileDownloadExtra.FULL_PATH_OR_FANNEL_RAW_NAME.schema
         ).let {
             if(
@@ -120,8 +124,8 @@ class FileDownloadService: Service() {
             applicationContext.sendBroadcast(stanIntent)
             return START_NOT_STICKY
         }
-        val currentAppDirPath = intent?.getStringExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema
+        currentAppDirPath = intent?.getStringExtra(
+            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema
         ).let {
             if(
                 !it.isNullOrEmpty()
@@ -129,6 +133,9 @@ class FileDownloadService: Service() {
             applicationContext.sendBroadcast(stanIntent)
             return START_NOT_STICKY
         }
+        currentAppDirPathForUploader = intent?.getStringExtra(
+            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+        )
 
         notificationBuilder = NotificationCompat.Builder(
             applicationContext,
@@ -157,9 +164,6 @@ class FileDownloadService: Service() {
 
         fileDownloadJob = FileDownloader.save(
             this,
-            currentAppDirPath,
-            mainUrl,
-            fullPathPrFannelRawName
         )
         return START_NOT_STICKY
     }

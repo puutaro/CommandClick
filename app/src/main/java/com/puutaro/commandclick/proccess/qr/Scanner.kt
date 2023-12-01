@@ -30,7 +30,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
-import com.puutaro.commandclick.component.adapter.subMenuAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
@@ -247,10 +247,14 @@ class Scanner(
     private fun createCopyFileTitle(
         scanCon: String
     ): String {
-        val urlAndFilePath = QrMapper.extractCopyPath(scanCon)
-        val url = urlAndFilePath?.first
-        val filePath = urlAndFilePath?.second
-        return "Copy ok?: path: ${filePath} from: ${url}".take(
+        val cpFileMap = QrMapper.makeCpFileMap(scanCon)
+        val filePath = cpFileMap.get(CpFileKey.PATH.key)
+        if(
+            filePath.isNullOrEmpty()
+        ){
+           return scanCon.take(displayTitleTextLimit)
+        }
+        return "Copy from phone ok?: path: ${filePath}".take(
             displayTitleTextLimit
         )
     }
@@ -530,7 +534,7 @@ private class QrHistoryListDialog(
             )
         val subMenuPairList = makeQrTitleList(
         )
-        val subMenuAdapter = subMenuAdapter(
+        val subMenuAdapter = SubMenuAdapter(
             context,
             subMenuPairList.toMutableList()
         )
@@ -552,7 +556,7 @@ private class QrHistoryListDialog(
             qrScanDialogObj?.dismiss()
             codeScanner.releaseResources()
             subMenuDialog?.dismiss()
-            val menuListAdapter = subMenuListView.adapter as subMenuAdapter
+            val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedQrTitle = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             val selectedQrTitleUriLine = makeQrHistoryList().filter {
