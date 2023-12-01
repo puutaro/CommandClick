@@ -11,17 +11,23 @@ import android.widget.ListView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import coil.load
+import coil.transform.CircleCropTransformation
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
+import java.io.File
 
 
 object ExecOnLongClickDo {
@@ -49,6 +55,13 @@ object ExecOnLongClickDo {
                     )
                     contextMenuDialog?.setContentView(
                         R.layout.list_dialog_layout
+                    )
+                    setTitleImage(
+                        contextMenuDialog?.findViewById<AppCompatImageView>(
+                            R.id.list_dialog_title_image
+                        ),
+                        currentAppDirPath,
+                        selectedFannelName,
                     )
                     val listDialogTitle = contextMenuDialog?.findViewById<AppCompatTextView>(
                         R.id.list_dialog_title
@@ -180,6 +193,13 @@ private object CopySubMenuDialog {
         copySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
+        setTitleImage(
+            copySubMenuDialog?.findViewById<AppCompatImageView>(
+                R.id.list_dialog_title_image
+            ),
+            currentAppDirPath,
+            selectedScriptName,
+        )
         val listDialogTitle = copySubMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
         )
@@ -301,6 +321,13 @@ private object UtilitySubMenuDialog {
         )
         utilitySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
+        )
+        setTitleImage(
+            utilitySubMenuDialog?.findViewById<AppCompatImageView>(
+                R.id.list_dialog_title_image
+            ),
+            currentAppDirPath,
+            selectedScriptName,
         )
         val listDialogTitle = utilitySubMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
@@ -433,4 +460,20 @@ private enum class UtilitySubMenuEnums(
     DELETE("Delete", R.drawable.icons8_refresh),
     DESCRIPTION("Description", R.drawable.icons8_info),
     KILL("Kill", R.drawable.icons8_cancel)
+}
+
+private fun setTitleImage(
+    titleImageView: AppCompatImageView?,
+    currentAppDirPath: String,
+    selectedScriptName: String,
+){
+    val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
+    val qrLogoPath = "$currentAppDirPath/$fannelDirName/${UsePath.qrPngRelativePath}"
+    if(!File(qrLogoPath).isFile) return
+    titleImageView?.load(qrLogoPath){
+        crossfade(true)
+        transformations(
+            CircleCropTransformation()
+        )
+    }
 }
