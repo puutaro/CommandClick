@@ -109,14 +109,16 @@ class MakeListView(
     }
 
     fun onLongClickDo (
-        item: MenuItem,
-        contextItemSelected: Boolean,
-    ): Boolean {
-        return ExecOnLongClickDo.invoke(
+        fannelIndexListAdapter: FannelIndexListAdapter
+//        item: MenuItem,
+//        contextItemSelected: Boolean,
+    ) {
+        ExecOnLongClickDo.invoke(
             cmdIndexFragment,
             currentAppDirPath,
-            item,
-            contextItemSelected,
+            fannelIndexListAdapter
+//            item,
+//            contextItemSelected,
         )
     }
 }

@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.component.adapter
 
-import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -38,15 +36,10 @@ class FannelIndexListAdapter(
     private val qrPngNameRelativePath = UsePath.qrPngRelativePath
     private val qrLogo = QrLogo(cmdIndexFragment)
 
-    companion object {
-        var selectedFannelName = String()
-    }
-
     class FannelIndexListViewHolder(
         val activity: FragmentActivity?,
         val view: View
-        ): RecyclerView.ViewHolder(view),
-        OnCreateContextMenuListener {
+        ): RecyclerView.ViewHolder(view) {
 
         val fannelContentsQrLogoView =
             view.findViewById<AppCompatImageView>(
@@ -56,17 +49,6 @@ class FannelIndexListAdapter(
             view.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.fannel_index_list_adapter_name
             )
-        init {
-            view.setOnCreateContextMenuListener(this)
-        }
-        override fun onCreateContextMenu(
-            menu: ContextMenu?,
-            v: View?,
-            menuInfo: ContextMenu.ContextMenuInfo?
-        ) {
-            val inflater = activity?.menuInflater
-            inflater?.inflate(com.puutaro.commandclick.R.menu.cmd_index_list_menu, menu)
-        }
     }
 
     override fun getItemId(position: Int): Long {
@@ -138,16 +120,6 @@ class FannelIndexListAdapter(
             )
                 withContext(Dispatchers.Main) {
                     val itemView = holder.itemView
-                    this@FannelIndexListAdapter.itemLongClickListener =
-                        object : OnItemLongClickListener {
-                            override fun onItemLongClick(
-                                itemView: View,
-                                holder: FannelIndexListViewHolder,
-                                position: Int
-                            ) {
-                                selectedFannelName = holder.fannelNameTextView.text.toString()
-                            }
-                        }
 
                     itemView.setOnLongClickListener {
                         itemLongClickListener?.onItemLongClick(
@@ -155,7 +127,7 @@ class FannelIndexListAdapter(
                             holder,
                             position
                         )
-                        false
+                        true
                     }
                     itemView.setOnClickListener {
                         fannelNameClickListener?.onFannelNameClick(
@@ -251,5 +223,4 @@ class FannelIndexListAdapter(
         ) return com.puutaro.commandclick.R.color.terminal_color
         return com.puutaro.commandclick.R.color.fannel_icon_color
     }
-
 }

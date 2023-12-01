@@ -157,6 +157,9 @@ class CommandIndexFragment: Fragment() {
         makeListView.onLongClickQrDo(
             fannelIndexListAdapter
         )
+        makeListView.onLongClickDo(
+            fannelIndexListAdapter
+        )
         makeListView.cmdListSwipeToRefresh()
         cmdListView.adapter = fannelIndexListAdapter
         cmdListView.layoutManager = PreLoadLayoutManager(
@@ -169,7 +172,7 @@ class CommandIndexFragment: Fragment() {
             fannelIndexListAdapter,
         )
 
-        registerForContextMenu(cmdListView)
+//        registerForContextMenu(cmdListView)
 
         val cmdindexInternetButton = binding.cmdindexInternetButton
         KeyboardVisibilityEvent.setEventListener(activity) {
@@ -305,23 +308,23 @@ class CommandIndexFragment: Fragment() {
 //        inflater?.inflate(R.menu.cmd_index_list_menu, menu)
 //    }
 
-    override fun onContextItemSelected(item: MenuItem): Boolean {
-        super.onContextItemSelected(item)
-
-        val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
-            startUpPref
-        )
-        val makeListView = MakeListView(
-            binding,
-            this,
-            readSharePreffernceMap
-        )
-        return makeListView.onLongClickDo (
-            item,
-            super.onContextItemSelected(item),
-        )
-    }
+//    override fun onContextItemSelected(item: MenuItem): Boolean {
+//        super.onContextItemSelected(item)
+//
+//        val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
+//        val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
+//            startUpPref
+//        )
+//        val makeListView = MakeListView(
+//            binding,
+//            this,
+//            readSharePreffernceMap
+//        )
+//        return makeListView.onLongClickDo (
+//            item,
+//            super.onContextItemSelected(item),
+//        )
+//    }
 
     interface OnLongClickMenuItemsForCmdIndexListener {
         fun onLongClickMenuItemsforCmdIndex(
