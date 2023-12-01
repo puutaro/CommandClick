@@ -154,6 +154,9 @@ class CommandIndexFragment: Fragment() {
         makeListView.makeClickItemListener(
             fannelIndexListAdapter
         )
+        makeListView.onLongClickQrDo(
+            fannelIndexListAdapter
+        )
         makeListView.cmdListSwipeToRefresh()
         cmdListView.adapter = fannelIndexListAdapter
         cmdListView.layoutManager = PreLoadLayoutManager(
@@ -165,6 +168,7 @@ class CommandIndexFragment: Fragment() {
         makeListView.makeTextFilter(
             fannelIndexListAdapter,
         )
+
         registerForContextMenu(cmdListView)
 
         val cmdindexInternetButton = binding.cmdindexInternetButton
@@ -274,10 +278,13 @@ class CommandIndexFragment: Fragment() {
         EditTextWhenReuse.focus(this)
         installFannelDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
-        BroadcastRegister.registerBroadcastReceiver(
+        BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,
             broadcastReceiverForCmdIndex,
-            BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
+            listOf(
+                BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action,
+                BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
+            )
         )
     }
 
