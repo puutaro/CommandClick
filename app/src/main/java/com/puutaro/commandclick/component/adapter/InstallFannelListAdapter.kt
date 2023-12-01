@@ -3,13 +3,17 @@ package com.puutaro.commandclick.component.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -17,17 +21,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 class InstallFannelListAdapter(
     val cmdIndexFragment: CommandIndexFragment,
-    var fannelInstallerList: MutableList<String>
+    private val currentAppDirPath: String,
+    var fannelInstallerList: MutableList<String>,
 ): RecyclerView.Adapter<InstallFannelListAdapter.FannelInstallerListViewHolder>()
 {
     val context = cmdIndexFragment.context
     val activity = cmdIndexFragment.activity
-    private val shortSizeThreshold = 50
-    private val middleSizeThreshold = 100
     private val maxTakeSize = 200
+    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
+    private val qrLogo = QrLogo(cmdIndexFragment)
 
 
     class FannelInstallerListViewHolder(
@@ -35,8 +41,8 @@ class InstallFannelListAdapter(
         val view: View
     ): RecyclerView.ViewHolder(view) {
 
-        val fannelContentsTextView =
-            view.findViewById<AppCompatTextView>(
+        val fannelContentsQrLogoView =
+            view.findViewById<AppCompatImageView>(
                 com.puutaro.commandclick.R.id.install_fannel_adapter_contents
             )
         val fannelNameTextView =
@@ -68,25 +74,6 @@ class InstallFannelListAdapter(
             activity,
             itemView
         )
-//        fannelIndexListViewHolder.fannelNameTextView.setOnClickListener {
-//            fannelNameClickListener?.onFannelNameClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//        }
-//        fannelIndexListViewHolder.fannelNameTextView.setOnLongClickListener {
-//            fannelNameLongClickListener?.onFannelNameLongClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//            true
-//        }
-//        fannelIndexListViewHolder.fannelContentsTextView.setOnClickListener {
-//            fannelContentsClickListener?.onFannelContentsClick(
-//                itemView,
-//                fannelIndexListViewHolder
-//            )
-//        }
         return fannelInstallerListViewHolder
     }
 
@@ -121,16 +108,11 @@ class InstallFannelListAdapter(
                 ).textToList().take(maxTakeSize)
             }
             withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.text =
-                    fannelConList.joinToString("\n")
-            }
-            val textSize = withContext(Dispatchers.IO) {
-                culCTextSize(
-                    fannelConList
+                setQrLogo(
+                    currentAppDirPath,
+                    fannelName,
+                    holder,
                 )
-            }
-            withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.textSize = textSize
             }
             val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
                 setFannelContentsBackColor(
@@ -139,36 +121,18 @@ class InstallFannelListAdapter(
                 )
             }
             withContext(Dispatchers.Main){
-                holder.fannelContentsTextView.setBackgroundColor(
+                holder.fannelContentsQrLogoView.setBackgroundColor(
                     context?.getColor(fannelConBackGroundColorInt) as Int
                 )
                 withContext(Dispatchers.Main) {
                     val itemView = holder.itemView
-//                    this@FannelInstalListAdapter.itemLongClickListener =
-//                        object : OnItemLongClickListener {
-//                            override fun onItemLongClick(
-//                                itemView: View,
-//                                holder: FannelInstallerListViewHolder,
-//                                position: Int
-//                            ) {
-//                                cmdIndexFragment.recyclerViewIndex = position
-//                            }
-//                        }
-//                    itemView.setOnLongClickListener {
-//                        itemLongClickListener?.onItemLongClick(
-//                            itemView,
-//                            holder,
-//                            position
-//                        )
-//                        false
-//                    }
                     itemView.setOnClickListener {
                         fannelItemClickListener?.onFannelItemClick(
                             itemView,
                             holder
                         )
                     }
-                    holder.fannelContentsTextView.setOnClickListener {
+                    holder.fannelContentsQrLogoView.setOnClickListener {
                         fannelContentsClickListener?.onFannelContentsClick(
                             itemView,
                             holder
@@ -194,36 +158,6 @@ class InstallFannelListAdapter(
             itemView: View,
             holder: FannelInstallerListViewHolder
         )
-    }
-
-//    var itemLongClickListener: OnItemLongClickListener? = null
-//    interface OnItemLongClickListener {
-//        fun onItemLongClick(
-//            itemView: View,
-//            holder: FannelInstallerListViewHolder,
-//            position: Int
-//        )
-//    }
-
-//    var fannelNameLongClickListener: OnFannelNameLongClickListener? = null
-//    interface OnFannelNameLongClickListener {
-//        fun onFannelNameLongClick(
-//            itemView: View,
-//            holder: FannelIndexListViewHolder
-//        )
-//    }
-
-    private fun culCTextSize(
-        fannelConList: List<String>
-    ): Float {
-        val fannelConListSize = fannelConList.size
-        if (
-            fannelConListSize < shortSizeThreshold
-        ) return 2f
-        else if (
-            fannelConListSize < middleSizeThreshold
-        ) return 1f
-        return 0.5f
     }
 
     private fun setFannelContentsBackColor(
@@ -259,6 +193,41 @@ class InstallFannelListAdapter(
             == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return com.puutaro.commandclick.R.color.terminal_color
         return com.puutaro.commandclick.R.color.fannel_icon_color
+    }
+
+    private fun setQrLogo(
+        currentAppDirPath: String,
+        fannelName: String,
+        holder: FannelInstallerListViewHolder,
+    ){
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val qrPngPathObjInInstallIndex =
+            File(
+                "${UsePath.cmdclickFannelDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            )
+        if(
+            qrPngPathObjInInstallIndex.isFile
+        ) {
+            holder.fannelContentsQrLogoView.load(qrPngPathObjInInstallIndex.absolutePath)
+            return
+        }
+        val qrPngPathObjInFannelIndex =
+            File(
+                "${currentAppDirPath}/$fannelDirName/${qrPngNameRelativePath}"
+            )
+        if(
+            qrPngPathObjInFannelIndex.isFile
+        ) {
+            holder.fannelContentsQrLogoView.load(qrPngPathObjInFannelIndex.absolutePath)
+            return
+        }
+        qrLogo.createAndSaveRnd(
+            "${currentAppDirPath}/${fannelName}",
+            currentAppDirPath,
+            fannelName,
+        )?.let {
+            holder.fannelContentsQrLogoView.setImageDrawable(it)
+        }
     }
 
 }

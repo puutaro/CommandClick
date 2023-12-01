@@ -56,7 +56,8 @@ class InstallFromFannelRepo(
         )
         val installFannelListAdapter = InstallFannelListAdapter(
             cmdIndexFragment,
-            InstallFannelList.makeFannelListForListView().toMutableList()
+            currentAppDirPath,
+            InstallFannelList.makeFannelListForListView().toMutableList(),
         )
         cancelButtonSetOnClickListener()
         installFannelRecyclerView?.adapter = installFannelListAdapter
