@@ -9,11 +9,12 @@ import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelContentsClickListener
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelQrLogoClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelNameClickListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.KeyListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
 import com.puutaro.commandclick.util.*
 
 
@@ -77,7 +78,7 @@ class MakeListView(
             currentAppDirPath,
             fannelIndexListAdapter
         )
-        FannelContentsClickListener.set(
+        FannelQrLogoClickListener.set(
             cmdIndexFragment,
             currentAppDirPath,
             fannelIndexListAdapter
@@ -95,6 +96,16 @@ class MakeListView(
             )
             cmdListSwipeToRefresh.isRefreshing = false
         })
+    }
+
+    fun onLongClickQrDo(
+        fannelIndexListAdapter: FannelIndexListAdapter
+    ) {
+        ExecOnQrLongClickDo.invoke(
+            cmdIndexFragment,
+            currentAppDirPath,
+            fannelIndexListAdapter
+        )
     }
 
     fun onLongClickDo (

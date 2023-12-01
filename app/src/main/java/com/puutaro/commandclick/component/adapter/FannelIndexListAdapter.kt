@@ -5,19 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnCreateContextMenuListener
 import android.view.ViewGroup
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class FannelIndexListAdapter(
@@ -28,9 +34,9 @@ class FannelIndexListAdapter(
 {
     val context = cmdIndexFragment.context
     val activity = cmdIndexFragment.activity
-    private val shortSizeThreshold = 50
-    private val middleSizeThreshold = 100
     private val maxTakeSize = 150
+    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
+    private val qrLogo = QrLogo(cmdIndexFragment)
 
     companion object {
         var selectedFannelName = String()
@@ -42,9 +48,9 @@ class FannelIndexListAdapter(
         ): RecyclerView.ViewHolder(view),
         OnCreateContextMenuListener {
 
-        val fannelContentsTextView =
-            view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_adapter_contents
+        val fannelContentsQrLogoView =
+            view.findViewById<AppCompatImageView>(
+                com.puutaro.commandclick.R.id.fannel_index_list_qr_log
             )
         val fannelNameTextView =
             view.findViewById<AppCompatTextView>(
@@ -103,17 +109,22 @@ class FannelIndexListAdapter(
                     fannelName
                 ).textToList().take(maxTakeSize)
             }
+            val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+            val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            val qrPngPathObj = File(qrPngPath)
+
             withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.text =
-                    fannelConList.joinToString("\n")
-            }
-            val textSize = withContext(Dispatchers.IO) {
-                culCTextSize(
-                    fannelConList
-                )
-            }
-            withContext(Dispatchers.Main) {
-                holder.fannelContentsTextView.textSize = textSize
+                if(qrPngPathObj.isFile){
+                    holder.fannelContentsQrLogoView.load(qrPngPath)
+                    return@withContext
+                }
+                qrLogo.createAndSaveRnd(
+                    "${currentAppDirPath}/${fannelName}",
+                    currentAppDirPath,
+                    fannelName,
+                )?.let {
+                    holder.fannelContentsQrLogoView.setImageDrawable(it)
+                }
             }
              val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
                  setFannelContentsBackColor(
@@ -122,7 +133,7 @@ class FannelIndexListAdapter(
                  )
              }
             withContext(Dispatchers.Main){
-                holder.fannelContentsTextView.setBackgroundColor(
+                holder.fannelContentsQrLogoView.setBackgroundColor(
                 context?.getColor(fannelConBackGroundColorInt) as Int
             )
                 withContext(Dispatchers.Main) {
@@ -137,6 +148,7 @@ class FannelIndexListAdapter(
                                 selectedFannelName = holder.fannelNameTextView.text.toString()
                             }
                         }
+
                     itemView.setOnLongClickListener {
                         itemLongClickListener?.onItemLongClick(
                             itemView,
@@ -151,11 +163,20 @@ class FannelIndexListAdapter(
                             holder
                         )
                     }
-                    holder.fannelContentsTextView.setOnClickListener {
-                        fannelContentsClickListener?.onFannelContentsClick(
+                    val fannelContentsQrLogo = holder.fannelContentsQrLogoView
+                    fannelContentsQrLogo.setOnClickListener {
+                        fannelQrLogoClickListener?.onFannelContentsClick(
                             itemView,
                             holder
                         )
+                    }
+                    fannelContentsQrLogo.setOnLongClickListener {
+                        qrLongClickListener?.onQrLongClick(
+                            fannelContentsQrLogo,
+                            holder,
+                            position
+                        )
+                        true
                     }
                 }
             }
@@ -170,8 +191,8 @@ class FannelIndexListAdapter(
         )
     }
 
-    var fannelContentsClickListener: OnFannelContentsItemClickListener? = null
-    interface OnFannelContentsItemClickListener {
+    var fannelQrLogoClickListener: OnFannelQrLogoItemClickListener? = null
+    interface OnFannelQrLogoItemClickListener {
         fun onFannelContentsClick(
             itemView: View,
             holder: FannelIndexListViewHolder
@@ -179,6 +200,7 @@ class FannelIndexListAdapter(
     }
 
     var itemLongClickListener: OnItemLongClickListener? = null
+    var qrLongClickListener: OnQrLongClickListener? = null
     interface OnItemLongClickListener {
         fun onItemLongClick(
             itemView: View,
@@ -187,17 +209,12 @@ class FannelIndexListAdapter(
         )
     }
 
-    private fun culCTextSize(
-        fannelConList: List<String>
-    ): Float {
-        val fannelConListSize = fannelConList.size
-        if (
-            fannelConListSize < shortSizeThreshold
-        ) return 2f
-        else if (
-            fannelConListSize < middleSizeThreshold
-        ) return 1f
-        return 0.5f
+    interface OnQrLongClickListener {
+        fun onQrLongClick(
+            imageView: AppCompatImageView,
+            holder: FannelIndexListViewHolder,
+            position: Int
+        )
     }
 
     private fun setFannelContentsBackColor(

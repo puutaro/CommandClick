@@ -6,13 +6,13 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.ReadText
 
-object FannelContentsClickListener {
+object FannelQrLogoClickListener {
     fun set(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
-        fannelIndexListAdapter.fannelContentsClickListener = object: FannelIndexListAdapter.OnFannelContentsItemClickListener {
+        fannelIndexListAdapter.fannelQrLogoClickListener = object: FannelIndexListAdapter.OnFannelQrLogoItemClickListener {
             override fun onFannelContentsClick(
                 itemView: View,
                 holder: FannelIndexListAdapter.FannelIndexListViewHolder
