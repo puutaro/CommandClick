@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
 
+import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -13,7 +14,7 @@ object CopyAppDirEventForEdit {
         editFragment: EditFragment,
         currentAppDirPath: String,
         scriptScriptName: String,
-        editText: AppCompatEditText
+        editText: AutoCompleteTextView
     ){
         val context = editFragment.context
         val destiDirNameEditable = editText.text
