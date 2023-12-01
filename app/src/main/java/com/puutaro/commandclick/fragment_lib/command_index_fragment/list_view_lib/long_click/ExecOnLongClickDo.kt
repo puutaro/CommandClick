@@ -9,15 +9,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
+import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import coil.load
-import coil.transform.CircleCropTransformation
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -25,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
@@ -57,6 +60,7 @@ object ExecOnLongClickDo {
                         R.layout.list_dialog_layout
                     )
                     setTitleImage(
+                        cmdIndexFragment,
                         contextMenuDialog?.findViewById<AppCompatImageView>(
                             R.id.list_dialog_title_image
                         ),
@@ -194,6 +198,7 @@ private object CopySubMenuDialog {
             R.layout.list_dialog_layout
         )
         setTitleImage(
+            cmdIndexFragment,
             copySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),
@@ -323,6 +328,7 @@ private object UtilitySubMenuDialog {
             R.layout.list_dialog_layout
         )
         setTitleImage(
+            cmdIndexFragment,
             utilitySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),
@@ -463,17 +469,46 @@ private enum class UtilitySubMenuEnums(
 }
 
 private fun setTitleImage(
+    cmdIndexFragment: CommandIndexFragment,
     titleImageView: AppCompatImageView?,
     currentAppDirPath: String,
     selectedScriptName: String,
 ){
+    val context = cmdIndexFragment.context
+        ?: return
+    if(
+        titleImageView == null
+    ) return
+    val isEditExecute = checkEditExecute(
+        currentAppDirPath,
+        selectedScriptName,
+    )
+    titleImageView.setPadding(2, 2,2,2)
+    titleImageView.background = if(isEditExecute) {
+        AppCompatResources.getDrawable(context, R.color.terminal_color)
+    } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
     val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
     val qrLogoPath = "$currentAppDirPath/$fannelDirName/${UsePath.qrPngRelativePath}"
     if(!File(qrLogoPath).isFile) return
-    titleImageView?.load(qrLogoPath){
-        crossfade(true)
-        transformations(
-            CircleCropTransformation()
-        )
-    }
+    titleImageView.load(qrLogoPath)
+}
+
+private fun checkEditExecute(
+    currentAppDirPath: String,
+    selectedScriptName: String,
+): Boolean {
+    val scriptContentsList = ReadText(
+        currentAppDirPath,
+        selectedScriptName,
+    ).textToList()
+    val editExecuteAlwaysStr = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+    val isEditExecuteForJs = CommandClickVariables.returnEditExecuteValueStr(
+        scriptContentsList,
+        LanguageTypeSelects.JAVA_SCRIPT
+    ) == editExecuteAlwaysStr
+    val isEditExecuteForShell = CommandClickVariables.returnEditExecuteValueStr(
+        scriptContentsList,
+        LanguageTypeSelects.SHELL_SCRIPT
+    ) == editExecuteAlwaysStr
+    return isEditExecuteForJs || isEditExecuteForShell
 }
