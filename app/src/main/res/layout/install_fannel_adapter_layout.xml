@@ -17,22 +17,17 @@
         android:background="@android:color/white"
         android:orientation="horizontal">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/install_fannel_adapter_contents"
-            android:layout_width="60dp"
-            android:layout_height="90dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_vertical"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:fontFamily="serif"
-            android:textColor="@color/white"
-            android:textSize="0.5sp"
-            android:layout_marginEnd="7dp"
-            android:paddingTop="7dp"
-            android:paddingBottom="10dp"
+            android:padding="2dp"
+            android:layout_marginEnd="0dp"
             android:clickable="true"
             android:background="?android:attr/selectableItemBackground"
             />
+
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/install_fannel_adapter_vertical_linearlayout"
             android:layout_width="match_parent"
@@ -42,23 +37,23 @@
             android:orientation="vertical"
             android:layout_gravity="center_vertical"
             >
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/install_fannel_adapter_fannel_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="15dp"
-                    android:paddingEnd="15dp"
-                    android:textSize="20sp"
-                    />
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/fannel_index_list_adapter_fannel_summary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:paddingStart="20dp"
-                    android:paddingEnd="20dp"
-                    android:textSize="16sp"
-                    />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/install_fannel_adapter_fannel_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textSize="20sp"
+                />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/fannel_index_list_adapter_fannel_summary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:textSize="16sp"
+                />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
 </androidx.cardview.widget.CardView>
