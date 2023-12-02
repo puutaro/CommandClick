@@ -142,7 +142,8 @@ object QrUri {
         val parentDirPath =
             cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val isMoveCurrentDir =
-            cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key) ?: isMoveCurrentDirSrc
+            cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key)
+                ?: isMoveCurrentDirSrc
         val intent = Intent(
             context,
             fileDownloadService
