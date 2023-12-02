@@ -47,7 +47,6 @@ class ToolBarSettingButtonControl(
     )
 
     private val settingButtonView = binding.cmdindexSettingButton
-//    private val popup = PopupMenu(context, settingButtonView)
     private val installFromFannelRepo = InstallFromFannelRepo(
         cmdIndexFragment,
         currentAppDirPath,
@@ -238,7 +237,7 @@ private enum class MenuEnums(
     EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    QR_SCAN("scan QR", R.drawable.qr_code),
+    QR_SCAN("scan QR", R.drawable.icons_qr_code),
     USAGE("usage", R.drawable.icons8_info),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
     SETTING("setting",R.drawable.icons8_setting),

@@ -40,6 +40,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.proccess.qr.Scanner
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
@@ -185,9 +186,9 @@ class WithIndexListView(
     companion object {
         private const val throughMark = "-"
         private const val noExtend = "NoExtend"
-        private val subMenuSeparator = "&"
+        private const val subMenuSeparator = "&"
 
-        private var filterDir = String()
+        var filterDir = String()
         private var filterPrefix = String()
         private var filterSuffix = String()
         private var fannelDirName = String()
@@ -772,6 +773,12 @@ class WithIndexListView(
                     selectedItem,
                     "setting"
                 )
+            }
+            PreMenuType.SCAN_QR.menuName -> {
+                Scanner(
+                    editFragment,
+                    filterDir
+                ).scanFromCamera()
             }
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
@@ -1581,7 +1588,7 @@ class WithIndexListView(
     ){
         Toast.makeText(
             context,
-            "No file",
+            message,
             Toast.LENGTH_SHORT
         ).show()
     }
@@ -1654,5 +1661,6 @@ enum class PreMenuType(
     GET("get", R.drawable.icons8_puzzle),
     EDIT_C("editC", R.drawable.icons8_edit),
     EDIT_S("editS", R.drawable.icons8_edit),
-    DESC("desc", R.drawable.icons8_info)
+    DESC("desc", R.drawable.icons8_info),
+    SCAN_QR("scanQR", R.drawable.icons_qr_code),
 }

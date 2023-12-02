@@ -30,7 +30,7 @@ setReplaceVariables="LIST_SUFFIX=suffix"
 setReplaceVariables="CMDCLICK_ROOT_DIR_PATH=${00}"
 setReplaceVariables="CMDCLICK_CONF_DIR_PATH=${CMDCLICK_ROOT_DIR_PATH}/conf"
 setReplaceVariables="CMDCLICK_JS_IMPORT_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/jsimport"
-setVariableTypes="jsImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_JS_IMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!get!sync!util&add&write&cat!copy&copy_file&copy_path"
+setVariableTypes="jsImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_JS_IMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!scanQR!get!sync!util&add&write&cat!copy&copy_file&copy_path"
 scriptFileName="jsImportManager.js"
 /// SETTING_SECTION_END
 

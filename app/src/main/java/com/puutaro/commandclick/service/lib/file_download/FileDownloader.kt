@@ -1,5 +1,8 @@
 package com.puutaro.commandclick.service.lib.file_download
 
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
 import com.puutaro.commandclick.service.FileDownloadService
@@ -162,30 +165,14 @@ object FileDownloader {
         val cpFileList = makeCpFileListCon(
             getPathOrFannelRawName,
             fileListCon,
-            currentAppDirPath,
         )
         if(
             cpFileList.isEmpty()
         ){
-            fileDownloadService.notificationBuilder
-                ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
-                ?.setContentTitle(
-                    FileDownloadStatus.FAILURE_GREP_FILE_LIST.title,
-                )
-                ?.setContentText(
-                    FileDownloadStatus.FAILURE_GREP_FILE_LIST.message.format(getPathOrFannelRawName),
-                )
-            fileDownloadService.notificationBuilder?.clearActions()
-            fileDownloadService.notificationBuilder?.addAction(
-                com.puutaro.commandclick.R.drawable.icons8_cancel,
-                FileDownloadLabels.CLOSE.label,
-                fileDownloadService.cancelPendingIntent
-            )?.build()?.let {
-                fileDownloadService.notificationManager.notify(
-                    fileDownloadService.chanelId,
-                    it
-                )
-            }
+            cpFileListConNotFoundNoti(
+                fileDownloadService,
+                getPathOrFannelRawName
+            )
             return
         }
         val cpFileListIndexSize = cpFileList.size - 1
@@ -193,65 +180,38 @@ object FileDownloader {
             fileDownloadService.currentAppDirPathForUploader ?: String()
         (cpFileList.indices).forEach {
             delay(100)
-            val cpFilePath = cpFileList[it]
-
-            val destiFileObj = withContext(Dispatchers.IO) {
-                File(cpFilePath)
+            val cpUploaderFilePath = cpFileList[it]
+            val cpDownloaderFilePath = CcPathTool.convertAppDirPathToLocal(
+                cpUploaderFilePath,
+                currentAppDirPath,
+            )
+            val con = withContext(Dispatchers.IO) {
+                getFileCon(
+                    mainUrl,
+                    parendDirPathForUploader,
+                    cpUploaderFilePath,
+                )
             }
-                val destiFileParentDirPath =  withContext(Dispatchers.IO) {
-                    destiFileObj.parent
-                        ?: String()
-                }
-                val destiFileName = withContext(Dispatchers.IO) {
-                    destiFileObj.name
-                }
-                val con = withContext(Dispatchers.IO) {
-                    var conSrc = byteArrayOf()
-                    val cpFileMapStr = listOf(
-                        "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}",
-                        "${CpFileKey.PATH.key}=${cpFilePath}",
-                    ).joinToString("\t")
-                    for (i in 1..3) {
-                        conSrc = CurlManager.post(
-                            mainUrl,
-                            "Content-type\ttext/plain",
-                            cpFileMapStr,
-                            curlTimeoutMiliSec,
-                        )
-                        if (
-                            conSrc.isNotEmpty()
-                        ) break
-                        delay(retryDelayMiliSec)
-                    }
-                    conSrc
-                }
             if(
                 String(con).trim() == invalidResponse
             ){
-                fileDownloadService.notificationBuilder
-                    ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
-                    ?.setContentTitle(
-                        FileDownloadStatus.CONNECTION_ERR.title
-                    )
-                    ?.setContentText(
-                        FileDownloadStatus.CONNECTION_ERR.message.format(
-                            mainUrl
-                        )
-                    )
-                fileDownloadService.notificationBuilder?.clearActions()
-                fileDownloadService.notificationBuilder?.addAction(
-                    com.puutaro.commandclick.R.drawable.icons8_cancel,
-                    FileDownloadLabels.CLOSE.label,
-                    fileDownloadService.cancelPendingIntent
-                )?.build()?.let {
-                    fileDownloadService.notificationManager.notify(
-                        fileDownloadService.chanelId,
-                        it
-                    )
-                }
-                fileDownloadService.fileDownloadJob?.cancel()
+                cannotGetFileListConNoti(
+                    fileDownloadService,
+                    mainUrl,
+                )
                 return
             }
+            val destiFileObj = withContext(Dispatchers.IO) {
+                File(cpDownloaderFilePath)
+            }
+            val destiFileParentDirPath =  withContext(Dispatchers.IO) {
+                destiFileObj.parent
+                    ?: String()
+            }
+            val destiFileName = withContext(Dispatchers.IO) {
+                destiFileObj.name
+            }
+
             val cpFileMapStr = listOf(
                 "${CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key}=${ReceivePathMacroType.CLOSE_COPY_SERVER.name}"
             ).joinToString("\t")
@@ -285,54 +245,145 @@ object FileDownloader {
                     )
                 }
                 withContext(Dispatchers.IO){
-                    fileDownloadService.notificationBuilder
-                        ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
-                        ?.setContentTitle(
-                            FileDownloadStatus.COMP.title
-                        )
-                        ?.setContentText(
-                            FileDownloadStatus.COMP.message.format(
-                                getPathOrFannelRawName
-                            )
-                        )
-                    fileDownloadService.notificationBuilder?.clearActions()
-                    fileDownloadService.notificationBuilder?.addAction(
-                        com.puutaro.commandclick.R.drawable.icons8_cancel,
-                        FileDownloadLabels.CLOSE.label,
-                        fileDownloadService.cancelPendingIntent
-                    )?.build()?.let {
-                        fileDownloadService.notificationManager.notify(
-                            fileDownloadService.chanelId,
-                            it
-                        )
-                    }
+                    BroadcastSender.normalSend(
+                        fileDownloadService,
+                        BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
+                    )
+                    BroadcastSender.normalSend(
+                        fileDownloadService,
+                        BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+                    )
+                }
+                withContext(Dispatchers.IO){
+                    compNoti(
+                        fileDownloadService,
+                        getPathOrFannelRawName
+                    )
                 }
             }
+        }
+    }
+
+    private suspend fun getFileCon(
+        mainUrl: String,
+        parendDirPathForUploader: String,
+        cpUploaderFilePath: String,
+    ): ByteArray {
+
+        var conSrc = byteArrayOf()
+        val cpFileMapStr = listOf(
+            "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}",
+            "${CpFileKey.PATH.key}=${cpUploaderFilePath}",
+        ).joinToString("\t")
+        for (i in 1..3) {
+            conSrc = CurlManager.post(
+                mainUrl,
+                "Content-type\ttext/plain",
+                cpFileMapStr,
+                curlTimeoutMiliSec,
+            )
+            if (
+                conSrc.isNotEmpty()
+            ) break
+            delay(retryDelayMiliSec)
+        }
+        return conSrc
+    }
+
+    private fun cannotGetFileListConNoti(
+        fileDownloadService: FileDownloadService,
+        mainUrl: String,
+    ){
+        fileDownloadService.notificationBuilder
+            ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
+            ?.setContentTitle(
+                FileDownloadStatus.CONNECTION_ERR.title
+            )
+            ?.setContentText(
+                FileDownloadStatus.CONNECTION_ERR.message.format(
+                    mainUrl
+                )
+            )
+        fileDownloadService.notificationBuilder?.clearActions()
+        fileDownloadService.notificationBuilder?.addAction(
+            com.puutaro.commandclick.R.drawable.icons8_cancel,
+            FileDownloadLabels.CLOSE.label,
+            fileDownloadService.cancelPendingIntent
+        )?.build()?.let {
+            fileDownloadService.notificationManager.notify(
+                fileDownloadService.chanelId,
+                it
+            )
+        }
+        fileDownloadService.fileDownloadJob?.cancel()
+    }
+    private fun cpFileListConNotFoundNoti(
+        fileDownloadService: FileDownloadService,
+        getPathOrFannelRawName: String
+    ){
+        fileDownloadService.notificationBuilder
+            ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
+            ?.setContentTitle(
+                FileDownloadStatus.FAILURE_GREP_FILE_LIST.title,
+            )
+            ?.setContentText(
+                FileDownloadStatus.FAILURE_GREP_FILE_LIST.message.format(getPathOrFannelRawName),
+            )
+        fileDownloadService.notificationBuilder?.clearActions()
+        fileDownloadService.notificationBuilder?.addAction(
+            com.puutaro.commandclick.R.drawable.icons8_cancel,
+            FileDownloadLabels.CLOSE.label,
+            fileDownloadService.cancelPendingIntent
+        )?.build()?.let {
+            fileDownloadService.notificationManager.notify(
+                fileDownloadService.chanelId,
+                it
+            )
+        }
+    }
+
+    private fun compNoti(
+        fileDownloadService: FileDownloadService,
+        getPathOrFannelRawName: String
+    ){
+        fileDownloadService.notificationBuilder
+            ?.setSmallIcon(android.R.drawable.stat_sys_download_done)
+            ?.setContentTitle(
+                FileDownloadStatus.COMP.title
+            )
+            ?.setContentText(
+                FileDownloadStatus.COMP.message.format(
+                    getPathOrFannelRawName
+                )
+            )
+        fileDownloadService.notificationBuilder?.clearActions()
+        fileDownloadService.notificationBuilder?.addAction(
+            com.puutaro.commandclick.R.drawable.icons8_cancel,
+            FileDownloadLabels.CLOSE.label,
+            fileDownloadService.cancelPendingIntent
+        )?.build()?.let {
+            fileDownloadService.notificationManager.notify(
+                fileDownloadService.chanelId,
+                it
+            )
         }
     }
 
     private fun makeCpFileListCon(
         getPathOrFannelRawName: String,
         fileListCon: String,
-        currentAppDirPath: String,
     ): List<String> {
-        return fileListCon.let {
-            CcPathTool.convertIfFunnelRawNamePathToFullPath(
-                currentAppDirPath,
-                it
-            )
-        }.let {
-            CcPathTool.convertAppDirPathToLocal(
-                it,
-                currentAppDirPath
-            )
-        }.split("\n").filter {
-            it.startsWith(
-                CcPathTool.convertIfFunnelRawNamePathToFullPath(
-                    currentAppDirPath,
-                    getPathOrFannelRawName
-                )
-            )
+        val isMakeServerCurrentDirPath =
+            !getPathOrFannelRawName.startsWith("/")
+        val grepPath = if(isMakeServerCurrentDirPath) {
+            fileListCon.let {
+                CcPathTool.extractCurrentDirPathFromPath(it)
+            }.split("\n").distinct().firstOrNull()?.let {
+                "$it/${getPathOrFannelRawName}"
+            } ?: String()
+        } else getPathOrFannelRawName
+        return fileListCon.split("\n").filter {
+            it.startsWith(grepPath)
         }
     }
 

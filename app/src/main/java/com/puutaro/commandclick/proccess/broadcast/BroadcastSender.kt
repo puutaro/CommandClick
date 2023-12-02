@@ -32,6 +32,23 @@ object BroadcastSender {
         }
         context?.sendBroadcast(broadcastIntent)
     }
+
+    fun normalSend(
+        context: Context?,
+        action: String,
+        putStringExtraList: List<Pair<String, String>>? = null,
+    ){
+        val broadcastIntent = Intent()
+        broadcastIntent.action = action
+        putStringExtraList?.forEach{
+            broadcastIntent.putExtra(
+                it.first,
+                it.second
+            )
+        }
+
+        context?.sendBroadcast(broadcastIntent)
+    }
 }
 
 enum class BroadCastSenderSchemaForCommon {

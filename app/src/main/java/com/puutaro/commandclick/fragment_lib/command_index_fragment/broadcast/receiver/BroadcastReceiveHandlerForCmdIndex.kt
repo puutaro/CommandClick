@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.r
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
@@ -17,6 +16,9 @@ object BroadcastReceiveHandlerForCmdIndex {
         cmdIndexFragment: CommandIndexFragment,
         intent: Intent
     ){
+        if(
+            !cmdIndexFragment.isVisible
+        ) return
         val action = intent.action
         when(action){
             BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action

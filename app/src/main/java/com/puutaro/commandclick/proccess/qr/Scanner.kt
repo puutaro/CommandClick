@@ -476,7 +476,7 @@ private class QrHistoryListDialog(
     private val currentAppDirPath: String,
 ) {
     private val context = fragment.context
-    private val qrLogo = R.drawable.qr_code
+    private val qrLogo = R.drawable.icons_qr_code
     private var subMenuDialog: Dialog? = null
 
 

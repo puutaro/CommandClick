@@ -117,6 +117,23 @@ object CcPathTool {
             "\n${currentAppDirPath}/$1"
         )
     }
+    fun extractCurrentDirPathFromPath(
+        path: String
+    ): String {
+        val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+        return path.replace(
+            Regex("^(${cmdclickAppDirPath}/[^/]+).*"),
+            "$1"
+        ).replace(
+            Regex("\n(${cmdclickAppDirPath}/[^/]+).*"),
+            "\n$1"
+        ).let {
+            if(
+                !it.startsWith(cmdclickAppDirPath)
+            ) return@let String()
+            it
+        }
+    }
 
     fun convertAppDirPathToLocal(
         path: String,

@@ -144,7 +144,7 @@ object QrDialogMethod {
             else -> {
                 QrLaunchType.CpFile.prefix + listOf(
                     "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
-                    "${CpFileKey.PATH.key}=$fannelRawName",
+                    "${CpFileKey.PATH.key}=$currentAppDirPath/$fannelRawName",
                 ).joinToString(";")
             }
         }

@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.fragment
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -25,6 +28,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
+import com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver.BroadcastReceiveHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
@@ -35,6 +39,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchTo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
@@ -99,6 +104,15 @@ class EditFragment: Fragment() {
     var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
+
+    private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            BroadcastReceiveHandlerForEdit.handle(
+                this@EditFragment,
+                intent
+            )
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -281,8 +295,23 @@ class EditFragment: Fragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        BroadcastRegister.unregisterBroadcastReceiver(
+            this,
+            broadcastReceiverForEdit
+        )
+    }
+
     override fun onResume() {
         super.onResume()
+        BroadcastRegister.registerBroadcastReceiverMultiActions(
+            this,
+            broadcastReceiverForEdit,
+            listOf(
+                BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action,
+            )
+        )
         val shellScriptContentsList = ReadText(
             SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,

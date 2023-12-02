@@ -26,8 +26,10 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowBy
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.qr.Scanner
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -591,6 +593,18 @@ class ToolbarButtonProducerForEdit(
                         String()
                     )
                 }
+                MenuEnumsForEdit.QR_SCAN.itemName -> {
+                    val filterDirInWithListIndex = WithIndexListView.filterDir
+                    val activeCurrentDirPath = if(
+                        editFragment.existIndexList
+                        && filterDirInWithListIndex.isNotEmpty()
+                    ) filterDirInWithListIndex
+                    else currentAppDirPath
+                    Scanner(
+                        editFragment,
+                        activeCurrentDirPath,
+                    ).scanFromCamera()
+                }
                 MenuEnumsForEdit.KILL.itemName -> {
                     AppProcessManager.killDialog(
                         editFragment,
@@ -631,6 +645,7 @@ private enum class MenuEnumsForEdit(
     TERM_REFRESH("term refresh", R.drawable.icons8_refresh),
     SELECT_TERM("select term", R.drawable.icons8_file),
     RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
+    QR_SCAN("scan QR", R.drawable.icons_qr_code),
     KILL("kill", R.drawable.cancel),
     NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     USAGE("usage", R.drawable.icons8_info),

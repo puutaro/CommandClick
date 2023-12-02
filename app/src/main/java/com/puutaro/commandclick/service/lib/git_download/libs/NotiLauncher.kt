@@ -3,6 +3,8 @@ package com.puutaro.commandclick.service.lib.git_download.libs
 import android.R
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.GitDownloadService
 
 object NotiLauncher {
@@ -42,9 +44,14 @@ object NotiLauncher {
     fun compCloseNoti(
         gitDownloadService: GitDownloadService
     ){
-        val updateFannelIndexIntent = Intent()
-        updateFannelIndexIntent.action = BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
-        gitDownloadService.sendBroadcast(updateFannelIndexIntent)
+        BroadcastSender.normalSend(
+            gitDownloadService,
+            BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
+        )
+        BroadcastSender.normalSend(
+            gitDownloadService,
+            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+        )
 
         val fannelRawName = gitDownloadService.fannelRawName
         gitDownloadService.notificationBuilder
