@@ -87,7 +87,7 @@
             android:id="@+id/qr_logo_dialog_pass"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:src="@drawable/qr_code"
+            android:src="@drawable/icons_qr_code"
             app:tint="@color/cmdclick_text_black"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
