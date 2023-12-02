@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.proccess.qr
 
 import android.graphics.drawable.Drawable
+import androidx.appcompat.content.res.AppCompatResources
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.fragment.app.Fragment
+import coil.load
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
@@ -17,9 +20,13 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelSha
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.icon.FannelIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,6 +44,31 @@ class QrLogo(
     private val twoThreeLogListSize = (logoList.size * 2) / 3
     private var usedLogoIndexList = mutableListOf<Int>()
 
+
+    fun setTitleQrLogo(
+        titleImageView: AppCompatImageView?,
+        currentAppDirPath: String,
+        selectedScriptName: String,
+    ){
+        val context = fragment.context
+            ?: return
+        if(
+            titleImageView == null
+        ) return
+        val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
+        val qrLogoPath = "$currentAppDirPath/$fannelDirName/${UsePath.qrPngRelativePath}"
+        if(!File(qrLogoPath).isFile) return
+
+        val isEditExecute = checkEditExecute(
+            currentAppDirPath,
+            selectedScriptName,
+        )
+        titleImageView.setPadding(2, 2,2,2)
+        titleImageView.background = if(isEditExecute) {
+            AppCompatResources.getDrawable(context, R.color.terminal_color)
+        } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
+        titleImageView.load(qrLogoPath)
+    }
 
     fun createMonochrome(
         qrSrcStr: String,
@@ -226,5 +258,25 @@ class QrLogo(
         usedLogoIndexList = usedLogoIndexList.filterIndexed {
             index, _ -> index <= twoThreeLogListSize
         }.toMutableList()
+    }
+
+    private fun checkEditExecute(
+        currentAppDirPath: String,
+        selectedScriptName: String,
+    ): Boolean {
+        val scriptContentsList = ReadText(
+            currentAppDirPath,
+            selectedScriptName,
+        ).textToList()
+        val editExecuteAlwaysStr = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+        val isEditExecuteForJs = CommandClickVariables.returnEditExecuteValueStr(
+            scriptContentsList,
+            LanguageTypeSelects.JAVA_SCRIPT
+        ) == editExecuteAlwaysStr
+        val isEditExecuteForShell = CommandClickVariables.returnEditExecuteValueStr(
+            scriptContentsList,
+            LanguageTypeSelects.SHELL_SCRIPT
+        ) == editExecuteAlwaysStr
+        return isEditExecuteForJs || isEditExecuteForShell
     }
 }

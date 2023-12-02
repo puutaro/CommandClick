@@ -11,14 +11,16 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import android.widget.PopupMenu
+import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -27,6 +29,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
@@ -36,6 +39,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDia
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
@@ -73,6 +77,8 @@ class WithIndexListView(
     private var promptDialog: Dialog? = null
     private var confirmDialog: Dialog? = null
     private var confirmDialog2: Dialog? = null
+    private var mainMenuListIndexDialog: Dialog? = null
+    private var listIndexSubMenuDialog: Dialog? = null
     private var clickDirPath = String()
     private val clickDirName = "click"
     private val itemClickJsName = "itemClick.js"
@@ -179,6 +185,7 @@ class WithIndexListView(
     companion object {
         private const val throughMark = "-"
         private const val noExtend = "NoExtend"
+        private val subMenuSeparator = "&"
 
         private var filterDir = String()
         private var filterPrefix = String()
@@ -226,7 +233,7 @@ class WithIndexListView(
             filterSuffix: String,
         ): Boolean {
             if(filterSuffix != noExtend) {
-                return filterSuffix.split("&").any {
+                return filterSuffix.split(subMenuSeparator).any {
                     targetStr.endsWith(it)
                 }
             }
@@ -287,10 +294,14 @@ class WithIndexListView(
         clickDirPath = "${fannelDirPath}/${clickDirName}"
         FileSystems.createDirs(clickDirPath)
 
-        val menuList = getMenuMap(
+        val menuMapList = createMenuMapList(
             editParameters
-        )?.get(IndexListEditMenu.menu.name)
-            ?: emptyList()
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "lMenuMap.txt",
+            menuMapList.toString()
+        )
 
         val fileList = makeFileList()
 
@@ -311,20 +322,13 @@ class WithIndexListView(
         invokeItemSetClickListenerForFileList()
         invokeQrLogoSetClickListenerForFileList()
         invokeQrLogoSetLongClickListenerForFileList()
-        invokeItemSetLongTimeClickListenerForHistory(
-            menuList
+        invokeItemSetLongTimeClickListenerForIndexList(
+            menuMapList
         )
         makeSearchEditText(
             editListSearchEditText,
             readSharePreffernceMap
         )
-//        TODO remove to confirm normal scroll to bottom
-//        CoroutineScope(Dispatchers.Main).launch {
-//            delay(100)
-//            editListRecyclerView.layoutManager?.scrollToPosition(
-//                listIndexForEditAdapter.itemCount - 1
-//            )
-//        }
     }
 
     private fun invokeItemSetClickListenerForFileList() {
@@ -420,9 +424,12 @@ class WithIndexListView(
         })
     }
 
-    private fun invokeItemSetLongTimeClickListenerForHistory(
-        menuList: List<String>,
+    private fun invokeItemSetLongTimeClickListenerForIndexList(
+        menuMapList: List<Map<String, String?>>?
     ){
+        if(
+            context == null
+        ) return
         val indexForEditAdapter = editListRecyclerView.adapter as ListIndexForEditAdapter
         indexForEditAdapter.itemLongClickListener = object : ListIndexForEditAdapter.OnItemLongClickListener {
             override fun onItemLongClick(
@@ -432,96 +439,133 @@ class WithIndexListView(
             ) {
                 val selectedItem =
                     indexForEditAdapter.listIndexList[position]
-                val popup = PopupMenu(
-                    context,
-                    itemView,
-                    Gravity.BOTTOM
+                mainMenuListIndexDialog = Dialog(
+                    context
                 )
-                popup.menu.clear()
-                val inflater = popup.menuInflater
-                inflater.inflate(
-                    com.puutaro.commandclick.R.menu.history_admin_menu,
-                    popup.menu
+                mainMenuListIndexDialog?.setContentView(
+                    R.layout.list_dialog_layout
                 )
-                (menuList.indices).forEach {
-                    val menuSubMenuList = menuList[it].split("&")
-                    val menuName = menuSubMenuList[0]
-                    val itemId = mainMenuGroupId + it * 100
-                    if(
-                        menuSubMenuList.size < 2
-                    ) {
-                        popup.menu.add(
-                            mainMenuGroupId,
-                            itemId,
-                            it,
-                            menuList[it],
-                        )
-                        return@forEach
-                    }
-                    val subMenuList = menuSubMenuList.slice(
-                        1 until menuSubMenuList.size
-                    )
-                    execAddSettingSubMenu(
-                        popup,
-                        itemId,
-                        it,
-                        menuName,
-                        subMenuList
-                    )
+                QrLogo(editFragment).setTitleQrLogo(
+                    mainMenuListIndexDialog?.findViewById<AppCompatImageView>(
+                        R.id.list_dialog_title_image
+                    ),
+                    filterDir,
+                    selectedItem
+                )
+
+                val listDialogTitle = mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
+                    R.id.list_dialog_title
+                )
+                listDialogTitle?.text = selectedItem
+                val listDialogMessage = mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
+                    R.id.list_dialog_message
+                )
+                listDialogMessage?.isVisible = false
+                val listDialogSearchEditText = mainMenuListIndexDialog?.findViewById<AppCompatEditText>(
+                    R.id.list_dialog_search_edit_text
+                )
+                listDialogSearchEditText?.isVisible = false
+                val cancelButton = mainMenuListIndexDialog?.findViewById<AppCompatImageButton>(
+                    R.id.list_dialog_cancel
+                )
+                cancelButton?.setOnClickListener {
+                    mainMenuListIndexDialog?.dismiss()
                 }
-                popupMenuItemSelected(
-                    popup,
-                    menuList,
+
+                setContextMenuListView(
+                    editFragment,
                     selectedItem,
+                    menuMapList
                 )
-                Toast.makeText(
-                    context,
-                    selectedItem,
-                    Toast.LENGTH_SHORT
-                ).show()
-                popup.show()
+                mainMenuListIndexDialog?.setOnCancelListener {
+                    mainMenuListIndexDialog?.dismiss()
+                }
+                mainMenuListIndexDialog?.window?.setLayout(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                mainMenuListIndexDialog?.window?.setGravity(Gravity.BOTTOM)
+                mainMenuListIndexDialog?.show()
             }
         }
     }
 
-    private fun popupMenuItemSelected(
-        popup: PopupMenu,
-        menuList: List<String>,
+    private fun setContextMenuListView(
+        editFragment: EditFragment,
         selectedItem: String,
+        menuMapList:  List<Map<String, String?>>?,
     ){
-        popup.setOnMenuItemClickListener { menuItem ->
-            val itemId = menuItem.itemId
-            val indexSource = itemId - mainMenuGroupId
-            val menuIndex = indexSource / 100
-            val subMenuIndex = indexSource % 100
-            val menuSubMenuList = menuList[menuIndex].split("&")
-            val menuSubMenuListSize = menuSubMenuList.size
+        val context = editFragment.context
+            ?: return
+        if(
+            menuMapList.isNullOrEmpty()
+        ) return
+        val menuPairList = menuMapList.map{
+            val menuName = it.get(MenuMapKey.MAIN_MENU_NAME.str)
+                ?: String()
+            val iconId = PreMenuType.values().filter {
+                it.menuName == menuName
+            }.firstOrNull()?.iconId ?: R.drawable.icons8_wheel
+            menuName to iconId
+        }.filter {
+            it.first.isNotEmpty()
+        }
+        val contextMenuListView =
+            mainMenuListIndexDialog?.findViewById<ListView>(
+                R.id.list_dialog_list_view
+            ) ?: return
+        val mainMenuAdapter = SubMenuAdapter(
+            context,
+            menuPairList.toMutableList()
+        )
+        contextMenuListView.adapter = mainMenuAdapter
+        invokeItemSetClickListnerForListIndexContextMenuList(
+            menuMapList,
+            contextMenuListView,
+            selectedItem
+        )
+    }
+
+    private fun invokeItemSetClickListnerForListIndexContextMenuList(
+        menuMapList:  List<Map<String, String?>>?,
+        contextMenuListView: ListView,
+        selectedItemName: String,
+    ) {
+        contextMenuListView.setOnItemClickListener {
+                parent, View, pos, id ->
+            mainMenuListIndexDialog?.dismiss()
+            val menuListAdapter = contextMenuListView.adapter as SubMenuAdapter
+            val selectedMenuName = menuListAdapter.getItem(pos)
+                ?: return@setOnItemClickListener
             if(
-                menuSubMenuListSize < 2
-            ) {
-                val menuName = menuSubMenuList[0]
-                execMenuOrSubMenuClickJs(
+                menuMapList.isNullOrEmpty()
+            ) return@setOnItemClickListener
+            val isSubMenuList = menuMapList.filter {
+                val isMainMenuName =
+                    it.get(MenuMapKey.MAIN_MENU_NAME.str) == selectedMenuName
+                if (
+                    !isMainMenuName
+                ) return@filter false
+                val isSubMenuList =
+                    !it.get(MenuMapKey.SUB_MENU_NAME_LIST_STR.str).isNullOrEmpty()
+                isSubMenuList
+            }.isNotEmpty()
+            when(isSubMenuList) {
+                false -> execMenuOrSubMenuClickJs(
                     clickDirPath,
                     menuClickJsName,
-                    selectedItem,
-                    menuName,
+                    selectedItemName,
+                    selectedMenuName,
                 )
-                return@setOnMenuItemClickListener true
+                else -> {
+                    launchSubMenuDialogForListIndex(
+                        menuMapList,
+                        selectedMenuName,
+                        selectedItemName,
+                    )
+                }
             }
-            if(
-                subMenuIndex == 0
-            ) return@setOnMenuItemClickListener true
-            val subMenuList = menuSubMenuList.slice(
-                1 until menuSubMenuList.size
-            )
-            val subMenuName = subMenuList[subMenuIndex - 1]
-            execMenuOrSubMenuClickJs(
-                clickDirPath,
-                subMenuClickJsName,
-                selectedItem,
-                subMenuName,
-            )
-            true
+            return@setOnItemClickListener
         }
     }
 
@@ -531,7 +575,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         val onOverrideItemClickExec =
             editFragment.overrideItemClickExec !=
                     SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
@@ -616,62 +663,68 @@ class WithIndexListView(
         menuName: String,
     ){
         when(menuName){
-            preMenuType.sync.name -> {
+            PreMenuType.SYNC.menuName -> {
                 listIndexListUpdateFileList(
                     editFragment,
                     makeFileList()
                 )
                 return
             }
-            preMenuType.delete.name -> {
+            PreMenuType.DELETE.menuName -> {
                 execItemDelete(selectedItem)
                 return
             }
-            preMenuType.cat.name -> {
+            PreMenuType.CAT.menuName -> {
                 execItemCat(
                     selectedItem
                 )
                 return
             }
-            preMenuType.write.name -> {
+            PreMenuType.WRITE.menuName -> {
                 execWriteItem(
                     selectedItem
                 )
                 return
             }
-            preMenuType.add.name -> {
+            PreMenuType.ADD.menuName -> {
                 execAddItem()
                 return
             }
-            preMenuType.add_app_dir.name -> {
+            PreMenuType.ADD_APP_DIR.menuName -> {
                 if(
                     selectedItem == throughMark
-                ) return
+                ) {
+                    noFileToast()
+                    return
+                }
                 execAddAppDir()
                 return
             }
-            preMenuType.copy_path.name -> {
+            PreMenuType.COPY_PATH.menuName -> {
                 execCopyPath(
                     selectedItem
                 )
                 return
             }
-            preMenuType.copy_file.name -> {
+            PreMenuType.COPY_FILE.menuName -> {
                 execCopyFile(
                     selectedItem
                 )
                 return
             }
-            preMenuType.copy_app_dir.name -> {
+            PreMenuType.COPY_APP_DIR.menuName -> {
                 execCopyAppDir(
                     selectedItem
                 )
                 return
             }
-            preMenuType.rename_app_dir.name -> {
+            PreMenuType.RENAME_APP_DIR.menuName -> {
                 if(
                     selectedItem == throughMark
-                ) return
+                ) {
+                    noFileToast()
+                    return
+                }
                 execRenameForAppDirAdmin(
                     selectedItem
                 )
@@ -681,20 +734,23 @@ class WithIndexListView(
                 )
                 return
             }
-            preMenuType.get.name -> {
+            PreMenuType.GET.menuName -> {
                 execGetFile()
                 return
             }
-            preMenuType.desc.name -> {
+            PreMenuType.DESC.menuName -> {
                 execShowDescription(
                     selectedItem
                 )
                 return
             }
-            preMenuType.editC.name -> {
+            PreMenuType.EDIT_C.menuName -> {
                 if(
                     selectedItem == throughMark
-                ) return
+                ) {
+                    noFileToast()
+                    return
+                }
                 formDialogForListIndexOrButton.create(
                     "edit command variable",
                     filterDir,
@@ -703,10 +759,13 @@ class WithIndexListView(
                 )
                 return
             }
-            preMenuType.editS.name -> {
+            PreMenuType.EDIT_S.menuName -> {
                 if(
                     selectedItem == throughMark
-                ) return
+                ) {
+                    noFileToast()
+                    return
+                }
                 formDialogForListIndexOrButton.create(
                     "edit setting variable",
                     filterDir,
@@ -737,32 +796,32 @@ class WithIndexListView(
             context
         )
         promptDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+            R.layout.prompt_dialog_layout
         )
         val promptTitleTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_title
+                R.id.prompt_dialog_title
             )
         promptTitleTextView?.text = "Input create app directory name"
         val promptMessageTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_message
+                R.id.prompt_dialog_message
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
             promptDialog?.findViewById<AutoCompleteTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_input
+                R.id.prompt_dialog_input
             )
         val promptCancelButton =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+                R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_ok
+                R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
@@ -820,32 +879,32 @@ class WithIndexListView(
             context
         )
         promptDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+            R.layout.prompt_dialog_layout
         )
         val promptTitleTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_title
+                R.id.prompt_dialog_title
             )
         promptTitleTextView?.text = "Input, destination App dir name"
         val promptMessageTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_message
+                R.id.prompt_dialog_message
             )
         promptMessageTextView?.text = "current app dir name: ${selectedItem}"
         val promptEditText =
             promptDialog?.findViewById<AutoCompleteTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_input
+                R.id.prompt_dialog_input
             ) ?: return
         val promptCancelButton =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+                R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_ok
+                R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
@@ -884,35 +943,35 @@ class WithIndexListView(
             context
         )
         promptDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+            R.layout.prompt_dialog_layout
         )
         val promptTitleTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_title
+                R.id.prompt_dialog_title
             )
         promptTitleTextView?.text = "Rename app dir"
         val promptMessageTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_message
+                R.id.prompt_dialog_message
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
             promptDialog?.findViewById<AutoCompleteTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_input
+                R.id.prompt_dialog_input
             )
         promptEditText?.setText(
             selectedItem.removeSuffix(jsSuffix)
         )
         val promptCancelButton =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+                R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_ok
+                R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
@@ -987,7 +1046,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         ScriptFileDescription.show(
             editFragment,
             ReadText(
@@ -1009,7 +1071,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         selectedItemForCopy = selectedItem
         getDirectoryAndCopy.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
@@ -1021,7 +1086,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         val selectedItemPath = "${filterDir}/${selectedItem}"
         val clipboard = context?.getSystemService(
             Context.CLIPBOARD_SERVICE) as ClipboardManager
@@ -1042,7 +1110,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         val editor = Editor(
             filterDir,
             selectedItem,
@@ -1059,32 +1130,32 @@ class WithIndexListView(
             context
         )
         promptDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.prompt_dialog_layout
+            R.layout.prompt_dialog_layout
         )
         val promptTitleTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_title
+                R.id.prompt_dialog_title
             )
         promptTitleTextView?.text = "Type item name"
         val promptMessageTextView =
             promptDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_message
+                R.id.prompt_dialog_message
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
             promptDialog?.findViewById<AutoCompleteTextView>(
-                com.puutaro.commandclick.R.id.prompt_dialog_input
+                R.id.prompt_dialog_input
             )
         val promptCancelButton =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_cancel
+                R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
             promptDialog?.dismiss()
         }
         val promptOkButtonView =
             promptDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.prompt_dialog_ok
+                R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
@@ -1130,7 +1201,10 @@ class WithIndexListView(
         ) return
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         val scriptContents = ReadText(
             filterDir,
             selectedItem
@@ -1144,28 +1218,28 @@ class WithIndexListView(
             context
         )
         confirmDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.confirm_text_dialog
+            R.layout.confirm_text_dialog
         )
         val confirmTitleTextView =
             confirmDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_title
+                R.id.confirm_text_dialog_title
             )
         confirmTitleTextView?.text = "Delete bellow contents, ok?"
         val confirmContentTextView =
             confirmDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+                R.id.confirm_text_dialog_text_view
             )
         confirmContentTextView?.text = displayContents
         val confirmCancelButton =
             confirmDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+                R.id.confirm_text_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
             confirmDialog?.dismiss()
         }
         val confirmOkButton =
             confirmDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+                R.id.confirm_text_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
             confirmDialog?.dismiss()
@@ -1204,30 +1278,30 @@ class WithIndexListView(
                     context
                 )
                 confirmDialog2?.setContentView(
-                    com.puutaro.commandclick.R.layout.confirm_text_dialog
+                    R.layout.confirm_text_dialog
                 )
                 val confirmTitleForDeleteAppDirTextView =
                     confirmDialog2?.findViewById<AppCompatTextView>(
-                        com.puutaro.commandclick.R.id.confirm_text_dialog_title
+                        R.id.confirm_text_dialog_title
                     )
                 confirmTitleForDeleteAppDirTextView?.text =
                     "Delete bellow App dir, ok?"
                 val confirmContentTextViewForDeleteAppDir =
                     confirmDialog2?.findViewById<AppCompatTextView>(
-                        com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
+                        R.id.confirm_text_dialog_text_view
                     )
                 confirmContentTextViewForDeleteAppDir?.text =
                     "\tpath: ${displayDeleteAppDirPath}"
                 val confirmCancelButtonForDeleteAppDir =
                     confirmDialog2?.findViewById<AppCompatImageButton>(
-                        com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
+                        R.id.confirm_text_dialog_cancel
                     )
                 confirmCancelButtonForDeleteAppDir?.setOnClickListener {
                     confirmDialog2?.dismiss()
                 }
                 val confirmOkButtonForDeleteAppDir =
                     confirmDialog2?.findViewById<AppCompatImageButton>(
-                        com.puutaro.commandclick.R.id.confirm_text_dialog_ok
+                        R.id.confirm_text_dialog_ok
                     )
                 confirmOkButtonForDeleteAppDir?.setOnClickListener {
                     confirmDialog2?.dismiss()
@@ -1272,7 +1346,10 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-        ) return
+        ) {
+            noFileToast()
+            return
+        }
         val scriptContents = ReadText(
             filterDir,
             selectedItem
@@ -1359,6 +1436,162 @@ class WithIndexListView(
            makeFileList()
         )
     }
+
+    private fun createMenuMapList(
+        editParameters: EditParameters
+    ): List<Map<String, String?>>? {
+        return getMenuMap(
+            editParameters
+        )?.get(IndexListEditMenu.menu.name)?.map {
+                menuLine ->
+            val menuSubMenuList = menuLine.split(subMenuSeparator)
+            val menuName = menuSubMenuList[0]
+            val subMenuListStr = if(
+                menuSubMenuList.size < 2
+            ) null
+            else menuSubMenuList.slice(
+                1 until menuSubMenuList.size
+            ).joinToString(subMenuSeparator)
+            mapOf(
+                MenuMapKey.MAIN_MENU_NAME.str to menuName,
+                MenuMapKey.SUB_MENU_NAME_LIST_STR.str to subMenuListStr
+            )
+        }
+    }
+
+
+
+    private fun launchSubMenuDialogForListIndex(
+        menuMapList:  List<Map<String, String?>>?,
+        selectedMainMenuName: String,
+        selectedItemName: String,
+    ){
+        val context = editFragment.context
+            ?: return
+        listIndexSubMenuDialog = Dialog(
+            context
+        )
+        listIndexSubMenuDialog?.setContentView(
+            R.layout.list_dialog_layout
+        )
+        QrLogo(editFragment).setTitleQrLogo(
+            listIndexSubMenuDialog?.findViewById<AppCompatImageView>(
+                R.id.list_dialog_title_image
+            ),
+            filterDir,
+            selectedItemName
+        )
+        val listDialogTitle = listIndexSubMenuDialog?.findViewById<AppCompatTextView>(
+            R.id.list_dialog_title
+        )
+        listDialogTitle?.text = "$selectedMainMenuName: $selectedItemName"
+        val listDialogMessage = listIndexSubMenuDialog?.findViewById<AppCompatTextView>(
+            R.id.list_dialog_message
+        )
+        listDialogMessage?.isVisible = false
+        val listDialogSearchEditText = listIndexSubMenuDialog?.findViewById<AppCompatEditText>(
+            R.id.list_dialog_search_edit_text
+        )
+        listDialogSearchEditText?.isVisible = false
+        val cancelButton = listIndexSubMenuDialog?.findViewById<AppCompatImageButton>(
+            R.id.list_dialog_cancel
+        )
+        cancelButton?.setOnClickListener {
+            listIndexSubMenuDialog?.dismiss()
+        }
+
+        setListIndexSubMenuListView(
+            menuMapList,
+            selectedMainMenuName,
+            selectedItemName,
+        )
+        listIndexSubMenuDialog?.setOnCancelListener {
+            listIndexSubMenuDialog?.dismiss()
+        }
+        listIndexSubMenuDialog?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        listIndexSubMenuDialog?.window?.setGravity(Gravity.BOTTOM)
+        listIndexSubMenuDialog?.show()
+    }
+
+    private fun setListIndexSubMenuListView(
+        menuMapList:  List<Map<String, String?>>?,
+        selectedMainMenuName: String,
+        selectedScriptName: String,
+    ) {
+        val context = editFragment.context
+            ?: return
+        if(menuMapList.isNullOrEmpty()) return
+        val listIndexSubMenuList = menuMapList.map {
+            val mainMenuName = it.get(MenuMapKey.MAIN_MENU_NAME.str)
+            val isMainMenu =
+                mainMenuName == selectedMainMenuName
+            if(!isMainMenu) return@map emptyList()
+            val subMenuListStr = it.get(MenuMapKey.SUB_MENU_NAME_LIST_STR.str)
+                ?: String()
+            subMenuListStr.split(subMenuSeparator)
+        }.filter {
+            it.isNotEmpty()
+        }.firstOrNull()?.map {
+            subMenuName ->
+            val icon = PreMenuType.values().filter {
+                it.menuName == subMenuName
+            }.firstOrNull()?.iconId ?: R.drawable.icons8_wheel
+            subMenuName to icon
+        } ?: return
+        val copyMenuListView =
+            listIndexSubMenuDialog?.findViewById<ListView>(
+                R.id.list_dialog_list_view
+            ) ?: return
+        val subMenuAdapter = SubMenuAdapter(
+            context,
+            listIndexSubMenuList.toMutableList()
+        )
+        copyMenuListView.adapter = subMenuAdapter
+        invokeItemSetClickListnerForListIndexSubMenu(
+            copyMenuListView,
+            selectedScriptName
+        )
+    }
+
+    private fun invokeItemSetClickListnerForListIndexSubMenu(
+        listIndexSubMenuMenuListView: ListView,
+        selectedItem: String,
+    ){
+        listIndexSubMenuMenuListView.setOnItemClickListener {
+                parent, View, pos, id ->
+            listIndexSubMenuDialog?.dismiss()
+            val menuListAdapter = listIndexSubMenuMenuListView.adapter as SubMenuAdapter
+            val selectedMenuName = menuListAdapter.getItem(pos)
+                ?: return@setOnItemClickListener
+            execMenuOrSubMenuClickJs(
+                clickDirPath,
+                subMenuClickJsName,
+                selectedItem,
+                selectedMenuName
+            )
+            return@setOnItemClickListener
+        }
+    }
+
+    private fun noFileToast(
+        message: String = "No file"
+    ){
+        Toast.makeText(
+            context,
+            "No file",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+}
+
+private enum class MenuMapKey(
+    val str: String
+) {
+    MAIN_MENU_NAME("meinMenuName"),
+    SUB_MENU_NAME_LIST_STR("subMenuNameList"),
 }
 
 private enum class IndexListEditMenu {
@@ -1404,46 +1637,22 @@ private fun getFilterSuffix(
 }
 
 
-private val mainMenuGroupId = 80000
-
-private fun execAddSettingSubMenu(
-    popup: PopupMenu,
-    itemId: Int,
-    order: Int,
-    itemName: String,
-    subMenuList: List<String>,
-){
-    val sub = popup.menu.addSubMenu(
-        mainMenuGroupId,
-        itemId,
-        order,
-        itemName
-    )
-    val subMenuGid = order
-    (subMenuList.indices).forEach{
-        sub.add(
-            subMenuGid,
-            itemId + it + 1,
-            it,
-            subMenuList[it]
-        )
-    }
-}
-
-enum class preMenuType {
-    sync,
-    delete,
-    write,
-    add,
-    add_app_dir,
-    rename_app_dir,
-    cat,
-    copy_path,
-    copy_file,
-    copy_app_dir,
-    get,
-    bookmark,
-    editC,
-    editS,
-    desc
+enum class PreMenuType(
+    val menuName: String,
+    val iconId: Int,
+) {
+    SYNC("sync", R.drawable.icons8_update),
+    DELETE("delete", R.drawable.icons8_refresh),
+    WRITE("write", R.drawable.icons8_edit),
+    ADD("add", R.drawable.icons8_plus),
+    ADD_APP_DIR("add_app_dir", R.drawable.icons8_plus),
+    RENAME_APP_DIR("rename_app_dir", R.drawable.icons8_edit_frame),
+    CAT("cat", R.drawable.icons8_file),
+    COPY_PATH("copy_path", com.termux.shared.R.drawable.ic_copy),
+    COPY_FILE("copy_file", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
+    COPY_APP_DIR("copy_app_dir", com.google.android.material.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
+    GET("get", R.drawable.icons8_puzzle),
+    EDIT_C("editC", R.drawable.icons8_edit),
+    EDIT_S("editS", R.drawable.icons8_edit),
+    DESC("desc", R.drawable.icons8_info)
 }

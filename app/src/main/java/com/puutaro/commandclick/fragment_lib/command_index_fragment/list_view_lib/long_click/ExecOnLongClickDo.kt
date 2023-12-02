@@ -15,6 +15,7 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -26,6 +27,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Editor
@@ -59,8 +61,7 @@ object ExecOnLongClickDo {
                     contextMenuDialog?.setContentView(
                         R.layout.list_dialog_layout
                     )
-                    setTitleImage(
-                        cmdIndexFragment,
+                    QrLogo(cmdIndexFragment).setTitleQrLogo(
                         contextMenuDialog?.findViewById<AppCompatImageView>(
                             R.id.list_dialog_title_image
                         ),
@@ -112,7 +113,7 @@ object ExecOnLongClickDo {
     ) {
         val context = cmdIndexFragment.context
             ?: return
-        val menePairList = ContextMenuEnums.values().map {
+        val menuPairList = ContextMenuEnums.values().map {
             it.itemName to it.imageId
         }
         val contextMenuListView =
@@ -121,7 +122,7 @@ object ExecOnLongClickDo {
             ) ?: return
         val subMenuAdapter = SubMenuAdapter(
             context,
-            menePairList.toMutableList()
+            menuPairList.toMutableList()
         )
         contextMenuListView.adapter = subMenuAdapter
         invokeItemSetClickListnerForContextMenuList(
@@ -197,8 +198,7 @@ private object CopySubMenuDialog {
         copySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
-        setTitleImage(
-            cmdIndexFragment,
+        QrLogo(cmdIndexFragment).setTitleQrLogo(
             copySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),
@@ -327,8 +327,7 @@ private object UtilitySubMenuDialog {
         utilitySubMenuDialog?.setContentView(
             R.layout.list_dialog_layout
         )
-        setTitleImage(
-            cmdIndexFragment,
+        QrLogo(cmdIndexFragment).setTitleQrLogo(
             utilitySubMenuDialog?.findViewById<AppCompatImageView>(
                 R.id.list_dialog_title_image
             ),
@@ -468,47 +467,3 @@ private enum class UtilitySubMenuEnums(
     KILL("Kill", R.drawable.icons8_cancel)
 }
 
-private fun setTitleImage(
-    cmdIndexFragment: CommandIndexFragment,
-    titleImageView: AppCompatImageView?,
-    currentAppDirPath: String,
-    selectedScriptName: String,
-){
-    val context = cmdIndexFragment.context
-        ?: return
-    if(
-        titleImageView == null
-    ) return
-    val isEditExecute = checkEditExecute(
-        currentAppDirPath,
-        selectedScriptName,
-    )
-    titleImageView.setPadding(2, 2,2,2)
-    titleImageView.background = if(isEditExecute) {
-        AppCompatResources.getDrawable(context, R.color.terminal_color)
-    } else AppCompatResources.getDrawable(context, R.color.fannel_icon_color)
-    val fannelDirName = CcPathTool.makeFannelDirName(selectedScriptName)
-    val qrLogoPath = "$currentAppDirPath/$fannelDirName/${UsePath.qrPngRelativePath}"
-    if(!File(qrLogoPath).isFile) return
-    titleImageView.load(qrLogoPath)
-}
-
-private fun checkEditExecute(
-    currentAppDirPath: String,
-    selectedScriptName: String,
-): Boolean {
-    val scriptContentsList = ReadText(
-        currentAppDirPath,
-        selectedScriptName,
-    ).textToList()
-    val editExecuteAlwaysStr = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-    val isEditExecuteForJs = CommandClickVariables.returnEditExecuteValueStr(
-        scriptContentsList,
-        LanguageTypeSelects.JAVA_SCRIPT
-    ) == editExecuteAlwaysStr
-    val isEditExecuteForShell = CommandClickVariables.returnEditExecuteValueStr(
-        scriptContentsList,
-        LanguageTypeSelects.SHELL_SCRIPT
-    ) == editExecuteAlwaysStr
-    return isEditExecuteForJs || isEditExecuteForShell
-}
