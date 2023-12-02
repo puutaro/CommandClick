@@ -43,7 +43,6 @@ class ToolbarButtonProducerForEdit(
 ) {
 
     private val context = editFragment.context
-    private val cmdWebSearchEditText = binding.webSearch.cmdWebSearchEditText
     private val insertImageButtonParam = LinearLayout.LayoutParams(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -581,59 +580,55 @@ class ToolbarButtonProducerForEdit(
             menuPopupWindow?.dismiss()
             val menuListAdapter = menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
-                MenuEnumsForEdit.SETTING.itemName -> {
-                    SubMenuDialogForEdit.launch(
+                MenuEnumsForEdit.SETTING.itemName
+                -> SubMenuDialogForEdit.launch(
                         editFragment,
                     )
-                }
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName -> {
-                    NoScrollUrlSaver.save(
+                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName
+                -> NoScrollUrlSaver.save(
                         editFragment,
                         currentAppDirPath,
                         String()
                     )
-                }
-                MenuEnumsForEdit.QR_SCAN.itemName -> {
-                    val filterDirInWithListIndex = WithIndexListView.filterDir
-                    val activeCurrentDirPath = if(
-                        editFragment.existIndexList
-                        && filterDirInWithListIndex.isNotEmpty()
-                    ) filterDirInWithListIndex
-                    else currentAppDirPath
-                    Scanner(
-                        editFragment,
-                        activeCurrentDirPath,
-                    ).scanFromCamera()
-                }
-                MenuEnumsForEdit.KILL.itemName -> {
-                    AppProcessManager.killDialog(
+                MenuEnumsForEdit.QR_SCAN.itemName
+                -> execQrScan()
+                MenuEnumsForEdit.KILL.itemName
+                -> AppProcessManager.killDialog(
                         editFragment,
                         currentAppDirPath,
                         currentScriptFileName
                     )
-                }
-                MenuEnumsForEdit.TERM_REFRESH.itemName -> {
-                    TermRefresh.refresh(
+                MenuEnumsForEdit.TERM_REFRESH.itemName
+                -> TermRefresh.refresh(
                         terminalViewModel.currentMonitorFileName
                     )
-                }
-                MenuEnumsForEdit.SELECT_TERM.itemName -> {
-                    SelectTermDialog.launch(editFragment)
-                }
-                MenuEnumsForEdit.USAGE.itemName -> {
-                    UrlTexter.launch(
+                MenuEnumsForEdit.SELECT_TERM.itemName
+                -> SelectTermDialog.launch(editFragment)
+                MenuEnumsForEdit.USAGE.itemName
+                -> UrlTexter.launch(
                         editFragment,
                         null,
                         WebUrlVariables.commandClickUsageUrl
                     )
-                }
-                MenuEnumsForEdit.RESTART_UBUNTU.itemName -> {
-                    UbuntuServiceManager.launch(
+                MenuEnumsForEdit.RESTART_UBUNTU.itemName
+                -> UbuntuServiceManager.launch(
                         editFragment.activity
                     )
-                }
             }
         }
+    }
+
+    private fun execQrScan(){
+        val filterDirInWithListIndex = WithIndexListView.filterDir
+        val activeCurrentDirPath = if(
+            editFragment.existIndexList
+            && filterDirInWithListIndex.isNotEmpty()
+        ) filterDirInWithListIndex
+        else currentAppDirPath
+        Scanner(
+            editFragment,
+            activeCurrentDirPath,
+        ).scanFromCamera()
     }
 }
 
