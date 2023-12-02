@@ -29,7 +29,7 @@ import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.qr.Scanner
+import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -625,7 +625,7 @@ class ToolbarButtonProducerForEdit(
             && filterDirInWithListIndex.isNotEmpty()
         ) filterDirInWithListIndex
         else currentAppDirPath
-        Scanner(
+        QrScanner(
             editFragment,
             activeCurrentDirPath,
         ).scanFromCamera()

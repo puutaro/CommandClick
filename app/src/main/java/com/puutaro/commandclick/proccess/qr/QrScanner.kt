@@ -45,7 +45,7 @@ import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
 
 
-class Scanner(
+class QrScanner(
     private val fragment: Fragment,
     private val currentAppDirPath: String,
 ) {
@@ -56,7 +56,8 @@ class Scanner(
     private var qrScanDialogObj: Dialog? = null
 
     fun scanFromImage(
-        qrImagePath: String
+        qrImagePath: String,
+        isMoveCurrentDir: String? = null
     ): String {
         val bMap = BitmapFactory.decodeFile(qrImagePath)
 
@@ -402,7 +403,9 @@ private class ConfirmDialogForQr(
     private var confirmDialogObj: Dialog? = null
     private val displayUriTextLimit = 200
 
-    fun launch(){
+    fun launch(
+        isMoveCurrentDir: String? = null
+    ){
         if(
             context == null
         ) return
@@ -444,7 +447,8 @@ private class ConfirmDialogForQr(
             QrUri.handler(
                 fragment,
                 currentAppDirPath,
-                body
+                body,
+                isMoveCurrentDir
             )
             registerQrUriToHistory(
                 currentAppDirPath,

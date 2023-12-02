@@ -40,7 +40,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.proccess.qr.Scanner
+import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
@@ -771,7 +771,7 @@ class WithIndexListView(
                 )
             }
             PreMenuType.SCAN_QR.menuName -> {
-                Scanner(
+                QrScanner(
                     editFragment,
                     filterDir
                 ).scanFromCamera()

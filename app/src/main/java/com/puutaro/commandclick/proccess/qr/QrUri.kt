@@ -27,7 +27,8 @@ object QrUri {
     fun handler(
         fragment: Fragment,
         currentAppDirPath: String,
-        loadConSrc: String
+        loadConSrc: String,
+        isMoveCurrentDir: String? = null
     ) {
         when (true) {
             loadConSrc.startsWith(QrLaunchType.Http.prefix),
@@ -43,7 +44,8 @@ object QrUri {
             -> execCpFile(
                 fragment,
                 currentAppDirPath,
-                loadConSrc
+                loadConSrc,
+                isMoveCurrentDir
             )
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix),
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix.uppercase())
@@ -86,7 +88,7 @@ object QrUri {
             else
             -> execCopy(
                 fragment,
-                loadConSrc
+                loadConSrc,
             )
         }
     }
@@ -108,6 +110,7 @@ object QrUri {
         fragment: Fragment,
         currentAppDirPath: String,
         cpQrString: String,
+        isMoveCurrentDirSrc: String? = null
     ){
         val fileDownloadService = FileDownloadService::class.java
         val context = fragment.context
@@ -139,7 +142,7 @@ object QrUri {
         val parentDirPath =
             cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val isMoveCurrentDir =
-            cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key)
+            cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key) ?: isMoveCurrentDirSrc
         val intent = Intent(
             context,
             fileDownloadService

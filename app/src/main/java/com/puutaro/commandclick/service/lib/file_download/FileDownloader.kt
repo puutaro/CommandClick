@@ -2,6 +2,7 @@ package com.puutaro.commandclick.service.lib.file_download
 
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
@@ -26,6 +27,7 @@ object FileDownloader {
     private val invalidResponse = CurlManager.invalidResponse
     private var isWaitForFileListCon = true
     private var fileListConSrc = String()
+    private var commonDirPath: String? = null
 
     fun save(
         fileDownloadService: FileDownloadService,
@@ -92,6 +94,11 @@ object FileDownloader {
             "${CpFileKey.PATH.key}=$parentDirPath",
             "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}"
         ).joinToString("\t")
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrReq.txt",
+            cpFileMapStr
+        )
         for (i in 1..3) {
             val fileListConSrcByteArray = CurlManager.post(
                 mainUrl,
@@ -166,6 +173,16 @@ object FileDownloader {
             getPathOrFannelRawName,
             fileListCon,
         )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrfileListCon00.txt",
+            fileListCon
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrcpFileList00.txt",
+            cpFileList.joinToString("\n")
+        )
         if(
             cpFileList.isEmpty()
         ){
@@ -175,15 +192,46 @@ object FileDownloader {
             )
             return
         }
+
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrFileList.txt",
+            cpFileList.joinToString("\n")
+        )
+        if(
+            !fileDownloadService.isMoveToCurrentDir.isNullOrEmpty()
+        ) commonDirPath = extractCommonDirPath(cpFileList)
+        else commonDirPath = null
+
         val cpFileListIndexSize = cpFileList.size - 1
         val parendDirPathForUploader =
             fileDownloadService.currentAppDirPathForUploader ?: String()
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrFileList.txt",
+            cpFileList.joinToString("\n")
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qrFileList11.txt",
+            String()
+        )
         (cpFileList.indices).forEach {
             delay(100)
             val cpUploaderFilePath = cpFileList[it]
             val cpDownloaderFilePath = CcPathTool.convertAppDirPathToLocal(
                 cpUploaderFilePath,
                 currentAppDirPath,
+                commonDirPath
+            )
+//            if(
+//                cpDownloaderFilePath == currentAppDirPath
+//            ) return@forEach
+            FileSystems.updateFile(
+                UsePath.cmdclickDefaultAppDirPath,
+                "qrFileList11.txt",
+                "cpUploaderFilePath: $cpUploaderFilePath\ncpDownloaderFilePath: $cpDownloaderFilePath\n" +
+                        "currentAppDirPath: $currentAppDirPath\ncommonDirPath: $commonDirPath"
             )
             val con = withContext(Dispatchers.IO) {
                 getFileCon(
@@ -387,4 +435,19 @@ object FileDownloader {
         }
     }
 
+    private fun extractCommonDirPath(
+        cpFileList: List<String>
+    ): String {
+        val cpFileListSize = cpFileList.size
+        val rootDirPathEntry =
+            cpFileList.minOf { it }
+        val isAllCommon = cpFileList.filter {
+            it.startsWith(rootDirPathEntry)
+        }.size == cpFileListSize
+        if(
+            isAllCommon
+            && File(rootDirPathEntry).isFile
+        ) return rootDirPathEntry
+        return File(rootDirPathEntry).parent ?: String()
+    }
 }

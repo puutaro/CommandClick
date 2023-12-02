@@ -28,7 +28,7 @@ import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.UrlTexter
-import com.puutaro.commandclick.proccess.qr.Scanner
+import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -192,7 +192,7 @@ class ToolBarSettingButtonControl(
                     )
                 }
                 MenuEnums.QR_SCAN.itemName -> {
-                    Scanner(
+                    QrScanner(
                         cmdIndexFragment,
                         currentAppDirPath,
                     ).scanFromCamera()
