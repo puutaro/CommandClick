@@ -13,7 +13,6 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.security.DigestInputStream
 import java.security.MessageDigest
-import kotlin.io.path.fileVisitor
 
 
 object FileSystems {
@@ -39,6 +38,7 @@ object FileSystems {
     ) {
         if(fileName == "-") return
         val filePath = File(dirPath, fileName)
+        if(filePath.isDirectory) return
         if(filePath.exists()) return
         try {
             filePath.createNewFile()
@@ -336,12 +336,13 @@ object FileSystems {
 
     fun writeFromByteArray(
         dirPath: String,
-        filePath: String,
+        fileName: String,
         byteArrayCon: ByteArray,
     ){
-        val file = File(dirPath, filePath)
-        removeFiles(dirPath, filePath)
+        val file = File(dirPath, fileName)
+        removeFiles(dirPath, fileName)
         createDirs(dirPath)
+        if(file.isDirectory) return
         FileUtils.writeByteArrayToFile(file, byteArrayCon)
     }
 

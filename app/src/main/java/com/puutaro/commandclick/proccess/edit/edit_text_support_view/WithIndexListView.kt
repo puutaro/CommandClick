@@ -217,7 +217,8 @@ class WithIndexListView(
                 !editListRecyclerView.isVisible
             ) return
             val listIndexForEditAdapter =
-                editListRecyclerView.adapter as ListIndexForEditAdapter
+                editListRecyclerView.adapter as? ListIndexForEditAdapter
+                    ?: return
             listIndexForEditAdapter.listIndexList.clear()
             listIndexForEditAdapter.listIndexList.addAll(updateList)
             listIndexForEditAdapter.notifyDataSetChanged()
@@ -297,11 +298,6 @@ class WithIndexListView(
 
         val menuMapList = createMenuMapList(
             editParameters
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "lMenuMap.txt",
-            menuMapList.toString()
         )
 
         val fileList = makeFileList()

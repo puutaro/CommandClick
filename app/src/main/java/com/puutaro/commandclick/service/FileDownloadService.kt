@@ -28,6 +28,7 @@ class FileDownloadService: Service() {
     var fullPathPrFannelRawName: String = String()
     var currentAppDirPath: String = String()
     var currentAppDirPathForUploader: String? = null
+    var isMoveToCurrentDir: String? = null
     private val notificationIdToImportance =
         NotificationIdToImportance.HIGH
     val chanelId = ServiceChannelNum.fileDownload
@@ -135,6 +136,9 @@ class FileDownloadService: Service() {
         }
         currentAppDirPathForUploader = intent?.getStringExtra(
             FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
+        )
+        isMoveToCurrentDir = intent?.getStringExtra(
+            FileDownloadExtra.IS_MOVE_TO_CURRENT_DIR.schema
         )
 
         notificationBuilder = NotificationCompat.Builder(

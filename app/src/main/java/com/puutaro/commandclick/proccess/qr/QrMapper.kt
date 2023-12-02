@@ -87,26 +87,6 @@ object QrMapper {
                 "="
             )
         }.toMap()
-//        val httpPrefix = WebUrlVariables.httpPrefix
-//        val cpFilePrefix = QrLaunchType.CpFile.prefix
-//        val urlAndFilePath =
-//            cpCpFileSrcCon
-//                .trim()
-//                .removePrefix(cpFilePrefix)
-//                .trim()
-//                .split(";")
-//        val url =
-//            urlAndFilePath.firstOrNull()?.trim()?.let {
-//                if(
-//                    it.startsWith(WebUrlVariables.httpPrefix)
-//                    || it.startsWith(WebUrlVariables.httpsPrefix)
-//                ) return@let it
-//                "${httpPrefix}${it}"
-//            } ?: return null
-//        val filePath =
-//            urlAndFilePath.getOrNull(1)?.trim()
-//                ?: return null
-//        return url to filePath
     }
 
 
@@ -165,6 +145,7 @@ enum class CpFileKey(
     PATH("path"),
     CURRENT_APP_DIR_PATH_FOR_SERVER("currentAppDirPathForServer"),
     ADDRESS("address"),
+    IS_MOVE_CURRENT_DIR("onMoveCurrentDir"),
     CP_FILE_MACRO_FOR_SERVICE("cpFileMacro"),
 }
 

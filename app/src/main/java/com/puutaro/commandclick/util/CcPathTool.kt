@@ -137,16 +137,34 @@ object CcPathTool {
 
     fun convertAppDirPathToLocal(
         path: String,
-        currentAppDirPath: String
+        currentAppDirPath: String,
+        commonDirPath: String? = null
     ): String {
-        val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
-        val currentAppDirPathRegexNewLine = Regex("\n${UsePath.cmdclickAppDirPath}/[^/]*")
-        return path.replace(
-            currentAppDirPathRegex,
-            currentAppDirPath
-        ).replace(
-            currentAppDirPathRegexNewLine,
-            "\n$currentAppDirPath"
-        )
+        return when(
+            !commonDirPath.isNullOrEmpty()
+        ) {
+            true -> {
+                val commonDirPathRegex = Regex("^${commonDirPath}")
+                val commonDirPathRegexNewLine = Regex("\n${commonDirPath}")
+                path.replace(
+                    commonDirPathRegex,
+                    currentAppDirPath
+                ).replace(
+                    commonDirPathRegexNewLine,
+                    "\n$currentAppDirPath"
+                )
+            }
+            else -> {
+                val currentAppDirPathRegex = Regex("^${UsePath.cmdclickAppDirPath}/[^/]*")
+                val currentAppDirPathRegexNewLine = Regex("\n${UsePath.cmdclickAppDirPath}/[^/]*")
+                path.replace(
+                    currentAppDirPathRegex,
+                    currentAppDirPath
+                ).replace(
+                    currentAppDirPathRegexNewLine,
+                    "\n$currentAppDirPath"
+                )
+            }
+        }
     }
 }

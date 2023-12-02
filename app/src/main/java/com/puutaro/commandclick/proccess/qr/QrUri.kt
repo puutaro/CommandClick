@@ -8,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -16,7 +15,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUt
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.util.BroadCastIntent
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 
@@ -140,6 +138,8 @@ object QrUri {
         }
         val parentDirPath =
             cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
+        val isMoveCurrentDir =
+            cpFileMap.get(CpFileKey.IS_MOVE_CURRENT_DIR.key)
         val intent = Intent(
             context,
             fileDownloadService
@@ -156,10 +156,16 @@ object QrUri {
             FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
             currentAppDirPath
         )
+        isMoveCurrentDir?.let {
+            intent.putExtra(
+                FileDownloadExtra.IS_MOVE_TO_CURRENT_DIR.schema,
+                it
+            )
+        }
         parentDirPath?.let {
             intent.putExtra(
                 FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_UPLOADER.schema,
-                currentAppDirPath
+                it
             )
         }
         try {
@@ -230,11 +236,6 @@ object QrUri {
         intent.putExtra(
             GitDownloadExtra.PARENT_DIR_PATH_FOR_FILE_UPLOAD.schema,
             parentDirRelativePathPATH
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrSchema.txt",
-            "prefix: $prefix\nfannelRawName: $fannelRawName\ncurrentAppDirPath: $currentAppDirPath\nparentDirRelativePathPATH: $parentDirRelativePathPATH\n"
         )
         try {
             context?.let {

@@ -2,7 +2,6 @@ package com.puutaro.commandclick.service.lib.file_upload
 
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.CcPathTool
@@ -28,7 +27,6 @@ import java.time.LocalDateTime
 
 object CopyFannelServer {
     private var intentRequestMonitorJob: Job? = null
-    private val macroSeparator = QrSeparator.sepalator.str
     private val limitFileMegaByteLength = 5000000
 
     fun exit(
@@ -237,16 +235,10 @@ object CopyFannelServer {
 
     private fun makeParentDirPath(
         currentAppDirPath: String,
-        receivePathAndArg: String,
+        parentDirSrc: String,
     ): String {
-        val parentDirSrc =
-            receivePathAndArg
-                .removeSuffix("/")
-                .split(macroSeparator)
-                .getOrNull(1)
-                ?.trim()
         if(
-            parentDirSrc.isNullOrEmpty()
+            parentDirSrc.isEmpty()
         ) return currentAppDirPath
         return CcPathTool.convertAppDirPathToLocal(
             parentDirSrc,
