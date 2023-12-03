@@ -111,6 +111,7 @@ class QrScanJsDialog(
         codeScanner.decodeCallback = DecodeCallback {
             CoroutineScope(Dispatchers.Main).launch {
                 val decodeText = it.text
+//                    .replace("\\`", "`").replace("\\$", "$");
                 Toast.makeText(context, "Scan result: ${decodeText}", Toast.LENGTH_LONG).show()
                 codeScanner.releaseResources()
                 qrScanDialogObj?.dismiss()
@@ -119,7 +120,8 @@ class QrScanJsDialog(
                     currentScriptPath,
                     callBackJsPath,
                     webView,
-                    "${qrDecodeTextReplaceMark}=${decodeText}"
+                    decodeText
+//                    "${qrDecodeTextReplaceMark}=${decodeText}"
                 )
             }
         }
@@ -323,7 +325,8 @@ class QrScanJsDialog(
         currentScriptPath: String,
         jsPath: String,
         webView: WebView,
-        replaceMapStr: String = String(),
+        decodedText: String = String(),
+//        replaceMapStr: String = String(),
     ){
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             currentScriptPath,
@@ -349,13 +352,13 @@ class QrScanJsDialog(
             fannelDirName,
             fannelName
         )
-
+        terminalViewModel.jsArguments = decodedText
         val jsScriptUrl = JavaScriptLoadUrl.make(
             context,
             execJsPath,
             makeJsList(
                 execJsPath,
-                replaceMapStr,
+//                replaceMapStr,
             ),
             setReplaceVariableMapSrc = setReplaceVariableMap
         ) ?: return
@@ -364,33 +367,37 @@ class QrScanJsDialog(
 
     private fun makeJsList(
         execJsPath: String,
-        replaceMapStr: String?
+//        replaceMapStr: String?
     ): List<String> {
         val execJsPathObj = File(execJsPath)
         val execJsDirPath = execJsPathObj.parent
             ?: return emptyList()
         val execJsName = execJsPathObj.name
-        if(
-            replaceMapStr.isNullOrEmpty()
-        ) return ReadText(
+        return ReadText(
             execJsDirPath,
             execJsName
         ).textToList()
-        var replaceJsCon = ReadText(
-            execJsDirPath,
-            execJsName
-        ).readText()
-        val replacedStr = CmdClickMap.createMap(
-            replaceMapStr,
-            "\n"
-        )
-        replacedStr.forEach {
-            replaceJsCon = replaceJsCon.replace(
-                it.first,
-                it.second
-            )
-        }
-        return replaceJsCon.split("\n")
+//        if(
+//            replaceMapStr.isNullOrEmpty()
+//        ) return ReadText(
+//            execJsDirPath,
+//            execJsName
+//        ).textToList()
+//        var replaceJsCon = ReadText(
+//            execJsDirPath,
+//            execJsName
+//        ).readText()
+//        val replacedStr = CmdClickMap.createMap(
+//            replaceMapStr,
+//            "\n"
+//        )
+//        replacedStr.forEach {
+//            replaceJsCon = replaceJsCon.replace(
+//                it.first,
+//                it.second
+//            )
+//        }
+//        return replaceJsCon.split("\n")
     }
 
     private fun getJsPathFromSelectedMenuStr(
