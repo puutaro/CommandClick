@@ -32,6 +32,50 @@ object WaitQuizPair {
     private val documentDir = "{documentDir}"
     val quizPairList = listOf(
         Pair(
+            "What's one of CC feature",
+            "-> File/Dir share by QR"
+        ),
+        Pair(
+            "What's one of CC feature",
+            "-> File/Dir share by QR"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> to gmail"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> to tel"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> Set WIFI"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> to SMS"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> Download fannel"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> File/Dir share"
+        ),
+        Pair(
+            "What's one of QR usage?",
+            "-> Download fannel"
+        ),
+        Pair(
+            "Why adopt QR feature?",
+            "-> Good compatibility"
+        ),
+        Pair(
+            "Why adopt QR feature?",
+            "-> For development"
+        ),
+        Pair(
             "What's alternative fakeroot",
             "-> green-green-avk/build-proot-android in recent android"
         ),
