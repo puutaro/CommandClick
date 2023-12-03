@@ -172,8 +172,6 @@ class CommandIndexFragment: Fragment() {
             fannelIndexListAdapter,
         )
 
-//        registerForContextMenu(cmdListView)
-
         val cmdindexInternetButton = binding.cmdindexInternetButton
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
@@ -232,10 +230,8 @@ class CommandIndexFragment: Fragment() {
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
             this,
-            startUpPref,
             readSharePreffernceMap
         )
-//        toolBarSettingButtonControl.inflate()
         toolBarSettingButtonControl.toolbarSettingButtonOnClick()
         toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
 
@@ -296,35 +292,6 @@ class CommandIndexFragment: Fragment() {
         super.onStart()
         ListViewUpdaterOnStart.update(this)
     }
-
-
-//    override fun onCreateContextMenu(
-//        menu: ContextMenu,
-//        view: View,
-//        menuInfo: ContextMenu.ContextMenuInfo?
-//    ) {
-//        super.onCreateContextMenu(menu, view, menuInfo)
-//        val inflater = this.activity?.menuInflater;
-//        inflater?.inflate(R.menu.cmd_index_list_menu, menu)
-//    }
-
-//    override fun onContextItemSelected(item: MenuItem): Boolean {
-//        super.onContextItemSelected(item)
-//
-//        val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
-//        val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
-//            startUpPref
-//        )
-//        val makeListView = MakeListView(
-//            binding,
-//            this,
-//            readSharePreffernceMap
-//        )
-//        return makeListView.onLongClickDo (
-//            item,
-//            super.onContextItemSelected(item),
-//        )
-//    }
 
     interface OnLongClickMenuItemsForCmdIndexListener {
         fun onLongClickMenuItemsforCmdIndex(
