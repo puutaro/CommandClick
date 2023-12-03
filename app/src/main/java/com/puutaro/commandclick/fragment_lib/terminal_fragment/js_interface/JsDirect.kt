@@ -58,7 +58,7 @@ class JsDirect (
             fullPathOrFannelRawName
         )
         intent.putExtra(
-            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_TRANSFER.schema,
+            FileDownloadExtra.CURRENT_APP_DIR_PATH_FOR_DOWNLOAD.schema,
             terminalFragment.currentAppDirPath
         )
         context?.let {

@@ -54,8 +54,5 @@ object BitmapTool {
         // return the bitmap
         return screenshot
     }
-
-
-
 }
 
