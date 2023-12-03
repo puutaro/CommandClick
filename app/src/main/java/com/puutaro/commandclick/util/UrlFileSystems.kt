@@ -33,6 +33,7 @@ class UrlFileSystems {
             WebSearcher("webSearcher"),
             AskGpt35("askGpt35"),
             CopyLink("copyLink"),
+            qrLReader("qrLReader"),
         }
     }
 
