@@ -31,7 +31,7 @@ object DialogObject {
 
     private var simpleTextDialogObj: Dialog? = null
     private var descWebDialog: Dialog? = null
-    private val defaultFontPercentage = 140
+    private const val defaultFontPercentage = 140
     private val positionHashMap = hashMapOf<String, Int>()
 
     fun simpleTextShow(
@@ -173,7 +173,7 @@ object DialogObject {
         }
     }
     private fun webViewSetting(
-        fragment: androidx.fragment.app.Fragment,
+        fragment: Fragment,
         webView: WebView
     ){
         val settings = webView.settings
@@ -191,7 +191,7 @@ object DialogObject {
     }
 
     private fun getFontZoomPercentage(
-        fragment: androidx.fragment.app.Fragment
+        fragment: Fragment
     ): Int {
         val context = fragment.context
             ?: return defaultFontPercentage

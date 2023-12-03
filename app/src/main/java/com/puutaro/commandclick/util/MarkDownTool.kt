@@ -5,6 +5,7 @@ object MarkDownTool {
         scriptName: String,
         contents: String
     ): String{
+
         return """
 <!DOCTYPE html>
 <html>
@@ -48,9 +49,6 @@ object MarkDownTool {
 </head>
 <body>
     <div id="markdown">
-
-# ${scriptName}
--------
 
 ${contents}
 

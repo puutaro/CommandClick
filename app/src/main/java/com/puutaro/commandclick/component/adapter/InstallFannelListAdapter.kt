@@ -92,7 +92,8 @@ class InstallFannelListAdapter(
             withContext(Dispatchers.Main) {
                 holder.fannelNameTextView.text = fannelName
             }
-            val fannelSumamry = fannelInstallerLineList?.getOrNull(1)
+            val fannelSumamry =
+                fannelInstallerLineList?.getOrNull(1)
                 ?: String()
             withContext(Dispatchers.Main) {
                 holder.fannelSummaryTextView.text =

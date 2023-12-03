@@ -183,6 +183,7 @@ class GitCloneService: Service() {
         val fannelsListSource = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
             cmdclickFannelItselfDirPath,
         )
+        val firstDescriptionLineRange = 50
         return fannelsListSource.map {
             val descFirstLineSource = ScriptFileDescription.makeDescriptionContents(
                 ReadText(
@@ -191,7 +192,13 @@ class GitCloneService: Service() {
                 ).textToList(),
                 cmdclickFannelItselfDirPath,
                 it
-            ).split('\n').firstOrNull()
+            ).split('\n').take(firstDescriptionLineRange).filter {
+                val trimLine = it.trim()
+                val isLetter =
+                    trimLine.firstOrNull()?.isLetter()
+                        ?: false
+                isLetter && trimLine.isNotEmpty()
+                }.firstOrNull()
             val descFirstLine = if(
                 !descFirstLineSource.isNullOrEmpty()
                 && descFirstLineSource.length > descriptionFirstLineLimit
@@ -281,15 +288,6 @@ class GitCloneService: Service() {
 
                 override fun endTask() {
                     if(isProgressCancel) return
-//                    notificationBuilder.setContentTitle("Cloned 100%")
-//                    notificationBuilder.setContentText("cloned 100%")
-//                    notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
-//                    notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-//                    notificationBuilder.setProgress(100, 100, false)
-//                    notificationBuilder.setAutoCancel(true)
-//                    notificationBuilder.clearActions()
-//                    val notification = notificationBuilder.build()
-//                    notificationManager.notify(notificationId, notification)
                     isProgressCancel = true
                 }
                 override fun isCancelled(): Boolean {

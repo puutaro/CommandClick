@@ -136,6 +136,7 @@ object UsePath {
     val jsImportAdminFannelPath = "$cmdclickSystemAppDirPath/$jsImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"
     val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
+    val fannelReadmePath = "\${01}/\${001}/README.md"
 
 
     private const val cmdclickSystemDirName = "system"

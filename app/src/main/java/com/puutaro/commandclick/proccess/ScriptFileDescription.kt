@@ -1,12 +1,12 @@
 package com.puutaro.commandclick.proccess
 
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
@@ -15,7 +15,6 @@ import java.io.File
 object ScriptFileDescription {
 
     private val filePrefix = "file://"
-    private val mdSuffix = ".md"
 
     fun show(
         fragment: Fragment,
@@ -78,12 +77,7 @@ object ScriptFileDescription {
                         it + suffixBlank
                     }
                 if(
-                    !inputDescLine.startsWith(
-                        filePrefix
-                    )
-                    || !inputDescLine.endsWith(
-                        "${mdSuffix}${suffixBlank}"
-                    )
+                    inputDescLine.trim() != filePrefix
                 ) return@map inputDescLine
                 extractMdContents(
                     inputDescLine,
@@ -102,19 +96,13 @@ object ScriptFileDescription {
         val fannelDirName = CcPathTool.makeFannelDirName(
             fannelName
         )
-        val mdPath = inputDescLine.trim().let{
-            QuoteTool.trimBothEdgeQuote(it)
-        }.removePrefix(
-            filePrefix
-        ).let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirName,
-                fannelDirName,
-                fannelName
-            )
-        }
-        val mdPathObj = File(mdPath)
+        val fannelReadmePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelReadmePath,
+            currentAppDirName,
+            fannelDirName,
+            fannelName,
+        )
+        val mdPathObj = File(fannelReadmePath)
         if(
             !mdPathObj.isFile
         ) return inputDescLine
