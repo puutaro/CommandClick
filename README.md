@@ -63,6 +63,7 @@ CommandClick
 
 - Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
 - Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also `ubuntu`: `shell`, `python`, `golang`, `clang`, `android os cli` and etc. Therefore, this has wide spread usage
+- Existing web browsers link `QR code` to system. But `CommandClick` handle `QR code` for `P2P` file transfer, `Git clone` and `URL`, `JS`, `WIFI`, `SMS`, etc.
 - Existing web browsers cannot create original android app. But `CommandClick` can create the app just for you as low code tool.
 
 
