@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -226,6 +227,10 @@ object PcPulseSetServer {
             }
             writer?.write(response.toByteArray())
         } catch (ex: Exception) {
+            LogSystems.equals(ex.toString())
+        } finally {
+            isr.close()
+            writer?.close()
             client?.close()
         }
     }

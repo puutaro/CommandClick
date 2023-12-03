@@ -175,12 +175,12 @@ object FileDownloader {
         )
         FileSystems.writeFile(
             UsePath.cmdclickDefaultAppDirPath,
-            "qrfileListCon00.txt",
+            "qrFileListCon.txt",
             fileListCon
         )
         FileSystems.writeFile(
             UsePath.cmdclickDefaultAppDirPath,
-            "qrcpFileList00.txt",
+            "qrCpFileList.txt",
             cpFileList.joinToString("\n")
         )
         if(
@@ -193,11 +193,6 @@ object FileDownloader {
             return
         }
 
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrFileList.txt",
-            cpFileList.joinToString("\n")
-        )
         if(
             !fileDownloadService.isMoveToCurrentDir.isNullOrEmpty()
         ) commonDirPath = extractCommonDirPath(cpFileList)
@@ -206,14 +201,10 @@ object FileDownloader {
         val cpFileListIndexSize = cpFileList.size - 1
         val parendDirPathForUploader =
             fileDownloadService.currentAppDirPathForUploader ?: String()
+
         FileSystems.writeFile(
             UsePath.cmdclickDefaultAppDirPath,
-            "qrFileList.txt",
-            cpFileList.joinToString("\n")
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrFileList11.txt",
+            "qrProcessLog.txt",
             String()
         )
         (cpFileList.indices).forEach {
@@ -224,12 +215,9 @@ object FileDownloader {
                 currentAppDirPath,
                 commonDirPath
             )
-//            if(
-//                cpDownloaderFilePath == currentAppDirPath
-//            ) return@forEach
             FileSystems.updateFile(
                 UsePath.cmdclickDefaultAppDirPath,
-                "qrFileList11.txt",
+                "qrProcessLog.txt",
                 "cpUploaderFilePath: $cpUploaderFilePath\ncpDownloaderFilePath: $cpDownloaderFilePath\n" +
                         "currentAppDirPath: $currentAppDirPath\ncommonDirPath: $commonDirPath"
             )
@@ -423,16 +411,44 @@ object FileDownloader {
     ): List<String> {
         val isMakeServerCurrentDirPath =
             !getPathOrFannelRawName.startsWith("/")
-        val grepPath = if(isMakeServerCurrentDirPath) {
-            fileListCon.let {
-                CcPathTool.extractCurrentDirPathFromPath(it)
-            }.split("\n").distinct().firstOrNull()?.let {
-                "$it/${getPathOrFannelRawName}"
-            } ?: String()
-        } else getPathOrFannelRawName
+        val grepPath =
+            when(isMakeServerCurrentDirPath) {
+                true
+                -> concatCommonDirAsPrefix(
+                    getPathOrFannelRawName,
+                    fileListCon,
+                )
+
+                else
+                -> makeGrepPathByIsDir(
+                    getPathOrFannelRawName,
+                    fileListCon,
+                )
+            }
         return fileListCon.split("\n").filter {
             it.startsWith(grepPath)
         }
+    }
+
+    private fun concatCommonDirAsPrefix(
+        getPathOrFannelRawName: String,
+        fileListCon: String,
+    ): String {
+        return fileListCon.let {
+            CcPathTool.extractCurrentDirPathFromPath(it)
+        }.split("\n").distinct().firstOrNull()?.let {
+            "$it/${getPathOrFannelRawName}"
+        } ?: String()
+    }
+
+    private fun makeGrepPathByIsDir(
+        getPathOrFannelRawName: String,
+        fileListCon: String,
+    ): String {
+        val isDir =
+            fileListCon.contains("$getPathOrFannelRawName/")
+        if(isDir) return "$getPathOrFannelRawName/"
+        return getPathOrFannelRawName
     }
 
     private fun extractCommonDirPath(
