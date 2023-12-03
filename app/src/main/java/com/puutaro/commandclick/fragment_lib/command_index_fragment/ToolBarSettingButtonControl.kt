@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 
-import android.content.SharedPreferences
 import android.util.Size
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -18,25 +17,22 @@ import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.proccess.SelectTermDialog
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SubMenuDialog
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.ManageSubMenuDialog
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SettingSubMenuDialog
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,
     private val cmdIndexFragment: CommandIndexFragment,
-    private val sharedPref: SharedPreferences?,
     readSharePreffernceMap: Map<String, String>,
 ){
     private val context = cmdIndexFragment.context
@@ -172,19 +168,6 @@ class ToolBarSettingButtonControl(
             val menuListAdapter =
                 menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
-                MenuEnums.ADD.itemName -> {
-                    AddScriptHandler(
-                        cmdIndexFragment,
-                        sharedPref,
-                        currentAppDirPath,
-                    ).handle()
-                }
-                MenuEnums.SETTING.itemName -> {
-                    SubMenuDialog.launch(cmdIndexFragment)
-                }
-                MenuEnums.SELECTTERM.itemName -> {
-                    SelectTermDialog.launch(cmdIndexFragment)
-                }
                 MenuEnums.INSTALL_FANNEL.itemName -> {
                     InstallFannelHandler.handle(
                         cmdIndexFragment,
@@ -218,10 +201,14 @@ class ToolBarSettingButtonControl(
                         UsePath.cmdclickStartupJsName,
                     )
                 }
-                MenuEnums.RESTART_UBUNTU.itemName -> {
-                    UbuntuServiceManager.launch(
-                        cmdIndexFragment.activity
+                MenuEnums.MANAGE.itemName -> {
+                    ManageSubMenuDialog.launch(
+                        cmdIndexFragment,
+                        currentAppDirPath
                     )
+                }
+                MenuEnums.SETTING.itemName -> {
+                    SettingSubMenuDialog.launch(cmdIndexFragment)
                 }
             }
         }
@@ -232,16 +219,13 @@ private enum class MenuEnums(
     val itemName: String,
     val imageId: Int,
 ) {
-    ADD("add", R.drawable.icons8_plus),
-    SELECTTERM("select term", R.drawable.icons8_file),
-    EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
-    RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
-    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    QR_SCAN("scan QR", R.drawable.icons_qr_code),
     USAGE("usage", R.drawable.icons8_info),
+    EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
+    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
+    QR_SCAN("scan QR", R.drawable.icons_qr_code),
+    MANAGE("manage", R.drawable.icons8_setup),
     SETTING("setting",R.drawable.icons8_setting),
-    //    SETUP_UBUNTU("setup ubuntu", R.drawable.ic_terminal),
 }
 
 

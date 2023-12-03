@@ -9,18 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
 import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
-import coil.load
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -28,11 +22,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Editor
 import com.puutaro.commandclick.util.ReadText
-import java.io.File
 
 
 object ExecOnLongClickDo {
@@ -139,7 +130,6 @@ object ExecOnLongClickDo {
         contextMenuListView: ListView,
         selectedScriptName: String,
     ) {
-        val context = cmdIndexFragment.context
         contextMenuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             contextMenuDialog?.dismiss()
@@ -148,13 +138,25 @@ object ExecOnLongClickDo {
                 ?: return@setOnItemClickListener
 
             when(selectedMenuName){
-                ContextMenuEnums.WRITE.itemName
-                -> Editor(
-                        currentAppDirPath,
-                        selectedScriptName,
-                        context
-                    ).open()
-
+                ContextMenuEnums.KILL.itemName
+                -> AppProcessManager.killDialog(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    selectedScriptName
+                )
+//                ContextMenuEnums.WRITE.itemName
+//                -> Editor(
+//                        currentAppDirPath,
+//                        selectedScriptName,
+//                        context
+//                    ).open()
+                ContextMenuEnums.DELETE.itemName
+                -> ConfirmDialogForDelete.show(
+                    cmdIndexFragment,
+                    currentAppDirPath,
+                    selectedScriptName,
+                    cmdIndexFragment.binding.cmdList
+                )
                 ContextMenuEnums.EDIT.itemName
                 -> ScriptFileEdit.edit(
                         cmdIndexFragment,
@@ -162,12 +164,12 @@ object ExecOnLongClickDo {
                         selectedScriptName,
                     )
 
-                ContextMenuEnums.COPY.itemName
-                -> CopySubMenuDialog.launch(
-                    cmdIndexFragment,
-                    currentAppDirPath,
-                    selectedScriptName
-                )
+//                ContextMenuEnums.COPY.itemName
+//                -> CopySubMenuDialog.launch(
+//                    cmdIndexFragment,
+//                    currentAppDirPath,
+//                    selectedScriptName
+//                )
                 ContextMenuEnums.UTILITY.itemName
                 -> UtilitySubMenuDialog.launch(
                     cmdIndexFragment,
@@ -181,135 +183,135 @@ object ExecOnLongClickDo {
     }
 }
 
-
-private object CopySubMenuDialog {
-
-    private var copySubMenuDialog: Dialog? = null
-    fun launch(
-        cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
-        selectedScriptName: String,
-    ){
-        val context = cmdIndexFragment.context
-            ?: return
-        copySubMenuDialog = Dialog(
-            context
-        )
-        copySubMenuDialog?.setContentView(
-            R.layout.list_dialog_layout
-        )
-        QrLogo(cmdIndexFragment).setTitleQrLogo(
-            copySubMenuDialog?.findViewById<AppCompatImageView>(
-                R.id.list_dialog_title_image
-            ),
-            currentAppDirPath,
-            selectedScriptName,
-        )
-        val listDialogTitle = copySubMenuDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_title
-        )
-        listDialogTitle?.text = "Copy: $selectedScriptName"
-        val listDialogMessage = copySubMenuDialog?.findViewById<AppCompatTextView>(
-            R.id.list_dialog_message
-        )
-        listDialogMessage?.isVisible = false
-        val listDialogSearchEditText = copySubMenuDialog?.findViewById<AppCompatEditText>(
-            R.id.list_dialog_search_edit_text
-        )
-        listDialogSearchEditText?.isVisible = false
-        val cancelButton = copySubMenuDialog?.findViewById<AppCompatImageButton>(
-            R.id.list_dialog_cancel
-        )
-        cancelButton?.setOnClickListener {
-            copySubMenuDialog?.dismiss()
-        }
-
-        copySubMenuListView(
-            cmdIndexFragment,
-            currentAppDirPath,
-            selectedScriptName,
-        )
-        copySubMenuDialog?.setOnCancelListener {
-            copySubMenuDialog?.dismiss()
-        }
-        copySubMenuDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        copySubMenuDialog?.window?.setGravity(Gravity.BOTTOM)
-        copySubMenuDialog?.show()
-    }
-
-    private fun copySubMenuListView(
-        cmdIndexFragment: CommandIndexFragment,
-        currentAppDirPath: String,
-        selectedScriptName: String,
-    ) {
-        val context = cmdIndexFragment.context
-            ?: return
-        val copyMenePairList = CopySubMenuEnums.values().map {
-            it.itemName to it.imageId
-        }
-        val copyMenuListView =
-            copySubMenuDialog?.findViewById<ListView>(
-                R.id.list_dialog_list_view
-            ) ?: return
-        val subMenuAdapter = SubMenuAdapter(
-            context,
-            copyMenePairList.toMutableList()
-        )
-        copyMenuListView.adapter = subMenuAdapter
-        invokeItemSetClickListnerForCopy(
-            cmdIndexFragment,
-            copyMenuListView,
-            currentAppDirPath,
-            selectedScriptName
-        )
-    }
-
-    private fun invokeItemSetClickListnerForCopy(
-        cmdIndexFragment: CommandIndexFragment,
-        copyMenuListView: ListView,
-        currentAppDirPath: String,
-        selectedScriptName: String,
-    ){
-        val context = cmdIndexFragment.context
-        copyMenuListView.setOnItemClickListener {
-                parent, View, pos, id ->
-            copySubMenuDialog?.dismiss()
-            val menuListAdapter = copyMenuListView.adapter as SubMenuAdapter
-            val selectedMenuName = menuListAdapter.getItem(pos)
-                ?: return@setOnItemClickListener
-
-            when(selectedMenuName){
-                CopySubMenuEnums.COPY_PATH.itemName
-                -> {
-                    val shellFilePathByTermux = "${currentAppDirPath}/${selectedScriptName}"
-                    val clipboard = context?.getSystemService(
-                        Context.CLIPBOARD_SERVICE) as ClipboardManager
-                    val clip: ClipData = ClipData.newPlainText(
-                        "cmdclick path",
-                        shellFilePathByTermux
-                    )
-                    clipboard.setPrimaryClip(clip)
-                    Toast.makeText(
-                        context,
-                        "copy ok",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                CopySubMenuEnums.COPY_FILE.itemName
-                -> CopyFileEvent(
-                    cmdIndexFragment,
-                    currentAppDirPath,
-                    selectedScriptName,
-                ).invoke()
-            }
-            return@setOnItemClickListener
-        }
-    }
-}
+//
+//private object CopySubMenuDialog {
+//
+//    private var copySubMenuDialog: Dialog? = null
+//    fun launch(
+//        cmdIndexFragment: CommandIndexFragment,
+//        currentAppDirPath: String,
+//        selectedScriptName: String,
+//    ){
+//        val context = cmdIndexFragment.context
+//            ?: return
+//        copySubMenuDialog = Dialog(
+//            context
+//        )
+//        copySubMenuDialog?.setContentView(
+//            R.layout.list_dialog_layout
+//        )
+//        QrLogo(cmdIndexFragment).setTitleQrLogo(
+//            copySubMenuDialog?.findViewById<AppCompatImageView>(
+//                R.id.list_dialog_title_image
+//            ),
+//            currentAppDirPath,
+//            selectedScriptName,
+//        )
+//        val listDialogTitle = copySubMenuDialog?.findViewById<AppCompatTextView>(
+//            R.id.list_dialog_title
+//        )
+//        listDialogTitle?.text = "Copy: $selectedScriptName"
+//        val listDialogMessage = copySubMenuDialog?.findViewById<AppCompatTextView>(
+//            R.id.list_dialog_message
+//        )
+//        listDialogMessage?.isVisible = false
+//        val listDialogSearchEditText = copySubMenuDialog?.findViewById<AppCompatEditText>(
+//            R.id.list_dialog_search_edit_text
+//        )
+//        listDialogSearchEditText?.isVisible = false
+//        val cancelButton = copySubMenuDialog?.findViewById<AppCompatImageButton>(
+//            R.id.list_dialog_cancel
+//        )
+//        cancelButton?.setOnClickListener {
+//            copySubMenuDialog?.dismiss()
+//        }
+//
+//        copySubMenuListView(
+//            cmdIndexFragment,
+//            currentAppDirPath,
+//            selectedScriptName,
+//        )
+//        copySubMenuDialog?.setOnCancelListener {
+//            copySubMenuDialog?.dismiss()
+//        }
+//        copySubMenuDialog?.window?.setLayout(
+//            ViewGroup.LayoutParams.MATCH_PARENT,
+//            ViewGroup.LayoutParams.WRAP_CONTENT
+//        )
+//        copySubMenuDialog?.window?.setGravity(Gravity.BOTTOM)
+//        copySubMenuDialog?.show()
+//    }
+//
+//    private fun copySubMenuListView(
+//        cmdIndexFragment: CommandIndexFragment,
+//        currentAppDirPath: String,
+//        selectedScriptName: String,
+//    ) {
+//        val context = cmdIndexFragment.context
+//            ?: return
+//        val copyMenePairList = CopySubMenuEnums.values().map {
+//            it.itemName to it.imageId
+//        }
+//        val copyMenuListView =
+//            copySubMenuDialog?.findViewById<ListView>(
+//                R.id.list_dialog_list_view
+//            ) ?: return
+//        val subMenuAdapter = SubMenuAdapter(
+//            context,
+//            copyMenePairList.toMutableList()
+//        )
+//        copyMenuListView.adapter = subMenuAdapter
+//        invokeItemSetClickListnerForCopy(
+//            cmdIndexFragment,
+//            copyMenuListView,
+//            currentAppDirPath,
+//            selectedScriptName
+//        )
+//    }
+//
+//    private fun invokeItemSetClickListnerForCopy(
+//        cmdIndexFragment: CommandIndexFragment,
+//        copyMenuListView: ListView,
+//        currentAppDirPath: String,
+//        selectedScriptName: String,
+//    ){
+//        val context = cmdIndexFragment.context
+//        copyMenuListView.setOnItemClickListener {
+//                parent, View, pos, id ->
+//            copySubMenuDialog?.dismiss()
+//            val menuListAdapter = copyMenuListView.adapter as SubMenuAdapter
+//            val selectedMenuName = menuListAdapter.getItem(pos)
+//                ?: return@setOnItemClickListener
+//
+//            when(selectedMenuName){
+//                CopySubMenuEnums.COPY_PATH.itemName
+//                -> {
+//                    val shellFilePathByTermux = "${currentAppDirPath}/${selectedScriptName}"
+//                    val clipboard = context?.getSystemService(
+//                        Context.CLIPBOARD_SERVICE) as ClipboardManager
+//                    val clip: ClipData = ClipData.newPlainText(
+//                        "cmdclick path",
+//                        shellFilePathByTermux
+//                    )
+//                    clipboard.setPrimaryClip(clip)
+//                    Toast.makeText(
+//                        context,
+//                        "copy ok",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                }
+//
+//                CopySubMenuEnums.COPY_FILE.itemName
+//                -> CopyFileEvent(
+//                    cmdIndexFragment,
+//                    currentAppDirPath,
+//                    selectedScriptName,
+//                ).invoke()
+//            }
+//            return@setOnItemClickListener
+//        }
+//    }
+//}
 
 private object UtilitySubMenuDialog {
 
@@ -402,6 +404,8 @@ private object UtilitySubMenuDialog {
         currentAppDirPath: String,
         selectedScriptName: String,
     ){
+        val context = cmdIndexFragment.context
+            ?: return
         copyMenuListView.setOnItemClickListener {
                 parent, View, pos, id ->
             utilitySubMenuDialog?.dismiss()
@@ -410,13 +414,19 @@ private object UtilitySubMenuDialog {
                 ?: return@setOnItemClickListener
 
             when(selectedMenuName){
-                UtilitySubMenuEnums.DELETE.itemName
-                -> ConfirmDialogForDelete.show(
-                    cmdIndexFragment,
+                UtilitySubMenuEnums.WRITE.itemName
+                -> Editor(
                     currentAppDirPath,
                     selectedScriptName,
-                    cmdIndexFragment.binding.cmdList
-                )
+                    context
+                ).open()
+//                UtilitySubMenuEnums.DELETE.itemName
+//                -> ConfirmDialogForDelete.show(
+//                    cmdIndexFragment,
+//                    currentAppDirPath,
+//                    selectedScriptName,
+//                    cmdIndexFragment.binding.cmdList
+//                )
                 UtilitySubMenuEnums.DESCRIPTION.itemName
                 -> ScriptFileDescription.show(
                     cmdIndexFragment,
@@ -427,12 +437,35 @@ private object UtilitySubMenuDialog {
                     currentAppDirPath,
                     selectedScriptName
                 )
-                UtilitySubMenuEnums.KILL.itemName
-                -> AppProcessManager.killDialog(
+                UtilitySubMenuEnums.COPY_PATH.itemName
+                -> {
+                    val shellFilePathByTermux = "${currentAppDirPath}/${selectedScriptName}"
+                    val clipboard = context.getSystemService(
+                        Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip: ClipData = ClipData.newPlainText(
+                        "cmdclick path",
+                        shellFilePathByTermux
+                    )
+                    clipboard.setPrimaryClip(clip)
+                    Toast.makeText(
+                        context,
+                        "copy ok",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                UtilitySubMenuEnums.COPY_FILE.itemName
+                -> CopyFileEvent(
                     cmdIndexFragment,
                     currentAppDirPath,
-                    selectedScriptName
-                )
+                    selectedScriptName,
+                ).invoke()
+//                UtilitySubMenuEnums.KILL.itemName
+//                -> AppProcessManager.killDialog(
+//                    cmdIndexFragment,
+//                    currentAppDirPath,
+//                    selectedScriptName
+//                )
             }
             return@setOnItemClickListener
         }
@@ -444,26 +477,28 @@ private enum class ContextMenuEnums(
     val itemName: String,
     val imageId: Int
 ){
-    WRITE("Write", R.drawable.icons8_support),
+    KILL("Kill", R.drawable.icons8_cancel),
+    DELETE("Delete", R.drawable.icons8_refresh),
     EDIT("Edit", R.drawable.icons8_edit),
-    COPY("Copy", com.termux.shared.R.drawable.ic_copy),
+//    COPY("Copy", com.termux.shared.R.drawable.ic_copy),
     UTILITY("Utility", R.drawable.icons8_support),
 }
 
-private enum class CopySubMenuEnums(
-    val itemName: String,
-    val imageId: Int
-){
-    COPY_PATH("Copy path", com.termux.shared.R.drawable.ic_copy),
-    COPY_FILE("Copy file", R.drawable.icons8_folda)
-}
+//private enum class CopySubMenuEnums(
+//    val itemName: String,
+//    val imageId: Int
+//){
+//    COPY_PATH("Copy path", com.termux.shared.R.drawable.ic_copy),
+//    COPY_FILE("Copy file", R.drawable.icons8_file)
+//}
 
 private enum class UtilitySubMenuEnums(
     val itemName: String,
     val imageId: Int
 ){
-    DELETE("Delete", R.drawable.icons8_refresh),
     DESCRIPTION("Description", R.drawable.icons8_info),
-    KILL("Kill", R.drawable.icons8_cancel)
+    WRITE("Write", R.drawable.icons8_support),
+    COPY_PATH("Copy path", com.termux.shared.R.drawable.ic_copy),
+    COPY_FILE("Copy file", R.drawable.icons8_file)
 }
 

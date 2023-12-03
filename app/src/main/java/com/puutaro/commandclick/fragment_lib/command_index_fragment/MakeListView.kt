@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
 import android.content.Context
-import android.view.MenuItem
 import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -52,11 +51,6 @@ class MakeListView(
     fun makeTextFilter(
         cmdListAdapter: FannelIndexListAdapter,
     ){
-//        cmdListView.setTextFilterEnabled(false)
-//        cmdListView.isTextFilterEnabled = false
-//        val filteringCmdStrList = (0..cmdListAdapter.getCount()-1).map{
-//            cmdListAdapter.getItem(it) ?: String()
-//        }
 
         TextChangedListenerAdder.add(
             cmdIndexFragment,
@@ -110,15 +104,11 @@ class MakeListView(
 
     fun onLongClickDo (
         fannelIndexListAdapter: FannelIndexListAdapter
-//        item: MenuItem,
-//        contextItemSelected: Boolean,
     ) {
         ExecOnLongClickDo.invoke(
             cmdIndexFragment,
             currentAppDirPath,
             fannelIndexListAdapter
-//            item,
-//            contextItemSelected,
         )
     }
 }

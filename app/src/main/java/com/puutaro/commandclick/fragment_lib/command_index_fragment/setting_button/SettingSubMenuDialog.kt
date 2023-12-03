@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -17,66 +16,61 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.Syste
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-object SubMenuDialog {
+object SettingSubMenuDialog {
 
-    private var subMenuDialog: Dialog? = null
+    private var settingSubMenuDialog: Dialog? = null
 
     fun launch(
         cmdIndexFragment: CommandIndexFragment
     ){
         val context = cmdIndexFragment.context
             ?: return
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
-        subMenuDialog = Dialog(
+        settingSubMenuDialog = Dialog(
             context
         )
-        subMenuDialog?.setContentView(
+        settingSubMenuDialog?.setContentView(
             R.layout.submenu_dialog
         )
         setListView(
             cmdIndexFragment,
-            terminalViewModel
         )
         setCancelListener()
-        subMenuDialog?.window?.setLayout(
+        settingSubMenuDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        subMenuDialog?.window?.setGravity(Gravity.BOTTOM)
-        subMenuDialog?.show()
+        settingSubMenuDialog?.window?.setGravity(Gravity.BOTTOM)
+        settingSubMenuDialog?.show()
 
     }
 
     private fun setCancelListener(
     ){
         val cancelImageButton =
-            subMenuDialog?.findViewById<ImageButton>(
+            settingSubMenuDialog?.findViewById<ImageButton>(
                 R.id.submenu_dialog_cancel
             )
         cancelImageButton?.setOnClickListener {
-            subMenuDialog?.dismiss()
+            settingSubMenuDialog?.dismiss()
         }
-        subMenuDialog?.setOnCancelListener {
-            subMenuDialog?.dismiss()
+        settingSubMenuDialog?.setOnCancelListener {
+            settingSubMenuDialog?.dismiss()
         }
     }
 
     private fun setListView(
         cmdIndexFragment: CommandIndexFragment,
-        terminalViewModel: TerminalViewModel
     ) {
         val context = cmdIndexFragment.context
             ?: return
         val subMenuListView =
-            subMenuDialog?.findViewById<ListView>(
+            settingSubMenuDialog?.findViewById<ListView>(
                 R.id.sub_menu_list_view
             )
         val subMenuPairList = SettingSubMenuEnums.values().map {
@@ -87,21 +81,19 @@ object SubMenuDialog {
             subMenuPairList.toMutableList()
         )
         subMenuListView?.adapter = subMenuAdapter
-        subMenuItemClickListener(
+        settingSubMenuItemClickListener(
             cmdIndexFragment,
-            terminalViewModel,
             subMenuListView
         )
     }
 
-    private fun subMenuItemClickListener(
+    private fun settingSubMenuItemClickListener(
         cmdIndexFragment: CommandIndexFragment,
-        terminalViewModel: TerminalViewModel,
         subMenuListView: ListView?
     ){
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
-            subMenuDialog?.dismiss()
+            settingSubMenuDialog?.dismiss()
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
@@ -113,22 +105,10 @@ object SubMenuDialog {
                         UsePath.appDirManagerFannelName
                     )
                 }
-                SettingSubMenuEnums.JS_IMPORT.itemName -> {
-                    SystemFannelLauncher.launch(
-                        cmdIndexFragment,
-                        UsePath.cmdclickSystemAppDirPath,
-                        UsePath.jsImportManagerFannelName
-                    )
-                }
                 SettingSubMenuEnums.SHORTCUT.itemName -> {
                     val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
-                    )
-                }
-                SettingSubMenuEnums.TERM_REFRESH.itemName -> {
-                    TermRefresh.refresh(
-                        terminalViewModel.currentMonitorFileName
                     )
                 }
                 SettingSubMenuEnums.TERMUX_SETUP.itemName -> {
@@ -149,9 +129,7 @@ object SubMenuDialog {
         val imageId: Int
     ){
         CHDIR("change app dir", R.drawable.icons8_support),
-        JS_IMPORT("js import manager", R.drawable.icons8_folda),
         SHORTCUT("create short cut", R.drawable.icons8_shortcut),
-        TERM_REFRESH("term refresh", R.drawable.icons8_refresh),
         TERMUX_SETUP("termux setup", R.drawable.icons8_setup),
         CONFIG("config", R.drawable.icons8_edit),
     }

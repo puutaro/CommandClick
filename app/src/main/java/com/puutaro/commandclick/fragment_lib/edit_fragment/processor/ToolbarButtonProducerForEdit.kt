@@ -13,7 +13,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
@@ -23,7 +22,8 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SubMenuDialogForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.ManageSubMenuDialogForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SettingSubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
@@ -32,7 +32,6 @@ import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
@@ -581,9 +580,13 @@ class ToolbarButtonProducerForEdit(
             val menuListAdapter = menuListView.adapter as SubMenuAdapter
             when(menuListAdapter.getItem(pos)){
                 MenuEnumsForEdit.SETTING.itemName
-                -> SubMenuDialogForEdit.launch(
+                -> SettingSubMenuDialogForEdit.launch(
                         editFragment,
                     )
+                MenuEnumsForEdit.MANAGE.itemName
+                -> ManageSubMenuDialogForEdit.launch(
+                    editFragment,
+                )
                 MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName
                 -> NoScrollUrlSaver.save(
                         editFragment,
@@ -597,22 +600,6 @@ class ToolbarButtonProducerForEdit(
                         editFragment,
                         currentAppDirPath,
                         currentScriptFileName
-                    )
-                MenuEnumsForEdit.TERM_REFRESH.itemName
-                -> TermRefresh.refresh(
-                        terminalViewModel.currentMonitorFileName
-                    )
-                MenuEnumsForEdit.SELECT_TERM.itemName
-                -> SelectTermDialog.launch(editFragment)
-                MenuEnumsForEdit.USAGE.itemName
-                -> UrlTexter.launch(
-                        editFragment,
-                        null,
-                        WebUrlVariables.commandClickUsageUrl
-                    )
-                MenuEnumsForEdit.RESTART_UBUNTU.itemName
-                -> UbuntuServiceManager.launch(
-                        editFragment.activity
                     )
             }
         }
@@ -637,12 +624,10 @@ private enum class MenuEnumsForEdit(
     val itemName: String,
     val imageId: Int,
 ) {
-    TERM_REFRESH("term refresh", R.drawable.icons8_refresh),
-    SELECT_TERM("select term", R.drawable.icons8_file),
-    RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
-    QR_SCAN("scan QR", R.drawable.icons_qr_code),
     KILL("kill", R.drawable.cancel),
-    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
     USAGE("usage", R.drawable.icons8_info),
+    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
+    QR_SCAN("scan QR", R.drawable.icons_qr_code),
+    MANAGE("manage", R.drawable.icons8_setup),
     SETTING("setting", R.drawable.icons8_setting),
 }

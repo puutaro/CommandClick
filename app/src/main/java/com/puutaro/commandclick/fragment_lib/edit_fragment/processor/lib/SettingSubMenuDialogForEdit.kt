@@ -6,7 +6,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -21,64 +20,60 @@ import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
-object SubMenuDialogForEdit {
+object SettingSubMenuDialogForEdit {
 
-    private var subMenuDialog: Dialog? = null
+    private var settingSubMenuDialog: Dialog? = null
 
     fun launch(
         editFragment: EditFragment
     ){
         val context = editFragment.context
             ?: return
-        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
 
-        subMenuDialog = Dialog(
+        settingSubMenuDialog = Dialog(
             context
         )
-        subMenuDialog?.setContentView(
+        settingSubMenuDialog?.setContentView(
             R.layout.submenu_dialog
         )
         setListView(
             editFragment,
-            terminalViewModel
         )
         setCancelListener()
-        subMenuDialog?.window?.setLayout(
+        settingSubMenuDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        subMenuDialog
+        settingSubMenuDialog
             ?.window
             ?.setGravity(Gravity.BOTTOM)
-        subMenuDialog?.show()
+        settingSubMenuDialog?.show()
 
     }
 
     private fun setCancelListener(
     ){
         val cancelImageButton =
-            subMenuDialog?.findViewById<ImageButton>(
+            settingSubMenuDialog?.findViewById<ImageButton>(
                 R.id.submenu_dialog_cancel
             )
         cancelImageButton?.setOnClickListener {
-            subMenuDialog?.dismiss()
+            settingSubMenuDialog?.dismiss()
         }
-        subMenuDialog?.setOnCancelListener {
-            subMenuDialog?.dismiss()
+        settingSubMenuDialog?.setOnCancelListener {
+            settingSubMenuDialog?.dismiss()
         }
     }
 
     private fun setListView(
         editFragment: EditFragment,
-        terminalViewModel: TerminalViewModel
     ) {
         val context = editFragment.context
             ?: return
         val subMenuListView =
-            subMenuDialog?.findViewById<ListView>(
+            settingSubMenuDialog?.findViewById<ListView>(
                 R.id.sub_menu_list_view
             )
         val subMenuPairList = SettingSubMenuEnumsForEdit.values().map {
@@ -101,7 +96,7 @@ object SubMenuDialogForEdit {
     ){
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
-            subMenuDialog?.dismiss()
+            settingSubMenuDialog?.dismiss()
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
