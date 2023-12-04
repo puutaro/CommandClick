@@ -13,6 +13,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.proccess.qr.QrMapper
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
@@ -106,8 +107,9 @@ class ListIndexForEditAdapter(
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
+                val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
                 qrLogo.createAndSaveRnd(
-                    "${currentAppDirPath}/${fannelName}",
+                    QrMapper.onGitTemplate.format(fannelRawName),
                     currentAppDirPath,
                     fannelName,
                 )?.let {
