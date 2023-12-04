@@ -39,17 +39,39 @@
                 android:focusableInTouchMode="true"
                 android:background="@color/white"
                 >
-                <TextView
-                    android:id="@+id/editTextView"
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/edit_title_linearlayout"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:textColor="#050505"
-                    android:text=""
-                    android:textSize="18sp"
-                    android:autofillHints="test"
+                    android:layout_height="35dp"
+                    android:background="@color/white"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp"/>
-                <requestFocus/>
+                    android:layout_marginBottom="10dp"
+                    >
+                    <androidx.appcompat.widget.AppCompatImageView
+                        android:id="@+id/edit_title_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:adjustViewBounds="true"
+                        android:src="@mipmap/ic_cmdclick_launcher"
+                        />
+                    <TextView
+                        android:id="@+id/editTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="10dp"
+                        android:textColor="#050505"
+                        android:text=""
+                        android:textSize="18sp"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:ellipsize="end"
+                        android:autofillHints="test"
+                        />
+                    <requestFocus/>
+                </androidx.appcompat.widget.LinearLayoutCompat>
             </LinearLayout>
         </ScrollView>
         <LinearLayout

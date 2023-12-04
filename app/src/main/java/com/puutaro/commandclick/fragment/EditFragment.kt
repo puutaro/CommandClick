@@ -29,7 +29,7 @@ import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver.BroadcastReceiveHandlerForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ListIndexSizingToKeyboard
@@ -234,7 +234,7 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
         }
-        binding.editTextView.text = EditFragmentTitle.make(
+        TitleImageAndViewSetter.set(
             this,
             currentAppDirPath,
             currentScriptFileName
@@ -265,7 +265,7 @@ class EditFragment: Fragment() {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
             if(terminalViewModel.onDialog) return@setEventListener
-            binding.editTextView.isVisible = !isOpen
+            binding.editTitleLinearlayout.isVisible = !isOpen
             if(
                 terminalViewModel.readlinesNum != ReadLines.SHORTH
             ) {

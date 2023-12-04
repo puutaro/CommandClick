@@ -32,7 +32,7 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditFragmentTitle
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
@@ -387,7 +387,7 @@ class WithIndexListView(
         searchText: AppCompatEditText,
         readSharePreffernceMap: Map<String, String>
     ) {
-        searchText.hint = EditFragmentTitle.make(
+        searchText.hint = TitleImageAndViewSetter.makeTitle(
             editFragment,
             SharePreffrenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
