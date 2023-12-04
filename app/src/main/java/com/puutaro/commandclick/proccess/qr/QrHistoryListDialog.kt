@@ -109,7 +109,9 @@ class QrHistoryListDialog(
                 title == selectedQrTitle
             }.firstOrNull() ?: return@setOnItemClickListener
             val selectedTitleQrList = selectedQrTitleUriLine.split("\t")
-            val selectedQrUri = selectedTitleQrList.last()
+            val selectedQrUri = selectedTitleQrList.filterIndexed{
+                index, s -> index > 0
+            }.joinToString()
             QrUri.handler(
                 fragment,
                 currentAppDirPath,
