@@ -14,12 +14,16 @@ object QuoteTool {
                 it,
                 '"'
             )
-        }
-            .let {
+        }.let {
             execTrim(
                 it,
                 '\''
-            ) ?: String()
+            )
+        }.let {
+            execTrim(
+                it,
+                '`'
+            )
         }
     }
 

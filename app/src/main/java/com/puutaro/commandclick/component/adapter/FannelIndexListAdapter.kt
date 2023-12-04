@@ -15,6 +15,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.proccess.qr.QrLogo
+import com.puutaro.commandclick.proccess.qr.QrMapper
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -91,6 +92,7 @@ class FannelIndexListAdapter(
                     fannelName
                 ).textToList().take(maxTakeSize)
             }
+            val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
             val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
@@ -101,7 +103,7 @@ class FannelIndexListAdapter(
                     return@withContext
                 }
                 qrLogo.createAndSaveRnd(
-                    "${currentAppDirPath}/${fannelName}",
+                    QrMapper.onGitTemplate.format(fannelRawName),
                     currentAppDirPath,
                     fannelName,
                 )?.let {
