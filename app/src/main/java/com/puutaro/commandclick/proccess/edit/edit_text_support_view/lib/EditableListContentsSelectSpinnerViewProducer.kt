@@ -7,6 +7,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.setInitMarkToListContents
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
@@ -57,6 +58,17 @@ object EditableListContentsSelectSpinnerViewProducer {
             currentAppDirPath,
             scriptName,
         )
+        val initMark = ListContentsSelectSpinnerViewProducer.getInitMarkPath(
+            elcbMap,
+        )
+        val initValue = ListContentsSelectSpinnerViewProducer.getInitValuePath(
+            elcbMap
+        )
+        setInitMarkToListContents(
+            elcbMap,
+            currentAppDirPath,
+        )
+
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
         val listFileName = fileObj.name
@@ -144,7 +156,11 @@ object EditableListContentsSelectSpinnerViewProducer {
                 if(
                     selectedItem == throughMark
                 ) return
-                insertEditText.setText(selectedItem)
+                val isDelete = selectedItem == initMark
+                when(isDelete){
+                    true -> insertEditText.setText(initValue)
+                    else -> insertEditText.setText(selectedItem)
+                }
                 SelectJsExecutor.exec(
                     currentFragment,
                     selectJsPath,

@@ -154,6 +154,30 @@ object ListContentsSelectSpinnerViewProducer {
             } ?: String()
     }
 
+    fun getInitMarkPath(
+        elcbMap: Map<String, String>?,
+    ): String? {
+        return elcbMap?.get(ListContentsEditKey.initMark.name)
+            ?.let {
+                if(
+                    it.isEmpty()
+                ) return@let null
+                it
+            }
+    }
+
+    fun getInitValuePath(
+        elcbMap: Map<String, String>?,
+    ): String {
+        return elcbMap?.get(ListContentsEditKey.initValue.name)
+            ?.let {
+                if(
+                    it.isEmpty()
+                ) return@let String()
+                it
+            }?: String()
+    }
+
     fun getLimitNum(
         elcbMap: Map<String, String>?,
         defaultListLimit: Int,
@@ -233,6 +257,47 @@ object ListContentsSelectSpinnerViewProducer {
         listPath,
         limitNum,
         selectJsPath,
+        initMark,
+        initValue
+    }
+
+    fun setInitMarkToListContents(
+        elcbMap: Map<String, String>?,
+        currentAppDirPath: String,
+    ){
+        val listContentsFilePath = getListPath(
+            elcbMap
+        )
+        if(
+            listContentsFilePath.isEmpty()
+        ) return
+        val deleteStr = getInitMarkPath(elcbMap)
+        if(
+            deleteStr.isNullOrEmpty()
+        ) return
+        if(
+            !listContentsFilePath.startsWith(currentAppDirPath)
+            || listContentsFilePath == currentAppDirPath
+        ) return
+        val listContentsFilePathObj = File(listContentsFilePath)
+        val listContentsParentDirPath = listContentsFilePathObj.parent
+            ?: return
+        val listContentsFileName = listContentsFilePathObj.name
+        val listContentsList = ReadText(
+            listContentsParentDirPath,
+            listContentsFileName
+        ).textToList()
+        if(
+            listContentsList.contains(deleteStr)
+        ) return
+        val insertListConList = listOf(deleteStr) + listContentsList.filter {
+            it != deleteStr
+        }
+        FileSystems.writeFile(
+            listContentsParentDirPath,
+            listContentsFileName,
+            insertListConList.joinToString("\n")
+        )
     }
 }
 
