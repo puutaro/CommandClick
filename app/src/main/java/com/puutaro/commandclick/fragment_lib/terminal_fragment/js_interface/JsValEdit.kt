@@ -15,6 +15,8 @@ class JsValEdit(
 
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
+    private val okReturnCode = "0"
+    private val cancelReturnCode = "1"
 
 
     @JavascriptInterface
@@ -23,8 +25,8 @@ class JsValEdit(
         fContents: String,
         setVariableTypes: String,
         targetVariables: String,
-    ) {
-        try {
+    ): String {
+        return try {
             execEditAndSaveCmdVar(
                 title,
                 fContents,
@@ -38,6 +40,7 @@ class JsValEdit(
                 Toast.LENGTH_SHORT
             ).show()
             LogSystems.stdErr("$e")
+            cancelReturnCode
         }
     }
 
@@ -47,10 +50,10 @@ class JsValEdit(
         fannelPath: String,
         setVariableTypes: String,
         targetVariables: String,
-    ) {
+    ): String {
         val fannelPathObj = File(fannelPath)
         val parentDirPath = fannelPathObj.parent
-            ?: return
+            ?: return cancelReturnCode
         val fannelName = fannelPathObj.name
         val resultKeyValueConSrc = JsDialog(terminalFragment).formDialog(
             title,
@@ -59,7 +62,7 @@ class JsValEdit(
         )
         if(
             resultKeyValueConSrc.isEmpty()
-        ) return
+        ) return cancelReturnCode
         val resultKeyValueCon =
             resultKeyValueConSrc.replace(
                 "\n",
@@ -90,11 +93,12 @@ class JsValEdit(
         )
         if(
             replacedCon.isEmpty()
-        ) return
+        ) return okReturnCode
         FileSystems.writeFile(
             parentDirPath,
             fannelName,
             replacedCon
         )
+        return okReturnCode
     }
 }

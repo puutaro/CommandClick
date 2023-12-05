@@ -279,7 +279,8 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun q(
+    fun copyDialog
+                (
         title: String,
         contents: String,
         scrollBottom: Boolean

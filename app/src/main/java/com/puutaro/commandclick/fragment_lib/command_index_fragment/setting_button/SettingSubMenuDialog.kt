@@ -98,7 +98,7 @@ object SettingSubMenuDialog {
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             when(selectedSubMenu){
-                SettingSubMenuEnums.CHDIR.itemName -> {
+                SettingSubMenuEnums.APP_DIR_MANAGER.itemName -> {
                     SystemFannelLauncher.launch(
                         cmdIndexFragment,
                         UsePath.cmdclickSystemAppDirPath,
@@ -128,7 +128,7 @@ object SettingSubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
-        CHDIR("change app dir", R.drawable.icons8_support),
+        APP_DIR_MANAGER("app dir manager", R.drawable.icons8_support),
         SHORTCUT("create short cut", R.drawable.icons8_shortcut),
         TERMUX_SETUP("termux setup", R.drawable.icons8_setup),
         CONFIG("config", R.drawable.icons8_edit),

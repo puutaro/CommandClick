@@ -46,7 +46,7 @@ switch(FIRST_ARGS){
     break;
   case "${CTRL_Z}": 
     jsSendKey.send("${CTRL_Z}");
-    brxeak;
+    break;
   case "${UP}": 
     jsSendKey.send("${UP}");
     break;

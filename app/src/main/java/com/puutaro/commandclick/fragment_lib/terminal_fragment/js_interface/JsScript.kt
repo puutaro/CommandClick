@@ -6,9 +6,11 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.ReadText
+import java.io.File
 
 class JsScript(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val languageTypeHolderMap =
@@ -143,6 +145,28 @@ class JsScript(
             settingEndHolder,
         )
     }
+
+    @JavascriptInterface
+    fun readCmdVal(
+        targetValName: String,
+        fannelPath: String,
+    ): String {
+        val fannelPathObj = File(fannelPath)
+        val parentDirPath = fannelPathObj.parent
+            ?: return String()
+        val fannelName = fannelPathObj.name
+        val mainFannelCon = ReadText(
+            parentDirPath,
+            fannelName
+        ).readText()
+        val cmdCon = subCmdVars(
+                mainFannelCon
+                )
+        return subValOnlyValue(
+            targetValName,
+            cmdCon,
+        );
+    };
 
     private fun replaceVariableInHolder(
         scriptContents: String,
