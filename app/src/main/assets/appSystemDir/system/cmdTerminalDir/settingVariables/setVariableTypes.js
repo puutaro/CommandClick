@@ -3,7 +3,6 @@ sendkeys1
 	:BTN:BTN:BTN:BTN:BTN:HL=
 		${BTN_CMD}=jsf '${0}' ${COPY} 
 			!${BTN_LABEL}=CP
-			!${IS_CONSEC}=true
 			!${DISABLE_KEYBOARD_HIDDEN}=true
 		|
 			${BTN_CMD}=jsf '${0}' ${PASTE} 
