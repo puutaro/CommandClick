@@ -35,20 +35,11 @@ class JsListSelect(
         val findSearchText = listContentsList.find {
             it == itemText
         }
-//        if(
-//            !findSearchText.isNullOrEmpty()
-//        ) {
-//            listOf(itemText) + listContentsList.filter {
-//                it != itemText
-//            }
-//            return
-//        }
         val lastListContentsSourceList = makeUpdatedListCon(
             findSearchText,
             listContentsList,
             itemText
         )
-//            listOf(itemText) + listContentsList
         val lastListContents = lastListContentsSourceList.filter {
             it.isNotEmpty()
                     || it != escapeCharHyphen
@@ -57,6 +48,34 @@ class JsListSelect(
             searchListDirPath,
             searchListFileName,
             lastListContents
+        )
+    }
+
+    @JavascriptInterface
+    fun initListFile(
+        targetListFilePath: String,
+        itemTextListCon: String
+    ){
+        if(
+            itemTextListCon.isEmpty()
+        ) return
+        val itemTextList = itemTextListCon.split("\t")
+        val targetListFilePathObj = File(targetListFilePath)
+        val targetListParentDirPath = targetListFilePathObj.parent
+            ?: return
+        val targetListFileName = targetListFilePathObj.name
+        val currentListConList = ReadText(
+            targetListParentDirPath,
+            targetListFileName
+        ).textToList()
+        val registerItemList = itemTextList.filter {
+            !currentListConList.contains(it)
+        }
+        val registerListConList = registerItemList + currentListConList
+        FileSystems.writeFile(
+            targetListParentDirPath,
+            targetListFileName,
+            registerListConList.joinToString("\n")
         )
     }
 
