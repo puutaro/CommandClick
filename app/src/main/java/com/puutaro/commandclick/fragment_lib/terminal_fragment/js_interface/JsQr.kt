@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmapOrNull
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
@@ -20,6 +19,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
+import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.QrUri
 import com.puutaro.commandclick.util.FileSystems
@@ -130,8 +130,8 @@ class JsQr(
                         .RoundCorners(.25f)
                 }
             }
-            val drawable = QrCodeDrawable(data, options)
-            val qrBitMap = drawable.toBitmapOrNull(1000, 1000)
+            val qrDrawable = QrCodeDrawable(data, options)
+            val qrBitMap = QrLogo.toBitMapWrapper(qrDrawable)
                 ?: return
             FileSystems.savePngFromBitMap(
                 UsePath.cmdclickTempDownloadDirPath,
@@ -303,8 +303,8 @@ class JsQr(
                         .RoundCorners(.25f)
                 }
             }
-            val drawable = QrCodeDrawable(data, options)
-            val qrBitMap = drawable.toBitmapOrNull(1000, 1000)
+            val qrLogoDrawable = QrCodeDrawable(data, options)
+            val qrBitMap = QrLogo.toBitMapWrapper(qrLogoDrawable)
                 ?: return
             FileSystems.savePngFromBitMap(
                 UsePath.cmdclickTempDownloadDirPath,

@@ -4,10 +4,12 @@ import android.Manifest
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -27,6 +29,8 @@ import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.getRandomString
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,18 +50,37 @@ class QrScanner(
     fun scanFromImage(
         qrImagePath: String,
     ): String {
-        val bMap = BitmapFactory.decodeFile(qrImagePath)
+        var errMessage = String()
+        for(i in 1..3) {
+            try {
+                return execScanFromImage(qrImagePath)
+            } catch (e: Exception) {
+                errMessage = e.toString()
+                continue
+            }
+        }
+        return errMessage
+    }
+    fun execScanFromImage(
+        qrImagePath: String,
+    ): String {
+        try {
+            val bMap = BitmapFactory.decodeFile(qrImagePath)
 
-        val intArray = IntArray(bMap.width * bMap.height)
-        bMap.getPixels(intArray, 0, bMap.width, 0, 0, bMap.width, bMap.height)
+            val intArray = IntArray(bMap.width * bMap.height)
+            bMap.getPixels(intArray, 0, bMap.width, 0, 0, bMap.width, bMap.height)
 
-        val source: LuminanceSource =
-            RGBLuminanceSource(bMap.width, bMap.height, intArray)
-        val bitmap = BinaryBitmap(HybridBinarizer(source))
+            val source: LuminanceSource =
+                RGBLuminanceSource(bMap.width, bMap.height, intArray)
+            val bitmap = BinaryBitmap(HybridBinarizer(source))
 
-        val reader = MultiFormatReader()
-        val result = reader.decode(bitmap)
-        return result.getText()
+            val reader = MultiFormatReader()
+            return reader.decode(bitmap).text
+        } catch (e: Exception){
+            val errOutput = e.toString()
+            LogSystems.stdErr(errOutput)
+            return errOutput
+        }
     }
 
     fun scanFromCamera() {

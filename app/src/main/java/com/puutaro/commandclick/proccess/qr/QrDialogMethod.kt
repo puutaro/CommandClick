@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.R
@@ -84,7 +83,9 @@ object QrDialogMethod {
         val imageContentsView = imageDialogObj?.findViewById<AppCompatImageView>(
             R.id.image_dialog_image
         )
-        val qrBitMap = passQrLogoDrawable.toBitmap(1000, 1000)
+        val qrBitMap =
+            QrLogo.toBitMapWrapper(passQrLogoDrawable)
+                ?: return
         imageContentsView
             ?.setImageBitmap(qrBitMap)
         setShareButton(

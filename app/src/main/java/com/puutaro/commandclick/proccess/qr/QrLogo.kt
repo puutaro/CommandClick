@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.qr
 
+import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
@@ -44,6 +45,16 @@ class QrLogo(
     private val twoThreeLogListSize = (logoList.size * 2) / 3
     private var usedLogoIndexList = mutableListOf<Int>()
 
+    companion object {
+        fun toBitMapWrapper(
+            qrLogoDrawable: Drawable
+        ): Bitmap? {
+            return qrLogoDrawable.toBitmapOrNull(
+                1000,
+                1000
+            )
+        }
+    }
 
     fun setTitleQrLogo(
         titleImageView: AppCompatImageView?,
@@ -212,7 +223,7 @@ class QrLogo(
         fannelName: String,
     ): Drawable? {
         try{
-            val drawable = create(qrSrcStr)
+            val qrDrawable = create(qrSrcStr)
                 ?: return null
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
@@ -222,7 +233,7 @@ class QrLogo(
                         File(qrPngPath)
                     val qrDirPath = qrPngPathObj.parent
                         ?: return@withContext
-                    val qrBitMap = drawable.toBitmapOrNull(1000, 1000)
+                    val qrBitMap = toBitMapWrapper(qrDrawable)
                         ?: return@withContext
                     FileSystems.savePngFromBitMap(
                         qrDirPath,
@@ -231,7 +242,7 @@ class QrLogo(
                     )
                 }
             }
-            return drawable
+            return qrDrawable
         } catch(e: Exception){
             LogSystems.stdErr(e.toString())
         }
