@@ -52,6 +52,12 @@ object JavaScriptLoadUrl {
                 scriptFileName
             ).textToList()
         } else jsListSource
+        if(
+            jsList.isEmpty()
+        ) return null
+        if(
+            jsList.joinToString().replace("\n", "").trim().isEmpty()
+        ) return null
         val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
             jsList,
             recentAppDirPath,
