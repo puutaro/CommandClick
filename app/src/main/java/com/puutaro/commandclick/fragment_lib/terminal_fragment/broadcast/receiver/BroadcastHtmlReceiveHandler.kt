@@ -51,6 +51,11 @@ object BroadcastHtmlReceiveHandler {
         val pageFinishedLoadCon = intent.getStringExtra(
             BroadCastIntentExtraForUrl.PAGE_FINISHED_LOAD_CON.scheme
         )
+        val beforeDelayMiliSec = intent.getStringExtra(
+            BroadCastIntentExtraForUrl.BEFORE_DELAY_MILI_SEC.scheme
+        )?.let {
+            try{ it.toLong() } catch(e: Exception){0L}
+        } ?: 0L
         if(
             pageFinishedLoadCon.isNullOrEmpty()
         ) return
@@ -73,6 +78,9 @@ object BroadcastHtmlReceiveHandler {
                     if (
                         updateChecksum != previousChecksum
                     ) {
+                        withContext(Dispatchers.IO){
+                            delay(beforeDelayMiliSec)
+                        }
                         withContext(Dispatchers.Main) {
                             binding.terminalWebView.loadUrl(
                                 pageFinishedLoadCon

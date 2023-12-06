@@ -81,11 +81,16 @@ class JsUrl(
     fun loadUrlWithPageFinishedLoadCon(
         urlCon: String,
         pageFinishedLoadCon: String,
+        beforeDelayMiliSec: String
     ){
         val urlBroadcastExtra = listOf(
             Pair(
                 BroadCastIntentSchemeTerm.ULR_LAUNCH.scheme,
                 urlCon
+            ),
+            Pair(
+                BroadCastIntentExtraForUrl.BEFORE_DELAY_MILI_SEC.scheme,
+                beforeDelayMiliSec
             ),
             Pair(
                 BroadCastIntentExtraForUrl.PAGE_FINISHED_LOAD_CON.scheme,
