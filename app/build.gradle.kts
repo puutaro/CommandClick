@@ -22,7 +22,7 @@ android {
         applicationId = "com.puutaro.commandclick"
         minSdk = 27
         targetSdk = 33
-        versionCode = 55
+        versionCode = 56
         versionName = "${versionMajor}.${versionMinor}.${versionPatch}"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

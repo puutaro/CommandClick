@@ -301,6 +301,8 @@ install_require_pacakges(){
 			python3-pip
 			translate-shell
 			bsdmainutils
+			rsync
+			sshpass
 			" \
 	)
 	apt-get install -y ${require_packages}
