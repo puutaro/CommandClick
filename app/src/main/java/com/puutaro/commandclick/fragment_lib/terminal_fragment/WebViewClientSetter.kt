@@ -1,29 +1,22 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.content.Context
 import android.webkit.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
-import com.puutaro.commandclick.util.BroadCastIntent
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
-import java.io.File
 
 
 object WebViewClientSetter {
@@ -33,7 +26,6 @@ object WebViewClientSetter {
     ){
         val binding = terminalFragment.binding
         val context = terminalFragment.context
-        val startUpPref = terminalFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
         val validation = WebViewRequestValidation()
         val implicitIntentStarter = terminalFragment.context?.let {
@@ -41,8 +33,6 @@ object WebViewClientSetter {
                 it
             )
         }
-        val systemExecJsDirName = UsePath.systemExecJsDirName
-        val pageFinishdJsName = UsePath.pageFinishdJsName
         var previousUrl: String? = null
 
         binding.terminalWebView.webViewClient = object : WebViewClient() {
@@ -161,30 +151,6 @@ object WebViewClientSetter {
                             appUrlSystemDirPath,
                             UsePath.urlLoadFinished,
                             System.currentTimeMillis().toString()
-                        )
-                    }
-                    withContext(Dispatchers.IO){
-                        val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-                            startUpPref,
-                            SharePrefferenceSetting.current_app_dir
-                        )
-                        val curFannelName = SharePreffrenceMethod.getStringFromSharePreffrence(
-                            startUpPref,
-                            SharePrefferenceSetting.current_script_file_name
-                        )
-                        val fannelDirName = CcPathTool.makeFannelDirName(curFannelName)
-                        val systemExecJsDirPath = "${currentAppDirPath}/${fannelDirName}/${systemExecJsDirName}"
-                        val pageFinishedJsPath = "${systemExecJsDirPath}/${pageFinishdJsName}"
-                        if(
-                            !File(pageFinishedJsPath).isFile
-                        ) return@withContext
-                        val jsCon = JavaScriptLoadUrl.make(
-                                context,
-                                pageFinishedJsPath
-                            ) ?: return@withContext
-                        BroadCastIntent.sendUrlCon(
-                            terminalFragment,
-                            jsCon
                         )
                     }
                 }
