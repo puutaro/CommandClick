@@ -70,14 +70,16 @@ CommandClick
 Screenshots
 --------
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/1808e7c1-90a7-4ab2-9aaf-25fa3b10f322"><img src="https://github.com/puutaro/CommandClick/assets/55217593/1808e7c1-90a7-4ab2-9aaf-25fa3b10f322" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/05b946ed-5eef-44fb-b03c-8f4615b33eeb"><img src="https://github.com/puutaro/CommandClick/assets/55217593/05b946ed-5eef-44fb-b03c-8f4615b33eeb" width="30%" /></a>
+<a href="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" />
+<a href="https://github.com/puutaro/CommandClick/assets/55217593/b2014b7e-3782-4ecd-83f6-5eb0d134e349"><img src="https://github.com/puutaro/CommandClick/assets/55217593/b2014b7e-3782-4ecd-83f6-5eb0d134e349" width="30%" />
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537"><img src="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/9eaec54d-dec4-4786-a393-8dadcdb0e210"><img src="https://github.com/puutaro/CommandClick/assets/55217593/9eaec54d-dec4-4786-a393-8dadcdb0e210" width="30%" /></a>
+<a href="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612"><img src="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612" width="30%" /></a>
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a"><img src="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a" width="30%" /></a> -->
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5"><img src="https://github.com/puutaro/CommandClick/assets/55217593/65aceaee-5f6e-418b-9423-26b39cf31ed5" width="30%" /></a> -->
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
+
+
 App installation
 -----  
 - Android 8+
