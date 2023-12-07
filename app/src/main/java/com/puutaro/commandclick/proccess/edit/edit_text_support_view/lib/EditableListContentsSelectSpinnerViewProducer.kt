@@ -158,7 +158,10 @@ object EditableListContentsSelectSpinnerViewProducer {
                 ) return
                 val isDelete = selectedItem == initMark
                 when(isDelete){
-                    true -> insertEditText.setText(initValue)
+                    true -> {
+                        insertEditText.setText(initValue)
+                        return
+                    }
                     else -> insertEditText.setText(selectedItem)
                 }
                 SelectJsExecutor.exec(
