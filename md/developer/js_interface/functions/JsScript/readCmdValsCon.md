@@ -29,13 +29,21 @@ jsScript.readCmdValsCon(
 -> [subFannel](https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#sub-fannel)https://github.com/puutaro/CommandClick/blob/master/md/developer/glossary.md#sub-fannel
 
 
+Mainly, used together with [getCmdVal](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_interface/functions/JsScript/getCmdVal.md#getcmdval)  
+
 ex1) 
+
 
 ```js.js
 jsScript.readCmdValsCon(
   `${0}`
 )
 
+jsScript.getCmdVal(
+  `${cmd val name1}`
+)
 
 ```
+
+- ${0} -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
 
