@@ -4,6 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
@@ -35,6 +36,7 @@ class JsScript(
     private val commandEndHolder = languageTypeHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
+    private var cmdVariableContents = String()
 
     @JavascriptInterface
     fun subLabelingVars(
@@ -147,24 +149,32 @@ class JsScript(
     }
 
     @JavascriptInterface
-    fun readCmdVal(
-        targetValName: String,
-        fannelPath: String,
-    ): String {
+    fun readCmdValsCon(
+        subFannelOrFannelPath: String,
+    ) {
+        val fannelPath = CcPathTool.getMainFannelFilePath(
+            subFannelOrFannelPath
+        )
         val fannelPathObj = File(fannelPath)
         val parentDirPath = fannelPathObj.parent
-            ?: return String()
+            ?: return
         val fannelName = fannelPathObj.name
         val mainFannelCon = ReadText(
             parentDirPath,
             fannelName
         ).readText()
-        val cmdCon = subCmdVars(
-                mainFannelCon
-                )
+        cmdVariableContents = subCmdVars(
+            mainFannelCon
+        )
+    }
+
+    @JavascriptInterface
+    fun getCmdVal(
+        targetValName: String,
+    ): String {
         return subValOnlyValue(
             targetValName,
-            cmdCon,
+            cmdVariableContents,
         );
     };
 
