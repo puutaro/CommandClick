@@ -76,7 +76,6 @@ class FormJsDialog(
                 while (true) {
                     delay(100)
                     if (!terminalViewModel.onDialog) {
-                        returnValue = String()
                         formDialog?.dismiss()
                         break
                     }

@@ -76,7 +76,6 @@ class JsUrl(
         )
     }
 
-
     @JavascriptInterface
     fun loadUrlWithPageFinishedLoadCon(
         urlCon: String,

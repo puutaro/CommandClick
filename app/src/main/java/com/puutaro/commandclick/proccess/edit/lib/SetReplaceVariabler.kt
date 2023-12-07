@@ -81,14 +81,17 @@ object SetReplaceVariabler {
             val entryValue = entry.value
             val setTargetVariableValueBeforeTrim = entryValue?.get(
                 RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            )
-            val setTargetVariableValueSource = if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
-                setTargetVariableValueBeforeTrim.trim('"')
-            } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
-                setTargetVariableValueBeforeTrim.trim('\'')
-            } else {
+            ) ?: return null
+            val setTargetVariableValueSource = QuoteTool.trimBothEdgeQuote(
                 setTargetVariableValueBeforeTrim
-            } ?: return null
+            )
+//            if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
+//                setTargetVariableValueBeforeTrim.trim('"')
+//            } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
+//                setTargetVariableValueBeforeTrim.trim('\'')
+//            } else {
+//                setTargetVariableValueBeforeTrim
+//            } ?: return null
             if(
                 !setTargetVariableValueSource.startsWith(
                     filePrefix
@@ -112,15 +115,19 @@ object SetReplaceVariabler {
                         ?.let {
                             QuoteTool.trimBothEdgeQuote(it)
                         } ?: return null
+
                 val setTargetVariableValueListSize =
                     setTargetVariableValueList.size
                 val replaceString = if(
                     setTargetVariableValueListSize > 1
-                ) setTargetVariableValueList.slice(
-                    1.. setTargetVariableValueListSize - 1
-                ).firstOrNull()
-                    ?.let { QuoteTool.trimBothEdgeQuote(it)}
-                    ?: return null
+                ) setTargetVariableValueList.filterIndexed{
+                    index, _ -> index >= 1
+                }.joinToString("=")
+//                    setTargetVariableValueList.slice(
+//                    1.. setTargetVariableValueListSize - 1
+//                ).firstOrNull()
+                    .let { QuoteTool.trimBothEdgeQuote(it)}
+//                    ?: return null
                 else return null
                 replaceVariableName to replaceString
             }?.toMap()
