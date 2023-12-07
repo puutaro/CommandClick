@@ -75,7 +75,11 @@ class FormJsDialog(
             withContext(Dispatchers.IO) {
                 while (true) {
                     delay(100)
-                    if (!terminalViewModel.onDialog) break
+                    if (!terminalViewModel.onDialog) {
+                        returnValue = String()
+                        formDialog?.dismiss()
+                        break
+                    }
                 }
             }
         }
