@@ -59,7 +59,7 @@ class JsListSelect(
         if(
             itemTextListCon.isEmpty()
         ) return
-        val itemTextList = itemTextListCon.split("\t")
+        val itemTextList = itemTextListCon.split("\n")
         val targetListFilePathObj = File(targetListFilePath)
         val targetListParentDirPath = targetListFilePathObj.parent
             ?: return
