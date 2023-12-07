@@ -19,6 +19,7 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
@@ -29,7 +30,7 @@ import java.io.File
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
-    readSharePreffernceMap: Map<String, String>,
+    private val readSharePreffernceMap: Map<String, String>,
 ) {
     private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
@@ -316,41 +317,74 @@ class UrlHistoryButtonEvent(
 
     private fun makeBottomScriptUrlList(
     ): List<String> {
-        return when(
-            fragment
-        ){
-            is CommandIndexFragment -> {
-                fragment.bottomScriptUrlList.map {
-                        url ->
-                    val replaceUrl = ScriptPreWordReplacer.replace(
-                        url,
-                        currentAppDirPath,
-                        String(),
-                        String()
-                    )
-                    val title = url.split("/")
-                        .lastOrNull()
-                        ?: String()
-                    "${title}\t${replaceUrl}"
-                }.reversed()
+        val fannelName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val replaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            "${currentAppDirPath}/${fannelName}",
+        )
+        val bottomScriptUrlList =
+            when(fragment){
+                is CommandIndexFragment
+                -> fragment.bottomScriptUrlList
+                is EditFragment
+                -> fragment.bottomScriptUrlList
+                else
+                -> return emptyList()
             }
-            is EditFragment -> {
-                fragment.bottomScriptUrlList.map {
-                    url ->
-                    val replaceUrl = ScriptPreWordReplacer.replace(
-                        url,
-                        currentAppDirPath,
-                        String(),
-                        String()
-                    )
-                    val title = url.split("/")
-                        .lastOrNull()
-                        ?: String()
-                    "${title}\t${replaceUrl}"
-                }
-            }
-            else -> emptyList()
-        }
+        return ConvertBottomScriptUrlListToUrlList(
+            bottomScriptUrlList,
+            replaceVariableMap,
+            fannelDirName,
+            fannelName,
+        )
+    }
+
+    private fun ConvertBottomScriptUrlListToUrlList(
+        bottomScriptUrlList: List<String>,
+        replaceVariableMap: Map<String, String>?,
+        fannelDirName: String,
+        fannelName: String,
+    ): List<String> {
+        return execSetRepalceVariable(
+            bottomScriptUrlList,
+            replaceVariableMap,
+            fannelDirName,
+            fannelName,
+        ).map {
+                url ->
+            val replaceUrl = ScriptPreWordReplacer.replace(
+                url,
+                currentAppDirPath,
+                String(),
+                String()
+            )
+            val title = url.split("/")
+                .lastOrNull()
+                ?: String()
+            "${title}\t${replaceUrl}"
+        }.filter {
+            it.trim().isNotEmpty()
+        }.reversed()
+    }
+
+    private fun execSetRepalceVariable(
+        bottomScriptUrlList: List<String>,
+        replaceVariableMap: Map<String, String>?,
+        fannelDirName: String,
+        fannelName: String,
+    ): List<String> {
+        return bottomScriptUrlList.joinToString("\n").let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                replaceVariableMap,
+                currentAppDirPath,
+                fannelDirName,
+                fannelName
+            )
+        }.split("\n")
     }
 
     private fun makeUrlHistoryList(
