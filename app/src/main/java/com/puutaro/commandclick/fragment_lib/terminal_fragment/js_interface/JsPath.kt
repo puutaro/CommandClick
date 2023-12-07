@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
 
@@ -112,6 +113,23 @@ class JsPath(
     @JavascriptInterface
     fun getFannelDirPath(path: String): String {
         return CcPathTool.getMainFannelDirPath(path)
+    }
+
+    @JavascriptInterface
+    fun convertUbuntuPath(path: String): String {
+        if(
+            context == null
+        ) return String()
+        if(
+            !path.startsWith("/")
+        ) return path
+        if(
+            path.startsWith("/storage")
+        ) return path
+
+        val ubuntuFiles = UbuntuFiles(context)
+        val filesOneRootfsPathPrfix = ubuntuFiles.filesOneRootfs.absolutePath
+        return "${filesOneRootfsPathPrfix}${path}"
     }
 }
 
