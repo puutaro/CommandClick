@@ -96,7 +96,11 @@ object ByCloneDownloader {
         val currentAppDirPath = gitDownloadService.currentAppDirPath
         val fannelRawName = gitDownloadService.fannelRawName
         val parentRelativeDirPath = gitDownloadService.parentRelativeDirPath
-        val fannelParentDirPath = "$cmdclickTempDownloadDirPath/$parentRelativeDirPath"
+        val fannelParentDirPath =
+            when(parentRelativeDirPath.isNullOrEmpty()) {
+                true -> cmdclickTempDownloadDirPath
+                else -> "$cmdclickTempDownloadDirPath/$parentRelativeDirPath"
+            }
         val fannelDirName = CcPathTool.makeFannelDirName(fannelRawName)
         val downloadFannelDirPath = "$fannelParentDirPath/$fannelDirName"
         val jsFannelPath = "$fannelParentDirPath/${fannelRawName}.js"
