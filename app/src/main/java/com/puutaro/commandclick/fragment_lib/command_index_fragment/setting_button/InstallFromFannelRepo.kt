@@ -289,8 +289,6 @@ object InstallFannelList {
                 )
             }
         }
-        installFannelRecyclerView.scrollToPosition(installFannelListAdapter.itemCount - 1)
-
     }
 
     fun makeFannelListForListView(): List<String> {
