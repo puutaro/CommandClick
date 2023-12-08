@@ -16,7 +16,7 @@ Get [comamnd section](https://github.com/puutaro/CommandClick/blob/master/DEVELO
 ```js.js
 jsScript.readCmdValsCon(
   subFannelOrFannelPath: String,
-) -> to memory
+) -> command variables contents
 
 ```
 
@@ -35,14 +35,15 @@ ex1)
 
 
 ```js.js
-jsScript.readCmdValsCon(
+const cmdVariablesContents = jsScript.readCmdValsCon(
   `${0}`
 )
 
 jsScript.getCmdVal(
-  `${cmd val name1}`
+  `${cmd val name1}`,
+  cmdVariablesContents
 )
-
+// -> cmd val name1 value
 ```
 
 - ${0} -> [pre reserved word](https://github.com/puutaro/CommandClick/blob/master/md/developer/js_pre_reserved_word.md)
