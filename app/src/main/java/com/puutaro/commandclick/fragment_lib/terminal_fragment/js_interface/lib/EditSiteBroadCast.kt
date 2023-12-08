@@ -73,6 +73,13 @@ class EditSiteBroadCast(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme,
             filterCode
         )
+        val latestUrlTitleFilterCodeShema = BroadCastIntentExtraForHtml.LATST_URL_TITLE_FILTER_CODE.scheme
+        editSiteMap.get(latestUrlTitleFilterCodeShema).let {
+            editSiteIntent.putExtra(
+                latestUrlTitleFilterCodeShema,
+                it
+            )
+        }
         val extraLabelSchema = BroadCastIntentExtraForHtml.EXTRA_LABEL.scheme
         editSiteMap.get(extraLabelSchema)?.let {
             editSiteIntent.putExtra(

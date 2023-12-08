@@ -49,6 +49,9 @@ object HtmlLauncher{
         val filterCode = intent.getStringExtra(
             BroadCastIntentExtraForHtml.FILTER_CODE.scheme
         ) ?: "true"
+        val latestUrlTitleFilterCode = intent.getStringExtra(
+            BroadCastIntentExtraForHtml.LATST_URL_TITLE_FILTER_CODE.scheme
+        ) ?: "(function(){return latestUrlTitleSrc;})();"
         val onDialog = intent.getStringExtra(
             BroadCastIntentExtraForHtml.ON_DIALOG.scheme
         ) ?: "false"
@@ -70,6 +73,10 @@ object HtmlLauncher{
                 .replace(
                     Regex("const CommandClickSiteTitle =.*"),
                     "const CommandClickSiteTitle = \"${title}\""
+                )
+                .replace(
+                    Regex("const latestUrlTitle =.*"),
+                    "const latestUrlTitle = ${latestUrlTitleFilterCode}"
                 )
                 .replace(
                     Regex("const editTargetUrlsFilePath =.*"),

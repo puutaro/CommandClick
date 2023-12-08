@@ -270,8 +270,9 @@
          return  ""
       }
    }
-   let latestUrlTitle = tabHandlerforTitleOrUrl(latestUrlStringRowFirst, 0)
-   let latestUrlString =  tabHandlerforTitleOrUrl(latestUrlStringRowFirst, -1)
+   const latestUrlTitleSrc = tabHandlerforTitleOrUrl(latestUrlStringRowFirst, 0)
+   const latestUrlTitle = latestUrlTitleFilterCode;
+   const latestUrlString =  tabHandlerforTitleOrUrl(latestUrlStringRowFirst, -1)
 
    function addBookmark(addName, addUrl){
       let dataLink = addUrl;

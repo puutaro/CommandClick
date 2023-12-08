@@ -18,6 +18,9 @@ enum class BroadCastIntentExtraForHtml(
     FILTER_CODE(
         "filter_code"
     ),
+    LATST_URL_TITLE_FILTER_CODE(
+        "latest_url_title_filter_code"
+    ),
     ON_DIALOG(
         "on_dialog"
     ),
