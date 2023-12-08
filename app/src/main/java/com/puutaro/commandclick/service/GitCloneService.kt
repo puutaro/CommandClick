@@ -112,9 +112,9 @@ class GitCloneService: Service() {
                 )
             }
             withContext(Dispatchers.IO){
-                notificationBuilder.setContentTitle("Update fannel list")
-                notificationBuilder.setContentText("Update fannel list")
-                notificationBuilder.setSmallIcon(R.drawable.stat_sys_download_done)
+                notificationBuilder.setContentTitle("Update fannel list..")
+                notificationBuilder.setContentText("Update fannel list..")
+                notificationBuilder.setSmallIcon(R.drawable.stat_sys_download)
                 notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
                 notificationBuilder.setProgress(100, 100, false)
                 notificationBuilder.setAutoCancel(true)
