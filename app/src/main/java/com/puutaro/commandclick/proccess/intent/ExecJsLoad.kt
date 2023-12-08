@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent
 
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -23,7 +24,7 @@ object ExecJsLoad {
 
 
     fun execJsLoad(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         recentAppDirPath: String,
         selectedJsFileName: String,
         jsContentsListSource: List<String>? = null,
@@ -178,6 +179,47 @@ object ExecJsLoad {
         FileSystems.updateLastModified(
             recentAppDirPath,
             selectedJsFileName
+        )
+    }
+
+    fun execExternalJs(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        fannelName: String,
+        systemExecReplaceText: String,
+    ){
+        val context = fragment.context
+            ?: return
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val externalExecJsPath = "${currentAppDirPath}/${fannelDirName}/${UsePath.externalExecJsDirName}/${UsePath.externalTextForExecFannel}"
+        val fannelPathObj = File("${currentAppDirPath}/${fannelName}")
+        val externalExecJsPathObj = File(externalExecJsPath)
+        val isExternalExecJsPath = externalExecJsPathObj.isFile
+        val execJsPathObj = when(isExternalExecJsPath){
+            true -> externalExecJsPathObj
+            else -> fannelPathObj
+        }
+        val parentDirPath = execJsPathObj.parent
+            ?: return
+        val execJsName = execJsPathObj.name
+
+        val jsContentsListSource = ReadText(
+            parentDirPath,
+            execJsName,
+        ).readText()
+            .replace(
+                CommandClickScriptVariable.CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT,
+                systemExecReplaceText
+            )
+            .split("\n")
+        val loadLongPressJsCon = JavaScriptLoadUrl.make(
+            context,
+            "${parentDirPath}/${execJsName}",
+            jsContentsListSource
+        ) ?: return
+        jsUrlLaunchHandler(
+            fragment,
+            loadLongPressJsCon
         )
     }
 

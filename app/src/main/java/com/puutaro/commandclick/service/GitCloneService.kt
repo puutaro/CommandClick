@@ -21,8 +21,10 @@ import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.UrlFileSystems
 import kotlinx.coroutines.*
 import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
@@ -185,14 +187,31 @@ class GitCloneService: Service() {
         )
         val firstDescriptionLineRange = 50
         return fannelsListSource.map {
-            val descFirstLineSource = ScriptFileDescription.makeDescriptionContents(
+            val descConSrc = ScriptFileDescription.makeDescriptionContents(
                 ReadText(
                     cmdclickFannelItselfDirPath,
                     it
                 ).textToList(),
                 cmdclickFannelItselfDirPath,
                 it
-            ).split('\n').take(firstDescriptionLineRange).filter {
+            )
+            val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)
+            val descCon = when(readmeUrl.isNullOrEmpty()){
+                true
+                -> descConSrc
+                else
+                -> CurlManager.get(
+                    makeReadmeRawUrl(readmeUrl),
+                    String(),
+                    String(),
+                    2000
+                ).let {
+                    val isConnOk = CurlManager.isConnOk(it)
+                    if(!isConnOk) return@let String()
+                    String(it)
+                }
+            }
+            val descFirstLineSource = descCon.split('\n').take(firstDescriptionLineRange).filter {
                 val trimLine = it.trim()
                 val isLetter =
                     trimLine.firstOrNull()?.isLetter()
@@ -209,6 +228,21 @@ class GitCloneService: Service() {
                 "$it\n\t\t- $descFirstLine"
             }
         }
+    }
+
+    private fun makeReadmeRawUrl(
+        readmeUrl: String,
+    ): String {
+        val gitComPrefix = UrlFileSystems.gitComPrefix
+        val gitUserContentPrefix = UrlFileSystems.gitUserContentPrefix
+        val readmeSuffix = UrlFileSystems.readmeSuffix
+        return listOf(
+            readmeUrl.removeSuffix(".git").replace(
+                gitComPrefix,
+                gitUserContentPrefix
+            ),
+            readmeSuffix
+        ).joinToString("/")
     }
 
 

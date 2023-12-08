@@ -9,7 +9,7 @@ object QrMapper {
 
     val onGitTemplate =
         QrLaunchType.ON_GIT.prefix +
-                "${OnGitKey.PREFIX.key}=${UrlFileSystems.gitUserContentPrefix};" +
+                "${OnGitKey.PREFIX.key}=${UrlFileSystems.cmdclickRepoGitUserContentPrefix};" +
                 "${OnGitKey.LIST_PATH.key}=manage/fannels/list/fannels.txt;" +
                 "${OnGitKey.DIR_PATH.key}=fannel;" +
                 "${OnGitKey.NAME.key}=%s"

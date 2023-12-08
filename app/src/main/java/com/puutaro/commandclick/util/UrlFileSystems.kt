@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -10,16 +11,22 @@ class UrlFileSystems {
     private var fannelListCon = String()
 
     private val gitUserContentManagePrefix =
-        "$gitUserContentPrefix/manage"
+        "$cmdclickRepoGitUserContentPrefix/manage"
 
     private val gitUserContentFannelPrefix =
-        "$gitUserContentPrefix/fannel"
+        "$cmdclickRepoGitUserContentPrefix/fannel"
 
     companion object {
 
+        val gitComPrefix = "https://github.com"
         val gitUserContentPrefix =
-            "https://raw.githubusercontent.com/" +
+            "https://raw.githubusercontent.com"
+
+        val cmdclickRepoGitUserContentPrefix =
+            "${gitUserContentPrefix}/" +
                     "puutaro/commandclick-repository/master"
+
+        val readmeSuffix = "master/${UsePath.fannelReadmeName}"
         enum class FirstCreateFannels(
             val str: String,
         ) {

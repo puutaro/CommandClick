@@ -136,7 +136,8 @@ object UsePath {
     val jsImportAdminFannelPath = "$cmdclickSystemAppDirPath/$jsImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"
     val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
-    val fannelReadmePath = "\${01}/\${001}/README.md"
+    val fannelReadmeName = "README.md"
+    val fannelReadmePath = "\${01}/\${001}/${fannelReadmeName}"
 
 
     private const val cmdclickSystemDirName = "system"
@@ -179,6 +180,8 @@ object UsePath {
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val systemExecJsDirName = "systemJs"
     val appHistoryClickJsName = "appHistoryClick.js"
+    val externalExecJsDirName = "externalJs"
+    val externalTextForExecFannel = "externalExec.js"
     val qrDirName = "qr"
     val qrPngName = "qr.png"
     val qrPngRelativePath = "$qrDirName/$qrPngName"

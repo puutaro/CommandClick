@@ -4,11 +4,13 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
+import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.UrlFileSystems
 import java.io.File
 
 
@@ -19,18 +21,48 @@ object ScriptFileDescription {
     fun show(
         fragment: Fragment,
         currentScriptContentsList: List<String>,
-        currentAppDirName: String,
+        currentAppDirPath: String,
         fannelName: String
     ) {
-        DialogObject.descDialog(
-            fragment,
+        val descCon = makeDescriptionContents(
+            currentScriptContentsList,
+            currentAppDirPath,
             fannelName,
-            makeDescriptionContents(
-                currentScriptContentsList,
-                currentAppDirName,
-                fannelName,
-            )
         )
+        val readmeUrl = getReadmeUrl(descCon)
+        when(readmeUrl.isNullOrEmpty()){
+            true -> DialogObject.descDialog(
+                fragment,
+                fannelName,
+                makeDescriptionContents(
+                    currentScriptContentsList,
+                    currentAppDirPath,
+                    fannelName,
+                )
+            )
+            else -> {
+                val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
+                        UsePath.JS_FILE_SUFFIX
+                ExecJsLoad.execExternalJs(
+                    fragment,
+                    currentAppDirPath,
+                    webSearcherName,
+                    readmeUrl,
+                )
+            }
+        }
+
+    }
+
+    fun getReadmeUrl(
+        descCon: String,
+    ): String? {
+        val httpsPrefix = UrlFileSystems.gitComPrefix
+        val lineNumForGirExtractGitComUrl = 50
+        return descCon.split("\n").take(lineNumForGirExtractGitComUrl).filter{
+            val line = it.trim()
+            line.startsWith(httpsPrefix)
+        }.firstOrNull()?.trim()
     }
 
     fun makeDescriptionContents(
