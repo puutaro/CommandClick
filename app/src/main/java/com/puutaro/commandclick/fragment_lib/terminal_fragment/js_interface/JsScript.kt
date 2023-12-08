@@ -11,7 +11,7 @@ import com.puutaro.commandclick.util.ReadText
 import java.io.File
 
 class JsScript(
-    private val terminalFragment: TerminalFragment
+    terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val languageTypeHolderMap =
@@ -36,7 +36,6 @@ class JsScript(
     private val commandEndHolder = languageTypeHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
-    private var cmdVariableContents = String()
 
     @JavascriptInterface
     fun subLabelingVars(
@@ -151,32 +150,22 @@ class JsScript(
     @JavascriptInterface
     fun readCmdValsCon(
         subFannelOrFannelPath: String,
-    ) {
+    ): String {
         val fannelPath = CcPathTool.getMainFannelFilePath(
             subFannelOrFannelPath
         )
         val fannelPathObj = File(fannelPath)
         val parentDirPath = fannelPathObj.parent
-            ?: return
+            ?: return String()
         val fannelName = fannelPathObj.name
         val mainFannelCon = ReadText(
             parentDirPath,
             fannelName
         ).readText()
-        cmdVariableContents = subCmdVars(
+        return subCmdVars(
             mainFannelCon
         )
     }
-
-    @JavascriptInterface
-    fun getCmdVal(
-        targetValName: String,
-    ): String {
-        return subValOnlyValue(
-            targetValName,
-            cmdVariableContents,
-        );
-    };
 
     private fun replaceVariableInHolder(
         scriptContents: String,
