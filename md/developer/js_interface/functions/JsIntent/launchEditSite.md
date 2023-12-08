@@ -30,7 +30,7 @@ jsIntent.launchEditSite(
 | -------- | -------- | -------- |
 | editPath | string | edit tsv path |
 | extraMapStr | string | format string (${key1}=value1|${key2}=value2|..) |
-| filterCode | string | javascipt code |
+| filterCode | js string | javascipt code |
 
 - extra map key table
 
@@ -41,7 +41,7 @@ jsIntent.launchEditSite(
 | on_sortable_js | boolean string | Enable sort: default is "true" |
 | on_click_url | boolean string | Enable jump url: default is "true" |
 | on_dialog | boolean string | Enable dialog mode: default is "false" |
-
+| latest_url_title_filter_code | js string | javascript code |
 
 ex1)
 
