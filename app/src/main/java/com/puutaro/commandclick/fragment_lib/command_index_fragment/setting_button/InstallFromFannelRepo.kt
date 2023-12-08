@@ -24,6 +24,11 @@ import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 
@@ -31,6 +36,7 @@ class InstallFromFannelRepo(
     private val cmdIndexFragment: CommandIndexFragment,
     private val currentAppDirPath: String,
 ) {
+    private val fannelListUpdateDelayMiliSec = InstallFannelList.fannelListUpdateDelayMiliSec
     private val cmdclickFannelDirPath = UsePath.cmdclickFannelDirPath
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
@@ -64,9 +70,6 @@ class InstallFromFannelRepo(
         installFannelRecyclerView?.layoutManager = PreLoadLayoutManager(
             context,
         )
-        installFannelRecyclerView?.scrollToPosition(
-        installFannelListAdapter.itemCount - 1
-        )
         setFannelContentsClickListener(
             installFannelRecyclerView
         )
@@ -89,6 +92,16 @@ class InstallFromFannelRepo(
             terminalViewModel.onDialog = false
         }
         cmdIndexFragment.installFannelDialog?.show()
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                delay(fannelListUpdateDelayMiliSec)
+            }
+            withContext(Dispatchers.Main){
+                installFannelRecyclerView?.scrollToPosition(
+                    installFannelListAdapter.itemCount - 1
+                )
+            }
+        }
     }
 
     private fun cancelButtonSetOnClickListener(
@@ -256,16 +269,27 @@ object InstallFannelList {
 
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
     val blankListMark = "Let's press sync button at left bellow"
+    val fannelListUpdateDelayMiliSec = 400L
     fun updateInstallFannelList(
-        fannelRecyclerView: RecyclerView?,
+        installFannelRecyclerView: RecyclerView?,
         updatedFannelList: List<String>
     ) {
-        val installFannelListAdapter = fannelRecyclerView?.adapter as? InstallFannelListAdapter
+        val installFannelListAdapter = installFannelRecyclerView?.adapter as? InstallFannelListAdapter
             ?: return
         installFannelListAdapter.fannelInstallerList.clear()
         installFannelListAdapter.fannelInstallerList.addAll(updatedFannelList)
         installFannelListAdapter.notifyDataSetChanged()
-        fannelRecyclerView.scrollToPosition(installFannelListAdapter.itemCount - 1)
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO){
+                delay(fannelListUpdateDelayMiliSec)
+            }
+            withContext(Dispatchers.Main){
+                installFannelRecyclerView.scrollToPosition(
+                    installFannelListAdapter.itemCount - 1
+                )
+            }
+        }
+        installFannelRecyclerView.scrollToPosition(installFannelListAdapter.itemCount - 1)
 
     }
 

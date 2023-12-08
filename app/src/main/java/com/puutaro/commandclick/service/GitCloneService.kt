@@ -236,11 +236,16 @@ class GitCloneService: Service() {
         val gitComPrefix = UrlFileSystems.gitComPrefix
         val gitUserContentPrefix = UrlFileSystems.gitUserContentPrefix
         val readmeSuffix = UrlFileSystems.readmeSuffix
+        val gitSuffix = ".git"
         return listOf(
-            readmeUrl.removeSuffix(".git").replace(
-                gitComPrefix,
-                gitUserContentPrefix
-            ),
+            readmeUrl
+                .replace(Regex("${gitSuffix}#.*$"), "")
+                .replace(Regex("#.*$"), "")
+                .removeSuffix(gitSuffix)
+                .replace(
+                    gitComPrefix,
+                    gitUserContentPrefix
+                ),
             readmeSuffix
         ).joinToString("/")
     }
