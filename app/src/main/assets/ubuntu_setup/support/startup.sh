@@ -221,6 +221,9 @@ startup_launch_system(){
     export REPLACE_VARIABLES_TSV_RELATIVE_PATH="${REPLACE_VARIABLES_TSV_RELATIVE_PATH}"
    	export UBUNTU_ENV_TSV_NAME="${UBUNTU_ENV_TSV_NAME}"
    	export UBUNTU_SERVICE_TEMP_DIR_PATH="${UBUNTU_SERVICE_TEMP_DIR_PATH}"
+   	export REPLACE_VARIABLE_SERVER_PORT="${REPLACE_VARIABLE_SERVER_PORT}"
+   	export REPLACE_VARIABLE_SERVER_ADDRESS="${REPLACE_VARIABLE_SERVER_ADDRESS}"
+   	export REPLACE_VARIABLES_CONFIG="${REPLACE_VARIABLES_CONFIG}"
 	echo \$USER
 	echo --- launch sshd server
 	echo "DROPBEAR_SSH_PORT ${DROPBEAR_SSH_PORT}"
@@ -237,7 +240,7 @@ startup_launch_system(){
 	echo "HTTP2_SHELL_PORT ${HTTP2_SHELL_PORT}"
 	shell2http \
 		-port ${HTTP2_SHELL_PORT} \
-		-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_ENV_TSV_NAME,UBUNTU_SERVICE_TEMP_DIR_PATH \
+		-export-vars=APP_ROOT_PATH,MONITOR_DIR_PATH,APP_DIR_PATH,INTENT_MONITOR_PORT,INTENT_MONITOR_ADDRESS,REPLACE_VARIABLES_TSV_RELATIVE_PATH,UBUNTU_ENV_TSV_NAME,UBUNTU_SERVICE_TEMP_DIR_PATH,REPLACE_VARIABLE_SERVER_PORT,REPLACE_VARIABLE_SERVER_ADDRESS,REPLACE_VARIABLES_CONFIG \
 		/bash "bash ${HTTP2_SHELL_PATH}"  &
 	EOF
 }
@@ -317,6 +320,18 @@ install_shell2http(){
 	rm -f "${package_name}"
 }
 
+install_repbash(){
+	local package_name="repbash"
+	curl \
+		-L "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
+		> "${package_name}"
+	local usrlocalbin_repbash="/usr/local/bin/${package_name}"
+	mv \
+		"${package_name}" \
+		"${usrlocalbin_repbash}"
+	chmod +x "${usrlocalbin_repbash}"
+}
+
 
 install_base_pkg(){
 	echo "### ${FUNCNAME}"
@@ -324,6 +339,7 @@ install_base_pkg(){
 	install_require_pacakges
 	install_pip3_pkg webssh
 	install_shell2http
+	install_repbash
 }
 
 install_user_package(){
@@ -369,6 +385,15 @@ launch_setup(){
 	insert_str_to_file \
 		'export UBUNTU_SERVICE_TEMP_DIR_PATH="'${UBUNTU_SERVICE_TEMP_DIR_PATH}'"' \
 		"${profile_path}"
+	insert_str_to_file \
+		'export REPLACE_VARIABLE_SERVER_PORT="'${REPLACE_VARIABLE_SERVER_PORT}'"' \
+		"${profile_path}"
+	insert_str_to_file \
+		'export REPLACE_VARIABLE_SERVER_ADDRESS="'${REPLACE_VARIABLE_SERVER_ADDRESS}'"' \
+		"${profile_path}"
+	insert_str_to_file \
+  		'export REPLACE_VARIABLES_CONFIG="'${REPLACE_VARIABLES_CONFIG}'"' \
+  		"${profile_path}"
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo
 }

@@ -1,8 +1,6 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.extra.UbuntuEnvTsv
-import com.puutaro.commandclick.common.variable.extra.WaitQuizPair
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
@@ -96,13 +94,15 @@ class BusyboxExecutor(
 
     fun executeProotCommand(
         command: List<String>,
-//        filesystemDirName: String,
-//        commandShouldTerminate: Boolean,
         env: HashMap<String, String> = hashMapOf(),
         monitorFileName: String,
 
     ) {
         val functionName = object{}.javaClass.enclosingMethod?.name
+        FileSystems.removeAndCreateDir(
+            ubuntuFiles.filesOneRootfsSupportProcDir.absolutePath
+        )
+        removeProotTempDir()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 AssetsFileManager.copyFileOrDirFromAssets(
@@ -184,6 +184,19 @@ class BusyboxExecutor(
                 monitorFileName,
                 "${className} ${functionName} ${err}"
             )
+        }
+    }
+
+    private fun removeProotTempDir(){
+        val prootTempDirPrefix = "proot-"
+        val supportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
+        FileSystems.showDirList(supportDirPath).forEach {
+            val secondDirName = it.removePrefix(prootTempDirPrefix)
+            val isDigit = secondDirName.getOrNull(0)?.isDigit() == true
+            val isProotTempDir =
+                it.startsWith(prootTempDirPrefix) && isDigit
+            if(!isProotTempDir) return@forEach
+            FileSystems.removeDir("${supportDirPath}/$it")
         }
     }
 
@@ -282,6 +295,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
         } ?: ""
         val bindings = "$emulatedStorageBinding $externalStorageBinding"
         val ubuntuIntentMonitorPort = UsePort.UBUNTU_INTENT_MONITOR_PORT.num.toString()
+        val ubuntuReplaceVariableServerPort = UsePort.UBUNTU_REPLACE_VARIABLE_SERVER_PORT.num.toString()
         return hashMapOf(
             "LD_LIBRARY_PATH" to ubuntuFiles.supportDir.absolutePath,
             "LIB_PATH" to ubuntuFiles.supportDir.absolutePath,
@@ -299,6 +313,8 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "DROPBEAR_SSH_PORT" to UsePort.DROPBEAR_SSH_PORT.num.toString(),
             "INTENT_MONITOR_PORT" to ubuntuIntentMonitorPort,
             "INTENT_MONITOR_ADDRESS" to "127.0.0.1:${ubuntuIntentMonitorPort}",
+            "REPLACE_VARIABLE_SERVER_PORT" to ubuntuReplaceVariableServerPort,
+            "REPLACE_VARIABLE_SERVER_ADDRESS" to "127.0.0.1:${ubuntuReplaceVariableServerPort}",
             "CMDCLICK_USER" to UbuntuInfo.user,
             "CREATE_IMAGE_SWITCH" to UbuntuInfo.createImageSwitch,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
