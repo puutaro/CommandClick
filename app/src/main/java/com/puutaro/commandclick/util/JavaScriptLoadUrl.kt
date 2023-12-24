@@ -76,7 +76,6 @@ object JavaScriptLoadUrl {
         val setReplaceVariableMap = CmdVariableReplacer.replace(
             context,
             execJsPath,
-            jsListBeforeRemoveTsv,
             setReplaceVariableMapBeforeConcatCmdVal
         )
         val jsList = TsvImportManager.removeTsvImport(jsListBeforeRemoveTsv)
