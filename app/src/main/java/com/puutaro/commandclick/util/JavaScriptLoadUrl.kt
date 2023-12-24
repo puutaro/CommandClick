@@ -1,10 +1,12 @@
 package com.puutaro.commandclick.util
 
+import TsvImportManager
 import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -44,7 +46,7 @@ object JavaScriptLoadUrl {
         val fannelDirName = CcPathTool.makeFannelDirName(
             scriptFileName
         )
-        val jsList = if(
+        val jsListBeforeRemoveTsv = if(
             jsListSource.isNullOrEmpty()
         ) {
             ReadText(
@@ -53,18 +55,31 @@ object JavaScriptLoadUrl {
             ).textToList()
         } else jsListSource
         if(
-            jsList.isEmpty()
+            jsListBeforeRemoveTsv.isEmpty()
         ) return null
         if(
-            jsList.joinToString().replace("\n", "").trim().isEmpty()
+            jsListBeforeRemoveTsv.joinToString().replace("\n", "").trim().isEmpty()
         ) return null
-        val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
-            jsList,
+        val setReplaceVariableMapBeforeConcatTsvMap = createMakeReplaceVariableMapHandler(
+            jsListBeforeRemoveTsv,
             recentAppDirPath,
             fannelDirName,
             scriptFileName,
             setReplaceVariableMapSrc,
         )
+        val setReplaceVariableMapBeforeConcatCmdVal = TsvImportManager.concatRepValWithTsvImport(
+            context,
+            execJsPath,
+            jsListBeforeRemoveTsv,
+            setReplaceVariableMapBeforeConcatTsvMap
+        )
+        val setReplaceVariableMap = CmdVariableReplacer.replace(
+            context,
+            execJsPath,
+            jsListBeforeRemoveTsv,
+            setReplaceVariableMapBeforeConcatCmdVal
+        )
+        val jsList = TsvImportManager.removeTsvImport(jsListBeforeRemoveTsv)
 
         CoroutineScope(Dispatchers.IO).launch {
             val currentJsPath = "$recentAppDirPath/$scriptFileName"
@@ -166,6 +181,61 @@ object JavaScriptLoadUrl {
             || loadJsUrl.isBlank()
         ) return null
         return makeLastJsCon(loadJsUrl)
+    }
+
+    fun makeOnlyReplaceVariableTsv (
+        execJsPathSrc: String,
+        jsListSource: List<String>? = null,
+        setReplaceVariableMapSrc: Map<String, String>? = null,
+    ) {
+        val execJsPath = CcPathTool.getMainFannelFilePath(execJsPathSrc)
+        val jsFileObj = File(execJsPath)
+        if (!jsFileObj.isFile) return
+        val recentAppDirPath = jsFileObj.parent
+        if (recentAppDirPath.isNullOrEmpty()) return
+
+        val scriptFileName = jsFileObj.name
+        val fannelDirName = CcPathTool.makeFannelDirName(
+            scriptFileName
+        )
+        val jsList = if (
+            jsListSource.isNullOrEmpty()
+        ) {
+            ReadText(
+                recentAppDirPath,
+                scriptFileName
+            ).textToList()
+        } else jsListSource
+        if (
+            jsList.isEmpty()
+        ) return
+        if (
+            jsList.joinToString().replace("\n", "").trim().isEmpty()
+        ) return
+        val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
+            jsList,
+            recentAppDirPath,
+            fannelDirName,
+            scriptFileName,
+            setReplaceVariableMapSrc,
+        )
+
+        val currentJsPath = "$recentAppDirPath/$scriptFileName"
+        val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
+            currentJsPath
+        )
+        val mainFannelName = File(
+            CcPathTool.getMainFannelFilePath(
+                currentJsPath
+            )
+        ).name
+        val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
+        makeReplaceVariableTableTsv(
+            setReplaceVariableMap,
+            mainCurrentAppDirPath,
+            mainFannelDirName,
+            mainFannelName,
+        )
     }
 
 
