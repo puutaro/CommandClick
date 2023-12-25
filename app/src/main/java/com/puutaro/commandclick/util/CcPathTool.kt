@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 
 object CcPathTool {
     fun makeFannelDirName(
@@ -166,5 +168,24 @@ object CcPathTool {
                 )
             }
         }
+    }
+
+    fun convertUbuntuPath(
+        context: Context?,
+        path: String
+    ): String {
+        if (
+            context == null
+        ) return String()
+        if (
+            !path.startsWith("/")
+        ) return path
+        if (
+            path.startsWith("/storage")
+        ) return path
+
+        val ubuntuFiles = UbuntuFiles(context)
+        val filesOneRootfsPathPrfix = ubuntuFiles.filesOneRootfs.absolutePath
+        return "${filesOneRootfsPathPrfix}${path}"
     }
 }

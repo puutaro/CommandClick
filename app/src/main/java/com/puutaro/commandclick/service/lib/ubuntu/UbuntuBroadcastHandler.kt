@@ -399,12 +399,25 @@ object UbuntuBroadcastHandler {
             backgroundShellPath,
         )?.cancel()
         val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
-            SshManager.execScript(
-                backgroundShellPath,
-                backgroundArgsTabSepaStr,
-                backgroundMonitorFileName,
-                false,
-            )
+            withContext(Dispatchers.IO){
+                if(
+                    !LinuxCmd.isProcessCheck(backgroundMonitorFileName)
+                ) return@withContext
+                SshManager.execScript(
+                    "/support/killProcTree.sh",
+                    backgroundShellPath,
+                    backgroundMonitorFileName,
+                    false
+                )
+            }
+            withContext(Dispatchers.IO) {
+                SshManager.execScript(
+                    backgroundShellPath,
+                    backgroundArgsTabSepaStr,
+                    backgroundMonitorFileName,
+                    false,
+                )
+            }
         }
         ubuntuService.ubuntuCoroutineJobsHashMap.put(
             backgroundShellPath,

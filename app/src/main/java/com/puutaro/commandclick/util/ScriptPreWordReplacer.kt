@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 
 object ScriptPreWordReplacer {
 
@@ -51,12 +52,12 @@ object ScriptPreWordReplacer {
     }
 
     fun replace(
-        tergetString: String,
+        tergetContents: String,
         currentAppDirPath: String,
         fannelDirName: String,
         currentScriptName: String
     ): String {
-        return tergetString
+        return tergetContents
             .replace(currentScriptPathMark, "$currentAppDirPath/$currentScriptName")
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)
             .replace(currentAppDirPathMark, currentAppDirPath)

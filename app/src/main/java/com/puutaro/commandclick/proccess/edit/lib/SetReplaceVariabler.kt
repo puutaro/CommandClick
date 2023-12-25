@@ -24,13 +24,23 @@ object SetReplaceVariabler {
         fannelDirName: String,
         currentShellFileName: String,
     ): Map<String, String>? {
-        val firstSetVariableMapStringList = execMakeSetReplaceVariableMap(
+        val setReplaceVariableMapBeforeRecursiveReplace = execMakeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             currentShellFileName,
             fannelDirName
-        )?.map { "${it.key}\t${it.value}"} ?: return null
+        )
+        return recursiveReplaceForReplaceVariableMap(
+            setReplaceVariableMapBeforeRecursiveReplace
+        )
+    }
 
+    fun recursiveReplaceForReplaceVariableMap(
+        setReplaceVariableMapBeforeRecursiveReplace : Map<String, String>?
+    ): Map<String, String>? {
+        val firstSetVariableMapStringList = setReplaceVariableMapBeforeRecursiveReplace
+            ?.map { "${it.key}\t${it.value}"}
+            ?: return null
         val firstSetVariableMapStringListSize = firstSetVariableMapStringList.size
         var lastSetVariableMapStringList = firstSetVariableMapStringList
         (0 until firstSetVariableMapStringListSize).forEach {
@@ -85,13 +95,6 @@ object SetReplaceVariabler {
             val setTargetVariableValueSource = QuoteTool.trimBothEdgeQuote(
                 setTargetVariableValueBeforeTrim
             )
-//            if(setTargetVariableValueBeforeTrim?.indexOf('"') == 0){
-//                setTargetVariableValueBeforeTrim.trim('"')
-//            } else if(setTargetVariableValueBeforeTrim?.indexOf('\'') == 0){
-//                setTargetVariableValueBeforeTrim.trim('\'')
-//            } else {
-//                setTargetVariableValueBeforeTrim
-//            } ?: return null
             if(
                 !setTargetVariableValueSource.startsWith(
                     filePrefix
@@ -103,7 +106,17 @@ object SetReplaceVariabler {
                 fannelDirName
             )
         }?.joinToString(",")
-            ?.split(',')
+            ?.let {
+                convertReplaceVariableConToMap(
+                    it
+                )
+            }
+    }
+
+    fun convertReplaceVariableConToMap(
+        replaceVariableCon: String?,
+    ): Map<String, String>? {
+        return replaceVariableCon?.split(',')
             ?.filter {
                 it.isNotEmpty()
             }?.map {
@@ -121,13 +134,9 @@ object SetReplaceVariabler {
                 val replaceString = if(
                     setTargetVariableValueListSize > 1
                 ) setTargetVariableValueList.filterIndexed{
-                    index, _ -> index >= 1
+                        index, _ -> index >= 1
                 }.joinToString("=")
-//                    setTargetVariableValueList.slice(
-//                    1.. setTargetVariableValueListSize - 1
-//                ).firstOrNull()
                     .let { QuoteTool.trimBothEdgeQuote(it)}
-//                    ?: return null
                 else return null
                 replaceVariableName to replaceString
             }?.toMap()

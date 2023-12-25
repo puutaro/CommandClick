@@ -1,0 +1,46 @@
+#!/bin/bash
+
+
+set -e
+
+readonly GREP_SHELL_PATH="${1:-help}"
+
+display_help(){
+	awk \
+		'BEGIN{
+			print "### Grep certain shell script process"
+			print ""
+			print ""
+			print "## Usage"
+			print "grepp \x22${execute file path}\x22"
+			print ""
+		}'
+}
+
+get_help(){
+	case "${GREP_SHELL_PATH}" in
+		-h|--help|help)
+			display_help
+			exit 0
+		;;
+		help)
+			display_help
+			exit 1
+		;;
+	esac
+}
+
+get_help
+
+ps aux \
+	| awk '{
+		if(\
+			$0 ~ "### REPBASH_CON" \
+			|| $0 ~ "awk " \
+			|| $0 ~ "'${0}'" \
+		) next
+		if(\
+			$0 !~ "'${GREP_SHELL_PATH}'" \
+		) next
+		print $0
+	}'

@@ -26,7 +26,7 @@ object ProcessManager {
         SetUp,
         PulseaudioSetUp,
         MonitoringProcessNum,
-        IntentRequestMonitor
+        IntentRequestMonitor,
     }
 
     fun finishProcess(

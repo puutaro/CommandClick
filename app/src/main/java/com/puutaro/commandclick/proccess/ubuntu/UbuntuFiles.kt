@@ -37,6 +37,8 @@ class UbuntuFiles(
     val filesOneRootfs = File("${filesDir}/1/rootfs")
     val filesOneRootfsSupportDir =
         File("${filesOneRootfs.absolutePath}/support")
+    val filesOneRootfsSupportProcDir =
+        File("${filesOneRootfsSupportDir.absolutePath}/proc")
     val filesOneRootfsSupportCmdDir =
         File("${filesOneRootfsSupportDir.absolutePath}/cmd")
     val ubuntuManagerDirPath =

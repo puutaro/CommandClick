@@ -117,19 +117,10 @@ class JsPath(
 
     @JavascriptInterface
     fun convertUbuntuPath(path: String): String {
-        if(
-            context == null
-        ) return String()
-        if(
-            !path.startsWith("/")
-        ) return path
-        if(
-            path.startsWith("/storage")
-        ) return path
-
-        val ubuntuFiles = UbuntuFiles(context)
-        val filesOneRootfsPathPrfix = ubuntuFiles.filesOneRootfs.absolutePath
-        return "${filesOneRootfsPathPrfix}${path}"
+        return CcPathTool.convertUbuntuPath(
+            context,
+            path
+        )
     }
 }
 
