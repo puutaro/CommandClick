@@ -6,6 +6,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
@@ -20,6 +21,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManag
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
+import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.ReadText
@@ -430,18 +432,12 @@ object UbuntuBroadcastHandler {
                     Toast.LENGTH_LONG
                 ).show()
             }
-            val processRestartDelayTime = 2000L
+            val processRestartDelayTime = 3000L
             withContext(Dispatchers.IO){
-                LinuxCmd.killAllProcess()
-                BusyboxExecutor(
+                LinuxCmd.killProcess(context.packageName)
+                BroadcastSender.normalSend(
                     context,
-                    UbuntuFiles(context),
-                ).executeProotCommand(
-                    listOf(
-                        "bash",
-                        UbuntuFiles.startupFilePath
-                    ),
-                    monitorFileName = backgroundMonitorFileName
+                    BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action
                 )
                 delay(processRestartDelayTime)
             }
