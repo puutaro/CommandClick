@@ -450,7 +450,7 @@ object UbuntuBroadcastHandler {
             when (
                 LinuxCmd.isProcessCheck(backgroundMonitorFileName)
             ) {
-                true -> SshManager.execScriptBeforeKill(
+                true -> SshManager.execScriptAfterKill(
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,

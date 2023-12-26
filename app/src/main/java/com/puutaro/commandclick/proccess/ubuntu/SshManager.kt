@@ -32,7 +32,7 @@ object SshManager {
         )
     }
 
-    fun execScriptBeforeKill(
+    fun execScriptAfterKill(
         scriptPath: String,
         tabSepaStr: String,
         monitorFileName: String,
