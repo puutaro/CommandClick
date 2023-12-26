@@ -28,7 +28,6 @@ import java.net.URL
 
 object UbuntuSetUp {
 
-    private val startupFilePath = "/support/startup.sh"
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val downLoadCompPercent = 100L
     private var downloadProgress = 100L
@@ -61,6 +60,7 @@ object UbuntuSetUp {
             ?: return
         val ubuntuFiles = ubuntuService.ubuntuFiles
             ?: return
+        val startupFilePath = UbuntuFiles.startupFilePath
         downloadProgress = 100L
         val isUbuntuRestore = ubuntuService.isUbuntuRestore
         if(

@@ -25,6 +25,7 @@ import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -399,19 +400,63 @@ object UbuntuBroadcastHandler {
             backgroundShellPath,
         )?.cancel()
         val backgroundShellJob = CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO){
-                if(
-                    !LinuxCmd.isProcessCheck(backgroundMonitorFileName)
-                ) return@withContext
-                SshManager.execScript(
-                    "/support/killProcTree.sh",
-                    backgroundShellPath,
-                    backgroundMonitorFileName,
-                    false
-                )
+            execBackGroundCmdStartHandler(
+                ubuntuService,
+                backgroundShellPath,
+                backgroundArgsTabSepaStr,
+                backgroundMonitorFileName,
+            )
+        }
+        ubuntuService.ubuntuCoroutineJobsHashMap.put(
+            backgroundShellPath,
+            backgroundShellJob
+        )
+    }
+
+    private suspend fun execBackGroundCmdStartHandler(
+        ubuntuService: UbuntuService,
+        backgroundShellPath: String,
+        backgroundArgsTabSepaStr: String,
+        backgroundMonitorFileName: String,
+    ){
+        val context = ubuntuService.applicationContext
+        if(
+            !LinuxCmd.isBasicProcess()
+        ){
+            withContext(Dispatchers.Main){
+                Toast.makeText(
+                    context,
+                    "Restart proc: lost base proc",
+                    Toast.LENGTH_LONG
+                ).show()
             }
-            withContext(Dispatchers.IO) {
-                SshManager.execScript(
+            val processRestartDelayTime = 2000L
+            withContext(Dispatchers.IO){
+                LinuxCmd.killAllProcess()
+                BusyboxExecutor(
+                    context,
+                    UbuntuFiles(context),
+                ).executeProotCommand(
+                    listOf(
+                        "bash",
+                        UbuntuFiles.startupFilePath
+                    ),
+                    monitorFileName = backgroundMonitorFileName
+                )
+                delay(processRestartDelayTime)
+            }
+        }
+        withContext(Dispatchers.IO) {
+            when (
+                LinuxCmd.isProcessCheck(backgroundMonitorFileName)
+            ) {
+                true -> SshManager.execScriptBeforeKill(
+                    backgroundShellPath,
+                    backgroundArgsTabSepaStr,
+                    backgroundMonitorFileName,
+                    false,
+                )
+                else -> SshManager.execScript(
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,
@@ -419,10 +464,6 @@ object UbuntuBroadcastHandler {
                 )
             }
         }
-        ubuntuService.ubuntuCoroutineJobsHashMap.put(
-            backgroundShellPath,
-            backgroundShellJob
-        )
     }
 
     private fun execSell2Http(

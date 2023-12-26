@@ -32,6 +32,24 @@ object SshManager {
         )
     }
 
+    fun execScriptBeforeKill(
+        scriptPath: String,
+        tabSepaStr: String,
+        monitorFileName: String,
+        isOutput: Boolean
+    ):String {
+        val tabSepaStrWithQuote = tabSepaStr.split("\t").map{
+            "\"${it}\""
+        }.joinToString("\t")
+        val cmdCon = "bash '/support/killProcTree.sh' '${scriptPath}';" +
+                "bash '${scriptPath}' $tabSepaStrWithQuote 2>&1"
+        return execCommand(
+            "bash --login -c \"${cmdCon}\"",
+            monitorFileName,
+            isOutput
+        )
+    }
+
     private fun execCommand(
         command: String,
         monitorFileName: String = sysMonitorFileName,

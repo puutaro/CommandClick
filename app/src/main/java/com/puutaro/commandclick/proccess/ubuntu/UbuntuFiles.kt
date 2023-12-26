@@ -19,6 +19,7 @@ class UbuntuFiles(
         val downloadRootfsTarGzPath = "$downloadDirPath/$rootfsTarGzName"
         const val waitQuizTsvName = "wait_quiz.tsv"
         const val ubuntuEnvTsvName = "ubuntu_env.tsv"
+        const val startupFilePath = "/support/startup.sh"
     }
     val libDirPath = context.applicationInfo.nativeLibraryDir
     val filesDir: File = context.filesDir

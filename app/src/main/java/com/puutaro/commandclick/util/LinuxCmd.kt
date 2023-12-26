@@ -94,9 +94,7 @@ object LinuxCmd {
         )
     }
     fun killAllProcess(){
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
+       LogSystems.stdSys(
             "allkill"
         )
         android.os.Process.killProcess(android.os.Process.myPid());
