@@ -3,14 +3,13 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 import android.text.Editable
 import android.text.InputFilter
 import android.text.TextWatcher
-import androidx.fragment.app.activityViewModels
+import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.GoogleSuggest
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object TextChangedListenerAdder {
@@ -20,7 +19,6 @@ object TextChangedListenerAdder {
         cmdListAdapter: FannelIndexListAdapter
     ){
         val context = cmdIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
@@ -47,11 +45,16 @@ object TextChangedListenerAdder {
         cmdSearchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!cmdSearchEditText.hasFocus()) return
                 if(
-                    terminalViewModel.readlinesNum == ReadLines.SHORTH
+                    !cmdSearchEditText.hasFocus()
+                ) return
+                val linearLayoutParam =
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                val cmdIndexFragmentWeight = linearLayoutParam.weight
+                if(
+                    cmdIndexFragmentWeight == ReadLines.LONGTH
                 ) {
-                    cmdSearchEditText.threshold = 100000;
+                    cmdSearchEditText.threshold = 100000
                     return
                 }
                 if(!cmdIndexFragment.WebSearchSwitch) return
@@ -71,8 +74,11 @@ object TextChangedListenerAdder {
                     )
                     return
                 }
+                val linearLayoutParam =
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                val cmdIndexFragmentWeight = linearLayoutParam.weight
                 if(
-                    terminalViewModel.readlinesNum != ReadLines.SHORTH
+                    cmdIndexFragmentWeight != ReadLines.LONGTH
                 ) return
                 val filteredCmdStrList = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
                     currentAppDirPath

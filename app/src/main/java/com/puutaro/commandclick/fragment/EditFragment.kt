@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.EditText
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -259,15 +260,17 @@ class EditFragment: Fragment() {
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        terminalViewModel.readlinesNum = ReadLines.SHORTH
-        val listener = context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+        val listener = context as? OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
             if(terminalViewModel.onDialog) return@setEventListener
             binding.editTitleLinearlayout.isVisible = !isOpen
+            val linearLayoutParam =
+                binding.editFragment.layoutParams as LinearLayout.LayoutParams
+            val editFragmentWeight = linearLayoutParam.weight
             if(
-                terminalViewModel.readlinesNum != ReadLines.SHORTH
+                editFragmentWeight != ReadLines.LONGTH
             ) {
                 KeyboardWhenTermLongForEdit.handle(
                     this,

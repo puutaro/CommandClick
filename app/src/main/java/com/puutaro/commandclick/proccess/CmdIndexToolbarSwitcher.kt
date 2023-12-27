@@ -3,11 +3,9 @@ package com.puutaro.commandclick.proccess
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object CmdIndexToolbarSwitcher {
@@ -22,10 +20,12 @@ object CmdIndexToolbarSwitcher {
                 R.string.command_index_fragment
             )
         ) return
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
+        val linearLayoutParam =
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+        val cmdIndexFragmentWeight = linearLayoutParam.weight
         if(
             cmdIndexFragment.WebSearchSwitch
-            && terminalViewModel.readlinesNum == ReadLines.SHORTH
+            && cmdIndexFragmentWeight == ReadLines.LONGTH
         ) return
         val binding = cmdIndexFragment.binding
         val pageSearch = binding.pageSearch

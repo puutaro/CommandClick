@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
@@ -297,18 +298,20 @@ class MainActivity:
 
     override fun onToolBarVisibleChange(
         toolBarVisible: Boolean,
-        changeTargetFragmentSelects: ChangeTargetFragment?
+        bottomFragment: Fragment?
     ) {
-        when(changeTargetFragmentSelects) {
-            ChangeTargetFragment.CMD_INDEX_FRAGMENT -> {
+        when(bottomFragment) {
+            is CommandIndexFragment -> {
                 ExecOnToolBarVisibleChange.execOnToolBarVisibleChange(
                     this,
+                    bottomFragment,
                     toolBarVisible
                 )
             }
-            ChangeTargetFragment.CMD_VARIABLES_EDIT_FRAGMENT -> {
+            is EditFragment -> {
                 ExecOnToolBarVisibleChangeForEdit.execOnToolBarVisibleChangeForEdit(
                     this,
+                    bottomFragment,
                     toolBarVisible
                 )
             }

@@ -177,10 +177,12 @@ class ToolbarButtonProducerForEdit(
                         ).show()
                         return@setOnClickListener
                     }
-                    val onShorth = terminalViewModel.readlinesNum == ReadLines.SHORTH
+                    val linearLayoutParam =
+                        editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                    val isShow = linearLayoutParam.weight == ReadLines.SHORTH
                     EditLayoutViewHideShow.exec(
                         editFragment,
-                        !onShorth
+                        isShow
                     )
                     val listener =
                         context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit

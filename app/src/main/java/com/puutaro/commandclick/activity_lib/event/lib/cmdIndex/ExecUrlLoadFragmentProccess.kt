@@ -2,8 +2,8 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
 import android.content.Context
 import android.util.Log
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOrShort
@@ -15,14 +15,11 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Sea
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object ExecUrlLoadFragmentProccess {
     fun execUrlLoadCmdIndexFragment (
         activity: MainActivity,
     ){
-        val terminalViewModel: TerminalViewModel =
-            ViewModelProvider(activity).get(TerminalViewModel::class.java)
         val cmdIndexFragmentTag = activity.getString(R.string.command_index_fragment)
         val supportFragmentManager = activity.supportFragmentManager
         val cmdIndexFragment = try {
@@ -41,14 +38,15 @@ object ExecUrlLoadFragmentProccess {
                 SearchSwichImage.WEB.image
             )
             cmdindexInternetButton.imageTintList = context.getColorStateList(R.color.terminal_color)
-            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color));
+            cmdindexInternetButton.setBackgroundTintList(it.getColorStateList(R.color.icon_selected_color))
             (it.getColor(R.color.white))
         }
-        if(terminalViewModel.readlinesNum == ReadLines.SHORTH) {
+        val linearLayoutParam =
+            cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+        if(linearLayoutParam.weight != ReadLines.SHORTH) {
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 cmdIndexFragmentTag,
                 supportFragmentManager,
-                terminalViewModel
             )
         }
         cmdIndexFragment.WebSearchSwitch = true
@@ -58,8 +56,6 @@ object ExecUrlLoadFragmentProccess {
     fun execUrlLoadCmdVriableEditFragment (
         activity: MainActivity,
     ){
-        val terminalViewModel: TerminalViewModel =
-            ViewModelProvider(activity).get(TerminalViewModel::class.java)
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
@@ -87,13 +83,14 @@ object ExecUrlLoadFragmentProccess {
             editFragment,
             false
         )
+        val linearLayoutParam =
+            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
         if(
-            terminalViewModel.readlinesNum != ReadLines.SHORTH
+            linearLayoutParam.weight == ReadLines.SHORTH
         ) return
         ExecTerminalLongOrShort.open<CommandIndexFragment>(
             cmdEditFragmentTag,
             supportFragmentManager,
-            terminalViewModel
         )
 
     }

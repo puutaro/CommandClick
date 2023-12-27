@@ -1,13 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
 import android.view.MotionEvent
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.util.ScreenSizeCalculator
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.util.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,10 +15,10 @@ import kotlinx.coroutines.launch
 object ToolbarHideShowWhenTermLongAndScrollSave {
     fun invoke (
         terminalFragment: TerminalFragment,
-        terminalViewModel: TerminalViewModel,
     ){
 
         val context = terminalFragment.context
+        val activity = terminalFragment.activity
         val binding = terminalFragment.binding
         val terminalWebView = binding.terminalWebView
         val listener =
@@ -29,12 +28,18 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
         with(binding.terminalWebView){
             setOnTouchListener {
                     v, event ->
-                val changeTargetFragment =
-                    IndexOrEditFragment(terminalFragment).select()
+                val targetFragmentInstance = TargetFragmentInstance()
+                val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
+                val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+                    activity,
+                    cmdEditFragmentTag,
+                    onNoHeightZeroCheckForEdit = true
+                )
+                val bottomFragmentWeight = targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
                 if(
                     terminalFragment.isVisible
-                    && terminalViewModel.readlinesNum != ReadLines.SHORTH
-                    && changeTargetFragment != null
+                    && bottomFragmentWeight != ReadLines.LONGTH
+                    && bottomFragment != null
                 ) {
                     when (event.action) {
                         MotionEvent.ACTION_DOWN -> {
@@ -43,7 +48,7 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                         }
                         MotionEvent.ACTION_UP -> {
                             execHideShow(
-                                changeTargetFragment,
+                                bottomFragment,
                                 hideShowThreshold,
                                 oldPositionY,
                                 event.rawY,
@@ -71,7 +76,7 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
 
 
 private fun execHideShow(
-    changeTargetFragment: ChangeTargetFragment,
+    bottomFragment: Fragment?,
     hideShowThreshold: Int,
     oldPositionY: Float,
     rawY: Float,
@@ -81,13 +86,13 @@ private fun execHideShow(
     if(hideShowThreshold < oldCurrYDff && oldCurrYDff < -10){
         listener?.onToolBarVisibleChange(
             true,
-            changeTargetFragment
+            bottomFragment
         )
     }
     if(oldCurrYDff > 10) {
         listener?.onToolBarVisibleChange(
             false,
-            changeTargetFragment
+            bottomFragment
         )
     }
 }

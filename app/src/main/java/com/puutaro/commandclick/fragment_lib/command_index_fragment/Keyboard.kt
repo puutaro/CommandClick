@@ -1,12 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarWidgetWeightForLinearLayout
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object KeyboardForCmdIndex {
@@ -37,7 +36,6 @@ object KeyboardForCmdIndex {
         isOpen: Boolean,
         cmdIndexFragment: CommandIndexFragment,
     ){
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         val binding = cmdIndexFragment.binding
         val context = cmdIndexFragment.context
         val cmdIndexSwipToRefreshLayout = binding.cmdListSwipeToRefresh
@@ -64,8 +62,11 @@ object KeyboardForCmdIndex {
         cmdSearchEditText.layoutParams = linearLayoutParamShrinkForSearchTextShrinkWeight
         if(!cmdIndexFragment.WebSearchSwitch) cmdSearchEditText.setText(String())
         cmdSearchEditText.clearFocus()
+        val linearLayoutParam =
+            binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+        val cmdIndexFragmentWeight = linearLayoutParam.weight
         cmdIndexSwipToRefreshLayout.isVisible =
-            terminalViewModel.readlinesNum == ReadLines.SHORTH
+            cmdIndexFragmentWeight == ReadLines.LONGTH
         val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE

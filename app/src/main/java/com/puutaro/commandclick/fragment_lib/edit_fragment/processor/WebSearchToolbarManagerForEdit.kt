@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
+import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.EditFragment
@@ -54,9 +55,14 @@ class WebSearchToolbarManagerForEdit(
         cmdWebSearchEditText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(!cmdWebSearchEditText.hasFocus()) return
                 if(
-                    terminalViewModel.readlinesNum == ReadLines.SHORTH
+                    !cmdWebSearchEditText.hasFocus()
+                ) return
+                val linearLayoutParam =
+                    cmdEditFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+                val editFragmentWeight = linearLayoutParam.weight
+                if(
+                    editFragmentWeight == ReadLines.LONGTH
                 ) {
                     cmdWebSearchEditText.threshold = 100000;
                     return

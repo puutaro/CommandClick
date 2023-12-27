@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.media.AudioManager
 import android.os.Bundle
 import android.view.*
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -181,9 +182,12 @@ class CommandIndexFragment: Fragment() {
             if(
                 terminalViewModel.onDialog
             ) return@setEventListener
+            val linearLayoutParam =
+                binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            val cmdIndexFragmentWeight = linearLayoutParam.weight
             val enableInternetButton = (
                     !isOpen
-                    || terminalViewModel.readlinesNum != ReadLines.SHORTH
+                    || cmdIndexFragmentWeight != ReadLines.LONGTH
                     )
             cmdindexInternetButton.isEnabled = enableInternetButton
             if(enableInternetButton){
@@ -191,7 +195,7 @@ class CommandIndexFragment: Fragment() {
             } else {
                 cmdindexInternetButton.imageTintList = context?.getColorStateList(android.R.color.darker_gray)
             }
-            val isLongth = terminalViewModel.readlinesNum != ReadLines.SHORTH
+            val isLongth = cmdIndexFragmentWeight != ReadLines.LONGTH
             if(isLongth) {
                 KeyboardForCmdIndex.ajustCmdIndexFragmentWhenTermLong(
                         isOpen,

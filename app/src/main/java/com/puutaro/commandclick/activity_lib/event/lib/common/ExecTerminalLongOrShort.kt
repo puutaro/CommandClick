@@ -5,14 +5,14 @@ import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
 
 
 object ExecTerminalLongOrShort {
     fun <T: Fragment> open(
         fragmentTag: String,
         supportFragmentManager: FragmentManager,
-        terminalViewModel: TerminalViewModel,
     ){
         val targetFragment = try {
             supportFragmentManager.findFragmentByTag(fragmentTag) as T
@@ -25,14 +25,23 @@ object ExecTerminalLongOrShort {
             LinearLayout.LayoutParams.MATCH_PARENT,
             0
         )
-        param.weight = if(
-            terminalViewModel.readlinesNum == ReadLines.SHORTH
+
+        val linearLayoutParam = when(targetFragment) {
+            is CommandIndexFragment -> {
+                targetFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            }
+            is EditFragment -> {
+                targetFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+            }
+            else -> {
+                return
+            }
+        }
+        param.weight = when(
+            linearLayoutParam.weight != ReadLines.SHORTH
         ) {
-            terminalViewModel.readlinesNum = ReadLines.LONGTH
-            ReadLines.SHORTH
-        } else {
-            terminalViewModel.readlinesNum = ReadLines.SHORTH
-            ReadLines.LONGTH
+            true -> ReadLines.SHORTH
+            else -> ReadLines.LONGTH
         }
         targetFragment.view?.layoutParams = param
     }

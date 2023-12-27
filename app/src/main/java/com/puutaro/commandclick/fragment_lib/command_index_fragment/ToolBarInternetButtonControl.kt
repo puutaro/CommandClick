@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
+import android.widget.LinearLayout
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
@@ -47,8 +48,11 @@ class ToolBarInternetButtonControl(
                 return@setOnClickListener
             }
 
+            val linearLayoutParam =
+                cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+            val cmdIndexFragmentWeight = linearLayoutParam.weight
             val enableExecInternetButtonJs =
-                terminalViewModel.readlinesNum != ReadLines.SHORTH
+                cmdIndexFragmentWeight != ReadLines.LONGTH
                         && terminalViewModel.onExecInternetButtonShell
                         && cmdIndexFragment.WebSearchSwitch
             if(

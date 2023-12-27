@@ -3,7 +3,6 @@ package com.puutaro.commandclick.activity_lib.event
 import android.content.*
 import android.os.Build
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.NotifierSetter
 import com.puutaro.commandclick.activity_lib.permission.RunCommandSetter
@@ -19,7 +18,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.util.ShortCutManager
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object ExecToolbarMenuCategoriesForCmdIndex {
     fun <T: Fragment> execToolbarMenuCategories(
@@ -29,12 +27,9 @@ object ExecToolbarMenuCategoriesForCmdIndex {
     ) {
         when(toolbarMenuCategoriesVariantForCmdIndex){
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX -> {
-                val terminalViewModel: TerminalViewModel =
-                    ViewModelProvider(activity).get(TerminalViewModel::class.java)
                 ExecTerminalLongOrShort.open<T>(
                     fragmentTag,
                     activity.supportFragmentManager,
-                    terminalViewModel
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN -> {

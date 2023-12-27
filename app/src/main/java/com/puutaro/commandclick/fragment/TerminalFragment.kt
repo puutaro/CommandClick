@@ -30,6 +30,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
@@ -92,7 +93,6 @@ class   TerminalFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val terminalViewModel: TerminalViewModel by activityViewModels()
-        terminalViewModel.readlinesNum = ReadLines.SHORTH
 
         outputFileLength = savedInstanceState?.getInt("outputFileLength")
             ?:arguments?.getInt("outputFileLength") ?: 0
@@ -113,7 +113,6 @@ class   TerminalFragment: Fragment() {
         )
         ToolbarHideShowWhenTermLongAndScrollSave.invoke(
             this,
-            terminalViewModel,
         )
 
         ConfigFromStartUpFileSetterForTerm.set(this)
@@ -173,9 +172,17 @@ class   TerminalFragment: Fragment() {
     override fun onResume() {
         super.onResume()
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        val targetFragmentInstance = TargetFragmentInstance()
+        val cmdVariableEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+            activity,
+            cmdVariableEditFragmentTag
+        )
+        val currentBottomFragmentWeight =
+            targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
         firstDisplayUpdate = if(
             !firstDisplayUpdate
-            && terminalViewModel.readlinesNum != ReadLines.LONGTH
+            && currentBottomFragmentWeight == ReadLines.LONGTH
         ){
             onTermBackendWhenStart == SettingVariableSelects.OnTermBackendWhenStartSelects.ON.name
         } else firstDisplayUpdate
@@ -217,7 +224,7 @@ class   TerminalFragment: Fragment() {
     interface OnToolBarVisibleChangeListener {
         fun onToolBarVisibleChange(
             toolBarVisible: Boolean,
-            changeTargetFragmentSelects: ChangeTargetFragment?,
+            bottomFragment: Fragment?,
         )
     }
 

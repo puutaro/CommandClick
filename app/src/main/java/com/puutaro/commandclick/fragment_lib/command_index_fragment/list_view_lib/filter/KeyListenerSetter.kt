@@ -2,13 +2,12 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import android.view.KeyEvent
 import android.view.View
-import androidx.fragment.app.activityViewModels
+import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object KeyListenerSetter {
@@ -16,8 +15,6 @@ object KeyListenerSetter {
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
     ){
-        val context = cmdIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
         val cmdListView = binding.cmdList
@@ -26,9 +23,12 @@ object KeyListenerSetter {
                 if (event.action != KeyEvent.ACTION_DOWN ||
                     keyCode != KeyEvent.KEYCODE_ENTER
                 ) return false
+                val linearLayoutParam =
+                    cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
+                val cmdIndexFragmentWeight = linearLayoutParam.weight
                 Keyboard.hiddenKeyboardForFragment(cmdIndexFragment)
                 if(
-                    terminalViewModel.readlinesNum == ReadLines.SHORTH
+                    cmdIndexFragmentWeight == ReadLines.LONGTH
                 ) {
                     CommandListManager.execListUpdateForCmdIndex(
                         currentAppDirPath,

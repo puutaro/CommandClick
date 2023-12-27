@@ -6,10 +6,10 @@ import android.webkit.WebView
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
+import com.puutaro.commandclick.util.TargetFragmentInstance
 
 
 object TermOnLongClickListener {
@@ -53,11 +53,16 @@ object TermOnLongClickListener {
                         terminalFragment.disableShowToolbarWhenHighlight
                         == SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
                     ) return@setOnLongClickListener false
-                    val changeTargetFragment =
-                        IndexOrEditFragment(terminalFragment).select()
+                    val targetFragmentInstance = TargetFragmentInstance()
+                    val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
+                    val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+                        activity,
+                        cmdEditFragmentTag,
+                        onNoHeightZeroCheckForEdit = true
+                    )
                     listener?.onToolBarVisibleChange(
                         true,
-                        changeTargetFragment
+                        bottomFragment
                     )
                     false
                 }
