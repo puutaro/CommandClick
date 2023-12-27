@@ -258,7 +258,7 @@ object ButtonViewProducer {
         ){
             val listener =
                 context as? EditFragment.OnTermSizeLongListenerForEdit
-            listener?.onTermSizeLongForEdit()
+            listener?.onTermSizeLongForEdit(editFragment)
         }
         val execCmdAfterTrimButtonEditExecVariant =
             innerExecCmd

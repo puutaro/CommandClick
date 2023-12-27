@@ -56,7 +56,7 @@ object ExecBackstackHandle {
         }
         if(
             currentTerminalFragment == null
-            || currentBottomFragmentWeight != ReadLines.SHORTH
+            || currentBottomFragmentWeight == ReadLines.LONGTH
         ) {
             execPopBackStackImmediate(
                 activity,

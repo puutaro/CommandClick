@@ -397,7 +397,9 @@ class EditFragment: Fragment() {
     }
 
     interface OnTermSizeLongListenerForEdit {
-        fun onTermSizeLongForEdit()
+        fun onTermSizeLongForEdit(
+            editFragment: EditFragment
+        )
     }
 
     interface OnMultiSelectListenerForEdit {

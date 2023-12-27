@@ -54,7 +54,6 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
@@ -337,18 +336,20 @@ class MainActivity:
     }
 
     override fun onTermLongChangeForTerminalFragment(
-        changeTargetFragment: ChangeTargetFragment?
+        bottomFragment: Fragment?
     ) {
         ExecTermLongChangeHandlerForTerm.handle(
             this,
-            changeTargetFragment,
+            bottomFragment,
         )
     }
 
-    override fun onTermSizeLongForEdit() {
+    override fun onTermSizeLongForEdit(
+        editFragment: EditFragment
+    ) {
         ExecTermLongChangeHandlerForTerm.handle(
             this,
-            ChangeTargetFragment.CMD_VARIABLES_EDIT_FRAGMENT,
+            editFragment,
         )
     }
 

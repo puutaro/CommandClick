@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manage
 
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.IndexOrEditFragment
+import com.puutaro.commandclick.util.TargetFragmentInstance
 
 object TxtHtmlLauncher {
     fun launch(
@@ -10,6 +10,7 @@ object TxtHtmlLauncher {
         urlStr: String,
     ){
         val context = terminalFragment.context
+        val activity = terminalFragment.activity
         val binding = terminalFragment.binding
         binding.terminalWebView.loadDataWithBaseURL(
             "",
@@ -21,12 +22,16 @@ object TxtHtmlLauncher {
             "utf-8",
             null
         )
-        val changeTargetFragment =
-            IndexOrEditFragment(terminalFragment).select()
+        val targetFragmentInstance = TargetFragmentInstance()
+        val cmdEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
+        val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
+            activity,
+            cmdEditFragmentTag,
+        )
         val listener =
             context as? TerminalFragment.OnTermLongChangeListenerForTerminalFragment
         listener?.onTermLongChangeForTerminalFragment(
-            changeTargetFragment
+            bottomFragment
         )
     }
 }

@@ -28,7 +28,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.ChangeTargetFragment
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -242,7 +241,7 @@ class   TerminalFragment: Fragment() {
 
     interface OnTermLongChangeListenerForTerminalFragment {
         fun onTermLongChangeForTerminalFragment(
-            changeTargetFragment: ChangeTargetFragment?
+            bottomFragment: Fragment?
         )
     }
 

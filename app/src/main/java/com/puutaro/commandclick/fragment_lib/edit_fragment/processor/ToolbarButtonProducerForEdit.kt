@@ -179,7 +179,7 @@ class ToolbarButtonProducerForEdit(
                     }
                     val linearLayoutParam =
                         editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
-                    val isShow = linearLayoutParam.weight == ReadLines.SHORTH
+                    val isShow = linearLayoutParam.weight != ReadLines.LONGTH
                     EditLayoutViewHideShow.exec(
                         editFragment,
                         isShow

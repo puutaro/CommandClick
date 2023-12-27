@@ -61,7 +61,7 @@ class TargetFragmentInstance {
         if(
             cmdVariableEditFragment != null
             && cmdVariableEditFragment.isVisible
-            && cmdVariableEditFragment.view?.height != 0
+//            && cmdVariableEditFragment.view?.height != 0
         ) {
             return cmdVariableEditFragment
         }

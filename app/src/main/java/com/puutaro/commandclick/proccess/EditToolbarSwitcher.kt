@@ -91,7 +91,7 @@ object EditToolbarSwitcher {
                 ?: return
         when(execPlayBtnLongPress){
             EditLongPressType.WEB_SEARCH.name -> {
-                onTermSizeLongListenerForEdit.onTermSizeLongForEdit()
+                onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = true
                 cmdclickPageSearchToolBar.isVisible = false
                 cmdclickToolBar.isVisible = false
@@ -103,7 +103,7 @@ object EditToolbarSwitcher {
                 cmdPageSearchEditText.clearFocus()
             }
             EditLongPressType.PAGE_SEARCH.name -> {
-                onTermSizeLongListenerForEdit.onTermSizeLongForEdit()
+                onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = true
                 cmdclickToolBar.isVisible = false

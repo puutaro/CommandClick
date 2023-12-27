@@ -38,7 +38,7 @@ object ExecTerminalLongOrShort {
             }
         }
         param.weight = when(
-            linearLayoutParam.weight != ReadLines.SHORTH
+            linearLayoutParam.weight == ReadLines.LONGTH
         ) {
             true -> ReadLines.SHORTH
             else -> ReadLines.LONGTH

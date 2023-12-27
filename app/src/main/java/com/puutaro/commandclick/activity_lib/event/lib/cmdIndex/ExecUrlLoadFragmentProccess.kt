@@ -43,7 +43,7 @@ object ExecUrlLoadFragmentProccess {
         }
         val linearLayoutParam =
             cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
-        if(linearLayoutParam.weight != ReadLines.SHORTH) {
+        if(linearLayoutParam.weight == ReadLines.LONGTH) {
             ExecTerminalLongOrShort.open<CommandIndexFragment>(
                 cmdIndexFragmentTag,
                 supportFragmentManager,
@@ -86,7 +86,7 @@ object ExecUrlLoadFragmentProccess {
         val linearLayoutParam =
             editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
         if(
-            linearLayoutParam.weight == ReadLines.SHORTH
+            linearLayoutParam.weight != ReadLines.LONGTH
         ) return
         ExecTerminalLongOrShort.open<CommandIndexFragment>(
             cmdEditFragmentTag,

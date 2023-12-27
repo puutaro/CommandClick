@@ -24,7 +24,7 @@ object ExecSetTermSizeForCmdIndexFragment {
         val linearLayoutParam =
             binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
         when(
-            linearLayoutParam.weight == ReadLines.SHORTH
+            linearLayoutParam.weight != ReadLines.LONGTH
         ) {
             true
             -> {
