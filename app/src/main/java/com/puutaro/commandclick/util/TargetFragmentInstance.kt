@@ -71,7 +71,7 @@ class TargetFragmentInstance {
     fun getCurrentBottomFragmentInFrag(
         activity: FragmentActivity?,
         cmdVariableEditFragmentTag: String,
-        onNoHeightZeroCheckForEdit: Boolean = false,
+        onNoHeightZeroCheckForEdit: Boolean = true,
     ): Fragment? {
         if(
             activity == null

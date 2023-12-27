@@ -58,7 +58,6 @@ object TermOnLongClickListener {
                     val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
                         activity,
                         cmdEditFragmentTag,
-                        onNoHeightZeroCheckForEdit = true
                     )
                     listener?.onToolBarVisibleChange(
                         true,

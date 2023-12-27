@@ -33,7 +33,6 @@ object ToolbarHideShowWhenTermLongAndScrollSave {
                 val bottomFragment = targetFragmentInstance.getCurrentBottomFragmentInFrag(
                     activity,
                     cmdEditFragmentTag,
-                    onNoHeightZeroCheckForEdit = true
                 )
                 val bottomFragmentWeight = targetFragmentInstance.getCurrentBottomFragmentWeight(bottomFragment)
                 if(
