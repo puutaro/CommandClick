@@ -112,7 +112,6 @@ Detail is bellow.
 | Pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
 | Gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
 | Ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
-| Ocr veiwer | [ocrViewer.js](https://github.com/puutaro/ocrViewer) |  
 | Gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |  
 
 
