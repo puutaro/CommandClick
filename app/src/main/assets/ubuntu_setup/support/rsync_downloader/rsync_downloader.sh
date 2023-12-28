@@ -27,9 +27,6 @@ exec_rsync_download(){
 		*);;
 	esac
 	sleep 1
-	noti \
-		-t exit \
-		-cn "${RSYNC_DOWNLOAD_CHANNEL_NUM}"
 	kill $(\
 		ps aux \
 			| grep -v grep \
@@ -37,6 +34,10 @@ exec_rsync_download(){
 			| grep "${RSYNC_NOTI_TITLE_MESSAGE}"\
 			| awk '{print $2}' \
 	) 
+	noti \
+		-t exit \
+		-cn "${RSYNC_DOWNLOAD_CHANNEL_NUM}"
+	sleep 0.5
 	wqnoti \
 		-p "12324568" \
 		-cn "${RSYNC_DOWNLOAD_CHANNEL_NUM}" \
