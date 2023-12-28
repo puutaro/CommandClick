@@ -92,28 +92,28 @@ Detail is bellow.
 
 | Janre | builtin or addon(fannel) |
 | ------- | ---------------- |
-| web browser | builtin |  
+| Web browser | builtin |  
 | QR reader | builtin  |  
-| addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
-| browser menu | builtin |  
+| Addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
+| Browser menu | builtin |  
 | Ubuntu22.04 | builtin after installing | 
 | Ubuntu terminal | builtin when installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
-| termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
+| Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
 | Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
-| youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
-| text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
-| pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
-| news scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
-| google calendar register | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter) |  
-| clip board formater | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker) |  
-| train route seacher | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher) |  
-| file manager | [fileManager.js](https://github.com/puutaro/fileManager) |  
-| input support tool | [selectTyper.js](https://github.com/puutaro/selectTyper) |  
-| pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
-| gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
-| ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
-| ocr veiwer | [ocrViewer.js](https://github.com/puutaro/ocrViewer) |  
-| gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |  
+| Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
+| Text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
+| Pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
+| News scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
+| Google calendar register | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter) |  
+| Clip board formater | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker) |  
+| Train route seacher | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher) |  
+| File manager | [fileManager.js](https://github.com/puutaro/fileManager) |  
+| Input support tool | [selectTyper.js](https://github.com/puutaro/selectTyper) |  
+| Pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
+| Gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
+| Ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
+| Ocr veiwer | [ocrViewer.js](https://github.com/puutaro/ocrViewer) |  
+| Gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |  
 
 
 
