@@ -82,7 +82,7 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
 
- army knife Collection
+ Army knife Collection
 ----------
 
 Multiple feature is made by builtin feature or addon.   
