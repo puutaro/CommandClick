@@ -11,7 +11,7 @@
 <br>
 <br>
 
-### *Existing browsers cannot have a Swiss army knife like CommandClick.*
+### *Existing browsers cannot have a army knife like CommandClick.*
  
 <br>
 <br>
@@ -82,7 +82,7 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
 
-Swiss army knife Collection
+ army knife Collection
 ----------
 
 Multiple feature is made by builtin feature or addon.   
@@ -141,7 +141,7 @@ And most knife is provided by addon (`fannel`).
 Usage
 ------
 
-How to use swiss army knife?  
+How to use army knife?  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
@@ -149,7 +149,7 @@ How to use swiss army knife?
 For Developer
 --------
 
-You can create addon (`fannel`) with swiss army knife.  
+You can create addon (`fannel`) with army knife.  
 Each knife give you D.I.Y developement life.  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
