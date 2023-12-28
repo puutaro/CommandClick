@@ -97,7 +97,7 @@ Detail is bellow.
 | Addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
 | Browser menu | builtin |  
 | Ubuntu22.04 | builtin after installing | 
-| Ubuntu terminal | builtin when installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
+| Ubuntu terminal | builtin after installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
 | Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
 | Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
 | Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
