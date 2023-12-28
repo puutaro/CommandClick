@@ -1,6 +1,5 @@
 
 
-
 <br>    
 <br>
 <br>
@@ -9,17 +8,14 @@
 <br>
 <br>
 <br>
-
-`CommandClick` is android browser powered by ubuntu without root access and termux.  
-<br>
-<br>
-<br>
-This is "fullend" browser from backend + frontend. 
-<br>
 <br>
 <br>
 
-`CommandClick` provide you with new browser world.  
+### *Existing browsers cannot have a Swiss army knife like CommandClick.*
+ 
+<br>
+<br>
+<br>
 
 <br>
 <br>
@@ -61,10 +57,16 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-- Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
-- Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also `ubuntu`: `shell`, `python`, `golang`, `clang`, `android os cli` and etc. Therefore, this has wide spread usage
-- Existing web browsers link `QR code` to system. But `CommandClick` handle `QR code` for `P2P` file transfer, `Git clone` and `URL`, `JS`, `WIFI`, `SMS`, etc.
-- Existing web browsers cannot create original android app. But `CommandClick` can create the app just for you as low code tool.
+
+App installation
+-----  
+- Android 8+
+
+get it on belllow link  
+
+<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
+
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
 
 Screenshots
@@ -80,15 +82,41 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
 
-App installation
------  
-- Android 8+
+Swiss army knife Collection
+----------
 
-get it on belllow link  
+Multiple feature is made by builtin feature or addon.   
+Detail is bellow.  
 
-<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
+- `fannel` is super addon by CommandClick. 
 
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
+| Janre | builtin or addon(fannel) |
+| ------- | ---------------- |
+| web browser | builtin |  
+| QR reader | builtin  |  
+| addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
+| browser menu | builtin |  
+| Ubuntu22.04 | builtin after installing | 
+| Ubuntu terminal | builtin when installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
+| termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
+| Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
+| youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
+| text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
+| pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
+| news scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
+| google calendar register | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter) |  
+| clip board formater | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker) |  
+| train route seacher | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher) |  
+| file manager | [fileManager.js](https://github.com/puutaro/fileManager) |  
+| input support tool | [selectTyper.js](https://github.com/puutaro/selectTyper) |  
+| pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
+| gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
+| ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
+| ocr veiwer | [ocrViewer.js](https://github.com/puutaro/ocrViewer) |  
+| gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |  
+
+
+
 
 
 Setup Ubuntu
@@ -97,6 +125,12 @@ Setup Ubuntu
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
+
+Install addon (fannel)
+------
+
+-> [install fannel](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)
+
 
 
 Usage
