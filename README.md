@@ -88,7 +88,7 @@ Swiss army knife Collection
 Multiple feature is made by builtin feature or addon.   
 Detail is bellow.  
 
-- `fannel` is super addon by CommandClick. 
+- `fannel` is super addon by `CommandClick`. 
 
 | Janre | builtin or addon(fannel) |
 | ------- | ---------------- |
@@ -132,8 +132,8 @@ Enjoy ubuntu wide spread usage on android.
 Install addon (fannel)
 ------
 
-CommandClick has addon store.   
-And most knife is provided by addon (fannel).  
+`CommandClick` has addon store.   
+And most knife is provided by addon (`fannel`).  
 
 -> [install fannel](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)
 
@@ -150,7 +150,7 @@ How to use swiss army knife?
 For Developer
 --------
 
-You can create addon (fannel) with swiss army knife.  
+You can create addon (`fannel`) with swiss army knife.  
 Each knife give you D.I.Y developement life.  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
