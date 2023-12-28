@@ -123,7 +123,7 @@ Setup Ubuntu
 ------
 
 CommandClick has ubuntu by proot without root and termux.  
-Enjoy ubuntu wide spread usage.   
+Enjoy ubuntu wide spread usage on android.   
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
