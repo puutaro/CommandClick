@@ -19,9 +19,9 @@ CC stand for `CommandClick`
 
 ## Fannel
 
-`CommandClcik`'s app.
+`CommandClcik`'s super addon.
 In fact, java script and shell script enforced by `CommandClck`.  
-This represent that `CommandClick` is android app maker. 
+This represent that `CommandClick` is D.I.Y addon maker. 
 
 ## Fannel directory
 
