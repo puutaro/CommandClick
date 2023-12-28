@@ -122,12 +122,18 @@ Detail is bellow.
 Setup Ubuntu
 ------
 
+CommandClick has ubuntu by proot without root and termux.  
+Enjoy ubuntu wide spread usage.   
+
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
 Install addon (fannel)
 ------
+
+CommandClick has addon store.   
+And most knife is provided by addon (fannel).  
 
 -> [install fannel](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)
 
@@ -136,11 +142,16 @@ Install addon (fannel)
 Usage
 ------
 
+How to use swiss army knife?  
+
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
 For Developer
 --------
+
+You can create addon (fannel) with swiss army knife.  
+Each knife give you D.I.Y developement life.  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
 
