@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
-import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
@@ -8,9 +7,10 @@ import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentE
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.UbuntuBootManager
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -103,35 +103,12 @@ class JsUbuntu(
         argsTabSepaStr:String,
         monitorNum: Int,
     ){
-        if(
-            context == null
-        ) return
-        if(
-            !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
-        ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-        val monitorFileName = UsePath.decideMonitorName(monitorNum)
-        val backgroundCmdIntent = Intent()
-        backgroundCmdIntent.action = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
-        backgroundCmdIntent.putExtra(
-            UbuntuServerIntentExtra.backgroundShellPath.schema,
-            backgroundShellPath
+        UbuntuController.execScriptByBackground(
+            terminalFragment,
+            backgroundShellPath,
+            argsTabSepaStr,
+            monitorNum,
         )
-        backgroundCmdIntent.putExtra(
-            UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema,
-            argsTabSepaStr
-        )
-        backgroundCmdIntent.putExtra(
-            UbuntuServerIntentExtra.backgroundMonitorFileName.schema,
-            monitorFileName
-        )
-        terminalFragment.activity?.sendBroadcast(backgroundCmdIntent)
     }
 
     @JavascriptInterface
@@ -141,13 +118,14 @@ class JsUbuntu(
         if(
             cmdName.isEmpty()
         ) return
-        val intent = Intent()
-        intent.action = BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
-        intent.putExtra(
-            UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema,
-            cmdName
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action,
+            listOf(
+                UbuntuServerIntentExtra.ubuntuCroutineJobTypeListForKill.schema to
+                        cmdName
+            )
         )
-        terminalFragment.activity?.sendBroadcast(intent)
     }
 
 
@@ -173,7 +151,7 @@ class JsUbuntu(
         var retryTimesProcess = 0
         val firstSuccess = 0
         val bootFailureTimes = 50
-        UbuntuBootManager.boot(terminalFragment)
+        UbuntuController.boot(terminalFragment)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 for (i in 0..bootFailureTimes) {
@@ -268,7 +246,7 @@ class JsUbuntu(
         ){
             return
         }
-        UbuntuBootManager.boot(terminalFragment)
+        UbuntuController.boot(terminalFragment)
         runBlocking {
             withContext(Dispatchers.IO) {
                 for (i in 1..50) {

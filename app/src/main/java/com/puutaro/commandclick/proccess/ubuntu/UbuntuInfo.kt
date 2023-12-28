@@ -18,7 +18,7 @@ object UbuntuInfo {
 
     val createImageSwitch = if(
         buildConfigDebug
-    ) CreateImageSwitch.off.name
+    ) CreateImageSwitch.on.name
     else createImageSwitchOffInRelease
 
     val arm64UbuntuRootfsUrl =

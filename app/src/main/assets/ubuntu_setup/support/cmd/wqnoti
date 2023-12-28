@@ -8,8 +8,10 @@ PROCESS_PID=""
 CHANNEL_NUM=""
 CANCEL_SHELL_PATH=""
 ICON_NAME="download"
+COMP_ICON_NAME="download_done"
 IMPORTANCE="low"
 TITLE="wait.."
+COMP_MESSAGE=""
 MARK=""
 
 read_args(){
@@ -32,6 +34,10 @@ read_args(){
 			ICON_NAME="${2}"
 			shift
 			;;
+		--comp_icon-name|-cin)
+			COMP_ICON_NAME="${2}"
+			shift
+			;;
 		--importance|-i)
 			IMPORTANCE="${2}"
 			shift
@@ -42,6 +48,10 @@ read_args(){
 			;;
 		--cancel-shell-path|-cs)
 			CANCEL_SHELL_PATH="${2}"
+			shift
+			;;
+		--comp-message|-cm)
+			COMP_MESSAGE="${2}"
 			shift
 			;;
 		-*)
@@ -82,11 +92,17 @@ echo_help(){
 		print "--icon-name|-in"
 		print "\t-> notification icon macro name: detail noti -h"
 		print "[Optional]"
+		print "--comp_icon-name|-cin"
+		print "\t-> notification comp icon macro name: detail noti -h"
+		print "[Optional]"
 		print "--importance|-i"
 		print "\t-> notification importance: low (default) / high"
 		print "[Optional]"
 		print "--title|-t"
 		print "\t-> notification title"
+		print "[Optional]"
+		print "--comp-message|-cm"
+		print "\t-> complete message: remain noti on specify in finished"
 		print ""
 	}'
 	exit 0
@@ -121,6 +137,21 @@ launch_noti(){
 		--alert-once \
 		--delete "shellPath=${CANCEL_SHELL_PATH}" \
 		--button "label=CANCEL,shellPath=${CANCEL_SHELL_PATH}" \
+	>/dev/null 2>&1
+}
+
+comp_noti(){
+	local message="${1}"
+	noti \
+		-t launch \
+		-cn "${CHANNEL_NUM}" \
+		--icon-name "${COMP_ICON_NAME}" \
+		--importance "${IMPORTANCE}" \
+		--title "${message}" \
+		--message "${message}" \
+		--alert-once \
+		--delete "shellPath=${CANCEL_SHELL_PATH}" \
+		--button "label=CLOSE,shellPath=${CANCEL_SHELL_PATH}" \
 	>/dev/null 2>&1
 }
 
@@ -163,7 +194,13 @@ wait_quiz(){
 		sleep ${wait_sec}
 		current_times=$((${current_times} + 1))
 	done
-	exit_noti
+	case "${COMP_MESSAGE}" in
+		"") exit_noti
+			;;
+		*) comp_noti \
+				"${COMP_MESSAGE}"
+			;;
+	esac
 }
 
 

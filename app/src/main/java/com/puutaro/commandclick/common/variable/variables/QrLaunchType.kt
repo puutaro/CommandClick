@@ -8,6 +8,7 @@ enum class QrLaunchType(
     Javascript(WebUrlVariables.jsPrefix),
     JsDesc("jsDesc:"),
     CpFile("cpFile:"),
+    ScpDir("scpDir:"),
     WIFI("wifi:"),
     SMS("smsto:"),
     MAIL("mailto:"),

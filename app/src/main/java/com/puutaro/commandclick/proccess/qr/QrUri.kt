@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.qr
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
@@ -8,15 +9,24 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
+import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.GitDownloadService
+import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 object QrUri {
@@ -46,6 +56,11 @@ object QrUri {
                 currentAppDirPath,
                 loadConSrc,
                 isMoveCurrentDir
+            )
+            loadConSrc.startsWith(QrLaunchType.ScpDir.prefix),
+            -> execScpDir(
+                fragment,
+                loadConSrc,
             )
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix),
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix.uppercase())
@@ -114,31 +129,18 @@ object QrUri {
     ){
         val fileDownloadService = FileDownloadService::class.java
         val context = fragment.context
-        val cpFileMap = QrMapper.makeCpFileMap(cpQrString)
-        val mainUrl = QrMapper.makeMainUrl(
-            cpFileMap.get(CpFileKey.ADDRESS.key)
-        )
-        if(
-            mainUrl.isNullOrEmpty()
-        ){
-            Toast.makeText(
-                context,
-                keyMissingErrStr.format(CpFileKey.ADDRESS.key),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-        val filePath = cpFileMap.get(CpFileKey.PATH.key)
-        if(
-            filePath.isNullOrEmpty()
-        ){
-            Toast.makeText(
-                context,
-                keyMissingErrStr.format(CpFileKey.PATH.key),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
+        val cpFileMap = QrMapper.convertScanConToMap(cpQrString)
+        val mainUrlSrc = getRequireKey(
+            context,
+            cpFileMap,
+            CpFileKey.ADDRESS.key,
+        ) ?: return
+        val mainUrl = QrMapper.makeMainUrl(mainUrlSrc)
+        val filePath = getRequireKey(
+            context,
+            cpFileMap,
+            CpFileKey.PATH.key,
+        ) ?: return
         val parentDirPath =
             cpFileMap.get(CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key)
         val isMoveCurrentDir =
@@ -181,6 +183,99 @@ object QrUri {
         }
     }
 
+    private fun execScpDir(
+        fragment: Fragment,
+        cpQrString: String,
+    ) {
+        val context = fragment.context
+            ?: return
+        val scpDirMap = QrMapper.convertScanConToMap(cpQrString)
+        val dirPath = getRequireKey(
+            context,
+            scpDirMap,
+            ScpDirKey.DIR_PATH.key,
+        ) ?: return
+        val ipv4Address = getRequireKey(
+            context,
+            scpDirMap,
+            ScpDirKey.IPV4AD.key,
+        ) ?: return
+        val port = getRequireKey(
+            context,
+            scpDirMap,
+            ScpDirKey.PORT.key,
+        ) ?: return
+        val userName = getRequireKey(
+            context,
+            scpDirMap,
+            ScpDirKey.USER_NAME.key,
+        ) ?: return
+        val password = getRequireKey(
+            context,
+            scpDirMap,
+            ScpDirKey.PASSWORD.key,
+        ) ?: return
+        val ubuntuFiles = UbuntuFiles(context)
+        val argsCon = listOf(
+            "RSYNC_DIR_PATH=${dirPath}",
+            "IP_V4_ADDRESS=${ipv4Address}",
+            "PORT=${port}",
+            "USER_NAME=${userName}",
+            "PASSWORD=${password}",
+        ).joinToString(",")
+        val isUbuntuProc = LinuxCmd.isBasicProcess()
+        when(isUbuntuProc){
+            true
+            ->
+                UbuntuController.execScriptByBackground(
+                    fragment,
+                    ubuntuFiles.rsyncDownloaderShellPath.absolutePath,
+                    argsCon,
+                    2,
+                )
+            else
+            -> startRsyncUbuntuService(
+                fragment,
+                ubuntuFiles,
+                argsCon,
+            )
+        }
+    }
+
+    private fun startRsyncUbuntuService(
+        fragment: Fragment,
+        ubuntuFiles: UbuntuFiles,
+        argsCon: String,
+    ){
+        val context = fragment.context
+            ?: return
+        CoroutineScope(Dispatchers.IO).launch {
+            withContext(Dispatchers.IO) {
+                UbuntuController.bootWait(fragment)
+            }
+            try {
+                val ubuntuService = UbuntuService::class.java
+                val intent = Intent(
+                    context,
+                    ubuntuService
+                )
+                intent.putExtra(
+                    UbuntuServerIntentExtra.backgroundShellPath.schema,
+                    ubuntuFiles.rsyncDownloaderShellPath.absolutePath
+                )
+                intent.putExtra(
+                    UbuntuServerIntentExtra.backgroundArgsTabSepaStr.schema,
+                    argsCon
+                )
+                context.let {
+                    ContextCompat.startForegroundService(context, intent)
+                }
+            }catch (e: Exception){
+                LogSystems.stdErr(e.toString())
+            }
+        }
+    }
+
 
     private fun execOnGit(
         fragment: Fragment,
@@ -189,34 +284,22 @@ object QrUri {
     ){
         val gitDownloadService = GitDownloadService::class.java
         val context = fragment.context
-        val onGitMap = QrMapper.makeOnGitMap(onGitCon)
+        val onGitMap = QrMapper.convertScanConToMap(onGitCon)
         if(
             onGitMap.isEmpty()
         ) return
-        val prefix = onGitMap.get(OnGitKey.PREFIX.key)
-        if(
-            prefix.isNullOrEmpty()
-        ) {
-            Toast.makeText(
-                context,
-                keyMissingErrStr.format(OnGitKey.PREFIX.key),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
+        val prefix = getRequireKey(
+            context,
+            onGitMap,
+            OnGitKey.PREFIX.key,
+        ) ?: return
         val fannelListPath = onGitMap.get(OnGitKey.LIST_PATH.key)
         val parentDirRelativePathPATH = onGitMap.get(OnGitKey.DIR_PATH.key)
-        val fannelRawName = onGitMap.get(OnGitKey.NAME.key)
-        if(
-            fannelRawName.isNullOrEmpty()
-        ) {
-            Toast.makeText(
-                context,
-                keyMissingErrStr.format(OnGitKey.NAME.key),
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
+        val fannelRawName = getRequireKey(
+            context,
+            onGitMap,
+            OnGitKey.NAME.key,
+        ) ?: return
         val intent = Intent(
             context,
             gitDownloadService
@@ -276,7 +359,7 @@ object QrUri {
         val intent = Intent()
         intent.data = CalendarContract.Calendars.CONTENT_URI
         intent.action = Intent.ACTION_INSERT
-        val gCalendarMap = QrMapper.makeGCalendarMap(
+        val gCalendarMap = QrMapper.convertScanConToMap(
             gCalendarStr
         )
         val jsUtil = JsUtil(fragment)
@@ -372,6 +455,25 @@ object QrUri {
         } catch (e: Exception){
             LogSystems.stdErr(e.toString())
         }
+    }
+
+    private fun getRequireKey(
+        context: Context?,
+        scanConMap: Map<String, String?>,
+        keyName: String,
+    ): String? {
+        val targetValue = scanConMap.get(keyName)
+        if(
+            targetValue.isNullOrEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                keyMissingErrStr.format(keyName),
+                Toast.LENGTH_SHORT
+            ).show()
+            return null
+        }
+        return targetValue
     }
 
     private fun sendSms(

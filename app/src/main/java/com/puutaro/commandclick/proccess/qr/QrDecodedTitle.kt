@@ -27,6 +27,8 @@ object QrDecodedTitle {
             scanCon.startsWith(QrLaunchType.CpFile.prefix) -> {
                 createCopyFileTitle(scanCon)
             }
+            scanCon.startsWith(QrLaunchType.ScpDir.prefix)
+            -> createScpDirTitle(scanCon)
             scanCon.startsWith(QrLaunchType.JsDesc.prefix)
             -> extractTitleForJsDesc(scanCon)
             scanCon.startsWith(QrLaunchType.WIFI.prefix),
@@ -52,7 +54,7 @@ object QrDecodedTitle {
     private fun createCopyFileTitle(
         scanCon: String
     ): String {
-        val cpFileMap = QrMapper.makeCpFileMap(scanCon)
+        val cpFileMap = QrMapper.convertScanConToMap(scanCon)
         val filePath = cpFileMap.get(CpFileKey.PATH.key)
         if(
             filePath.isNullOrEmpty()
@@ -60,6 +62,21 @@ object QrDecodedTitle {
             return scanCon.take(displayTitleTextLimit)
         }
         return "Copy from phone ok?: path: ${filePath}".take(
+            displayTitleTextLimit
+        )
+    }
+
+    private fun createScpDirTitle(
+        scanCon: String
+    ): String {
+        val scpDirMap = QrMapper.convertScanConToMap(scanCon)
+        val dirPath = scpDirMap.get(ScpDirKey.DIR_PATH.key)
+        if(
+            dirPath.isNullOrEmpty()
+        ){
+            return scanCon.take(displayTitleTextLimit)
+        }
+        return "Scp from phone ok?: path: ${dirPath}".take(
             displayTitleTextLimit
         )
     }
@@ -97,7 +114,7 @@ object QrDecodedTitle {
     }
 
     private fun createGcalendarTitle(scanCon: String): String {
-        val gcalendarMap = QrMapper.makeGCalendarMap(scanCon)
+        val gcalendarMap = QrMapper.convertScanConToMap(scanCon)
         val title = gcalendarMap.get(GCalendarKey.TITLE.key)
             ?: return scanCon.take(displayTitleTextLimit)
         return "calendar: $title".take(displayTitleTextLimit)
@@ -106,7 +123,7 @@ object QrDecodedTitle {
     private fun createOnGitTitle(
         scanCon: String
     ): String {
-        val onGitMap = QrMapper.makeOnGitMap(scanCon)
+        val onGitMap = QrMapper.convertScanConToMap(scanCon)
         val title = onGitMap.get(OnGitKey.NAME.key)
             ?: return scanCon.take(displayTitleTextLimit)
         return "Git download: $title".take(displayTitleTextLimit)

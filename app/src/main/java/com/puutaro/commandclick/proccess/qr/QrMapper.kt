@@ -72,51 +72,16 @@ object QrMapper {
         return mailAdMap + subjectBodyMap
     }
 
-    fun makeCpFileMap(
-        cpCpFileSrcCon: String
+    fun convertScanConToMap(
+        scanCon: String
     ): Map<String, String?> {
-        val cpCpFileMapSrcStr =
-            cpCpFileSrcCon
+        val scanConMapSrcStr =
+            scanCon
                 .split(":")
                 .filterIndexed { index, _ ->
                     index > 0
                 }.joinToString(":")
-        return cpCpFileMapSrcStr.split(";").map {
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
-            )
-        }.toMap()
-    }
-
-
-    fun makeOnGitMap(
-        onGitSrcCon: String
-    ): Map<String, String?> {
-        val onGitMapSrcStr =
-            onGitSrcCon
-                .split(":")
-                .filterIndexed { index, _ ->
-                    index > 0
-                }.joinToString(":")
-        return onGitMapSrcStr.split(";").map {
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
-            )
-        }.toMap()
-    }
-
-    fun makeGCalendarMap(
-        gCalendarStr: String
-    ): Map<String, String?> {
-        val gCalendarMapSrcStr =
-            gCalendarStr
-                .split(":")
-                .filterIndexed { index, _ ->
-                    index > 0
-                }.joinToString(":")
-        return gCalendarMapSrcStr.split(";").map {
+        return scanConMapSrcStr.split(";").map {
             CcScript.makeKeyValuePairFromSeparatedString(
                 it,
                 "="
@@ -139,6 +104,16 @@ object QrMapper {
     }
 }
 
+
+enum class ScpDirKey(
+    val key: String
+){
+    DIR_PATH("dirPath"),
+    IPV4AD("ipv4add"),
+    PORT("port"),
+    USER_NAME("userName"),
+    PASSWORD("password"),
+}
 enum class CpFileKey(
     val key: String
 ){

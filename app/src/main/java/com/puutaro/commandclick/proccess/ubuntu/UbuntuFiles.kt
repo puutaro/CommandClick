@@ -42,6 +42,10 @@ class UbuntuFiles(
         File("${filesOneRootfsSupportDir.absolutePath}/proc")
     val filesOneRootfsSupportCmdDir =
         File("${filesOneRootfsSupportDir.absolutePath}/cmd")
+    val rsyncDownloaderDirPath =
+        File("${filesOneRootfsSupportDir.absolutePath}/rsync_downloader")
+    val rsyncDownloaderShellPath =
+        File("${rsyncDownloaderDirPath.absolutePath}/rsync_downloader.sh")
     val ubuntuManagerDirPath =
         File("${filesOneRootfsSupportDir.absolutePath}/ubuntu_manager")
     val ubuntuManagerShellPath =
