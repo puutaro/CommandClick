@@ -11,7 +11,7 @@
 <br>
 <br>
 
-### *Existing browsers cannot have a army knife like CommandClick.*
+### *Existing browsers cannot have "army knife" like CommandClick.*
  
 <br>
 <br>
