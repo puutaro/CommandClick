@@ -60,7 +60,7 @@ Table of Contents
 * [Developer page](#developer-page)
 * [CommandClick repository](#commandclick-repository)
 * [Generally TroubleShooting](#generally-troubleshooting)
-* [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
+* [Ubuntu, debian or widnows version](#ubuntu-debian-or-widnows-version)
 
 ## Ubuntu
 ----------------
@@ -173,7 +173,7 @@ Display qr code dialog
 1. Long click QR code
 2. Click bellow like image
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/726cbf62-ab39-4647-8567-22de40b51d24" width="500"> 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/3e353332-c974-48df-90f4-f1365d074bd9" width="500"> 
 
 
 ### Body click
@@ -289,7 +289,7 @@ Edit `statup script` contents.
 [Procedure]  
 1. Long press right buttom gear button  
 2. Click `edit_startup` in popup menu
-3. 
+
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">
 
 ### No scroll save url
@@ -313,8 +313,8 @@ Enable scan bellow type qr
 | TEL |call number |  
 | GOOGLE CALENDAR | register google calendar |  
 | URL | launch url |  
-| GIT CLONE | git clone |  
-| FILE DOWNLOAD | file download by p2p |  
+| GIT CLONE | git clone <br> ref: [Git clone QR](#Image long click) |  
+| FILE DOWNLOAD | file download by p2p <br> ref: [Fannel upload by P2P](#Image long click) |  
 | SCP_DOWNLOAD | file downlaod by rsync |  
 | JAVASCRIPT | Load javascript |  
 
@@ -573,7 +573,7 @@ Generally TroubleShooting
 
 
 
-Ubuntu, debian and windows version
+Ubuntu, debian and windows version <a id="ubuntu-debian-or-widnows-version"></a>
 -----------------
 
 -> [ubuntu, debian or windows version](https://github.com/puutaro/cmdclick)  
