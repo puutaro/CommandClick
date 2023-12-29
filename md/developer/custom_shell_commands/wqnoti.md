@@ -9,8 +9,10 @@ Table
   * [--channel-num, -cn](#channel-num)
   * [--importance, -i](#importance)
   * [--icon-name, -in](#icon-name)
+  * [--comp_icon-name, -cin](#comp-icon-name)
   * [--title, -t](#title)
   * [--cancel-shell-path, -cs](#cancel-shell-path)
+  * [--comp-message, -cm](#comp-message)
 * [example](#example)
 
 ## Overview
@@ -48,6 +50,14 @@ Wait target pid
 
 - default icon macro name `download`
 
+
+### [Optional] --comp_icon-name, -cin <a id="comp-icon-name"></a>
+
+-> [About icon name](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md#icon_name)
+
+- default icon macro name `download_done`
+
+
 ### [Optional] --title, -t <a id="title"></a>
 
 [About title](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md#title)
@@ -57,6 +67,12 @@ Wait target pid
 [About delete](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md#delete)
 
 - with `CANCEL` button action
+
+
+### [Optional] --comp-message, -cm <a id="comp-message"></a>
+
+process comp message
+When specified this message, comp noti remain 
 
 ## example
 

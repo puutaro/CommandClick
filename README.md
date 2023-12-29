@@ -1,6 +1,5 @@
 
 
-
 <br>    
 <br>
 <br>
@@ -9,17 +8,14 @@
 <br>
 <br>
 <br>
-
-`CommandClick` is android browser powered by ubuntu without root access and termux.  
-<br>
-<br>
-<br>
-This is "fullend" browser from backend + frontend. 
-<br>
 <br>
 <br>
 
-`CommandClick` provide you with new browser world.  
+### *Existing browsers cannot have a army knife like CommandClick.*
+ 
+<br>
+<br>
+<br>
 
 <br>
 <br>
@@ -61,10 +57,21 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-- Existing web browsers mainly has tab feature. But `CommandClick`'core is  history search. Therefore, you easly restore, load, and check my history.
-- Existing web browsers support normal javascript. But `CommandClick` enforce javascript, and interact with not only web but also `ubuntu`: `shell`, `python`, `golang`, `clang`, `android os cli` and etc. Therefore, this has wide spread usage
-- Existing web browsers link `QR code` to system. But `CommandClick` handle `QR code` for `P2P` file transfer, `Git clone` and `URL`, `JS`, `WIFI`, `SMS`, etc.
-- Existing web browsers cannot create original android app. But `CommandClick` can create the app just for you as low code tool.
+Existing browsers cannot support multiple usecase, but `CommandClick` can do.  
+Existing browsers cannot has Ubuntu itself, but `CommandClick` can do.  
+Existing browsers cannot develop D.I.Y addon by combining multiple features, but `CommandClick` can do.  
+
+
+
+App installation
+-----  
+- Android 8+
+
+get it on belllow link  
+
+<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
+
+<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
 
 
 Screenshots
@@ -80,33 +87,76 @@ Screenshots
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7"><img src="https://github.com/puutaro/CommandClick/assets/55217593/3f1df823-e4ee-45ff-aa2f-c17bec4752d7" width="30%" /></a> -->
 
 
-App installation
------  
-- Android 8+
+ Army knife Collection
+----------
 
-get it on belllow link  
+Multiple feature is made by builtin or addon.   
+Detail is bellow.  
 
-<a href="https://github.com/puutaro/CommandClick/releases" target="_blank"><img src="https://img.shields.io/github/v/release/puutaro/CommandClick"  width="170"></a>　　
+- `fannel` is super addon by `CommandClick`. 
 
-<a href="https://apt.izzysoft.de/fdroid/index/apk/com.puutaro.commandclick/" target="_blank"><img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170"></a>　　
+| Janre | builtin or addon(fannel) |
+| ------- | ---------------- |
+| Web browser | builtin |  
+| QR reader | builtin  |  
+| File transfer | builtin by QR reader | 
+| Addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
+| Browser menu | builtin |  
+| Ubuntu22.04 | builtin after installing | 
+| Ubuntu terminal | builtin after installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
+| Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
+| Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
+| Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
+| Text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
+| Pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
+| News scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
+| Google calendar register | [gCalendarFormatter.js](https://github.com/puutaro/gCalendarFormatter) |  
+| Clip board formater | [clipFormatMaker.js](https://github.com/puutaro/clipFormatMaker) |  
+| Train route seacher | [japanRouteSeacher.js](https://github.com/puutaro/japanRouteSearcher) |  
+| File manager | [fileManager.js](https://github.com/puutaro/fileManager) |  
+| Input support tool | [selectTyper.js](https://github.com/puutaro/selectTyper) |  
+| Pocket web search | [webSearcher.js](https://github.com/puutaro/webSearcher) | 
+| Gpt3.5 client | askGpt35.js (builtin) <br> [cmdGpt35.js](https://github.com/puutaro/cmdGpt35) |  
+| Ascii art maker  | [image2AsciiArt.js](https://github.com/puutaro/image2AsciiArt) |  
+| Gmail draft saver | [sendToGmail.js](https://github.com/puutaro/sendClipToGmail) |  
+
+
+
 
 
 Setup Ubuntu
 ------
 
+CommandClick has ubuntu by proot without root and termux.  
+Enjoy ubuntu wide spread usage on android.   
+
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
 
 -> [More detail](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#setup-ubuntu)
 
+Install addon (fannel)
+------
+
+`CommandClick` has addon store.   
+And most knife is provided by addon (`fannel`).  
+
+-> [install fannel](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel)
+
+
 
 Usage
 ------
+
+How to use army knife?  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
 For Developer
 --------
+
+You can create addon (`fannel`) with army knife.  
+Each knife give you D.I.Y developement life.  
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
 
