@@ -20,6 +20,7 @@ import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -60,6 +61,7 @@ object QrUri {
             loadConSrc.startsWith(QrLaunchType.ScpDir.prefix),
             -> execScpDir(
                 fragment,
+                currentAppDirPath,
                 loadConSrc,
             )
             loadConSrc.startsWith(QrLaunchType.WIFI.prefix),
@@ -185,16 +187,21 @@ object QrUri {
 
     private fun execScpDir(
         fragment: Fragment,
+        currentAppDirPath: String,
         cpQrString: String,
     ) {
         val context = fragment.context
             ?: return
         val scpDirMap = QrMapper.convertScanConToMap(cpQrString)
-        val dirPath = getRequireKey(
+        val srcDirPath = getRequireKey(
             context,
             scpDirMap,
             ScpDirKey.DIR_PATH.key,
         ) ?: return
+        val destiDirPath = CcPathTool.convertAppDirPathToLocal(
+            srcDirPath,
+            currentAppDirPath,
+        )
         val ipv4Address = getRequireKey(
             context,
             scpDirMap,
@@ -217,7 +224,8 @@ object QrUri {
         ) ?: return
         val ubuntuFiles = UbuntuFiles(context)
         val argsCon = listOf(
-            "RSYNC_DIR_PATH=${dirPath}",
+            "SRC_DIR_PATH=${srcDirPath}",
+            "DESTI_DIR_PATH=${destiDirPath}",
             "IP_V4_ADDRESS=${ipv4Address}",
             "PORT=${port}",
             "USER_NAME=${userName}",
