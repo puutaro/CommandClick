@@ -155,23 +155,25 @@ Above same.
 
 ### Image click
 
-### Description
+#### Description
 
 Display description for script 
 
 [Procedure]  
-1. Long press list item
-2. Click `utility` -> `description` in menu 
-
-or
-
-
-1. Click thumbnail
+1. Click QR code
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
   
 
 ### Image long click
+
+Display qr code dialog
+
+[Procedure]  
+1. Long click QR code
+2. Click bellow like image
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/726cbf62-ab39-4647-8567-22de40b51d24" width="500"> 
 
 
 ### Body click
@@ -197,21 +199,13 @@ Edit script.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e5ac7e04-a506-4c3d-b7f7-5505ac6f7b03" width="400">  
 
-#### Write
-
-Edit script by editor  
-
-[Procedure]  
-1. Long press list item
-2. Click `write` in menu
-  
 #### Delete
 
 Delete script  
 
 [Procedure]  
 1. Long press list item
-2. Click `utility` -> `delete` in menu
+2. Click `Utility` -> `delete` in menu
 
 
 #### Kill
@@ -220,7 +214,7 @@ Kill proccess
   
 [Procedure]  
 1. Long press list item
-2. Click `utility` -> `kill` in menu
+2. Click `Utility` -> `kill` in menu
 3. Select kill type
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/72d1f628-ee6f-43eb-8e8c-6b43860ec03b" width="300">  
@@ -233,11 +227,25 @@ Kill proccess
 |  `kill this process` | Kill this fannel(script) process  |
 | `select kill` | Kill process selected from process list dialog  |
 
-  
 
 ### Description
 
--> [Description](#description)
+Display description for script 
+
+[Procedure]  
+1. Long press list item
+2. Click `Utility` -> `Description` in menu
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
+  
+#### Write
+
+Edit script by editor  
+
+[Procedure]  
+1. Long press list item
+2. Click `Utility` -> `write` in menu
+  
 
 ### Copy file
 
@@ -245,7 +253,7 @@ Copy file for script
   
 [Procedure]  
 1. Long press list item
-2. Click `copy` -> `copy file` in menu 
+2. Click `Utility` -> `copy file` in menu 
   
   
 ### Copy file path
@@ -254,7 +262,7 @@ Copy file path for script
 
 [Procedure]  
 1. Long press list item
-2. Click `copy` -> `copy file path` in menu
+2. Click `Utility` -> `copy file path` in menu
 
 ## Settings
 -----------------
