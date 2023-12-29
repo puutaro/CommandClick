@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
@@ -44,19 +45,23 @@ class LongPressForSrcAnchor(
         if(
             !File(srcAnchorMenuFilePath).isFile
         ) return
-
-        val menuList = ReadText(
-            srcAnchorLongPressMenuDirPath,
-            srcAnchorLongPressMenuFileName
-        ).textToList().map {
-            it to icons8Wheel
+        val longPressScriptList = LongPressMenuTool.makeLongPressScriptList(
+            terminalFragment,
+            ReadText(
+                srcAnchorLongPressMenuDirPath,
+                srcAnchorLongPressMenuFileName
+            ).readText()
+        )
+        val menuList = longPressScriptList.map {
+            File(it).name to icons8Wheel
         }
 
         if(
             menuList.size == 1
         ){
-            menuScriptHandler(
+            execJsFile(
                 menuList.first().first,
+                longPressScriptList,
                 longPressLinkUrl,
                 currentUrl,
             )
@@ -90,6 +95,7 @@ class LongPressForSrcAnchor(
 
         setListView(
             menuList,
+            longPressScriptList,
             longPressLinkUrl,
             currentUrl,
         )
@@ -106,6 +112,7 @@ class LongPressForSrcAnchor(
 
     private fun setListView(
         menuList: List<Pair<String, Int>>,
+        longPressScriptList: List<String>,
         longPressLinkUrl: String,
         currentUrl: String,
     ) {
@@ -122,6 +129,7 @@ class LongPressForSrcAnchor(
         subMenuListView.adapter = subMenuAdapter
         invokeListItemSetClickListenerForListDialog(
             subMenuListView,
+            longPressScriptList,
             longPressLinkUrl,
             currentUrl,
         )
@@ -129,6 +137,7 @@ class LongPressForSrcAnchor(
 
     private fun invokeListItemSetClickListenerForListDialog(
         dialogListView: ListView,
+        longPressScriptList: List<String>,
         longPressLinkUrl: String,
         currentUrl: String,
     ) {
@@ -140,8 +149,9 @@ class LongPressForSrcAnchor(
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-            menuScriptHandler(
+            execJsFile(
                 selectedScript,
+                longPressScriptList,
                 longPressLinkUrl,
                 currentUrl,
             )
@@ -149,27 +159,24 @@ class LongPressForSrcAnchor(
         }
     }
 
-    private fun menuScriptHandler(
-        selectedScript: String,
-        longPressLinkUrl: String,
-        currentUrl: String,
-    ){
-        execJsFile(
-            selectedScript,
-            longPressLinkUrl,
-            currentUrl,
-        )
-    }
-
     private fun execJsFile(
         selectedScript: String,
+        longPressScriptList: List<String>,
         longPressLinkUrl: String,
         currentUrl: String,
     ){
-        val jsContentsListSource = ReadText(
+        val selectedScriptNameOrPath = longPressScriptList.filter {
+            File(it).name == selectedScript
+        }.firstOrNull() ?: return
+        val selectedScriptNameOrPathObj = File(selectedScriptNameOrPath)
+        val execJsPath = LongPressMenuTool.makeExecJsPath(
+            terminalFragment,
             currentAppDirPath,
-            selectedScript,
-        ).readText()
+            selectedScriptNameOrPathObj,
+        )
+        val jsContentsListSource = LongPressMenuTool.makeJsConSrc(
+            execJsPath
+        )
             .replace(
                 CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL,
                 longPressLinkUrl
@@ -181,7 +188,7 @@ class LongPressForSrcAnchor(
             .split("\n")
         val loadLongPressJsCon = JavaScriptLoadUrl.make(
             context,
-            "${currentAppDirPath}/${selectedScript}",
+            execJsPath,
             jsContentsListSource
         ) ?: return
         ExecJsLoad.jsUrlLaunchHandler(

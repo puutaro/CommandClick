@@ -20,6 +20,7 @@ import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.BitmapTool
 import com.puutaro.commandclick.util.CcPathTool
@@ -123,7 +124,7 @@ object QrDialogMethod {
         }
     }
 
-    private fun makeCpFileQrStr(
+    fun makeCpFileQrStr(
         fragment: Fragment,
         currentAppDirPath: String,
         fannelName: String,
@@ -143,12 +144,39 @@ object QrDialogMethod {
                 ).joinToString(";")
             }
             else -> {
-                QrLaunchType.CpFile.prefix + listOf(
-                    "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
-                    "${CpFileKey.PATH.key}=$currentAppDirPath/$fannelRawName",
-                ).joinToString(";")
+                makeCpFileQrNormal(
+                    fragment,
+                    "$currentAppDirPath/$fannelRawName",
+                )
             }
         }
+    }
+
+    fun makeCpFileQrNormal(
+        fragment: Fragment,
+        path: String,
+    ): String {
+        val context = fragment.context
+        val ipV4Address = NetworkTool.getIpv4Address(context)
+        return QrLaunchType.CpFile.prefix + listOf(
+            "${CpFileKey.ADDRESS.key}=${ipV4Address}:${UsePort.COPY_FANNEL_PORT.num}",
+            "${CpFileKey.PATH.key}=$path",
+        ).joinToString(";")
+    }
+
+    fun makeScpDirQrStr(
+        fragment: Fragment,
+        dirPath: String,
+    ): String {
+        val context = fragment.context
+        val ipV4Address = NetworkTool.getIpv4Address(context)
+        return QrLaunchType.ScpDir.prefix + listOf(
+            "${ScpDirKey.IPV4AD.key}=${ipV4Address}",
+            "${ScpDirKey.PORT.key}=${UsePort.DROPBEAR_SSH_PORT.num}",
+            "${ScpDirKey.DIR_PATH.key}=$dirPath",
+            "${ScpDirKey.USER_NAME.key}=${UbuntuInfo.user}",
+            "${ScpDirKey.PASSWORD.key}=${UbuntuInfo.user}",
+        ).joinToString(";")
     }
 
     private fun setShareButton(

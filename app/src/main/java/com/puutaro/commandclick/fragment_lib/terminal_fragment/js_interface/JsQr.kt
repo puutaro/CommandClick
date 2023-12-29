@@ -1,9 +1,11 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
+import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
@@ -15,18 +17,22 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoPadd
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
+import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.QrUri
+import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.Random
 
 
@@ -39,6 +45,22 @@ class JsQr(
         terminalFragment,
         terminalFragment.currentAppDirPath
     )
+
+    @JavascriptInterface
+    fun launchUploader(){
+        val intent = Intent(
+            context,
+            FileUploadService::class.java
+        )
+        intent.putExtra(
+            FileUploadExtra.CURRENT_APP_DIR_PATH_FOR_FILE_UPLOAD.schema,
+            terminalFragment.currentAppDirPath
+        )
+        context?.let {
+            ContextCompat.startForegroundService(context, intent)
+        }
+    }
+
     @JavascriptInterface
     fun scanFromImage(
         qrImagePath: String
@@ -141,6 +163,47 @@ class JsQr(
         }catch(e: Exception){
             LogSystems.stdErr(e.toString())
         }
+    }
+
+    @JavascriptInterface
+    fun makeScpQrSrcStr(dirPath: String): String {
+        return QrDialogMethod.makeScpDirQrStr(
+            terminalFragment,
+            dirPath
+        )
+    }
+
+    @JavascriptInterface
+    fun makeCpFileQr(
+        path: String,
+    ): String {
+        return QrDialogMethod.makeCpFileQrNormal(
+            terminalFragment,
+            path,
+        )
+    }
+
+    @JavascriptInterface
+    fun saveQrImage(
+        srcQrStr: String,
+        savePath: String,
+    ){
+        val drawable =
+            QrLogo(terminalFragment)
+                .createMonochrome(
+                    srcQrStr
+                ) ?: return
+        val qrBitMap = QrLogo.toBitMapWrapper(drawable)
+            ?: return
+        val savePathObj = File(savePath)
+        val parentDirPath = savePathObj.parent
+            ?: return
+        val imageFileName = savePathObj.name
+        FileSystems.savePngFromBitMap(
+            parentDirPath,
+            imageFileName,
+            qrBitMap
+        )
 
     }
 

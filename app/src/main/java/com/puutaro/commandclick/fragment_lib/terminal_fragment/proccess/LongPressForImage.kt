@@ -12,6 +12,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
@@ -44,17 +45,23 @@ class LongPressForImage(
         if(
             !File(imageMenuFilePath).isFile
         ) return
-        val menuList = ReadText(
-            imageLongPressMenuDirPath,
-            imageLongPressMenuFileName
-        ).textToList().map {
-            it to icons8Wheel
+        val longPressScriptList =
+            LongPressMenuTool.makeLongPressScriptList(
+                terminalFragment,
+                ReadText(
+                    imageLongPressMenuDirPath,
+                    imageLongPressMenuFileName
+                ).readText()
+            )
+        val menuList = longPressScriptList.map {
+            File(it).name to icons8Wheel
         }
         if(
             menuList.size == 1
         ){
-            menuScriptHandler(
+            execJsFile(
                 menuList.first().first,
+                longPressScriptList,
                 longPressImageUrl,
                 currentUrl,
             )
@@ -88,6 +95,7 @@ class LongPressForImage(
 
         setListView(
             menuList,
+            longPressScriptList,
             longPressImageUrl,
             currentUrl,
         )
@@ -105,6 +113,7 @@ class LongPressForImage(
 
     private fun invokeListItemSetClickListenerForListDialog(
         dialogListView: ListView,
+        longPressScriptList: List<String>,
         longPressImageUrl: String,
         currentUrl: String,
     ) {
@@ -116,8 +125,9 @@ class LongPressForImage(
             val menuListAdapter = dialogListView.adapter as SubMenuAdapter
             val selectedScript = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-            menuScriptHandler(
+            execJsFile(
                 selectedScript,
+                longPressScriptList,
                 longPressImageUrl,
                 currentUrl,
             )
@@ -127,6 +137,7 @@ class LongPressForImage(
 
     private fun setListView(
         menuList: List<Pair<String, Int>>,
+        longPressScriptList: List<String>,
         longPressImageUrl: String,
         currentUrl: String,
     ) {
@@ -143,32 +154,31 @@ class LongPressForImage(
         subMenuListView.adapter = subMenuAdapter
         invokeListItemSetClickListenerForListDialog(
             subMenuListView,
+            longPressScriptList,
             longPressImageUrl,
             currentUrl,
         )
     }
 
-    private fun menuScriptHandler(
-        selectedScript: String,
-        longPressImageUrl: String,
-        currentUrl: String,
-    ){
-        execJsFile(
-            selectedScript,
-            longPressImageUrl,
-            currentUrl,
-        )
-    }
 
     private fun execJsFile(
         selectedScript: String,
+        longPressScriptList: List<String>,
         longPressImageUrl: String,
         currentUrl: String,
     ){
-        val jsContentsListSource = ReadText(
+        val selectedScriptNameOrPath = longPressScriptList.filter {
+            File(it).name == selectedScript
+        }.firstOrNull() ?: return
+        val selectedScriptNameOrPathObj = File(selectedScriptNameOrPath)
+        val execJsPath = LongPressMenuTool.makeExecJsPath(
+            terminalFragment,
             currentAppDirPath,
-            selectedScript,
-        ).readText()
+            selectedScriptNameOrPathObj,
+        )
+        val jsContentsListSource = LongPressMenuTool.makeJsConSrc(
+            execJsPath
+        )
             .replace(
                 CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL,
                 longPressImageUrl
@@ -180,7 +190,7 @@ class LongPressForImage(
             .split("\n")
         val loadLongPressJsCon = JavaScriptLoadUrl.make(
             context,
-            "${currentAppDirPath}/${selectedScript}",
+            execJsPath,
             jsContentsListSource
         ) ?: return
         ExecJsLoad.jsUrlLaunchHandler(
