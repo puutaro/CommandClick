@@ -90,7 +90,7 @@ Screenshots
  Army knife Collection
 ----------
 
-Multiple feature is made by builtin feature or addon.   
+Multiple feature is made by builtin or addon.   
 Detail is bellow.  
 
 - `fannel` is super addon by `CommandClick`. 
