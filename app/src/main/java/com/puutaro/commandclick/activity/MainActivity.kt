@@ -14,6 +14,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_NO
 import androidx.fragment.app.Fragment
 import com.abdeveloper.library.MultiSelectModel
 import com.anggrayudi.storage.SimpleStorageHelper
@@ -158,6 +160,7 @@ class MainActivity:
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
         savedInstanceStateVal = savedInstanceState
         val actionBar = supportActionBar
         actionBar?.hide()
