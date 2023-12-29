@@ -102,8 +102,8 @@ Detail is bellow.
 | File transfer | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader <br> [fileManager.js](https://github.com/puutaro/fileManager) | 
 | Addon store | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel) <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
 | Browser menu | [builtin](https://github.com/puutaro/selectTyper) |  
-| Ubuntu22.04 | builtin after installing | 
-| Ubuntu terminal | builtin after installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
+| Ubuntu22.04 | builtin after [installing](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu) | 
+| Ubuntu terminal | builtin after [installing ubuntu](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu) <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
 | Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
 | Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
 | Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
