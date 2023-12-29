@@ -13,10 +13,13 @@ Table of Contents
 -----------------
 <!-- vim-markdown-toc GFM -->
 
-* [Usage](#usage)
+* [Ubuntu](#ubuntu)
+  * [Setup ubuntu](#setup-ubuntu)
+  * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
+* [Historys](#history)
   * [History](#history)
   * [Url history](#url-history)
-  * [Change term size](#change-term-size)
+* [Fannel(addon) List](#fannel-list)
   * [Run](#run)
   * [Edit](#edit)
   * [Write](#write)
@@ -24,20 +27,21 @@ Table of Contents
   * [Description](#description)
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
-  * [Add](#add)
-  * [Select term](#select-term)
-  * [Change app dir](#change-app-dir)
-  * [Create shortcut](#create-shortcut)
-  * [Setup ubuntu](#setup-ubuntu)
-  * [Backup ubuntu rootfs](#backup-ubuntu-rootfs)
+* [Settings]
+  * [Change term size](#change-term-size)
+  * [Edit startup](#edit-startup)
+  * [No scroll save url](#no-scroll-save-url)
   * [Install fannel](#install-fannel)
+  * [Scan QR](#scan-qr)
+  * [Reflesh monitor](#reflesh-monitor)
+  * [Select monitor](#select-monitor)
+  * [Restart ubuntu](#restart-ubuntu)
+  * [Add](#add)
+  * [App dir manager](#app-dir-manager)
+  * [Create shortcut](#create-shortcut)
+  * [Termux setting](#termux-setting)
   * [Config](#config)
     * [Change ubuntu sleep minutes](change-ubuntu-sleep-minutes)
-  * [Termux setting](#termux-setting)
-  * [Edit startup](#edit-startup)
-  * [Restart ubuntu](#restart-ubuntu)
-  * [No scroll save url](#no-scroll-save-url)
-  * [Term reflesh](#term-reflesh)
   * [Forward](#forward)
   * [Search mode](#search-mode)
     * [Terminal filter](#terminal-filter)
@@ -54,19 +58,74 @@ Table of Contents
 * [Generally TroubleShooting](#generally-troubleshooting)
 * [Ubuntu debian or widnows version](#ubuntu-debian-or-widnows-version)
 
+## Ubuntu
+----------------
+
+### Setup ubuntu
+
+'CommandClick' is enable ubuntu as backend with sound.
+
+[Procedure]  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
+
+1. Press `Setup` button in Notification  
+2. Complete about 5 minutes
+3. Press `Terminal` button 
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
+
+- `Restart` -> Press button when ubuntu not working
+- ssh username & password: `cmdclick`
+
+ex)
 
 
-Usage
------------------
+```sh.sh
 
-### Index mode
+sshpass -p cmdclick \
+	ssh -p 10022 "cmdclick@${android ipv4 address}"
 
-This mode is main mode. Top is `web terminal view`, down is `script name list`, bottom is toolbar.  
+```
+
+### Backup ubuntu rootfs
+
+'CommandClick' is enable current rootfs backup.
+
+[Procedure]  
+
+
+1. Press `BACKUP` button in Notification  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/f2e0b09b-3724-410a-b3a5-38ac5ed96e3d" width="250">  
+
+2. Launch ubuntu rootfs backup manager  
+3. Press `BACKUP` button  
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/677a7634-0145-4569-824b-457a0d602c79" width="250">  
+
+4. Wait backup comp  
+
+5. Press `INIT` button  
+
+6. Press `RESTORE`  
+  
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/15bfaadb-bb6d-454b-86a0-f4f11c196423" width="250">  
+
+
+
+## Index mode
+---------------
+
+This mode is main mode. Top is `web monitor view`, down is `fannel(addon) name list`, bottom is toolbar.  
 Main usage is executoin script by net surfing and list script clicking, other usage is maintenance script or app by longpress or toolbar.  
   
   
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/12ebcad4-b447-4c5f-ad4c-3ad1a685d606" width="400">  
 
+
+## Historys
+---------------
 
 
 ### History
@@ -88,15 +147,7 @@ Above same.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e27ca648-e436-4b8d-a95f-3e17e5c06914" width="400">  
 
-
-### Change term size
-
-Terminal size change.  
-  
-[Procedure]  
-1. Click toolbar right setting button
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
+## Fannel(addon) List <a id="fannel-list"></a>
 
 
 ### Run
@@ -190,111 +241,41 @@ Copy file path for script
 1. Long press list item
 2. Click `copy` -> `copy file path` in menu
 
+## Settings
+-----------------
 
-### Add
+Mainly, setting browser and addon (fannel) 
 
-Add new script.  
-At the same time, if you installed code editor, edit new file.    
+
+### Change term size
+
+Terminal size change.  
   
-More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+[Procedure]  
+1. Click toolbar right setting button
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/7a7eed05-c669-499a-b7c4-7b59f2947e09" width="400">  
+
+
+### Edit startup
+
+Edit `statup script` contents.  
+`statup script` is setting script for `current app directory`. So this setting directly link to usability.    
+[ref](#startup-script)
   
 [Procedure]  
 1. Long press right buttom gear button  
-2. Click `add` in popup menu 
+2. Click `edit_startup` in popup menu
+3. 
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">
 
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/2e73099f-b2f7-4241-80e9-1a28a4a4a100" width="400">  
+### No scroll save url
 
-### Select term
-
-[Procedure]  
-1. Long press right buttom gear button  
-2. Click `select term` in popup menu 
-3. select term from term list
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/b49cc5ff-27e4-4362-a3d7-b12ba5af2eb4" width="250">  
-
-- [term type](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#output_monitor)
-
-### Change app dir
-  
-Start `App directory` Manager 
-  
+Register scroll y position ignore domain 
 
 [Procedure]  
 1. Long press right buttom gear button  
-2. Click `setting` -> "change_app_dir" in popup menu
-  
-`App directory` is directory which index mode retreive
-- when item long press, poupu like bellow menu table `add`, `delete`, `copy` and `rename` menu
-
-| menu | description |
-| --------- | --------- |
-| `add` | Add `App directory` |
-| `delete` | Delete `App directory` |
-| `rename` | Rename `App directory` name |
-| `copy` | Copy `App directory` |
-
-
-
-### Create shortcut
- 
-You can create shortcut for current `App directory` or `script`  
-
-[Procedure]  
-1. Long press right buttom gear button  
-2. Click `setting` -> "create_short_cut" in popup menu
-
-### Setup ubuntu
-
-'CommandClick' is enable ubuntu as backend with sound.
-
-[Procedure]  
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/2406d8eb-b836-43eb-8dd0-1169c954e64b" width="400">  
-
-1. Press `Setup` button in Notification  
-2. Complete about 5 minutes
-3. Press `Terminal` button 
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/83f7668a-e3a2-4df5-867e-2d2491ebf7f5" width="400">  
-
-- `Restart` -> Press button when ubuntu not working
-- ssh username & password: `cmdclick`
-
-ex)
-
-
-```sh.sh
-
-sshpass -p cmdclick \
-	ssh -p 10022 "cmdclick@${android ipv4 address}"
-
-```
-
-### Backup ubuntu rootfs
-
-'CommandClick' is enable current rootfs backup.
-
-[Procedure]  
-
-
-1. Press `BACKUP` button in Notification  
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/f2e0b09b-3724-410a-b3a5-38ac5ed96e3d" width="250">  
-
-2. Launch ubuntu rootfs backup manager  
-3. Press `BACKUP` button  
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/677a7634-0145-4569-824b-457a0d602c79" width="250">  
-
-4. Wait backup comp  
-
-5. Press `INIT` button  
-
-6. Press `RESTORE`  
-  
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/15bfaadb-bb6d-454b-86a0-f4f11c196423" width="250">  
-
+2. Click `no scroll save url` in popup menu
 
 
 ### Install fannel
@@ -314,6 +295,74 @@ When you wont to sync [git repository](https://github.com/puutaro/commandclick-r
   
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/4589a003-3eb5-46d9-a981-ad00930923ca" width="400">  
 
+### Reflesh monitor
+
+You can reflesh `web terminal view`.
+  
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `manager` -> "term_reflesh" in popup menu
+
+
+### Select monitor
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click 'manager' -> `select term` in popup menu 
+3. select term from term list
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/b49cc5ff-27e4-4362-a3d7-b12ba5af2eb4" width="250">  
+
+- [term type](https://github.com/puutaro/CommandClick/blob/master/md/developer/FileApis.md#output_monitor)
+
+### Restart ubuntu
+
+Restart ubuntu forcibly
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `manager` -> `restart ubuntu` in popup menu
+
+### Add
+
+Add new script.  
+At the same time, if you installed code editor, edit new file.    
+  
+More detail ref [DEVELOPER.md](https://github.com/puutaro/CommandClick/blob/master/DEVELOPER.md#add)
+  
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `manager` -> `add`  in popup menu 
+
+
+### App dir manager
+  
+Start `App directory` Manager 
+  
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `setting` -> "change_app_dir" in popup menu
+  
+`App directory` is directory which index mode retreive
+- when item long press, poupu like bellow menu table `add`, `delete`, `copy` and `rename` menu
+
+| menu | description |
+| --------- | --------- |
+| `add` | Add `App directory` |
+| `delete` | Delete `App directory` |
+| `rename` | Rename `App directory` name |
+| `copy` | Copy `App directory` |
+
+
+### Create shortcut
+ 
+You can create shortcut for current `App directory` or `script`  
+
+[Procedure]  
+1. Long press right buttom gear button  
+2. Click `setting` -> "create_short_cut" in popup menu
+
 
 ### Config
 
@@ -324,7 +373,7 @@ You can setting `CommandClick` Configration
 1. Long press right buttom gear button  
 2. Click `setting` -> "config" in popup menu
 
-### Change ubuntu sleep minutes
+#### Change ubuntu sleep minutes
   
 Ubuntu Sleep delay minutes is set for battery life.  default `20` min   
 
@@ -340,39 +389,6 @@ Ubuntu Sleep delay minutes is set for battery life.  default `20` min
 ### Termux Setting
 
 -> [About termux setup](https://github.com/puutaro/CommandClick/blob/master/md/usage/termux_setup.md)
-
-### Edit startup
-
-Edit `statup script` contenst.  
-`statup script` is setting script for `current app directory`. So this setting directly link to usability.    
-[ref](#startup-script)
-  
-[Procedure]  
-1. Long press right buttom gear button  
-2. Click `edit_startup` in popup menu
-
-### Restart ubuntu
-
-Restart ubuntu forcibly
-
-
-### No scroll save url
-
-Register scroll y position ignore domain 
-
-[Procedure]  
-1. Long press right buttom gear button  
-2. Click `no scroll save url` in popup menu
-
-
-### Term reflesh
-
-You can reflesh `web terminal view`.
-  
-[Procedure]  
-1. Long press right buttom gear button  
-2. Click `setting` -> "term_reflesh" in popup menu
-
 
 ### Forward
 
