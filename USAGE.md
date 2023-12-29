@@ -20,13 +20,17 @@ Table of Contents
   * [History](#history)
   * [Url history](#url-history)
 * [Fannel(addon) List](#fannel-list)
-  * [Run](#run)
-  * [Edit](#edit)
-  * [Write](#write)
-  * [Kill](#kill)
-  * [Description](#description)
-  * [Copy file](#copy-file)
-  * [Copy file path](#copy-file-path)
+  * [Image click](#image-click)
+  * [Image long click](#image-long-click)
+  * [Body Click](#body-click)
+    * [Run](#run)
+  * [Body long click](#body-long-click)
+    * [Edit](#edit)
+    * [Write](#write)
+    * [Kill](#kill)
+    * [Description](#description)
+    * [Copy file](#copy-file)
+    * [Copy file path](#copy-file-path)
 * [Settings](#settings)
   * [Change term size](#change-term-size)
   * [Edit startup](#edit-startup)
@@ -149,8 +153,30 @@ Above same.
 
 ## Fannel(addon) List <a id="fannel-list"></a>
 
+### Image click
 
-### Run
+### Description
+
+Display description for script 
+
+[Procedure]  
+1. Long press list item
+2. Click `utility` -> `description` in menu 
+
+or
+
+
+1. Click thumbnail
+
+<img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
+  
+
+### Image long click
+
+
+### Body click
+
+#### Run
 
 Run script or launch app mode (when editExecute variable is `Always`)  
 
@@ -159,8 +185,9 @@ Run script or launch app mode (when editExecute variable is `Always`)
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/bfa4ba53-faa8-4b3b-88ef-1c978e8495f5" width="400">  
 
+### Body long click
 
-### Edit
+#### Edit
 
 Edit script.  
 
@@ -170,7 +197,7 @@ Edit script.
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/e5ac7e04-a506-4c3d-b7f7-5505ac6f7b03" width="400">  
 
-### Write
+#### Write
 
 Edit script by editor  
 
@@ -178,7 +205,7 @@ Edit script by editor
 1. Long press list item
 2. Click `write` in menu
   
-### Delete
+#### Delete
 
 Delete script  
 
@@ -187,7 +214,7 @@ Delete script
 2. Click `utility` -> `delete` in menu
 
 
-### Kill
+#### Kill
   
 Kill proccess  
   
@@ -210,19 +237,7 @@ Kill proccess
 
 ### Description
 
-Display description for script 
-
-[Procedure]  
-1. Long press list item
-2. Click `utility` -> `description` in menu 
-
-or
-
-
-1. Click thumbnail
-
-<img src="https://github.com/puutaro/CommandClick/assets/55217593/8e9fd681-0b66-48bc-bb24-e82cb5b95f85" width="400">  
-  
+-> [Description](#description)
 
 ### Copy file
 
