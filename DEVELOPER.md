@@ -18,6 +18,7 @@ Table of Contents
 * [Directory structure](#directory-structure)
 * [Import library](#import-library)
 * [File api](#file-api)
+* [QR code format](#qr-code-format)
 * [JavaScript interface](#javascript-interface)
 * [Javascript pre reserved word](#javascript-pre-reserved-word)
 * [Include Javascript Library](#include-javascript-library)
@@ -94,6 +95,9 @@ So, each file data can use in CommandClick's development
 
 -> [fileApi](https://github.com/puutaro/CommandClick/blob/master/md/developer/apiFiles.md#apifiles)
 
+### QR code format
+
+-> [qr code](https://github.com/puutaro/CommandClick/blob/master/md/developer/qrcode/qrcode.md)
 
 ### JavaScript interface
 

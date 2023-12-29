@@ -57,9 +57,9 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-Existing browsers cannot support multiple usecase, but `CommandClick` can do.  
-Existing browsers cannot has Ubuntu itself, but `CommandClick` can do.  
-Existing browsers cannot develop D.I.Y addon by combining multiple features, but `CommandClick` can do.  
+- Existing browsers cannot support multiple usecase, but `CommandClick` can do.  
+- Existing browsers cannot has Ubuntu itself, but `CommandClick` can do.  
+- Existing browsers cannot develop D.I.Y addon by combining multiple features, but `CommandClick` can do.  
 
 
 
@@ -98,10 +98,10 @@ Detail is bellow.
 | Janre | builtin or addon(fannel) |
 | ------- | ---------------- |
 | Web browser | builtin |  
-| QR reader | builtin  |  
-| File transfer | builtin by QR reader | 
-| Addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
-| Browser menu | builtin |  
+| QR reader | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#scan-qr)  |  
+| File transfer | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader | 
+| Addon store | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel) <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
+| Browser menu | [builtin](https://github.com/puutaro/selectTyper) |  
 | Ubuntu22.04 | builtin after installing | 
 | Ubuntu terminal | builtin after installing ubuntu <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
 | Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
