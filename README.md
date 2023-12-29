@@ -57,6 +57,11 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
+Existing browsers cannot support multiple usecase, but `CommandClick` can do.  
+Existing browsers cannot has Ubuntu itself, but `CommandClick` can do.  
+Existing browsers cannot develop D.I.Y addon by combining multiple features, but `CommandClick` can do.  
+
+
 
 App installation
 -----  
@@ -94,6 +99,7 @@ Detail is bellow.
 | ------- | ---------------- |
 | Web browser | builtin |  
 | QR reader | builtin  |  
+| File transfer | builtin by QR reader | 
 | Addon store | builtin <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
 | Browser menu | builtin |  
 | Ubuntu22.04 | builtin after installing | 
