@@ -27,7 +27,7 @@ Table of Contents
   * [Description](#description)
   * [Copy file](#copy-file)
   * [Copy file path](#copy-file-path)
-* [Settings]
+* [Settings](#settings)
   * [Change term size](#change-term-size)
   * [Edit startup](#edit-startup)
   * [No scroll save url](#no-scroll-save-url)
@@ -276,6 +276,24 @@ Register scroll y position ignore domain
 [Procedure]  
 1. Long press right buttom gear button  
 2. Click `no scroll save url` in popup menu
+
+### Scan QR
+
+This is high power feature.  
+Enable scan bellow type qr
+
+| type | description |
+| ------------- | -------------- |
+| WIFI | setup ssid and pin |  
+| SMS | send sms |  
+| GMAIL | send gmail  |  
+| TEL |call number |  
+| GOOGLE CALENDAR | register google calendar |  
+| URL | launch url |  
+| GIT CLONE | git clone |  
+| FILE DOWNLOAD | file download by p2p |  
+| SCP_DOWNLOAD | file downlaod by rsync |  
+| JAVASCRIPT | Load javascript |  
 
 
 ### Install fannel
