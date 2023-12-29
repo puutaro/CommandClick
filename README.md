@@ -97,7 +97,7 @@ Detail is bellow.
 
 | Janre | builtin or addon(fannel) |
 | ------- | ---------------- |
-| Web browser | builtin |  
+| History oriented Web browser | builtin |  
 | QR reader | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#scan-qr)  |  
 | File transfer | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#image-long-click) by QR reader <br> [fileManager.js](https://github.com/puutaro/fileManager) | 
 | Addon store | [builtin](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#install-fannel) <br> [fannelStore.js](https://github.com/puutaro/fannelStore) |  
