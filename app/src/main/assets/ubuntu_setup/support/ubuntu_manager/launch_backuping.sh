@@ -1,23 +1,12 @@
 #!/bin/bash
 
 
-readonly BACKUP_PID="${1}"
-readonly NOTI_SHELL_DIR_PATH=$(dirname "$0")
-readonly MONITOR_FILE_PATH="${MONITOR_DIR_PATH}/term_3"
-readonly MONITOR_DEBUG_FILE_PATH="${MONITOR_DIR_PATH}/term_1"
-readonly NOTI_EXIT_SHELL_PATH="${NOTI_SHELL_DIR_PATH}/exit_manager.sh"
-readonly NOTIFICATION_CAHNEL_NUM=$(\
-	bash "${NOTI_SHELL_DIR_PATH}/echo_channel_num.sh"\
-)
+exec repbash "${0}" \
+	-a "${1}" \
+	-t "\${UBUNTU_ENV_TSV_PATH}"
 
 readonly TITLE="Ubuntu backuping.."
-readonly support_dir_path="/support"
-readonly ubuntu_env_tsv_path="${support_dir_path}/${UBUNTU_ENV_TSV_NAME}"
-readonly ubuntu_env_tsv_con="$(cat "${ubuntu_env_tsv_path}")"
-readonly wait_quiz_tsv_name=$(\
-	tsvar "${ubuntu_env_tsv_con}" "WAIT_QUIZ_TSV_NAME" \
-)
-readonly wait_quiz_tsv_path="${support_dir_path}/${wait_quiz_tsv_name}"
+readonly wait_quiz_tsv_path="${SUPPORT_DIR_PATH}/${WAIT_QUIZ_TSV_NAME}"
 readonly WAIT_QUIZ_TSV_CON="$(cat "${wait_quiz_tsv_path}")"
 readonly WAIT_QUIZ_TSV_CON_LINES="$(echo "${WAIT_QUIZ_TSV_CON}" | wc -l)"
 
@@ -52,8 +41,8 @@ launch_backuping(){
 		--title "${TITLE}	${current_state}" \
 		--message "${message}" \
 		--alert-once \
-		--delete "shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}&remove" \
-		--button "label=CANCEL,shellPath=${NOTI_EXIT_SHELL_PATH},args=${NOTIFICATION_CAHNEL_NUM}&remove" \
+		--delete "shellPath=${NOTI_EXIT_SHELL_PATH},args=REMOVE_ROOTFS=" \
+		--button "label=CANCEL,shellPath=${NOTI_EXIT_SHELL_PATH},args=REMOVE_ROOTFS=remove" \
 	>/dev/null 2>&1
 }
 

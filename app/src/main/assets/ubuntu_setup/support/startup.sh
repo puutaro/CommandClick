@@ -318,6 +318,7 @@ install_shell2http(){
 }
 
 install_repbash(){
+	echo "### ${FUNCNAME}"
 	local package_name="repbash"
 	curl \
 		-L "https://github.com/puutaro/repbash/releases/download/0.0.1/repbash-0.0.1-arm64" \
@@ -327,6 +328,7 @@ install_repbash(){
 		"${package_name}" \
 		"${usrlocalbin_repbash}"
 	chmod +x "${usrlocalbin_repbash}"
+	echo "install ok"
 }
 
 
@@ -336,7 +338,6 @@ install_base_pkg(){
 	install_require_pacakges
 	install_pip3_pkg webssh
 	install_shell2http
-	install_repbash
 }
 
 install_user_package(){
@@ -384,6 +385,7 @@ launch_setup(){
 		"${profile_path}"
 	apt-get purge --auto-remove -y sudo
 	apt-get install -y sudo
+	install_repbash
 }
 
 install_nodjs(){
