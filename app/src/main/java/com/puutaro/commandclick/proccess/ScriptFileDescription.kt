@@ -1,8 +1,10 @@
 package com.puutaro.commandclick.proccess
 
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CcPathTool
@@ -10,6 +12,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.util.UrlFileSystems
 import java.io.File
 
@@ -17,43 +20,109 @@ import java.io.File
 object ScriptFileDescription {
 
     private val filePrefix = "file://"
+    private val httpsPrefix = WebUrlVariables.httpsPrefix
 
     fun show(
         fragment: Fragment,
         currentScriptContentsList: List<String>,
         currentAppDirPath: String,
-        fannelName: String
+        fannelName: String,
     ) {
-        val descCon = makeDescriptionContents(
+        val labelingSecConList = subLabelingSecConList(
             currentScriptContentsList,
+            fannelName,
+        ) ?: return
+        Toast.makeText(
+            fragment.context,
+            labelingSecConList.joinToString("\n"),
+            Toast.LENGTH_SHORT
+        ).show()
+
+        val descCon = makeDescriptionContents(
+            labelingSecConList,
             currentAppDirPath,
             fannelName,
         )
+        val targetFragmentInstance = TargetFragmentInstance()
+        val isTerminalFragment =
+            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(
+                fragment.activity
+            ) != null
         val readmeUrl = getReadmeUrl(descCon)
-        when(readmeUrl.isNullOrEmpty()){
-            true -> DialogObject.descDialog(
-                fragment,
+        val isReadmeUrl = !readmeUrl.isNullOrEmpty()
+        val isLaunchWebReadme = isTerminalFragment && isReadmeUrl
+        Toast.makeText(
+            fragment.context,
+            "isTerminalFragment: ${isTerminalFragment}\nisReadmeUrl: ${isReadmeUrl}\nisMdConAsHttp: ${isMdConAsHttp(
+                labelingSecConList,
                 fannelName,
-                makeDescriptionContents(
-                    currentScriptContentsList,
-                    currentAppDirPath,
-                    fannelName,
-                )
-            )
-            else -> {
+            )}",
+            Toast.LENGTH_SHORT
+        ).show()
+        when(isLaunchWebReadme){
+            true -> {
                 val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
                         UsePath.JS_FILE_SUFFIX
                 ExecJsLoad.execExternalJs(
                     fragment,
                     currentAppDirPath,
                     webSearcherName,
-                    readmeUrl,
+                    readmeUrl ?: String(),
+                )
+            }
+            else -> {
+                if(
+                    isMdConAsHttp(
+                        labelingSecConList,
+                        fannelName,
+                    )
+                ){
+                    DialogObject.descDialog(
+                        fragment,
+                        fannelName,
+                        extractMdContents(
+                            String(),
+                            currentAppDirPath,
+                            fannelName,
+                        )
+                    )
+                    return
+                }
+                DialogObject.descDialog(
+                    fragment,
+                    fannelName,
+                    makeDescriptionContents(
+                        labelingSecConList,
+                        currentAppDirPath,
+                        fannelName,
+                    )
                 )
             }
         }
 
     }
 
+    private fun isMdConAsHttp(
+        labelingSecConList: List<String>,
+        fannelName: String,
+    ): Boolean {
+        val labelingSecListSize = labelingSecConList.size
+        if(
+            labelingSecListSize > 4
+        ) return false
+        val languageType =
+            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+        val removePrefix = when(
+            languageType == LanguageTypeSelects.SHELL_SCRIPT
+        ) {
+            true -> "#"
+            else -> "//"
+        }
+        return labelingSecConList.any {
+            val line = it.removePrefix(removePrefix).trim()
+            line.startsWith(httpsPrefix)
+        }
+    }
     fun getReadmeUrl(
         descCon: String,
     ): String? {
@@ -66,13 +135,45 @@ object ScriptFileDescription {
     }
 
     fun makeDescriptionContents(
-        currentScriptContentsList: List<String>,
-        currentAppDirName: String,
+        labelingSecConList: List<String>,
+        currentAppDirPath: String,
         fannelName: String,
     ): String {
+        return makeDescConFromLabelingSec(
+            labelingSecConList,
+            currentAppDirPath,
+            fannelName,
+        ).joinToString("\n")
+    }
+
+    private fun subLabelingSecConList(
+        currentScriptContentsList: List<String>,
+        fannelName: String,
+    ): List<String>? {
         val languageType =
             CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val labelingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_START
+        ) as String
+        val labelingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
+        ) as String
+        return CommandClickVariables.substituteVariableListFromHolder(
+            currentScriptContentsList,
+            labelingSectionStart,
+            labelingSectionEnd,
+        )
+    }
 
+    private fun makeDescConFromLabelingSec(
+        labelingSecConList: List<String>,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): List<String> {
+        val languageType =
+            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val labelingSectionStart = languageTypeToSectionHolderMap?.get(
@@ -85,44 +186,38 @@ object ScriptFileDescription {
             "#"
         } else "//"
         val suffixBlank = "  "
-        val descriptionContentsList =
-            CommandClickVariables.substituteVariableListFromHolder(
-                currentScriptContentsList,
-                labelingSectionStart,
-                labelingSectionEnd,
-            )?.filter {
-                (
-                        !it.startsWith(labelingSectionStart)
-                                && !it.endsWith(labelingSectionStart)
-                        )
-                        && (
-                        !it.startsWith(labelingSectionEnd)
-                                && !it.endsWith(labelingSectionEnd)
-                        )
-            }?.map {
+        return labelingSecConList.filter {
+            (
+                    !it.startsWith(labelingSectionStart)
+                            && !it.endsWith(labelingSectionStart)
+                    )
+                    && (
+                    !it.startsWith(labelingSectionEnd)
+                            && !it.endsWith(labelingSectionEnd)
+                    )
+        }.map {
                 line ->
-                val inputDescLine = line
-                    .trim()
-                    .removePrefix(removePrefix)
-                    .removePrefix(" ")
-                    .let {
-                        it + suffixBlank
-                    }
-                if(
-                    inputDescLine.trim() != filePrefix
-                ) return@map inputDescLine
-                extractMdContents(
-                    inputDescLine,
-                    currentAppDirName,
-                    fannelName,
-                )
-            } ?: return String()
-        return descriptionContentsList.joinToString("\n")
+            val inputDescLine = line
+                .trim()
+                .removePrefix(removePrefix)
+                .removePrefix(" ")
+                .let {
+                    it + suffixBlank
+                }
+            if(
+                inputDescLine.trim() != filePrefix
+            ) return@map inputDescLine
+            extractMdContents(
+                inputDescLine,
+                currentAppDirPath,
+                fannelName,
+            )
+        }
     }
 
     private fun extractMdContents(
         inputDescLine: String,
-        currentAppDirName: String,
+        currentAppDirPath: String,
         fannelName: String,
     ): String {
         val fannelDirName = CcPathTool.makeFannelDirName(
@@ -130,7 +225,7 @@ object ScriptFileDescription {
         )
         val fannelReadmePath = ScriptPreWordReplacer.replace(
             UsePath.fannelReadmePath,
-            currentAppDirName,
+            currentAppDirPath,
             fannelDirName,
             fannelName,
         )
