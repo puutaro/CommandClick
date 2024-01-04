@@ -3,7 +3,6 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -19,24 +18,24 @@ object ExecBackstackHandle {
         activity: MainActivity,
     ) {
         if(keyCode != KeyEvent.KEYCODE_BACK) return
-        doEexecBackstack(activity)
+        doExecBackstack(activity)
         return
     }
 
 
-    private fun doEexecBackstack(
+    private fun doExecBackstack(
         activity: MainActivity
     ){
-        val supportFragmentManager = activity.supportFragmentManager
-        val currentTerminalFragment = getCurrentTerminalFragment(
+        val targetFragmentInstance = TargetFragmentInstance()
+        val currentTerminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
             activity
         )
-        val targetFragmentInstance = TargetFragmentInstance()
         val cmdVariableEditFragmentTag = targetFragmentInstance.getCmdEditFragmentTag(activity)
         val currentBottomFragment = targetFragmentInstance.getCurrentBottomFragment(
             activity,
             cmdVariableEditFragmentTag
         )
+        val supportFragmentManager = activity.supportFragmentManager
         if(currentBottomFragment == null){
             execPopBackStackImmediate(
                 activity,
@@ -114,31 +113,6 @@ private fun execBack(
             )
         }
     }
-}
-
-
-private fun getCurrentTerminalFragment(
-    activity: MainActivity
-): TerminalFragment? {
-    val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
-    val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_execute_terminal_fragment)
-    val indexTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
-        activity,
-        indexTerminalFragmentTag
-    )
-    if(
-        indexTerminalFragment != null
-        && indexTerminalFragment.isVisible
-    ) return indexTerminalFragment
-    val editExecuteTerminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
-        activity,
-        editExecuteTerminalFragmentTag
-    )
-    if(
-        editExecuteTerminalFragment != null
-        && editExecuteTerminalFragment.isVisible
-    ) return editExecuteTerminalFragment
-    return null
 }
 
 

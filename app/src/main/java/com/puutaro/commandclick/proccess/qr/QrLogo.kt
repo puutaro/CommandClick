@@ -24,6 +24,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
@@ -44,6 +45,7 @@ class QrLogo(
     private val qrPngRelativePath = UsePath.qrPngRelativePath
     private val twoThreeLogListSize = (logoList.size * 2) / 3
     private var usedLogoIndexList = mutableListOf<Int>()
+    private val qrNewLine = "cmdclickQRNewLine"
 
     companion object {
         fun toBitMapWrapper(
@@ -85,8 +87,6 @@ class QrLogo(
         qrSrcStr: String,
     ): Drawable? {
         val context = fragment.context ?: return null
-        val rnd = Random(System.currentTimeMillis())
-        val insertLogoIndex =  decideLogoIndex(rnd)
         try {
             val data = QrData.Url(qrSrcStr)
             val qrColor = ContextCompat.getColor(context, R.color.terminal_color)
@@ -168,12 +168,7 @@ class QrLogo(
                     drawable = ContextCompat
                         .getDrawable(context, logoList[insertLogoIndex])?.apply {
                             setTint(
-                                Color(
-                                    255,
-                                    rnd.nextInt(150),
-                                    rnd.nextInt(150),
-                                    rnd.nextInt(150)
-                                )
+                                decideDarkColor(rnd)
                             )
                         }
                     size = .25f
@@ -185,12 +180,7 @@ class QrLogo(
                         )
                     }
                 }
-                val ballFrameColor = Color(
-                    255,
-                    rnd.nextInt(150),
-                    rnd.nextInt(150),
-                    rnd.nextInt(150)
-                )
+                val ballFrameColor = decideDarkColor(rnd)
                 colors {
                     dark = QrVectorColor.Solid(
                         ContextCompat.getColor(context, R.color.terminal_color)
@@ -217,20 +207,130 @@ class QrLogo(
         }
         return null
     }
+
+    fun createFromQrDesign(
+        qrDesignMap: Map<String, String>,
+    ): Drawable? {
+        val context = fragment.context ?: return null
+        val rnd = Random(System.currentTimeMillis())
+        val contents = getQrDesignFileKey(
+            QrDesignFileKey.CONTENTS.key,
+            qrDesignMap
+        )
+        if(
+            contents.isNullOrEmpty()
+        ) return null
+
+        val logoIndex =
+            getQrDesignFileKey(
+                QrDesignFileKey.LOGO_INDEX.key,
+                qrDesignMap
+            ).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let decideLogoIndex(rnd)
+            try { it.toInt() } catch (e: Exception){ decideLogoIndex(rnd)}
+        }
+        val logoColor = getDarkColor(
+            rnd,
+            qrDesignMap,
+            QrDesignFileKey.LOGO_COLOR.key,
+        )
+        val squareColor = getDarkColor(
+            rnd,
+            qrDesignMap,
+            QrDesignFileKey.SQUARE_COLOR.key,
+        )
+        try {
+            val data = QrData.Url(contents)
+
+            val options = createQrVectorOptions {
+                padding = .075f
+//                    .125f
+                background {
+                    drawable =
+                        ContextCompat
+                            .getDrawable(
+                                context,
+                                R.color.white
+                            )
+                }
+                logo {
+                    drawable = ContextCompat
+                        .getDrawable(context, logoList[logoIndex])?.apply {
+                            setTint(logoColor)
+                        }
+                    size = .25f
+                    padding = QrVectorLogoPadding.Natural(.2f)
+                    shape = QrVectorLogoShape.Circle
+                    background {
+                        QrVectorColor.Solid(
+                            ContextCompat.getColor(context, R.color.terminal_color)
+                        )
+                    }
+                }
+                colors {
+                    dark = QrVectorColor.Solid(
+                        ContextCompat.getColor(context, R.color.terminal_color)
+                    )
+                    ball = QrVectorColor.Solid(squareColor)
+                    frame = QrVectorColor.Solid(
+                        ContextCompat.getColor(context, R.color.terminal_color)
+                    )
+                }
+                shapes {
+                    darkPixel = QrVectorPixelShape
+                        .RoundCorners(.5f)
+                    ball = QrVectorBallShape
+                        .RoundCorners(.25f)
+                    frame = QrVectorFrameShape
+                        .RoundCorners(.25f)
+                }
+            }
+            return QrCodeDrawable(data, options)
+        } catch(e: Exception){
+            LogSystems.stdErr(e.toString())
+        }
+        return null
+    }
+
+    fun createAndSaveFromDesignMap(
+        qrDesignMap: Map<String, String>,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): Drawable? {
+        return qrDrawableSave(
+            createFromQrDesign(qrDesignMap),
+            currentAppDirPath,
+            fannelName,
+        )
+    }
+
     fun createAndSaveRnd(
         qrSrcStr: String,
         currentAppDirPath: String,
         fannelName: String,
     ): Drawable? {
+        return qrDrawableSave(
+            create(qrSrcStr),
+            currentAppDirPath,
+            fannelName,
+        )
+    }
+
+    private fun qrDrawableSave(
+        qrDrawableSrc: Drawable?,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): Drawable? {
         try{
-            val qrDrawable = create(qrSrcStr)
+            val qrDrawable = qrDrawableSrc
                 ?: return null
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
                     val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
                     val qrPngPath = "${currentAppDirPath}/${fannelDirName}/$qrPngRelativePath"
-                    val qrPngPathObj =
-                        File(qrPngPath)
+                    val qrPngPathObj = File(qrPngPath)
                     val qrDirPath = qrPngPathObj.parent
                         ?: return@withContext
                     val qrBitMap = toBitMapWrapper(qrDrawable)
@@ -249,7 +349,7 @@ class QrLogo(
         return null
     }
 
-    private fun decideLogoIndex(
+    fun decideLogoIndex(
         rnd: Random
     ): Int {
         var entryIndex = 0
@@ -290,4 +390,169 @@ class QrLogo(
         ) == editExecuteAlwaysStr
         return isEditExecuteForJs || isEditExecuteForShell
     }
+
+    fun getDarkColor(
+        rnd: Random,
+        qrDesignMap: Map<String, String>,
+        qrDesignFileKey: String,
+    ): Int {
+        return getQrDesignFileKey(
+            qrDesignFileKey,
+            qrDesignMap
+        ).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let decideDarkColor(rnd)
+            try { it.toInt() } catch (e: Exception){
+                decideDarkColor(rnd)
+            }
+        }
+    }
+
+    fun decideDarkColor(
+        rnd: Random
+    ): Int {
+        return Color(
+            255,
+            rnd.nextInt(150),
+            rnd.nextInt(150),
+            rnd.nextInt(150)
+        )
+    }
+
+    fun readQrDesignMapWithCreate(
+        qrDesignFilePath: String,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): Map<String, String> {
+        return readQrDesignMap(qrDesignFilePath).let {
+            when(it.isNotEmpty()) {
+                true -> updateDesignMapWithCon(
+                    it,
+                    qrDesignFilePath,
+                    currentAppDirPath,
+                    fannelName,
+                )
+                else -> createNewDesignMap(
+                    qrDesignFilePath,
+                    currentAppDirPath,
+                    fannelName,
+                )
+            }
+        }
+    }
+
+    private fun updateDesignMapWithCon(
+        qrDesignMap: Map<String, String>,
+        qrDesignFilePath: String,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): Map<String, String> {
+        val contentsKeyName = QrDesignFileKey.CONTENTS.key
+        val updateQrDesignMap = qrDesignMap.map {
+            val currentKeyName = it.key
+            when(currentKeyName == contentsKeyName) {
+                true -> {
+                    currentKeyName to ReadText(
+                        currentAppDirPath,
+                        fannelName,
+                    ).readText()
+                }
+                false ->
+                    currentKeyName to it.value
+            }
+        }.toMap()
+        saveQrDesignMap(
+            qrDesignFilePath,
+            updateQrDesignMap,
+        )
+        return updateQrDesignMap
+    }
+
+    fun createNewDesignMap(
+        qrDesignFilePath: String,
+        currentAppDirPath: String,
+        fannelName: String,
+    ): Map<String, String> {
+        val rnd = Random(System.currentTimeMillis())
+        val newQrDesignMap = makeQrDesignMap(
+            decideLogoIndex(rnd).toString(),
+            decideDarkColor(rnd).toString(),
+            decideDarkColor(rnd).toString(),
+            ReadText(
+                currentAppDirPath,
+                fannelName,
+            ).readText()
+        )
+        saveQrDesignMap(
+            qrDesignFilePath,
+            newQrDesignMap,
+        )
+        return newQrDesignMap
+    }
+
+    private fun readQrDesignMap(
+        qrDesignFilePath: String,
+    ): Map<String, String> {
+        val qrDesignFilePathObj = File(qrDesignFilePath)
+        val qrDesignDirPath = qrDesignFilePathObj.parent
+            ?: return mapOf()
+        return ReadText(
+            qrDesignDirPath,
+            qrDesignFilePathObj.name
+        ).readText().split("\n").map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }.toMap().filterKeys { it.isNotEmpty() }
+    }
+
+    fun makeQrDesignMap(
+        logoIndexIntStr: String,
+        logoColorIntStr: String,
+        squareColorIntStr: String,
+        qrContents: String,
+    ): Map<String, String>{
+        return mapOf(
+            QrDesignFileKey.LOGO_INDEX.key to logoIndexIntStr,
+            QrDesignFileKey.LOGO_COLOR.key to logoColorIntStr,
+            QrDesignFileKey.SQUARE_COLOR.key to squareColorIntStr,
+            QrDesignFileKey.CONTENTS.key to qrContents,
+        )
+    }
+
+    fun saveQrDesignMap(
+        qrDesignFilePath: String,
+        qrDesignMap: Map<String, String>
+    ){
+        val qrDesignPathObj = File(qrDesignFilePath)
+        val parentDirPath = qrDesignPathObj.parent
+            ?: return
+        FileSystems.writeFile(
+            parentDirPath,
+            qrDesignPathObj.name,
+            qrDesignMap.map {
+                "${it.key}=${it.value.replace("\n", qrNewLine)}"
+            }.joinToString("\n")
+        )
+    }
+
+    fun getQrDesignFileKey(
+        key: String,
+        qrDesignMap: Map<String, String>
+    ): String? {
+        return qrDesignMap.get(key)
+            ?.replace(qrNewLine, "\n")
+
+    }
+}
+
+enum class QrDesignFileKey(
+    val key: String
+) {
+    LOGO_INDEX("logo_index"),
+    LOGO_COLOR("logo_color"),
+    SQUARE_COLOR("square_color"),
+    CONTENTS("con"),
 }

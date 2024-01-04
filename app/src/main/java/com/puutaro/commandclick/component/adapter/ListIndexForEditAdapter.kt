@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,8 @@ import java.io.File
 class ListIndexForEditAdapter(
     val editFragment: EditFragment,
     val currentAppDirPath: String,
-    var listIndexList: MutableList<String>
+    var listIndexList: MutableList<String>,
+    val isConQr: Boolean,
 ): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
 {
 
@@ -36,7 +38,6 @@ class ListIndexForEditAdapter(
     val activity = editFragment.activity
     private val maxTakeSize = 150
     private val qrPngNameRelativePath = UsePath.qrPngRelativePath
-    private val qrLogo = QrLogo(editFragment)
 
 
     class ListIndexListViewHolder(
@@ -83,6 +84,7 @@ class ListIndexForEditAdapter(
         holder: ListIndexListViewHolder,
         position: Int
     ) {
+        val qrLogo =  QrLogo(editFragment)
         CoroutineScope(Dispatchers.IO).launch {
             val fannelName = listIndexList[position]
             withContext(Dispatchers.Main) {
@@ -95,7 +97,8 @@ class ListIndexForEditAdapter(
                 ).textToList().take(maxTakeSize)
             }
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
+            val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+            val qrPngPath = "${fannelDirPath}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
 
             withContext(Dispatchers.Main) {
@@ -107,11 +110,10 @@ class ListIndexForEditAdapter(
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
-                val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
-                qrLogo.createAndSaveRnd(
-                    QrMapper.onGitTemplate.format(fannelRawName),
-                    currentAppDirPath,
+                qrLogoCreateHandler(
+                    qrLogo,
                     fannelName,
+                    fannelDirPath,
                 )?.let {
                     holder.fannelContentsQrLogoView.setImageDrawable(it)
                 }
@@ -153,6 +155,7 @@ class ListIndexForEditAdapter(
                         qrLongClickListener?.onQrLongClick(
                             fannelContentsQrLogoView,
                             holder,
+                            isConQr,
                             position
                         )
                         true
@@ -175,6 +178,7 @@ class ListIndexForEditAdapter(
         fun onQrLongClick(
             imageView: AppCompatImageView,
             holder: ListIndexListViewHolder,
+            isConQr: Boolean,
             position: Int
         )
     }
@@ -229,6 +233,36 @@ class ListIndexForEditAdapter(
             == SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return com.puutaro.commandclick.R.color.terminal_color
         return com.puutaro.commandclick.R.color.fannel_icon_color
+    }
+
+    private fun qrLogoCreateHandler(
+        qrLogo: QrLogo,
+        fannelName: String,
+        fannelDirPath: String,
+    ): Drawable? {
+        return when(isConQr){
+            true -> {
+                val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
+                val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
+                    qrDesignFilePath,
+                    currentAppDirPath,
+                    fannelName,
+                )
+                qrLogo.createAndSaveFromDesignMap(
+                    qrDesignMap,
+                    currentAppDirPath,
+                    fannelName,
+                )
+            }
+            else -> {
+                val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
+                qrLogo.createAndSaveRnd(
+                    QrMapper.onGitTemplate.format(fannelRawName),
+                    currentAppDirPath,
+                    fannelName,
+                )
+            }
+        }
     }
 
 }

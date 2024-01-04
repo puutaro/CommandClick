@@ -276,8 +276,12 @@ class WithIndexListView(
         )
         fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
 
-        val indexListMap = getIndexListMap(
+        val replacedSetVariableMap = makeReplacedSetVariableMap(
             editParameters
+        )
+        val indexListMap = getIndexListMap(
+            editParameters,
+            replacedSetVariableMap
         )
         filterDir = getFilterListDir(
             indexListMap,
@@ -297,18 +301,21 @@ class WithIndexListView(
         FileSystems.createDirs(clickDirPath)
 
         val menuMapList = createMenuMapList(
-            editParameters
+            replacedSetVariableMap,
         )
 
         val fileList = makeFileList()
-
+        val isConQr = howConQr(
+            replacedSetVariableMap,
+        )
 
         val editListRecyclerView =
             binding.editListRecyclerView
         val listIndexForEditAdapter = ListIndexForEditAdapter(
             editFragment,
             filterDir,
-            fileList
+            fileList,
+            isConQr
         )
         editListRecyclerView.adapter = listIndexForEditAdapter
         val preLoadLayoutManager = PreLoadLayoutManager(
@@ -328,7 +335,7 @@ class WithIndexListView(
         )
     }
 
-    private fun invokeItemSetClickListenerForFileList() {
+        private fun invokeItemSetClickListenerForFileList() {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
         listIndexForEditAdapter.fannelNameClickListener =
@@ -1367,64 +1374,59 @@ class WithIndexListView(
     }
 
     private fun getIndexListMap(
+        editParameters: EditParameters,
+        replacedSetVariableMap: Map<String, String>?
+    ): Map<String, String>? {
+        val listDirKeyName = IndexListEditKey.listDir.name
+        return replacedSetVariableMap?.get(
+            listDirKeyName
+        )?.split("!")?.map {
+            val isListDirKeyEl = !it.contains("=") && it.isNotEmpty()
+            val line = when(isListDirKeyEl){
+                false -> it
+                else ->  "${listDirKeyName}=${it}"
+            }
+            CcScript.makeKeyValuePairFromSeparatedString(
+                line,
+                    "="
+                )
+        }?.toMap() ?: return null
+    }
+
+    private fun makeReplacedSetVariableMap(
         editParameters: EditParameters
     ): Map<String, String>? {
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')
-            ?.firstOrNull()
-            ?.let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    currentAppDirPath,
-                    fannelDirName,
-                    currentScriptName
-                )
-            }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    QuoteTool.trimBothEdgeQuote(it),
-                    editParameters
-                )
-            }?.split('!')?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-            }?.toMap()
+        )?.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                fannelDirName,
+                currentScriptName
+            )
+        }.let {
+            ReplaceVariableMapReflecter.reflect(
+                QuoteTool.trimBothEdgeQuote(it),
+                editParameters
+            )
+        }?.split('|')?.map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "="
+            )
+        }?.toMap()
     }
 
     private fun getMenuMap(
-        editParameters: EditParameters
+        replacedSetVariableMap: Map<String, String>?,
     ): Map<String, List<String>>? {
-        val menuListSource = currentSetVariableMap?.get(
-            SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.split('|')
+        val menuKeyName = IndexListEditMenu.menu.name
+        val menuValueList = replacedSetVariableMap
+            ?.get(menuKeyName)
+            ?.split("!")
             ?: return null
-        if(
-            menuListSource.size != 2
-        ) return null
-        return menuListSource
-            .lastOrNull()
-            ?.let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    currentAppDirPath,
-                    fannelDirName,
-                    currentScriptName
-                )
-            }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    QuoteTool.trimBothEdgeQuote(it),
-                    editParameters
-                )
-            }?.let {
-                val keyValue = CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-                listOf(keyValue.first to
-                        keyValue.second.split("!"))
-            }?.toMap()
+        return mapOf(menuKeyName to menuValueList)
     }
 
     private fun clickUpdateFileList(
@@ -1441,10 +1443,10 @@ class WithIndexListView(
     }
 
     private fun createMenuMapList(
-        editParameters: EditParameters
+        replacedSetVariableMap: Map<String, String>?
     ): List<Map<String, String?>>? {
         return getMenuMap(
-            editParameters
+            replacedSetVariableMap
         )?.get(IndexListEditMenu.menu.name)?.map {
                 menuLine ->
             val menuSubMenuList = menuLine.split(subMenuSeparator)
@@ -1588,6 +1590,18 @@ class WithIndexListView(
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    private fun howConQr(
+        replacedSetVariableMap: Map<String, String>?
+    ): Boolean {
+        val onConQrKeyName = OnConQrFlag.onConQr.name
+        if(
+            replacedSetVariableMap.isNullOrEmpty()
+        ) return false
+        return replacedSetVariableMap.keys.any {
+            it == onConQrKeyName
+        }
+    }
 }
 
 private enum class MenuMapKey(
@@ -1600,19 +1614,23 @@ private enum class MenuMapKey(
 private enum class IndexListEditMenu {
     menu,
 }
+
+private enum class OnConQrFlag {
+    onConQr,
+}
 private enum class IndexListEditKey {
     listDir,
     prefix,
-    suffix
+    suffix,
 }
 
 private fun getFilterListDir(
-    fcbMap: Map<String, String>?,
+    indexListMap: Map<String, String>?,
     currentAppDirPath: String,
     fannelDirName: String,
     currentScriptName: String
 ): String {
-    return fcbMap?.get(IndexListEditKey.listDir.name)?.let{
+    return indexListMap?.get(IndexListEditKey.listDir.name)?.let{
         ScriptPreWordReplacer.replace(
             it,
             currentAppDirPath,
@@ -1624,17 +1642,17 @@ private fun getFilterListDir(
     } ?: String()
 }
 private fun getFilterPrefix(
-    fcbMap: Map<String, String>?,
+    indexListMap: Map<String, String>?,
 ): String {
-    return fcbMap?.get(IndexListEditKey.prefix.name)?.let {
+    return indexListMap?.get(IndexListEditKey.prefix.name)?.let {
         QuoteTool.trimBothEdgeQuote(it)
     } ?: String()
 }
 
 private fun getFilterSuffix(
-    fcbMap: Map<String, String>?,
+    indexListMap: Map<String, String>?,
 ): String {
-    return fcbMap?.get(IndexListEditKey.suffix.name)?.let {
+    return indexListMap?.get(IndexListEditKey.suffix.name)?.let {
         QuoteTool.trimBothEdgeQuote(it)
     } ?: String()
 }

@@ -124,7 +124,7 @@ object QrDialogMethod {
         }
     }
 
-    fun makeCpFileQrStr(
+    private fun makeCpFileQrStr(
         fragment: Fragment,
         currentAppDirPath: String,
         fannelName: String,
@@ -229,35 +229,58 @@ object QrDialogMethod {
         currentAppDirPath: String,
         fannelName: String,
         dialogObj: Dialog?,
+        replace_qr_logo_int: Int,
+        onQrCon: Boolean = false
     ){
 
         val context = fragment.context ?: return
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val qrLogoPath = "${currentAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        val qrLogoPathObj = File(qrLogoPath)
+        val qrLogoParentDirPath = qrLogoPathObj.parent
+            ?: return
+        val qrLogoName = qrLogoPathObj.name
+        val qrLogo = QrLogo(fragment)
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO){
                 FileSystems.checkSum(
-                    currentAppDirPath,
-                    fannelName
+                    qrLogoParentDirPath,
+                    qrLogoName
                 )
             }
             withContext(Dispatchers.IO) {
-                QrLogo(fragment).createAndSaveRnd(
-                    QrMapper.onGitTemplate.format(fannelRawName),
-                    currentAppDirPath,
-                    fannelName,
-                )
+                when(onQrCon) {
+                    true -> {
+                        val qrDesignFilePath = "${qrLogoParentDirPath}/${UsePath.qrDesignFileName}"
+                        val qrDesignMap = qrLogo.createNewDesignMap(
+                            qrDesignFilePath,
+                            currentAppDirPath,
+                            fannelName
+                        )
+                        qrLogo.createAndSaveFromDesignMap(
+                            qrDesignMap,
+                            currentAppDirPath,
+                            fannelName,
+                        )
+                    }
+                    else -> {
+                        qrLogo.createAndSaveRnd(
+                            QrMapper.onGitTemplate.format(fannelRawName),
+                            currentAppDirPath,
+                            fannelName,
+                        )
+                    }
+                }
             }
             withContext(Dispatchers.IO){
                 for(i in 1..20){
-                    val updateChecksum = FileSystems.checkSum(
-                        currentAppDirPath,
-                        fannelName
+                    val isBreak = isForBreakWithCheckSum(
+                        previousChecksum,
+                        qrLogoParentDirPath,
+                        qrLogoName
                     )
-                    if(
-                        updateChecksum != previousChecksum
-                    ) break
+                    if(isBreak) break
                     withContext(Dispatchers.Main) toast@ {
                         if(i != 1) return@toast
                         Toast.makeText(
@@ -271,7 +294,7 @@ object QrDialogMethod {
             }
             withContext(Dispatchers.Main) {
                 dialogObj?.findViewById<AppCompatImageView>(
-                    R.id.qr_logo_dialog_top_image
+                    replace_qr_logo_int
                 )?.load(qrLogoPath)
                 when(fragment) {
                     is CommandIndexFragment -> {
@@ -288,6 +311,117 @@ object QrDialogMethod {
                     }
                 }
             }
+        }
+    }
+
+    fun execConUpdate(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        fannelName: String,
+        dialogObj: Dialog?,
+        replace_qr_logo_int: Int,
+    ){
+        val context = fragment.context ?: return
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
+        val qrLogo = QrLogo(fragment)
+        val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
+            qrDesignFilePath,
+            currentAppDirPath,
+            fannelName,
+        )
+        val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
+        val qrLogoPathObj = File(qrLogoPath)
+        val qrLogoParentDirPath = qrLogoPathObj.parent
+            ?: return
+        val qrLogoName = qrLogoPathObj.name
+        CoroutineScope(Dispatchers.IO).launch {
+            val previousChecksum = withContext(Dispatchers.IO){
+                FileSystems.checkSum(
+                    qrLogoParentDirPath,
+                    qrLogoName
+                )
+            }
+            withContext(Dispatchers.IO) {
+                qrLogo.createAndSaveFromDesignMap(
+                    qrDesignMap,
+                    currentAppDirPath,
+                    fannelName,
+                )
+            }
+            withContext(Dispatchers.IO){
+                for(i in 1..20){
+                    val isBreak = isForBreakWithCheckSum(
+                        previousChecksum,
+                        qrLogoParentDirPath,
+                        qrLogoName
+                    )
+                    if(isBreak) break
+                    withContext(Dispatchers.Main) toast@ {
+                        if(i != 1) return@toast
+                        Toast.makeText(
+                            context,
+                            "Contents Change..",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                    delay(100)
+                }
+            }
+            val updateChecksum = FileSystems.checkSum(
+                qrLogoParentDirPath,
+                qrLogoName
+            )
+            if(
+                updateChecksum == previousChecksum
+            ) return@launch
+            withContext(Dispatchers.Main) {
+                dialogObj?.findViewById<AppCompatImageView>(
+                    replace_qr_logo_int
+                )?.load(qrLogoPath)
+                when(fragment) {
+//                    is CommandIndexFragment -> {
+//                        val indexfannelListUpdateIntent = Intent()
+//                        indexfannelListUpdateIntent.action =
+//                            BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action
+//                        context.sendBroadcast(indexfannelListUpdateIntent)
+//                    }
+                    is EditFragment -> {
+                        WithIndexListView.listIndexListUpdateFileList(
+                            fragment,
+                            WithIndexListView.makeFileList()
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun isForBreakWithCheckSum(
+        previousChecksum: String,
+        qrLogoParentDirPath: String,
+        qrLogoName: String
+    ): Boolean {
+        val updateChecksum = FileSystems.checkSum(
+            qrLogoParentDirPath,
+            qrLogoName
+        )
+        return when(
+            updateChecksum != previousChecksum
+        ) {
+            true -> {
+                delay(100)
+                val confirmUpdateChecksum = FileSystems.checkSum(
+                    qrLogoParentDirPath,
+                    qrLogoName
+                )
+                if(
+                    confirmUpdateChecksum == updateChecksum
+                ) return true
+                false
+            }
+            else -> false
         }
     }
 }
