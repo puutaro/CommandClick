@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -32,11 +31,6 @@ object ScriptFileDescription {
             currentScriptContentsList,
             fannelName,
         ) ?: return
-        Toast.makeText(
-            fragment.context,
-            labelingSecConList.joinToString("\n"),
-            Toast.LENGTH_SHORT
-        ).show()
 
         val descCon = makeDescriptionContents(
             labelingSecConList,
@@ -51,14 +45,6 @@ object ScriptFileDescription {
         val readmeUrl = getReadmeUrl(descCon)
         val isReadmeUrl = !readmeUrl.isNullOrEmpty()
         val isLaunchWebReadme = isTerminalFragment && isReadmeUrl
-        Toast.makeText(
-            fragment.context,
-            "isTerminalFragment: ${isTerminalFragment}\nisReadmeUrl: ${isReadmeUrl}\nisMdConAsHttp: ${isMdConAsHttp(
-                labelingSecConList,
-                fannelName,
-            )}",
-            Toast.LENGTH_SHORT
-        ).show()
         when(isLaunchWebReadme){
             true -> {
                 val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +

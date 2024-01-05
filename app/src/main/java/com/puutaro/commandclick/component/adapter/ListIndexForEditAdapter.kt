@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.component.adapter
 
-import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,9 +13,9 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.proccess.qr.QrMapper
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +29,7 @@ class ListIndexForEditAdapter(
     val editFragment: EditFragment,
     val currentAppDirPath: String,
     var listIndexList: MutableList<String>,
-    val isConQr: Boolean,
+    val isFileCon: Boolean,
 ): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
 {
 
@@ -70,11 +69,10 @@ class ListIndexForEditAdapter(
             parent,
             false
         )
-        val listIndexListViewHolder = ListIndexListViewHolder(
+        return ListIndexListViewHolder(
             activity,
             itemView
         )
-        return listIndexListViewHolder
     }
 
     override fun getItemCount(): Int = listIndexList.size
@@ -106,14 +104,20 @@ class ListIndexForEditAdapter(
                     fannelName.isEmpty()
                     || fannelName == "-"
                 ) return@withContext
+                FileSystems.writeFile(
+                    UsePath.cmdclickDefaultAppDirPath,
+                    "qrdefault.txt",
+                    "qrPngPath: ${qrPngPath}\nisFile: ${qrPngPathObj.isFile}"
+                )
                 if(qrPngPathObj.isFile){
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
-                qrLogoCreateHandler(
-                    qrLogo,
+                qrLogo.createAndSaveWithGitCloneOrFileCon(
+                    currentAppDirPath,
                     fannelName,
                     fannelDirPath,
+                    isFileCon,
                 )?.let {
                     holder.fannelContentsQrLogoView.setImageDrawable(it)
                 }
@@ -155,7 +159,7 @@ class ListIndexForEditAdapter(
                         qrLongClickListener?.onQrLongClick(
                             fannelContentsQrLogoView,
                             holder,
-                            isConQr,
+                            isFileCon,
                             position
                         )
                         true
@@ -178,7 +182,7 @@ class ListIndexForEditAdapter(
         fun onQrLongClick(
             imageView: AppCompatImageView,
             holder: ListIndexListViewHolder,
-            isConQr: Boolean,
+            isFileCon: Boolean,
             position: Int
         )
     }
@@ -234,35 +238,4 @@ class ListIndexForEditAdapter(
         ) return com.puutaro.commandclick.R.color.terminal_color
         return com.puutaro.commandclick.R.color.fannel_icon_color
     }
-
-    private fun qrLogoCreateHandler(
-        qrLogo: QrLogo,
-        fannelName: String,
-        fannelDirPath: String,
-    ): Drawable? {
-        return when(isConQr){
-            true -> {
-                val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
-                val qrDesignMap = qrLogo.readQrDesignMapWithCreate(
-                    qrDesignFilePath,
-                    currentAppDirPath,
-                    fannelName,
-                )
-                qrLogo.createAndSaveFromDesignMap(
-                    qrDesignMap,
-                    currentAppDirPath,
-                    fannelName,
-                )
-            }
-            else -> {
-                val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
-                qrLogo.createAndSaveRnd(
-                    QrMapper.onGitTemplate.format(fannelRawName),
-                    currentAppDirPath,
-                    fannelName,
-                )
-            }
-        }
-    }
-
 }

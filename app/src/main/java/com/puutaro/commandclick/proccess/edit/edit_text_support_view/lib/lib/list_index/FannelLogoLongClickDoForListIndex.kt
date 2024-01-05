@@ -35,7 +35,7 @@ object FannelLogoLongClickDoForListIndex {
                 override fun onQrLongClick(
                     imageView: AppCompatImageView,
                     holder: ListIndexForEditAdapter.ListIndexListViewHolder,
-                    isConQr: Boolean,
+                    isFileCon: Boolean,
                     position: Int
                 ) {
                     val fannelName = holder.fannelNameTextView.text.toString()
@@ -66,7 +66,7 @@ object FannelLogoLongClickDoForListIndex {
                     qrLogoDialogObj?.findViewById<AppCompatImageView>(
                         R.id.qr_logo_list_index_dialog_top_image
                     )?.load(qrLogoPath)
-                    val buttonWeight = decideButtonWeight(isConQr)
+                    val buttonWeight = decideButtonWeight(isFileCon)
                     setPassButton(
                         editFragment,
                         currentAppDirPath,
@@ -83,14 +83,14 @@ object FannelLogoLongClickDoForListIndex {
                         currentAppDirPath,
                         fannelName,
                         buttonWeight,
-                        isConQr
+                        isFileCon
                     )
                     setChangeButton(
                         editFragment,
                         currentAppDirPath,
                         fannelName,
                         buttonWeight,
-                        isConQr
+                        isFileCon
                     )
                     setCancelButton(buttonWeight)
                     val cancelButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
@@ -112,10 +112,10 @@ object FannelLogoLongClickDoForListIndex {
             }
     }
 
-    private fun decideButtonWeight(isConQr: Boolean): Float {
+    private fun decideButtonWeight(isFileCon: Boolean): Float {
         val fourWeight = 0.25f
         val fileWeight = 0.2f
-        return when(isConQr){
+        return when(isFileCon){
             true -> fourWeight
             else -> fileWeight
         }
@@ -170,7 +170,7 @@ object FannelLogoLongClickDoForListIndex {
         currentAppDirPath: String,
         fannelName: String,
         buttonWeight: Float,
-        isConQr: Boolean
+        isFileCon: Boolean
     ){
         val changeButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
             R.id.qr_logo_list_index_dialog_change
@@ -184,7 +184,7 @@ object FannelLogoLongClickDoForListIndex {
                 fannelName,
                 qrLogoDialogObj,
                 R.id.qr_logo_list_index_dialog_top_image,
-                isConQr,
+                isFileCon,
             )
         }
     }
@@ -194,12 +194,12 @@ object FannelLogoLongClickDoForListIndex {
         currentAppDirPath: String,
         fannelName: String,
         buttonWeight: Float,
-        isConQr: Boolean,
+        isFileCon: Boolean,
     ){
         val conUpdateButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
             R.id.qr_logo_list_index_dialog_con_update
         )?: return
-        if(!isConQr){
+        if(!isFileCon){
             conUpdateButton.isVisible = false
             return
         }

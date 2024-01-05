@@ -83,6 +83,33 @@ class QrLogo(
         titleImageView.load(qrLogoPath)
     }
 
+    fun createAndSaveWithGitCloneOrFileCon(
+        currentAppDirPath: String,
+        fannelName: String,
+        fannelDirPath: String,
+        isFileCon: Boolean,
+    ): Drawable? {
+        val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
+        val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
+        val qrContents = when(isFileCon) {
+            true -> ReadText(
+                currentAppDirPath,
+                fannelName
+            ).readText()
+            else ->
+                QrMapper.onGitTemplate.format(fannelRawName)
+        }
+        val qrDesignMap = createNewDesignMap(
+            qrDesignFilePath,
+            qrContents,
+        )
+        return createAndSaveFromDesignMap(
+            qrDesignMap,
+            currentAppDirPath,
+            fannelName,
+        )
+    }
+
     fun createMonochrome(
         qrSrcStr: String,
     ): Drawable? {
@@ -144,71 +171,7 @@ class QrLogo(
         return null
     }
 
-    fun create(
-        qrSrcStr: String,
-    ): Drawable? {
-        val context = fragment.context ?: return null
-        val rnd = Random(System.currentTimeMillis())
-        val insertLogoIndex =  decideLogoIndex(rnd)
-        try {
-            val data = QrData.Url(qrSrcStr)
-
-            val options = createQrVectorOptions {
-                padding = .075f
-//                    .125f
-                background {
-                    drawable =
-                        ContextCompat
-                            .getDrawable(
-                                context,
-                                R.color.white
-                            )
-                }
-                logo {
-                    drawable = ContextCompat
-                        .getDrawable(context, logoList[insertLogoIndex])?.apply {
-                            setTint(
-                                decideDarkColor(rnd)
-                            )
-                        }
-                    size = .25f
-                    padding = QrVectorLogoPadding.Natural(.2f)
-                    shape = QrVectorLogoShape.Circle
-                    background {
-                        QrVectorColor.Solid(
-                            ContextCompat.getColor(context, R.color.terminal_color)
-                        )
-                    }
-                }
-                val ballFrameColor = decideDarkColor(rnd)
-                colors {
-                    dark = QrVectorColor.Solid(
-                        ContextCompat.getColor(context, R.color.terminal_color)
-                    )
-                    ball = QrVectorColor.Solid(
-                        ballFrameColor
-                    )
-                    frame = QrVectorColor.Solid(
-                        ContextCompat.getColor(context, R.color.terminal_color)
-                    )
-                }
-                shapes {
-                    darkPixel = QrVectorPixelShape
-                        .RoundCorners(.5f)
-                    ball = QrVectorBallShape
-                        .RoundCorners(.25f)
-                    frame = QrVectorFrameShape
-                        .RoundCorners(.25f)
-                }
-            }
-            return QrCodeDrawable(data, options)
-        } catch(e: Exception){
-            LogSystems.stdErr(e.toString())
-        }
-        return null
-    }
-
-    fun createFromQrDesign(
+    fun createFromQrDesignMap(
         qrDesignMap: Map<String, String>,
     ): Drawable? {
         val context = fragment.context ?: return null
@@ -300,19 +263,7 @@ class QrLogo(
         fannelName: String,
     ): Drawable? {
         return qrDrawableSave(
-            createFromQrDesign(qrDesignMap),
-            currentAppDirPath,
-            fannelName,
-        )
-    }
-
-    fun createAndSaveRnd(
-        qrSrcStr: String,
-        currentAppDirPath: String,
-        fannelName: String,
-    ): Drawable? {
-        return qrDrawableSave(
-            create(qrSrcStr),
+            createFromQrDesignMap(qrDesignMap),
             currentAppDirPath,
             fannelName,
         )
@@ -349,7 +300,7 @@ class QrLogo(
         return null
     }
 
-    fun decideLogoIndex(
+    private fun decideLogoIndex(
         rnd: Random
     ): Int {
         var entryIndex = 0
@@ -391,7 +342,7 @@ class QrLogo(
         return isEditExecuteForJs || isEditExecuteForShell
     }
 
-    fun getDarkColor(
+    private fun getDarkColor(
         rnd: Random,
         qrDesignMap: Map<String, String>,
         qrDesignFileKey: String,
@@ -409,7 +360,7 @@ class QrLogo(
         }
     }
 
-    fun decideDarkColor(
+    private fun decideDarkColor(
         rnd: Random
     ): Int {
         return Color(
@@ -433,7 +384,7 @@ class QrLogo(
                     currentAppDirPath,
                     fannelName,
                 )
-                else -> createNewDesignMap(
+                else -> createConDesignMap(
                     qrDesignFilePath,
                     currentAppDirPath,
                     fannelName,
@@ -469,7 +420,7 @@ class QrLogo(
         return updateQrDesignMap
     }
 
-    fun createNewDesignMap(
+    private fun createConDesignMap(
         qrDesignFilePath: String,
         currentAppDirPath: String,
         fannelName: String,
@@ -483,6 +434,24 @@ class QrLogo(
                 currentAppDirPath,
                 fannelName,
             ).readText()
+        )
+        saveQrDesignMap(
+            qrDesignFilePath,
+            newQrDesignMap,
+        )
+        return newQrDesignMap
+    }
+
+    fun createNewDesignMap(
+        qrDesignFilePath: String,
+        qrContents: String,
+    ): Map<String, String> {
+        val rnd = Random(System.currentTimeMillis())
+        val newQrDesignMap = makeQrDesignMap(
+            decideLogoIndex(rnd).toString(),
+            decideDarkColor(rnd).toString(),
+            decideDarkColor(rnd).toString(),
+            qrContents
         )
         saveQrDesignMap(
             qrDesignFilePath,
@@ -508,7 +477,7 @@ class QrLogo(
         }.toMap().filterKeys { it.isNotEmpty() }
     }
 
-    fun makeQrDesignMap(
+    private fun makeQrDesignMap(
         logoIndexIntStr: String,
         logoColorIntStr: String,
         squareColorIntStr: String,
@@ -522,7 +491,7 @@ class QrLogo(
         )
     }
 
-    fun saveQrDesignMap(
+    private fun saveQrDesignMap(
         qrDesignFilePath: String,
         qrDesignMap: Map<String, String>
     ){
@@ -538,7 +507,7 @@ class QrLogo(
         )
     }
 
-    fun getQrDesignFileKey(
+    private fun getQrDesignFileKey(
         key: String,
         qrDesignMap: Map<String, String>
     ): String? {

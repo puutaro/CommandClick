@@ -15,7 +15,6 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.proccess.qr.QrMapper
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -76,7 +75,6 @@ class FannelIndexListAdapter(
 
     override fun getItemCount(): Int = fannelIndexList.size
 
-
     override fun onBindViewHolder(
         holder: FannelIndexListViewHolder,
         position: Int
@@ -92,8 +90,8 @@ class FannelIndexListAdapter(
                     fannelName
                 ).textToList().take(maxTakeSize)
             }
-            val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+            val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
             val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
 
@@ -102,10 +100,11 @@ class FannelIndexListAdapter(
                     holder.fannelContentsQrLogoView.load(qrPngPath)
                     return@withContext
                 }
-                qrLogo.createAndSaveRnd(
-                    QrMapper.onGitTemplate.format(fannelRawName),
+                qrLogo.createAndSaveWithGitCloneOrFileCon(
                     currentAppDirPath,
                     fannelName,
+                    fannelDirPath,
+                    false,
                 )?.let {
                     holder.fannelContentsQrLogoView.setImageDrawable(it)
                 }

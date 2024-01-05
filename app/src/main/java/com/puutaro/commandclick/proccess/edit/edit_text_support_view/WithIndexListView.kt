@@ -38,6 +38,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.lis
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.QrConGetterDialog
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
@@ -280,7 +281,6 @@ class WithIndexListView(
             editParameters
         )
         val indexListMap = getIndexListMap(
-            editParameters,
             replacedSetVariableMap
         )
         filterDir = getFilterListDir(
@@ -305,7 +305,7 @@ class WithIndexListView(
         )
 
         val fileList = makeFileList()
-        val isConQr = howConQr(
+        val isFileCon = howFileConQr(
             replacedSetVariableMap,
         )
 
@@ -315,7 +315,7 @@ class WithIndexListView(
             editFragment,
             filterDir,
             fileList,
-            isConQr
+            isFileCon
         )
         editListRecyclerView.adapter = listIndexForEditAdapter
         val preLoadLayoutManager = PreLoadLayoutManager(
@@ -777,12 +777,15 @@ class WithIndexListView(
                     "setting"
                 )
             }
-            PreMenuType.SCAN_QR.menuName -> {
-                QrScanner(
+            PreMenuType.SCAN_QR.menuName -> QrScanner(
+                editFragment,
+                filterDir
+            ).scanFromCamera()
+            PreMenuType.GET_QR_CON.menuName ->
+                QrConGetterDialog.launch(
                     editFragment,
-                    filterDir
-                ).scanFromCamera()
-            }
+                    filterDir,
+                )
         }
         val execJsFilePath = "${parentDirPath}/${clickJsName}"
         terminalViewModel.jsArguments = listOf(
@@ -1374,7 +1377,6 @@ class WithIndexListView(
     }
 
     private fun getIndexListMap(
-        editParameters: EditParameters,
         replacedSetVariableMap: Map<String, String>?
     ): Map<String, String>? {
         val listDirKeyName = IndexListEditKey.listDir.name
@@ -1591,15 +1593,15 @@ class WithIndexListView(
         ).show()
     }
 
-    private fun howConQr(
+    private fun howFileConQr(
         replacedSetVariableMap: Map<String, String>?
     ): Boolean {
-        val onConQrKeyName = OnConQrFlag.onConQr.name
+        val onFileConKeyName = OnFileConFlag.onFileCon.name
         if(
             replacedSetVariableMap.isNullOrEmpty()
         ) return false
         return replacedSetVariableMap.keys.any {
-            it == onConQrKeyName
+            it == onFileConKeyName
         }
     }
 }
@@ -1615,8 +1617,8 @@ private enum class IndexListEditMenu {
     menu,
 }
 
-private enum class OnConQrFlag {
-    onConQr,
+private enum class OnFileConFlag {
+    onFileCon,
 }
 private enum class IndexListEditKey {
     listDir,
@@ -1677,4 +1679,5 @@ enum class PreMenuType(
     EDIT_S("editS", R.drawable.icons8_edit),
     DESC("desc", R.drawable.icons8_info),
     SCAN_QR("scanQR", R.drawable.icons_qr_code),
+    GET_QR_CON("getQR", R.drawable.icons_qr_code),
 }

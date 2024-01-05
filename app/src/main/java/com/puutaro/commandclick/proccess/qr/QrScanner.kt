@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
-import android.util.Log
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -27,16 +26,20 @@ import com.google.zxing.MultiFormatReader
 import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.getRandomString
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class QrScanner(
@@ -84,7 +87,58 @@ class QrScanner(
     }
 
     fun scanFromCamera() {
-        val activity = fragment.activity ?: return
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+        getCameraPermission()
+        CoroutineScope(Dispatchers.IO).launch {
+            val isCameraPermission = withContext(Dispatchers.IO) {
+                howCameraPermission(terminalViewModel)
+            }
+//            val isCameraPermission = ContextCompat.checkSelfPermission(
+//                activity,
+//                Manifest.permission.CAMERA
+//            ) == PackageManager.PERMISSION_GRANTED
+            if(!isCameraPermission) return@launch
+            withContext(Dispatchers.Main) {
+                launchCameraDialog()
+            }
+        }
+    }
+
+    fun saveFromCamera(
+        fileName: String,
+    ) {
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+        getCameraPermission()
+        CoroutineScope(Dispatchers.IO).launch {
+            val isCameraPermission = withContext(Dispatchers.IO) {
+                howCameraPermission(terminalViewModel)
+            }
+//            val isCameraPermission = ContextCompat.checkSelfPermission(
+//                activity,
+//                Manifest.permission.CAMERA
+//            ) == PackageManager.PERMISSION_GRANTED
+            if(!isCameraPermission) return@launch
+            withContext(Dispatchers.Main) {
+                launchCameraDialogForSave(fileName)
+            }
+        }
+    }
+    private suspend fun howCameraPermission(
+        terminalViewModel: TerminalViewModel
+    ): Boolean {
+        val activity = fragment.activity
+            ?: return false
+        for (i in 1..100) {
+            if (!terminalViewModel.onPermDialog) break
+            delay(100)
+        }
+       return ContextCompat.checkSelfPermission(
+            activity,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun getCameraPermission(){
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         terminalViewModel.onPermDialog = true
         val cameraPermissionStr = Manifest.permission.CAMERA
@@ -98,22 +152,6 @@ class QrScanner(
                 val listener =
                     fragContext as? EditFragment.OnGetPermissionListenerForEdit
                 listener?.onGetPermissionForEdit(cameraPermissionStr)
-            }
-        }
-        CoroutineScope(Dispatchers.IO).launch {
-            withContext(Dispatchers.IO) {
-                for (i in 1..100) {
-                    if (!terminalViewModel.onPermDialog) break
-                    delay(100)
-                }
-            }
-            val isCameraPermission = ContextCompat.checkSelfPermission(
-                activity,
-                Manifest.permission.CAMERA
-            ) == PackageManager.PERMISSION_GRANTED
-            if(!isCameraPermission) return@launch
-            withContext(Dispatchers.Main) {
-                launchCameraDialog()
             }
         }
     }
@@ -192,6 +230,87 @@ class QrScanner(
         qrScanDialogObj?.show()
     }
 
+    fun launchCameraDialogForSave(
+        fileName: String,
+    ) {
+        val context = fragment.context
+            ?: return
+        qrScanDialogObj = Dialog(
+            context,
+            R.style.BottomSheetDialogTheme
+        )
+        qrScanDialogObj?.setContentView(
+            R.layout.qr_scan_dialog
+        )
+        val qrScanTitle =
+            qrScanDialogObj?.findViewById<AppCompatTextView>(
+                R.id.qr_scan_dialog_title
+            )
+        qrScanTitle?.isVisible = false
+        val qrScanView =
+            qrScanDialogObj?.findViewById<CodeScannerView>(
+                R.id.qr_scan_view
+            ) ?: return
+        val codeScanner = CodeScanner(context, qrScanView)
+
+        // Parameters (default values)
+        codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
+        codeScanner.formats = CodeScanner.ALL_FORMATS // list of type BarcodeFormat,
+        // ex. listOf(BarcodeFormat.QR_CODE)
+        codeScanner.autoFocusMode = AutoFocusMode.SAFE // or CONTINUOUS
+        codeScanner.scanMode = ScanMode.SINGLE // or CONTINUOUS or PREVIEW
+        codeScanner.isAutoFocusEnabled = true // Whether to enable auto focus or not
+        codeScanner.isFlashEnabled = false // Whether to enable flash or not
+
+        // Callbacks
+        codeScanner.decodeCallback = DecodeCallback {
+            CoroutineScope(Dispatchers.Main).launch {
+                val decodeText = it.text
+                codeScanner.releaseResources()
+                withContext(Dispatchers.IO) {
+                    FileSystems.writeFile(
+                        currentAppDirPath,
+                        fileName,
+                        decodeText
+                    )
+                }
+                qrScanDialogObj?.dismiss()
+                withContext(Dispatchers.IO) {
+                    BroadcastSender.normalSend(
+                        fragContext,
+                        BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+                    )
+                }
+            }
+        }
+        codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
+            dismissProcess(codeScanner)
+        }
+
+        qrScanView.setOnClickListener {
+            codeScanner.startPreview()
+        }
+
+        val qrScanBottomLinearLayout = qrScanDialogObj?.findViewById<LinearLayout>(
+            R.id.qr_scan_bottom_linearlayout
+        ) ?: return
+        val cancelButton = makeCancelButton(
+            codeScanner,
+            1F,
+        )
+        qrScanBottomLinearLayout.addView(cancelButton)
+        qrScanDialogObj?.setOnCancelListener {
+            dismissProcess(codeScanner)
+        }
+        codeScanner.startPreview()
+
+        qrScanDialogObj?.window?.setLayout(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+        qrScanDialogObj?.show()
+    }
+
     private fun dismissProcess(
         codeScanner: CodeScanner
     ){
@@ -248,7 +367,8 @@ class QrScanner(
     }
 
     private fun makeCancelButton(
-        codeScanner: CodeScanner
+        codeScanner: CodeScanner,
+        weight: Float = 0.5F
     ): ImageButton {
         val fragContext = fragment.context
         val imageButton = ImageButton(fragContext)
@@ -258,7 +378,7 @@ class QrScanner(
             0,
             ViewGroup.LayoutParams.MATCH_PARENT,
         )
-        linearLayoutForImageButtonParam.weight = 0.5F
+        linearLayoutForImageButtonParam.weight = weight
         linearLayoutForImageButtonParam.gravity = Gravity.CENTER
         imageButton.layoutParams = linearLayoutForImageButtonParam
         imageButton.setImageResource(R.drawable.icons8_cancel)

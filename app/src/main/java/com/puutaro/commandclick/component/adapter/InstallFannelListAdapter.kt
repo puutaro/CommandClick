@@ -13,7 +13,6 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.proccess.qr.QrMapper
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
@@ -203,6 +202,7 @@ class InstallFannelListAdapter(
         holder: FannelInstallerListViewHolder,
     ){
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
         val qrPngPathObjInInstallIndex =
             File(
                 "${UsePath.cmdclickFannelDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
@@ -223,11 +223,11 @@ class InstallFannelListAdapter(
             holder.fannelContentsQrLogoView.load(qrPngPathObjInFannelIndex.absolutePath)
             return
         }
-        val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
-        qrLogo.createAndSaveRnd(
-            QrMapper.onGitTemplate.format(fannelRawName),
+        qrLogo.createAndSaveWithGitCloneOrFileCon(
             currentAppDirPath,
             fannelName,
+            fannelDirPath,
+            false
         )?.let {
             holder.fannelContentsQrLogoView.setImageDrawable(it)
         }

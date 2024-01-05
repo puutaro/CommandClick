@@ -230,13 +230,13 @@ object QrDialogMethod {
         fannelName: String,
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
-        onQrCon: Boolean = false
+        isFileCon: Boolean = false
     ){
 
         val context = fragment.context ?: return
-        val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val qrLogoPath = "${currentAppDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        val qrLogoPath = "${fannelDirPath}/${UsePath.qrPngRelativePath}"
         val qrLogoPathObj = File(qrLogoPath)
         val qrLogoParentDirPath = qrLogoPathObj.parent
             ?: return
@@ -250,28 +250,12 @@ object QrDialogMethod {
                 )
             }
             withContext(Dispatchers.IO) {
-                when(onQrCon) {
-                    true -> {
-                        val qrDesignFilePath = "${qrLogoParentDirPath}/${UsePath.qrDesignFileName}"
-                        val qrDesignMap = qrLogo.createNewDesignMap(
-                            qrDesignFilePath,
-                            currentAppDirPath,
-                            fannelName
-                        )
-                        qrLogo.createAndSaveFromDesignMap(
-                            qrDesignMap,
-                            currentAppDirPath,
-                            fannelName,
-                        )
-                    }
-                    else -> {
-                        qrLogo.createAndSaveRnd(
-                            QrMapper.onGitTemplate.format(fannelRawName),
-                            currentAppDirPath,
-                            fannelName,
-                        )
-                    }
-                }
+                qrLogo.createAndSaveWithGitCloneOrFileCon(
+                    currentAppDirPath,
+                    fannelName,
+                    fannelDirPath,
+                    isFileCon,
+                )
             }
             withContext(Dispatchers.IO){
                 for(i in 1..20){
