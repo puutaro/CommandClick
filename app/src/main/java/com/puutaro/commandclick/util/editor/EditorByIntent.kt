@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.editor
 
 import android.content.Context
 import android.content.Intent
@@ -9,14 +9,14 @@ import com.puutaro.commandclick.BuildConfig
 import java.io.File
 
 class Editor(
-    private val appDirPath: String,
-    private val shellScriptName: String,
+    private val parentDirPath: String,
+    private val fileName: String,
     private val context: Context?
 ) {
-    fun open(){
+    fun byIntent(){
         val openFile = File(
-            appDirPath,
-            shellScriptName
+            parentDirPath,
+            fileName
         )
         val uri = FileProvider.getUriForFile(
             context as Context,
