@@ -150,6 +150,5 @@
                 </LinearLayout>
             </android.widget.Toolbar>
         </LinearLayout>
-
     </RelativeLayout>
 </layout>

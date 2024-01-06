@@ -3,14 +3,15 @@ package com.puutaro.commandclick.util.editor
 import android.app.Dialog
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.util.FileSystems
+import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.util.LinkedList
 
 object EditorByEditText {
@@ -25,6 +26,7 @@ object EditorByEditText {
     ){
         val context = fragment.context
             ?: return
+        val activity = fragment.activity
         editorDialog = Dialog(
             context
         )
@@ -56,16 +58,21 @@ object EditorByEditText {
             dirPath,
             fileName
         )
+        KeyboardVisibilityEvent.setEventListener(activity) {
+                isOpen ->
+            if(editorDialog?.isShowing != true) return@setEventListener
+            confirmTitleTextView?.isVisible = !isOpen
+        }
         editorDialog?.setOnCancelListener {
             editorDialog?.dismiss()
         }
         editorDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
+            ViewGroup.LayoutParams.MATCH_PARENT
         )
-        editorDialog?.window?.setGravity(
-            Gravity.BOTTOM
-        )
+//        editorDialog?.window?.setGravity(
+//            Gravity.BOTTOM
+//        )
         editorDialog?.show()
 
     }

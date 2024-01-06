@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,11 +10,13 @@
     android:weightSum="1"
     >
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/editor_by_edit_text_dialog_con_linear_layout"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/editor_by_edit_text_dialog_toolbar_linearLayout"
         android:paddingTop="15dp"
+        android:weightSum="1"
         >
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/editor_by_edit_text_dialog_title"
@@ -39,9 +41,10 @@
             android:scrollbars="vertical"
             android:orientation="vertical"
             android:layout_weight="1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constrainedHeight="true"
             android:descendantFocusability="blocksDescendants"
             android:scrollbarThumbVertical="@android:color/darker_gray"
-            android:layout_above="@+id/text_simple_dialog_scroll_view"
             android:paddingTop="0dp"
             android:paddingBottom="15dp"
             android:paddingStart="15dp"
@@ -63,10 +66,14 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/editor_by_edit_text_dialog_toolbar_linearLayout"
+        android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:background="@color/setting_menu_footer"
+        android:weightSum="1"
+        android:imeOptions="actionDone"
         >
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/editor_by_edit_text_dialog_undo"
@@ -76,7 +83,7 @@
             app:tint="@color/cmdclick_text_black"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             />
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/editor_by_edit_text_dialog_redo"
@@ -87,7 +94,7 @@
             app:tint="@color/cmdclick_text_black"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             />
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/editor_by_edit_text_dialog_cancel"
@@ -97,7 +104,7 @@
             app:tint="@color/cmdclick_text_black"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             />
         <androidx.appcompat.widget.AppCompatImageButton
             android:id="@+id/editor_by_edit_text_dialog_save"
@@ -107,7 +114,7 @@
             app:tint="@color/gray_out"
             android:backgroundTint="@color/setting_menu_footer"
             android:layout_gravity="center"
-            android:layout_weight="0.5"
+            android:layout_weight="0.25"
             />
     </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.appcompat.widget.LinearLayoutCompat>
+</RelativeLayout>
