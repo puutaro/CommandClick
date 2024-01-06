@@ -19,6 +19,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.QrScanJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
+import com.puutaro.commandclick.util.DialogObject
 import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(
@@ -109,6 +110,20 @@ class JsDialog(
             title,
             message,
             suggestVars,
+        )
+    }
+
+    @JavascriptInterface
+    fun textDialog(
+        title: String,
+        contents: String,
+        scrollBottom: Boolean
+    ) {
+        DialogObject.simpleTextShow(
+            context,
+            title,
+            contents,
+            scrollBottom
         )
     }
 
