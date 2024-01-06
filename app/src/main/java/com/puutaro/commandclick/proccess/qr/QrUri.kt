@@ -38,9 +38,10 @@ object QrUri {
     fun handler(
         fragment: Fragment,
         currentAppDirPath: String,
-        loadConSrc: String,
+        loadConSrcWithNewline: String,
         isMoveCurrentDir: String? = null
     ) {
+        val loadConSrc = loadConSrcWithNewline.replace("\n", "")
         when (true) {
             loadConSrc.startsWith(QrLaunchType.Http.prefix),
             loadConSrc.startsWith(QrLaunchType.Https.prefix),

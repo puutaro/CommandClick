@@ -47,7 +47,6 @@ class QrHistoryListDialog(
             ?.window
             ?.setGravity(Gravity.BOTTOM)
         subMenuDialog?.show()
-
     }
 
     private fun setCancelListener(){

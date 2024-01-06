@@ -12,7 +12,8 @@ object QrDecodedTitle {
     private val displayTitleTextLimit = 50
     private val jsDescSeparator = QrSeparator.sepalator.str
 
-    suspend fun makeTitle(scanCon: String): String{
+    suspend fun makeTitle(scanConWithNewline: String): String{
+        val scanCon = scanConWithNewline.replace("\n", "")
         return when(true){
             scanCon.startsWith(QrLaunchType.Http.prefix),
             scanCon.startsWith(QrLaunchType.Https.prefix)

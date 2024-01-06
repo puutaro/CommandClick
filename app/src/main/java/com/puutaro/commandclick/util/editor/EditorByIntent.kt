@@ -8,7 +8,7 @@ import androidx.core.content.FileProvider
 import com.puutaro.commandclick.BuildConfig
 import java.io.File
 
-class Editor(
+class EditorByIntent(
     private val parentDirPath: String,
     private val fileName: String,
     private val context: Context?

@@ -11,10 +11,19 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.qr.QrScanner
 import java.io.File
 
-object SimpleEditorDialog {
+object SimpleEdit {
+    fun handler(
+        editFragment: EditFragment,
+        filterDir: String,
+    ){
+
+    }
+}
+
+
+private object SimpleEditorDialog {
 
     private var simpleEditorDialog: Dialog? = null
     fun launch(
@@ -75,7 +84,7 @@ object SimpleEditorDialog {
                 ).show()
                 return@setOnClickListener
             }
-            
+
         }
         simpleEditorDialog?.setOnCancelListener {
             simpleEditorDialog?.dismiss()

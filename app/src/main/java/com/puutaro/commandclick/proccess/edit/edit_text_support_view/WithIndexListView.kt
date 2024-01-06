@@ -40,6 +40,8 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Exe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.QrConGetterDialog
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
+import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.QuoteTool
@@ -47,12 +49,13 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.DialogObject
-import com.puutaro.commandclick.util.Editor
+import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -324,7 +327,7 @@ class WithIndexListView(
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
         invokeItemSetClickListenerForFileList()
-        invokeQrLogoSetClickListenerForFileList()
+        invokeQrLogoSetClickListenerForFileList(replacedSetVariableMap)
         invokeQrLogoSetLongClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForIndexList(
             menuMapList
@@ -355,7 +358,12 @@ class WithIndexListView(
         }
     }
 
-    private fun invokeQrLogoSetClickListenerForFileList() {
+    private fun invokeQrLogoSetClickListenerForFileList(
+        replacedSetVariableMap: Map<String, String>?
+    ) {
+        val isExecQrInLogoClick = howExecQrInLogoClick(
+            replacedSetVariableMap
+        )
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
         listIndexForEditAdapter.fannelQrLogoClickListener = object: ListIndexForEditAdapter.OnFannelQrLogoItemClickListener {
@@ -372,11 +380,26 @@ class WithIndexListView(
                     selectedItem
                 ).readText()
                 else "no file"
-                DialogObject.simpleTextShow(
-                    itemView.context,
-                    "file contents: $selectedItem",
-                    contents
-                )
+                when(isExecQrInLogoClick) {
+                    false
+                    -> DialogObject.simpleTextShow(
+                        itemView.context,
+                        "file contents: $selectedItem",
+                        contents
+                    )
+                    else -> {
+                        CoroutineScope(Dispatchers.Main).launch {
+                            QrConfirmDialog(
+                                editFragment,
+                                null,
+                                null,
+                                filterDir,
+                                QrDecodedTitle.makeTitle(contents),
+                                contents
+                            ).launch()
+                        }
+                    }
+                }
                 editListSearchEditText.setText(String())
             }
         }
@@ -777,6 +800,17 @@ class WithIndexListView(
                     "setting"
                 )
             }
+            PreMenuType.SIMPLE_EDIT.menuName -> {
+                EditorByEditText.byEditText(
+                    editFragment,
+                    filterDir,
+                    selectedItem,
+                    ReadText(
+                        filterDir,
+                        selectedItem
+                    ).readText()
+                )
+            }
             PreMenuType.SCAN_QR.menuName -> QrScanner(
                 editFragment,
                 filterDir
@@ -1127,12 +1161,12 @@ class WithIndexListView(
             noFileToast()
             return
         }
-        val editor = Editor(
+        val editorByIntent = EditorByIntent(
             filterDir,
             selectedItem,
             context
         )
-        editor.open()
+        editorByIntent.byIntent()
     }
 
     private fun execAddItem(){
@@ -1596,12 +1630,24 @@ class WithIndexListView(
     private fun howFileConQr(
         replacedSetVariableMap: Map<String, String>?
     ): Boolean {
-        val onFileConKeyName = OnFileConFlag.onFileCon.name
+        val onFileConKeyName = OnFlags.onFileCon.name
         if(
             replacedSetVariableMap.isNullOrEmpty()
         ) return false
         return replacedSetVariableMap.keys.any {
             it == onFileConKeyName
+        }
+    }
+
+    private fun howExecQrInLogoClick(
+        replacedSetVariableMap: Map<String, String>?
+    ): Boolean {
+        val onExecQrInLogoClickKeyName = OnFlags.onExecQrInLogoClick.name
+        if(
+            replacedSetVariableMap.isNullOrEmpty()
+        ) return false
+        return replacedSetVariableMap.keys.any {
+            it == onExecQrInLogoClickKeyName
         }
     }
 }
@@ -1617,8 +1663,9 @@ private enum class IndexListEditMenu {
     menu,
 }
 
-private enum class OnFileConFlag {
+private enum class OnFlags {
     onFileCon,
+    onExecQrInLogoClick,
 }
 private enum class IndexListEditKey {
     listDir,
@@ -1667,6 +1714,7 @@ enum class PreMenuType(
     SYNC("sync", R.drawable.icons8_update),
     DELETE("delete", R.drawable.icons8_refresh),
     WRITE("write", R.drawable.icons8_edit),
+    SIMPLE_EDIT("sEdit", R.drawable.icons8_edit_frame),
     ADD("add", R.drawable.icons8_plus),
     ADD_APP_DIR("add_app_dir", R.drawable.icons8_plus),
     RENAME_APP_DIR("rename_app_dir", R.drawable.icons8_edit_frame),

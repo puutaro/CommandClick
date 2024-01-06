@@ -47,7 +47,7 @@ class QrConfirmDialog(
             confirmDialogObj?.findViewById<AppCompatTextView>(
                 R.id.confirm_text_dialog_text_view
             )
-        confirmContentTextView?.text = body.take(displayUriTextLimit)
+            confirmContentTextView?.text = body.take(displayUriTextLimit)
         val confirmCancelButton =
             confirmDialogObj?.findViewById<AppCompatImageButton>(
                 R.id.confirm_text_dialog_cancel
