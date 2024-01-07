@@ -30,12 +30,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-object QrUri {
+object QrUriHandler {
 
     private val jsDescSeparator = QrSeparator.sepalator.str
     private val keyMissingErrStr = "Must specify %s"
 
-    fun handler(
+    fun handle(
         fragment: Fragment,
         currentAppDirPath: String,
         loadConSrcWithNewline: String,
@@ -466,7 +466,7 @@ object QrUri {
         }
     }
 
-    private fun getRequireKey(
+    fun getRequireKey(
         context: Context?,
         scanConMap: Map<String, String?>,
         keyName: String,
