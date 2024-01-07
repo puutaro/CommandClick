@@ -5,6 +5,7 @@ import android.view.WindowManager
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.CmdIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsBroadcast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUbuntu
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCurl
@@ -12,6 +13,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDi
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDirSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDirect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsEditor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHtml
@@ -24,6 +26,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPd
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPermission
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPulseAudioReceiver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsQr
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsQrEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsRecordToText
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsReplaceVariables
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsScript
@@ -187,6 +190,18 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsDirect(terminalFragment),
             JsInterfaceVariant.jsDirect.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsEditor(terminalFragment),
+            JsInterfaceVariant.jsEditor.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsQrEdit(terminalFragment),
+            JsInterfaceVariant.jsQrEdit.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsBroadcast(terminalFragment),
+            JsInterfaceVariant.jsBroadcast.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),

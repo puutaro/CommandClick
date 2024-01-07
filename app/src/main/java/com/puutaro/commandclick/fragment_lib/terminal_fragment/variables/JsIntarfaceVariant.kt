@@ -33,4 +33,7 @@ enum class JsInterfaceVariant {
     jsPermission,
     jsQr,
     jsDirect,
+    jsEditor,
+    jsQrEdit,
+    jsBroadcast
 }

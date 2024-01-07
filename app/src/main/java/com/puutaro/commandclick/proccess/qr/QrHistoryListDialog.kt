@@ -111,7 +111,7 @@ class QrHistoryListDialog(
             val selectedQrUri = selectedTitleQrList.filterIndexed{
                 index, s -> index > 0
             }.joinToString()
-            QrUri.handler(
+            QrUriHandler.handle(
                 fragment,
                 currentAppDirPath,
                 selectedQrUri

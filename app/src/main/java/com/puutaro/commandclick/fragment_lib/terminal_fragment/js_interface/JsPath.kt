@@ -76,10 +76,7 @@ class JsPath(
     fun trimAllExtend(
         path: String
     ): String {
-        return path.replace(
-            Regex("\\.[a-zA-Z0-9]*$"),
-            ""
-        )
+        return CcPathTool.trimAllExtend(path)
     }
 
     @JavascriptInterface

@@ -17,7 +17,7 @@ object QrMapper {
     fun getWifiWpaSsidAndPinPair(
         scanStr: String
     ): Pair<String?, String?> {
-        val wifiNetowrkRegex = "T:[^;]+;S:([^;]+);P:([^;]+).*".toRegex()
+        val wifiNetowrkRegex = "T:[^;]+;S:([^;]*);P:([^;]*).*".toRegex()
         return scanStr.split(":").filterIndexed {
                 index, _ -> index > 0
         }.joinToString(":").replace(
@@ -102,6 +102,31 @@ object QrMapper {
         ) return mainUrlSrc
         return "${httpPrefix}${mainUrlSrc}"
     }
+}
+
+enum class FreeTextKey(
+    val key: String,
+){
+    FREE_TEXT("free_text")
+}
+
+enum class WifiKey(
+    val key: String
+){
+    SSID("ssid"),
+    PIN("pin"),
+}
+
+enum class TelKey(
+    val key: String,
+){
+    NUMBER("number"),
+}
+enum class SmsKey(
+    val key: String,
+){
+    NUMBER("number"),
+    BODY("body"),
 }
 
 

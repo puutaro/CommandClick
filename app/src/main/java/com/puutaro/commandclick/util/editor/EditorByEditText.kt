@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.editor
 
 import android.app.Dialog
+import android.content.Intent
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.ViewGroup
@@ -23,6 +24,7 @@ object EditorByEditText {
         dirPath: String,
         fileName: String,
         firstCon: String,
+        broadcastIntent: Intent? = null
     ){
         val context = fragment.context
             ?: return
@@ -56,7 +58,8 @@ object EditorByEditText {
             fragment,
             textWatcher,
             dirPath,
-            fileName
+            fileName,
+            broadcastIntent
         )
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
@@ -127,7 +130,9 @@ object EditorByEditText {
         textWatcher: UndoTextWatcher,
         dirPath: String,
         fileName: String,
+        broadcastIntent: Intent?
     ){
+        val context = fragment.context
         val editView =
             editorDialog?.findViewById<AppCompatEditText>(
                 R.id.editor_by_edit_text_dialog_edit_view
@@ -147,6 +152,9 @@ object EditorByEditText {
             )
             saveButton.imageTintList = fragment.context?.getColorStateList(R.color.gray_out)
             textWatcher.saveButtonEnable = false
+            broadcastIntent?.let {
+                context?.sendBroadcast(broadcastIntent)
+            }
         }
     }
 }

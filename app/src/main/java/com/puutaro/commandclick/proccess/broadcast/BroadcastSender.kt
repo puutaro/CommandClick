@@ -11,14 +11,31 @@ object BroadcastSender {
         broadcastMap: Map<String, String>,
         keySeparator: String,
     ){
-        val broadcastIntent = Intent()
         val action = broadcastMap.get(
             BroadCastSenderSchemaForCommon.action.name
-        ) ?: return
-        broadcastIntent.action = action
-        val extraPairList = broadcastMap.get(
+        )
+        val extraMapStr = broadcastMap.get(
             BroadCastSenderSchemaForCommon.extras.name
-        )?.let {
+        )
+        val broadcastIntent = createBroadcastIntent(
+            action,
+            extraMapStr,
+            keySeparator
+        )?: return
+        context?.sendBroadcast(broadcastIntent)
+    }
+
+    fun createBroadcastIntent(
+        action: String?,
+        extraMapStr: String?,
+        keySeparator: String,
+    ): Intent? {
+        if(
+            action.isNullOrEmpty()
+        ) return null
+        val broadcastIntent = Intent()
+        broadcastIntent.action = action
+        val extraPairList = extraMapStr?.let {
             CmdClickMap.createMap(
                 it,
                 keySeparator
@@ -30,7 +47,7 @@ object BroadcastSender {
                 it.second
             )
         }
-        context?.sendBroadcast(broadcastIntent)
+        return broadcastIntent
     }
 
     fun normalSend(

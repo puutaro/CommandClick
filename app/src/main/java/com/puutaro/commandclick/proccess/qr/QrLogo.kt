@@ -46,6 +46,7 @@ class QrLogo(
     private val twoThreeLogListSize = (logoList.size * 2) / 3
     private var usedLogoIndexList = mutableListOf<Int>()
     private val qrNewLine = "cmdclickQRNewLine"
+    private val maxQrConLength = 500
 
     companion object {
         fun toBitMapWrapper(
@@ -95,7 +96,7 @@ class QrLogo(
             true -> ReadText(
                 currentAppDirPath,
                 fannelName
-            ).readText()
+            ).readText().take(maxQrConLength)
             else ->
                 QrMapper.onGitTemplate.format(fannelRawName)
         }

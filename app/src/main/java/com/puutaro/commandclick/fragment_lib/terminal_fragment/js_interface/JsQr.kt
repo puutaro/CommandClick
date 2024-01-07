@@ -5,7 +5,6 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.webkit.JavascriptInterface
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import com.github.alexzhirkevich.customqrgenerator.QrData
 import com.github.alexzhirkevich.customqrgenerator.style.Color
 import com.github.alexzhirkevich.customqrgenerator.vector.QrCodeDrawable
@@ -19,13 +18,14 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelSha
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.qr.QrUri
+import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
@@ -45,6 +45,11 @@ class JsQr(
         terminalFragment,
         terminalFragment.currentAppDirPath
     )
+
+    @JavascriptInterface
+    fun qrPrefixList(): String {
+        return QrLaunchType.values().map { it.prefix }.joinToString("\n")
+    }
 
     @JavascriptInterface
     fun launchUploader(){
@@ -74,7 +79,7 @@ class JsQr(
     fun scanHandler(
         decodedText: String,
     ){
-        QrUri.handler(
+        QrUriHandler.handle(
             terminalFragment,
             terminalFragment.currentAppDirPath,
             decodedText,
@@ -99,6 +104,23 @@ class JsQr(
                 decodedText
             ).launch()
         }
+    }
+
+    @JavascriptInterface
+    fun makeQrSrcFile(
+        qrSrcFilePath: String,
+        qrSrcMapStr: String,
+    ){
+        val arSrcMapCon = qrSrcMapStr.split("|").map{it.trim()}.joinToString("\n")
+        val pathObj = File(qrSrcFilePath)
+        val parentDirPath = pathObj.parent
+            ?: return
+        val qrSrcFileName = pathObj.name
+        FileSystems.writeFile(
+            parentDirPath,
+            qrSrcFileName,
+            arSrcMapCon,
+        )
     }
 
     @JavascriptInterface

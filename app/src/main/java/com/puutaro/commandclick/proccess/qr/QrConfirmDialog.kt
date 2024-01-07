@@ -63,7 +63,7 @@ class QrConfirmDialog(
         confirmOkButton?.setOnClickListener {
             qrScanDialogObj?.dismiss()
             confirmDialogObj?.dismiss()
-            QrUri.handler(
+            QrUriHandler.handle(
                 fragment,
                 currentAppDirPath,
                 body,
