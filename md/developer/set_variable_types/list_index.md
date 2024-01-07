@@ -70,4 +70,6 @@ ${target fannel dirctory}
 | `copy_file` | copy item file to other directory |
 | `editC` | edit command variables |
 | `editS` | edit setting variables |
+| `scanQR` | scan qr code |
+| `getQR` | get qr code contents |
 
