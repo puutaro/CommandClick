@@ -4,16 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
+import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.FileDownloadService
@@ -24,6 +27,8 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,6 +50,11 @@ object QrUriHandler {
         when (true) {
             loadConSrc.startsWith(QrLaunchType.Http.prefix),
             loadConSrc.startsWith(QrLaunchType.Https.prefix),
+                -> loadUrl(
+                fragment,
+                currentAppDirPath,
+                loadConSrc
+            )
             loadConSrc.startsWith(QrLaunchType.JsDesc.prefix),
             loadConSrc.startsWith(QrLaunchType.Javascript.prefix),
             -> load(
@@ -521,6 +531,41 @@ object QrUriHandler {
         )
     }
 
+
+    fun loadUrl(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        loadConSrc: String
+    ) {
+        val targetFragmentInstance = TargetFragmentInstance()
+        val terminalFragment =
+            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+                ?: return
+        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
+            ?: return
+        val loadUrl =
+            ScriptPreWordReplacer.replaceForQr(
+                loadConSrc,
+                currentAppDirPath
+            )
+        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
+        when(onLaunchByWebViewDialog){
+            true -> {
+                val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
+                        UsePath.JS_FILE_SUFFIX
+                ExecJsLoad.execExternalJs(
+                    fragment,
+                    currentAppDirPath,
+                    webSearcherName,
+                    loadUrl
+                )
+            }
+            else -> BroadCastIntent.sendUrlCon(
+                fragment,
+                loadUrl.trim()
+            )
+        }
+    }
     fun load(
         fragment: Fragment,
         currentAppDirPath: String,

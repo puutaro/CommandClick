@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,6 +56,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -178,6 +180,7 @@ class WithIndexListView(
         private var filterSuffix = String()
         private var fannelDirName = String()
         private var fannelDirPath = String()
+        private var fannelMenuDirPath = String()
 
         fun makeFileList(): MutableList<String> {
             val fileListSource = FileSystems.sortedFiles(
@@ -260,6 +263,7 @@ class WithIndexListView(
             currentScriptName
         )
         fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
+        fannelMenuDirPath = "${fannelDirPath}/menu"
 
         val replacedSetVariableMap = makeReplacedSetVariableMap(
             editParameters
@@ -369,12 +373,24 @@ class WithIndexListView(
                         contents
                     )
                     else -> {
+                        val targetFragmentInstance = TargetFragmentInstance()
+                        val terminalFragment =
+                            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
+                                ?: return
+                        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
+                            ?: return
+                        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
+                        val useAppDirPath =
+                            when(onLaunchByWebViewDialog){
+                                true -> currentAppDirPath
+                                else -> filterDir
+                        }
                         CoroutineScope(Dispatchers.Main).launch {
                             QrConfirmDialog(
                                 editFragment,
                                 null,
                                 null,
-                                filterDir,
+                                useAppDirPath,
                                 QrDecodedTitle.makeTitle(contents),
                                 contents
                             ).launch()
@@ -809,7 +825,11 @@ class WithIndexListView(
                     filterDir,
                 )
         }
-        val execJsFilePath = "${parentDirPath}/${clickJsName}"
+        val menuScriptPathObj = File("${fannelMenuDirPath}/${menuName}${UsePath.JS_FILE_SUFFIX}")
+        val execJsFilePath = when(menuScriptPathObj.isFile) {
+            true -> menuScriptPathObj.absolutePath
+            else -> "${parentDirPath}/${clickJsName}"
+        }
         terminalViewModel.jsArguments = listOf(
             parentDirPath,
             filterDir,

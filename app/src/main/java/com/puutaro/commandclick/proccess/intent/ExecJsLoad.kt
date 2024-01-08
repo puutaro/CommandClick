@@ -224,7 +224,7 @@ object ExecJsLoad {
     }
 
     fun jsUrlLaunchHandler(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         launchUrlString: String,
     ){
         when (currentFragment) {
@@ -284,7 +284,7 @@ object ExecJsLoad {
     }
 
     private suspend fun launchUrlByWebView(
-        currentFragment: androidx.fragment.app.Fragment,
+        currentFragment: Fragment,
         onLaunchUrl: Boolean,
         launchUrlString: String
     ){
