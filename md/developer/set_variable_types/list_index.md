@@ -68,6 +68,7 @@ ${target fannel dirctory}
 | `desc` | how description |
 | `copy_path` | copy item file path |
 | `copy_file` | copy item file to other directory |
+| `copy_file_here` | copy item file to current directory |
 | `editC` | edit command variables |
 | `editS` | edit setting variables |
 | `scanQR` | scan qr code |
