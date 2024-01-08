@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.qr.QrUri
+import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 
@@ -37,7 +37,7 @@ class JsUrl(
     fun loadQrUrl(
         loadConSrc: String
     ) {
-        QrUri.load(
+        QrUriHandler.load(
             terminalFragment,
             terminalFragment.currentAppDirPath,
             loadConSrc
