@@ -185,6 +185,8 @@ object UsePath {
     val qrDirName = "qr"
     val qrPngName = "qr.png"
     val qrPngRelativePath = "$qrDirName/$qrPngName"
+    val qrDesignFileName = "qrDesign.txt"
+    val qrDesignRelativePath = "$qrDirName/$qrDesignFileName"
 
     fun makeOmitPath(
         path: String
