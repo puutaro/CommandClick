@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.li
 
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatEditText
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.FileSystems
@@ -18,7 +17,9 @@ object CopyAppDirEventForEdit {
     ){
         val context = editFragment.context
         val destiDirNameEditable = editText.text
-        if(destiDirNameEditable.isNullOrEmpty()) return
+        if(
+            destiDirNameEditable.isNullOrEmpty()
+        ) return
         val destiDirNameSource = destiDirNameEditable.toString()
         val jsFileSuffix = UsePath.JS_FILE_SUFFIX
         val destiDirName = if(
@@ -28,9 +29,7 @@ object CopyAppDirEventForEdit {
         } else destiDirNameSource
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val sourceAppDirPath = cmdclickAppDirPath +
-                "/${scriptScriptName.removeSuffix(
-                    UsePath.JS_FILE_SUFFIX
-                )}"
+                "/${scriptScriptName.removeSuffix(jsFileSuffix)}"
         val destiAppDirPath = "${cmdclickAppDirPath}/${destiDirName}"
         val destiAppFileName = destiDirName + jsFileSuffix
         if(

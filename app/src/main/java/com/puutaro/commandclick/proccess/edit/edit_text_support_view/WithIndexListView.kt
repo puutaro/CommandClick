@@ -118,20 +118,9 @@ class WithIndexListView(
         ) "${targetDirectoryPath}/" +
                 "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
         else targetScriptFilePathSource
-        FileSystems.copyFile(
-            sourceScriptFilePath,
-            targetScriptFilePath
-        )
-        val sourceFannelDir =
-            CcPathTool.makeFannelDirName(
-                selectedItemForCopy
-            )
-        val targetFannelDir = CcPathTool.makeFannelDirName(
-            File(targetScriptFilePath).name
-        )
-        FileSystems.copyDirectory(
-            "${filterDir}/${sourceFannelDir}",
-            "${targetDirectoryPath}/${targetFannelDir}"
+        FileSystems.execCopyFileWithDir(
+            File(sourceScriptFilePath),
+            File(targetScriptFilePath),
         )
         listIndexListUpdateFileList(
             editFragment,
@@ -161,20 +150,12 @@ class WithIndexListView(
         }
         val sourceFilePath =
             pathSource.absolutePath ?: String()
-        val sourceDirPath =
-            pathSource.parent ?: String()
         val getFileName = pathSource.name
         val targetScriptFilePathSource = "${filterDir}/${getFileName}"
-        FileSystems.copyFile(
-            sourceFilePath,
-            targetScriptFilePathSource
-        )
-        val sourceFannelDir = CcPathTool.makeFannelDirName(
-            getFileName
-        )
-        FileSystems.copyDirectory(
-            "${sourceDirPath}/${sourceFannelDir}",
-            "${filterDir}/${sourceFannelDir}"
+        FileSystems.execCopyFileWithDir(
+            File(sourceFilePath),
+            File(targetScriptFilePathSource),
+            true
         )
         listIndexListUpdateFileList(
             editFragment,
@@ -739,6 +720,13 @@ class WithIndexListView(
                 )
                 return
             }
+            PreMenuType.COPY_FILE_HERE.menuName -> {
+                execCopyFileHere(
+                    "${filterDir}/${selectedItem}",
+                    "${filterDir}/${selectedItem}",
+                )
+                return
+            }
             PreMenuType.COPY_APP_DIR.menuName -> {
                 execCopyAppDir(
                     selectedItem
@@ -914,6 +902,25 @@ class WithIndexListView(
             Gravity.BOTTOM
         )
         promptDialog?.show()
+    }
+
+    private fun execCopyFileHere(
+        srcFilePath: String,
+        destiFilePath: String,
+    ){
+        FileSystems.execCopyFileWithDir(
+            File(srcFilePath),
+            File(destiFilePath),
+        )
+        Toast.makeText(
+            context,
+            "Copy ok",
+            Toast.LENGTH_SHORT
+        ).show()
+        listIndexListUpdateFileList(
+            editFragment,
+            makeFileList()
+        )
     }
 
     private fun execCopyAppDir(
@@ -1721,6 +1728,7 @@ enum class PreMenuType(
     CAT("cat", R.drawable.icons8_file),
     COPY_PATH("copy_path", com.termux.shared.R.drawable.ic_copy),
     COPY_FILE("copy_file", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
+    COPY_FILE_HERE("copy_file_here", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
     COPY_APP_DIR("copy_app_dir", com.google.android.material.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
     GET("get", R.drawable.icons8_puzzle),
     EDIT_C("editC", R.drawable.icons8_edit),

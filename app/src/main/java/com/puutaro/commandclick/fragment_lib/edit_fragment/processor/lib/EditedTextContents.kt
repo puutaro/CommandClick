@@ -18,6 +18,7 @@ import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableLis
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
+import java.io.File
 
 
 class EditedTextContents(
@@ -110,24 +111,10 @@ class EditedTextContents(
                         to updateScriptFileName
             )
         )
-        val currentFannelDir = makeFunnelDirPath(
-            currentAppDirPath,
-            currentScriptFileName
-        )
-        val updateFannelDir = makeFunnelDirPath(
-            currentAppDirPath,
-            updateScriptFileName
-        )
-        FileSystems.copyDirectory(
-            currentFannelDir,
-            updateFannelDir
-        )
-        FileSystems.removeDir(
-            currentFannelDir
-        )
-        FileSystems.removeFiles(
-            currentAppDirPath,
-            currentScriptFileName,
+        FileSystems.moveFileWithDir(
+            File("$currentAppDirPath/$currentScriptFileName"),
+            File("$currentAppDirPath/$updateScriptFileName"),
+            true
         )
     }
 

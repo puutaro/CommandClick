@@ -23,7 +23,7 @@ import java.io.File
 class CopyFileEvent(
     cmdIndexFragment: CommandIndexFragment,
     private val sourceAppDirPath: String,
-    private val sourceShellFileName:String,
+    private val sourceFannelName:String,
 ) {
 
     private val context = cmdIndexFragment.context
@@ -37,8 +37,6 @@ class CopyFileEvent(
         if(
             context == null
         ) return
-
-
         copyFileDialog = Dialog(
             context
         )
@@ -48,7 +46,7 @@ class CopyFileEvent(
         val listDialogTitle = copyFileDialog?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.list_dialog_title
         )
-        listDialogTitle?.text = "Select app dirctory name"
+        listDialogTitle?.text = "Select app dir name"
         val listDialogMessage = copyFileDialog?.findViewById<AppCompatTextView>(
             com.puutaro.commandclick.R.id.list_dialog_message
         )
@@ -80,23 +78,33 @@ class CopyFileEvent(
         if(
             context == null
         ) return
-        val appDirList = FileSystems.filterSuffixJsFiles(
-            cmdclickAppDirAdminPath
-        ).map {
-            it to icons8Wheel
-        }
         val subMenuListView =
             copyFileDialog?.findViewById<ListView>(
                 com.puutaro.commandclick.R.id.list_dialog_list_view
             ) ?: return
         val subMenuAdapter = SubMenuAdapter(
             context,
-            appDirList.toMutableList()
+            makeAppDirNameList().toMutableList()
         )
         subMenuListView.adapter = subMenuAdapter
         invokeItemSetClickListnerForCopyFile(
             subMenuListView,
         )
+    }
+
+    private fun makeAppDirNameList(): List<Pair<String, Int>> {
+        val jsSuffix = UsePath.JS_FILE_SUFFIX
+        val systemAppDirName = UsePath.cmdclickSystemAppDirName
+        return FileSystems.filterSuffixJsFiles(
+            cmdclickAppDirAdminPath
+        ).map {
+            val appDirName = it.removeSuffix(
+                jsSuffix
+            )
+            appDirName to icons8Wheel
+        }.filter {
+            it.first != systemAppDirName
+        }
     }
 
 
@@ -106,12 +114,12 @@ class CopyFileEvent(
         appDirListView.setOnItemClickListener {
                 parent, View, pos, id ->
             val menuListAdapter = appDirListView.adapter as SubMenuAdapter
-            val selectedScript = menuListAdapter.getItem(pos)
+            val selectedAppDirName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
             execInvokeItemSetClickListnerForCopyFile(
                 sourceAppDirPath,
-                sourceShellFileName,
-                selectedScript
+                sourceFannelName,
+                selectedAppDirName
             )
             copyFileDialog?.dismiss()
             return@setOnItemClickListener
@@ -120,40 +128,21 @@ class CopyFileEvent(
 
     private fun execInvokeItemSetClickListnerForCopyFile(
         sourceAppDirPath: String,
-        sourceScriptFileName: String,
-        selectedShellFileName: String,
+        sourceFannelName: String,
+        selectedAppDirName: String,
     ) {
-
-        val sourceScriptFilePath = "${sourceAppDirPath}/${sourceScriptFileName}"
-        val selectedShellFilePath = makeSelectedShellFilePath(
-            sourceAppDirPath,
-            sourceScriptFileName,
-            selectedShellFileName
-        )
-
-        FileSystems.copyFile(
-            sourceScriptFilePath,
-            selectedShellFilePath
-        )
-        val sourceFannelName =
-            CcPathTool.makeFannelDirName(
-                sourceScriptFileName
-            )
-        val selectedFannelName =
-            CcPathTool.makeFannelDirName(
-                File(selectedShellFilePath).name
-            )
-        val sourceFannelDir = sourceFannelName + UsePath.fannelDirSuffix
-        val selectedFannelDir = selectedFannelName + UsePath.fannelDirSuffix
-        FileSystems.copyDirectory(
-            "${sourceAppDirPath}/${sourceFannelDir}",
-            "${File(selectedShellFilePath).parent}/${selectedFannelDir}"
+        val sourceFannelPath =
+            "${sourceAppDirPath}/${sourceFannelName}"
+        val selectedFannelPath =
+            "${UsePath.cmdclickAppDirPath}/${selectedAppDirName}/${sourceFannelName}"
+        FileSystems.execCopyFileWithDir(
+            File(sourceFannelPath),
+            File(selectedFannelPath),
         )
         copyResultToast(
             context,
-            selectedShellFilePath
+            selectedFannelPath
         )
-
         CommandListManager.execListUpdateForCmdIndex(
             sourceAppDirPath,
             cmdListView,
@@ -161,32 +150,6 @@ class CopyFileEvent(
 
     }
 }
-
-private fun makeSelectedShellFilePath(
-    sourceAppDirPath: String,
-    sourceShellFileName: String,
-    selectedShellFileName: String
-): String {
-    val selectedAppDirPath = UsePath.cmdclickAppDirPath + '/' +
-            selectedShellFileName.removeSuffix(
-                UsePath.JS_FILE_SUFFIX
-            )
-    val selectedShellFilePathSource = if(sourceAppDirPath == selectedAppDirPath) {
-        sourceAppDirPath +
-                "/${CommandClickScriptVariable.makeCopyPrefix()}" +
-                "_${sourceShellFileName}"
-    } else {
-        "${selectedAppDirPath}/${sourceShellFileName}"
-    }
-    return if(File(selectedShellFilePathSource).isFile){
-        selectedAppDirPath +
-                "/${CommandClickScriptVariable.makeCopyPrefix()}" +
-                "_${sourceShellFileName}"
-    } else {
-        selectedShellFilePathSource
-    }
-}
-
 
 private fun copyResultToast(
     context: Context?,

@@ -43,7 +43,6 @@ class InstallFromFannelRepo(
     private val cmdListView = binding.cmdList
     private val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val blankListMark = InstallFannelList.blankListMark
-    private val fannelDirSuffix = UsePath.fannelDirSuffix
     val languageType = LanguageTypeSelects.JAVA_SCRIPT
     val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -170,7 +169,6 @@ class InstallFromFannelRepo(
                     holder: InstallFannelListAdapter.FannelInstallerListViewHolder
                 ) {
                     val fannelNameTextView = holder.fannelNameTextView
-                    val itemContext = itemView.context
                     val fannelName = fannelNameTextView.text.toString()
                     ScriptFileDescription.show(
                         cmdIndexFragment,
@@ -210,33 +208,19 @@ class InstallFromFannelRepo(
                     ) return
                     val selectedFannelPath =
                         "${UsePath.cmdclickFannelItselfDirPath}/${selectedFannel}"
+                    val selectedFannelPathObj = File(selectedFannelPath)
                     if(
-                        !File(selectedFannelPath).isFile
+                        !selectedFannelPathObj.isFile
                     ) return
-                    FileSystems.copyFile(
-                        selectedFannelPath,
-                        "${currentAppDirPath}/${selectedFannel}"
-                    )
-                    val selectedFannelName =
-                        selectedFannel
-                            .removeSuffix(UsePath.JS_FILE_SUFFIX)
-                            .removeSuffix(UsePath.SHELL_FILE_SUFFIX)
-                    val fannelDir = selectedFannelName + fannelDirSuffix
-                    val selectedFannelDirPath =
-                        "${UsePath.cmdclickFannelItselfDirPath}/${fannelDir}"
-                    if(
-                        !File(selectedFannelDirPath).isDirectory
-                    ) {
-                        Toast.makeText(
-                            cmdIndexFragment.context,
-                            "install ok: ${selectedFannelName}",
-                            Toast.LENGTH_LONG
-                        ).show()
-                        return
+                    val installFannelPathObj =  File("${currentAppDirPath}/${selectedFannel}")
+                    val compMessage = when(installFannelPathObj.isFile) {
+                        false -> "install ok: ${selectedFannel}"
+                        else -> "update ok: ${selectedFannel}"
                     }
-                    FileSystems.copyDirectory(
-                        selectedFannelDirPath,
-                        "${currentAppDirPath}/${fannelDir}"
+                    FileSystems.execCopyFileWithDir(
+                        selectedFannelPathObj,
+                        installFannelPathObj,
+                        true,
                     )
                     val searchEditText = cmdIndexFragment.installFannelDialog?.findViewById<EditText>(
                         R.id.install_fannel_search_edit_text
@@ -248,7 +232,7 @@ class InstallFromFannelRepo(
                     )
                     Toast.makeText(
                         cmdIndexFragment.context,
-                        "install ok: ${selectedFannelName}",
+                        compMessage,
                         Toast.LENGTH_LONG
                     ).show()
                 }

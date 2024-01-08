@@ -401,4 +401,75 @@ object FileSystems {
             return fullFilePath
         }
     }
+
+    fun execCopyFileWithDir(
+        srcFileObj: File,
+        destiFilePathObjSrc: File,
+        isOverride: Boolean = false
+    ){
+        val sourceFileDirPath = srcFileObj.parent
+            ?: return
+        val sourceFilePath = srcFileObj.absolutePath
+        val destiFileDirPath = destiFilePathObjSrc.parent
+            ?: return
+        val destiFilePath = when(
+            destiFilePathObjSrc.isFile
+            && !isOverride
+        ) {
+            true ->
+                "${destiFileDirPath}/" +
+                        "${CommandClickScriptVariable.makeCopyPrefix()}_${destiFilePathObjSrc.name}"
+            else ->
+                destiFilePathObjSrc.absolutePath
+        }
+        copyFile(
+            sourceFilePath,
+            destiFilePath
+        )
+        val destiFilePathObj = File(destiFilePath)
+        val sourceFannelDir =
+            CcPathTool.makeFannelDirName(
+                srcFileObj.name
+            )
+        val sourceFannelDirPath = "${sourceFileDirPath}/${sourceFannelDir}"
+        val destiFannelDir = CcPathTool.makeFannelDirName(
+            destiFilePathObj.name
+        )
+        val destiFannelDirPath = "${destiFileDirPath}/${destiFannelDir}"
+        copyDirectory(
+            sourceFannelDirPath,
+            destiFannelDirPath
+        )
+    }
+
+    fun moveFileWithDir(
+        srcFileObj: File,
+        destiFilePathObj: File,
+        isOverride: Boolean = false
+    ){
+        execCopyFileWithDir(
+            srcFileObj,
+            destiFilePathObj,
+            isOverride
+        )
+        removeFileWithDir(
+            srcFileObj,
+        )
+    }
+
+    fun removeFileWithDir(
+        srcFileObj: File,
+    ){
+        val parentDirPath = srcFileObj.parent
+            ?: return
+        val fannelDirName = CcPathTool.makeFannelDirName(srcFileObj.name)
+        val fannelDirPath = "${parentDirPath}/${fannelDirName}"
+        removeDir(
+            fannelDirPath
+        )
+        removeFiles(
+            parentDirPath,
+            srcFileObj.name,
+        )
+    }
 }
