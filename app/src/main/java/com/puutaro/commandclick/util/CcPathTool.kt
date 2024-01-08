@@ -15,13 +15,22 @@ object CcPathTool {
         return "${fannelName}Dir"
     }
 
+    fun trimAllExtend(
+        fileName: String
+    ): String {
+        val lastIndex = fileName.lastIndexOf('.')
+        return if (lastIndex != -1) {
+            fileName.substring(0, lastIndex)
+        } else fileName
+    }
+
+
     fun makeFannelRawName(
         fannelNameSrc: String
     ): String {
-        val lastIndex = fannelNameSrc.lastIndexOf('.')
-        return if (lastIndex != -1) {
-            fannelNameSrc.substring(0, lastIndex)
-        } else fannelNameSrc
+        return trimAllExtend(
+            fannelNameSrc
+        )
     }
     fun getMainAppDirPath(
         currentSubFannelPath: String
