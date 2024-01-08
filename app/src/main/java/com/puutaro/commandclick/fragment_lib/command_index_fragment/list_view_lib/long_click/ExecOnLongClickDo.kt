@@ -22,7 +22,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.util.Editor
+import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.ReadText
 
 
@@ -415,11 +415,11 @@ private object UtilitySubMenuDialog {
 
             when(selectedMenuName){
                 UtilitySubMenuEnums.WRITE.itemName
-                -> Editor(
+                -> EditorByIntent(
                     currentAppDirPath,
                     selectedScriptName,
                     context
-                ).open()
+                ).byIntent()
 //                UtilitySubMenuEnums.DELETE.itemName
 //                -> ConfirmDialogForDelete.show(
 //                    cmdIndexFragment,

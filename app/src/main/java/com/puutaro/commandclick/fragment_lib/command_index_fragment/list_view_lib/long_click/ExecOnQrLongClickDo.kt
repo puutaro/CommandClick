@@ -135,7 +135,8 @@ object ExecOnQrLongClickDo {
                 cmdIndexFragment,
                 currentAppDirPath,
                 fannelName,
-                qrLogoDialogObj
+                qrLogoDialogObj,
+                R.id.qr_logo_dialog_top_image
             )
         }
     }
