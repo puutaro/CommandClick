@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.util.Editor
+import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
 
@@ -34,11 +34,11 @@ object AddShellScript {
             shellScriptName,
             shellOrJs = languageTypeSelects
         )
-        val editor = Editor(
+        val editorByIntent = EditorByIntent(
             currentAppDirPath,
             shellScriptName,
             context
         )
-        editor.open()
+        editorByIntent.byIntent()
     }
 }
