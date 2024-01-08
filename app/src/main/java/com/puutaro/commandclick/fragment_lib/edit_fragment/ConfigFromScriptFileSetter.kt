@@ -1,12 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.provider.UserDictionary.Words
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 
@@ -35,6 +35,8 @@ object ConfigFromScriptFileSetter {
         editFragment.existIndexList =
             judgeExistListIndex(
                 editFragment,
+                currentAppDirPath,
+                currentScriptFileName,
                 currentShellContentsList
             )
         if (
@@ -234,6 +236,8 @@ object ConfigFromScriptFileSetter {
 
     private fun judgeExistListIndex(
         editFragment: EditFragment,
+        currentAppDirPath: String,
+        currentScriptFileName: String,
         currentShellContentsList: List<String>
     ): Boolean {
         val prefixDirScriptSuffixList = FragmentTagManager.makeListFromTag(
@@ -245,10 +249,22 @@ object ConfigFromScriptFileSetter {
         if(
             isSetting
         ) return false
-        return CommandClickVariables.substituteCmdClickVariableList(
-            currentShellContentsList,
-            CommandClickScriptVariable.SET_VARIABLE_TYPE
-        )?.any {
+        val recordNumToMapNameValueInSettingHolder =
+            RecordNumToMapNameValueInHolder.parse(
+                currentShellContentsList,
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd,
+                true,
+                currentScriptFileName
+            )
+        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
+            recordNumToMapNameValueInSettingHolder,
+            currentAppDirPath,
+            fannelDirName,
+            currentScriptFileName,
+        )
+        return setVariableTypeList?.any {
             it.contains(
                 ":${EditTextSupportViewName.LIST_INDEX.str}="
             )
