@@ -15,7 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.util.DialogObject
+import com.puutaro.commandclick.util.dialog.DialogObject
 import com.termux.shared.termux.TermuxConstants
 
 object RunCommandSetter {

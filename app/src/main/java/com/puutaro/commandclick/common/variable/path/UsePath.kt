@@ -167,7 +167,12 @@ object UsePath {
     val cmdclickFirstHistoryTitle = "firstHistoryTitle$tsvExtend"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
-    val homeScriptUrlsFilePath =  "$fannelSettingDirPath/homeScriptUrlsPath.txt"
+    private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
+    val homeScriptUrlsFilePath =  "$fannelSettingDirPath/${homeScriptUrlsFileName}"
+    private val settingMenuSettingFileName = "settingMenu.js"
+    val settingMenuSettingFilePath =  "$fannelSettingDirPath/${settingMenuSettingFileName}"
+    private val settingButtonConfigName = "settingButtonConfig.js"
+    val settingButtonConfigPath =  "$fannelSettingDirPath/${settingButtonConfigName}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"

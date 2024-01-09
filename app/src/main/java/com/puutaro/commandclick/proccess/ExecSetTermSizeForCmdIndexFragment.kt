@@ -2,13 +2,11 @@ package com.puutaro.commandclick.proccess
 
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 
 object ExecSetTermSizeForCmdIndexFragment {
@@ -16,7 +14,6 @@ object ExecSetTermSizeForCmdIndexFragment {
         cmdIndexFragment: CommandIndexFragment,
     ){
         val context = cmdIndexFragment.context
-        val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
 
         val binding = cmdIndexFragment.binding
         val cmdindexInternetButton = binding.cmdindexInternetButton

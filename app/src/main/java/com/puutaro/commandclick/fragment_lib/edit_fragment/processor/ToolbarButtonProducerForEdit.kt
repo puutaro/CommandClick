@@ -1,43 +1,32 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.content.Context
-import android.util.Size
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.custom_view.NoScrollListView
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.ManageSubMenuDialogForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.SettingSubMenuDialogForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-
 class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
+    currentScriptContentsList: List<String>,
+    readSharePreffernceMap: Map<String, String>,
     private val enableCmdEdit: Boolean,
 ) {
 
@@ -46,7 +35,10 @@ class ToolbarButtonProducerForEdit(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
     )
-    private var menuPopupWindow: PopupWindow? = null
+    private val settingButtonHandler = SettingButtonHandler(
+        editFragment,
+        readSharePreffernceMap
+    )
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val sharedPref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
@@ -65,14 +57,41 @@ class ToolbarButtonProducerForEdit(
         SharePrefferenceSetting.current_script_file_name
     )
 
+    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+    var languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            languageType
+        )
+    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+    ) as String
+
+    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    private val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+
+    private val recordNumToMapNameValueInSettingHolder =
+        RecordNumToMapNameValueInHolder.parse(
+            currentScriptContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+            true,
+            currentScriptFileName
+        )
+    private val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+        recordNumToMapNameValueInSettingHolder,
+        currentAppDirPath,
+        fannelDirName,
+        currentScriptFileName,
+    )
+
     private val scriptFileSaver = ScriptFileSaver(
         binding,
         editFragment,
         readSharePreffernceMap,
     )
-    private val menuListMap = MenuEnumsForEdit.values().map {
-        it.itemName to it.imageId
-    }
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
@@ -156,38 +175,9 @@ class ToolbarButtonProducerForEdit(
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.SETTING -> {
-                    if(
-                        editFragment.terminalOn
-                        == SettingVariableSelects.TerminalDoSelects.OFF.name
-                    ) return@setOnClickListener
-                    val existEditExecuteTerminalFragment = ExistTerminalFragment
-                        .how(
-                            editFragment,
-                            editFragment.context?.getString(
-                                R.string.edit_execute_terminal_fragment
-                            )
-                        )
-                    if(
-                        existEditExecuteTerminalFragment?.isVisible != true
-                    ) {
-                        Toast.makeText(
-                            view.context,
-                            "no terminal",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        return@setOnClickListener
-                    }
-                    val linearLayoutParam =
-                        editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
-                    val isShow = linearLayoutParam.weight != ReadLines.LONGTH
-                    EditLayoutViewHideShow.exec(
-                        editFragment,
-                        isShow
-                    )
-                    val listener =
-                        context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                    listener?.onToolbarMenuCategoriesForEdit(
-                        ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX
+                    settingButtonHandler.handle(
+                        false,
+                        makeButtonView,
                     )
                     return@setOnClickListener
                 }
@@ -210,7 +200,7 @@ class ToolbarButtonProducerForEdit(
 
     private fun onLongClickHandler(
         buttonInnerView: View,
-        makeButtonView: ImageButton,
+        settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
@@ -232,26 +222,9 @@ class ToolbarButtonProducerForEdit(
                 )
             }
             ToolbarButtonBariantForEdit.SETTING -> {
-                val existEditExecuteTerminalFragment = ExistTerminalFragment
-                    .how(
-                        editFragment,
-                        editFragment.context?.getString(
-                            R.string.edit_execute_terminal_fragment
-                        )
-                    )
-                if(
-                    existEditExecuteTerminalFragment == null
-                ){
-                    Toast.makeText(
-                        buttonInnerView.context,
-                        "no working",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return
-                }
-                createPopUpForSetting(
-                    buttonInnerView,
-                    makeButtonView
+                settingButtonHandler.handle(
+                    true,
+                    settingButtonView,
                 )
             }
             ToolbarButtonBariantForEdit.OK -> {
@@ -297,7 +270,6 @@ class ToolbarButtonProducerForEdit(
         }
 
         editFragment.execPlayBtnLongPress = replaceLongPressMacroInToolBar(
-            shellContentsList,
             editFragment.execPlayBtnLongPress,
         )
 
@@ -321,7 +293,6 @@ class ToolbarButtonProducerForEdit(
             )
         }
         editFragment.execEditBtnLongPress = replaceLongPressMacroInToolBar(
-            shellContentsList,
             editFragment.execEditBtnLongPress,
         )
         EditToolbarSwitcher.switch(
@@ -331,23 +302,8 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun replaceLongPressMacroInToolBar(
-        shellContentsList: List<String>,
         execLongPressMacro: String,
     ): String {
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-        val recordNumToMapNameValueInSettingHolderForLongPress = RecordNumToMapNameValueInHolder.parse(
-            shellContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-            true,
-            currentScriptFileName
-        )
-        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolderForLongPress,
-            currentAppDirPath,
-            fannelDirName,
-            currentScriptFileName
-        )
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             execLongPressMacro,
             setReplaceVariableMap,
@@ -453,7 +409,6 @@ class ToolbarButtonProducerForEdit(
             )
             return
         }
-
         if(onPassCmdVariableEdit){
             val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
@@ -464,8 +419,6 @@ class ToolbarButtonProducerForEdit(
             )
             return
         }
-
-
         val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
         listener?.onToolBarButtonClickForEditFragment(
             editFragment.tag,
@@ -474,162 +427,4 @@ class ToolbarButtonProducerForEdit(
             enableCmdEdit
         )
     }
-
-    private fun createPopUpForSetting(
-        buttonInnerView: View,
-        settingButtonView: ImageButton
-    ){
-        val settingButtonViewContext = buttonInnerView.context
-        menuPopupWindow = PopupWindow(
-            settingButtonView.context,
-        ).apply {
-            elevation = 5f
-            isFocusable = true
-            isOutsideTouchable = true
-            setBackgroundDrawable(null)
-            animationStyle = R.style.popup_window_animation_phone
-            val inflater = LayoutInflater.from(settingButtonView.context)
-            contentView = inflater.inflate(
-                R.layout.setting_popup_for_index,
-                LinearLayoutCompat(settingButtonViewContext),
-                false
-            ).apply {
-                val menuListView =
-                    this.findViewById<NoScrollListView>(
-                        R.id.setting_menu_list_view
-                    )
-                val menuListAdapter = SubMenuAdapter(
-                    settingButtonViewContext,
-                    menuListMap.toMutableList()
-                )
-                menuListView.adapter = menuListAdapter
-                menuListViewSetOnItemClickListener(menuListView)
-                navButtonsSeter(this)
-                measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                )
-            }
-        }.also { popupWindow ->
-            // Absolute location of the anchor view
-            val location = IntArray(2).apply {
-                settingButtonView.getLocationOnScreen(this)
-            }
-            val size = Size(
-                popupWindow.contentView.measuredWidth,
-                popupWindow.contentView.measuredHeight
-            )
-            popupWindow.showAtLocation(
-                settingButtonView,
-                Gravity.TOP or Gravity.START,
-                location[0] - (size.width - settingButtonView.width) / 2,
-                location[1] - size.height
-            )
-        }
-    }
-
-    private fun navButtonsSeter(
-        settingButtonInnerView: View
-    ){
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_back_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.BACK,
-            EnableNavForWebView.checkForGoBack(editFragment)
-        )
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_reload_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
-            EnableNavForWebView.checkForReload(editFragment),
-        )
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_forward_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
-            EnableNavForWebView.checkForGoForward(editFragment)
-        )
-    }
-
-    private fun execSetNavImageButton (
-        settingButtonInnerView: View,
-        buttonId: Int,
-        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
-        buttonEnable: Boolean
-    ){
-        val navImageButton =
-            settingButtonInnerView.findViewById<AppCompatImageButton>(
-                buttonId
-            )
-        navImageButton.setOnClickListener {
-            menuPopupWindow?.dismiss()
-            val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-            listener?.onToolbarMenuCategoriesForEdit(
-                toolbarMenuCategoriesVariantForCmdIndex
-            )
-        }
-        navImageButton.isEnabled = buttonEnable
-        val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
-        navImageButton.imageTintList = context?.getColorStateList(colorId)
-    }
-
-    private fun menuListViewSetOnItemClickListener(
-        menuListView: NoScrollListView
-    ){
-        menuListView.setOnItemClickListener {
-                parent, View, pos, id ->
-            menuPopupWindow?.dismiss()
-            val menuListAdapter = menuListView.adapter as SubMenuAdapter
-            when(menuListAdapter.getItem(pos)){
-                MenuEnumsForEdit.SETTING.itemName
-                -> SettingSubMenuDialogForEdit.launch(
-                        editFragment,
-                    )
-                MenuEnumsForEdit.MANAGE.itemName
-                -> ManageSubMenuDialogForEdit.launch(
-                    editFragment,
-                )
-                MenuEnumsForEdit.NO_SCROLL_SAVE_URL.itemName
-                -> NoScrollUrlSaver.save(
-                        editFragment,
-                        currentAppDirPath,
-                        String()
-                    )
-                MenuEnumsForEdit.QR_SCAN.itemName
-                -> execQrScan()
-                MenuEnumsForEdit.KILL.itemName
-                -> AppProcessManager.killDialog(
-                        editFragment,
-                        currentAppDirPath,
-                        currentScriptFileName
-                    )
-            }
-        }
-    }
-
-    private fun execQrScan(){
-        val filterDirInWithListIndex = WithIndexListView.filterDir
-        val activeCurrentDirPath = if(
-            editFragment.existIndexList
-            && filterDirInWithListIndex.isNotEmpty()
-        ) filterDirInWithListIndex
-        else currentAppDirPath
-        QrScanner(
-            editFragment,
-            activeCurrentDirPath,
-        ).scanFromCamera()
-    }
-}
-
-
-private enum class MenuEnumsForEdit(
-    val itemName: String,
-    val imageId: Int,
-) {
-    KILL("kill", R.drawable.cancel),
-    USAGE("usage", R.drawable.icons8_info),
-    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    QR_SCAN("scan QR", R.drawable.icons_qr_code),
-    MANAGE("manage", R.drawable.icons8_setup),
-    SETTING("setting", R.drawable.icons8_setting),
 }

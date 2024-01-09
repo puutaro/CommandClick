@@ -20,7 +20,7 @@ import kotlinx.coroutines.*
 class EditModeHandler(
     private val editFragment: EditFragment,
     binding: EditFragmentBinding,
-    private val currentShellContentsList: List<String>
+    private val currentScriptContentsList: List<String>
 ) {
     private val context = editFragment.context
     private val currentEditFragmentTag = editFragment.tag
@@ -50,7 +50,7 @@ class EditModeHandler(
     )
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-        currentShellContentsList,
+        currentScriptContentsList,
         editFragment.languageType
     )
 
@@ -69,6 +69,8 @@ class EditModeHandler(
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,
+        currentScriptContentsList,
+        readSharePreffernceMap,
         enableCmdEdit,
     )
     private val buttonViewHowActive = ButtonViewHowActive(
@@ -101,7 +103,7 @@ class EditModeHandler(
                 .get(editFragment.languageType)
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
-                currentShellContentsList,
+                currentScriptContentsList,
                 languageTypeToSectionHolderMap?.get(
                     CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
                 ) as String,
@@ -111,7 +113,7 @@ class EditModeHandler(
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
-                currentShellContentsList,
+                currentScriptContentsList,
                 languageTypeToSectionHolderMap.get(
                     CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
                 ) as String,
@@ -136,7 +138,7 @@ class EditModeHandler(
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-            shellContentsList=currentShellContentsList,
+            shellContentsList=currentScriptContentsList,
             editExecuteValue=editExecuteValue,
             setDrawble = setDrawbleForOk(),
             howActive = !onDisablePlayButton
@@ -144,7 +146,7 @@ class EditModeHandler(
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
             readSharePreffernceMap,
-            currentShellContentsList,
+            currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             enableCmdEdit
@@ -155,7 +157,7 @@ class EditModeHandler(
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-            shellContentsList=currentShellContentsList,
+            shellContentsList=currentScriptContentsList,
             howActive=onEditButton && !onDisableEditButton
         )
         buttonCreate(
@@ -168,13 +170,13 @@ class EditModeHandler(
     ) {
         val recordNumToMapNameValueInCommandHolder =
             RecordNumToMapNameValueInHolder.parse(
-                currentShellContentsList,
+                currentScriptContentsList,
                 commandSectionStart,
                 commandSectionEnd
             )
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
-                currentShellContentsList,
+                currentScriptContentsList,
                 settingSectionStart,
                 settingSectionEnd,
                 true,
@@ -214,13 +216,13 @@ class EditModeHandler(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            currentShellContentsList,
+            currentScriptContentsList,
             editExecuteValue=editExecuteValue
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
             readSharePreffernceMap,
-            currentShellContentsList,
+            currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             enableCmdEdit

@@ -1,61 +1,27 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment
 
-
-import android.util.Size
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.widget.PopupWindow
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.LinearLayoutCompat
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.ManageSubMenuDialog
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.SettingSubMenuDialog
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.EnableNavForWebView
-import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
-import com.puutaro.commandclick.proccess.NoScrollUrlSaver
-import com.puutaro.commandclick.proccess.UrlTexter
-import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-
+import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,
-    private val cmdIndexFragment: CommandIndexFragment,
+    cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ){
     private val context = cmdIndexFragment.context
-    private val cmdSearchEditText = binding.cmdSearchEditText
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
-    )
-
     private val settingButtonView = binding.cmdindexSettingButton
-    private val installFromFannelRepo = InstallFromFannelRepo(
+
+    private val settingButtonHandler = SettingButtonHandler(
         cmdIndexFragment,
-        currentAppDirPath,
+        readSharePreffernceMap,
     )
-    private val menuListMap = MenuEnums.values().toList().map{
-        it.itemName to it.imageId
-    }
-    private var menuPopupWindow: PopupWindow? = null
 
     fun toolbarSettingButtonOnLongClick() {
         settingButtonView.setOnClickListener {
-            ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-                cmdIndexFragment,
+            settingButtonHandler.handle(
+                false,
+                settingButtonView,
             )
         }
     }
@@ -63,169 +29,14 @@ class ToolBarSettingButtonControl(
     fun toolbarSettingButtonOnClick(){
         settingButtonView.setOnLongClickListener {
             settingButtonInnerView ->
-            val settingButtonViewContext = settingButtonInnerView.context
-            menuPopupWindow = PopupWindow(
-                settingButtonView.context,
-            ).apply {
-                elevation = 5f
-                isFocusable = true
-                isOutsideTouchable = true
-                setBackgroundDrawable(null)
-                animationStyle = R.style.popup_window_animation_phone
-                val inflater = LayoutInflater.from(settingButtonView.context)
-                contentView = inflater.inflate(
-                    R.layout.setting_popup_for_index,
-                    LinearLayoutCompat(settingButtonViewContext),
-                false
-                ).apply {
-                    val menuListView =
-                        this.findViewById<NoScrollListView>(
-                            R.id.setting_menu_list_view
-                        )
-                    val menuListAdapter = SubMenuAdapter(
-                        settingButtonViewContext,
-                        menuListMap.toMutableList()
-                    )
-                    menuListView.adapter = menuListAdapter
-                    menuListViewSetOnItemClickListener(menuListView)
-                    navButtonsSeter(this)
-                    measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    )
-                }
-            }.also { popupWindow ->
-                // Absolute location of the anchor view
-                val location = IntArray(2).apply {
-                    settingButtonView.getLocationOnScreen(this)
-                }
-                val size = Size(
-                    popupWindow.contentView.measuredWidth,
-                    popupWindow.contentView.measuredHeight
-                )
-                popupWindow.showAtLocation(
-                    settingButtonView,
-                    Gravity.TOP or Gravity.START,
-                    location[0] - (size.width - settingButtonView.width) / 2,
-                    location[1] - size.height
-                )
-            }
+            settingButtonHandler.handle(
+                true,
+                settingButtonView,
+            )
             true
         }
     }
-
-    private fun navButtonsSeter(
-        settingButtonInnerView: View
-    ){
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_back_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.BACK,
-            EnableNavForWebView.checkForGoBack(cmdIndexFragment)
-        )
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_reload_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
-            EnableNavForWebView.checkForReload(cmdIndexFragment),
-        )
-        execSetNavImageButton(
-            settingButtonInnerView,
-            R.id.setting_menu_nav_forward_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
-            EnableNavForWebView.checkForGoForward(cmdIndexFragment)
-        )
-    }
-
-    private fun execSetNavImageButton (
-        settingButtonInnerView: View,
-        buttonId: Int,
-        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
-        buttonEnable: Boolean
-    ){
-        val navImageButton =
-            settingButtonInnerView.findViewById<AppCompatImageButton>(
-                buttonId
-            )
-        navImageButton.setOnClickListener {
-            menuPopupWindow?.dismiss()
-            val listener = cmdIndexFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-            listener?.onToolbarMenuCategories(
-                toolbarMenuCategoriesVariantForCmdIndex
-            )
-        }
-        navImageButton.isEnabled = buttonEnable
-        val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
-        navImageButton.imageTintList = context?.getColorStateList(colorId)
-    }
-
-    private fun menuListViewSetOnItemClickListener(
-        menuListView: NoScrollListView
-    ){
-        menuListView.setOnItemClickListener {
-                parent, View, pos, id ->
-            menuPopupWindow?.dismiss()
-            val menuListAdapter =
-                menuListView.adapter as SubMenuAdapter
-            when(menuListAdapter.getItem(pos)){
-                MenuEnums.INSTALL_FANNEL.itemName -> {
-                    InstallFannelHandler.handle(
-                        cmdIndexFragment,
-                        installFromFannelRepo
-                    )
-                }
-                MenuEnums.QR_SCAN.itemName -> {
-                    QrScanner(
-                        cmdIndexFragment,
-                        currentAppDirPath,
-                    ).scanFromCamera()
-                }
-                MenuEnums.NO_SCROLL_SAVE_URL.itemName -> {
-                    NoScrollUrlSaver.save(
-                        cmdIndexFragment,
-                        currentAppDirPath,
-                        String()
-                    )
-                }
-                MenuEnums.USAGE.itemName -> {
-                    UrlTexter.launch(
-                        cmdIndexFragment,
-                        cmdSearchEditText,
-                        WebUrlVariables.commandClickUsageUrl
-                    )
-                }
-                MenuEnums.EDIT_STARTUP.itemName -> {
-                    ScriptFileEdit.edit(
-                        cmdIndexFragment,
-                        currentAppDirPath,
-                        UsePath.cmdclickStartupJsName,
-                    )
-                }
-                MenuEnums.MANAGE.itemName -> {
-                    ManageSubMenuDialog.launch(
-                        cmdIndexFragment,
-                        currentAppDirPath
-                    )
-                }
-                MenuEnums.SETTING.itemName -> {
-                    SettingSubMenuDialog.launch(cmdIndexFragment)
-                }
-            }
-        }
-    }
 }
 
-private enum class MenuEnums(
-    val itemName: String,
-    val imageId: Int,
-) {
-    USAGE("usage", R.drawable.icons8_info),
-    EDIT_STARTUP("edit startup", R.drawable.icons8_edit_frame),
-    NO_SCROLL_SAVE_URL("no scroll save url", R.drawable.icons8_check_ok),
-    INSTALL_FANNEL("install fannel", R.drawable.icons8_puzzle),
-    QR_SCAN("scan QR", R.drawable.icons_qr_code),
-    MANAGE("manage", R.drawable.icons8_setup),
-    SETTING("setting",R.drawable.icons8_setting),
-}
 
 

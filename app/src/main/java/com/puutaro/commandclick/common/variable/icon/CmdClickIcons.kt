@@ -10,6 +10,7 @@ enum class CmdClickIcons(
     SEARCH("search", R.drawable.icons8_search),
     BACK("back", com.afollestad.materialdialogs.R.drawable.md_nav_back),
     WHEEL("wheel", com.skydoves.colorpickerview.R.drawable.wheel),
+    RING("ring", R.drawable.icons8_wheel),
     HISTORY("history", R.drawable.icons8_history),
     OVERFLOW("oeverflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material),
     CANCEL("cancel", R.drawable.icons8_cancel),
@@ -22,6 +23,7 @@ enum class CmdClickIcons(
     DOWNLOAD_COMP("download_done", android.R.drawable.stat_sys_download_done),
     REFLESH("reflesh", R.drawable.icons8_refresh),
     EDIT("edit", R.drawable.icons8_edit),
+    EDIT_FRAME("edit_frame", R.drawable.icons8_edit_frame),
     SET_UP("setup", R.drawable.icons8_setup),
     SHORTCUT("shortcut", R.drawable.icons8_shortcut),
     FOLDA("folda", R.drawable.icons8_folda),
@@ -34,4 +36,5 @@ enum class CmdClickIcons(
     UPDATE("update", R.drawable.icons8_update),
     INFO("info", R.drawable.icons8_info),
     ABOUT("about", R.drawable.icons8_about),
+    QR("qr", R.drawable.icons_qr_code)
 }

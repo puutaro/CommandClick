@@ -93,10 +93,6 @@ class QrScanner(
             val isCameraPermission = withContext(Dispatchers.IO) {
                 howCameraPermission(terminalViewModel)
             }
-//            val isCameraPermission = ContextCompat.checkSelfPermission(
-//                activity,
-//                Manifest.permission.CAMERA
-//            ) == PackageManager.PERMISSION_GRANTED
             if(!isCameraPermission) return@launch
             withContext(Dispatchers.Main) {
                 launchCameraDialog()
