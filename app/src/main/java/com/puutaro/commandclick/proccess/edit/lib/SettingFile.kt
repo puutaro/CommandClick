@@ -18,7 +18,7 @@ object SettingFile {
     }
 
     fun formSettingContents(
-        settingCon : List<String>
+        settingCon: List<String>
     ): String {
         return settingCon.map{
             it.trim()

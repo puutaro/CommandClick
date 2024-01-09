@@ -22,12 +22,12 @@ object SetReplaceVariabler {
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
         fannelDirName: String,
-        currentShellFileName: String,
+        currentScriptFileName: String,
     ): Map<String, String>? {
         val setReplaceVariableMapBeforeRecursiveReplace = execMakeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
-            currentShellFileName,
+            currentScriptFileName,
             fannelDirName
         )
         return recursiveReplaceForReplaceVariableMap(
@@ -35,7 +35,7 @@ object SetReplaceVariabler {
         )
     }
 
-    fun recursiveReplaceForReplaceVariableMap(
+    private fun recursiveReplaceForReplaceVariableMap(
         setReplaceVariableMapBeforeRecursiveReplace : Map<String, String>?
     ): Map<String, String>? {
         val firstSetVariableMapStringList = setReplaceVariableMapBeforeRecursiveReplace
@@ -78,7 +78,7 @@ object SetReplaceVariabler {
     private fun execMakeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
-        currentShellFileName: String,
+        currentScriptFileName: String,
         fannelDirName: String
     ): Map<String, String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
@@ -102,7 +102,7 @@ object SetReplaceVariabler {
             ) return@map setTargetVariableValueSource
             makeSetVariableValueFromFile(
                 currentAppDirPath,
-                currentShellFileName,
+                currentScriptFileName,
                 fannelDirName
             )
         }?.joinToString(",")
@@ -113,7 +113,7 @@ object SetReplaceVariabler {
             }
     }
 
-    fun convertReplaceVariableConToMap(
+    private fun convertReplaceVariableConToMap(
         replaceVariableCon: String?,
     ): Map<String, String>? {
         return replaceVariableCon?.split(',')
@@ -144,7 +144,7 @@ object SetReplaceVariabler {
 
     private fun makeSetVariableValueFromFile(
         currentAppDirPath: String,
-        currentShellFileName: String,
+        currentScriptFileName: String,
         fannelDirName: String
     ): String {
         val setReplaceVariablesConfigPath =
@@ -155,7 +155,7 @@ object SetReplaceVariabler {
                     ),
                 currentAppDirPath,
                 fannelDirName,
-                currentShellFileName,
+                currentScriptFileName,
             )
         val setReplaceVariablesConfigObj = File(setReplaceVariablesConfigPath)
         val setReplaceVariableConfigDirPath = setReplaceVariablesConfigObj.parent
@@ -169,7 +169,7 @@ object SetReplaceVariabler {
                 it,
                 currentAppDirPath,
                 fannelDirName,
-                currentShellFileName,
+                currentScriptFileName,
             )
         }
     }

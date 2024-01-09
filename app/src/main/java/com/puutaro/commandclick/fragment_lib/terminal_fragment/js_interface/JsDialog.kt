@@ -19,7 +19,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.PromptJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.QrScanJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewJsDialog
-import com.puutaro.commandclick.util.DialogObject
+import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.QuoteTool
 
 class JsDialog(

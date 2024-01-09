@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.lib
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.util.DialogObject
+import com.puutaro.commandclick.util.dialog.DialogObject
 
 
 object VariationErrDialog {

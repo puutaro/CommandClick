@@ -49,7 +49,7 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.DialogObject
+import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
