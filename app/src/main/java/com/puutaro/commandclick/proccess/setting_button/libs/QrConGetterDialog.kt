@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
+package com.puutaro.commandclick.proccess.setting_button.libs
 
 import android.app.Dialog
 import android.view.Gravity
@@ -8,56 +8,57 @@ import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import java.io.File
 
 object QrConGetterDialog {
 
-    private var qrconGetterDialog: Dialog? = null
+    private var qrConGetterDialog: Dialog? = null
     fun launch(
-        editFragment: EditFragment,
-        filterDir: String,
+        settingButtonArgsMaker: SettingButtonArgsMaker,
     ){
-        val context = editFragment.context
+        val fragment = settingButtonArgsMaker.fragment
+        val context = fragment.context
             ?: return
-        val activity = editFragment.activity
+        val activity = fragment.activity
             ?: return
-        qrconGetterDialog = Dialog(
+        qrConGetterDialog = Dialog(
             activity
         )
-        qrconGetterDialog?.setContentView(
+        qrConGetterDialog?.setContentView(
             R.layout.prompt_dialog_layout
         )
         val promptTitleTextView =
-            qrconGetterDialog?.findViewById<AppCompatTextView>(
+            qrConGetterDialog?.findViewById<AppCompatTextView>(
                 R.id.prompt_dialog_title
             )
         promptTitleTextView?.text = "Input contents name"
         val promptMessageTextView =
-            qrconGetterDialog?.findViewById<AppCompatTextView>(
+            qrConGetterDialog?.findViewById<AppCompatTextView>(
                 R.id.prompt_dialog_message
             )
         promptMessageTextView?.isVisible = false
         val promptEditText =
-            qrconGetterDialog?.findViewById<AutoCompleteTextView>(
+            qrConGetterDialog?.findViewById<AutoCompleteTextView>(
                 R.id.prompt_dialog_input
             )
         val promptCancelButton =
-            qrconGetterDialog?.findViewById<AppCompatImageButton>(
+            qrConGetterDialog?.findViewById<AppCompatImageButton>(
                 R.id.prompt_dialog_cancel
             )
         promptCancelButton?.setOnClickListener {
-            qrconGetterDialog?.dismiss()
+            qrConGetterDialog?.dismiss()
         }
         val promptOkButtonView =
-            qrconGetterDialog?.findViewById<AppCompatImageButton>(
+            qrConGetterDialog?.findViewById<AppCompatImageButton>(
                 R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
-            qrconGetterDialog?.dismiss()
+            qrConGetterDialog?.dismiss()
             val shortcutNameEditable = promptEditText?.text
             if(
                 shortcutNameEditable.isNullOrEmpty()
@@ -66,7 +67,16 @@ object QrConGetterDialog {
                 shortcutNameEditable.toString(),
                 ".txt",
             )
-            val filePath = "${filterDir}/${fileName}"
+            val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+            val extraMap = ExtraMapTool.createExtraMap(
+                JsPathMacroForSettingButton.GET_QR_CON.name,
+                settingButtonMenuMapList
+            )
+            val parentDirPath = ExtraMapTool.getParentDirPath(
+                extraMap,
+                settingButtonArgsMaker.currentAppDirPath
+            )
+            val filePath = "${parentDirPath}/${fileName}"
             if(File(filePath).isFile) {
                 Toast.makeText(
                     context,
@@ -76,32 +86,32 @@ object QrConGetterDialog {
                 return@setOnClickListener
             }
             getQrHandler(
-                editFragment,
-                filterDir,
+                fragment,
+                parentDirPath,
                 fileName,
             )
         }
-        qrconGetterDialog?.setOnCancelListener {
-            qrconGetterDialog?.dismiss()
+        qrConGetterDialog?.setOnCancelListener {
+            qrConGetterDialog?.dismiss()
         }
-        qrconGetterDialog?.window?.setLayout(
+        qrConGetterDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        qrconGetterDialog?.window?.setGravity(
+        qrConGetterDialog?.window?.setGravity(
             Gravity.BOTTOM
         )
-        qrconGetterDialog?.show()
+        qrConGetterDialog?.show()
     }
 
     private fun getQrHandler(
-        editFragment: EditFragment,
-        filterDir: String,
+        fragment: Fragment,
+        parentDirPath: String,
         fileName: String,
     ){
         QrScanner(
-            editFragment,
-            filterDir
+            fragment,
+            parentDirPath
         ).saveFromCamera(fileName)
     }
 }
