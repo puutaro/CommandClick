@@ -53,7 +53,7 @@ Wait target pid
 
 ### [Optional] --comp_icon-name, -cin <a id="comp-icon-name"></a>
 
--> [About icon name](https://github.com/puutaro/CommandClick/blob/master/md/developer/custom_shell_commands/noti.md#icon_name)
+-? [Pre researved icon name](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md)
 
 - default icon macro name `download_done`
 

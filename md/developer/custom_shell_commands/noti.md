@@ -58,9 +58,8 @@ Specify 30+ number, becuase of 1 ~ 30 system channel num
 
 Can specify　bellow pre reserved icon names
 
-- pre reserved icon names
+-> [pre reserved icon names](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md)
 
-`copy`, `search`, `back`, `wheel`, `history`, `overflow`, `cancel`, `file`, `ok`, `puzzle`, `terminal`, `down`, `reflesh`, `edit`, `edit_frame`, `set`_`up`, `shortcut`, `folda`, `setting`, `plus`, `support`, `play`, `share`, `launch`, `update`, `info`, `about`, `download`, `download_done`, `qr`, `ring`  
 
 ### [Optional] --alert-once, -o <a id="alert_once"></a>
 

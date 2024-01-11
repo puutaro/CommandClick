@@ -6,7 +6,8 @@ Table
 -----------------
 * [Overview](#overview)
 * [Usage](#usage)
-* [Directory structrue](#directory-structrue)
+* [Directory structrue (mvc version)](#directory-structrue-mvc)
+* [Directory structrue (mvvm version)](#directory-structrue-mvvm)
 * [Pre reserved menu name](#pre-reserved-menu-name)
 
 
@@ -27,9 +28,9 @@ setVariableTypes={variableName}:LI=listDir={target list dir path}|menu={menuName
 
 - This option must be one and other component is exclude by this.  
 - Above list is script name in `{target list dir path}`  
+- Enable to use [file prefix](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md#specify-file-path): `file://`
 
-
-## Directory structrue  
+## Directory structrue (mvc version) <a id="directory-structrue-mvc"></a>
 
 ```
 ${target fannel dirctory}
@@ -52,8 +53,40 @@ ${target fannel dirctory}
 	     var MENU_NAME = args.at(3);
 ```
 
-- `itemclick.js` option  
-`const override = true;` -> when click, your handling when js and shell don't execute.  
+
+## Directory structrue (mvvm version) <a id="directory-structrue-mvvm"></a>
+
+(setVariableTypes)
+
+```js.js
+setVariableTypes={variableName}:LI=listDir={target list dir path}|menu=mvvmMenu1!{menuName1}&mvvmMenu1&mvvmMenu2!menuName2&subMenuName2&subMenuName2
+```
+
+```
+${target fannel dirctory}
+└── click
+    ├── itemClick.js
+    ├── menuClick.js
+    ├── subMenuClick.js
+    ├
+    menu
+    ├── mvvmMenu1.js
+    ├── subMvvmMenu1.js
+    └── subMvvmMenu2.js
+```
+
+- `itemClick.js` is trigger when item click  
+- `menuClick.js` is trigger when menu click  
+- `subMenuClick.js` is trigger when subMenu click  
+- `itemClick.js`, `menuClick.js`, and `subMenuClick.js` have bellow argument:
+   
+```js.js 
+	     let args = jsArgs.get().split("\t");   
+	     var PARENT_DIR = args.at(0);  
+	     var LIST_VIEW_DIR = args.at(1);  
+	     var ITEM_NAME = args.at(2);  
+	     var MENU_NAME = args.at(3);
+```
 
 
 ## Pre reserved menu name  
