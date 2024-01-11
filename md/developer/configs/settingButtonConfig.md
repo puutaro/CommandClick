@@ -15,6 +15,8 @@ Table
 
 Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/USAGE.md#settings) feature
 
+- Use default config in no set
+
 ## Config key 
 
 | Key name | Description | 
