@@ -6,8 +6,8 @@ Table
 
 * [Overview](#overview)
 * [Config key](#config-key)
-* [Setting key](#config-key)
-* [Config key](#config-key)
+	* [jsPath](#jspath)
+* [Setting key](#setting-key)
 * [Example](#example)
 
 
@@ -22,23 +22,32 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 | Key name | Description | 
 | --------- | --------- | 
 | `name` | menu name | 
-| `icon` | [pre reserved icon names](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md) |
-| `jsPath` | setting for long click |
-| `parentName` | setting for long click |
-| `extra` | setting for long click |
+| `icon` | [Optional] [pre reserved icon names](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md) |
+| `jsPath` | [Optional] js file path |
+| `parentName` | [Optional] parent menu name when sub menu |
+| `extra` | [Optional] setting for long click |
 
-- `${Config key}=` -> Mean disable this click.
 - Concat by `,`
+
+### jsPath
+
+Js path that you want to execute.  
+Also use [`JS_PATH_MACRO`](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/JsPathMacro.md)
+
 
 ## Setting key 
 
 | Key name | Description | 
 | --------- | --------- | 
-| `jsPath` | execute js path macro | 
-| `menuPath` | menu config path |
-| `onHideFooter` | hide footer in menu |
+| `parentDirPath` | parent dir path | 
+| `compPrefix` | complete prefix string |
+| `compSuffix` | complete suffix string |
+| `broadcastAction` | -> [broadcast action name](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md) |
+| `broadcastSchemas` | -> [broadcast shemas](https://github.com/puutaro/CommandClick/blob/master/md/developer/broadcastActoins.md) |
 
-- Concat by `|`
+- Concat by `!`
+- braadcast scheme concat by `!` like `broadcastSchemas=${schema1}=value1!${schema2}=value2`
+
 
 
 ## Example
@@ -46,13 +55,15 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 - settingButtonConfig.js
 
 ```js.js
-longClick=
-	jsPath=MENU
-	|menuPath=`${setting button menu config js path1}`
-	|onHideFooter=,
-click=
-	jsPath=MENU
-	|menuPath=`${setting button menu config js path1}`
-	|onHideFooter=,
+name=sync
+|icon=update
+|jsPath=SYNC
+|extra=
+	broadcastAction=`${UPDATE_LIST_INDEX_BROADCAST_ACTION}`,
+name=add app dir
+|icon=plus
+|jsPath=ADD_APP_DIR
+|extra=
+	!broadcastAction=`${UPDATE_LIST_INDEX_BROADCAST_ACTION}`,
 
 ```
