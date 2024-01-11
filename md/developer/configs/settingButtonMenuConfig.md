@@ -7,7 +7,7 @@ Table
 * [Overview](#overview)
 * [Config key](#config-key)
 	* [jsPath](#jspath)
-* [Setting key](#setting-key)
+	* [Setting key](#setting-key)
 * [Example](#example)
 
 
@@ -35,7 +35,9 @@ Js path that you want to execute.
 Also use [`JS_PATH_MACRO`](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/JsPathMacro.md)
 
 
-## Setting key 
+### Setting key 
+
+Config key include this keys
 
 | Key name | Description | 
 | --------- | --------- | 
