@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.image_tools
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import java.nio.ByteBuffer
 import java.util.Arrays
 
