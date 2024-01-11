@@ -42,6 +42,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
     </ScrollView>
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/setting_menu_nav_footer"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="50dp"
