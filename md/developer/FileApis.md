@@ -14,6 +14,9 @@ Table
 * [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt`](#src_anchor_long_press_menu)
 * [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcImageAnchorLongPressMenu.txt`](#src_image_anchor_long_press_menu)
 * [`~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/imageAnchorLongPressMenu.txt`](#image_long_press_menu)
+* [`~/AppDir/${app directory}/${fannel_dir}/settings/homeScriptUrlsPath.txt`](#home_script_urls_path)
+* [`~/AppDir/${app directory}/${fannel_dir}/settings/settingButtonConfig.js`](#setting_button_config)
+* [`~/AppDir/${app directory}/${fannel_dir}/settings/qrDialogConfig.js`](#qr_dialog_config)
 * [`~/AppDir/${app directory}/${fannel_dir}/settingVariables/replaceVariablesTable.tsv`](#replace_variables_table)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/urlHistoryClick.js`](#url_history_click)
 * [`~/AppDir/${app directory}/${fannel_dir}/systemJs/appHistoryClick.js`](#app_history_click)
@@ -91,6 +94,14 @@ fannel path 2
 ```
 - [settings directory](https://github.com/puutaro/CommandClick/blob/master/md/developer/directory_structure.md#settings)
 
+
+## `~/AppDir/${app directory}/${fannel_dir}/settings/settingButtonConfig.js` <a id="setting_button_config"></a>
+
+setting button config file
+
+## `~/AppDir/${app directory}/${fannel_dir}/settings/qrDialogConfig.js` <a id="qr_dialog_config"></a>
+
+qr dialog config file
 
 ## `~/AppDir/${app directory}/${fannel_dir}/longPressMenuDir/srcAnchorLongPressMenu.txt` <a id="src_anchor_long_press_menu"></a>
 
