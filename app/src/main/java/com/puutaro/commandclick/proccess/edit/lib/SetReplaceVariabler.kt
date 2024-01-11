@@ -198,7 +198,12 @@ object SetReplaceVariabler {
                 replaceString
             )
         }
-        return loadJsUrlSource
+        return ScriptPreWordReplacer.replace(
+            loadJsUrlSource,
+            recentAppDirPath,
+            fannelDirName,
+            scriptFileName
+        )
     }
 
 
