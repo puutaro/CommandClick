@@ -28,6 +28,7 @@ Table of Contents
 * [execPlayBtnLongPress](#execplaybtnlongpress)
 * [execEditBtnLongPress](#execeditbtnlongpress)
 * [execJsOrHtmlPath](#execjsorhtmlpath)
+* [overrideItemClickExec](#overrideItemClickExec)
 * [setReplaceVariables](#setreplacevariables)
 * [setVariableTypes](#setvariabletypes)
 * [hideSettingVariables](#hidesettingvariables)
@@ -247,6 +248,10 @@ setReplaceVariables="{replaceVariablle1}={repalce string1}
 or setReplaceVariables="file://{file path}"    
 -> [detail](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_replace_variables.md) 
 ```
+
+## overrideItemClickExec
+
+Override js executor to `itemClick.js` when click in [ListIndex](https://github.com/puutaro/CommandClick/blob/master/md/developer/set_variable_types/list_index.md#list-index-option)
 
 ## setVariableTypes
 
