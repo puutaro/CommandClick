@@ -27,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.re
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -239,6 +240,11 @@ class CommandIndexFragment: Fragment() {
         toolBarSettingButtonControl.toolbarSettingButtonOnClick()
         toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
 
+        SettingButtonHandler.setIcon(
+            this,
+            readSharePreffernceMap,
+            binding.cmdindexSettingButton
+        )
 
         val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
             this,
