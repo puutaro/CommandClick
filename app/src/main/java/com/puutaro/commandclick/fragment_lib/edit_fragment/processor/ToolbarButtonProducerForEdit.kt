@@ -105,19 +105,31 @@ class ToolbarButtonProducerForEdit(
         val makeButtonView = ImageButton(context)
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
-        if (setDrawble == null) {
-            makeButtonView.setImageResource(
-                toolbarButtonBariantForEdit.drawbleIconInt
-            )
-        } else {
-            makeButtonView.setImageResource(
-                setDrawble
-            )
+        when (setDrawble == null) {
+            true->
+                makeButtonView.setImageResource(
+                    toolbarButtonBariantForEdit.drawbleIconInt
+                )
+
+            else ->
+                makeButtonView.setImageResource(
+                    setDrawble
+                )
         }
         makeButtonView.backgroundTintList =
             context?.getColorStateList(R.color.white)
         makeButtonView.layoutParams = insertImageButtonParam
         makeButtonView.tag = toolbarButtonBariantForEdit.str
+        if(
+            makeButtonView.tag ==
+            ToolbarButtonBariantForEdit.SETTING.str
+        ) {
+            SettingButtonHandler.setIcon(
+                editFragment,
+                readSharePreffernceMap,
+                makeButtonView,
+            )
+        }
 
         makeButtonView.setOnLongClickListener {
                 buttonInnerView ->

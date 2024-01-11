@@ -9,7 +9,6 @@ class ToolBarSettingButtonControl(
     cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ){
-    private val context = cmdIndexFragment.context
     private val settingButtonView = binding.cmdindexSettingButton
 
     private val settingButtonHandler = SettingButtonHandler(
