@@ -12,7 +12,7 @@ object CcScript {
         if(
             keyValueListSize < 2
         ) return String() to String()
-        val parametarKey = keyValueList.first()
+        val parametarKey = keyValueList.first().trim()
         val parameterValue = getValueFromSeparatedList(
             keyValueList,
             separator
