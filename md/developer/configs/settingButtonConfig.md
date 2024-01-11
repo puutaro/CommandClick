@@ -22,6 +22,7 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 | --------- | --------- | 
 | `click` | setting for click | 
 | `longClick` | setting for long click |
+| `icon` | [Optional] [pre reserved icon names](https://github.com/puutaro/CommandClick/blob/master/md/developer/collection/icons.md) |
 
 - `${Config key}=` -> Mean disable this click.
 - Concat by `,`
@@ -50,5 +51,6 @@ click=
 	jsPath=MENU
 	|menuPath=`${setting button menu config js path1}`
 	|onHideFooter=,
+icon=plus,
 
 ```
