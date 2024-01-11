@@ -2,6 +2,8 @@ package com.puutaro.commandclick.util
 
 import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 
 object CcPathTool {
@@ -196,5 +198,20 @@ object CcPathTool {
         val ubuntuFiles = UbuntuFiles(context)
         val filesOneRootfsPathPrfix = ubuntuFiles.filesOneRootfs.absolutePath
         return "${filesOneRootfsPathPrfix}${path}"
+    }
+
+    fun getCurrentScriptFileName(
+        readSharePreffernceMap: Map<String, String>
+    ): String {
+        val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_script_file_name
+        )
+        if(
+            currentScriptFileName.isEmpty()
+            || currentScriptFileName == "-"
+            || currentScriptFileName == CommandClickScriptVariable.EMPTY_STRING
+        ) return UsePath.cmdclickStartupJsName
+        return currentScriptFileName
     }
 }
