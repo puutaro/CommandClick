@@ -19,7 +19,6 @@ terminalDo="OFF"
 editExecute="ALWAYS"
 onAdBlock="OFF"
 overrideItemClickExec="ON"
-disableSettingButton="ON"
 disableEditButton="ON"
 disablePlayButton="ON"
 terminalFontZoom="0"
@@ -27,13 +26,8 @@ terminalColor=""
 terminalFontColor=""
 execPlayBtnLongPress=""
 execEditBtnLongPress=""
-setReplaceVariables="LIST_DIR_PATH=listDir"
-setReplaceVariables="LIST_PREFIX=prefix"
-setReplaceVariables="LIST_SUFFIX=suffix"
-setReplaceVariables="CMDCLICK_ROOT_DIR_PATH=${00}"
-setReplaceVariables="CMDCLICK_CONF_DIR_PATH=${CMDCLICK_ROOT_DIR_PATH}/conf"
-setReplaceVariables="CMDCLICK_JS_IMPORT_DIR_PATH=${CMDCLICK_CONF_DIR_PATH}/jsimport"
-setVariableTypes="jsImportList:LI=${LIST_DIR_PATH}=${CMDCLICK_JS_IMPORT_DIR_PATH}!${LIST_SUFFIX}=.js|menu=delete!scanQR!get!sync!util&add&write&cat!copy&copy_file&copy_path"
+setReplaceVariables="file://"
+setVariableTypes="file://"
 scriptFileName="jsImportManager.js"
 /// SETTING_SECTION_END
 
@@ -45,8 +39,5 @@ jsImportList=""
 
 /// Please write bellow with javascript
 
-
-let args = jsArgs.get().split("\t");
-var FIRST_ARGS = args.at(0);
 
 
