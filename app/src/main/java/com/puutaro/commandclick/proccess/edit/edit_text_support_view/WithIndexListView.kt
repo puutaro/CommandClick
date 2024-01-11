@@ -39,10 +39,10 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.lis
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.QrConGetterDialog
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
+import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.util.QuoteTool
@@ -131,41 +131,6 @@ class WithIndexListView(
         Toast.makeText(
             context,
             "copy file ok",
-            Toast.LENGTH_LONG
-        ).show()
-    }
-
-    private val getFile = editFragment.registerForActivityResult(
-        ActivityResultContracts.OpenDocument()) { uri ->
-        if (
-            uri == null
-            || uri.toString() == String()
-        ) return@registerForActivityResult
-        val pathSource = runBlocking {
-            File(
-                withContext(Dispatchers.IO) {
-                    URLDecoder.decode(
-                        uri.toString(), Charsets.UTF_8.name()
-                    )
-                }.replace(prefixRegex, "/storage")
-            )
-        }
-        val sourceFilePath =
-            pathSource.absolutePath ?: String()
-        val getFileName = pathSource.name
-        val targetScriptFilePathSource = "${filterDir}/${getFileName}"
-        FileSystems.execCopyFileWithDir(
-            File(sourceFilePath),
-            File(targetScriptFilePathSource),
-            true
-        )
-        listIndexListUpdateFileList(
-            editFragment,
-            makeFileList()
-        )
-        Toast.makeText(
-            context,
-            "get file ok",
             Toast.LENGTH_LONG
         ).show()
     }
@@ -293,8 +258,11 @@ class WithIndexListView(
         )
 
         val fileList = makeFileList()
+        val qrDialogConfigMap = QrDialogConfig.makeDialogConfigMap(
+            readSharePreffernceMap,
+        )
         val isFileCon = howFileConQr(
-            replacedSetVariableMap,
+            qrDialogConfigMap,
         )
 
         val editListRecyclerView =
@@ -312,7 +280,7 @@ class WithIndexListView(
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
         invokeItemSetClickListenerForFileList()
-        invokeQrLogoSetClickListenerForFileList(replacedSetVariableMap)
+        invokeQrLogoSetClickListenerForFileList(qrDialogConfigMap)
         invokeQrLogoSetLongClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForIndexList(
             menuMapList
@@ -344,10 +312,10 @@ class WithIndexListView(
     }
 
     private fun invokeQrLogoSetClickListenerForFileList(
-        replacedSetVariableMap: Map<String, String>?
+        qrDialogConfigMap: Map<String, String>,
     ) {
         val isExecQrInLogoClick = howExecQrInLogoClick(
-            replacedSetVariableMap
+            qrDialogConfigMap
         )
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
@@ -687,13 +655,6 @@ class WithIndexListView(
         menuName: String,
     ){
         when(menuName){
-            PreMenuType.SYNC.menuName -> {
-                listIndexListUpdateFileList(
-                    editFragment,
-                    makeFileList()
-                )
-                return
-            }
             PreMenuType.DELETE.menuName -> {
                 execItemDelete(selectedItem)
                 return
@@ -708,20 +669,6 @@ class WithIndexListView(
                 execWriteItem(
                     selectedItem
                 )
-                return
-            }
-            PreMenuType.ADD.menuName -> {
-                execAddItem()
-                return
-            }
-            PreMenuType.ADD_APP_DIR.menuName -> {
-                if(
-                    selectedItem == throughMark
-                ) {
-                    noFileToast()
-                    return
-                }
-                execAddAppDir()
                 return
             }
             PreMenuType.COPY_PATH.menuName -> {
@@ -763,10 +710,6 @@ class WithIndexListView(
                     editFragment,
                     makeFileList()
                 )
-                return
-            }
-            PreMenuType.GET.menuName -> {
-                execGetFile()
                 return
             }
             PreMenuType.DESC.menuName -> {
@@ -819,11 +762,6 @@ class WithIndexListView(
                 editFragment,
                 filterDir
             ).scanFromCamera()
-            PreMenuType.GET_QR_CON.menuName ->
-                QrConGetterDialog.launch(
-                    editFragment,
-                    filterDir,
-                )
         }
         val menuScriptPathObj = File("${fannelMenuDirPath}/${menuName}${UsePath.JS_FILE_SUFFIX}")
         val execJsFilePath = when(menuScriptPathObj.isFile) {
@@ -840,88 +778,6 @@ class WithIndexListView(
             editFragment,
             execJsFilePath,
         )
-    }
-
-    private fun execAddAppDir(){
-        if(
-            context == null
-        ) return
-
-        promptDialog = Dialog(
-            context
-        )
-        promptDialog?.setContentView(
-            R.layout.prompt_dialog_layout
-        )
-        val promptTitleTextView =
-            promptDialog?.findViewById<AppCompatTextView>(
-                R.id.prompt_dialog_title
-            )
-        promptTitleTextView?.text = "Input create app directory name"
-        val promptMessageTextView =
-            promptDialog?.findViewById<AppCompatTextView>(
-                R.id.prompt_dialog_message
-            )
-        promptMessageTextView?.isVisible = false
-        val promptEditText =
-            promptDialog?.findViewById<AutoCompleteTextView>(
-                R.id.prompt_dialog_input
-            )
-        val promptCancelButton =
-            promptDialog?.findViewById<AppCompatImageButton>(
-                R.id.prompt_dialog_cancel
-            )
-        promptCancelButton?.setOnClickListener {
-            promptDialog?.dismiss()
-        }
-        val promptOkButtonView =
-            promptDialog?.findViewById<AppCompatImageButton>(
-                R.id.prompt_dialog_ok
-            )
-        promptOkButtonView?.setOnClickListener {
-            promptDialog?.dismiss()
-            val inputScriptFileName = promptEditText?.text.toString()
-            val jsFileSuffix = UsePath.JS_FILE_SUFFIX
-            val isJsSuffix = inputScriptFileName.endsWith(jsFileSuffix)
-            val scriptFileName = if (
-                isJsSuffix
-            ) inputScriptFileName
-            else inputScriptFileName + jsFileSuffix
-
-            CommandClickScriptVariable.makeAppDirAdminFile(
-                UsePath.cmdclickAppDirAdminPath,
-                scriptFileName
-            )
-            listIndexListUpdateFileList(
-                editFragment,
-                makeFileList()
-            )
-            val createAppDirName = if (
-                isJsSuffix
-            ) {
-                inputScriptFileName.removeSuffix(jsFileSuffix)
-            } else {
-                inputScriptFileName
-            }
-            val createAppDirPath = "${UsePath.cmdclickAppDirPath}/${createAppDirName}"
-            FileSystems.createDirs(
-                createAppDirPath
-            )
-            FileSystems.createDirs(
-                "${createAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-            )
-        }
-        promptDialog?.setOnCancelListener {
-            promptDialog?.dismiss()
-        }
-        promptDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        promptDialog?.window?.setGravity(
-            Gravity.BOTTOM
-        )
-        promptDialog?.show()
     }
 
     private fun execCopyFileHere(
@@ -1134,11 +990,6 @@ class WithIndexListView(
             selectedItem
         )
     }
-    private fun execGetFile(){
-        getFile.launch(
-            arrayOf(Intent.CATEGORY_OPENABLE)
-        )
-    }
 
     private fun execCopyFile(
         selectedItem: String
@@ -1194,77 +1045,6 @@ class WithIndexListView(
             context
         )
         editorByIntent.byIntent()
-    }
-
-    private fun execAddItem(){
-        if(
-            context == null
-        ) return
-        promptDialog = Dialog(
-            context
-        )
-        promptDialog?.setContentView(
-            R.layout.prompt_dialog_layout
-        )
-        val promptTitleTextView =
-            promptDialog?.findViewById<AppCompatTextView>(
-                R.id.prompt_dialog_title
-            )
-        promptTitleTextView?.text = "Type item name"
-        val promptMessageTextView =
-            promptDialog?.findViewById<AppCompatTextView>(
-                R.id.prompt_dialog_message
-            )
-        promptMessageTextView?.isVisible = false
-        val promptEditText =
-            promptDialog?.findViewById<AutoCompleteTextView>(
-                R.id.prompt_dialog_input
-            )
-        val promptCancelButton =
-            promptDialog?.findViewById<AppCompatImageButton>(
-                R.id.prompt_dialog_cancel
-            )
-        promptCancelButton?.setOnClickListener {
-            promptDialog?.dismiss()
-        }
-        val promptOkButtonView =
-            promptDialog?.findViewById<AppCompatImageButton>(
-                R.id.prompt_dialog_ok
-            )
-        promptOkButtonView?.setOnClickListener {
-            promptDialog?.dismiss()
-            val inputEditable = promptEditText?.text
-            if(
-                inputEditable.isNullOrEmpty()
-            ) {
-                Toast.makeText(
-                    context,
-                    "No type item name",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@setOnClickListener
-            }
-            FileSystems.writeFile(
-                filterDir,
-                inputEditable.toString(),
-                String()
-            )
-            listIndexListUpdateFileList(
-                editFragment,
-                makeFileList()
-            )
-        }
-        promptDialog?.setOnCancelListener {
-            promptDialog?.dismiss()
-        }
-        promptDialog?.window?.setLayout(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        )
-        promptDialog?.window?.setGravity(
-            Gravity.BOTTOM
-        )
-        promptDialog?.show()
     }
 
     private fun execItemDelete(
@@ -1655,27 +1435,24 @@ class WithIndexListView(
     }
 
     private fun howFileConQr(
-        replacedSetVariableMap: Map<String, String>?
+        qrDialogConfigMap: Map<String, String>,
     ): Boolean {
-        val onFileConKeyName = OnFlags.onFileCon.name
+        val onFileConKeyName = QrDialogConfig.QrDialogConfigKey.ON_FILE_CON.key
         if(
-            replacedSetVariableMap.isNullOrEmpty()
+            qrDialogConfigMap.isEmpty()
         ) return false
-        return replacedSetVariableMap.keys.any {
-            it == onFileConKeyName
-        }
+        return qrDialogConfigMap.containsKey(onFileConKeyName)
     }
 
     private fun howExecQrInLogoClick(
-        replacedSetVariableMap: Map<String, String>?
+        qrDialogConfigMap: Map<String, String>,
     ): Boolean {
-        val onExecQrInLogoClickKeyName = OnFlags.onExecQrInLogoClick.name
+        val onExecQrInLogoClickKeyName = QrDialogConfig.QrDialogConfigKey.ON_EXEC_QR_IN_LOGO_CLICK.key
         if(
-            replacedSetVariableMap.isNullOrEmpty()
+            qrDialogConfigMap.isEmpty()
         ) return false
-        return replacedSetVariableMap.keys.any {
-            it == onExecQrInLogoClickKeyName
-        }
+        return qrDialogConfigMap.containsKey(onExecQrInLogoClickKeyName)
+
     }
 }
 
@@ -1690,10 +1467,6 @@ private enum class IndexListEditMenu {
     menu,
 }
 
-private enum class OnFlags {
-    onFileCon,
-    onExecQrInLogoClick,
-}
 private enum class IndexListEditKey {
     listDir,
     prefix,
@@ -1738,22 +1511,17 @@ enum class PreMenuType(
     val menuName: String,
     val iconId: Int,
 ) {
-    SYNC("sync", R.drawable.icons8_update),
     DELETE("delete", R.drawable.icons8_refresh),
     WRITE("write", R.drawable.icons8_edit),
     SIMPLE_EDIT("sEdit", R.drawable.icons8_edit_frame),
-    ADD("add", R.drawable.icons8_plus),
-    ADD_APP_DIR("add_app_dir", R.drawable.icons8_plus),
     RENAME_APP_DIR("rename_app_dir", R.drawable.icons8_edit_frame),
     CAT("cat", R.drawable.icons8_file),
     COPY_PATH("copy_path", com.termux.shared.R.drawable.ic_copy),
     COPY_FILE("copy_file", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
     COPY_FILE_HERE("copy_file_here", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
     COPY_APP_DIR("copy_app_dir", com.google.android.material.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),
-    GET("get", R.drawable.icons8_puzzle),
     EDIT_C("editC", R.drawable.icons8_edit),
     EDIT_S("editS", R.drawable.icons8_edit),
     DESC("desc", R.drawable.icons8_info),
     SCAN_QR("scanQR", R.drawable.icons_qr_code),
-    GET_QR_CON("getQR", R.drawable.icons_qr_code),
 }
