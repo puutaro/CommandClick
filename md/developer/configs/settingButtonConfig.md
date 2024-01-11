@@ -25,7 +25,7 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 | `longClick` | setting for long click |
 
 - `${Config key}=` -> Mean disable this click.
-
+- Concat by `,`
 
 ## Setting key 
 
@@ -35,7 +35,7 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 | `menuPath` | menu config path |
 | `onHideFooter` | hide footer in menu |
 
-- concat by `|`
+- Concat by `|`
 
 
 ## Example
