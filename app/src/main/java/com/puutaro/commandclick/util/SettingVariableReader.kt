@@ -88,13 +88,9 @@ object SettingVariableReader {
         )?.joinToString(",").let {
             QuoteTool.removeDoubleQuoteByIgnoreBackSlash(it)
         } ?: String()
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptName
-        )
         return ScriptPreWordReplacer.replace(
             variableValueListSource,
             currentAppDirPath,
-            fannelDirName,
             scriptName
         ).split(",")
     }

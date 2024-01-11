@@ -14,7 +14,6 @@ object ListSettingVariableListMaker {
         settingVariableName: String,
         currentAppDirPath: String,
         currentScriptFileName: String,
-        fannelDirName: String,
         scriptContentsList: List<String>,
         settingSectionStart: String,
         settingSectionEnd: String,
@@ -27,7 +26,6 @@ object ListSettingVariableListMaker {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         }?.split("\n")
@@ -36,7 +34,6 @@ object ListSettingVariableListMaker {
             settingVariableName,
             currentAppDirPath,
             currentScriptFileName,
-            fannelDirName,
             settingVariables
         )
     }
@@ -45,7 +42,6 @@ object ListSettingVariableListMaker {
         settingVariableName: String,
         currentAppDirPath: String,
         currentScriptFileName: String,
-        fannelDirName: String,
         settingVariablesList: List<String>,
     ): List<String> {
         val filePrefix = EditSettings.filePrefix
@@ -65,7 +61,6 @@ object ListSettingVariableListMaker {
                 ScriptPreWordReplacer.replace(
                     it,
                     currentAppDirPath,
-                    fannelDirName,
                     currentScriptFileName
                 )
             }
@@ -88,7 +83,6 @@ object ListSettingVariableListMaker {
                 ScriptPreWordReplacer.replace(
                     it,
                     currentAppDirPath,
-                    fannelDirName,
                     currentScriptFileName,
                 )
             }.split("\n")

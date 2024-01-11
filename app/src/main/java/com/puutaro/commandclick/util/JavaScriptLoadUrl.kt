@@ -43,9 +43,6 @@ object JavaScriptLoadUrl {
         if(recentAppDirPath.isNullOrEmpty()) return null
 
         val scriptFileName = jsFileObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptFileName
-        )
         val jsListBeforeRemoveTsv = if(
             jsListSource.isNullOrEmpty()
         ) {
@@ -63,7 +60,6 @@ object JavaScriptLoadUrl {
         val setReplaceVariableMapBeforeConcatTsvMap = createMakeReplaceVariableMapHandler(
             jsListBeforeRemoveTsv,
             recentAppDirPath,
-            fannelDirName,
             scriptFileName,
             setReplaceVariableMapSrc,
         )
@@ -90,11 +86,9 @@ object JavaScriptLoadUrl {
                     currentJsPath
                 )
             ).name
-            val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
             makeReplaceVariableTableTsv(
                 setReplaceVariableMap,
                 mainCurrentAppDirPath,
-                mainFannelDirName,
                 mainFannelName,
             )
         }
@@ -163,7 +157,6 @@ object JavaScriptLoadUrl {
                 ScriptPreWordReplacer.replace(
                     it,
                     recentAppDirPath,
-                    fannelDirName,
                     scriptFileName
                 )
             }.let {
@@ -171,7 +164,6 @@ object JavaScriptLoadUrl {
                     it,
                     setReplaceVariableMap,
                     recentAppDirPath,
-                    fannelDirName,
                     scriptFileName
                 )
             }
@@ -194,9 +186,6 @@ object JavaScriptLoadUrl {
         if (recentAppDirPath.isNullOrEmpty()) return
 
         val scriptFileName = jsFileObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptFileName
-        )
         val jsList = if (
             jsListSource.isNullOrEmpty()
         ) {
@@ -214,7 +203,6 @@ object JavaScriptLoadUrl {
         val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
             jsList,
             recentAppDirPath,
-            fannelDirName,
             scriptFileName,
             setReplaceVariableMapSrc,
         )
@@ -228,11 +216,9 @@ object JavaScriptLoadUrl {
                 currentJsPath
             )
         ).name
-        val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
         makeReplaceVariableTableTsv(
             setReplaceVariableMap,
             mainCurrentAppDirPath,
-            mainFannelDirName,
             mainFannelName,
         )
     }
@@ -266,7 +252,6 @@ object JavaScriptLoadUrl {
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 recordNumToMapNameValueInSettingHolder,
-                String(),
                 String(),
                 String()
             )
@@ -329,14 +314,12 @@ object JavaScriptLoadUrl {
                 ScriptPreWordReplacer.replace(
                     it,
                     String(),
-                    String(),
                     String()
                 )
             }.let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
-                    String(),
                     String(),
                     String()
                 )
@@ -364,7 +347,6 @@ object JavaScriptLoadUrl {
     private fun makeReplaceVariableTableTsv(
         setReplaceVariableMap:  Map<String, String>?,
         recentAppDirPath: String,
-        fannelDirName: String,
         scriptFileName: String,
     ){
         if(setReplaceVariableMap.isNullOrEmpty()) return
@@ -376,7 +358,6 @@ object JavaScriptLoadUrl {
             val replacedVal = ScriptPreWordReplacer.replace(
                 it.value,
                 recentAppDirPath,
-                fannelDirName,
                 scriptFileName,
             )
             "${it.key}\t${replacedVal}"
@@ -384,7 +365,6 @@ object JavaScriptLoadUrl {
         val fannelSettingsDirPath = ScriptPreWordReplacer.replace(
             UsePath.fannelSettingVariablsDirPath,
             recentAppDirPath,
-            fannelDirName,
             scriptFileName,
         )
         FileSystems.writeFile(
@@ -397,7 +377,6 @@ object JavaScriptLoadUrl {
     fun createMakeReplaceVariableMapHandler(
         jsList: List<String>,
         recentAppDirPath: String,
-        fannelDirName: String,
         scriptFileName:  String,
         setReplaceVariableMapSrc: Map<String, String>? = null,
     ): Map<String, String>? {
@@ -414,7 +393,6 @@ object JavaScriptLoadUrl {
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 recordNumToMapNameValueInSettingHolder,
                 recentAppDirPath,
-                fannelDirName,
                 scriptFileName
             )
         if(

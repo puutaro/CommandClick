@@ -24,7 +24,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.CmdClickMap
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
@@ -337,19 +336,14 @@ class QrScanJsDialog(
         val currentAppDirPath = fannelPathObj.parent
             ?: return
         val fannelName = fannelPathObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            fannelName
-        )
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             ScriptPreWordReplacer.replace(
                 jsPath,
                 currentAppDirPath,
-                fannelDirName,
                 fannelName
             ),
             setReplaceVariableMap,
             currentAppDirPath,
-            fannelDirName,
             fannelName
         )
         terminalViewModel.jsArguments = decodedText
@@ -435,15 +429,11 @@ class QrScanJsDialog(
         val fannelName =
             currentFannelPathObj.name
                 ?: String()
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            fannelName
-        )
 
         return centerMenuMapStr.let {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 fannelName
             )
         }.split("!").map{

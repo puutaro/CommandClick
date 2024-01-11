@@ -4,7 +4,6 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -15,9 +14,6 @@ object SetConfigInfo {
     ){
         val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
         val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val configDirName = CcPathTool.makeFannelDirName(
-            cmdclickConfigFileName
-        )
         val configConList = CommandClickVariables.makeScriptContentsList(
             UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
@@ -79,7 +75,6 @@ object SetConfigInfo {
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,
                 cmdclickSystemAppDirPath,
-                configDirName,
                 cmdclickConfigFileName,
             )
         )

@@ -239,7 +239,6 @@ class WithIndexListView(
         filterDir = getFilterListDir(
             indexListMap,
             currentAppDirPath,
-            fannelDirName,
             currentScriptName
         )
         filterPrefix = getFilterPrefix(
@@ -1245,7 +1244,6 @@ class WithIndexListView(
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptName
             )
         }.let {
@@ -1476,14 +1474,12 @@ private enum class IndexListEditKey {
 private fun getFilterListDir(
     indexListMap: Map<String, String>?,
     currentAppDirPath: String,
-    fannelDirName: String,
     currentScriptName: String
 ): String {
     return indexListMap?.get(IndexListEditKey.listDir.name)?.let{
         ScriptPreWordReplacer.replace(
             it,
             currentAppDirPath,
-            fannelDirName,
             currentScriptName
         )
     }?.let {

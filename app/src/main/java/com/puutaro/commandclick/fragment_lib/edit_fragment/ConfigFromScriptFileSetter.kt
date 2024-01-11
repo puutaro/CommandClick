@@ -43,10 +43,6 @@ object ConfigFromScriptFileSetter {
             onShortcut != FragmentTagManager.Suffix.ON.name
         ) return
 
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptFileName
-        )
-
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             currentShellContentsList,
             editFragment.settingSectionStart,
@@ -55,7 +51,6 @@ object ConfigFromScriptFileSetter {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         }?.split("\n")
@@ -191,7 +186,6 @@ object ConfigFromScriptFileSetter {
             ScriptPreWordReplacer.replace(
                 UsePath.homeScriptUrlsFilePath,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         )
@@ -204,7 +198,6 @@ object ConfigFromScriptFileSetter {
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         )
@@ -257,11 +250,9 @@ object ConfigFromScriptFileSetter {
                 true,
                 currentScriptFileName
             )
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
-            fannelDirName,
             currentScriptFileName,
         )
         return setVariableTypeList?.any {

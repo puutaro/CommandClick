@@ -68,13 +68,9 @@ object ExecUpdateNoSaveUrlPaths {
             fannelName.isEmpty()
         ) UsePath.cmdclickStartupJsName
         else fannelName
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentFannelName
-        )
         val noScrollSaveUrlsFilePath = ScriptPreWordReplacer.replace(
             UsePath.noScrollSaveUrlsFilePath,
             currentAppDirPath,
-            fannelDirName,
             currentFannelName
         )
         val noScrollSaveUrlsFilePathObj = File(noScrollSaveUrlsFilePath)

@@ -511,9 +511,6 @@ object ButtonViewProducer {
             ?: return String()
         val currentScriptName = scriptFileObj.name
             ?: return String()
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptName
-        )
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
                 QuoteTool.trimBothEdgeQuote(
@@ -525,7 +522,6 @@ object ButtonViewProducer {
                 ScriptPreWordReplacer.replace(
                     it,
                     currentAppDirPath,
-                    fannelDirName,
                     currentScriptName
                 )
             }.let {
@@ -533,7 +529,6 @@ object ButtonViewProducer {
                     it,
                     setReplaceVariableMap,
                     currentAppDirPath,
-                    fannelDirName,
                     currentScriptName
                 )
         }

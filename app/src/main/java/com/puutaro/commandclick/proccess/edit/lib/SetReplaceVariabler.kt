@@ -21,14 +21,12 @@ object SetReplaceVariabler {
     fun makeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
-        fannelDirName: String,
         currentScriptFileName: String,
     ): Map<String, String>? {
         val setReplaceVariableMapBeforeRecursiveReplace = execMakeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             currentScriptFileName,
-            fannelDirName
         )
         return recursiveReplaceForReplaceVariableMap(
             setReplaceVariableMapBeforeRecursiveReplace
@@ -79,7 +77,6 @@ object SetReplaceVariabler {
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
         currentScriptFileName: String,
-        fannelDirName: String
     ): Map<String, String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
                 entry ->
@@ -103,7 +100,6 @@ object SetReplaceVariabler {
             makeSetVariableValueFromFile(
                 currentAppDirPath,
                 currentScriptFileName,
-                fannelDirName
             )
         }?.joinToString(",")
             ?.let {
@@ -145,7 +141,6 @@ object SetReplaceVariabler {
     private fun makeSetVariableValueFromFile(
         currentAppDirPath: String,
         currentScriptFileName: String,
-        fannelDirName: String
     ): String {
         val setReplaceVariablesConfigPath =
             ScriptPreWordReplacer.replace(
@@ -154,7 +149,6 @@ object SetReplaceVariabler {
                         filePrefix
                     ),
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         val setReplaceVariablesConfigObj = File(setReplaceVariablesConfigPath)
@@ -168,7 +162,6 @@ object SetReplaceVariabler {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         }
@@ -178,7 +171,6 @@ object SetReplaceVariabler {
         replacingContents: String,
         setReplaceVariableCompleteMap: Map<String, String>?,
         recentAppDirPath: String,
-        fannelDirName: String,
         scriptFileName: String
     ):String {
         var loadJsUrlSource = replacingContents
@@ -189,7 +181,6 @@ object SetReplaceVariabler {
                     ScriptPreWordReplacer.replace(
                         it,
                         recentAppDirPath,
-                        fannelDirName,
                         scriptFileName
                     )
                 }
@@ -201,7 +192,6 @@ object SetReplaceVariabler {
         return ScriptPreWordReplacer.replace(
             loadJsUrlSource,
             recentAppDirPath,
-            fannelDirName,
             scriptFileName
         )
     }
@@ -224,7 +214,6 @@ object SetReplaceVariabler {
                 return null
             }
         val mainFannelName = currentMainFannelPathObj.name
-        val mainFannelDirName = CcPathTool.makeFannelDirName(mainFannelName)
         val mainFannelConList = ReadText(
             currentAppDirPath,
             mainFannelName,
@@ -232,7 +221,6 @@ object SetReplaceVariabler {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                mainFannelDirName,
                 mainFannelName
             )
         }.split("\n")
@@ -259,7 +247,6 @@ object SetReplaceVariabler {
         return makeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
-            mainFannelDirName,
             mainFannelName,
         )
     }

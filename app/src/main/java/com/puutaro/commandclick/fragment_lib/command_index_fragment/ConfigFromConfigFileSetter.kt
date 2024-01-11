@@ -25,9 +25,6 @@ object ConfigFromConfigFileSetter {
         ) as String
         val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
         val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val configDirName = CcPathTool.makeFannelDirName(
-            cmdclickConfigFileName
-        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             CommandClickVariables.makeScriptContentsList(
                 cmdclickSystemAppDirPath,
@@ -87,7 +84,6 @@ object ConfigFromConfigFileSetter {
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,
                 cmdclickSystemAppDirPath,
-                configDirName,
                 cmdclickConfigFileName,
             )
         )

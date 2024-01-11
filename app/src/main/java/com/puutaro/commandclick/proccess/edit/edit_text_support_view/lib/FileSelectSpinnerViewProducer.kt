@@ -256,9 +256,6 @@ object FileSelectSpinnerViewProducer {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptName
-        )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )?.split('|')
@@ -267,7 +264,6 @@ object FileSelectSpinnerViewProducer {
                 ScriptPreWordReplacer.replace(
                     it,
                     currentAppDirPath,
-                    fannelDirName,
                     currentScriptName
                 )
             }.let {

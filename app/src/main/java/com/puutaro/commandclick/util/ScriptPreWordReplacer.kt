@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 
 object ScriptPreWordReplacer {
 
@@ -15,9 +14,6 @@ object ScriptPreWordReplacer {
         currentAppDirPath: String,
         scriptName: String,
     ): String {
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptName
-        )
         return listOf(
             currentScriptPathMark,
             cmdclickDirPathMark,
@@ -28,7 +24,6 @@ object ScriptPreWordReplacer {
             "$it\t" + replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 scriptName,
             )
         }.joinToString("\n")
@@ -38,14 +33,10 @@ object ScriptPreWordReplacer {
         currentAppDirPath: String,
         scriptName: String,
     ): String {
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptName
-        )
         return targetFilePath.let {
             replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 scriptName,
             )
         }
@@ -54,9 +45,9 @@ object ScriptPreWordReplacer {
     fun replace(
         tergetContents: String,
         currentAppDirPath: String,
-        fannelDirName: String,
         currentScriptName: String
     ): String {
+        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptName)
         return tergetContents
             .replace(currentScriptPathMark, "$currentAppDirPath/$currentScriptName")
             .replace(cmdclickDirPathMark, UsePath.cmdclickDirPath)

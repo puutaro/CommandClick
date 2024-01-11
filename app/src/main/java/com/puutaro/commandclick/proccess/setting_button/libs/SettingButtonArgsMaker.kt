@@ -73,7 +73,6 @@ class SettingButtonArgsMaker(
     val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder,
         currentAppDirPath,
-        fannelDirName,
         currentScriptFileName,
     )
     val settingButtonConfigMap = createSettingButtonConfigMap()
@@ -88,7 +87,6 @@ class SettingButtonArgsMaker(
         ).joinToString("|").let {
             makeSettingMenuMapList(
                 it,
-                fannelDirName,
             )
         }
     }
@@ -118,7 +116,6 @@ class SettingButtonArgsMaker(
 
     fun makeSettingButtonMenuMapList(
     ): List<Map<String, String>?> {
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
         val clickKey = decideClickKey()
         val clickConfigMap =   settingButtonConfigMap?.get(clickKey).let {
             if(
@@ -158,17 +155,14 @@ class SettingButtonArgsMaker(
         }
         return makeSettingMenuMapList(
             settingMenuMapCon,
-            fannelDirName,
         )
     }
 
     private fun createSettingButtonConfigMap(): Map<String, String>? {
         val propertySeparator = ","
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
         val settingMenuSettingFilePath = ScriptPreWordReplacer.replace(
             UsePath.settingButtonConfigPath,
             currentAppDirPath,
-            fannelDirName,
             currentScriptFileName,
         )
         val settingMenuSettingFilePathObj = File(settingMenuSettingFilePath)
@@ -191,7 +185,6 @@ class SettingButtonArgsMaker(
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName
             )
         }.let {
@@ -199,7 +192,6 @@ class SettingButtonArgsMaker(
                 it,
                 setReplaceVariableMap,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName
             )
         }.split(propertySeparator).map {
@@ -212,7 +204,6 @@ class SettingButtonArgsMaker(
 
     private fun makeSettingMenuMapList(
         settingMenuMapCon: String,
-        fannelDirName: String,
     ): List<Map<String, String>?> {
         val menuSeparator = ","
         val keySeparator = "|"
@@ -220,7 +211,6 @@ class SettingButtonArgsMaker(
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName
             )
         }.let {
@@ -228,7 +218,6 @@ class SettingButtonArgsMaker(
                 it,
                 setReplaceVariableMap,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName
             )
         }.split(menuSeparator).map {

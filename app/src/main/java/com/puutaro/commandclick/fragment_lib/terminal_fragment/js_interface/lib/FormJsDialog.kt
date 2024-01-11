@@ -120,7 +120,6 @@ class FormJsDialog(
             recordNumToMapNameValueInSettingHolder,
             String(),
             String(),
-            String(),
         )
 
         val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
@@ -132,7 +131,6 @@ class FormJsDialog(
             recordNumToMapNameValueInSettingHolder,
             String(),
             String(),
-            String()
         )
 
 
@@ -141,11 +139,11 @@ class FormJsDialog(
             context
         )
         formDialog?.setContentView(
-            com.puutaro.commandclick.R.layout.form_dialog_laytout
+            R.layout.form_dialog_laytout
         )
         val confirmTitleTextView =
             formDialog?.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.form_dialog_title
+                R.id.form_dialog_title
             )
         if(
             title.isNotEmpty()
@@ -153,7 +151,7 @@ class FormJsDialog(
         else confirmTitleTextView?.isVisible = false
         val linearLayout =
             formDialog?.findViewById<LinearLayout>(
-                com.puutaro.commandclick.R.id.form_dialog_contents_linear
+                R.id.form_dialog_contents_linear
             ) ?: return
         val virtualReadPreffrenceMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name
@@ -181,7 +179,7 @@ class FormJsDialog(
 
         val confirmCancelButton =
             formDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.form_dialog_cancel
+                R.id.form_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
             terminalViewModel.onDialog = false
@@ -190,7 +188,7 @@ class FormJsDialog(
         }
         val confirmOkButton =
             formDialog?.findViewById<AppCompatImageButton>(
-                com.puutaro.commandclick.R.id.form_dialog_ok
+                R.id.form_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
             formDialog?.dismiss()

@@ -22,7 +22,6 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
@@ -156,16 +155,12 @@ class FormDialogForListIndexOrButton(
                 settingSectionEnd,
                 true,
             )
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            selectedScriptName
-        )
         val recordNumToSetVariableMaps = if(
             onSetting.isEmpty()
         ) {
             val setVariableForCmdHolder = SetVariableTyper.makeSetVariableTypeList(
                 recordNumToMapNameValueInSettingHolder,
                 parentDirPath,
-                fannelDirName,
                 selectedScriptName,
             )
             SetVariableTyper.makeRecordNumToSetVariableMaps(
@@ -185,7 +180,6 @@ class FormDialogForListIndexOrButton(
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 recordNumToMapNameValueInSettingHolder,
                 parentDirPath,
-                fannelDirName,
                 selectedScriptName,
             )
         } else {
@@ -209,7 +203,6 @@ class FormDialogForListIndexOrButton(
                 CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
                 parentDirPath,
                 selectedScriptName,
-                fannelDirName,
                 scriptContentsList,
                 settingSectionStart,
                 settingSectionEnd,

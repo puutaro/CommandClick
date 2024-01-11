@@ -140,9 +140,6 @@ object CommandClickVariables {
         currentAppDirPath: String,
         scriptName: String,
     ): List<String> {
-        val configDirName = CcPathTool.makeFannelDirName(
-            scriptName
-        )
         return ReadText(
             currentAppDirPath,
             scriptName
@@ -150,7 +147,6 @@ object CommandClickVariables {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                configDirName,
                 scriptName,
             )
         }.split("\n")

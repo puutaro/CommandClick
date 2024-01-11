@@ -14,14 +14,9 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 
 class EditTextProducerForEdit(
@@ -44,21 +39,16 @@ class EditTextProducerForEdit(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_script_file_name
     )
-    val fannelDirName = CcPathTool.makeFannelDirName(
-        currentScriptFileName
-    )
 
     private val setReplaceVariableMap =
         SetReplaceVariabler.makeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
-            fannelDirName,
             currentScriptFileName,
         )
     private val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder,
         currentAppDirPath,
-        fannelDirName,
         currentScriptFileName,
     )
 
@@ -246,7 +236,7 @@ class EditTextProducerForEdit(
             CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
             currentAppDirPath,
             currentScriptFileName,
-            fannelDirName, currentScriptContentsList,
+            currentScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
         )

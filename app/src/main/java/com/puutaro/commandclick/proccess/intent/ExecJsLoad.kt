@@ -66,9 +66,6 @@ object ExecJsLoad {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            selectedJsFileName
-        )
         val jsContents = if (jsContentsListSource.isNullOrEmpty()) {
             ReadText(
                 recentAppDirPath,
@@ -79,7 +76,6 @@ object ExecJsLoad {
             ScriptPreWordReplacer.replace(
                 jsContents,
                 recentAppDirPath,
-                fannelDirName,
                 selectedJsFileName,
             ).split("\n")
         val substituteSettingVariableList =

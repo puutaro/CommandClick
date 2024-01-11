@@ -5,7 +5,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
@@ -23,7 +22,6 @@ object LongPressMenuTool {
         val currentFannelName = makeCurrentFannelName(
             terminalFragment,
         )
-        val fannelDirName = CcPathTool.makeFannelDirName(currentFannelName)
         val isScriptName = selectedScriptNameOrPath.parent.isNullOrEmpty()
         return when(
             isScriptName
@@ -35,7 +33,6 @@ object LongPressMenuTool {
             -> ScriptPreWordReplacer.replace(
                 selectedScriptNameOrPath.absolutePath,
                 currentAppDirPath,
-                fannelDirName,
                 currentFannelName,
             )
         }
@@ -64,9 +61,6 @@ object LongPressMenuTool {
             makeCurrentFannelName(
                 terminalFragment,
             )
-        val fannelDirName =
-            CcPathTool.makeFannelDirName(currentFannelName)
-
         val mainJsList =  ReadText(
             currentAppDirPath,
             currentFannelName,
@@ -74,7 +68,6 @@ object LongPressMenuTool {
         val repValMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
             mainJsList,
             currentAppDirPath,
-            fannelDirName,
             currentFannelName
         )
         val srcLongPressListCon = srcLongPressListConSrc.split("\n").map {
@@ -84,7 +77,6 @@ object LongPressMenuTool {
             srcLongPressListCon,
             repValMap,
             currentAppDirPath,
-            fannelDirName,
             currentFannelName
         ).split("\n")
     }

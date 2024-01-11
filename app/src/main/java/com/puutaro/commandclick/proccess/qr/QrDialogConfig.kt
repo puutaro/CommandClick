@@ -28,11 +28,9 @@ object QrDialogConfig {
         val currentScriptName = CcPathTool.getCurrentScriptFileName(
             readSharePreffernceMap
         )
-        val fannelDirName = CcPathTool.makeFannelDirName(currentScriptName)
         val qrDialogConfigPath = ScriptPreWordReplacer.replace(
             UsePath.qrDialogConfigPath,
             currentAppDirPath,
-            fannelDirName,
             currentScriptName
         )
         val qrDialogConfigPathObj = File(qrDialogConfigPath)

@@ -10,6 +10,9 @@ object CcPathTool {
     fun makeFannelDirName(
         fannelNameSrc: String
     ): String {
+        if(
+            judgeEmpty(fannelNameSrc)
+        ) return String()
         val lastIndex = fannelNameSrc.lastIndexOf('.')
         val fannelName = if (lastIndex != -1) {
             fannelNameSrc.substring(0, lastIndex)
@@ -108,7 +111,7 @@ object CcPathTool {
             pathListStartAppDirName.take(2).last().let{
                 if(
                     it.endsWith(UsePath.JS_FILE_SUFFIX)
-                ) return@let CcPathTool.makeFannelDirName(it)
+                ) return@let makeFannelDirName(it)
                 it
             }
         return listOf(
@@ -213,5 +216,14 @@ object CcPathTool {
             || currentScriptFileName == CommandClickScriptVariable.EMPTY_STRING
         ) return UsePath.cmdclickStartupJsName
         return currentScriptFileName
+    }
+
+    private fun judgeEmpty(
+        fannelName: String,
+    ): Boolean {
+        return fannelName.isEmpty()
+                || fannelName == "-"
+                || fannelName == CommandClickScriptVariable.EMPTY_STRING
+
     }
 }

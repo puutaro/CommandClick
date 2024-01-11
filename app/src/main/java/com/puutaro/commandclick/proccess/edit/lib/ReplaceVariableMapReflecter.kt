@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
 
@@ -20,9 +19,6 @@ object ReplaceVariableMapReflecter {
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_script_file_name
         )
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptName
-        )
         var innerExecCmd = replaceTargetStr
         setReplaceVariableMap?.forEach {
             val replaceVariable = "\${${it.key}}"
@@ -31,7 +27,6 @@ object ReplaceVariableMapReflecter {
                     ScriptPreWordReplacer.replace(
                         it,
                         currentAppDirPath,
-                        fannelDirName,
                         currentScriptName
                     )
                 }

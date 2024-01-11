@@ -138,7 +138,6 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.currentAppDirPath
         )
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
-        val startupDirName = CcPathTool.makeFannelDirName(cmdclickStartupJsName)
         val currentScriptFileName = if (
             terminalFragment.tag ==
             terminalFragment.context?.getString(
@@ -146,7 +145,6 @@ object ConfigFromStartUpFileSetterForTerm {
             )
         ) cmdclickStartupJsName
         else currentScriptFileNameSource
-        val currentScriptDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
 
         if(
             currentScriptFileName != cmdclickStartupJsName
@@ -162,21 +160,18 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.srcImageAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
                 UsePath.srcImageAnchorLongPressMenuFilePath,
                 terminalFragment.currentAppDirPath,
-                startupDirName,
                 cmdclickStartupJsName,
             )
 
             terminalFragment.srcAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
                 UsePath.srcAnchorLongPressMenuFilePath,
                 terminalFragment.currentAppDirPath,
-                startupDirName,
                 cmdclickStartupJsName,
             )
 
             terminalFragment.imageLongPressMenuFilePath = ScriptPreWordReplacer.replace(
                 UsePath.imageLongPressMenuFilePath,
                 terminalFragment.currentAppDirPath,
-                startupDirName,
                 cmdclickStartupJsName,
             )
 
@@ -184,7 +179,6 @@ object ConfigFromStartUpFileSetterForTerm {
                 ScriptPreWordReplacer.replace(
                     UsePath.noScrollSaveUrlsFilePath,
                     terminalFragment.currentAppDirPath,
-                    startupDirName,
                     cmdclickStartupJsName,
                 )
             )
@@ -202,10 +196,6 @@ object ConfigFromStartUpFileSetterForTerm {
                 ),
             )
         }
-
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptFileName
-        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             CommandClickVariables.makeScriptContentsList(
                 terminalFragment.currentAppDirPath,
@@ -225,7 +215,6 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.currentAppDirPath,
             currentScriptFileName,
-            fannelDirName,
             settingVariableList ?: emptyList(),
         )
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
@@ -347,7 +336,6 @@ object ConfigFromStartUpFileSetterForTerm {
             ScriptPreWordReplacer.replace(
                 UsePath.srcImageAnchorLongPressMenuFilePath,
                 terminalFragment.currentAppDirPath,
-                currentScriptDirName,
                 currentScriptFileName,
             )
 
@@ -361,7 +349,6 @@ object ConfigFromStartUpFileSetterForTerm {
             ScriptPreWordReplacer.replace(
                 UsePath.srcAnchorLongPressMenuFilePath,
                 terminalFragment.currentAppDirPath,
-                currentScriptDirName,
                 currentScriptFileName,
             )
 
@@ -376,7 +363,6 @@ object ConfigFromStartUpFileSetterForTerm {
                 ScriptPreWordReplacer.replace(
                     UsePath.imageLongPressMenuFilePath,
                     terminalFragment.currentAppDirPath,
-                    currentScriptDirName,
                     currentScriptFileName,
                 )
 
@@ -384,7 +370,6 @@ object ConfigFromStartUpFileSetterForTerm {
             ScriptPreWordReplacer.replace(
                 UsePath.noScrollSaveUrlsFilePath,
                 terminalFragment.currentAppDirPath,
-                currentScriptDirName,
                 currentScriptFileName,
             )
         )

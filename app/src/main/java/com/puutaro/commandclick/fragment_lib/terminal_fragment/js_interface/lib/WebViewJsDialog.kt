@@ -452,15 +452,11 @@ class WebViewJsDialog(
         val fannelName =
             currentScriptPathObj.name
                 ?: String()
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            fannelName
-        )
 
         return centerMenuMapStr.let {
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 fannelName
             )
         }.split("!").map{
@@ -563,23 +559,6 @@ class WebViewJsDialog(
                 else -> false
             }
         }
-    }
-
-    private fun makeLongPressMenu(
-        currentScriptPath: String,
-        imageMapStr: String?
-    ): String {
-        if(
-            imageMapStr.isNullOrEmpty()
-        ) return String()
-        val imageMenuMap = makeBtnOptionMap(
-            currentScriptPath,
-            imageMapStr
-        )
-        return imageMenuMap
-            ?.get(
-                WebViewMenuMapType.clickMenuFilePath.name
-            ) ?: String()
     }
 
     private fun dismissHandler(
@@ -735,19 +714,14 @@ class WebViewJsDialog(
         val currentAppDirPath = fannelPathObj.parent
             ?: return
         val fannelName = fannelPathObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            fannelName
-        )
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
             ScriptPreWordReplacer.replace(
                 jsPath,
                 currentAppDirPath,
-                fannelDirName,
                 fannelName
             ),
             setReplaceVariableMap,
             currentAppDirPath,
-            fannelDirName,
             fannelName
         )
         val jsScriptUrl = JavaScriptLoadUrl.make(
@@ -820,10 +794,6 @@ enum class WebViewMenuMapType {
     dismissType,
     dismissDelayMiliTime,
     iconName,
-}
-
-enum class WebViewRequireExtraMapType {
-    currentScriptPath
 }
 
 private enum class WebDialogLongPressType {

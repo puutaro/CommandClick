@@ -3,9 +3,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.ReadText
@@ -41,13 +39,9 @@ object SelectJsExecutor {
             val currentAppDir = jsFilePathObj.parent
                 ?: return@launch
             val scriptName = jsFilePathObj.name
-            val fannelDirName = CcPathTool.makeFannelDirName(
-                scriptName
-            )
             val jsFileContents = makeSelectJsContents(
                 currentAppDir,
                 scriptName,
-                fannelDirName,
                 selectedItem
             )
             withContext(Dispatchers.Main) {
@@ -67,7 +61,6 @@ object SelectJsExecutor {
 private fun makeSelectJsContents(
     currentAppDir: String,
     scriptName: String,
-    fannelDirName: String,
     selectedItem: String,
 ): List<String> {
     return ReadText(
@@ -77,7 +70,6 @@ private fun makeSelectJsContents(
         ScriptPreWordReplacer.replace(
             it,
             currentAppDir,
-            fannelDirName,
             scriptName
         )
     }.replace(

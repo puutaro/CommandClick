@@ -70,8 +70,6 @@ class ToolbarButtonProducerForEdit(
         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
-    private val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-
     private val recordNumToMapNameValueInSettingHolder =
         RecordNumToMapNameValueInHolder.parse(
             currentScriptContentsList,
@@ -83,7 +81,6 @@ class ToolbarButtonProducerForEdit(
     private val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
         recordNumToMapNameValueInSettingHolder,
         currentAppDirPath,
-        fannelDirName,
         currentScriptFileName,
     )
 
@@ -320,7 +317,6 @@ class ToolbarButtonProducerForEdit(
             execLongPressMacro,
             setReplaceVariableMap,
             currentAppDirPath,
-            fannelDirName,
             currentScriptFileName
         )
     }

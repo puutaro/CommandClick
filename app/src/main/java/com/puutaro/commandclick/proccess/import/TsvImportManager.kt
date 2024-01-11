@@ -1,7 +1,5 @@
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
@@ -23,14 +21,10 @@ object TsvImportManager {
         val recentAppDirPath = jsFileObj.parent
             ?: return setReplaceVariableCompleteMap
         val scriptFileName = jsFileObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptFileName
-        )
         val jsConForTsv = SetReplaceVariabler.execReplaceByReplaceVariables(
             trimJsConForTsv(jsList),
             setReplaceVariableCompleteMap,
             recentAppDirPath,
-            fannelDirName,
             scriptFileName
         )
         val tsvImportRegex = "\n${importPreWord}([^\n]*)".toRegex()

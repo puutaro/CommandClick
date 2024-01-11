@@ -11,8 +11,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
@@ -135,9 +133,6 @@ class EditedTextContents(
     private fun howUpdateLastModify(
         submitScriptContentsList: List<String>
     ): Boolean {
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            currentScriptFileName
-        )
         val settingVariableList = substituteVariableListFromHolder(
             submitScriptContentsList,
             editFragment.settingSectionStart,
@@ -146,12 +141,11 @@ class EditedTextContents(
             ScriptPreWordReplacer.replace(
                 it,
                 currentAppDirPath,
-                fannelDirName,
                 currentScriptFileName,
             )
         }?.split("\n")
         return !(
-                CommandClickVariables.substituteCmdClickVariable(
+                substituteCmdClickVariable(
                     settingVariableList,
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
                 ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
@@ -180,15 +174,4 @@ class EditedTextContents(
             scriptFileSuffix
         )
     }
-
-    private fun makeFunnelDirPath(
-        curentAppDirPath: String,
-        scriptFileName: String,
-    ): String {
-        val selectedFannelDirName = CcPathTool.makeFannelDirName(
-            scriptFileName
-        )
-        return curentAppDirPath + "/" + selectedFannelDirName
-    }
-
 }

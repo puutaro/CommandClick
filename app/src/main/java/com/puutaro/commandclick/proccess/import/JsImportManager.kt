@@ -5,7 +5,6 @@ import android.util.Log
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.ReadText
@@ -29,9 +28,6 @@ object JsImportManager {
         val recentAppDirPath = jsFileObj.parent
             ?: return String()
         val scriptFileName = jsFileObj.name
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            scriptFileName
-        )
         val trimRow = row
             .trim()
             .trim(';')
@@ -46,7 +42,6 @@ object JsImportManager {
                     it,
                     setReplaceVariableCompleteMap,
                     recentAppDirPath,
-                    fannelDirName,
                     scriptFileName
                 )
             }
@@ -54,7 +49,6 @@ object JsImportManager {
                 ScriptPreWordReplacer.replace(
                     it,
                     recentAppDirPath,
-                    fannelDirName,
                     scriptFileName
                 )
             }

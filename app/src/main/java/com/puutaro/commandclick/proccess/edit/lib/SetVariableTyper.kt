@@ -40,7 +40,7 @@ object SetVariableTyper {
             val variableNameAddType = currentFetchSetVariableType.substring(
                 0, equalIndex
             )
-            val variableNameAddTypeLength = variableNameAddType.length;
+            val variableNameAddTypeLength = variableNameAddType.length
             val colonIndex = variableNameAddType.indexOf(':')
             if(colonIndex == -1) {
                 LogSystems.stdErr(
@@ -84,7 +84,6 @@ object SetVariableTyper {
     fun makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
-        fannelDirName: String,
         currentShellFileName: String,
     ): List<String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
@@ -113,7 +112,6 @@ object SetVariableTyper {
             makeSetVariableValueFromFile(
                 currentAppDirPath,
                 currentShellFileName,
-                fannelDirName
             )
         }?.joinToString(",")
             ?.split(',')
@@ -123,7 +121,6 @@ object SetVariableTyper {
     private fun makeSetVariableValueFromFile(
         currentAppDirPath: String,
         currentShellFileName: String,
-        fannelDirName: String
     ): String {
         val setVariableTypesConfigPath =
             ScriptPreWordReplacer.replace(
@@ -132,7 +129,6 @@ object SetVariableTyper {
                         filePrefix
                     ),
                 currentAppDirPath,
-                fannelDirName,
                 currentShellFileName,
             )
         val setVariableTypesConfigObj = File(setVariableTypesConfigPath)

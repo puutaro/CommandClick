@@ -6,7 +6,6 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.ReadText
@@ -206,13 +205,9 @@ object ScriptFileDescription {
         currentAppDirPath: String,
         fannelName: String,
     ): String {
-        val fannelDirName = CcPathTool.makeFannelDirName(
-            fannelName
-        )
         val fannelReadmePath = ScriptPreWordReplacer.replace(
             UsePath.fannelReadmePath,
             currentAppDirPath,
-            fannelDirName,
             fannelName,
         )
         val mdPathObj = File(fannelReadmePath)

@@ -317,11 +317,13 @@ class UrlHistoryButtonEvent(
 
     private fun makeBottomScriptUrlList(
     ): List<String> {
-        val fannelName = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
-        )
-        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val fannelName = when(fragment) {
+            is EditFragment -> SharePreffrenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_script_file_name
+            )
+            else -> String()
+        }
         val replaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             "${currentAppDirPath}/${fannelName}",
         )
@@ -337,7 +339,6 @@ class UrlHistoryButtonEvent(
         return ConvertBottomScriptUrlListToUrlList(
             bottomScriptUrlList,
             replaceVariableMap,
-            fannelDirName,
             fannelName,
         )
     }
@@ -345,13 +346,11 @@ class UrlHistoryButtonEvent(
     private fun ConvertBottomScriptUrlListToUrlList(
         bottomScriptUrlList: List<String>,
         replaceVariableMap: Map<String, String>?,
-        fannelDirName: String,
         fannelName: String,
     ): List<String> {
         return execSetRepalceVariable(
             bottomScriptUrlList,
             replaceVariableMap,
-            fannelDirName,
             fannelName,
         ).map {
                 url ->
@@ -359,7 +358,6 @@ class UrlHistoryButtonEvent(
                 url,
                 currentAppDirPath,
                 String(),
-                String()
             )
             val title = url.split("/")
                 .lastOrNull()
@@ -373,7 +371,6 @@ class UrlHistoryButtonEvent(
     private fun execSetRepalceVariable(
         bottomScriptUrlList: List<String>,
         replaceVariableMap: Map<String, String>?,
-        fannelDirName: String,
         fannelName: String,
     ): List<String> {
         return bottomScriptUrlList.joinToString("\n").let {
@@ -381,7 +378,6 @@ class UrlHistoryButtonEvent(
                 it,
                 replaceVariableMap,
                 currentAppDirPath,
-                fannelDirName,
                 fannelName
             )
         }.split("\n")
