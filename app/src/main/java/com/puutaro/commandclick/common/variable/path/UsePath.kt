@@ -129,9 +129,9 @@ object UsePath {
     val setVariableTypesConfig = "setVariableTypes.js"
     val ignoreHistoryPathsConfig = "ignoreHistoryPaths.js"
     val replaceVariablesTsvRelativePath = "$settingVariablesDirName/$replaceVariablesTsv"
-    val fannelSettingDirPath = "\${01}/\${001}/settings"
+    val fannelSettingsDirPath = "\${01}/\${001}/settings"
     val homeFannelsFilePath =
-        "${fannelSettingDirPath}/homeFannelsFilePaths.txt"
+        "${fannelSettingsDirPath}/homeFannelsFilePaths.txt"
     val jsImportManagerFannelName = "jsImportManager.js"
     val jsImportAdminFannelPath = "$cmdclickSystemAppDirPath/$jsImportManagerFannelName"
     val appDirManagerFannelName = "appDirManager.js"
@@ -168,11 +168,11 @@ object UsePath {
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
     private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
-    val homeScriptUrlsFilePath =  "$fannelSettingDirPath/${homeScriptUrlsFileName}"
-    private val settingMenuSettingFileName = "settingMenu.js"
-    val settingMenuSettingFilePath =  "$fannelSettingDirPath/${settingMenuSettingFileName}"
+    val homeScriptUrlsFilePath =  "$fannelSettingsDirPath/${homeScriptUrlsFileName}"
+    private val qrDialogConfigName = "qrDialogConfig.js"
+    val qrDialogConfigPath =  "$fannelSettingsDirPath/${qrDialogConfigName}"
     private val settingButtonConfigName = "settingButtonConfig.js"
-    val settingButtonConfigPath =  "$fannelSettingDirPath/${settingButtonConfigName}"
+    val settingButtonConfigPath =  "$fannelSettingsDirPath/${settingButtonConfigName}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"
@@ -181,7 +181,7 @@ object UsePath {
     val imageLongPressMenuFilePath =
         "$longPressMenuDirPath/imageLongPressMenu.txt"
     val noScrollSaveUrlsFilePath =
-        "$fannelSettingDirPath/noScrollSaveUrls.txt"
+        "$fannelSettingsDirPath/noScrollSaveUrls.txt"
     val selectMenuFannelPath = "\${01}/selectMenu$JS_FILE_SUFFIX"
     val systemExecJsDirName = "systemJs"
     val appHistoryClickJsName = "appHistoryClick.js"
