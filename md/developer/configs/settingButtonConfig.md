@@ -6,8 +6,7 @@ Table
 
 * [Overview](#overview)
 * [Config key](#config-key)
-* [Setting key](#config-key)
-* [Config key](#config-key)
+	* [Setting key](#config-key)
 * [Example](#example)
 
 
@@ -27,7 +26,7 @@ Config for [Setting button](https://github.com/puutaro/CommandClick/blob/master/
 - `${Config key}=` -> Mean disable this click.
 - Concat by `,`
 
-## Setting key 
+### Setting key 
 
 | Key name | Description | 
 | --------- | --------- | 
