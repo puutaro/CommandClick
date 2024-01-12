@@ -5,15 +5,18 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Intent.CurlManager
-import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.UrlFileSystems
 import java.io.File
 
 object ListIndexEditConfig {
+
+    val fileNameConMark = "FILE_NAME_CON_MARK"
+    private val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
     enum class ListIndexConfigKey(
         val key: String,
     ) {
@@ -28,6 +31,7 @@ object ListIndexEditConfig {
         REMOVE_EXTEND("removeExtend"),
         COMP_PREFIX("compPrefix"),
         COMP_SUFFIX("compSuffix"),
+        SHELL_PATH("shellPath"),
     }
 
     enum class ListIndexDescKey(
@@ -41,7 +45,8 @@ object ListIndexEditConfig {
     fun setFileNameTextView(
         fileNameTextView: AppCompatTextView?,
         fileNameSrc: String,
-        listIndexConfigMap: Map<String, String>?
+        listIndexConfigMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor,
     ) {
         val fileNameConfigMap = listIndexConfigMap?.get(
             ListIndexConfigKey.NAME.key
@@ -61,13 +66,15 @@ object ListIndexEditConfig {
         }
         fileNameTextView?.text = makeFileName(
             fileNameSrc,
-            listIndexConfigMap,
+            fileNameConfigMap,
+            busyboxExecutor
         )
     }
 
     private fun makeFileName(
         fileNameSrc: String,
-        fileNameConfigMap: Map<String, String>?
+        fileNameConfigMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor,
     ): String {
         if (
             fileNameConfigMap.isNullOrEmpty()
@@ -84,22 +91,51 @@ object ListIndexEditConfig {
                 ) return@let removedExtendFileName
                 UsePath.compPrefix(fileNameSrc, it)
             }
-        return fileNameConfigMap.get(ListIndexFileNameKey.COMP_SUFFIX.key).let {
-            if (
-                it.isNullOrEmpty()
-            ) return@let compPrefixedFileName
-            UsePath.compExtend(fileNameSrc, it)
-        }
+        val compSuffixedFileName =
+            fileNameConfigMap.get(ListIndexFileNameKey.COMP_SUFFIX.key).let {
+                if (
+                    it.isNullOrEmpty()
+                ) return@let compPrefixedFileName
+                UsePath.compExtend(fileNameSrc, it)
+            }
+        return fileNameConfigMap.get(ListIndexFileNameKey.SHELL_PATH.key).let {
+                if (
+                    it.isNullOrEmpty()
+                ) return@let compSuffixedFileName
+                val shellPathObj = File(it)
+                if (
+                    !shellPathObj.isFile
+                ) return@let compPrefixedFileName
+                val shellDirPath = shellPathObj.parent
+                    ?: return@let compSuffixedFileName
+                val shellCon = ReadText(
+                    shellDirPath,
+                    shellPathObj.name
+                ).readText().replace(
+                    "\${${fileNameConMark}}",
+                    compSuffixedFileName,
+                )
+                return@let busyboxExecutor.execCommandForOutput(
+                    listOf("sh", "-c", shellCon),
+                    cmdClickMonitorFileName_2
+                )
+            }
     }
 
+    class MakeFileDescArgsMaker(
+        val parentDirPath: String,
+        val fileName: String,
+        val fileCon: String,
+        val listIndexConfigMap: Map<String, String>?,
+        val busyboxExecutor: BusyboxExecutor
+    )
     fun makeFileDesc(
-        parentDirPath: String,
-        fileName: String,
-        fileCon: String,
-        listIndexConfigMap: Map<String, String>?,
+        makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
         val defaultMaxTakeLength = 50
+        val fileCon = makeFileDescArgsMaker.fileCon
         val defaultTakeFileCon = fileCon.take(defaultMaxTakeLength)
+        val listIndexConfigMap = makeFileDescArgsMaker.listIndexConfigMap
         if (
             listIndexConfigMap.isNullOrEmpty()
         ) return null
@@ -124,6 +160,8 @@ object ListIndexEditConfig {
             }
             return fileCon.take(maxTakeLength)
         }
+        val parentDirPath = makeFileDescArgsMaker.parentDirPath
+        val fileName = makeFileDescArgsMaker.fileName
         descConfigMap.containsKey(ListIndexDescKey.FANNEL_DESC.key).let {
             if (
                 !it
@@ -133,7 +171,7 @@ object ListIndexEditConfig {
                 fileName
             )
         }
-        val descConMark = "DESC_CON_MARK"
+        val busyboxExecutor = makeFileDescArgsMaker.busyboxExecutor
         return descConfigMap.get(ListIndexDescKey.SHELL_PATH.key).let {
             if (
                 it.isNullOrEmpty()
@@ -148,11 +186,12 @@ object ListIndexEditConfig {
                 shellDirPath,
                 shellPathObj.name
             ).readText().replace(
-                descConMark,
+                "\${${fileNameConMark}}",
                 fileCon,
             )
-            return@let LinuxCmd.execCommand(
-                listOf("sh", "-c", shellCon).joinToString("\t")
+            return@let busyboxExecutor.execCommandForOutput(
+                listOf("sh", "-c", shellCon),
+                cmdClickMonitorFileName_2
             )
         }
     }

@@ -97,7 +97,7 @@ object LinuxCmd {
        LogSystems.stdSys(
             "allkill"
         )
-        android.os.Process.killProcess(android.os.Process.myPid());
+        android.os.Process.killProcess(android.os.Process.myPid())
     }
 
     fun killProcess(
@@ -156,14 +156,6 @@ object LinuxCmd {
         )
     }
 
-    private fun makePListOutput0(
-        packageName: String
-    ): String {
-        return "app_pname=\$(ps -ef | grep '${packageName}' | tail -1 | sed 's/ .*//g' ); " +
-                "ps -ef " +
-                "| grep '\${app_pname}' "
-    }
-
     private fun pListOutputExcludeApp(
         packageName: String
     ): String {
@@ -206,6 +198,14 @@ object LinuxCmd {
                     "| grep 'pulseaudio' " +
                     "| sed 's/  */\\t/g'"
         }
+    }
+
+    fun execCommandTrimNewLIne(
+        cmdList: String
+    ): String {
+        return execCommand(cmdList)
+            .removePrefix("\n")
+            .removeSuffix("\n")
     }
 
     fun execCommand(

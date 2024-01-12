@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +15,8 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
@@ -36,6 +39,10 @@ class ListIndexForEditAdapter(
     private val context = editFragment.context
     private val activity = editFragment.activity
     private val maxTakeSize = 150
+    private val busyboxExecutor = BusyboxExecutor(
+        context,
+        UbuntuFiles(context as Context)
+    )
 //    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
 
     val qrDialogConfigMap = QrDialogConfig.makeDialogConfigMap(
@@ -106,7 +113,8 @@ class ListIndexForEditAdapter(
                 ListIndexEditConfig.setFileNameTextView(
                     holder.fileNameTextView,
                     fileName,
-                    listIndexConfigMap
+                    listIndexConfigMap,
+                    busyboxExecutor,
                 )
             }
             val fileConList = withContext(Dispatchers.IO) {
@@ -116,11 +124,15 @@ class ListIndexForEditAdapter(
                 ).textToList().take(maxTakeSize)
             }
             val descCon = withContext(Dispatchers.IO){
-                ListIndexEditConfig.makeFileDesc(
+                val makeFileDescArgsMaker = ListIndexEditConfig.MakeFileDescArgsMaker(
                     filterDir,
                     fileName,
                     fileConList.joinToString("\n"),
                     listIndexConfigMap,
+                    busyboxExecutor,
+                )
+                ListIndexEditConfig.makeFileDesc(
+                    makeFileDescArgsMaker,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -135,13 +147,16 @@ class ListIndexForEditAdapter(
                     holder.fileContentsQrLogoView,
                     qrLogoConfigMap
                 )
-                QrDialogConfig.setQrLogoHandler(
+                val qrLogoHandlerArgsMaker = QrDialogConfig.QrLogoHandlerArgsMaker(
                     editFragment,
                     readSharePreffernceMap,
                     qrLogoConfigMap,
                     filterDir,
                     fileName,
                     holder.fileContentsQrLogoView,
+                )
+                QrDialogConfig.setQrLogoHandler(
+                    qrLogoHandlerArgsMaker
                 )
             }
             val fileConBackGroundColorInt = withContext(Dispatchers.IO) {

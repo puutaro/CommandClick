@@ -129,6 +129,19 @@ class UbuntuFiles(
         }
     }
 
+    @Throws(NullPointerException::class, NoSuchFileException::class, Exception::class)
+    fun setupLinksForBusyBox() {
+        supportDir.mkdirs()
+        libDir.listFiles()!!.forEach { libFile ->
+            val libFileName = libFile.name
+            if(!libFileName.contains("busybox")) return@forEach
+            val name = libFileName.toSupportName()
+            val linkFile = File(supportDir, name)
+            linkFile.delete()
+            symlinker.createSymlink(libFile.path, linkFile.path)
+        }
+    }
+
     fun getArchType(): String {
         val usedABI = File(libDir, "lib_arch.so").readText()
         return translateABI(usedABI)

@@ -104,14 +104,20 @@ object QrDialogConfig {
         imageView?.layoutParams?.width = oneSideLength
     }
 
+    class QrLogoHandlerArgsMaker(
+        val fragment: Fragment,
+        val readSharePreffernceMap: Map<String, String>,
+        val qrLogoConfigMap: Map<String, String>,
+        val parentDirPath: String,
+        val fileName: String,
+        val fannelContentsQrLogoView: AppCompatImageView?,
+    )
+
     fun setQrLogoHandler(
-        fragment: Fragment,
-        readSharePreffernceMap: Map<String, String>,
-        qrLogoConfigMap: Map<String, String>,
-        parentDirPath: String,
-        fileName: String,
-        fannelContentsQrLogoView: AppCompatImageView?,
+        qrLogoHandlerArgsMaker: QrLogoHandlerArgsMaker,
     ){
+        val fileName = qrLogoHandlerArgsMaker.fileName
+        val qrLogoConfigMap = qrLogoHandlerArgsMaker.qrLogoConfigMap
         if(
             fileName.isEmpty()
             || fileName == "-"
@@ -119,55 +125,45 @@ object QrDialogConfig {
         val isFannelRepoQrMode = howFannelRepoQrMode(qrLogoConfigMap)
         when(isFannelRepoQrMode){
             true -> setQrLogoForFannelRepo(
-                fragment,
-                readSharePreffernceMap,
-                parentDirPath,
-                fileName,
-                fannelContentsQrLogoView,
+                qrLogoHandlerArgsMaker
             )
             else -> setQrLogoForNormal(
-                fragment,
-                qrLogoConfigMap,
-                parentDirPath,
-                fileName,
-                fannelContentsQrLogoView,
+                qrLogoHandlerArgsMaker
             )
         }
     }
 
     private fun setQrLogoForNormal(
-        fragment: Fragment,
-        qrLogoConfigMap: Map<String, String>,
-        parentDirPath: String,
-        fileName: String,
-        fannelContentsQrLogoView: AppCompatImageView?,
+        qrLogoHandlerArgsMaker: QrLogoHandlerArgsMaker,
     ){
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
+        val fileName =  qrLogoHandlerArgsMaker.fileName
         val fileDirName = CcPathTool.makeFannelDirName(fileName)
+        val parentDirPath =  qrLogoHandlerArgsMaker.parentDirPath
         val fileDirPath = "${parentDirPath}/${fileDirName}"
         val qrPngPath = "${fileDirPath}/${qrPngNameRelativePath}"
         val qrPngPathObj = File(qrPngPath)
         if(qrPngPathObj.isFile){
-            fannelContentsQrLogoView?.load(qrPngPath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPath)
             return
         }
+        val qrLogoConfigMap = qrLogoHandlerArgsMaker.qrLogoConfigMap
         val isFileCon = howFileConQr(qrLogoConfigMap)
+        val fragment = qrLogoHandlerArgsMaker.fragment
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
             parentDirPath,
             fileName,
             isFileCon,
         )?.let {
-            fannelContentsQrLogoView?.setImageDrawable(it)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.setImageDrawable(it)
         }
     }
     private fun setQrLogoForFannelRepo(
-        fragment: Fragment,
-        readSharePreffernceMap: Map<String, String>,
-        parentDirPath: String,
-        fannelName: String,
-        fannelContentsQrLogoView: AppCompatImageView?,
+        qrLogoHandlerArgsMaker: QrLogoHandlerArgsMaker,
     ){
+
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
+        val fannelName = qrLogoHandlerArgsMaker.fileName
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val qrPngPathObjInInstallIndex =
             File(
@@ -176,11 +172,11 @@ object QrDialogConfig {
         if(
             qrPngPathObjInInstallIndex.isFile
         ) {
-            fannelContentsQrLogoView?.load(qrPngPathObjInInstallIndex.absolutePath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInInstallIndex.absolutePath)
             return
         }
         val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+            qrLogoHandlerArgsMaker.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
         val qrPngPathObjInCurrentAppDir =
@@ -190,15 +186,17 @@ object QrDialogConfig {
         if(
             qrPngPathObjInCurrentAppDir.isFile
         ) {
-            fannelContentsQrLogoView?.load(qrPngPathObjInCurrentAppDir.absolutePath)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInCurrentAppDir.absolutePath)
             return
         }
+        val fragment = qrLogoHandlerArgsMaker.fragment
+        val parentDirPath = qrLogoHandlerArgsMaker.parentDirPath
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
             parentDirPath,
             fannelName,
             false
         )?.let {
-            fannelContentsQrLogoView?.setImageDrawable(it)
+            qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.setImageDrawable(it)
         }
     }
 

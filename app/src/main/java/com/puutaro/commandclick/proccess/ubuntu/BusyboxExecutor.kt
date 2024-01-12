@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,7 +41,40 @@ class BusyboxExecutor(
 
         return runCommand(updatedCommand, monitorFileName)
     }
+    fun executeCommandByStreaming(
+        command: String,
+        monitorFileName: String
+    ) {
+        val updatedCommand = busyboxWrapper.wrapCommand(command)
 
+        return runCommand(updatedCommand, monitorFileName)
+    }
+
+    fun execCommandForOutput(
+        command: List<String>,
+        monitorFileName: String
+    ): String {
+        if (!busyboxWrapper.busyboxIsPresent()) {
+            ubuntuFiles.setupLinksForBusyBox()
+        }
+        val env = busyboxWrapper.getBusyboxEnv()
+        val processBuilder = ProcessBuilder(command)
+        processBuilder.directory(ubuntuFiles.filesDir)
+        processBuilder.environment().putAll(env)
+        processBuilder.redirectErrorStream(true)
+        var output = String()
+        try {
+            val process = processBuilder.start()
+            output = output(
+                process,
+                monitorFileName
+            )
+            process.waitFor()
+        } catch (err: Exception) {
+            LogSystems.stdErr("$err")
+        }
+        return output.removePrefix("\n")
+    }
     private fun runCommand(
         command: List<String>,
         monitorFileName: String
@@ -248,6 +282,40 @@ class BusyboxExecutor(
         if(process.errorStream != null){
             process.errorStream.close()
         }
+    }
+
+    private fun output(
+        process: Process,
+        monitorName: String
+    ): String {
+        val inputStream = process.inputStream
+        val reader = inputStream.bufferedReader(Charsets.UTF_8)
+        var output = String()
+        reader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
+            output += "\n${line}"
+        }
+        if(process.inputStream != null){
+            process.inputStream.close()
+        }
+        val errStream = process.errorStream
+        val errReader = errStream.bufferedReader(Charsets.UTF_8)
+        errReader.forEachLine { line ->
+            if(
+                line.trim().isEmpty()
+            ) return@forEachLine
+            FileSystems.updateFile(
+                cmdclickMonitorDirPath,
+                monitorName,
+                line
+            )
+        }
+        if(process.errorStream != null){
+            process.errorStream.close()
+        }
+        return output.removePrefix("\n")
     }
 
 }
