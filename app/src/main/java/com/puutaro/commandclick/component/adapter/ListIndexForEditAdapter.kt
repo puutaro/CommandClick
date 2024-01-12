@@ -5,53 +5,71 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 
 class ListIndexForEditAdapter(
-    val editFragment: EditFragment,
-    val currentAppDirPath: String,
+    private val editFragment: EditFragment,
+    private val filterDir: String,
+    private val readSharePreffernceMap: Map<String, String>,
+    setReplaceVariableMap:  Map<String, String>?,
     var listIndexList: MutableList<String>,
-    val isFileCon: Boolean,
 ): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
 {
 
-    val context = editFragment.context
-    val activity = editFragment.activity
+    private val context = editFragment.context
+    private val activity = editFragment.activity
     private val maxTakeSize = 150
-    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
+//    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
 
+    val qrDialogConfigMap = QrDialogConfig.makeDialogConfigMap(
+        readSharePreffernceMap,
+    )
+
+    val qrLogoConfigMap = QrDialogConfig.makeLogoConfigMap(
+        qrDialogConfigMap
+    )
+    private val listIndexConfigMap = ConfigMapTool.create(
+        UsePath.listIndexForEditConfigPath,
+        String(),
+        readSharePreffernceMap,
+        setReplaceVariableMap,
+    )
 
     class ListIndexListViewHolder(
         val activity: FragmentActivity?,
         val view: View
     ): RecyclerView.ViewHolder(view) {
 
-        val fannelContentsQrLogoView =
+        val fileContentsQrLogoView =
             view.findViewById<AppCompatImageView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_qr_log
+                com.puutaro.commandclick.R.id.list_index_edit_adapter_contents
             )
-        val fannelNameTextView =
+        val fileNameTextView =
             view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.fannel_index_list_adapter_name
+                com.puutaro.commandclick.R.id.list_index_edit_adapter_file_name
             )
+        val fileDescTextView =
+            view.findViewById<AppCompatTextView>(
+                com.puutaro.commandclick.R.id.list_index_edit_adapter_file_desc
+            )
+        var fileName = String()
     }
 
     override fun getItemId(position: Int): Long {
@@ -65,7 +83,7 @@ class ListIndexForEditAdapter(
     ): ListIndexListViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val itemView = layoutInflater.inflate(
-            com.puutaro.commandclick.R.layout.fannel_index_list_adapter_layout,
+            com.puutaro.commandclick.R.layout.list_index_edit_adapter_layout,
             parent,
             false
         )
@@ -77,60 +95,64 @@ class ListIndexForEditAdapter(
 
     override fun getItemCount(): Int = listIndexList.size
 
-
     override fun onBindViewHolder(
         holder: ListIndexListViewHolder,
         position: Int
     ) {
-        val qrLogo =  QrLogo(editFragment)
         CoroutineScope(Dispatchers.IO).launch {
-            val fannelName = listIndexList[position]
+            val fileName = listIndexList[position]
+            holder.fileName = fileName
             withContext(Dispatchers.Main) {
-                holder.fannelNameTextView.text = fannelName
+                ListIndexEditConfig.setFileNameTextView(
+                    holder.fileNameTextView,
+                    fileName,
+                    listIndexConfigMap
+                )
             }
-            val fannelConList = withContext(Dispatchers.IO) {
+            val fileConList = withContext(Dispatchers.IO) {
                 ReadText(
-                    currentAppDirPath,
-                    fannelName
+                    filterDir,
+                    fileName
                 ).textToList().take(maxTakeSize)
             }
-            val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
-            val qrPngPath = "${fannelDirPath}/${qrPngNameRelativePath}"
-            val qrPngPathObj = File(qrPngPath)
-
-            withContext(Dispatchers.Main) {
-                if(
-                    fannelName.isEmpty()
-                    || fannelName == "-"
-                ) return@withContext
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "qrdefault.txt",
-                    "qrPngPath: ${qrPngPath}\nisFile: ${qrPngPathObj.isFile}"
+            val descCon = withContext(Dispatchers.IO){
+                ListIndexEditConfig.makeFileDesc(
+                    filterDir,
+                    fileName,
+                    fileConList.joinToString("\n"),
+                    listIndexConfigMap,
                 )
-                if(qrPngPathObj.isFile){
-                    holder.fannelContentsQrLogoView.load(qrPngPath)
-                    return@withContext
-                }
-                qrLogo.createAndSaveWithGitCloneOrFileCon(
-                    currentAppDirPath,
-                    fannelName,
-                    fannelDirPath,
-                    isFileCon,
-                )?.let {
-                    holder.fannelContentsQrLogoView.setImageDrawable(it)
+            }
+            withContext(Dispatchers.Main) {
+                when(descCon.isNullOrEmpty()){
+                    true -> holder.fileDescTextView.isVisible = false
+                    else -> holder.fileDescTextView.text = descCon
                 }
             }
-            val fannelConBackGroundColorInt = withContext(Dispatchers.IO) {
-                setFannelContentsBackColor(
-                    fannelConList,
-                    fannelName,
+
+            withContext(Dispatchers.Main) {
+                QrDialogConfig.setOneSideLength(
+                    holder.fileContentsQrLogoView,
+                    qrLogoConfigMap
+                )
+                QrDialogConfig.setQrLogoHandler(
+                    editFragment,
+                    readSharePreffernceMap,
+                    qrLogoConfigMap,
+                    filterDir,
+                    fileName,
+                    holder.fileContentsQrLogoView,
+                )
+            }
+            val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
+                setFileContentsBackColor(
+                    fileConList,
+                    fileName,
                 )
             }
             withContext(Dispatchers.Main){
-                holder.fannelContentsQrLogoView.setBackgroundColor(
-                    context?.getColor(fannelConBackGroundColorInt) as Int
+                holder.fileContentsQrLogoView.setBackgroundColor(
+                    context?.getColor(fileConBackGroundColorInt) as Int
                 )
                 withContext(Dispatchers.Main) {
                     val itemView = holder.itemView
@@ -143,23 +165,22 @@ class ListIndexForEditAdapter(
                         true
                     }
                     itemView.setOnClickListener {
-                        fannelNameClickListener?.onFannelNameClick(
+                        fileNameClickListener?.onFileNameClick(
                             itemView,
                             holder
                         )
                     }
-                    val fannelContentsQrLogoView = holder.fannelContentsQrLogoView
-                    fannelContentsQrLogoView.setOnClickListener {
-                        fannelQrLogoClickListener?.onFannelQrLogoClick(
+                    val fileContentsQrLogoView = holder.fileContentsQrLogoView
+                    fileContentsQrLogoView.setOnClickListener {
+                        fileQrLogoClickListener?.onFileQrLogoClick(
                             itemView,
                             holder
                         )
                     }
-                    fannelContentsQrLogoView.setOnLongClickListener {
+                    fileContentsQrLogoView.setOnLongClickListener {
                         qrLongClickListener?.onQrLongClick(
-                            fannelContentsQrLogoView,
+                            fileContentsQrLogoView,
                             holder,
-                            isFileCon,
                             position
                         )
                         true
@@ -169,10 +190,10 @@ class ListIndexForEditAdapter(
         }
     }
 
-    var fannelNameClickListener: OnFannelNameItemClickListener? = null
+    var fileNameClickListener: OnFileNameItemClickListener? = null
     var qrLongClickListener: OnQrLogoLongClickListener? = null
-    interface OnFannelNameItemClickListener {
-        fun onFannelNameClick(
+    interface OnFileNameItemClickListener {
+        fun onFileNameClick(
             itemView: View,
             holder: ListIndexListViewHolder
         )
@@ -182,14 +203,13 @@ class ListIndexForEditAdapter(
         fun onQrLongClick(
             imageView: AppCompatImageView,
             holder: ListIndexListViewHolder,
-            isFileCon: Boolean,
             position: Int
         )
     }
 
-    var fannelQrLogoClickListener: OnFannelQrLogoItemClickListener? = null
-    interface OnFannelQrLogoItemClickListener {
-        fun onFannelQrLogoClick(
+    var fileQrLogoClickListener: OnFileQrLogoItemClickListener? = null
+    interface OnFileQrLogoItemClickListener {
+        fun onFileQrLogoClick(
             itemView: View,
             holder: ListIndexListViewHolder
         )
@@ -204,15 +224,15 @@ class ListIndexForEditAdapter(
         )
     }
 
-    private fun setFannelContentsBackColor(
-        fannelConList: List<String>,
-        fannelName: String,
+    private fun setFileContentsBackColor(
+        fileConList: List<String>,
+        fileName: String,
     ): Int {
         if(
             context == null
         ) return com.puutaro.commandclick.R.color.fannel_icon_color
         val languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(fannelName)
+            CommandClickVariables.judgeJsOrShellFromSuffix(fileName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -223,7 +243,7 @@ class ListIndexForEditAdapter(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            fannelConList,
+            fileConList,
             settingSectionStart,
             settingSectionEnd
         )

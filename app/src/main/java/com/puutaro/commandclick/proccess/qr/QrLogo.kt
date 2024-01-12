@@ -87,9 +87,10 @@ class QrLogo(
     fun createAndSaveWithGitCloneOrFileCon(
         currentAppDirPath: String,
         fannelName: String,
-        fannelDirPath: String,
         isFileCon: Boolean,
     ): Drawable? {
+        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val qrContents = when(isFileCon) {

@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.view.Gravity
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
@@ -17,7 +16,7 @@ import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.util.CcPathTool
 
-object QrLogoDialogLauncher {
+object QrLogoEditDialogLauncher {
 
     private var qrLogoDialogObj: Dialog? = null
 
@@ -29,17 +28,6 @@ object QrLogoDialogLauncher {
     ){
         val context = fragment.context
             ?: return
-        if(
-            fannelName.isEmpty()
-            || fannelName == "-"
-        ) {
-            Toast.makeText(
-                context,
-                "no file",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val qrLogoPath = "${parentDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
         qrLogoDialogObj = Dialog(
@@ -56,7 +44,8 @@ object QrLogoDialogLauncher {
         qrLogoDialogObj?.findViewById<AppCompatImageView>(
             R.id.qr_logo_list_index_dialog_top_image
         )?.load(qrLogoPath)
-        val isFileCon = QrDialogConfig.howFileConQr(qrDialogConfigMap)
+        val logoConfigMap = QrDialogConfig.makeLogoConfigMap(qrDialogConfigMap)
+        val isFileCon = QrDialogConfig.howFileConQr(logoConfigMap)
         val buttonWeight = decideButtonWeight(isFileCon)
         setPassButton(
             fragment,

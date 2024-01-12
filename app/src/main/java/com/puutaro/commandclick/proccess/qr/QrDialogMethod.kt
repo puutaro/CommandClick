@@ -253,7 +253,6 @@ object QrDialogMethod {
                 qrLogo.createAndSaveWithGitCloneOrFileCon(
                     currentAppDirPath,
                     fannelName,
-                    fannelDirPath,
                     isFileCon,
                 )
             }

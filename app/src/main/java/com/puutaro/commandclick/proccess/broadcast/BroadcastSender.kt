@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.broadcast
 
 import android.content.Context
 import android.content.Intent
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.util.Map.CmdClickMap
 
 object BroadcastSender {
 

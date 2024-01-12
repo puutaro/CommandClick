@@ -16,6 +16,16 @@ object ListSyncer {
             settingMenuMapList
         )
         val broadcastIntent = ExtraMapTool.makeBroadcastIntent(extraMap)
+        if(
+            broadcastIntent?.action.isNullOrEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                "broadcast intent action not found: ${extraMap}",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
         Toast.makeText(
             context,
             "sync ok",

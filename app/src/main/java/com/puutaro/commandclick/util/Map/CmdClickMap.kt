@@ -1,4 +1,6 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.Map
+
+import com.puutaro.commandclick.util.CcScript
 
 object CmdClickMap {
      fun createMap(

@@ -16,8 +16,8 @@ import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfig
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.util.Map.CmdClickMap
+import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -75,7 +75,13 @@ class SettingButtonArgsMaker(
         currentAppDirPath,
         currentScriptFileName,
     )
-    val settingButtonConfigMap = createSettingButtonConfigMap()
+    val settingButtonConfigMap = ConfigMapTool.create(
+        UsePath.settingButtonConfigPath,
+        makeSettingButtonConfigConForEdit(),
+        readSharePreffernceMap,
+        setReplaceVariableMap
+
+    )
 
 
     fun makeSettingButtonConfigMapList(
@@ -156,50 +162,6 @@ class SettingButtonArgsMaker(
         return makeSettingMenuMapList(
             settingMenuMapCon,
         )
-    }
-
-    private fun createSettingButtonConfigMap(): Map<String, String>? {
-        val propertySeparator = ","
-        val settingMenuSettingFilePath = ScriptPreWordReplacer.replace(
-            UsePath.settingButtonConfigPath,
-            currentAppDirPath,
-            currentScriptFileName,
-        )
-        val settingMenuSettingFilePathObj = File(settingMenuSettingFilePath)
-        return when (settingMenuSettingFilePathObj.isFile) {
-            true -> {
-                val parentDirPath = settingMenuSettingFilePathObj.parent
-                    ?: return null
-                SettingFile.read(
-                    parentDirPath,
-                    settingMenuSettingFilePathObj.name
-                )
-            }
-
-            else -> {
-                SettingFile.formSettingContents(
-                    makeSettingButtonConfigConForEdit().split("\n")
-                )
-            }
-        }.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentScriptFileName
-            )
-        }.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentScriptFileName
-            )
-        }.split(propertySeparator).map {
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
-            )
-        }.toMap().filterKeys { it.isNotEmpty() }
     }
 
     private fun makeSettingMenuMapList(

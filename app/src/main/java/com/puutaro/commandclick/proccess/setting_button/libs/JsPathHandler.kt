@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.proccess.setting_button.libs
 
 import android.content.Context
+import android.content.Intent
 import android.util.Size
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -46,7 +47,8 @@ import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingBut
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.proccess.setting_button.SystemFannelLauncher
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -208,6 +210,8 @@ object JsPathHandler {
             JsPathMacroForSettingButton.GET_QR_CON -> QrConGetterDialog.launch(
                settingButtonArgsMaker
             )
+            JsPathMacroForSettingButton.FANNEL_REPO_SYNC ->
+                syncFannelRepo(fragment)
         }
     }
 }
@@ -666,4 +670,14 @@ private fun installFannelHandler(
         )
         is EditFragment -> {}
     }
+}
+
+private fun syncFannelRepo(fragment: Fragment){
+    val context = fragment.context
+        ?: return
+    val intent = Intent(
+        context,
+        GitCloneService::class.java
+    )
+    context.startForegroundService(intent)
 }

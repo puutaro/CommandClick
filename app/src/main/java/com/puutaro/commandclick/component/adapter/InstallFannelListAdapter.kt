@@ -202,7 +202,6 @@ class InstallFannelListAdapter(
         holder: FannelInstallerListViewHolder,
     ){
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
         val qrPngPathObjInInstallIndex =
             File(
                 "${UsePath.cmdclickFannelDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
@@ -226,7 +225,6 @@ class InstallFannelListAdapter(
         qrLogo.createAndSaveWithGitCloneOrFileCon(
             currentAppDirPath,
             fannelName,
-            fannelDirPath,
             false
         )?.let {
             holder.fannelContentsQrLogoView.setImageDrawable(it)

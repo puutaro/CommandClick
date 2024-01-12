@@ -45,6 +45,7 @@ import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
@@ -176,7 +177,7 @@ class WithIndexListView(
             listIndexForEditAdapter.listIndexList.addAll(updateList)
             listIndexForEditAdapter.notifyDataSetChanged()
             CoroutineScope(Dispatchers.Main).launch {
-                delay(200)
+                delay(500)
                 editListRecyclerView.layoutManager?.scrollToPosition(
                     listIndexForEditAdapter.itemCount - 1
                 )
@@ -257,20 +258,15 @@ class WithIndexListView(
         )
 
         val fileList = makeFileList()
-        val qrDialogConfigMap = QrDialogConfig.makeDialogConfigMap(
-            readSharePreffernceMap,
-        )
-        val isFileCon = howFileConQr(
-            qrDialogConfigMap,
-        )
 
         val editListRecyclerView =
             binding.editListRecyclerView
         val listIndexForEditAdapter = ListIndexForEditAdapter(
             editFragment,
             filterDir,
+            readSharePreffernceMap,
+            editParameters.setReplaceVariableMap,
             fileList,
-            isFileCon
         )
         editListRecyclerView.adapter = listIndexForEditAdapter
         val preLoadLayoutManager = PreLoadLayoutManager(
@@ -279,7 +275,7 @@ class WithIndexListView(
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
         invokeItemSetClickListenerForFileList()
-        invokeQrLogoSetClickListenerForFileList(qrDialogConfigMap)
+        invokeQrLogoSetClickListenerForFileList()
         invokeQrLogoSetLongClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForIndexList(
             menuMapList
@@ -288,19 +284,22 @@ class WithIndexListView(
             editListSearchEditText,
             readSharePreffernceMap
         )
+        listIndexListUpdateFileList(
+            editFragment,
+            fileList,
+        )
     }
 
         private fun invokeItemSetClickListenerForFileList() {
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.fannelNameClickListener =
-            object: ListIndexForEditAdapter.OnFannelNameItemClickListener {
-                override fun onFannelNameClick(
+        listIndexForEditAdapter.fileNameClickListener =
+            object: ListIndexForEditAdapter.OnFileNameItemClickListener {
+                override fun onFileNameClick(
                     itemView: View,
                     holder: ListIndexForEditAdapter.ListIndexListViewHolder
                 ) {
-                    val selectedItem =
-                        holder.fannelNameTextView.text.toString()
+                    val selectedItem = holder.fileName
                     execItemClickJs(
                         clickDirPath,
                         selectedItem,
@@ -310,61 +309,70 @@ class WithIndexListView(
         }
     }
 
-    private fun invokeQrLogoSetClickListenerForFileList(
-        qrDialogConfigMap: Map<String, String>,
-    ) {
-        val isExecQrInLogoClick = howExecQrInLogoClick(
-            qrDialogConfigMap
-        )
+    private fun invokeQrLogoSetClickListenerForFileList() {
+
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
-        listIndexForEditAdapter.fannelQrLogoClickListener = object: ListIndexForEditAdapter.OnFannelQrLogoItemClickListener {
-            override fun onFannelQrLogoClick(
+        listIndexForEditAdapter.fileQrLogoClickListener = object: ListIndexForEditAdapter.OnFileQrLogoItemClickListener {
+            override fun onFileQrLogoClick(
                 itemView: View,
                 holder: ListIndexForEditAdapter.ListIndexListViewHolder
             ) {
-                val selectedItem =
-                    holder.fannelNameTextView.text.toString()
-                val contents = if(
-                    File("${filterDir}/${selectedItem}").isFile
-                ) ReadText(
+                QrDialogClickHandler.handle(
+                    false,
+                    editFragment,
+                    currentAppDirPath,
                     filterDir,
-                    selectedItem
-                ).readText()
-                else "no file"
-                when(isExecQrInLogoClick) {
-                    false
-                    -> DialogObject.simpleTextShow(
-                        itemView.context,
-                        "file contents: $selectedItem",
-                        contents
-                    )
-                    else -> {
-                        val targetFragmentInstance = TargetFragmentInstance()
-                        val terminalFragment =
-                            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
-                                ?: return
-                        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
-                            ?: return
-                        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
-                        val useAppDirPath =
-                            when(onLaunchByWebViewDialog){
-                                true -> currentAppDirPath
-                                else -> filterDir
-                        }
-                        CoroutineScope(Dispatchers.Main).launch {
-                            QrConfirmDialog(
-                                editFragment,
-                                null,
-                                null,
-                                useAppDirPath,
-                                QrDecodedTitle.makeTitle(contents),
-                                contents
-                            ).launch()
-                        }
-                    }
-                }
-                editListSearchEditText.setText(String())
+                    holder.fileName,
+                    listIndexForEditAdapter.qrDialogConfigMap
+                )
+//                val contents = if(
+//                    File("${filterDir}/${selectedItem}").isFile
+//                ) ReadText(
+//                    filterDir,
+//                    selectedItem
+//                ).readText()
+//                else "no file"
+//                when(listIndexForEditAdapter.clickMode) {
+//                    QrDialogConfig.ClickModeValues.EXEC_QR -> {
+//                        val targetFragmentInstance = TargetFragmentInstance()
+//                        val terminalFragment =
+//                            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
+//                                ?: return
+//                        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
+//                            ?: return
+//                        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
+//                        val useAppDirPath =
+//                            when(onLaunchByWebViewDialog){
+//                                true -> currentAppDirPath
+//                                else -> filterDir
+//                            }
+//                        CoroutineScope(Dispatchers.Main).launch {
+//                            QrConfirmDialog(
+//                                editFragment,
+//                                null,
+//                                null,
+//                                useAppDirPath,
+//                                QrDecodedTitle.makeTitle(contents),
+//                                contents
+//                            ).launch()
+//                        }
+//                    }
+//                    QrDialogConfig.ClickModeValues.DESC -> {
+//                        ScriptFileDescription.show(
+//                            editFragment,
+//                            contents.split("\n"),
+//                            filterDir,
+//                            selectedItem
+//                        )
+//                    }
+//                    else -> DialogObject.simpleTextShow(
+//                        itemView.context,
+//                        "file contents: $selectedItem",
+//                        contents
+//                    )
+//                }
+//                editListSearchEditText.setText(String())
             }
         }
     }
@@ -373,6 +381,7 @@ class WithIndexListView(
     ) {
         FannelLogoLongClickDoForListIndex.invoke(
             editFragment,
+            currentAppDirPath,
             filterDir,
         )
     }
@@ -428,8 +437,11 @@ class WithIndexListView(
                 holder: ListIndexForEditAdapter.ListIndexListViewHolder,
                 position: Int
             ) {
-                val selectedItem =
-                    indexForEditAdapter.listIndexList[position]
+                if(
+                    menuMapList.isNullOrEmpty()
+                ) return
+                val selectedItem = holder.fileName
+//                    indexForEditAdapter.listIndexList[position]
                 mainMenuListIndexDialog = Dialog(
                     context
                 )
@@ -444,21 +456,25 @@ class WithIndexListView(
                     selectedItem
                 )
 
-                val listDialogTitle = mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
-                    R.id.list_dialog_title
-                )
+                val listDialogTitle =
+                    mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
+                        R.id.list_dialog_title
+                    )
                 listDialogTitle?.text = selectedItem
-                val listDialogMessage = mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
-                    R.id.list_dialog_message
-                )
+                val listDialogMessage =
+                    mainMenuListIndexDialog?.findViewById<AppCompatTextView>(
+                        R.id.list_dialog_message
+                    )
                 listDialogMessage?.isVisible = false
-                val listDialogSearchEditText = mainMenuListIndexDialog?.findViewById<AppCompatEditText>(
-                    R.id.list_dialog_search_edit_text
-                )
+                val listDialogSearchEditText =
+                    mainMenuListIndexDialog?.findViewById<AppCompatEditText>(
+                        R.id.list_dialog_search_edit_text
+                    )
                 listDialogSearchEditText?.isVisible = false
-                val cancelButton = mainMenuListIndexDialog?.findViewById<AppCompatImageButton>(
-                    R.id.list_dialog_cancel
-                )
+                val cancelButton =
+                    mainMenuListIndexDialog?.findViewById<AppCompatImageButton>(
+                        R.id.list_dialog_cancel
+                    )
                 cancelButton?.setOnClickListener {
                     mainMenuListIndexDialog?.dismiss()
                 }
@@ -1302,7 +1318,7 @@ class WithIndexListView(
                 MenuMapKey.MAIN_MENU_NAME.str to menuName,
                 MenuMapKey.SUB_MENU_NAME_LIST_STR.str to subMenuListStr
             )
-        }
+        }?.filter { it.isNotEmpty() }
     }
 
 
@@ -1430,27 +1446,6 @@ class WithIndexListView(
             message,
             Toast.LENGTH_SHORT
         ).show()
-    }
-
-    private fun howFileConQr(
-        qrDialogConfigMap: Map<String, String>,
-    ): Boolean {
-        val onFileConKeyName = QrDialogConfig.QrDialogConfigKey.ON_FILE_CON.key
-        if(
-            qrDialogConfigMap.isEmpty()
-        ) return false
-        return qrDialogConfigMap.containsKey(onFileConKeyName)
-    }
-
-    private fun howExecQrInLogoClick(
-        qrDialogConfigMap: Map<String, String>,
-    ): Boolean {
-        val onExecQrInLogoClickKeyName = QrDialogConfig.QrDialogConfigKey.ON_EXEC_QR_IN_LOGO_CLICK.key
-        if(
-            qrDialogConfigMap.isEmpty()
-        ) return false
-        return qrDialogConfigMap.containsKey(onExecQrInLogoClickKeyName)
-
     }
 }
 

@@ -11,7 +11,7 @@ import com.puutaro.commandclick.proccess.qr.FreeTextKey
 import com.puutaro.commandclick.proccess.qr.QrContents
 import com.puutaro.commandclick.proccess.qr.QrSchema
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.editor.EditorByEditText

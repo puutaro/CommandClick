@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ReadText

@@ -4,7 +4,7 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.CmdClickMap
+import com.puutaro.commandclick.util.Map.CmdClickMap
 
 class EditSiteBroadCast(
     terminalFragment: TerminalFragment

@@ -13,12 +13,14 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitClone
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
@@ -131,11 +133,13 @@ class GitCloneService: Service() {
                 isProgressCancel = true
             }
             withContext(Dispatchers.IO){
-                val updateInstallFannelListIntent = Intent()
-                updateInstallFannelListIntent.action =
+                BroadcastSender.normalSend(
+                    context,
                     BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
-                sendBroadcast(
-                    updateInstallFannelListIntent
+                )
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
                 )
             }
             withContext(Dispatchers.IO){

@@ -169,6 +169,8 @@ object UsePath {
     val fannelDirSuffix = "Dir"
     private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
     val homeScriptUrlsFilePath =  "$fannelSettingsDirPath/${homeScriptUrlsFileName}"
+    private val listIndexForEditConfigName = "listIndexConfig.js"
+    val listIndexForEditConfigPath =  "$fannelSettingsDirPath/${listIndexForEditConfigName}"
     private val qrDialogConfigName = "qrDialogConfig.js"
     val qrDialogConfigPath =  "$fannelSettingsDirPath/${qrDialogConfigName}"
     private val settingButtonConfigName = "settingButtonConfig.js"

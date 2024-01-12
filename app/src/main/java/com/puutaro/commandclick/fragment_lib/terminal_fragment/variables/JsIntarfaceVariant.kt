@@ -35,5 +35,6 @@ enum class JsInterfaceVariant {
     jsDirect,
     jsEditor,
     jsQrEdit,
-    jsBroadcast
+    jsBroadcast,
+    jsFannelInstaller,
 }

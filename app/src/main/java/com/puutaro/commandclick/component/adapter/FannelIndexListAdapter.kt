@@ -91,7 +91,6 @@ class FannelIndexListAdapter(
                 ).textToList().take(maxTakeSize)
             }
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-            val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
             val qrPngPath = "${currentAppDirPath}/${fannelDirName}/${qrPngNameRelativePath}"
             val qrPngPathObj = File(qrPngPath)
 
@@ -103,7 +102,6 @@ class FannelIndexListAdapter(
                 qrLogo.createAndSaveWithGitCloneOrFileCon(
                     currentAppDirPath,
                     fannelName,
-                    fannelDirPath,
                     false,
                 )?.let {
                     holder.fannelContentsQrLogoView.setImageDrawable(it)
