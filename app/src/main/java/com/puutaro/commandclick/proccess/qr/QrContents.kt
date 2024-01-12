@@ -86,7 +86,9 @@ object QrContents {
         qrMap: Map<String, String>
     ): String {
         val ssid =qrMap.get(WifiKey.SSID.key)
+            ?: String()
         val pin =qrMap.get(WifiKey.PIN.key)
+            ?: String()
         return "${prefix}T:WPA;S:${ssid};P:${pin};;"
     }
 
@@ -108,7 +110,8 @@ object QrContents {
         qrMap: Map<String, String>
     ): String {
 //        mailto:<email>?subject=<subject>&body=<body>
-        val main = prefix + qrMap.get(GmailKey.MAIL_AD.key)
+        val mailAd = qrMap.get(GmailKey.MAIL_AD.key) ?: String()
+        val main = prefix + mailAd
         return main + makeMailSubCode(qrMap)
     }
 

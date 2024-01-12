@@ -23,6 +23,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
+import com.puutaro.commandclick.proccess.qr.QrEditType
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
@@ -49,6 +50,19 @@ class JsQr(
     @JavascriptInterface
     fun qrPrefixList(): String {
         return QrLaunchType.values().map { it.prefix }.joinToString("\n")
+    }
+
+    @JavascriptInterface
+    fun qrEditTypeList(): String {
+        val freeEditType = QrEditType.FREE_TEXT.type
+        return QrLaunchType.values().map { it.prefix }.map {
+            prefix ->
+            QrEditType.values()
+                .find {
+                    it.prefixList.contains(prefix)
+                }?.type
+                ?: freeEditType
+        }.distinct().reversed().joinToString("\n")
     }
 
     @JavascriptInterface

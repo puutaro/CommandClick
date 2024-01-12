@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
@@ -40,6 +41,12 @@ class JsQrEdit(
         )
         val qrMap = QrSchema.makeQrMapFromCon(
             qrCon
+        )
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "qr.txt",
+            "qrCon: ${qrCon}\n\n" +
+                    "qrMap: ${qrMap}"
         )
         editAndSaveHandler(
             qrConFilePath,
@@ -192,13 +199,31 @@ class JsQrEdit(
             "${valNameAndMacro}=${valValueListStr}"
         }.joinToString("\t")
         val targetVariables = qrMap.keys.map {
-            "${it}=${qrMap.get(it)}"
+            val variableValue = getFromQrMapForForm(
+                qrMap,
+                it,
+            )
+            "${it}=${variableValue}"
         }.joinToString("\t")
         return JsDialog(terminalFragment).formDialog(
             "Edit: ${qrConFileName}",
             setVariableTypes,
             targetVariables,
         )
+    }
+
+    fun getFromQrMapForForm(
+        qrMap: Map<String, String>,
+        key: String,
+    ): String {
+        return qrMap.get(key)
+            ?.let {
+                if(
+                    it == null.toString()
+                ) return@let String()
+                it
+            }
+            ?: String()
     }
 
     private fun createBroadcastIntentForQr(
