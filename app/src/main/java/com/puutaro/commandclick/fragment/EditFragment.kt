@@ -105,6 +105,7 @@ class EditFragment: Fragment() {
     var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
+    var isInstallFannelForListIndex = false
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -338,7 +339,7 @@ class EditFragment: Fragment() {
                 delay(100)
                 WithIndexListView.listIndexListUpdateFileList(
                     this@EditFragment,
-                    WithIndexListView.makeFileList()
+                    WithIndexListView.makeFileListHandler(isInstallFannelForListIndex)
                 )
             }
         }

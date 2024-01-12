@@ -59,6 +59,9 @@ class ListIndexForEditAdapter(
         setReplaceVariableMap,
     )
 
+
+    private val isInstallFannel = editFragment.isInstallFannelForListIndex
+
     class ListIndexListViewHolder(
         val activity: FragmentActivity?,
         val view: View
@@ -107,12 +110,16 @@ class ListIndexForEditAdapter(
         position: Int
     ) {
         CoroutineScope(Dispatchers.IO).launch {
-            val fileName = listIndexList[position]
-            holder.fileName = fileName
+            val fileNameOrInstallFannelLine = listIndexList[position]
+            holder.fileName =
+                fileNameOrInstallFannelLine
+                    .split("\n")
+                    .firstOrNull() ?: String()
             withContext(Dispatchers.Main) {
                 ListIndexEditConfig.setFileNameTextView(
+                    isInstallFannel,
                     holder.fileNameTextView,
-                    fileName,
+                    holder.fileName,
                     listIndexConfigMap,
                     busyboxExecutor,
                 )
@@ -120,13 +127,14 @@ class ListIndexForEditAdapter(
             val fileConList = withContext(Dispatchers.IO) {
                 ReadText(
                     filterDir,
-                    fileName
+                    holder.fileName
                 ).textToList().take(maxTakeSize)
             }
             val descCon = withContext(Dispatchers.IO){
                 val makeFileDescArgsMaker = ListIndexEditConfig.MakeFileDescArgsMaker(
+                    isInstallFannel,
                     filterDir,
-                    fileName,
+                    fileNameOrInstallFannelLine,
                     fileConList.joinToString("\n"),
                     listIndexConfigMap,
                     busyboxExecutor,
@@ -152,7 +160,7 @@ class ListIndexForEditAdapter(
                     readSharePreffernceMap,
                     qrLogoConfigMap,
                     filterDir,
-                    fileName,
+                    holder.fileName,
                     holder.fileContentsQrLogoView,
                 )
                 QrDialogConfig.setQrLogoHandler(
@@ -162,7 +170,7 @@ class ListIndexForEditAdapter(
             val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
                 setFileContentsBackColor(
                     fileConList,
-                    fileName,
+                    fileNameOrInstallFannelLine,
                 )
             }
             withContext(Dispatchers.Main){

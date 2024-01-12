@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.util.FileSystems
 import java.io.File
 
 class JsFannelInstaller(
@@ -29,6 +30,11 @@ class JsFannelInstaller(
             false -> "install ok: ${selectedFannel}"
             else -> "update ok: ${selectedFannel}"
         }
+        FileSystems.execCopyFileWithDir(
+            selectedFannelPathObj,
+            installFannelPathObj,
+            true,
+        )
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action

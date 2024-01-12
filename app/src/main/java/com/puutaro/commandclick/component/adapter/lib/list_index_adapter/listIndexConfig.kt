@@ -22,6 +22,7 @@ object ListIndexEditConfig {
     ) {
         NAME("name"),
         DESC("desc"),
+        INSTALL_FANEL("installFannel"),
     }
 
     enum class ListIndexFileNameKey(
@@ -42,9 +43,18 @@ object ListIndexEditConfig {
         SHELL_PATH("shellPath"),
     }
 
+    fun howInstallFannel(
+        listIndexConfigMap: Map<String, String>?
+    ): Boolean {
+        return listIndexConfigMap?.containsKey(
+            ListIndexConfigKey.INSTALL_FANEL.key
+        ) ?: false
+    }
+
     fun setFileNameTextView(
+        isInstallFannel: Boolean,
         fileNameTextView: AppCompatTextView?,
-        fileNameSrc: String,
+        fileName: String,
         listIndexConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor,
     ) {
@@ -65,17 +75,22 @@ object ListIndexEditConfig {
             return
         }
         fileNameTextView?.text = makeFileName(
-            fileNameSrc,
+            isInstallFannel,
+            fileName,
             fileNameConfigMap,
             busyboxExecutor
         )
     }
 
     private fun makeFileName(
+        isInstallFannel: Boolean,
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor,
     ): String {
+        if(isInstallFannel){
+            return fileNameSrc
+        }
         if (
             fileNameConfigMap.isNullOrEmpty()
         ) return fileNameSrc
@@ -123,8 +138,9 @@ object ListIndexEditConfig {
     }
 
     class MakeFileDescArgsMaker(
+        val isInstallFannel: Boolean,
         val parentDirPath: String,
-        val fileName: String,
+        val fileNameOrInstallFannelLine: String,
         val fileCon: String,
         val listIndexConfigMap: Map<String, String>?,
         val busyboxExecutor: BusyboxExecutor
@@ -132,6 +148,15 @@ object ListIndexEditConfig {
     fun makeFileDesc(
         makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
+        if(
+            makeFileDescArgsMaker.isInstallFannel
+        ) return makeFileDescArgsMaker
+            .fileNameOrInstallFannelLine
+            .split("\n")
+            .getOrNull(1)
+            ?.trim()
+            ?.removePrefix("-")
+            ?: String()
         val defaultMaxTakeLength = 50
         val fileCon = makeFileDescArgsMaker.fileCon
         val defaultTakeFileCon = fileCon.take(defaultMaxTakeLength)
@@ -161,7 +186,10 @@ object ListIndexEditConfig {
             return fileCon.take(maxTakeLength)
         }
         val parentDirPath = makeFileDescArgsMaker.parentDirPath
-        val fileName = makeFileDescArgsMaker.fileName
+        val fileName =
+            makeFileDescArgsMaker.fileNameOrInstallFannelLine
+                .split("\n")
+                .firstOrNull() ?: String()
         descConfigMap.containsKey(ListIndexDescKey.FANNEL_DESC.key).let {
             if (
                 !it

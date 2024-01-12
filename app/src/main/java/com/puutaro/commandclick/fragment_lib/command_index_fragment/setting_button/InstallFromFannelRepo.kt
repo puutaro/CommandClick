@@ -252,7 +252,7 @@ class InstallFromFannelRepo(
 object InstallFannelList {
 
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-    val blankListMark = "Let's press sync button at left bellow"
+    val blankListMark = "Let's press sync button at right bellow"
     val fannelListUpdateDelayMiliSec = 400L
     fun updateInstallFannelList(
         installFannelRecyclerView: RecyclerView?,

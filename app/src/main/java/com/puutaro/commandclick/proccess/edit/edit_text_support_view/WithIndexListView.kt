@@ -11,7 +11,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -29,10 +28,13 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelList
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
@@ -40,9 +42,6 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDia
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
-import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
-import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
-import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
@@ -54,10 +53,10 @@ import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.TargetFragmentInstance
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -95,6 +94,15 @@ class WithIndexListView(
     private val formDialogForListIndexOrButton = FormDialogForListIndexOrButton(
         editFragment
     )
+    private val listIndexConfigMap = ConfigMapTool.create(
+        UsePath.listIndexForEditConfigPath,
+        String(),
+        readSharePreffernceMap,
+        mapOf(),
+    )
+    private val isInstallFannel = ListIndexEditConfig.howInstallFannel(
+        listIndexConfigMap
+    )
     private var selectedItemForCopy = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
     private val getDirectoryAndCopy = editFragment.registerForActivityResult(
@@ -127,7 +135,7 @@ class WithIndexListView(
         )
         listIndexListUpdateFileList(
             editFragment,
-            makeFileList()
+            makeFileListHandler(isInstallFannel)
         )
         Toast.makeText(
             context,
@@ -148,7 +156,15 @@ class WithIndexListView(
         private var fannelDirPath = String()
         private var fannelMenuDirPath = String()
 
-        fun makeFileList(): MutableList<String> {
+        fun makeFileListHandler(isInstallFannel: Boolean): MutableList<String> {
+            return when(isInstallFannel) {
+                true -> makeFannelListForListView().toMutableList()
+                else -> makeFileList()
+            }
+        }
+
+        private fun makeFileList(): MutableList<String> {
+
             val fileListSource = FileSystems.sortedFiles(
                 filterDir,
             ).filter {
@@ -160,6 +176,24 @@ class WithIndexListView(
                 fileListSource.isEmpty()
             ) return mutableListOf(throughMark)
             return fileListSource.toMutableList()
+        }
+
+        private fun makeFannelListForListView(): List<String> {
+            val fannelListSource = ReadText(
+                UsePath.cmdclickFannelListDirPath,
+                UsePath.fannelListMemoryName,
+            ).readText()
+                .replace(Regex("\\*\\*([a-zA-Z0-9]*)\\*\\*"), "*$1")
+                .split(FannelListVariable.cmdclickFannelListSeparator)
+            return if (
+                fannelListSource.isNotEmpty()
+                && !fannelListSource
+                    .firstOrNull()
+                    ?.trim()
+                    .isNullOrEmpty()
+            ) {
+                fannelListSource
+            } else mutableListOf(InstallFannelList.blankListMark)
         }
 
         fun listIndexListUpdateFileList(
@@ -177,7 +211,7 @@ class WithIndexListView(
             listIndexForEditAdapter.listIndexList.addAll(updateList)
             listIndexForEditAdapter.notifyDataSetChanged()
             CoroutineScope(Dispatchers.Main).launch {
-                delay(500)
+                delay(200)
                 editListRecyclerView.layoutManager?.scrollToPosition(
                     listIndexForEditAdapter.itemCount - 1
                 )
@@ -213,6 +247,7 @@ class WithIndexListView(
     fun create(
         editParameters: EditParameters,
     ) {
+        editFragment.isInstallFannelForListIndex = isInstallFannel
         binding.editListLinearLayout.isVisible = true
         binding.editTextScroll.isVisible = false
         val context = editParameters.context
@@ -237,6 +272,7 @@ class WithIndexListView(
         val indexListMap = getIndexListMap(
             replacedSetVariableMap
         )
+
         filterDir = getFilterListDir(
             indexListMap,
             currentAppDirPath,
@@ -257,7 +293,7 @@ class WithIndexListView(
             replacedSetVariableMap,
         )
 
-        val fileList = makeFileList()
+        val fileList = makeFileListHandler(isInstallFannel)
 
         val editListRecyclerView =
             binding.editListRecyclerView
@@ -283,10 +319,6 @@ class WithIndexListView(
         makeSearchEditText(
             editListSearchEditText,
             readSharePreffernceMap
-        )
-        listIndexListUpdateFileList(
-            editFragment,
-            fileList,
         )
     }
 
@@ -326,53 +358,6 @@ class WithIndexListView(
                     holder.fileName,
                     listIndexForEditAdapter.qrDialogConfigMap
                 )
-//                val contents = if(
-//                    File("${filterDir}/${selectedItem}").isFile
-//                ) ReadText(
-//                    filterDir,
-//                    selectedItem
-//                ).readText()
-//                else "no file"
-//                when(listIndexForEditAdapter.clickMode) {
-//                    QrDialogConfig.ClickModeValues.EXEC_QR -> {
-//                        val targetFragmentInstance = TargetFragmentInstance()
-//                        val terminalFragment =
-//                            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(editFragment.activity)
-//                                ?: return
-//                        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
-//                            ?: return
-//                        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
-//                        val useAppDirPath =
-//                            when(onLaunchByWebViewDialog){
-//                                true -> currentAppDirPath
-//                                else -> filterDir
-//                            }
-//                        CoroutineScope(Dispatchers.Main).launch {
-//                            QrConfirmDialog(
-//                                editFragment,
-//                                null,
-//                                null,
-//                                useAppDirPath,
-//                                QrDecodedTitle.makeTitle(contents),
-//                                contents
-//                            ).launch()
-//                        }
-//                    }
-//                    QrDialogConfig.ClickModeValues.DESC -> {
-//                        ScriptFileDescription.show(
-//                            editFragment,
-//                            contents.split("\n"),
-//                            filterDir,
-//                            selectedItem
-//                        )
-//                    }
-//                    else -> DialogObject.simpleTextShow(
-//                        itemView.context,
-//                        "file contents: $selectedItem",
-//                        contents
-//                    )
-//                }
-//                editListSearchEditText.setText(String())
             }
         }
     }
@@ -407,7 +392,7 @@ class WithIndexListView(
 
             override fun afterTextChanged(s: Editable?) {
                 if(!searchText.hasFocus()) return
-                val filteredUrlHistoryList = makeFileList().filter {
+                val filteredUrlHistoryList = makeFileListHandler(isInstallFannel).filter {
                     Regex(
                         searchText.text.toString()
                             .lowercase()
@@ -582,6 +567,7 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
+            || selectedItem.trim() == InstallFannelList.blankListMark
         ) {
             noFileToast()
             return
@@ -723,7 +709,7 @@ class WithIndexListView(
                 )
                 listIndexListUpdateFileList(
                     editFragment,
-                    makeFileList()
+                    makeFileListHandler(isInstallFannel)
                 )
                 return
             }
@@ -810,7 +796,7 @@ class WithIndexListView(
         ).show()
         listIndexListUpdateFileList(
             editFragment,
-            makeFileList()
+            makeFileListHandler(isInstallFannel)
         )
     }
 
@@ -861,7 +847,7 @@ class WithIndexListView(
             )
             listIndexListUpdateFileList(
                 editFragment,
-                makeFileList()
+                makeFileListHandler(isInstallFannel)
             )
         }
         promptDialog?.setOnCancelListener {
@@ -970,7 +956,7 @@ class WithIndexListView(
             )
             listIndexListUpdateFileList(
                 editFragment,
-                makeFileList()
+                makeFileListHandler(isInstallFannel)
             )
         }
         promptDialog?.setOnCancelListener {
@@ -1125,7 +1111,7 @@ class WithIndexListView(
             )
             listIndexListUpdateFileList(
                 editFragment,
-                makeFileList()
+                makeFileListHandler(isInstallFannel)
             )
             if (
                 filterDir.removeSuffix("/")
@@ -1181,7 +1167,7 @@ class WithIndexListView(
                     )
                     listIndexListUpdateFileList(
                         editFragment,
-                        makeFileList()
+                        makeFileListHandler(isInstallFannel)
                     )
                 }
                 confirmDialog2?.setOnCancelListener {
@@ -1295,7 +1281,7 @@ class WithIndexListView(
         )
         listIndexListUpdateFileList(
             editFragment,
-           makeFileList()
+           makeFileListHandler(isInstallFannel)
         )
     }
 
