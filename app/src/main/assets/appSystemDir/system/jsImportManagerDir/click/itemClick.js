@@ -6,7 +6,15 @@ var ITEM_NAME = args.at(2);
 var MENU_NAME = args.at(3);
 
 
-jsFileSystem.jsEcho(
-	"NORMAL",
-	`item click \n${PARENT_DIR}\n${LIST_VIEW_DIR}\n${ITEM_NAME}\n${MENU_NAME}\n`
+const importedJsFilePath = `${LIST_VIEW_DIR}/${ITEM_NAME}`;
+const importedJsCon = jsFileSystem.readLocalFile(
+    importedJsFilePath
+);
+if(
+	!importedJsCon.trim()
+) exitZero();
+jsDialog.textDialog(
+    ITEM_NAME,
+    importedJsCon,
+    false,
 );
