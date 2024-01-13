@@ -202,6 +202,22 @@ object FileSystems {
         }
     }
 
+    fun getRecentAppDirPath(): String {
+        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
+        val jsSuffix = UsePath.JS_FILE_SUFFIX
+        val cmdclickSystemAppDirNameJs = "${UsePath.cmdclickSystemAppDirName}${jsSuffix}"
+        val recentAppDirName = filterSuffixJsFiles(
+            cmdclickAppDirAdminPath,
+            "on"
+        ).filter { it != cmdclickSystemAppDirNameJs }.firstOrNull()?.removeSuffix(
+            jsSuffix
+        ) ?: UsePath.cmdclickDefaultAppDirName
+        return File(
+            UsePath.cmdclickAppDirPath,
+            recentAppDirName,
+        ).absolutePath
+    }
+
     fun filterSuffixShellOrJsFiles(
         dirPath: String,
         reverse: String = String()

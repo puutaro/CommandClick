@@ -170,10 +170,15 @@ object JsPathHandler {
                     fragment.activity
                 )
             JsPathMacroForSettingButton.INSTALL_FANNEL ->
-                installFannelHandler(
+                SystemFannelLauncher.launch(
                     fragment,
-                    currentAppDirPath,
+                    UsePath.cmdclickSystemAppDirPath,
+                    UsePath.fannelRepoFannelName
                 )
+//                installFannelHandler(
+//                    fragment,
+//                    currentAppDirPath,
+//                )
             JsPathMacroForSettingButton.EDIT_STARTUP ->
                 scriptFileEditForCmdIndex(
                     fragment,

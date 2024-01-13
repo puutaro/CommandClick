@@ -4,11 +4,9 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.Map.ConfigMapTool
-import com.puutaro.commandclick.util.SharePreffrenceMethod
 import java.io.File
 
 object QrDialogConfig {
@@ -106,6 +104,7 @@ object QrDialogConfig {
 
     class QrLogoHandlerArgsMaker(
         val fragment: Fragment,
+        val recentAppDirPath: String,
         val readSharePreffernceMap: Map<String, String>,
         val qrLogoConfigMap: Map<String, String>,
         val parentDirPath: String,
@@ -161,7 +160,6 @@ object QrDialogConfig {
     private fun setQrLogoForFannelRepo(
         qrLogoHandlerArgsMaker: QrLogoHandlerArgsMaker,
     ){
-
         val qrPngNameRelativePath = UsePath.qrPngRelativePath
         val fannelName = qrLogoHandlerArgsMaker.fileName
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
@@ -175,10 +173,7 @@ object QrDialogConfig {
             qrLogoHandlerArgsMaker.fannelContentsQrLogoView?.load(qrPngPathObjInInstallIndex.absolutePath)
             return
         }
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
-            qrLogoHandlerArgsMaker.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
+        val currentAppDirPath = qrLogoHandlerArgsMaker.recentAppDirPath
         val qrPngPathObjInCurrentAppDir =
             File(
                 "${currentAppDirPath}/$fannelDirName/${qrPngNameRelativePath}"

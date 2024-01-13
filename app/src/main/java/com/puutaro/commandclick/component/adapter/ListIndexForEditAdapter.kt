@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
@@ -149,6 +150,9 @@ class ListIndexForEditAdapter(
                     else -> holder.fileDescTextView.text = descCon
                 }
             }
+            val recentAppDirPath = withContext(Dispatchers.IO){
+                FileSystems.getRecentAppDirPath()
+            }
 
             withContext(Dispatchers.Main) {
                 QrDialogConfig.setOneSideLength(
@@ -157,6 +161,7 @@ class ListIndexForEditAdapter(
                 )
                 val qrLogoHandlerArgsMaker = QrDialogConfig.QrLogoHandlerArgsMaker(
                     editFragment,
+                    recentAppDirPath,
                     readSharePreffernceMap,
                     qrLogoConfigMap,
                     filterDir,

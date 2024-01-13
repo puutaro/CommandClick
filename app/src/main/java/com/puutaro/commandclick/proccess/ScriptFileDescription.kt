@@ -171,7 +171,7 @@ object ScriptFileDescription {
             "#"
         } else "//"
         val suffixBlank = "  "
-        return labelingSecConList.filter {
+        return (listOf("\n") + labelingSecConList).filter {
             (
                     !it.startsWith(labelingSectionStart)
                             && !it.endsWith(labelingSectionStart)
