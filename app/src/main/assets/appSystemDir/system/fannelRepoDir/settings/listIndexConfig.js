@@ -1,4 +1,2 @@
 
-desc=
-    fannelDesc=,
 installFannel=,

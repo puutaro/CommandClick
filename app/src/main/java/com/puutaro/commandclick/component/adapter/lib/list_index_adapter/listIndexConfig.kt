@@ -3,14 +3,10 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.FannelListVariable
-import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.Map.CmdClickMap
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.UrlFileSystems
 import java.io.File
 
 object ListIndexEditConfig {
@@ -39,7 +35,6 @@ object ListIndexEditConfig {
         val key: String,
     ) {
         LENGTH("length"),
-        FANNEL_DESC("fannelDesc"),
         SHELL_PATH("shellPath"),
     }
 
@@ -185,20 +180,6 @@ object ListIndexEditConfig {
             }
             return fileCon.take(maxTakeLength)
         }
-        val parentDirPath = makeFileDescArgsMaker.parentDirPath
-        val fileName =
-            makeFileDescArgsMaker.fileNameOrInstallFannelLine
-                .split("\n")
-                .firstOrNull() ?: String()
-        descConfigMap.containsKey(ListIndexDescKey.FANNEL_DESC.key).let {
-            if (
-                !it
-            ) return@let defaultTakeFileCon
-            return getFannelDescFirstLine(
-                parentDirPath,
-                fileName
-            )
-        }
         val busyboxExecutor = makeFileDescArgsMaker.busyboxExecutor
         return descConfigMap.get(ListIndexDescKey.SHELL_PATH.key).let {
             if (
@@ -222,70 +203,5 @@ object ListIndexEditConfig {
                 cmdClickMonitorFileName_2
             )
         }
-    }
-
-    private fun getFannelDescFirstLine(
-        parentDirPath: String,
-        fannelName: String
-    ): String {
-        val descConSrc = ScriptFileDescription.makeDescriptionContents(
-            ReadText(
-                parentDirPath,
-                fannelName
-            ).textToList(),
-            parentDirPath,
-            fannelName
-        )
-        val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)
-        val descCon = when (readmeUrl.isNullOrEmpty()) {
-            true
-            -> descConSrc
-
-            else
-            -> CurlManager.get(
-                makeReadmeRawUrl(readmeUrl),
-                String(),
-                String(),
-                2000
-            ).let {
-                val isConnOk = CurlManager.isConnOk(it)
-                if (!isConnOk) return@let String()
-                String(it)
-            }
-        }
-        val firstDescriptionLineRange = 50
-        val descriptionFirstLineLimit = FannelListVariable.descriptionFirstLineLimit
-        val descFirstLineSource = descCon.split('\n').take(firstDescriptionLineRange).filter {
-            val trimLine = it.trim()
-            val isLetter =
-                trimLine.firstOrNull()?.isLetter()
-                    ?: false
-            isLetter && trimLine.isNotEmpty()
-        }.firstOrNull()
-        return if (
-            !descFirstLineSource.isNullOrEmpty()
-            && descFirstLineSource.length > descriptionFirstLineLimit
-        ) descFirstLineSource.substring(0, descriptionFirstLineLimit)
-        else descFirstLineSource ?: String()
-    }
-
-    private fun makeReadmeRawUrl(
-        readmeUrl: String,
-    ): String {
-        val gitComPrefix = UrlFileSystems.gitComPrefix
-        val gitUserContentPrefix = UrlFileSystems.gitUserContentPrefix
-        val readmeSuffix = UrlFileSystems.readmeSuffix
-        val gitSuffix = ".git"
-        return listOf(
-            readmeUrl
-                .replace(Regex("${gitSuffix}#.*$"), "")
-                .replace(Regex("#.*$"), "")
-                .removeSuffix(gitSuffix)
-                .replace(
-                    gitComPrefix,
-                    gitUserContentPrefix
-                ),
-            readmeSuffix
-        ).joinToString("/")
     }
 }

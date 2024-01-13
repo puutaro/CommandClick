@@ -12,7 +12,6 @@ import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.github.syari.kgit.KGit
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeGitClone
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -225,7 +224,7 @@ class GitCloneService: Service() {
             else descFirstLineSource
             return@map if(descFirstLine.isNullOrEmpty()) it
             else {
-                "$it\n\t\t- $descFirstLine"
+                "$it\n\t\t$descFirstLine"
             }
         }
     }
@@ -320,7 +319,11 @@ class GitCloneService: Service() {
                         )
                     notificationBuilder.setAutoCancel(true)
                     notificationBuilder.setContentText(WebUrlVariables.commandClickRepositoryUrl)
-                    notificationBuilder.setProgress(100, displayPercentComplete, false)
+                    notificationBuilder.setProgress(
+                        100,
+                        displayPercentComplete,
+                        false
+                    )
                     val notification = notificationBuilder.build()
                     notificationManager.notify(channelNum, notification)
                 }
