@@ -19,7 +19,9 @@ class SettingButtonHandler(
             fragment: Fragment,
             readSharePreffernceMap: Map<String, String>,
             settingButtonView: ImageButton?,
+            isSet: Boolean,
         ) {
+            if(!isSet) return
             val settingButtonArgsMaker = SettingButtonArgsMaker(
                 fragment,
                 readSharePreffernceMap,

@@ -239,11 +239,11 @@ class CommandIndexFragment: Fragment() {
         )
         toolBarSettingButtonControl.toolbarSettingButtonOnClick()
         toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()
-
         SettingButtonHandler.setIcon(
             this,
             readSharePreffernceMap,
-            binding.cmdindexSettingButton
+            binding.cmdindexSettingButton,
+            true,
         )
 
         val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(

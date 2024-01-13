@@ -90,15 +90,36 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap,
     )
 
+    private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+        readSharePreffernceMap,
+        SharePrefferenceSetting.on_shortcut
+    ) == FragmentTagManager.Suffix.ON.name
+
+    private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
+        currentScriptContentsList,
+        editFragment.languageType
+    )
+    private val enableEditExecute =
+        (
+                editExecuteValue ==
+                        SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+                        && onShortcut
+                )
+
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
+        buttonWeight: Float,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
         editExecuteValue :String = SettingVariableSelects.EditExecuteSelects.NO.name,
         setDrawble: Int? = null
     ) {
-        insertImageButtonParam.weight = 1F
+        if(
+            !howSetButton(toolbarButtonBariantForEdit)
+        ) return
+        insertImageButtonParam.weight = buttonWeight
+//              1F
         val makeButtonView = ImageButton(context)
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
@@ -121,10 +142,12 @@ class ToolbarButtonProducerForEdit(
             makeButtonView.tag ==
             ToolbarButtonBariantForEdit.SETTING.str
         ) {
+            val isCmdEditInEditExecute = enableCmdEdit && enableEditExecute
             SettingButtonHandler.setIcon(
                 editFragment,
                 readSharePreffernceMap,
                 makeButtonView,
+                isCmdEditInEditExecute
             )
         }
 
@@ -205,6 +228,30 @@ class ToolbarButtonProducerForEdit(
         }
 
         binding.editToolbarLinearLayout.addView(makeButtonView)
+    }
+
+    private fun howSetButton(
+        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit
+    ): Boolean {
+        if(!enableCmdEdit || !enableEditExecute){
+            return true
+        }
+        val onMark = SettingVariableSelects.disableEditButtonSelects.ON.name
+        return when(toolbarButtonBariantForEdit){
+            ToolbarButtonBariantForEdit.CANCEL,
+            ToolbarButtonBariantForEdit.HISTORY -> {
+                true
+            }
+            ToolbarButtonBariantForEdit.OK -> {
+                editFragment.disablePlayButton != onMark
+            }
+            ToolbarButtonBariantForEdit.EDIT -> {
+                editFragment.disableEditButton != onMark
+            }
+            ToolbarButtonBariantForEdit.SETTING -> {
+                editFragment.disableSettingButton != onMark
+            }
+        }
     }
 
     private fun onLongClickHandler(

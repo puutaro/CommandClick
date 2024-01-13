@@ -131,12 +131,15 @@ class EditModeHandler(
             editExecuteValue,
             readSharePreffernceMap,
         )
+        val buttonWeight = culcButtonWeight()
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
+            buttonWeight
         )
 
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
+            buttonWeight,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentScriptContentsList,
             editExecuteValue=editExecuteValue,
@@ -156,12 +159,14 @@ class EditModeHandler(
         val onEditButton = !onPassCmdVariableEdit
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
+            buttonWeight,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentScriptContentsList,
             howActive=onEditButton && !onDisableEditButton
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
+            buttonWeight,
             howActive=enableEditExecute && !onDisableSettingButton
         )
     }
@@ -208,12 +213,15 @@ class EditModeHandler(
             }
             return
         }
+        val settingWeight = 0.25F
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
+            1f,
         )
 
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
+            settingWeight,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             currentScriptContentsList,
@@ -232,17 +240,20 @@ class EditModeHandler(
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
+            settingWeight,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             howActive=false
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
+            settingWeight,
             howActive=enableEditExecute && enableCmdEdit && !onPassCmdVariableEdit,
         )
     }
 
     private fun buttonCreate(
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
+        buttonWeight: Float,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
@@ -252,6 +263,7 @@ class EditModeHandler(
     ){
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
+            buttonWeight,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             shellContentsList,
@@ -278,4 +290,20 @@ class EditModeHandler(
         }
     }
 
+    private fun culcButtonWeight(): Float {
+        val ordinalWeight = 0.25F
+        if(!enableCmdEdit || !enableEditExecute){
+            return ordinalWeight
+        }
+        val onMark = SettingVariableSelects.disableEditButtonSelects.ON.name
+        val historyDisableValue = "OFF"
+        return listOf(
+            historyDisableValue,
+            editFragment.disableEditButton,
+            editFragment.disablePlayButton,
+            editFragment.disableSettingButton,
+        ).filter {
+            it != onMark
+        }.size.let { 1.0F / it }
+    }
 }
