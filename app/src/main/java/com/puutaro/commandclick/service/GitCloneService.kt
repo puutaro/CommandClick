@@ -135,10 +135,6 @@ class GitCloneService: Service() {
             withContext(Dispatchers.IO){
                 BroadcastSender.normalSend(
                     context,
-                    BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action
-                )
-                BroadcastSender.normalSend(
-                    context,
                     BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
                 )
             }

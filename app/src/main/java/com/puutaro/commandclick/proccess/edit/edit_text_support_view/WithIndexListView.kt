@@ -34,7 +34,6 @@ import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelList
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
@@ -156,7 +155,11 @@ class WithIndexListView(
         private var fannelDirPath = String()
         private var fannelMenuDirPath = String()
 
-        fun makeFileListHandler(isInstallFannel: Boolean): MutableList<String> {
+        val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
+        val blankListMark = "Let's press sync button at right bellow"
+
+
+            fun makeFileListHandler(isInstallFannel: Boolean): MutableList<String> {
             return when(isInstallFannel) {
                 true -> makeFannelListForListView().toMutableList()
                 else -> makeFileList()
@@ -193,7 +196,7 @@ class WithIndexListView(
                     .isNullOrEmpty()
             ) {
                 fannelListSource
-            } else mutableListOf(InstallFannelList.blankListMark)
+            } else mutableListOf(blankListMark)
         }
 
         fun listIndexListUpdateFileList(
@@ -567,7 +570,7 @@ class WithIndexListView(
     ){
         if(
             selectedItem == throughMark
-            || selectedItem.trim() == InstallFannelList.blankListMark
+            || selectedItem.trim() == blankListMark
         ) {
             noFileToast()
             return

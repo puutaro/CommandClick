@@ -26,8 +26,6 @@ import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFannelHandler
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.InstallFromFannelRepo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
@@ -175,10 +173,6 @@ object JsPathHandler {
                     UsePath.cmdclickSystemAppDirPath,
                     UsePath.fannelRepoFannelName
                 )
-//                installFannelHandler(
-//                    fragment,
-//                    currentAppDirPath,
-//                )
             JsPathMacroForSettingButton.EDIT_STARTUP ->
                 scriptFileEditForCmdIndex(
                     fragment,
@@ -657,23 +651,6 @@ private fun configEdit(
                 cmdEditFragmentTag
             )
         }
-    }
-}
-
-private fun installFannelHandler(
-    fragment: Fragment,
-    currentAppDirPath: String,
-){
-    when(fragment){
-        is CommandIndexFragment
-        -> InstallFannelHandler.handle(
-            fragment,
-            InstallFromFannelRepo(
-                fragment,
-                currentAppDirPath,
-            )
-        )
-        is EditFragment -> {}
     }
 }
 

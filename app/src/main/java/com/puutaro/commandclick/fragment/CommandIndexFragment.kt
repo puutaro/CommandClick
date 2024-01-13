@@ -291,7 +291,6 @@ class CommandIndexFragment: Fragment() {
             this,
             broadcastReceiverForCmdIndex,
             listOf(
-                BroadCastIntentSchemeForCmdIndex.UPDATE_FANNEL_LIST.action,
                 BroadCastIntentSchemeForCmdIndex.UPDATE_INDEX_FANNEL_LIST.action,
             )
         )
