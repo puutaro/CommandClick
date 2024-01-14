@@ -19,7 +19,7 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -29,7 +29,9 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
@@ -40,6 +42,9 @@ class   TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler : Handler = Handler(Looper.getMainLooper())
+    var readSharedPreferences = mapOf<String, String>()
+    var currentAppDirPath = String()
+    var currentFannelName = String()
     var displayUpdateCoroutineJob: Job? = null
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null
@@ -60,8 +65,6 @@ class   TerminalFragment: Fragment() {
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
-    var currentAppDirPath = UsePath.cmdclickDefaultAppDirPath
-    var currentScriptName = String()
     var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     var ignoreHistoryPathList: List<String>? = null
@@ -105,6 +108,15 @@ class   TerminalFragment: Fragment() {
         if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
+        readSharedPreferences = EditFragmentArgs.get(this)
+        currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_app_dir
+        )
+        currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_fannel_name
+        )
 
         ExecDownLoadManager.set(
             this,
@@ -136,6 +148,8 @@ class   TerminalFragment: Fragment() {
         WebViewSettings.set(this)
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
+        val fragArgs = arguments
+        val fragTag = fragArgs?.getString("tag")
         return binding.root
     }
 

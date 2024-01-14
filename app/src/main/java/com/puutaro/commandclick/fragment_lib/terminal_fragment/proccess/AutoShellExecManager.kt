@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
@@ -21,13 +19,7 @@ object AutoShellExecManager {
         if(
             terminalFrgment.onUrlLaunchIntent
         ) return
-        val activity = terminalFrgment.activity
-            ?: return
-        val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-            startUpPref,
-            SharePrefferenceSetting.current_app_dir
-        )
+        val currentAppDirPath = terminalFrgment.currentAppDirPath
 
         val jsContentsList = ReadText(
             currentAppDirPath,

@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecBackstackHandle {
     fun execBackstackHandle(

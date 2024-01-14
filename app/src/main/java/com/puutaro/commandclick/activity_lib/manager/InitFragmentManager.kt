@@ -15,10 +15,11 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 
 class InitFragmentManager(
@@ -50,15 +51,15 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        val startUpAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val startUpAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
-        val startUpScriptFileName = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val startUpScriptFileName = SharePreferenceMethod.getStringFromSharePreference(
             startUpPref,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
-        val onShortcut = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val onShortcut = SharePreferenceMethod.getStringFromSharePreference(
             startUpPref,
             SharePrefferenceSetting.on_shortcut
         )
@@ -84,11 +85,17 @@ class InitFragmentManager(
             )
             return
         }
+        val onShortcutMark = FragmentTagManager.Suffix.ON.str
         val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             startUpAppDirPath,
             startUpScriptFileName,
-            FragmentTagManager.Suffix.ON.str
+            onShortcutMark
+        )
+        val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
+            startUpAppDirPath,
+            startUpScriptFileName,
+            onShortcut,
         )
         val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,
@@ -99,6 +106,7 @@ class InitFragmentManager(
             activity.supportFragmentManager,
             cmdVariableEditFragmentTag,
             activity.getString(R.string.edit_execute_terminal_fragment),
+            EditFragmentArgs(readSharePreferenceMapForNext),
             true
         )
     }
@@ -109,11 +117,11 @@ class InitFragmentManager(
         setDataString(intent)?.let {
             execIntent.data = it
         }
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             startUpPref,
             mapOf(
-                SharePrefferenceSetting.current_script_file_name.name
-                        to SharePrefferenceSetting.current_script_file_name.defalutStr,
+                SharePrefferenceSetting.current_fannel_name.name
+                        to SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.name
                         to SharePrefferenceSetting.on_shortcut.defalutStr
             )
@@ -133,13 +141,13 @@ class InitFragmentManager(
         ) return
 
         val currentShellFileName = intent.getStringExtra(
-            SharePrefferenceSetting.current_script_file_name.name
-        ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
-        SharePreffrenceMethod.putSharePreffrence(
+            SharePrefferenceSetting.current_fannel_name.name
+        ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
+        SharePreferenceMethod.putSharePreference(
             startUpPref,
             mapOf(
                 SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
-                SharePrefferenceSetting.current_script_file_name.name to currentShellFileName,
+                SharePrefferenceSetting.current_fannel_name.name to currentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
                         to FragmentTagManager.Suffix.ON.name
             )

@@ -43,6 +43,8 @@ import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -137,6 +139,7 @@ class EditFragment: Fragment() {
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
+        readSharePreffernceMap = EditFragmentArgs.get(this)
         Keyboard.hiddenKeyboardForFragment(
             this
         )
@@ -157,33 +160,33 @@ class EditFragment: Fragment() {
                 .checkIndexList()
         if(!checkOkIndexList) return
 
-        readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
-            this,
-        )
+//        readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
+//            this,
+//        )
 
         val currentAppDirPath =
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             )
         val currentScriptFileName =
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             )
         val shortcutOn =
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.on_shortcut
             )
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             sharePref,
             mapOf(
                 SharePrefferenceSetting.current_app_dir.name
                         to currentAppDirPath,
-                SharePrefferenceSetting.current_script_file_name.name
+                SharePrefferenceSetting.current_fannel_name.name
                         to currentScriptFileName,
-                        SharePrefferenceSetting.on_shortcut.name
+                SharePrefferenceSetting.on_shortcut.name
                         to shortcutOn
             )
         )
@@ -317,13 +320,13 @@ class EditFragment: Fragment() {
             )
         )
         val shellScriptContentsList = ReadText(
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             )
         ).textToList()
         TerminalShowByTerminalDoWhenReuse.show(
@@ -370,7 +373,8 @@ class EditFragment: Fragment() {
 
     interface OnToolbarMenuCategoriesListenerForEdit {
         fun onToolbarMenuCategoriesForEdit(
-            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
+            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+            editFragmentArgs: EditFragmentArgs,
         )
     }
 

@@ -226,7 +226,7 @@ object CommandClickScriptVariable {
     val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
     val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
-    val PASS_CMDVARIABLE_EDIT_ON_VALUE =  "ON"
+    val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
     val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
@@ -914,6 +914,7 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
+        |$TERMINAL_DO="${terminalOff}"
         |$EDIT_EXECUTE="$editExecuteAlways"
         |$CMDCLICK_RUN_SHELL="$CMDCLICK_RUN_SHELL_DEFAULT_VALUE"
         |$CMDCLICK_SHIBAN="$CMDCLICK_SHIBAN_DEFAULT_VALUE"
@@ -929,9 +930,14 @@ object CommandClickScriptVariable {
         |$TERMINAL_COLOR="$TERMINAL_COLOR_DEFAULT_VALUE"
         |$TERMINAL_FONT_COLOR="$TERMINAL_FONT_COLOR_DEFAULT_VALUE"
         |$PASS_CMDVARIABLE_EDIT="$PASS_CMDVARIABLE_EDIT_ON_VALUE"
+        |$HIDE_SETTING_VARIABLES="$TERMINAL_DO"
         |$HIDE_SETTING_VARIABLES="$EDIT_EXECUTE"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
+        |
+        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_START)}
+        |dummy=
+        |${languageTypeHolderMap?.get(HolderTypeName.CMD_SEC_END)}
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SCRIPT_START)}

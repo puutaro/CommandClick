@@ -24,6 +24,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -216,13 +217,13 @@ object ButtonViewProducer {
         val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         scriptFileSaver.save(
             currentShellContentsList,
@@ -470,13 +471,13 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
         val readSharePreffernceMap = editFragment.readSharePreffernceMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val fannelDirName = CcPathTool.makeFannelDirName(
             currentScriptName
@@ -628,9 +629,9 @@ object ButtonViewProducer {
             SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
         ).isNullOrEmpty()
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val listCon = FileSystems.sortedFiles(
             addSourceDirPath,

@@ -8,6 +8,9 @@ object TerminalOnHandlerForEdit {
         terminalFragment: TerminalFragment
     ){
         if(
+            !terminalFragment.isVisible
+        ) return
+        if(
             terminalFragment.terminalOn
             != SettingVariableSelects.TerminalDoSelects.OFF.name
         ) return

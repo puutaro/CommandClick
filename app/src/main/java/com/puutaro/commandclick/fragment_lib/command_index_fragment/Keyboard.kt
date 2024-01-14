@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarWidgetWeightForLinearLayout
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 
 object KeyboardForCmdIndex {
@@ -53,7 +54,8 @@ object KeyboardForCmdIndex {
             cmdSearchEditText.layoutParams = linearLayoutParamForSearchTextWideWeight
             val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(
-                ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN
+                ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN,
+                EditFragmentArgs(mapOf())
             )
             return
         }
@@ -69,7 +71,8 @@ object KeyboardForCmdIndex {
             cmdIndexFragmentWeight == ReadLines.LONGTH
         val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
-            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE
+            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE,
+            EditFragmentArgs(mapOf())
         )
     }
 }

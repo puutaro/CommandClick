@@ -8,8 +8,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.net.URLDecoder
 
 
@@ -26,7 +26,7 @@ object SearchViewAndAutoCompUpdater {
         val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             terminalFragment.currentAppDirPath,
-            terminalFragment.currentScriptName,
+            terminalFragment.currentFannelName,
             FragmentTagManager.Suffix.ON.str
         )
         val commandIndexFragment =

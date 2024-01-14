@@ -5,8 +5,8 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 class ScriptFileSaver(
     private val binding: EditFragmentBinding,
@@ -15,9 +15,9 @@ class ScriptFileSaver(
     private val onButton: Boolean = false,
 ) {
     private val context = editFragment.context
-    private val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
+        SharePrefferenceSetting.current_fannel_name
     )
     fun save(
         shellContentsList: List<String>,

@@ -9,8 +9,9 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecCancel
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOkForEdit
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
 object ExecToolBarButtonClickForEdit {
@@ -43,21 +44,29 @@ object ExecToolBarButtonClickForEdit {
                     callOwnerFragmentTag ?: String()
                 ).getOrNull(FragmentTagManager.modeIndex)
                     ?: String()
+                val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+                    sharePref,
+                    SharePrefferenceSetting.current_app_dir
+                )
+                val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+                    sharePref,
+                    SharePrefferenceSetting.current_fannel_name
+                )
                 val settingEditFragmentTag = FragmentTagManager.makeTag(
                     FragmentTagManager.Prefix.settingEditPrefix.str,
-                    SharePreffrenceMethod.getStringFromSharePreffrence(
-                        sharePref,
-                        SharePrefferenceSetting.current_app_dir
-                    ),
-                    SharePreffrenceMethod.getStringFromSharePreffrence(
-                        sharePref,
-                        SharePrefferenceSetting.current_script_file_name
-                    ),
+                    currentAppDirPath,
+                    currentFannelName,
                     onShortcut
+                )
+                val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
+                    currentAppDirPath,
+                    currentFannelName,
+                    onShortcut,
                 )
                 ExecCommandEdit.execCommandEdit(
                     activity,
-                    settingEditFragmentTag
+                    settingEditFragmentTag,
+                    EditFragmentArgs(readSharePreferenceMapForNext),
                 )
             }
             ToolbarButtonBariantForEdit.CANCEL -> {
@@ -68,14 +77,14 @@ object ExecToolBarButtonClickForEdit {
                     activity,
                     "now inplementing",
                     Toast.LENGTH_SHORT
-                ).show();
+                ).show()
             }
         }
     }
 }
 
 
-internal fun okHandler(
+private fun okHandler(
     activity: MainActivity,
     callOwnerFragmentTag : String?,
     readSharePreffernceMap: Map<String, String>,
@@ -96,7 +105,7 @@ internal fun okHandler(
     )
 }
 
-internal fun cancelHandler(
+private fun cancelHandler(
     activity: MainActivity,
     enableCmdEdit: Boolean
 ){

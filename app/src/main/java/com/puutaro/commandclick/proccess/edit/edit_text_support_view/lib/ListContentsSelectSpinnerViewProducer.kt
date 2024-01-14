@@ -12,6 +12,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Sel
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object ListContentsSelectSpinnerViewProducer {
@@ -26,13 +27,13 @@ object ListContentsSelectSpinnerViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val scriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -214,13 +215,13 @@ object ListContentsSelectSpinnerViewProducer {
         currentComponentIndex: Int,
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name

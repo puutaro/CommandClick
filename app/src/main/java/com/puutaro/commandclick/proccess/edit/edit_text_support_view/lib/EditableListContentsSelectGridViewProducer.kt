@@ -23,7 +23,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 
@@ -156,13 +156,13 @@ object EditableListContentsSelectGridViewProducer {
         elcbMap: Map<String, String>?,
     ){
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val scriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val scriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val listContentsFilePath = getListPath(
             elcbMap,

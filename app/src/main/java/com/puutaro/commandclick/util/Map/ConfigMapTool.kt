@@ -3,9 +3,8 @@ package com.puutaro.commandclick.util.Map
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object ConfigMapTool {
@@ -16,13 +15,13 @@ object ConfigMapTool {
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String>? {
         val propertySeparator = ","
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val settingMenuSettingFilePath = ScriptPreWordReplacer.replace(
             configPath,

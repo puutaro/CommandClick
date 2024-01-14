@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_l
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
 
 class DecideEditTag(
     private val shellContentsList: List<String>,

@@ -2,13 +2,15 @@ package com.puutaro.commandclick.activity_lib.event.lib.cmdIndex
 
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagManager
 
 
 object ExecCommandEdit {
     fun execCommandEdit(
         activity: MainActivity,
         editFragmentTag: String,
+        editFragmentArgs: EditFragmentArgs,
         onOpenTerminal: Boolean = false,
         terminalFragmentTagSource: String? = null
     ){
@@ -26,6 +28,7 @@ object ExecCommandEdit {
             activity.supportFragmentManager,
             editFragmentTag,
             terminalFragmentTag,
+            editFragmentArgs,
         )
     }
 }

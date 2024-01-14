@@ -9,7 +9,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button.CmdClickHistoryButtonEvent
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 
@@ -105,7 +105,7 @@ private fun urlHistoryButtonHandler(
         return
     }
 
-    val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )

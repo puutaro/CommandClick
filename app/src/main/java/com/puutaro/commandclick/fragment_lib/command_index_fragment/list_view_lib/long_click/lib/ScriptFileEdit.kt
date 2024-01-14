@@ -8,7 +8,9 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Lon
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ScriptFileEdit {
     fun edit(
@@ -17,10 +19,10 @@ object ScriptFileEdit {
         shellScriptName: String,
     ){
         val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             sharedPref,
             mapOf(
-                SharePrefferenceSetting.current_script_file_name.name
+                SharePrefferenceSetting.current_fannel_name.name
                         to shellScriptName,
                 SharePrefferenceSetting.on_shortcut.name
                         to SharePrefferenceSetting.on_shortcut.defalutStr,
@@ -49,10 +51,20 @@ object ScriptFileEdit {
             currentAppDirPath,
             shellScriptName
         ).decideForEdit()
+        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+            currentAppDirPath,
+            shellScriptName,
+            editFragmentTag?.let {
+                FragmentTagManager.makeListFromTag(editFragmentTag).get(
+                    FragmentTagManager.modeIndex
+                )
+            } ?: String()
+        )
         val listener = cmdIndexFragment.context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
+            EditFragmentArgs(readSharePreferenceMap),
             editFragmentTag
         )
     }

@@ -1,17 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.content.Context
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.AutoShellExecManager
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,15 +40,8 @@ object StartupOrEditExecuteOnceShell {
             terminalFragment.activity
         }
 
-        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-            sharePref,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val fannelName = SharePreffrenceMethod.getStringFromSharePreffrence(
-            sharePref,
-            SharePrefferenceSetting.current_script_file_name
-        )
+        val currentAppDirPath = terminalFragment.currentAppDirPath
+        val fannelName = terminalFragment.currentFannelName
 
 
         val editExecuteOnceCurrentShellFileName =

@@ -6,14 +6,14 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object UpdateLastModifiedForAppHistory {
     fun update (
         editExecuteValue: String,
         readSharePreffernceMap: Map<String, String>
     ){
-        val onShortCut = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val onShortCut = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.on_shortcut
         )
@@ -25,13 +25,13 @@ object UpdateLastModifiedForAppHistory {
             editExecuteValue !=
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val fannelName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val fannelName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         if(
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
@@ -41,9 +41,9 @@ object UpdateLastModifiedForAppHistory {
             UsePath.cmdclickAppHistoryDirAdminPath,
             AppHistoryManager.makeAppHistoryFileNameForInit(
                 currentAppDirPath,
-                SharePreffrenceMethod.getReadSharePreffernceMap(
+                SharePreferenceMethod.getReadSharePreffernceMap(
                     readSharePreffernceMap,
-                    SharePrefferenceSetting.current_script_file_name
+                    SharePrefferenceSetting.current_fannel_name
                 )
             )
         )

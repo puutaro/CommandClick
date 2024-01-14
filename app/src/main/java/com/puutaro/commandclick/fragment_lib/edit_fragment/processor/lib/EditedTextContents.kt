@@ -15,7 +15,7 @@ import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVar
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 
@@ -29,8 +29,8 @@ class EditedTextContents(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
     private val currentScriptFileName = readSharePreffernceMap.get(
-        SharePrefferenceSetting.current_script_file_name.name
-    ) ?: SharePrefferenceSetting.current_script_file_name.defalutStr
+        SharePrefferenceSetting.current_fannel_name.name
+    ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
     private val scriptContentsLister = ScriptContentsLister(
         binding.editLinearLayout
     )
@@ -102,10 +102,10 @@ class EditedTextContents(
         }
         val sharePref =
             editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             sharePref,
             mapOf(
-                SharePrefferenceSetting.current_script_file_name.name
+                SharePrefferenceSetting.current_fannel_name.name
                         to updateScriptFileName
             )
         )

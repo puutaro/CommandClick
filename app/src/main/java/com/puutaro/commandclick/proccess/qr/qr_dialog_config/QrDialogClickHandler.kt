@@ -9,7 +9,7 @@ import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.dialog.DialogObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -5,8 +5,8 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ExecOkForEdit{
     fun execOkForEdit(
@@ -17,7 +17,7 @@ object ExecOkForEdit{
 
         val supportFragmentManager = activity.supportFragmentManager
         if(
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             ) == UsePath.cmdclickAppDirAdminPath) {

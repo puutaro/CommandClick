@@ -29,6 +29,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -138,7 +140,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
+        readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
 
@@ -305,6 +307,7 @@ class CommandIndexFragment: Fragment() {
     interface OnLongClickMenuItemsForCmdIndexListener {
         fun onLongClickMenuItemsforCmdIndex(
             longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+            editFragmentArgs: EditFragmentArgs,
             editFragmentTag: String? = String(),
             onOpenTerminal: Boolean = false,
             terminalFragmentTag: String? = null
@@ -314,7 +317,8 @@ class CommandIndexFragment: Fragment() {
 
     interface OnToolbarMenuCategoriesListener {
         fun onToolbarMenuCategories(
-            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
+            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+            editFragmentArgs: EditFragmentArgs,
         )
     }
 

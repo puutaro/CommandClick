@@ -15,7 +15,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 
@@ -31,13 +31,13 @@ class EditTextProducerForEdit(
     private val context = editFragment.context
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    private val currentScriptFileName =SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
+        SharePrefferenceSetting.current_fannel_name
     )
 
     private val setReplaceVariableMap =
@@ -221,9 +221,9 @@ class EditTextProducerForEdit(
                editFragment,
                 currentShellContentsList,
                 currentAppDirPath,
-                SharePreffrenceMethod.getReadSharePreffernceMap(
+                SharePreferenceMethod.getReadSharePreffernceMap(
                     readSharePreffernceMap,
-                    SharePrefferenceSetting.current_script_file_name
+                    SharePrefferenceSetting.current_fannel_name
                 )
             )
         }

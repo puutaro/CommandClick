@@ -19,7 +19,9 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ToolbarButtonProducerForEdit(
@@ -47,14 +49,14 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap,
     )
 
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
 
-    private val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
+        SharePrefferenceSetting.current_fannel_name
     )
 
     var languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -90,7 +92,7 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap,
     )
 
-    private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
     ) == FragmentTagManager.Suffix.ON.name

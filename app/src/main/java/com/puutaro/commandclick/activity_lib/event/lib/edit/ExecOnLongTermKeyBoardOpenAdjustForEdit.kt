@@ -6,8 +6,8 @@ import android.widget.LinearLayout
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ExecOnLongTermKeyBoardOpenAdjustForEdit {
     fun adjust(
@@ -17,13 +17,13 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ),
             FragmentTagManager.Suffix.ON.str
         )

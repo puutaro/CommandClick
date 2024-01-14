@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 
 object ExecSetTermSizeForCmdIndexFragment {
@@ -55,7 +56,8 @@ object ExecSetTermSizeForCmdIndexFragment {
         val listener =
             context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
-            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX
+            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
+            EditFragmentArgs(mapOf())
         )
     }
 }

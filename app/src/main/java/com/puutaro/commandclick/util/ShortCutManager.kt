@@ -9,12 +9,12 @@ import android.graphics.drawable.Icon
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
 class ShortCutManager(
@@ -58,16 +58,16 @@ class ShortCutManager(
     private fun createExecIntent(
     ): Intent {
         val startUpPref =  activity.getPreferences(Context.MODE_PRIVATE)
-        val readSharePreffernceMap = SharePreffrenceMethod.makeReadSharePreffernceMap(
+        val readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
-        val curentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val curentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentShellFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
 
         val execIntent = Intent(activity, activity::class.java)
@@ -80,7 +80,7 @@ class ShortCutManager(
             curentAppDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_script_file_name.name,
+            SharePrefferenceSetting.current_fannel_name.name,
             currentShellFileName
         )
         return execIntent

@@ -55,7 +55,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -255,13 +255,13 @@ class WithIndexListView(
         binding.editTextScroll.isVisible = false
         val context = editParameters.context
         currentSetVariableMap = editParameters.setVariableMap
-        currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         fannelDirName = CcPathTool.makeFannelDirName(
             currentScriptName
@@ -380,13 +380,13 @@ class WithIndexListView(
     ) {
         searchText.hint = TitleImageAndViewSetter.makeTitle(
             editFragment,
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir,
             ),
-            SharePreffrenceMethod.getReadSharePreffernceMap(
+            SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_script_file_name,
+                SharePrefferenceSetting.current_fannel_name,
             )
         )
         searchText.addTextChangedListener(object : TextWatcher {

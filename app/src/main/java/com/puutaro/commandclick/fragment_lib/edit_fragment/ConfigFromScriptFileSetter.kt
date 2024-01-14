@@ -8,7 +8,8 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ConfigFromScriptFileSetter {
 
@@ -16,17 +17,17 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
     ){
         val readSharePreffernceMap = editFragment.readSharePreffernceMap
-        val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.on_shortcut
         )
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         val currentShellContentsList = ReadText(
             currentAppDirPath,

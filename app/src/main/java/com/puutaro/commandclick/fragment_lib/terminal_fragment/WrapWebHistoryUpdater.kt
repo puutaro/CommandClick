@@ -14,9 +14,9 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.*
 
 
@@ -97,7 +97,7 @@ object WrapWebHistoryUpdater {
         val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             terminalFragment.currentAppDirPath,
-            terminalFragment.currentScriptName,
+            terminalFragment.currentFannelName,
             FragmentTagManager.Suffix.ON.name
         )
         val commandIndexFragment =

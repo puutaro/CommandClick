@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
 
 object MakeReadPreffernceMapForEdit {
     fun make(
@@ -16,7 +16,7 @@ object MakeReadPreffernceMapForEdit {
                     to prefixDirScriptSuffixList.get(
                 FragmentTagManager.parentAppDirPathIndex
             ),
-            SharePrefferenceSetting.current_script_file_name.name
+            SharePrefferenceSetting.current_fannel_name.name
                     to prefixDirScriptSuffixList.get(
                 FragmentTagManager.scriptFileNameIndex
             ),

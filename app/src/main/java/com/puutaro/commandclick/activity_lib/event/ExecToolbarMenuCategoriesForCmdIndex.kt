@@ -15,14 +15,16 @@ import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.ShortCutManager
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 object ExecToolbarMenuCategoriesForCmdIndex {
     fun <T: Fragment> execToolbarMenuCategories(
         activity: MainActivity,
         fragmentTag: String,
+        editFragmentArgs: EditFragmentArgs,
         toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
     ) {
         when(toolbarMenuCategoriesVariantForCmdIndex){
@@ -51,14 +53,17 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 shortCutManager.createShortCut()
             }
             ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
+                if(
+                    editFragmentArgs == null
+                ) return
                 val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
                 val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-                SharePreffrenceMethod.putSharePreffrence(
+                SharePreferenceMethod.putSharePreference(
                     sharedPref,
                     mapOf(
                         SharePrefferenceSetting.current_app_dir.name
                                 to UsePath.cmdclickSystemAppDirPath,
-                        SharePrefferenceSetting.current_script_file_name.name
+                        SharePrefferenceSetting.current_fannel_name.name
                                 to cmdclickConfigFileName,
                         SharePrefferenceSetting.on_shortcut.name
                                 to FragmentTagManager.Suffix.ON.str
@@ -73,7 +78,8 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 WrapFragmentManager.changeFragmentEdit(
                     activity.supportFragmentManager,
                     cmdEditFragmentTag,
-                    String()
+                    String(),
+                    editFragmentArgs,
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {

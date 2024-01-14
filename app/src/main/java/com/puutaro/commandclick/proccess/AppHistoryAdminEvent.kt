@@ -8,7 +8,8 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object AppHistoryAdminEvent {
@@ -55,13 +56,13 @@ object AppHistoryAdminEvent {
         val onEditExecute = updateEditExecuteValue ==
                 SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         if (!onEditExecute) {
-            SharePreffrenceMethod.putSharePreffrence(
+            SharePreferenceMethod.putSharePreference(
                 sharedPref,
                 mapOf(
                     SharePrefferenceSetting.current_app_dir.name to
                             selectedAppDirPath,
-                    SharePrefferenceSetting.current_script_file_name.name to
-                            SharePrefferenceSetting.current_script_file_name.defalutStr,
+                    SharePrefferenceSetting.current_fannel_name.name to
+                            SharePrefferenceSetting.current_fannel_name.defalutStr,
                 )
             )
             return true
@@ -94,12 +95,12 @@ object AppHistoryAdminEvent {
         } else {
             FragmentTagManager.Suffix.ON.name
         }
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             sharedPref,
             mapOf(
                 SharePrefferenceSetting.current_app_dir.name to
                         selectedAppDirPath,
-                SharePrefferenceSetting.current_script_file_name.name to
+                SharePrefferenceSetting.current_fannel_name.name to
                         selectedAppShellFileName,
                 SharePrefferenceSetting.on_shortcut.name to
                         onShortCut,

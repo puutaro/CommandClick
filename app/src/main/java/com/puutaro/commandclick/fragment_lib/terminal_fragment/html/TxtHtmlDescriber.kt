@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object TxtHtmlDescriber {
@@ -29,9 +29,9 @@ object TxtHtmlDescriber {
             parent,
             fileName
         ).readText()
-        val fannelRawName = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val fannelRawName = SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ).replace(
             Regex("\\.[a-zA-Z0-9]*$"),
             ""

@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.setting_button.libs
 
-import android.content.Context
 import android.content.Intent
 import android.util.Size
 import android.view.Gravity
@@ -26,10 +25,8 @@ import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
@@ -39,7 +36,6 @@ import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
@@ -47,13 +43,12 @@ import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.proccess.setting_button.SystemFannelLauncher
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.Map.CmdClickMap
-import com.puutaro.commandclick.util.FragmentTagManager
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object JsPathHandler {
@@ -115,7 +110,7 @@ object JsPathHandler {
         val readSharePreffernceMap = settingButtonArgsMaker.readSharePreffernceMap
         val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
@@ -146,13 +141,15 @@ object JsPathHandler {
             JsPathMacroForSettingButton.SHORTCUT -> {
                 val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
-                    ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT
+                    ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
+                    EditFragmentArgs(readSharePreffernceMap)
                 )
             }
             JsPathMacroForSettingButton.TERMUX_SETUP -> {
                 val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
-                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP
+                    ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
+                    EditFragmentArgs(readSharePreffernceMap)
                 )
             }
             JsPathMacroForSettingButton.CONFIG ->
@@ -465,13 +462,15 @@ private object PopupSettingMenu{
                 is CommandIndexFragment -> {
                     val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
-                        toolbarMenuCategoriesVariantForCmdIndex
+                        toolbarMenuCategoriesVariantForCmdIndex,
+                        EditFragmentArgs(fragment.readSharePreffernceMap)
                     )
                 }
                 is EditFragment -> {
                     val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                     listener?.onToolbarMenuCategoriesForEdit(
-                        toolbarMenuCategoriesVariantForCmdIndex
+                        toolbarMenuCategoriesVariantForCmdIndex,
+                        EditFragmentArgs(fragment.readSharePreffernceMap),
                     )
                 }
             }
@@ -531,7 +530,10 @@ private fun monitorSizeChangeForEdit(
     val listener =
         context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
     listener?.onToolbarMenuCategoriesForEdit(
-        ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX
+        ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
+        EditFragmentArgs(
+            editFragment.readSharePreffernceMap
+        )
     )
 }
 
@@ -596,62 +598,11 @@ private fun configEdit(
         configDirPath,
         configShellName
     )
-    val shellContentsList = ReadText(
-        configDirPath,
-        configShellName
-    ).textToList()
-    val validateErrMessage = ValidateShell.correct(
+    SystemFannelLauncher.launch(
         fragment,
-        shellContentsList,
-        configShellName
-    )
-    if(validateErrMessage.isNotEmpty()){
-        val shellScriptPath = "${configDirPath}/${configShellName}"
-        VariationErrDialog.show(
-            fragment,
-            shellScriptPath,
-            validateErrMessage
-        )
-        return
-    }
-    val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-    val sharedPref = fragment.activity?.getPreferences(Context.MODE_PRIVATE)
-    SharePreffrenceMethod.putSharePreffrence(
-        sharedPref,
-        mapOf(
-            SharePrefferenceSetting.current_app_dir.name
-                    to UsePath.cmdclickSystemAppDirPath,
-            SharePrefferenceSetting.current_script_file_name.name
-                    to cmdclickConfigFileName,
-            SharePrefferenceSetting.on_shortcut.name
-                    to FragmentTagManager.Suffix.ON.name
-        )
-    )
-    val cmdEditFragmentTag = FragmentTagManager.makeTag(
-        FragmentTagManager.Prefix.cmdEditPrefix.str,
         UsePath.cmdclickSystemAppDirPath,
-        cmdclickConfigFileName,
-        FragmentTagManager.Suffix.ON.name
+        UsePath.cmdclickConfigFileName,
     )
-    when(fragment){
-        is CommandIndexFragment
-        -> {
-            val listener = fragment.context
-                    as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-            listener?.onLongClickMenuItemsforCmdIndex(
-                LongClickMenuItemsforCmdIndex.EDIT,
-                cmdEditFragmentTag
-            )
-        }
-        is EditFragment -> {
-            val listener = fragment.context
-                    as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-            listener?.onLongClickMenuItemsforCmdIndex(
-                LongClickMenuItemsforCmdIndex.EDIT,
-                cmdEditFragmentTag
-            )
-        }
-    }
 }
 
 private fun syncFannelRepo(fragment: Fragment){

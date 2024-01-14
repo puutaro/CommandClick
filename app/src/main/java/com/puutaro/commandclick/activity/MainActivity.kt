@@ -59,8 +59,9 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.Job
 import java.util.*
 import kotlin.collections.ArrayList
@@ -160,7 +161,7 @@ class MainActivity:
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO);
+        AppCompatDelegate.setDefaultNightMode(MODE_NIGHT_NO)
         savedInstanceStateVal = savedInstanceState
         val actionBar = supportActionBar
         actionBar?.hide()
@@ -197,6 +198,7 @@ class MainActivity:
 
     override fun onLongClickMenuItemsforCmdIndex(
         longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
+        editFragmentArgs: EditFragmentArgs,
         editFragmentTag: String?,
         onOpenTerminal: Boolean,
         terminalFragmentTag: String?
@@ -206,6 +208,7 @@ class MainActivity:
             this,
             longClickMenuItemsforCmdIndex,
             editFragmentTag,
+            editFragmentArgs,
             onOpenTerminal,
             terminalFragmentTag
         )
@@ -213,34 +216,38 @@ class MainActivity:
 
 
     override fun onToolbarMenuCategories(
-        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
+        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+        editFragmentArgs: EditFragmentArgs,
     ) {
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<CommandIndexFragment>(
             this,
             getString(R.string.command_index_fragment),
-            toolbarMenuCategoriesVariantForCmdIndex
+            editFragmentArgs,
+            toolbarMenuCategoriesVariantForCmdIndex,
         )
     }
 
     override fun onToolbarMenuCategoriesForEdit(
-        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex
+        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+        editFragmentArgs: EditFragmentArgs,
     ) {
         val startUpPref = getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 startUpPref,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 startUpPref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ),
             FragmentTagManager.Suffix.ON.name
         )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(
             this,
             cmdEditFragmentTag,
+            editFragmentArgs,
             toolbarMenuCategoriesVariantForCmdIndex
         )
     }

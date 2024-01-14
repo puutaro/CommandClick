@@ -21,7 +21,7 @@ import com.puutaro.commandclick.util.Map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 class SettingButtonArgsMaker(
@@ -47,7 +47,7 @@ class SettingButtonArgsMaker(
         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
     ) as String
 
-    val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )

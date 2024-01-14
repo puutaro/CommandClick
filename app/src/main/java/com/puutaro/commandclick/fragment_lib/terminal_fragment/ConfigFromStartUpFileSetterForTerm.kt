@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrl
 import com.puutaro.commandclick.proccess.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
 object ConfigFromStartUpFileSetterForTerm {
@@ -24,10 +25,6 @@ object ConfigFromStartUpFileSetterForTerm {
         CommandClickScriptVariable.makeConfigJsFile(
             UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
-        )
-        terminalFragment.currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
-            sharePref,
-            SharePrefferenceSetting.current_app_dir
         )
 
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -126,12 +123,10 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        val currentScriptFileNameSource = SharePreffrenceMethod.getStringFromSharePreffrence(
+        val currentScriptFileNameSource = SharePreferenceMethod.getStringFromSharePreference(
             sharePref,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
-
-        terminalFragment.currentScriptName = currentScriptFileNameSource
 
         StartFileMaker.makeForStartupScript(
             terminalFragment,
@@ -204,13 +199,10 @@ object ConfigFromStartUpFileSetterForTerm {
             settingSectionStart,
             settingSectionEnd
         )
-
         terminalFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
-
-
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.currentAppDirPath,

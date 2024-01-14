@@ -13,7 +13,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.*
 
 
@@ -40,13 +41,13 @@ class EditModeHandler(
         editFragment.disablePlayButton ==
                 SettingVariableSelects.disablePlayButtonSelects.ON.name
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    private val currentShellFileName =SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
-        SharePrefferenceSetting.current_script_file_name
+        SharePrefferenceSetting.current_fannel_name
     )
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
@@ -54,7 +55,7 @@ class EditModeHandler(
         editFragment.languageType
     )
 
-    private val onShortcut = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
     ) == FragmentTagManager.Suffix.ON.name

@@ -15,6 +15,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
 class MakeListView(
@@ -22,7 +23,7 @@ class MakeListView(
     private val cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )

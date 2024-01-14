@@ -23,7 +23,8 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -32,7 +33,7 @@ class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
     private val readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
@@ -318,9 +319,9 @@ class UrlHistoryButtonEvent(
     private fun makeBottomScriptUrlList(
     ): List<String> {
         val fannelName = when(fragment) {
-            is EditFragment -> SharePreffrenceMethod.getReadSharePreffernceMap(
+            is EditFragment -> SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             )
             else -> String()
         }

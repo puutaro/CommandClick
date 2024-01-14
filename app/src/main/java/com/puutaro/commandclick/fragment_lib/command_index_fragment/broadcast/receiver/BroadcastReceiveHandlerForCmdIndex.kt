@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object BroadcastReceiveHandlerForCmdIndex {
     fun handle(
@@ -23,7 +23,7 @@ object BroadcastReceiveHandlerForCmdIndex {
                 val startUpPref =
                     cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
                     ?: return
-                val currentAppDirPath = SharePreffrenceMethod.getStringFromSharePreffrence(
+                val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
                     startUpPref,
                     SharePrefferenceSetting.current_app_dir
                 )

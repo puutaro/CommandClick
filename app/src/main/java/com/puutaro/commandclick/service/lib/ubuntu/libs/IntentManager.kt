@@ -20,7 +20,7 @@ object IntentManager {
             fannelDirPath
         )
         execIntent.putExtra(
-            SharePrefferenceSetting.current_script_file_name.name,
+            SharePrefferenceSetting.current_fannel_name.name,
             fannelName
         )
         context?.startActivity(execIntent)

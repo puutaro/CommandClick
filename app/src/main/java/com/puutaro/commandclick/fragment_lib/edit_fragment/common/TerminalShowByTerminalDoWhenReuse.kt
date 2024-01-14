@@ -7,8 +7,8 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object TerminalShowByTerminalDoWhenReuse {
     fun show(

@@ -12,7 +12,7 @@ import com.puutaro.commandclick.proccess.StartFileMaker
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,13 +66,13 @@ object IndexInitHandler {
         FileSystems.createDirs(
             "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         )
-        SharePreffrenceMethod.putSharePreffrence(
+        SharePreferenceMethod.putSharePreference(
             startUpPref,
             mapOf(
                 SharePrefferenceSetting.current_app_dir.name
                         to currentAppDirPath,
-                SharePrefferenceSetting.current_script_file_name.name
-                        to SharePrefferenceSetting.current_script_file_name.defalutStr,
+                SharePrefferenceSetting.current_fannel_name.name
+                        to SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr,
             )
         )

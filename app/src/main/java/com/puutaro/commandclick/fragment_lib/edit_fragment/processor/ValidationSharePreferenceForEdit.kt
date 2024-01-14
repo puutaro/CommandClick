@@ -9,7 +9,7 @@ import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagManager
 import java.io.File
 
 
@@ -77,7 +77,7 @@ class ValidationSharePreferenceForEdit(
         } else  checkCurrentScriptNameSource
         if(
             checkCurrentScriptName !=
-            SharePrefferenceSetting.current_script_file_name.defalutStr
+            SharePrefferenceSetting.current_fannel_name.defalutStr
             && File(
                 "${checkCurrentAppDirPath}/${checkCurrentScriptName}"
             ).isFile

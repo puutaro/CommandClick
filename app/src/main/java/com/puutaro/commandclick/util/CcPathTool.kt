@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object CcPathTool {
     fun makeFannelDirName(
@@ -206,9 +207,9 @@ object CcPathTool {
     fun getCurrentScriptFileName(
         readSharePreffernceMap: Map<String, String>
     ): String {
-        val currentScriptFileName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         if(
             currentScriptFileName.isEmpty()

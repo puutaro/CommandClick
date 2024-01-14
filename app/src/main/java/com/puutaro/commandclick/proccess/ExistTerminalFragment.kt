@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess
 
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 
 class ExistTerminalFragment {

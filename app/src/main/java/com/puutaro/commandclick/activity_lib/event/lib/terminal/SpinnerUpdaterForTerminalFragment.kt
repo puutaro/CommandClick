@@ -7,9 +7,9 @@ import android.widget.Spinner
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,13 +24,13 @@ object SpinnerUpdaterForTerminalFragment {
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ),
             FragmentTagManager.Suffix.ON.str
         )

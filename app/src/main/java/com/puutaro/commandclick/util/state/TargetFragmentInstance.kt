@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.state
 
 import android.app.Activity
 import android.content.Context
@@ -130,13 +130,13 @@ class TargetFragmentInstance {
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         return FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ),
             FragmentTagManager.Suffix.ON.str
         )

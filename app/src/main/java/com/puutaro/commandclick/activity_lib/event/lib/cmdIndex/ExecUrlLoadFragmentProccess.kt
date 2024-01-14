@@ -13,8 +13,8 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
-import com.puutaro.commandclick.util.FragmentTagManager
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ExecUrlLoadFragmentProccess {
     fun execUrlLoadCmdIndexFragment (
@@ -59,13 +59,13 @@ object ExecUrlLoadFragmentProccess {
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
             ),
-            SharePreffrenceMethod.getStringFromSharePreffrence(
+            SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
-                SharePrefferenceSetting.current_script_file_name
+                SharePrefferenceSetting.current_fannel_name
             ),
             FragmentTagManager.Suffix.ON.str
         )

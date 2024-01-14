@@ -4,7 +4,7 @@ import android.widget.LinearLayout
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecTermMinimumForEdit {
     fun min(

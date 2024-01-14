@@ -138,7 +138,7 @@ class FormDialogForListIndexOrButton(
         val virtualReadPreffrenceMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name
                     to parentDirPath,
-            SharePrefferenceSetting.current_script_file_name.name
+            SharePrefferenceSetting.current_fannel_name.name
                     to selectedScriptName
         )
 

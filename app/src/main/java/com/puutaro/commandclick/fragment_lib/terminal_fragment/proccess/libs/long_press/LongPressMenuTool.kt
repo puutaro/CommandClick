@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object LongPressMenuTool {
@@ -94,9 +94,9 @@ object LongPressMenuTool {
         ){
             true -> {
                 val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-                SharePreffrenceMethod.getStringFromSharePreffrence(
+                SharePreferenceMethod.getStringFromSharePreference(
                     sharePref,
-                    SharePrefferenceSetting.current_script_file_name
+                    SharePrefferenceSetting.current_fannel_name
                 )
             }
             else -> {

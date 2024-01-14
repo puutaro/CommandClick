@@ -27,6 +27,8 @@ import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.UrlTool
+import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -203,18 +205,29 @@ class CmdClickHistoryButtonEvent (
                 val jsExecWaitTime =
                     if(isJsExec) 200L
                     else 0L
+                val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+                    appDirName,
+                    fannelName,
+                    FragmentTagManager.Suffix.ON.name,
+                )
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(jsExecWaitTime)
                     if(fragment is CommandIndexFragment) {
                         val listener = context
                                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                         listener?.onLongClickMenuItemsforCmdIndex(
-                            LongClickMenuItemsforCmdIndex.EXEC_HISTORY
+                            LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
+                            EditFragmentArgs(
+                                readSharePreferenceMap
+                            )
                         )
                     } else {
                         val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                         listener?.onToolbarMenuCategoriesForEdit(
-                            ToolbarMenuCategoriesVariantForCmdIndex.HISTORY
+                            ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
+                            EditFragmentArgs(
+                                readSharePreferenceMap
+                            )
                         )
                     }
                 }

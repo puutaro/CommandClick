@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.edit.lib
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.SharePreffrenceMethod
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ReplaceVariableMapReflecter {
     fun reflect(
@@ -11,13 +11,13 @@ object ReplaceVariableMapReflecter {
         editParameters: EditParameters,
     ): String? {
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
-        val currentAppDirPath = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptName = SharePreffrenceMethod.getReadSharePreffernceMap(
+        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
             editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_script_file_name
+            SharePrefferenceSetting.current_fannel_name
         )
         var innerExecCmd = replaceTargetStr
         setReplaceVariableMap?.forEach {

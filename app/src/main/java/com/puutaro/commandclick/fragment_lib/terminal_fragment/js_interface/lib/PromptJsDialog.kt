@@ -40,7 +40,7 @@ class PromptJsDialog(
     private val suggestDirName = "${suggestPrefix}Text"
     private val suggestTxtSuffix = ".txt"
     private val currentAppDirPath = terminalFragment.currentAppDirPath
-    private val currentScriptName = terminalFragment.currentScriptName
+    private val currentScriptName = terminalFragment.currentFannelName
     private val fannelDirName = CcPathTool.makeFannelDirName(
         currentScriptName
     )
