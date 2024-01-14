@@ -51,7 +51,8 @@ object ScreenMonitor {
                     processNum > ubuntuRunningProcessNum
                 ) return@withContext
                 ubuntuService.screenOffKill = true
-                LinuxCmd.killProcess(ubuntuService.packageName)
+                ProcessManager.finishProcessForSleep(ubuntuService)
+//                LinuxCmd.killProcess(ubuntuService.packageName)
 //                killFrontProcess(ubuntuService)
 //                killSubFrontProcess(ubuntuService)
             }

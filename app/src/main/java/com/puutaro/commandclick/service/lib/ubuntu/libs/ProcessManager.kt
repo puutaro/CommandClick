@@ -11,6 +11,7 @@ import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,6 +49,16 @@ object ProcessManager {
         ubuntuService.notificationManager?.cancel(ubuntuService.chanelId)
         ubuntuService.stopForeground(Service.STOP_FOREGROUND_DETACH)
         ubuntuService.stopSelf()
+    }
+
+    fun finishProcessForSleep(
+        ubuntuService: UbuntuService
+    ){
+        LinuxCmd.killProcess(ubuntuService.packageName)
+        PcPulseSetServerForUbuntu.exit()
+        killAllCoroutineJob(ubuntuService)
+        PcPulseSetServer.exit()
+        ubuntuService.intentMonitorServerSocket?.close()
     }
 
     fun processNumCalculator(
