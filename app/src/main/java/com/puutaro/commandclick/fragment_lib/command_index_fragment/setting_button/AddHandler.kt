@@ -16,7 +16,6 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 
 class AddScriptHandler(
     private val cmdIndexFragment: CommandIndexFragment,
-    private val sharedPref: SharedPreferences?,
     private val currentAppDirPath: String,
 ) {
     val context = cmdIndexFragment.context
@@ -116,7 +115,6 @@ class AddScriptHandler(
 
             AddShellScript.addShellOrJavaScript (
                 cmdIndexFragment,
-                sharedPref,
                 currentAppDirPath,
                 shellScriptName,
                 languageTypeSelects

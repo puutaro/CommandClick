@@ -41,7 +41,7 @@ object OnEditExecuteEvent {
             is EditFragment -> {
                 val listener = fragment.context
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                listener?.onLongClickMenuItemsforCmdIndex(
+                    listener?.onLongClickMenuItemsforCmdIndex(
                     LongClickMenuItemsforCmdIndex.EDIT,
                     editFragmentTag,
                     true,

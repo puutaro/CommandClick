@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.setting_button.libs
 
 import android.app.Dialog
-import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
@@ -29,10 +28,8 @@ object AddFileForEdit {
     ){
         when(fragment) {
             is CommandIndexFragment -> {
-                val sharedPref =  fragment.activity?.getPreferences(Context.MODE_PRIVATE)
                 AddScriptHandler(
                     fragment,
-                    sharedPref,
                     currentAppDirPath,
                 ).handle()
             }
