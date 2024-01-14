@@ -77,7 +77,7 @@ class InitFragmentManager(
                 startUpAppDirPath,
                 startUpScriptFileName
             )
-            || onShortcut == SharePrefferenceSetting.on_shortcut.defalutStr
+            || onShortcut != FragmentTagManager.Suffix.ON.name
         ) {
             WrapFragmentManager.initFragment(
                 savedInstanceState,

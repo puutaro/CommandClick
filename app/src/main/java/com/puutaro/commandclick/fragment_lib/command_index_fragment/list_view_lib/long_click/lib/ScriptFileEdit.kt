@@ -22,6 +22,8 @@ object ScriptFileEdit {
             mapOf(
                 SharePrefferenceSetting.current_script_file_name.name
                         to shellScriptName,
+                SharePrefferenceSetting.on_shortcut.name
+                        to SharePrefferenceSetting.on_shortcut.defalutStr,
             )
         )
         val shellContentsList = ReadText(
