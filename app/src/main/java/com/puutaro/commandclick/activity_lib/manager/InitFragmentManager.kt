@@ -27,9 +27,6 @@ class InitFragmentManager(
     private val activityManager = activity.getSystemService(ACTIVITY_SERVICE) as? ActivityManager
     private val startUpPref = activity.getPreferences(Context.MODE_PRIVATE)
     private val intent = activity.intent
-    private val onShortcut = intent.getStringExtra(
-        SharePrefferenceSetting.on_shortcut.name
-    ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
 
     fun registerSharePreferenceFromIntentExtra() {
         val normalTaskNum = 1
