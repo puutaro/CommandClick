@@ -2,17 +2,12 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
-import com.puutaro.commandclick.common.variable.path.UsePath
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
 
 
 object LinuxCmd {
-
-    private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    private val cmdClickMonitorFileName = UsePath.cmdClickMonitorFileName_2
-
 
     fun isBasicProcess(): Boolean {
         val psResult = execCommand(
@@ -71,9 +66,7 @@ object LinuxCmd {
                 dirPath
             ).joinToString("\t")
         )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
+        LogSystems.stdSys(
             "chmod ${result}"
         )
     }
@@ -111,36 +104,21 @@ object LinuxCmd {
     private fun execKillProcess(
         pListOutputCmd: String,
     ){
-        val plistcmd00 = "ps -ef"
-        val psOutput0 = execCommand(
-            listOf("sh" , "-c", plistcmd00).joinToString("\t")
-        )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
-            "psOutput0 ${psOutput0}"
-        )
         val psOutput = execCommand(
             listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
         )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
-            "psOutput ${psOutput}"
+        LogSystems.stdSys(
+           "psOutput ${psOutput}"
         )
         val pListOutput = psOutput.split("\n").map {
             it.split("\t").getOrNull(1) ?: String()
         }.joinToString("  ")
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
-            "pListOutput ${pListOutput}"
+        LogSystems.stdSys(
+           "pListOutput ${pListOutput}"
         )
         val killCmd = "kill -9 ${pListOutput}"
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
-            "killCmd ${killCmd}"
+        LogSystems.stdSys(
+           "killCmd ${killCmd}"
         )
         val killOutput = execCommand(
             listOf(
@@ -149,9 +127,7 @@ object LinuxCmd {
                 killCmd
             ).joinToString("\t")
         )
-        FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            cmdClickMonitorFileName,
+        LogSystems.stdSys(
             "kill output ${killOutput}"
         )
     }
@@ -228,7 +204,6 @@ object LinuxCmd {
                 var line: String?
                 while (r.readLine().also { line = it } != null) {
                     errContents += "\n" + line
-//                println(line)
                 }
             }
             var outputContents = String()
@@ -245,10 +220,8 @@ object LinuxCmd {
             }
             return outputContents + "\n" + errContents
         } catch (e: Exception){
-            FileSystems.writeFile(
-                cmdclickMonitorDirPath,
-                cmdClickMonitorFileName,
-                "### ${this::class.java.name} ${e.toString()}"
+            LogSystems.stdErr(
+                "### ${this::class.java.name} ${e}"
             )
             return e.toString()
         }

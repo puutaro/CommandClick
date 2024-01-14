@@ -51,8 +51,9 @@ object ScreenMonitor {
                     processNum > ubuntuRunningProcessNum
                 ) return@withContext
                 ubuntuService.screenOffKill = true
-                killFrontProcess(ubuntuService)
-                killSubFrontProcess(ubuntuService)
+                LinuxCmd.killProcess(ubuntuService.packageName)
+//                killFrontProcess(ubuntuService)
+//                killSubFrontProcess(ubuntuService)
             }
         }
     }
@@ -108,15 +109,15 @@ object ScreenMonitor {
         return miliTime * 1000 * 60
     }
 
-    private fun killFrontProcess(
-        ubuntuService: UbuntuService
-    ){
-        LinuxCmd.killFrontProcess(ubuntuService.packageName)
-    }
-
-    private fun killSubFrontProcess(
-        ubuntuService: UbuntuService
-    ){
-        LinuxCmd.killSubFrontProcess(ubuntuService.packageName)
-    }
+//    private fun killFrontProcess(
+//        ubuntuService: UbuntuService
+//    ){
+//        LinuxCmd.killFrontProcess(ubuntuService.packageName)
+//    }
+//
+//    private fun killSubFrontProcess(
+//        ubuntuService: UbuntuService
+//    ){
+//        LinuxCmd.killSubFrontProcess(ubuntuService.packageName)
+//    }
 }
