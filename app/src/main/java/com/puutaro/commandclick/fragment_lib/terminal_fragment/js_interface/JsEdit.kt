@@ -75,7 +75,7 @@ class JsEdit(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             terminalFragment.currentAppDirPath,
             terminalFragment.currentFannelName,
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val editFragment = TargetFragmentInstance().getFromFragment<EditFragment>(
             activity,

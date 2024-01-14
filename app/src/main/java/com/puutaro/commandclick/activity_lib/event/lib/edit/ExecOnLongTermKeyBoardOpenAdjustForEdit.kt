@@ -25,7 +25,7 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val targetFragment = try {
             activity.supportFragmentManager.findFragmentByTag(cmdEditFragmentTag) as EditFragment

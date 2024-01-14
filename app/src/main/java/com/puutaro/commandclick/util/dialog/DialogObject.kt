@@ -210,7 +210,7 @@ object DialogObject {
         val editExecuteTerminal = TargetFragmentInstance(
         ).getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             fragment.activity,
-            context.getString(R.string.edit_execute_terminal_fragment)
+            context.getString(R.string.edit_terminal_fragment)
         )
         if(
             editExecuteTerminal != null

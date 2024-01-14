@@ -20,7 +20,7 @@ object FindListenerSetter {
                 FragmentTagManager.Prefix.cmdEditPrefix.str,
                 terminalFragment.currentAppDirPath,
                 terminalFragment.currentFannelName,
-                FragmentTagManager.Suffix.ON.str
+                FragmentTagManager.OnShortcutSuffix.ON.str
             )
             val commandIndexFragment =
                 TargetFragmentInstance().getFromFragment<CommandIndexFragment>(

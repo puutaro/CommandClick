@@ -23,6 +23,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -49,6 +50,21 @@ class UrlHistoryButtonEvent(
     fun invoke(
         historyButtonInnerView: View,
     ){
+        when(fragment){
+            is EditFragment -> {
+                val isCmdValEdit =
+                    fragment.editTypeSettingKey ==
+                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                if(
+                    !isCmdValEdit
+                ) return
+                val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
+                    fragment.readSharePreffernceMap,
+                    SharePrefferenceSetting.on_shortcut
+                ) == FragmentTagManager.OnShortcutSuffix.ON.str
+                if(!onShortcut) return
+            }
+        }
         terminalViewModel.onDialog = true
         val historyButtonInnerViewContext = historyButtonInnerView.context
         val urlHistoryDialog = Dialog(

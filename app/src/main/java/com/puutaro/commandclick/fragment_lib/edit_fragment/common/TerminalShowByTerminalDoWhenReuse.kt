@@ -17,7 +17,7 @@ object TerminalShowByTerminalDoWhenReuse {
     ){
         TargetFragmentInstance().getFromFragment<TerminalFragment>(
             editFragment.activity,
-            editFragment.context?.getString(R.string.edit_execute_terminal_fragment)
+            editFragment.context?.getString(R.string.edit_terminal_fragment)
         ) ?: return
         if(
             editFragment.tag?.startsWith(

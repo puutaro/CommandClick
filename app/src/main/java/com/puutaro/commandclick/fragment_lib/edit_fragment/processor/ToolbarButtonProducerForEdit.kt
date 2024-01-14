@@ -95,7 +95,7 @@ class ToolbarButtonProducerForEdit(
     private val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
-    ) == FragmentTagManager.Suffix.ON.name
+    ) == FragmentTagManager.OnShortcutSuffix.ON.name
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
         currentScriptContentsList,
@@ -172,7 +172,7 @@ class ToolbarButtonProducerForEdit(
                     val editExecuteTerminalFragment = TargetFragmentInstance()
                         .getFromFragment<TerminalFragment>(
                             editFragment.activity,
-                            context?.getString(R.string.edit_execute_terminal_fragment)
+                            context?.getString(R.string.edit_terminal_fragment)
                         )
                     if(
                         editExecuteTerminalFragment != null
@@ -187,7 +187,7 @@ class ToolbarButtonProducerForEdit(
                         editFragment,
                         view,
                         editFragment.context?.getString(
-                            R.string.edit_execute_terminal_fragment
+                            R.string.edit_terminal_fragment
                         ),
                         readSharePreffernceMap,
                         editFragment.historySwitch,
@@ -270,7 +270,7 @@ class ToolbarButtonProducerForEdit(
                     editFragment,
                     buttonInnerView,
                     editFragment.context?.getString(
-                        R.string.edit_execute_terminal_fragment
+                        R.string.edit_terminal_fragment
                     ),
                     readSharePreffernceMap,
                     editFragment.historySwitch,
@@ -379,7 +379,7 @@ class ToolbarButtonProducerForEdit(
                 FragmentTagManager.Prefix.cmdEditPrefix.str
             ) != true
             || editFragment.tag?.endsWith(
-                FragmentTagManager.Suffix.ON.name
+                FragmentTagManager.OnShortcutSuffix.ON.name
             ) != true
         ) return
         scriptFileSaver.save(
@@ -412,12 +412,12 @@ class ToolbarButtonProducerForEdit(
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         val EditExecuteOnce =
             SettingVariableSelects.EditExecuteSelects.ONCE.name
-        val shortcutValue = FragmentTagManager.makeListFromTag(
-            editFragment.tag
-                ?: String()
-        ).getOrNull(FragmentTagManager.modeIndex)
-            ?: String()
-        val onShortcut = shortcutValue != SharePrefferenceSetting.on_shortcut.defalutStr
+        val shortcutValue = SharePreferenceMethod.getReadSharePreffernceMap(
+            editFragment.readSharePreffernceMap,
+            SharePrefferenceSetting.on_shortcut
+        )
+        val onShortcut =
+            shortcutValue != SharePrefferenceSetting.on_shortcut.defalutStr
                 && shortcutValue.isNotEmpty()
         if(
             editExecuteValue == EditExecuteAlways

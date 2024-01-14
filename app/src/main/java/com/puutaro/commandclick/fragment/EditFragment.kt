@@ -95,6 +95,8 @@ class EditFragment: Fragment() {
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
+    var editTypeSettingKey =
+        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
@@ -139,7 +141,8 @@ class EditFragment: Fragment() {
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        readSharePreffernceMap = EditFragmentArgs.get(this)
+        readSharePreffernceMap = EditFragmentArgs.getReadSharePreference(arguments)
+        editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
         Keyboard.hiddenKeyboardForFragment(
             this
         )
@@ -159,11 +162,6 @@ class EditFragment: Fragment() {
             validationSharePreferenceForEdit
                 .checkIndexList()
         if(!checkOkIndexList) return
-
-//        readSharePreffernceMap = MakeReadPreffernceMapForEdit.make(
-//            this,
-//        )
-
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
@@ -360,7 +358,6 @@ class EditFragment: Fragment() {
             toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
             readSharePreffernceMap: Map<String, String>,
             enableCmdEdit: Boolean,
-            isLongPress: Boolean = false
         )
     }
 

@@ -3,24 +3,20 @@ package com.puutaro.commandclick.util.state
 object FragmentTagManager {
 
     enum class Prefix(
+        
         val str: String
     ) {
-        indexPrefix("index"),
         cmdEditPrefix("cmd_edit"),
         settingEditPrefix("setting_edit"),
     }
 
-    enum class Suffix(
+    enum class OnShortcutSuffix(
         val str: String
     ) {
         ON("ON"),
         OFF("OFF"),
     }
     private val sepalateUnderBar = "___"
-    val prefixIndex = 0
-    val parentAppDirPathIndex = 1
-    val scriptFileNameIndex = 2
-    val modeIndex = 3
 
     fun makeTag(
         prefix: String,
@@ -32,11 +28,5 @@ object FragmentTagManager {
                 "${parentAppDirPath}$sepalateUnderBar" +
                 "${scriptFileName}$sepalateUnderBar" +
                 mode
-    }
-
-    fun makeListFromTag(
-        tag: String,
-    ): List<String> {
-        return tag.split(sepalateUnderBar)
     }
 }

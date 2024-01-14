@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -41,7 +42,7 @@ object ConfigFromScriptFileSetter {
                 currentShellContentsList
             )
         if (
-            onShortcut != FragmentTagManager.Suffix.ON.name
+            onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
         ) return
 
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
@@ -234,12 +235,9 @@ object ConfigFromScriptFileSetter {
         currentScriptFileName: String,
         currentShellContentsList: List<String>
     ): Boolean {
-        val prefixDirScriptSuffixList = FragmentTagManager.makeListFromTag(
-            editFragment.tag as String,
-        )
-        val isSetting = prefixDirScriptSuffixList.get(
-            FragmentTagManager.prefixIndex
-        ) == FragmentTagManager.Prefix.settingEditPrefix.str
+        val isSetting =
+            editFragment.editTypeSettingKey ==
+                    EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
         if(
             isSetting
         ) return false

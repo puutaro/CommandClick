@@ -38,7 +38,7 @@ object ExecUpdateNoSaveUrlPaths {
         val editExecuteTerminalFragment =
             TargetFragmentInstance().getFromFragment<TerminalFragment>(
                 activity,
-                activity?.getString(R.string.edit_execute_terminal_fragment)
+                activity?.getString(R.string.edit_terminal_fragment)
             )
         if(
             editExecuteTerminalFragment != null

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="index_terminal_fragment">index_terminal_fragment</string>
-    <string name="edit_execute_terminal_fragment">edit_execute_terminal_fragment</string>
+    <string name="edit_terminal_fragment">edit_terminal_fragment</string>
     <string name="command_index_fragment">command_index_fragment</string>
 </resources>

@@ -13,6 +13,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextPro
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.*
@@ -28,9 +29,8 @@ class EditModeHandler(
     private val onPassCmdVariableEdit =
         editFragment.passCmdVariableEdit ==
                 CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-    private val enableCmdEdit = currentEditFragmentTag?.startsWith(
-        FragmentTagManager.Prefix.cmdEditPrefix.str
-    ) == true
+    private val enableCmdEdit =
+        editFragment.editTypeSettingKey == EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     private val onDisableSettingButton =
         editFragment.disableSettingButton ==
                 SettingVariableSelects.disableSettingButtonSelects.ON.name
@@ -45,7 +45,7 @@ class EditModeHandler(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
     )
-    private val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
+    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_fannel_name
     )
@@ -58,7 +58,7 @@ class EditModeHandler(
     private val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.on_shortcut
-    ) == FragmentTagManager.Suffix.ON.name
+    ) == FragmentTagManager.OnShortcutSuffix.ON.name
 
     private val enableEditExecute =
         (
@@ -122,7 +122,7 @@ class EditModeHandler(
                         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
                 ] as String,
                 true,
-                currentShellFileName
+                currentFannelName
             )
 
         if(
@@ -186,7 +186,7 @@ class EditModeHandler(
                 settingSectionStart,
                 settingSectionEnd,
                 true,
-                currentShellFileName
+                currentFannelName
             )
         if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()

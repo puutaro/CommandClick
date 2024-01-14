@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 
@@ -18,31 +19,21 @@ class ValidationSharePreferenceForEdit(
 ) {
     private val context = editFragment.context
     private var shellContentsList: List<String> = emptyList()
-    val prefixDirScriptSuffixList = FragmentTagManager.makeListFromTag(
-        editFragment.tag as String,
-    )
     fun checkCurrentAppDirPreference(
         checkCurrentAppDirPathSource: String? = null
     ): Boolean {
         val checkCurrentAppDirPath = if(
             checkCurrentAppDirPathSource.isNullOrEmpty()
         ) {
-            prefixDirScriptSuffixList.get(
-                FragmentTagManager.parentAppDirPathIndex
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                editFragment.readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
             )
         } else checkCurrentAppDirPathSource
         if(
             checkCurrentAppDirPath == UsePath.cmdclickSystemAppDirPath
         ) return true
-//        val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath
-//        val updateDirName = FileSystems.filterSuffixJsFiles(
-//            cmdclickAppDirAdminPath,
-//            "on"
-//        ).firstOrNull()?.removeSuffix(
-//            CommandClickScriptVariable.JS_FILE_SUFFIX
-//        ).toString()
-//        val updateAppDirPath =
-//            "${UsePath.cmdclickAppDirPath}/${updateDirName}"
+
         if(
             !File(checkCurrentAppDirPath).isDirectory
         ) {
@@ -58,22 +49,28 @@ class ValidationSharePreferenceForEdit(
         checkCurrentAppDirPathSource: String? = null,
         checkCurrentScriptNameSource: String? = null
     ): Boolean {
-        val onShortcut = prefixDirScriptSuffixList.get(
-            FragmentTagManager.modeIndex
+        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
+            editFragment.readSharePreffernceMap,
+            SharePrefferenceSetting.on_shortcut
         )
+
         val checkCurrentAppDirPath = if(
             checkCurrentAppDirPathSource.isNullOrEmpty()
         ) {
-            prefixDirScriptSuffixList.get(
-                FragmentTagManager.parentAppDirPathIndex
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                editFragment.readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
             )
+
         } else checkCurrentAppDirPathSource
         val checkCurrentScriptName = if(
             checkCurrentScriptNameSource.isNullOrEmpty()
         ) {
-            prefixDirScriptSuffixList.get(
-                FragmentTagManager.scriptFileNameIndex
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                editFragment.readSharePreffernceMap,
+                SharePrefferenceSetting.current_fannel_name
             )
+
         } else  checkCurrentScriptNameSource
         if(
             checkCurrentScriptName !=
@@ -98,7 +95,7 @@ class ValidationSharePreferenceForEdit(
         recentShellFileName: String
     ): Boolean {
         if(
-            onShortcut != FragmentTagManager.Suffix.ON.name
+            onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
         ) return true
         shellContentsList = ReadText(
             checkCurrentAppDirPath,

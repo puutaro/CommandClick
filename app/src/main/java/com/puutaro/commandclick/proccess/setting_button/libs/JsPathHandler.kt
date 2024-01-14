@@ -52,6 +52,7 @@ import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object JsPathHandler {
+
     fun handle(
         settingButtonArgsMaker: SettingButtonArgsMaker,
         menuName: String,
@@ -142,14 +143,20 @@ object JsPathHandler {
                 val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
-                    EditFragmentArgs(readSharePreffernceMap)
+                    EditFragmentArgs(
+                        readSharePreffernceMap,
+                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                    )
                 )
             }
             JsPathMacroForSettingButton.TERMUX_SETUP -> {
                 val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
-                    EditFragmentArgs(readSharePreffernceMap)
+                    EditFragmentArgs(
+                        readSharePreffernceMap,
+                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                    )
                 )
             }
             JsPathMacroForSettingButton.CONFIG ->
@@ -238,7 +245,7 @@ private object PopupSettingMenu{
                     .how(
                         fragment,
                         context.getString(
-                            R.string.edit_execute_terminal_fragment
+                            R.string.edit_terminal_fragment
                         )
                     )
             else -> null
@@ -463,14 +470,20 @@ private object PopupSettingMenu{
                     val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                     listener?.onToolbarMenuCategories(
                         toolbarMenuCategoriesVariantForCmdIndex,
-                        EditFragmentArgs(fragment.readSharePreffernceMap)
+                        EditFragmentArgs(
+                            fragment.readSharePreffernceMap,
+                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                        )
                     )
                 }
                 is EditFragment -> {
                     val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                     listener?.onToolbarMenuCategoriesForEdit(
                         toolbarMenuCategoriesVariantForCmdIndex,
-                        EditFragmentArgs(fragment.readSharePreffernceMap),
+                        EditFragmentArgs(
+                            fragment.readSharePreffernceMap,
+                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                        ),
                     )
                 }
             }
@@ -507,7 +520,7 @@ private fun monitorSizeChangeForEdit(
         .how(
             editFragment,
             editFragment.context?.getString(
-                R.string.edit_execute_terminal_fragment
+                R.string.edit_terminal_fragment
             )
         )
     if(
@@ -532,7 +545,8 @@ private fun monitorSizeChangeForEdit(
     listener?.onToolbarMenuCategoriesForEdit(
         ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
         EditFragmentArgs(
-            editFragment.readSharePreffernceMap
+            editFragment.readSharePreffernceMap,
+            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         )
     )
 }

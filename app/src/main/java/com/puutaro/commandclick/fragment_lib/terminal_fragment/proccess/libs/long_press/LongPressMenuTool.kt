@@ -88,7 +88,7 @@ object LongPressMenuTool {
             ?: return String()
         val activity = terminalFragment.activity
             ?: return String()
-        val editExecuteFragmentTag = context.getString(R.string.edit_execute_terminal_fragment)
+        val editExecuteFragmentTag = context.getString(R.string.edit_terminal_fragment)
         return when(
             terminalFragment.tag == editExecuteFragmentTag
         ){

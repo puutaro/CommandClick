@@ -25,7 +25,7 @@ class ExecLoadUrlForWebView {
             }
             try {
                 val editExecuteTerminalFragment = activity.supportFragmentManager.findFragmentByTag(
-                    activity.getString(R.string.edit_execute_terminal_fragment)
+                    activity.getString(R.string.edit_terminal_fragment)
                 ) as TerminalFragment
                 if(editExecuteTerminalFragment.isVisible) {
                     val webView = editExecuteTerminalFragment.binding.terminalWebView

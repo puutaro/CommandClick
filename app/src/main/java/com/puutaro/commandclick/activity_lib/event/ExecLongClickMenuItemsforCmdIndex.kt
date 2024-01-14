@@ -13,8 +13,7 @@ object ExecLongClickMenuItemsforCmdIndex {
         longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
         editFragmentTag: String,
         editFragmentArgs: EditFragmentArgs,
-        onOpenTerminal: Boolean = false,
-        terminalFragmentTag: String?
+        terminalFragmentTag: String
     ){
         when(longClickMenuItemsforCmdIndex){
             LongClickMenuItemsforCmdIndex.EDIT -> {
@@ -22,7 +21,6 @@ object ExecLongClickMenuItemsforCmdIndex {
                     activity,
                     editFragmentTag,
                     editFragmentArgs,
-                    onOpenTerminal,
                     terminalFragmentTag
                 )
             }

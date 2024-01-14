@@ -17,7 +17,7 @@ class ExecTermSizing {
             val terminalFragment = TargetFragmentInstance().getFromActivity<TerminalFragment>(
                 activity,
                 activity.getString(
-                    R.string.edit_execute_terminal_fragment
+                    R.string.edit_terminal_fragment
                 )
             ) ?: return
             terminalFragment.binding.terminalWebView.onPause()

@@ -11,7 +11,7 @@ object ExecTermMinimumForEdit {
         activity: MainActivity
     ){
         val editExecuteTerminalFragmentTag = activity.getString(
-            R.string.edit_execute_terminal_fragment
+            R.string.edit_terminal_fragment
         )
         val editExecuteTerminalFragment =
             TargetFragmentInstance().getFromActivity<TerminalFragment>(

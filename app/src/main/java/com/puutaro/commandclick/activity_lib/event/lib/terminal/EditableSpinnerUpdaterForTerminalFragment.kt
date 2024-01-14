@@ -34,7 +34,7 @@ object EditableSpinnerUpdaterForTerminalFragment {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val editExecuteFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,

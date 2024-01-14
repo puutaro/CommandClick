@@ -138,7 +138,7 @@ class TargetFragmentInstance {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
     }
 
@@ -149,7 +149,7 @@ class TargetFragmentInstance {
             activity == null
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
-        val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_execute_terminal_fragment)
+        val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
         val targetFragmentInstance = TargetFragmentInstance()
         val indexTerminalFragment = targetFragmentInstance.getFromActivity<TerminalFragment>(
             activity,
@@ -176,7 +176,7 @@ class TargetFragmentInstance {
             activity == null
         ) return null
         val indexTerminalFragmentTag =  activity.getString(R.string.index_terminal_fragment)
-        val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_execute_terminal_fragment)
+        val editExecuteTerminalFragmentTag =  activity.getString(R.string.edit_terminal_fragment)
         val targetFragmentInstance = TargetFragmentInstance()
         val indexTerminalFragment = targetFragmentInstance.getFromFragment<TerminalFragment>(
             activity,

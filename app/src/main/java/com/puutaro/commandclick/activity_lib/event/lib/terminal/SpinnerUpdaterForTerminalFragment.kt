@@ -32,7 +32,7 @@ object SpinnerUpdaterForTerminalFragment {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val cmdEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,

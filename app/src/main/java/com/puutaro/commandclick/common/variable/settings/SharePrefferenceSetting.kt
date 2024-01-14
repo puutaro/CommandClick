@@ -9,5 +9,5 @@ enum class SharePrefferenceSetting(
 ) {
     current_app_dir(UsePath.cmdclickDefaultAppDirPath),
     current_fannel_name(CommandClickScriptVariable.EMPTY_STRING),
-    on_shortcut(FragmentTagManager.Suffix.OFF.name),
+    on_shortcut(FragmentTagManager.OnShortcutSuffix.OFF.name),
 }

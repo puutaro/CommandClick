@@ -67,7 +67,7 @@ object ExecUrlLoadFragmentProccess {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.str
+            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val supportFragmentManager = activity.supportFragmentManager
         val editFragment = try {

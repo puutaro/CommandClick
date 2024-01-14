@@ -30,7 +30,7 @@ object EditToolbarSwitcher {
         val activity = cmdEditFragment?.activity
         if(cmdEditFragment == null) return
         val editExecuteTerminalTag = context?.getString(
-            R.string.edit_execute_terminal_fragment
+            R.string.edit_terminal_fragment
         )
         val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
             activity,
@@ -142,7 +142,7 @@ object EditToolbarSwitcher {
                     val onLaunchUrl = EnableTerminalWebView.check(
                         cmdEditFragment,
                         context.getString(
-                            R.string.edit_execute_terminal_fragment
+                            R.string.edit_terminal_fragment
                         )
                     )
                     if(!onLaunchUrl) return@launch
@@ -202,7 +202,7 @@ private fun execJsFile(
         val onLaunchUrl = EnableTerminalWebView.check(
             cmdEditFragment,
             context.getString(
-                R.string.edit_execute_terminal_fragment
+                R.string.edit_terminal_fragment
             )
         )
         if(!onLaunchUrl) return@launch

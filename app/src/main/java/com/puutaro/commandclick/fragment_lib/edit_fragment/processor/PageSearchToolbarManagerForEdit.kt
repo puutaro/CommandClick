@@ -26,7 +26,7 @@ class PageSearchToolbarManagerForEdit(
     private val cmdindexSearchDownAllow = pageSearch.cmdindexSearchDownAllow
     private val listener = context as? EditFragment.OnLongPressPlayOrEditButtonListener
     private val pageSearchLongPressType = EditLongPressType.PAGE_SEARCH
-    private val editExecuteTerminalTag = context?.getString(R.string.edit_execute_terminal_fragment)
+    private val editExecuteTerminalTag = context?.getString(R.string.edit_terminal_fragment)
 
     fun cancleButtonClickListener(){
         cmdindexSearchCancel.setOnClickListener {

@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
 import android.content.SharedPreferences
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
@@ -14,6 +15,7 @@ object OnOnceEditExecuteEvent {
         selectedShellFileName: String,
         editFragmentTag: String,
     ) {
+        val context = cmdIndexFragment.context ?: return
         SharePreferenceMethod.putSharePreference(
             sharedPref,
             mapOf(
@@ -30,12 +32,16 @@ object OnOnceEditExecuteEvent {
             selectedShellFileName,
             String()
         )
-        val listener = cmdIndexFragment.context
-                as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-        listener?.onLongClickMenuItemsforCmdIndex(
+        val listener = context
+                as CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
+        listener.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
-            EditFragmentArgs(readSharePreferenceMap),
+            EditFragmentArgs(
+                readSharePreferenceMap,
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+            ),
             editFragmentTag,
+            context.getString(R.string.edit_terminal_fragment)
         )
     }
 }

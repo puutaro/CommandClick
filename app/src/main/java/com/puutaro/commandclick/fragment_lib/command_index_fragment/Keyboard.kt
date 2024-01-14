@@ -55,7 +55,10 @@ object KeyboardForCmdIndex {
             val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
             listener?.onToolbarMenuCategories(
                 ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_OPEN,
-                EditFragmentArgs(mapOf())
+                EditFragmentArgs(
+                    mapOf(),
+                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+                )
             )
             return
         }
@@ -72,7 +75,10 @@ object KeyboardForCmdIndex {
         val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX_KEYBOARD_CLOSE,
-            EditFragmentArgs(mapOf())
+            EditFragmentArgs(
+                mapOf(),
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+            )
         )
     }
 }

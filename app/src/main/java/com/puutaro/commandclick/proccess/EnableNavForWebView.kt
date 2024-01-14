@@ -20,7 +20,7 @@ object EnableNavForWebView {
         )
         val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
-            activity?.getString(R.string.edit_execute_terminal_fragment)
+            activity?.getString(R.string.edit_terminal_fragment)
         )
         if(
             indexTerminalFragment == null
@@ -55,7 +55,7 @@ object EnableNavForWebView {
         )
         val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
-            activity?.getString(R.string.edit_execute_terminal_fragment)
+            activity?.getString(R.string.edit_terminal_fragment)
         )
         if(
             indexTerminalFragment == null
@@ -90,7 +90,7 @@ object EnableNavForWebView {
         )
         val editExecuteTerminalFragment = targetFragmentInstance.getFromFragment<com.puutaro.commandclick.fragment.TerminalFragment>(
             activity,
-            activity?.getString(R.string.edit_execute_terminal_fragment)
+            activity?.getString(R.string.edit_terminal_fragment)
         )
         if(
             indexTerminalFragment == null

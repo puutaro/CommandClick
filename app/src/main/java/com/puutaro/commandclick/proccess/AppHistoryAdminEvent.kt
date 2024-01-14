@@ -93,7 +93,7 @@ object AppHistoryAdminEvent {
         ) {
             SharePrefferenceSetting.on_shortcut.defalutStr
         } else {
-            FragmentTagManager.Suffix.ON.name
+            FragmentTagManager.OnShortcutSuffix.ON.name
         }
         SharePreferenceMethod.putSharePreference(
             sharedPref,

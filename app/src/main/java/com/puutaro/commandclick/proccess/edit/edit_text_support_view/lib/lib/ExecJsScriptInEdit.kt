@@ -1,10 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.EnableTerminalWebView
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
@@ -36,7 +34,7 @@ object ExecJsScriptInEdit {
             val onLaunchUrl = EnableTerminalWebView.check(
                 editFragment,
                 editFragment.context?.getString(
-                    R.string.edit_execute_terminal_fragment
+                    R.string.edit_terminal_fragment
                 )
             )
             if(!onLaunchUrl) return@launch

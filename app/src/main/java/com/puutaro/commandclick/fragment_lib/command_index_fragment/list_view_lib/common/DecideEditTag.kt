@@ -48,7 +48,7 @@ class DecideEditTag(
                 FragmentTagManager.Prefix.cmdEditPrefix.str,
                 currentAppDirPath,
                 selectedScriptFileName,
-                FragmentTagManager.Suffix.ON.str
+                FragmentTagManager.OnShortcutSuffix.ON.str
             )
         } else {
             FragmentTagManager.makeTag(

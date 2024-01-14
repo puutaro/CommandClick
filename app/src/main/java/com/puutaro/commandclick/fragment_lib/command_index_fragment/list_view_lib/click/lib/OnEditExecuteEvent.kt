@@ -19,7 +19,9 @@ object OnEditExecuteEvent {
         sharedPref: SharedPreferences?,
         selectedShellFileName: String,
     ) {
-        val shortcutOnMark = FragmentTagManager.Suffix.ON.name
+        val context = fragment.context
+            ?: return
+        val shortcutOnMark = FragmentTagManager.OnShortcutSuffix.ON.name
         SharePreferenceMethod.putSharePreference(
             sharedPref,
             mapOf(
@@ -38,16 +40,19 @@ object OnEditExecuteEvent {
             selectedShellFileName,
             shortcutOnMark
         )
+        val cmdValEdit = EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         when(fragment){
             is CommandIndexFragment -> {
                 val listener = fragment.context
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                 listener?.onLongClickMenuItemsforCmdIndex(
                     LongClickMenuItemsforCmdIndex.EDIT,
-                    EditFragmentArgs(readSharePreferenceMap),
+                    EditFragmentArgs(
+                        readSharePreferenceMap,
+                        cmdValEdit,
+                    ),
                     editFragmentTag,
-                    true,
-                    fragment.context?.getString(R.string.edit_execute_terminal_fragment)
+                    context.getString(R.string.edit_terminal_fragment)
                 )
             }
             is EditFragment -> {
@@ -55,10 +60,12 @@ object OnEditExecuteEvent {
                         as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                     listener?.onLongClickMenuItemsforCmdIndex(
                         LongClickMenuItemsforCmdIndex.EDIT,
-                        EditFragmentArgs(readSharePreferenceMap),
+                        EditFragmentArgs(
+                            readSharePreferenceMap,
+                            cmdValEdit,
+                        ),
                         editFragmentTag,
-                        true,
-                        fragment.context?.getString(R.string.edit_execute_terminal_fragment)
+                        context.getString(R.string.edit_terminal_fragment)
                 )
             }
         }

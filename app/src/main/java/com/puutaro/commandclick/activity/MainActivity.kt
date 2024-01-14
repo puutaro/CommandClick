@@ -199,17 +199,14 @@ class MainActivity:
     override fun onLongClickMenuItemsforCmdIndex(
         longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
         editFragmentArgs: EditFragmentArgs,
-        editFragmentTag: String?,
-        onOpenTerminal: Boolean,
-        terminalFragmentTag: String?
+        editFragmentTag: String,
+        terminalFragmentTag: String
     ) {
-        if(editFragmentTag == null) return
         ExecLongClickMenuItemsforCmdIndex.execLongClickMenuItemsforCmdIndex(
             this,
             longClickMenuItemsforCmdIndex,
             editFragmentTag,
             editFragmentArgs,
-            onOpenTerminal,
             terminalFragmentTag
         )
     }
@@ -232,7 +229,8 @@ class MainActivity:
         editFragmentArgs: EditFragmentArgs,
     ) {
         val startUpPref = getPreferences(Context.MODE_PRIVATE)
-        val cmdEditFragmentTag = FragmentTagManager.makeTag(
+        val cmdEditFragmentTag =
+            FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             SharePreferenceMethod.getStringFromSharePreference(
                 startUpPref,
@@ -242,7 +240,7 @@ class MainActivity:
                 startUpPref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.Suffix.ON.name
+            FragmentTagManager.OnShortcutSuffix.ON.name
         )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(
             this,
@@ -257,7 +255,6 @@ class MainActivity:
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         readSharePreffernceMap: Map<String, String>,
         enableCmdEdit: Boolean,
-        isLongPress: Boolean
     ){
         ExecToolBarButtonClickForEdit.execToolBarButtonClickForEdit(
             this,
@@ -265,7 +262,6 @@ class MainActivity:
             toolbarButtonBariantForEdit,
             readSharePreffernceMap,
             enableCmdEdit,
-            isLongPress
         )
     }
 
@@ -301,7 +297,7 @@ class MainActivity:
         WrapFragmentManager.changeFragmentByKeyBoardVisibleChange(
             isKeyboardShowing,
             supportFragmentManager,
-            getString(R.string.edit_execute_terminal_fragment),
+            getString(R.string.edit_terminal_fragment),
         )
     }
 

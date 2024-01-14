@@ -20,7 +20,8 @@ object ExecOkForEdit{
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
-            ) == UsePath.cmdclickAppDirAdminPath) {
+            ) == UsePath.cmdclickAppDirAdminPath
+        ) {
             supportFragmentManager.popBackStackImmediate()
             return
         }

@@ -308,9 +308,8 @@ class CommandIndexFragment: Fragment() {
         fun onLongClickMenuItemsforCmdIndex(
             longClickMenuItemsforCmdIndex: LongClickMenuItemsforCmdIndex,
             editFragmentArgs: EditFragmentArgs,
-            editFragmentTag: String? = String(),
-            onOpenTerminal: Boolean = false,
-            terminalFragmentTag: String? = null
+            editFragmentTag: String,
+            terminalFragmentTag: String
         )
     }
 

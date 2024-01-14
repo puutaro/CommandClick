@@ -208,8 +208,10 @@ class CmdClickHistoryButtonEvent (
                 val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
                     appDirName,
                     fannelName,
-                    FragmentTagManager.Suffix.ON.name,
+                    FragmentTagManager.OnShortcutSuffix.ON.name,
                 )
+                val cmdValEdit =
+                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(jsExecWaitTime)
                     if(fragment is CommandIndexFragment) {
@@ -218,20 +220,24 @@ class CmdClickHistoryButtonEvent (
                         listener?.onLongClickMenuItemsforCmdIndex(
                             LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
                             EditFragmentArgs(
-                                readSharePreferenceMap
-                            )
+                                mapOf(),
+                                cmdValEdit,
+                            ),
+                            String(),
+                            String()
+
                         )
                     } else {
                         val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                         listener?.onToolbarMenuCategoriesForEdit(
                             ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
                             EditFragmentArgs(
-                                readSharePreferenceMap
+                                readSharePreferenceMap,
+                                cmdValEdit,
                             )
                         )
                     }
                 }
-
             }
         }
     }

@@ -41,8 +41,10 @@ class   TerminalFragment: Fragment() {
 
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
-    val terminalViewhandler : Handler = Handler(Looper.getMainLooper())
+    val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
     var readSharedPreferences = mapOf<String, String>()
+    var editType =
+        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var currentAppDirPath = String()
     var currentFannelName = String()
     var displayUpdateCoroutineJob: Job? = null
@@ -108,7 +110,7 @@ class   TerminalFragment: Fragment() {
         if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
-        readSharedPreferences = EditFragmentArgs.get(this)
+        readSharedPreferences = EditFragmentArgs.getReadSharePreference(arguments)
         currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
             SharePrefferenceSetting.current_app_dir
@@ -117,6 +119,7 @@ class   TerminalFragment: Fragment() {
             readSharedPreferences,
             SharePrefferenceSetting.current_fannel_name
         )
+        editType = EditFragmentArgs.getEditType(arguments)
 
         ExecDownLoadManager.set(
             this,
@@ -148,8 +151,6 @@ class   TerminalFragment: Fragment() {
         WebViewSettings.set(this)
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
-        val fragArgs = arguments
-        val fragTag = fragArgs?.getString("tag")
         return binding.root
     }
 

@@ -45,7 +45,7 @@ object MultiSelectDialogForEdit {
                             sharePref,
                             SharePrefferenceSetting.current_fannel_name
                         ),
-                        FragmentTagManager.Suffix.ON.str
+                        FragmentTagManager.OnShortcutSuffix.ON.str
                     )
                     val settingEditFragmentTag = FragmentTagManager.makeTag(
                         FragmentTagManager.Prefix.cmdEditPrefix.str,

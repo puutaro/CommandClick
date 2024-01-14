@@ -24,7 +24,6 @@ class EditedTextContents(
     private val editFragment: EditFragment,
     readSharePreffernceMap: Map<String, String>
 ) {
-
     private val currentAppDirPath = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr

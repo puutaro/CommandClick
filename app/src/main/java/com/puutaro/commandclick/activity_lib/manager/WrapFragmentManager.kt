@@ -4,11 +4,9 @@ import android.os.Bundle
 import androidx.fragment.app.FragmentManager
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.curdForFragment.FragmentManagerForActivity
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 object WrapFragmentManager {
@@ -117,12 +115,6 @@ object WrapFragmentManager {
                 )
             }
             else -> {
-                FileSystems.writeFile(
-                    UsePath.cmdclickDefaultAppDirPath,
-                    "terminalFragmentArgs.txt",
-                    "terminalFragmentArgs: ${terminalFragment.arguments}\n" +
-                            "ReadMap: ${EditFragmentArgs.get(terminalFragment)}\n"
-                )
                 fragmentManagerForActivity.replaceFragment(
                     R.id.main_container,
                     terminalFragment,

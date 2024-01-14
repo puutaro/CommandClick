@@ -16,7 +16,7 @@ object KeyboardWhenTermLongForEdit {
         val editExecuteTerminal = TargetFragmentInstance().getFromFragment<TerminalFragment>(
             activity,
             context?.getString(
-                R.string.edit_execute_terminal_fragment
+                R.string.edit_terminal_fragment
             )
         ) ?: return
         if(!editExecuteTerminal.isVisible) return

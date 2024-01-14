@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
 import android.content.Context
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
@@ -9,7 +10,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShe
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ScriptFileEdit {
@@ -51,21 +51,24 @@ object ScriptFileEdit {
             currentAppDirPath,
             shellScriptName
         ).decideForEdit()
+            ?: return
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             currentAppDirPath,
             shellScriptName,
-            editFragmentTag?.let {
-                FragmentTagManager.makeListFromTag(editFragmentTag).get(
-                    FragmentTagManager.modeIndex
-                )
-            } ?: String()
+            SharePrefferenceSetting.on_shortcut.defalutStr,
         )
-        val listener = cmdIndexFragment.context
+        val context = cmdIndexFragment.context
+            ?: return
+        val listener = context
                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
         listener?.onLongClickMenuItemsforCmdIndex(
             LongClickMenuItemsforCmdIndex.EDIT,
-            EditFragmentArgs(readSharePreferenceMap),
-            editFragmentTag
+            EditFragmentArgs(
+                readSharePreferenceMap,
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+            ),
+            editFragmentTag,
+            context.getString(R.string.edit_terminal_fragment)
         )
     }
 }

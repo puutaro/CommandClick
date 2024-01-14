@@ -75,7 +75,7 @@ class InitFragmentManager(
                 startUpAppDirPath,
                 startUpScriptFileName
             )
-            || onShortcut != FragmentTagManager.Suffix.ON.name
+            || onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
         ) {
             WrapFragmentManager.initFragment(
                 savedInstanceState,
@@ -85,7 +85,7 @@ class InitFragmentManager(
             )
             return
         }
-        val onShortcutMark = FragmentTagManager.Suffix.ON.str
+        val onShortcutMark = FragmentTagManager.OnShortcutSuffix.ON.str
         val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             startUpAppDirPath,
@@ -105,8 +105,11 @@ class InitFragmentManager(
         WrapFragmentManager.changeFragmentEdit(
             activity.supportFragmentManager,
             cmdVariableEditFragmentTag,
-            activity.getString(R.string.edit_execute_terminal_fragment),
-            EditFragmentArgs(readSharePreferenceMapForNext),
+            activity.getString(R.string.edit_terminal_fragment),
+            EditFragmentArgs(
+                readSharePreferenceMapForNext,
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
+            ),
             true
         )
     }
@@ -149,7 +152,7 @@ class InitFragmentManager(
                 SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
                 SharePrefferenceSetting.current_fannel_name.name to currentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
-                        to FragmentTagManager.Suffix.ON.name
+                        to FragmentTagManager.OnShortcutSuffix.ON.name
             )
         )
         exedRestartIntent(

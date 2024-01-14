@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 
 class EditFragmentArgs(
     private val readSharePreferenceMap: Map<String, String>,
+    private val editType: EditTypeSettingsKey,
 ) {
 
     companion object {
@@ -13,9 +14,17 @@ class EditFragmentArgs(
         enum class FragmentArgsKey(
             val key: String,
         ){
-            CURRENT_APP_DIR_PATH("currentAppDirPath"),
-            CURRENT_FANNEL_NAME("currentFannelName"),
-            ON_SHORTCUT("onShortcut"),
+            CURRENT_APP_DIR_PATH(SharePrefferenceSetting.current_app_dir.name),
+            CURRENT_FANNEL_NAME(SharePrefferenceSetting.current_fannel_name.name),
+            ON_SHORTCUT(SharePrefferenceSetting.on_shortcut.name),
+            EDIT_TYPE("editType"),
+        }
+
+        enum class EditTypeSettingsKey(val key: String){
+            CMD_VAL_EDIT("cmdValEdit"),
+//            CMD_VAL_EDIT_EXECUTE("cmdValEditExecute"),
+//            CMD_VAL_EDIT("cmdValEdit"),
+            SETTING_VAL_EDIT("settingValEdit"),
         }
 
         fun createReadSharePreferenceMap(
@@ -30,10 +39,9 @@ class EditFragmentArgs(
             )
         }
 
-        fun get(
-            fragment: Fragment,
+        fun getReadSharePreference(
+            fragArgsBundle:  Bundle?,
         ): Map<String, String> {
-            val fragArgsBundle = fragment.arguments
             val currentAppDirPath =
                 fragArgsBundle?.getString(
                     FragmentArgsKey.CURRENT_APP_DIR_PATH.key
@@ -47,10 +55,21 @@ class EditFragmentArgs(
                     FragmentArgsKey.ON_SHORTCUT.key
                 ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
             return mapOf(
-                SharePrefferenceSetting.current_app_dir.name to currentAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.name to currentFannelName,
-                SharePrefferenceSetting.on_shortcut.name to onShortcut,
+                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
+                FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
+                FragmentArgsKey.ON_SHORTCUT.key to onShortcut,
             )
+        }
+
+        fun getEditType(fragArgsBundle:  Bundle?): EditTypeSettingsKey {
+            return fragArgsBundle?.getString(
+                    FragmentArgsKey.EDIT_TYPE.key
+                ).let {
+                    currentEditTypeSettingKey ->
+                    EditTypeSettingsKey.values().find {
+                        it.key == currentEditTypeSettingKey
+                    }
+            } ?: EditTypeSettingsKey.CMD_VAL_EDIT
         }
     }
 
@@ -81,6 +100,10 @@ class EditFragmentArgs(
         fragArgsBundle.putString(
             FragmentArgsKey.ON_SHORTCUT.key,
             onShortcut,
+        )
+        fragArgsBundle.putString(
+            FragmentArgsKey.EDIT_TYPE.key,
+            editType.key,
         )
         fragment.arguments = fragArgsBundle
         return fragment

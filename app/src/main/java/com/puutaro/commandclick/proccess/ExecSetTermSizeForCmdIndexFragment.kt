@@ -57,7 +57,10 @@ object ExecSetTermSizeForCmdIndexFragment {
             context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
         listener?.onToolbarMenuCategories(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
-            EditFragmentArgs(mapOf())
+            EditFragmentArgs(
+                mapOf(),
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+            )
         )
     }
 }

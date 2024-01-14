@@ -61,7 +61,10 @@ object ExecSetTermSizeForIntent {
                 val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
                 listener?.onToolbarMenuCategoriesForEdit(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
-                    EditFragmentArgs(currentFragment.readSharePreffernceMap),
+                    EditFragmentArgs(
+                        currentFragment.readSharePreffernceMap,
+                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                    ),
                 )
             }
             else -> {}

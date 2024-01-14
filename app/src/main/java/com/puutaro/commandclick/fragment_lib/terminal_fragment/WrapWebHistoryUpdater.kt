@@ -98,7 +98,7 @@ object WrapWebHistoryUpdater {
             FragmentTagManager.Prefix.cmdEditPrefix.str,
             terminalFragment.currentAppDirPath,
             terminalFragment.currentFannelName,
-            FragmentTagManager.Suffix.ON.name
+            FragmentTagManager.OnShortcutSuffix.ON.name
         )
         val commandIndexFragment =
             TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
