@@ -22,7 +22,7 @@ object TerminalOnHandlerForEdit {
                 val isShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
                     terminalFragment.readSharedPreferences,
                     SharePrefferenceSetting.on_shortcut
-                ) == FragmentTagManager.OnShortcutSuffix.ON.name
+                ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                 if(
                     isShortcut
                     && terminalFragment.terminalOn !=

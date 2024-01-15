@@ -23,7 +23,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
-import com.puutaro.commandclick.util.Map.CmdClickMap
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope

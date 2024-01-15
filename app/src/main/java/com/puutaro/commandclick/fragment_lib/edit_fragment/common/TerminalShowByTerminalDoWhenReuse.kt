@@ -21,7 +21,7 @@ object TerminalShowByTerminalDoWhenReuse {
         ) ?: return
         if(
             editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.cmdEditPrefix.str
+                FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
             ) != true
         ) return
         if(

@@ -63,15 +63,13 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                         SharePrefferenceSetting.current_fannel_name.name
                                 to cmdclickConfigFileName,
                         SharePrefferenceSetting.on_shortcut.name
-                                to FragmentTagManager.OnShortcutSuffix.ON.str
+                                to EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                     )
                 )
                 val cmdEditFragmentTag =
-                    FragmentTagManager.makeTag(
-                    FragmentTagManager.Prefix.cmdEditPrefix.str,
+                    FragmentTagManager.makeCmdValEditTag(
                     UsePath.cmdclickSystemAppDirPath,
                     cmdclickConfigFileName,
-                    FragmentTagManager.OnShortcutSuffix.ON.str
                 )
                 WrapFragmentManager.changeFragmentEdit(
                     activity.supportFragmentManager,

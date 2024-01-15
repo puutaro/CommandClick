@@ -23,11 +23,9 @@ object SearchViewAndAutoCompUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             terminalFragment.currentAppDirPath,
             terminalFragment.currentFannelName,
-            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val commandIndexFragment =
             TargetFragmentInstance().getFromFragment<CommandIndexFragment>(

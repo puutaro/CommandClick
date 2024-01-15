@@ -61,7 +61,7 @@ class UrlHistoryButtonEvent(
                 val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
                     fragment.readSharePreffernceMap,
                     SharePrefferenceSetting.on_shortcut
-                ) == FragmentTagManager.OnShortcutSuffix.ON.str
+                ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                 if(!onShortcut) return
             }
         }
@@ -206,7 +206,7 @@ class UrlHistoryButtonEvent(
                 return@setOnItemClickListener
             } else if (
                 fragmentTag?.startsWith(
-                    FragmentTagManager.Prefix.cmdEditPrefix.str
+                    FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
                 ) == true
             ) {
                 val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener

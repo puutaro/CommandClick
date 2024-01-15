@@ -230,18 +230,16 @@ class MainActivity:
     ) {
         val startUpPref = getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag =
-            FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
-            SharePreferenceMethod.getStringFromSharePreference(
-                startUpPref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                startUpPref,
-                SharePrefferenceSetting.current_fannel_name
-            ),
-            FragmentTagManager.OnShortcutSuffix.ON.name
-        )
+            FragmentTagManager.makeCmdValEditTag(
+                SharePreferenceMethod.getStringFromSharePreference(
+                    startUpPref,
+                    SharePrefferenceSetting.current_app_dir
+                ),
+                SharePreferenceMethod.getStringFromSharePreference(
+                    startUpPref,
+                    SharePrefferenceSetting.current_fannel_name
+                ),
+            )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(
             this,
             cmdEditFragmentTag,

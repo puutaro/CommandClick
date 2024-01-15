@@ -44,18 +44,14 @@ class DecideEditTag(
             return null
         }
         return if(enableCommandHolderVariablesEdit) {
-            FragmentTagManager.makeTag(
-                FragmentTagManager.Prefix.cmdEditPrefix.str,
+            FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
-                FragmentTagManager.OnShortcutSuffix.ON.str
             )
         } else {
-            FragmentTagManager.makeTag(
-                FragmentTagManager.Prefix.settingEditPrefix.str,
+            FragmentTagManager.makeSettingValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
-                String()
             )
         }
     }
@@ -67,18 +63,14 @@ class DecideEditTag(
             return null
         }
         return if(enableCommandHolderVariablesEdit) {
-            FragmentTagManager.makeTag(
-                FragmentTagManager.Prefix.cmdEditPrefix.str,
+            FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
-                String()
             )
         } else {
-            FragmentTagManager.makeTag(
-                FragmentTagManager.Prefix.settingEditPrefix.str,
+            FragmentTagManager.makeSettingValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
-                String()
             )
         }
     }

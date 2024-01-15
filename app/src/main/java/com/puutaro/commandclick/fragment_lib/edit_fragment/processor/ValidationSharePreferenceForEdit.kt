@@ -9,7 +9,7 @@ import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -95,7 +95,7 @@ class ValidationSharePreferenceForEdit(
         recentShellFileName: String
     ): Boolean {
         if(
-            onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
+            onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) return true
         shellContentsList = ReadText(
             checkCurrentAppDirPath,

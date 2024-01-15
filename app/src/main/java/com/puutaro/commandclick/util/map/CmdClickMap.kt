@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util.Map
+package com.puutaro.commandclick.util.map
 
 import com.puutaro.commandclick.util.CcScript
 

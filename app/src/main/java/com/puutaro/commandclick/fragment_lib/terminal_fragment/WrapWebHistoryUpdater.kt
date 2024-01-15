@@ -16,6 +16,7 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.*
 
@@ -94,11 +95,9 @@ object WrapWebHistoryUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             terminalFragment.currentAppDirPath,
             terminalFragment.currentFannelName,
-            FragmentTagManager.OnShortcutSuffix.ON.name
         )
         val commandIndexFragment =
             TargetFragmentInstance().getFromFragment<CommandIndexFragment>(

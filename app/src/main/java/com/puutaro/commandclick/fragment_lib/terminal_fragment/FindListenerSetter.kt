@@ -16,11 +16,9 @@ object FindListenerSetter {
         binding.terminalWebView.setFindListener {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
-            val cmdEditFragmentTag = FragmentTagManager.makeTag(
-                FragmentTagManager.Prefix.cmdEditPrefix.str,
+            val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
                 terminalFragment.currentAppDirPath,
                 terminalFragment.currentFannelName,
-                FragmentTagManager.OnShortcutSuffix.ON.str
             )
             val commandIndexFragment =
                 TargetFragmentInstance().getFromFragment<CommandIndexFragment>(

@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.libs.JsPathHandler
 import com.puutaro.commandclick.proccess.setting_button.libs.SettingButtonArgsMaker
-import com.puutaro.commandclick.util.Map.CmdClickMap
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 class SettingButtonHandler(
     private val fragment: Fragment,

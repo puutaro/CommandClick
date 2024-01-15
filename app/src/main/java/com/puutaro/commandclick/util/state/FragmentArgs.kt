@@ -27,6 +27,13 @@ class EditFragmentArgs(
             SETTING_VAL_EDIT("settingValEdit"),
         }
 
+        enum class OnShortcutSettingKey(
+            val key: String
+        ) {
+            ON("ON"),
+            OFF("OFF"),
+        }
+
         fun createReadSharePreferenceMap(
             currentAppDirPath: String,
             currentFannelName: String,

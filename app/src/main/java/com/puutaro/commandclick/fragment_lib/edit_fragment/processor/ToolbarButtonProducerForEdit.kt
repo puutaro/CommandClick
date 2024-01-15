@@ -3,9 +3,7 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.content.Context
 import android.view.View
 import android.widget.*
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -19,17 +17,16 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
     currentScriptContentsList: List<String>,
     readSharePreffernceMap: Map<String, String>,
-    private val enableCmdEdit: Boolean,
 ) {
 
     private val context = editFragment.context
@@ -42,7 +39,6 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap
     )
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
-    private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
     private val sharedPref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         editFragment,
@@ -92,21 +88,7 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap,
     )
 
-    private val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.on_shortcut
-    ) == FragmentTagManager.OnShortcutSuffix.ON.name
-
-    private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-        currentScriptContentsList,
-        editFragment.languageType
-    )
-    private val enableEditExecute =
-        (
-                editExecuteValue ==
-                        SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-                        && onShortcut
-                )
+    private val enableEditExecute = editFragment.enableEditExecute
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
@@ -114,18 +96,16 @@ class ToolbarButtonProducerForEdit(
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
-        editExecuteValue :String = SettingVariableSelects.EditExecuteSelects.NO.name,
-        setDrawble: Int? = null
+        setDrawable: Int? = null
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
         ) return
         insertImageButtonParam.weight = buttonWeight
-//              1F
         val makeButtonView = ImageButton(context)
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
-        when (setDrawble == null) {
+        when (setDrawable == null) {
             true->
                 makeButtonView.setImageResource(
                     toolbarButtonBariantForEdit.drawbleIconInt
@@ -133,7 +113,7 @@ class ToolbarButtonProducerForEdit(
 
             else ->
                 makeButtonView.setImageResource(
-                    setDrawble
+                    setDrawable
                 )
         }
         makeButtonView.backgroundTintList =
@@ -144,7 +124,7 @@ class ToolbarButtonProducerForEdit(
             makeButtonView.tag ==
             ToolbarButtonBariantForEdit.SETTING.str
         ) {
-            val isCmdEditInEditExecute = enableCmdEdit && enableEditExecute
+            val isCmdEditInEditExecute = editFragment.enableCmdEdit && enableEditExecute
             SettingButtonHandler.setIcon(
                 editFragment,
                 readSharePreffernceMap,
@@ -202,9 +182,7 @@ class ToolbarButtonProducerForEdit(
                         shellContentsList,
                         recordNumToMapNameValueInCommandHolder,
                         recordNumToMapNameValueInSettingHolder,
-                        toolbarButtonBariantForEdit,
-                        editExecuteValue,
-                        enableCmdEdit
+
                     )
                     return@setOnClickListener
                 }
@@ -215,18 +193,17 @@ class ToolbarButtonProducerForEdit(
                     )
                     return@setOnClickListener
                 }
-                ToolbarButtonBariantForEdit.EDIT -> {}
-                else -> {
-                    println("pass")
+                ToolbarButtonBariantForEdit.EDIT,
+                ToolbarButtonBariantForEdit.CANCEL -> {
+                    val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    listener?.onToolBarButtonClickForEditFragment(
+                        editFragment.tag,
+                        toolbarButtonBariantForEdit,
+                        readSharePreffernceMap,
+                        editFragment.enableCmdEdit
+                    )
                 }
             }
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                toolbarButtonBariantForEdit,
-                readSharePreffernceMap,
-                enableCmdEdit
-            )
         }
 
         binding.editToolbarLinearLayout.addView(makeButtonView)
@@ -235,24 +212,17 @@ class ToolbarButtonProducerForEdit(
     private fun howSetButton(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit
     ): Boolean {
-        if(!enableCmdEdit || !enableEditExecute){
-            return true
-        }
-        val onMark = SettingVariableSelects.disableEditButtonSelects.ON.name
         return when(toolbarButtonBariantForEdit){
-            ToolbarButtonBariantForEdit.CANCEL,
-            ToolbarButtonBariantForEdit.HISTORY -> {
-                true
-            }
-            ToolbarButtonBariantForEdit.OK -> {
-                editFragment.disablePlayButton != onMark
-            }
-            ToolbarButtonBariantForEdit.EDIT -> {
-                editFragment.disableEditButton != onMark
-            }
-            ToolbarButtonBariantForEdit.SETTING -> {
-                editFragment.disableSettingButton != onMark
-            }
+            ToolbarButtonBariantForEdit.CANCEL
+            -> true
+            ToolbarButtonBariantForEdit.HISTORY
+            -> !editFragment.onDisableHistoryButton
+            ToolbarButtonBariantForEdit.OK
+            -> !editFragment.onDisablePlayButton
+            ToolbarButtonBariantForEdit.EDIT
+            -> !editFragment.onDisableEditButton
+            ToolbarButtonBariantForEdit.SETTING
+            -> !editFragment.onDisableSettingButton
         }
     }
 
@@ -376,10 +346,10 @@ class ToolbarButtonProducerForEdit(
     ){
         if(
             editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.cmdEditPrefix.str
+                FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
             ) != true
             || editFragment.tag?.endsWith(
-                FragmentTagManager.OnShortcutSuffix.ON.name
+                EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
             ) != true
         ) return
         scriptFileSaver.save(
@@ -393,10 +363,8 @@ class ToolbarButtonProducerForEdit(
         shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
-        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        editExecuteValue: String,
-        enableCmdEdit: Boolean
     ){
+        val enableCmdEdit = editFragment.enableCmdEdit
         val onPassCmdVariableEdit =
             editFragment.passCmdVariableEdit ==
                     CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
@@ -406,82 +374,45 @@ class ToolbarButtonProducerForEdit(
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
+        val isCmdEditExecute = enableCmdEdit
+                && editFragment.enableEditExecute
+                && !onPassCmdVariableEdit
+        val isSettingEditByPass = enableCmdEdit
+                && editFragment.enableEditExecute
+                && onPassCmdVariableEdit
+        val isSettingEdit = !enableCmdEdit
 
+        val isOnlyCmdEdit = enableCmdEdit
+                && !editFragment.enableEditExecute
 
-        val EditExecuteAlways =
-            SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-        val EditExecuteOnce =
-            SettingVariableSelects.EditExecuteSelects.ONCE.name
-        val shortcutValue = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreffernceMap,
-            SharePrefferenceSetting.on_shortcut
-        )
-        val onShortcut =
-            shortcutValue != SharePrefferenceSetting.on_shortcut.defalutStr
-                && shortcutValue.isNotEmpty()
-        if(
-            editExecuteValue == EditExecuteAlways
-            && enableCmdEdit
-            && onShortcut
-            && !onPassCmdVariableEdit
-        ) {
-            Keyboard.hiddenKeyboardForFragment(
-                editFragment
-            )
-            TerminalShowByTerminalDo.show(
-                editFragment,
-                shellContentsList
-            )
-            ExecJsOrSellHandler.handle(
-                editFragment,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
-            return
+        when(true) {
+            isCmdEditExecute -> {
+                Keyboard.hiddenKeyboardForFragment(
+                    editFragment
+                )
+                TerminalShowByTerminalDo.show(
+                    editFragment,
+                    shellContentsList
+                )
+                ExecJsOrSellHandler.handle(
+                    editFragment,
+                    currentAppDirPath,
+                    currentScriptFileName,
+                )
+            }
+            isSettingEditByPass,
+            isOnlyCmdEdit,
+            isSettingEdit -> {
+                val listener =
+                    this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                listener?.onToolBarButtonClickForEditFragment(
+                    String(),
+                    ToolbarButtonBariantForEdit.CANCEL,
+                    mapOf(),
+                    false
+                )
+            }
+            else -> {}
         }
-        if(
-            (editExecuteValue == EditExecuteAlways)
-            == !enableCmdEdit
-            && onShortcut
-        ){
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                ToolbarButtonBariantForEdit.HISTORY,
-                readSharePreffernceMap,
-                enableCmdEdit
-            )
-            return
-        }
-        if(
-            editExecuteValue == EditExecuteOnce
-        ) {
-            terminalViewModel.editExecuteOnceCurrentShellFileName = currentScriptFileName
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                toolbarButtonBariantForEdit,
-                readSharePreffernceMap,
-                enableCmdEdit,
-            )
-            return
-        }
-        if(onPassCmdVariableEdit){
-            val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                ToolbarButtonBariantForEdit.CANCEL,
-                readSharePreffernceMap,
-                enableCmdEdit
-            )
-            return
-        }
-        val listener = this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-        listener?.onToolBarButtonClickForEditFragment(
-            editFragment.tag,
-            toolbarButtonBariantForEdit,
-            readSharePreffernceMap,
-            enableCmdEdit
-        )
     }
 }

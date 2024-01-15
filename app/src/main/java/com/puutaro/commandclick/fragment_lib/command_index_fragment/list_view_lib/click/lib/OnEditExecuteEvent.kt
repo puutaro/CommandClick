@@ -21,7 +21,7 @@ object OnEditExecuteEvent {
     ) {
         val context = fragment.context
             ?: return
-        val shortcutOnMark = FragmentTagManager.OnShortcutSuffix.ON.name
+        val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         SharePreferenceMethod.putSharePreference(
             sharedPref,
             mapOf(

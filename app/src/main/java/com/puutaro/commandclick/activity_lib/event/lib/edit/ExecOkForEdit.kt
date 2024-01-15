@@ -28,7 +28,7 @@ object ExecOkForEdit{
         val context = activity.applicationContext
         if(
             callOwnerFragmentTag?.startsWith(
-                FragmentTagManager.Prefix.settingEditPrefix.str
+                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
             ) != true
         ) {
             supportFragmentManager.popBackStackImmediate()

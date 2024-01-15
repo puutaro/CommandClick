@@ -21,7 +21,7 @@ class TargetFragmentInstance {
         return try {
             activity?.supportFragmentManager?.findFragmentByTag(
                 targetFragmentTag
-            )  as T
+            ) as T
         } catch (e: Exception){
             null
         }
@@ -128,8 +128,7 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        return FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
+        return FragmentTagManager.makeCmdValEditTag(
             SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
@@ -138,7 +137,6 @@ class TargetFragmentInstance {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-            FragmentTagManager.OnShortcutSuffix.ON.str
         )
     }
 

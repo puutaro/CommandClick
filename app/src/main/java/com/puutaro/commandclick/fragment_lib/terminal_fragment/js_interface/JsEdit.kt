@@ -71,11 +71,9 @@ class JsEdit(
     ): String {
         val editTextId = editViewModel.variableNameToEditTextIdMap.get(targetVariableName)
             ?: return String()
-        val cmdEditFragmentTag = FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
+        val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             terminalFragment.currentAppDirPath,
             terminalFragment.currentFannelName,
-            FragmentTagManager.OnShortcutSuffix.ON.str
         )
         val editFragment = TargetFragmentInstance().getFromFragment<EditFragment>(
             activity,

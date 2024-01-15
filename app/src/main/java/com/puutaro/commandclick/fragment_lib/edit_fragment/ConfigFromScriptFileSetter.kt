@@ -16,37 +16,31 @@ object ConfigFromScriptFileSetter {
 
     fun set(
         editFragment: EditFragment,
+        currentScriptContentsList: List<String>
     ){
-        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val readSharePreferenceMap = editFragment.readSharePreffernceMap
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+            readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
-        )
+        ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
         )
         val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-        val currentShellContentsList = ReadText(
-            currentAppDirPath,
-            currentScriptFileName
-        ).textToList()
+
         editFragment.existIndexList =
             judgeExistListIndex(
                 editFragment,
                 currentAppDirPath,
                 currentScriptFileName,
-                currentShellContentsList
+                currentScriptContentsList
             )
-        if (
-            onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
-        ) return
-
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            currentShellContentsList,
+            currentScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd
         )?.joinToString("\n")?.let {
@@ -56,6 +50,17 @@ object ConfigFromScriptFileSetter {
                 currentScriptFileName,
             )
         }?.split("\n")
+        if (
+            !onShortcut
+        ) {
+            setButtonVisible(
+                editFragment,
+                settingVariableList,
+                onShortcut
+            )
+            return
+        }
+
 
         editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
             settingVariableList,
@@ -101,37 +106,6 @@ object ConfigFromScriptFileSetter {
             editFragment.statusBarIconColorMode,
             listOf(
                 SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
-            ),
-        )
-
-        editFragment.disableSettingButton = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.DISABLE_SETTING_BUTTON,
-            CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
-            String(),
-            CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.disableSettingButtonSelects.ON.name
-            ),
-        )
-        editFragment.disableEditButton = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.DISABLE_EDIT_BUTTON,
-            CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
-            String(),
-            CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.disableEditButtonSelects.ON.name
-            ),
-        )
-        editFragment.disablePlayButton = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.DISABLE_PLAY_BUTTON,
-            CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
-            String(),
-            CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.disablePlayButtonSelects.ON.name
             ),
         )
 
@@ -184,6 +158,12 @@ object ConfigFromScriptFileSetter {
             String(),
         )
 
+        setButtonVisible(
+            editFragment,
+            settingVariableList,
+            onShortcut
+        )
+
         val bottomScriptUrlList = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
                 UsePath.homeScriptUrlsFilePath,
@@ -209,7 +189,7 @@ object ConfigFromScriptFileSetter {
 
         if(
             editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.settingEditPrefix.str
+                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
             ) == true
         ) return
         editFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
@@ -259,5 +239,93 @@ object ConfigFromScriptFileSetter {
                 ":${EditTextSupportViewName.LIST_INDEX.str}="
             )
         } ?: false
+    }
+
+    private fun setButtonVisible(
+        editFragment: EditFragment,
+        settingVariableList: List<String>?,
+        onShortcut: Boolean
+    ){
+        editFragment.editExecuteValue = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.EDIT_EXECUTE,
+            CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
+        )
+        editFragment.enableEditExecute =
+            (editFragment.editExecuteValue ==
+                    SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+                    ) && onShortcut
+
+        val enableCmdEdit = editFragment.enableCmdEdit
+
+        val isSettingEdit = !enableCmdEdit
+                || editFragment.passCmdVariableEdit ==
+                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
+        val isOnlyCmdEdit = enableCmdEdit
+                && !editFragment.enableEditExecute
+//        val isCmdEditExecute = enableCmdEdit
+//                && editFragment.enableEditExecute
+        editFragment.onDisableHistoryButton =
+            isOnlyCmdEdit || isSettingEdit
+        editFragment.onDisableSettingButton =
+            when(true) {
+                isSettingEdit,
+                isOnlyCmdEdit -> true
+                else -> SettingVariableReader.getCbValue(
+                    settingVariableList,
+                    CommandClickScriptVariable.DISABLE_SETTING_BUTTON,
+                    CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
+                    String(),
+                    CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE,
+                    listOf(
+                        SettingVariableSelects.disableSettingButtonSelects.ON.name
+                    ),
+                ) == SettingVariableSelects.disableSettingButtonSelects.ON.name
+            }
+
+        editFragment.onDisableEditButton =
+            when (true) {
+                isSettingEdit -> true
+                isOnlyCmdEdit -> false
+                else -> SettingVariableReader.getCbValue(
+                    settingVariableList,
+                    CommandClickScriptVariable.DISABLE_EDIT_BUTTON,
+                    CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
+                    String(),
+                    CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE,
+                    listOf(
+                        SettingVariableSelects.disableEditButtonSelects.ON.name
+                    ),
+                ) == SettingVariableSelects.disableEditButtonSelects.ON.name
+            }
+        editFragment.onDisablePlayButton =
+            when(true) {
+                isSettingEdit -> false
+                isOnlyCmdEdit -> false
+                else -> SettingVariableReader.getCbValue(
+                    settingVariableList,
+                    CommandClickScriptVariable.DISABLE_PLAY_BUTTON,
+                    CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
+                    String(),
+                    CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE,
+                    listOf(
+                        SettingVariableSelects.disablePlayButtonSelects.ON.name
+                    ),
+                ) == SettingVariableSelects.disablePlayButtonSelects.ON.name
+            }
+        FileSystems.writeFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "editPara.txt",
+            "editExecuteValue: ${editFragment.editExecuteValue}\n" +
+                    "onShortcut: ${onShortcut}\n" +
+                    "enableCmdEdit:${enableCmdEdit}\n" +
+                    "tag: ${editFragment.tag}\n" +
+                    "onDisableHistoryButton: ${ editFragment.onDisableHistoryButton}\n" +
+                    "onDisablePlayButton: ${ editFragment.onDisablePlayButton}\n" +
+                    "onDisableEditButton: ${ editFragment.onDisableEditButton}\n" +
+                    "onDisableSettingButton: ${ editFragment.onDisableSettingButton}\n" +
+                    "passCmdVariableEdit: ${editFragment.passCmdVariableEdit}\n"
+        )
+
     }
 }

@@ -52,7 +52,7 @@ import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.Map.ConfigMapTool
+import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.SharePreferenceMethod

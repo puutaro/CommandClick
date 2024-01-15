@@ -75,7 +75,7 @@ class InitFragmentManager(
                 startUpAppDirPath,
                 startUpScriptFileName
             )
-            || onShortcut != FragmentTagManager.OnShortcutSuffix.ON.name
+            || onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) {
             WrapFragmentManager.initFragment(
                 savedInstanceState,
@@ -85,12 +85,9 @@ class InitFragmentManager(
             )
             return
         }
-        val onShortcutMark = FragmentTagManager.OnShortcutSuffix.ON.str
-        val cmdVariableEditFragmentTag = FragmentTagManager.makeTag(
-            FragmentTagManager.Prefix.cmdEditPrefix.str,
+        val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             startUpAppDirPath,
             startUpScriptFileName,
-            onShortcutMark
         )
         val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
             startUpAppDirPath,
@@ -152,7 +149,7 @@ class InitFragmentManager(
                 SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
                 SharePrefferenceSetting.current_fannel_name.name to currentShellFileName,
                 SharePrefferenceSetting.on_shortcut.name
-                        to FragmentTagManager.OnShortcutSuffix.ON.name
+                        to EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
             )
         )
         exedRestartIntent(

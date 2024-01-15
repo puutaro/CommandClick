@@ -97,6 +97,9 @@ class EditFragment: Fragment() {
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+    var enableCmdEdit = false
+    var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
+    var enableEditExecute = false
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
@@ -104,9 +107,10 @@ class EditFragment: Fragment() {
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
-    var disableSettingButton = CommandClickScriptVariable.DISABLE_SETTING_BUTTON_DEFAULT_VALUE
-    var disableEditButton = CommandClickScriptVariable.DISABLE_EDIT_BUTTON_DEFAULT_VALUE
-    var disablePlayButton = CommandClickScriptVariable.DISABLE_PLAY_BUTTON_DEFAULT_VALUE
+    var onDisableHistoryButton = false
+    var onDisableSettingButton = false
+    var onDisableEditButton = false
+    var onDisablePlayButton = false
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var isInstallFannelForListIndex = false
@@ -142,7 +146,27 @@ class EditFragment: Fragment() {
         binding.editListLinearLayout.isVisible = false
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         readSharePreffernceMap = EditFragmentArgs.getReadSharePreference(arguments)
+
+        val currentAppDirPath =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+        val currentScriptFileName =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_fannel_name
+            )
+        val onShortcutValue =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.on_shortcut
+            )
+
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
+        enableCmdEdit =
+            editTypeSettingKey ==
+                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         Keyboard.hiddenKeyboardForFragment(
             this
         )
@@ -162,21 +186,6 @@ class EditFragment: Fragment() {
             validationSharePreferenceForEdit
                 .checkIndexList()
         if(!checkOkIndexList) return
-        val currentAppDirPath =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
-            )
-        val currentScriptFileName =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_fannel_name
-            )
-        val shortcutOn =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.on_shortcut
-            )
         SharePreferenceMethod.putSharePreference(
             sharePref,
             mapOf(
@@ -185,7 +194,7 @@ class EditFragment: Fragment() {
                 SharePrefferenceSetting.current_fannel_name.name
                         to currentScriptFileName,
                 SharePrefferenceSetting.on_shortcut.name
-                        to shortcutOn
+                        to onShortcutValue
             )
         )
 
@@ -207,8 +216,13 @@ class EditFragment: Fragment() {
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
 
+        val currentScriptContentsList = ReadText(
+            currentAppDirPath,
+            currentScriptFileName
+        ).textToList()
         ConfigFromScriptFileSetter.set(
             this,
+            currentScriptContentsList,
         )
         if(
             UpdateLastModifyForEdit().judge(
@@ -249,10 +263,6 @@ class EditFragment: Fragment() {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
 
-        val currentScriptContentsList = ReadText(
-            currentAppDirPath,
-            currentScriptFileName
-        ).textToList()
         val editModeHandler = EditModeHandler(
             this,
             binding,

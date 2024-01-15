@@ -25,7 +25,6 @@ class EditTextProducerForEdit(
     private val currentScriptContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
-    enableCmdEdit: Boolean
 ) {
     private val binding = editFragment.binding
     private val context = editFragment.context
@@ -76,7 +75,6 @@ class EditTextProducerForEdit(
 
     private val withEditComponent = WithEditComponent(
         editFragment,
-        enableCmdEdit
     )
 
     private val withIndexListView = WithIndexListView(

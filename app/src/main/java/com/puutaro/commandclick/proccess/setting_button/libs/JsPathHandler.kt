@@ -42,7 +42,7 @@ import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfig
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.proccess.setting_button.SystemFannelLauncher
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.Map.CmdClickMap
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems

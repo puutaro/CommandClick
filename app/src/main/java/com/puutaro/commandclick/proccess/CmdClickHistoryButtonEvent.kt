@@ -208,7 +208,7 @@ class CmdClickHistoryButtonEvent (
                 val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
                     appDirName,
                     fannelName,
-                    FragmentTagManager.OnShortcutSuffix.ON.name,
+                    EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                 )
                 val cmdValEdit =
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT

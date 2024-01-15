@@ -35,8 +35,7 @@ object MultiSelectDialogForEdit {
                     dataString: String
                 ) {
                     val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-                    val cmdEditFragmentTag = FragmentTagManager.makeTag(
-                        FragmentTagManager.Prefix.cmdEditPrefix.str,
+                    val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
                         SharePreferenceMethod.getStringFromSharePreference(
                             sharePref,
                             SharePrefferenceSetting.current_app_dir
@@ -45,10 +44,8 @@ object MultiSelectDialogForEdit {
                             sharePref,
                             SharePrefferenceSetting.current_fannel_name
                         ),
-                        FragmentTagManager.OnShortcutSuffix.ON.str
                     )
-                    val settingEditFragmentTag = FragmentTagManager.makeTag(
-                        FragmentTagManager.Prefix.cmdEditPrefix.str,
+                    val settingEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
                         SharePreferenceMethod.getStringFromSharePreference(
                             sharePref,
                             SharePrefferenceSetting.current_app_dir
@@ -57,7 +54,6 @@ object MultiSelectDialogForEdit {
                             sharePref,
                             SharePrefferenceSetting.current_fannel_name
                         ),
-                        String()
                     )
                     val editFragmentSource = TargetFragmentInstance().getFromActivity<EditFragment>(
                         activity,

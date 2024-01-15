@@ -49,7 +49,7 @@ object EditToolbarSwitcher {
         if(
             cmdEditFragmentConfirm.tag
                 ?.startsWith(
-                    FragmentTagManager.Prefix.cmdEditPrefix.str
+                    FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
                 ) != true
         ) return
         val onExec = execJsFile(

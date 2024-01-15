@@ -35,7 +35,7 @@ class ScriptFileSaver(
             editFragment.passCmdVariableEdit
             == CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
             || editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.settingEditPrefix.str
+                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
             ) == true
         ){
             if(onButton) return

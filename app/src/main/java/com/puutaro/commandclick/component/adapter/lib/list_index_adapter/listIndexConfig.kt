@@ -5,7 +5,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.Map.CmdClickMap
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
 

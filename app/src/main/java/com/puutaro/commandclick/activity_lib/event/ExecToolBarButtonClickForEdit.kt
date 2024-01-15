@@ -36,7 +36,7 @@ object ExecToolBarButtonClickForEdit {
                     enableCmdEdit
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
-                val onShortcut = FragmentTagManager.OnShortcutSuffix.OFF.name
+                val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
                 val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
                     sharePref,
                     SharePrefferenceSetting.current_app_dir
@@ -45,16 +45,14 @@ object ExecToolBarButtonClickForEdit {
                     sharePref,
                     SharePrefferenceSetting.current_fannel_name
                 )
-                val settingEditFragmentTag = FragmentTagManager.makeTag(
-                    FragmentTagManager.Prefix.settingEditPrefix.str,
+                val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
                     currentAppDirPath,
                     currentFannelName,
-                    onShortcut
                 )
                 val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
                     currentAppDirPath,
                     currentFannelName,
-                    onShortcut,
+                    onShortcutOff,
                 )
                 ExecCommandEdit.execCommandEdit(
                     activity,

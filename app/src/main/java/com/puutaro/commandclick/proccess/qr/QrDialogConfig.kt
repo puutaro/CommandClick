@@ -5,8 +5,8 @@ import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.Map.CmdClickMap
-import com.puutaro.commandclick.util.Map.ConfigMapTool
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.ConfigMapTool
 import java.io.File
 
 object QrDialogConfig {

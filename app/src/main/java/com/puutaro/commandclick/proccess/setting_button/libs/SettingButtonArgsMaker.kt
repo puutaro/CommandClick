@@ -16,8 +16,8 @@ import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfig
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.Map.CmdClickMap
-import com.puutaro.commandclick.util.Map.ConfigMapTool
+import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer

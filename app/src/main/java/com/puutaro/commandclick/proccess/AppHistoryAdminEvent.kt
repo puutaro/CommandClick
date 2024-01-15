@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -93,7 +94,7 @@ object AppHistoryAdminEvent {
         ) {
             SharePrefferenceSetting.on_shortcut.defalutStr
         } else {
-            FragmentTagManager.OnShortcutSuffix.ON.name
+            EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
         SharePreferenceMethod.putSharePreference(
             sharedPref,

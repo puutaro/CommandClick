@@ -45,7 +45,6 @@ import kotlinx.coroutines.withContext
 
 class WithEditComponent(
     private val editFragment: EditFragment,
-    private val enableCmdEdit: Boolean
 ) {
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
