@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.R
-import android.content.Context
 import android.widget.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -21,7 +20,6 @@ import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 class EditTextProducerForEdit(
     private val editFragment: EditFragment,
-    readSharePreffernceMap: Map<String, String>,
     private val currentScriptContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
@@ -30,6 +28,7 @@ class EditTextProducerForEdit(
     private val context = editFragment.context
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -56,9 +55,6 @@ class EditTextProducerForEdit(
             setVariableTypeList,
             recordNumToMapNameValueInCommandHolder
         )
-
-    private val readSharePreffernceMap =
-        editFragment.readSharePreffernceMap
 
 
     private val hideSettingVariableList = makeHideVariableList()
@@ -101,9 +97,8 @@ class EditTextProducerForEdit(
             )
             binding.editLinearLayout.addView(
                 makeDescriptionButton(
-                    context,
+                    editFragment,
                     currentScriptContentsList,
-                    readSharePreffernceMap
                 )
             )
             return
@@ -115,9 +110,8 @@ class EditTextProducerForEdit(
         )
         binding.editLinearLayout.addView(
             makeDescriptionButton(
-                context,
+                editFragment,
                 currentScriptContentsList,
-                readSharePreffernceMap
             )
         )
     }
@@ -193,10 +187,11 @@ class EditTextProducerForEdit(
     }
 
     private fun makeDescriptionButton(
-        context: Context?,
+        editFragment: EditFragment,
         currentShellContentsList: List<String>,
-        readSharePreffernceMap: Map<String, String>
     ): Button {
+        val context = editFragment.context
+        val readSharePreffernceMap = editFragment.readSharePreffernceMap
         val descriptionButton = Button(context)
         val buttonLabel = "Desctiption"
         descriptionButton.text = buttonLabel
@@ -216,7 +211,7 @@ class EditTextProducerForEdit(
         }
         descriptionButton.setOnClickListener { innerButtonView ->
             ScriptFileDescription.show(
-               editFragment,
+                this.editFragment,
                 currentShellContentsList,
                 currentAppDirPath,
                 SharePreferenceMethod.getReadSharePreffernceMap(

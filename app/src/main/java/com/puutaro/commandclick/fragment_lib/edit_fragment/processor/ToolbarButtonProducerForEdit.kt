@@ -92,7 +92,6 @@ class ToolbarButtonProducerForEdit(
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        buttonWeight: Float,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
@@ -101,7 +100,7 @@ class ToolbarButtonProducerForEdit(
         if(
             !howSetButton(toolbarButtonBariantForEdit)
         ) return
-        insertImageButtonParam.weight = buttonWeight
+        insertImageButtonParam.weight = editFragment.buttonWeight
         val makeButtonView = ImageButton(context)
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
@@ -212,18 +211,9 @@ class ToolbarButtonProducerForEdit(
     private fun howSetButton(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit
     ): Boolean {
-        return when(toolbarButtonBariantForEdit){
-            ToolbarButtonBariantForEdit.CANCEL
-            -> true
-            ToolbarButtonBariantForEdit.HISTORY
-            -> !editFragment.onDisableHistoryButton
-            ToolbarButtonBariantForEdit.OK
-            -> !editFragment.onDisablePlayButton
-            ToolbarButtonBariantForEdit.EDIT
-            -> !editFragment.onDisableEditButton
-            ToolbarButtonBariantForEdit.SETTING
-            -> !editFragment.onDisableSettingButton
-        }
+        return editFragment.toolBarButtonDisableMap.filter {
+            it.key == toolbarButtonBariantForEdit
+        }.values.firstOrNull()?.let { !it } ?: true
     }
 
     private fun onLongClickHandler(

@@ -39,6 +39,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationS
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
@@ -107,10 +108,8 @@ class EditFragment: Fragment() {
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
-    var onDisableHistoryButton = false
-    var onDisableSettingButton = false
-    var onDisableEditButton = false
-    var onDisablePlayButton = false
+    val toolBarButtonDisableMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
+    var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var isInstallFannelForListIndex = false
@@ -224,6 +223,7 @@ class EditFragment: Fragment() {
             this,
             currentScriptContentsList,
         )
+        buttonWeight = ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
             UpdateLastModifyForEdit().judge(
                 this,

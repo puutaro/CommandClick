@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -265,9 +266,12 @@ object ConfigFromScriptFileSetter {
                 && !editFragment.enableEditExecute
 //        val isCmdEditExecute = enableCmdEdit
 //                && editFragment.enableEditExecute
-        editFragment.onDisableHistoryButton =
+        editFragment.toolBarButtonDisableMap.put(
+            ToolbarButtonBariantForEdit.HISTORY,
             isOnlyCmdEdit || isSettingEdit
-        editFragment.onDisableSettingButton =
+        )
+        editFragment.toolBarButtonDisableMap.put(
+            ToolbarButtonBariantForEdit.SETTING,
             when(true) {
                 isSettingEdit,
                 isOnlyCmdEdit -> true
@@ -282,8 +286,9 @@ object ConfigFromScriptFileSetter {
                     ),
                 ) == SettingVariableSelects.disableSettingButtonSelects.ON.name
             }
-
-        editFragment.onDisableEditButton =
+        )
+        editFragment.toolBarButtonDisableMap.put(
+            ToolbarButtonBariantForEdit.EDIT,
             when (true) {
                 isSettingEdit -> true
                 isOnlyCmdEdit -> false
@@ -298,7 +303,10 @@ object ConfigFromScriptFileSetter {
                     ),
                 ) == SettingVariableSelects.disableEditButtonSelects.ON.name
             }
-        editFragment.onDisablePlayButton =
+        )
+
+        editFragment.toolBarButtonDisableMap.put(
+            ToolbarButtonBariantForEdit.OK,
             when(true) {
                 isSettingEdit -> false
                 isOnlyCmdEdit -> false
@@ -313,19 +321,6 @@ object ConfigFromScriptFileSetter {
                     ),
                 ) == SettingVariableSelects.disablePlayButtonSelects.ON.name
             }
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "editPara.txt",
-            "editExecuteValue: ${editFragment.editExecuteValue}\n" +
-                    "onShortcut: ${onShortcut}\n" +
-                    "enableCmdEdit:${enableCmdEdit}\n" +
-                    "tag: ${editFragment.tag}\n" +
-                    "onDisableHistoryButton: ${ editFragment.onDisableHistoryButton}\n" +
-                    "onDisablePlayButton: ${ editFragment.onDisablePlayButton}\n" +
-                    "onDisableEditButton: ${ editFragment.onDisableEditButton}\n" +
-                    "onDisableSettingButton: ${ editFragment.onDisableSettingButton}\n" +
-                    "passCmdVariableEdit: ${editFragment.passCmdVariableEdit}\n"
         )
-
     }
 }

@@ -19,7 +19,7 @@ object ExecToolBarButtonClickForEdit {
         activity: MainActivity,
         callOwnerFragmentTag : String?,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        readSharePreffernceMap: Map<String, String>,
+        readSharePreferenceMap: Map<String, String>,
         enableCmdEdit: Boolean,
     ){
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
@@ -28,7 +28,7 @@ object ExecToolBarButtonClickForEdit {
                 ExecOkForEdit.execOkForEdit(
                     activity,
                     callOwnerFragmentTag,
-                    readSharePreffernceMap,
+                    readSharePreferenceMap,
                 )
             ToolbarButtonBariantForEdit.HISTORY ->
                 cancelHandler(

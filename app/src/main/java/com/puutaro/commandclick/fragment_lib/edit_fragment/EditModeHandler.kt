@@ -104,22 +104,18 @@ class EditModeHandler(
             editExecuteValue,
             readSharePreffernceMap,
         )
-        val buttonWeight = culcButtonWeight()
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
-            buttonWeight
         )
 
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
-            buttonWeight,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentScriptContentsList,
             setDrawble = setDrawableForOk(),
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            readSharePreffernceMap,
             currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -128,13 +124,11 @@ class EditModeHandler(
 
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
-            buttonWeight,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentScriptContentsList,
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
-            buttonWeight,
         )
     }
 
@@ -180,22 +174,19 @@ class EditModeHandler(
             }
             return
         }
-        val settingWeight = 0.25F
-        buttonCreate(
-            ToolbarButtonBariantForEdit.HISTORY,
-            1f,
-        )
+//        buttonCreate(
+//            ToolbarButtonBariantForEdit.HISTORY,
+//            1f,
+//        )
 
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
-            settingWeight,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             currentScriptContentsList,
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            readSharePreffernceMap,
             currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
@@ -203,20 +194,19 @@ class EditModeHandler(
         editTextProducerForEdit.adds(
             true
         )
-        buttonCreate(
-            ToolbarButtonBariantForEdit.EDIT,
-            settingWeight,
-            recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-        )
-        buttonCreate(
-            ToolbarButtonBariantForEdit.SETTING,
-            settingWeight,
-        )
+//        buttonCreate(
+//            ToolbarButtonBariantForEdit.EDIT,
+//            settingWeight,
+//            recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
+//        )
+//        buttonCreate(
+//            ToolbarButtonBariantForEdit.SETTING,
+//            settingWeight,
+//        )
     }
 
     private fun buttonCreate(
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
-        buttonWeight: Float,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
@@ -224,7 +214,6 @@ class EditModeHandler(
     ){
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
-            buttonWeight,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             shellContentsList,
@@ -245,14 +234,9 @@ class EditModeHandler(
         }
     }
 
-    private fun culcButtonWeight(): Float {
-        return listOf(
-            editFragment.onDisableHistoryButton,
-            editFragment.onDisableEditButton,
-            editFragment.onDisablePlayButton,
-            editFragment.onDisableSettingButton,
-        ).filter {
-            !it
-        }.size.let { 1.0F / it }
-    }
+//    private fun culcButtonWeight(): Float {
+//        return editFragment.toolBarButtonDisableMap.values.filter {
+//            !it
+//        }.size.let { 1.0F / it }
+//    }
 }
