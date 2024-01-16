@@ -7,8 +7,8 @@ import com.puutaro.commandclick.util.AssetsFileManager
 object JsPathForEditButton {
 
     val iconSelectBoxArgsKeySeparator = "@@@"
-    val buttonIconSeparator = "///"
-    val buttonIconNameIdSeparator = "???"
+    val buttonIconSeparator = "\t"
+    val buttonIconNameIdSeparator = "|"
 
     enum class JsPathMacroForEditButton {
         ICON_SELECT_BOX
@@ -18,7 +18,12 @@ object JsPathForEditButton {
         val key: String,
     ) {
         VAL_NAME("valName"),
-        LIST_SRC("listSrc"),
+        LIST_PATH("listPath"),
+        INIT_LIST_PATH("initListPath"),
+    }
+
+    enum class ListPathMacroForEditButton {
+        ICON_LIST
     }
 
     fun jsPathMacroHandler(

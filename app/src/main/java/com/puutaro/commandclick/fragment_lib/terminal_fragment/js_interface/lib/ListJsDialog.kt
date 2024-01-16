@@ -33,7 +33,7 @@ class ListJsDialog(
     companion object {
         val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
         val iconNameIndex = 1
-        val nameIconNameSeparator = "???"
+        val nameIconNameSeparator = "|"
     }
 
     fun create(

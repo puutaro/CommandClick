@@ -749,15 +749,8 @@ object ButtonViewProducer {
                 buttonMap
             )
         ) Keyboard.hiddenKeyboardForFragment(editFragment)
-        terminalViewModel.jsArguments = if(execCmdReplaceBlankList.size > 1){
-            execCmdReplaceBlankList
-                .slice(2..execCmdReplaceBlankList.size-1)
-                .map{
-                    QuoteTool.trimBothEdgeQuote(
-                        it.replace(blankString, " ")
-                    )
-                }.joinToString("\t")
-        } else String()
+
+        terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
         when(isJsMacro){
             true -> JsPathForEditButton.jsPathMacroHandler(
                 editFragment,
@@ -768,6 +761,20 @@ object ButtonViewProducer {
                 jsFilePath,
             )
         }
+    }
+
+    private fun makeArgs(
+        execCmdReplaceBlankList: List<String>,
+    ): String {
+        return if(execCmdReplaceBlankList.size > 1){
+            execCmdReplaceBlankList
+                .slice(2..execCmdReplaceBlankList.size-1)
+                .map{
+                    QuoteTool.trimBothEdgeQuote(
+                        it.replace(blankString, " ")
+                    )
+                }.joinToString("\t")
+        } else String()
     }
 
     private fun makeButtonLabel(

@@ -407,11 +407,11 @@ object CommandClickScriptVariable {
     ): String {
         val iconSelectBoxArgsKeySeparator = JsPathForEditButton.iconSelectBoxArgsKeySeparator
         val iconSelectBoxArgsValNameKey = JsPathForEditButton.IconSelectBoxArgsKey.VAL_NAME.key
-        val iconSelectBoxArgslistSrcKey = JsPathForEditButton.IconSelectBoxArgsKey.LIST_SRC.key
+        val iconSelectBoxArgslistPathKey = JsPathForEditButton.IconSelectBoxArgsKey.LIST_PATH.key
         val iconSelectBoxMacro = JsPathForEditButton.JsPathMacroForEditButton.ICON_SELECT_BOX.name
         val iconSelectBoxArgsMapCon = listOf(
             "${iconSelectBoxArgsValNameKey}=${editButtonIconValName}",
-            "${iconSelectBoxArgslistSrcKey}=${buttonIconNameIdPairListStr}",
+            "${iconSelectBoxArgslistPathKey}=${JsPathForEditButton.ListPathMacroForEditButton.ICON_LIST.name}",
         ).joinToString(iconSelectBoxArgsKeySeparator)
         return "$buttonCmd=" +
                 listOf(
