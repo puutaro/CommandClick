@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.common.variable.variables
 
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
 import java.io.File
@@ -96,6 +98,8 @@ object CommandClickScriptVariable {
     val DISABLE_SETTING_BUTTON = "disableSettingButton"
     val DISABLE_PLAY_BUTTON = "disablePlayButton"
     val DISABLE_EDIT_BUTTON = "disableEditButton"
+    val PLAY_BUTTON_ICON = "playButtonIcon"
+    val SETTING_BUTTON_ICON = "settingButtonIcon"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
     val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
@@ -143,6 +147,8 @@ object CommandClickScriptVariable {
         IGNORE_HISTORY_PATHS,
         HOME_SCRIPT_URLS_PATH,
         OVERRIDE_ITEM_CLICK_EXEC,
+        PLAY_BUTTON_ICON,
+        SETTING_BUTTON_ICON,
         DISABLE_SETTING_BUTTON,
         DISABLE_EDIT_BUTTON,
         DISABLE_PLAY_BUTTON,
@@ -212,6 +218,8 @@ object CommandClickScriptVariable {
     private val disableEditButtonOff = SettingVariableSelects.disableEditButtonSelects.OFF.name
     private val disablePlayButtonOn = SettingVariableSelects.disablePlayButtonSelects.ON.name
     private val disablePlayButtonOff = SettingVariableSelects.disablePlayButtonSelects.OFF.name
+    private val playButtonIconOk = SettingVariableSelects.PlayButtonIconSelects.ok.name
+    private val settingButtonIconSetting = SettingVariableSelects.SettingButtonIconSelects.setting.name
     val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
     val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
@@ -229,6 +237,8 @@ object CommandClickScriptVariable {
     val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
     val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
+    val PLAY_BUTTON_ICON_DEFAULT_VALUE = playButtonIconOk
+    val SETTING_BUTTON_ICON_DEFAULT_VALUE = settingButtonIconSetting
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
@@ -323,6 +333,20 @@ object CommandClickScriptVariable {
                     "$buttonSetfListAddSourceDirPath=\${01}" +
                             "!$buttonLabel=ADD"
                 ).joinToString(" ")
+    val buttonIconSeparator = JsPathForEditButton.buttonIconSeparator
+    val buttonIconNameIdSeparator = JsPathForEditButton.buttonIconNameIdSeparator
+    val buttonIconNameIdPairListStr = CmdClickIcons.values().reversed().map {
+        "${it.str}${buttonIconNameIdSeparator}${it.str}"
+    }.joinToString(buttonIconSeparator)
+    private val setVariableValueForPlayButtonIcon =
+        iconSetForEditButton(
+            PLAY_BUTTON_ICON
+        )
+    private val setVariableValueForSettingButtonIcon =
+        iconSetForEditButton(
+            SETTING_BUTTON_ICON
+        )
+
     private val setVariableValueForNoScrollSaveUrlsFilePath =
         "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
     val setVariableForSettingHolder: List<String> = listOf(
@@ -350,6 +374,8 @@ object CommandClickScriptVariable {
         "$DISABLE_SETTING_BUTTON:CB=$disableSettingButtonOff!$disableSettingButtonOn",
         "$DISABLE_EDIT_BUTTON:CB=$disableEditButtonOff!$disableEditButtonOn",
         "$DISABLE_PLAY_BUTTON:CB=$disablePlayButtonOff!$disablePlayButtonOn",
+        "$PLAY_BUTTON_ICON:TXT:RO:BTN=${setVariableValueForPlayButtonIcon}",
+        "$SETTING_BUTTON_ICON:TXT:RO:BTN=${setVariableValueForSettingButtonIcon}",
         "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000!1",
         "$TERMINAL_COLOR:TXT:CLR=",
@@ -376,11 +402,28 @@ object CommandClickScriptVariable {
         return (1..10000).random().toString() + scriptSuffix
     }
 
+    private fun iconSetForEditButton(
+        editButtonIconValName: String,
+    ): String {
+        val iconSelectBoxArgsKeySeparator = JsPathForEditButton.iconSelectBoxArgsKeySeparator
+        val iconSelectBoxArgsValNameKey = JsPathForEditButton.IconSelectBoxArgsKey.VAL_NAME.key
+        val iconSelectBoxArgslistSrcKey = JsPathForEditButton.IconSelectBoxArgsKey.LIST_SRC.key
+        val iconSelectBoxMacro = JsPathForEditButton.JsPathMacroForEditButton.ICON_SELECT_BOX.name
+        val iconSelectBoxArgsMapCon = listOf(
+            "${iconSelectBoxArgsValNameKey}=${editButtonIconValName}",
+            "${iconSelectBoxArgslistSrcKey}=${buttonIconNameIdPairListStr}",
+        ).joinToString(iconSelectBoxArgsKeySeparator)
+        return "$buttonCmd=" +
+                listOf(
+                    "jsf ${iconSelectBoxMacro}",
+                    "${iconSelectBoxArgsMapCon}!${buttonLabel}=change",
+                ).joinToString(" ")
+    }
+
     fun makeCopyPrefix(): String {
         return (1..10000).random().toString()
     }
 
-    private val colons = "::"
     private val settingVariableStr = "Setting variables"
     private val mdDash = "-------"
     private val mdDescription = "description"
@@ -763,6 +806,8 @@ object CommandClickScriptVariable {
         |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
         |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
         |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
+        |$PLAY_BUTTON_ICON="${PLAY_BUTTON_ICON_DEFAULT_VALUE}"
+        |$SETTING_BUTTON_ICON="${SETTING_BUTTON_ICON_DEFAULT_VALUE}"
         |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""

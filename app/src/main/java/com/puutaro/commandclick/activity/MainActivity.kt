@@ -51,7 +51,7 @@ import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonV
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter

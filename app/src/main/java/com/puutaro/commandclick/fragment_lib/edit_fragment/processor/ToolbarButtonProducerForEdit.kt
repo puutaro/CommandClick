@@ -11,7 +11,7 @@ import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.*
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
@@ -95,7 +95,6 @@ class ToolbarButtonProducerForEdit(
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
-        setDrawable: Int? = null
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
@@ -104,34 +103,13 @@ class ToolbarButtonProducerForEdit(
         val makeButtonView = ImageButton(context)
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
-        when (setDrawable == null) {
-            true->
-                makeButtonView.setImageResource(
-                    toolbarButtonBariantForEdit.drawbleIconInt
-                )
-
-            else ->
-                makeButtonView.setImageResource(
-                    setDrawable
-                )
-        }
+        makeButtonView.setImageResource(
+            editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit] ?: R.drawable.icons8_ok
+        )
         makeButtonView.backgroundTintList =
             context?.getColorStateList(R.color.white)
         makeButtonView.layoutParams = insertImageButtonParam
         makeButtonView.tag = toolbarButtonBariantForEdit.str
-        if(
-            makeButtonView.tag ==
-            ToolbarButtonBariantForEdit.SETTING.str
-        ) {
-            val isCmdEditInEditExecute = editFragment.enableCmdEdit && enableEditExecute
-            SettingButtonHandler.setIcon(
-                editFragment,
-                readSharePreffernceMap,
-                makeButtonView,
-                isCmdEditInEditExecute
-            )
-        }
-
         makeButtonView.setOnLongClickListener {
                 buttonInnerView ->
             onLongClickHandler(

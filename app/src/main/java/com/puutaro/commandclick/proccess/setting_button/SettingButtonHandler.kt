@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.setting_button
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.libs.JsPathHandler
 import com.puutaro.commandclick.proccess.setting_button.libs.SettingButtonArgsMaker
@@ -14,32 +13,7 @@ class SettingButtonHandler(
 ) {
     private val fileGetterForSettingButton = FileGetterForSettingButton(fragment)
 
-    companion object {
-        fun setIcon(
-            fragment: Fragment,
-            readSharePreffernceMap: Map<String, String>,
-            settingButtonView: ImageButton?,
-            isSet: Boolean,
-        ) {
-            if(!isSet) return
-            val settingButtonArgsMaker = SettingButtonArgsMaker(
-                fragment,
-                readSharePreffernceMap,
-                settingButtonView,
-                FileGetterForSettingButton(fragment),
-                false
-            )
-            val settingButtonConfigMap = settingButtonArgsMaker.settingButtonConfigMap
-            val iconName = settingButtonConfigMap?.get(SettingButtonConfigMapKey.ICON.str)
-                ?: CmdClickIcons.SETTING.str
-            val iconId = CmdClickIcons.values().find {
-                it.str == iconName
-            }?.id ?: CmdClickIcons.SETTING.id
-            settingButtonView?.setImageResource(
-                iconId
-            )
-        }
-    }
+
     fun handle(
         isLongClick: Boolean,
         settingButtonView: ImageButton?,
@@ -134,7 +108,6 @@ enum class SettingButtonConfigMapKey(
 ) {
     LONG_CLICK("longClick"),
     CLICK("click"),
-    ICON("icon"),
 }
 
 enum class SettingButtonClickConfigMapKey(

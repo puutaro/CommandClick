@@ -1,12 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -160,6 +162,11 @@ object ConfigFromScriptFileSetter {
         )
 
         setButtonVisible(
+            editFragment,
+            settingVariableList,
+            onShortcut
+        )
+        setEditToolBarButtonIcon(
             editFragment,
             settingVariableList,
             onShortcut
@@ -320,6 +327,73 @@ object ConfigFromScriptFileSetter {
                         SettingVariableSelects.disablePlayButtonSelects.ON.name
                     ),
                 ) == SettingVariableSelects.disablePlayButtonSelects.ON.name
+            }
+        )
+    }
+
+    private fun setEditToolBarButtonIcon(
+        editFragment: EditFragment,
+        settingVariableList: List<String>?,
+        onShortcut: Boolean
+    ){
+        editFragment.editExecuteValue = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.EDIT_EXECUTE,
+            CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
+        )
+        editFragment.enableEditExecute =
+            (editFragment.editExecuteValue ==
+                    SettingVariableSelects.EditExecuteSelects.ALWAYS.name
+                    ) && onShortcut
+
+        val enableCmdEdit = editFragment.enableCmdEdit
+
+        val isSettingEdit = !enableCmdEdit
+                || editFragment.passCmdVariableEdit ==
+                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
+        val isOnlyCmdEdit = enableCmdEdit
+                && !editFragment.enableEditExecute
+        val iconNameIdPairList = CmdClickIcons.values()
+        val defaultSettingButtonIconId =
+            R.drawable.icons8_setting
+        editFragment.toolBarButtonIconMap.put(
+            ToolbarButtonBariantForEdit.SETTING,
+            when(true) {
+                isSettingEdit,
+                isOnlyCmdEdit ->
+                    defaultSettingButtonIconId
+                else -> {
+                    val selectedIconName =
+                        SettingVariableReader.getStrValue(
+                            settingVariableList,
+                            CommandClickScriptVariable.SETTING_BUTTON_ICON,
+                            CmdClickIcons.SETTING.str
+                        )
+                    iconNameIdPairList.find {
+                        it.str == selectedIconName
+                    }?.id ?: defaultSettingButtonIconId
+                }
+            }
+        )
+        editFragment.toolBarButtonIconMap.put(
+            ToolbarButtonBariantForEdit.OK,
+            when(true) {
+                isSettingEdit ->
+                    R.drawable.icons8_check_ok
+                isOnlyCmdEdit ->
+                    R.drawable.icons8_check_ok
+                else -> {
+                    val selectedIconName =
+                        SettingVariableReader.getStrValue(
+                            settingVariableList,
+                            CommandClickScriptVariable.PLAY_BUTTON_ICON,
+                            CmdClickIcons.PLAY.str
+                        )
+                    val defaultIconId = R.drawable.icons_play
+                    iconNameIdPairList.find {
+                        it.str == selectedIconName
+                    }?.id ?: defaultIconId
+                }
             }
         )
     }

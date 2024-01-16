@@ -5,8 +5,6 @@ import android.util.Log
 import android.widget.EditText
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +19,8 @@ object EditTextUpdaterForTerminalFragment {
     ) {
         if(editTextId == null) return
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
+        val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+            activity,
             SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
@@ -29,17 +28,15 @@ object EditTextUpdaterForTerminalFragment {
             SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
-            ),
-        )
-        val editExecuteFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
-            activity,
-            cmdEditFragmentTag
-        )
-        val binding = editExecuteFragment?.binding ?: return
+            )
+        ) ?: return
+        val binding = editExecuteFragment.binding
         val editLinearLayout = binding.editLinearLayout
         try {
             CoroutineScope(Dispatchers.Main).launch {
-                val editTextInEditFragment = editLinearLayout.findViewById<EditText>(editTextId)
+                val editTextInEditFragment =
+                    editLinearLayout.findViewById<EditText>(editTextId)
+                        ?: return@launch
                 editTextInEditFragment.setText(variableValue)
             }
         } catch(e: Exception){

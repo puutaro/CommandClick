@@ -38,8 +38,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchT
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonToolForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
@@ -109,6 +109,7 @@ class EditFragment: Fragment() {
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     val toolBarButtonDisableMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
+    val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false

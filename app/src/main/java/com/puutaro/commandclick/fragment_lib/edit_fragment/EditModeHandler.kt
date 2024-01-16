@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import android.widget.Toast
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -9,7 +8,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifiedForAppHistory
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -41,8 +40,6 @@ class EditModeHandler(
         currentScriptContentsList,
         editFragment.languageType
     )
-
-    private val enableEditExecute = editFragment.enableEditExecute
 
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
@@ -112,7 +109,6 @@ class EditModeHandler(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
             shellContentsList=currentScriptContentsList,
-            setDrawble = setDrawableForOk(),
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
@@ -194,15 +190,6 @@ class EditModeHandler(
         editTextProducerForEdit.adds(
             true
         )
-//        buttonCreate(
-//            ToolbarButtonBariantForEdit.EDIT,
-//            settingWeight,
-//            recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-//        )
-//        buttonCreate(
-//            ToolbarButtonBariantForEdit.SETTING,
-//            settingWeight,
-//        )
     }
 
     private fun buttonCreate(
@@ -210,33 +197,12 @@ class EditModeHandler(
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
         shellContentsList: List<String> = listOf(),
-        setDrawble: Int? = null
     ){
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
             shellContentsList,
-            setDrawble
         )
     }
-
-
-    private fun setDrawableForOk()
-            :Int? {
-        return if(
-            enableCmdEdit
-            && enableEditExecute
-        ){
-            R.drawable.icons_play
-        } else {
-            null
-        }
-    }
-
-//    private fun culcButtonWeight(): Float {
-//        return editFragment.toolBarButtonDisableMap.values.filter {
-//            !it
-//        }.size.let { 1.0F / it }
-//    }
 }

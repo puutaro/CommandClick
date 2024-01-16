@@ -29,6 +29,34 @@ object ExecJsScriptInEdit {
             return
         }
         val context = editFragment.context
+        execJsUrl(
+            editFragment,
+            JavaScriptLoadUrl.make(
+                context,
+                jsFilePath,
+            ).toString()
+        )
+    }
+
+    fun execJsCon(
+        editFragment: EditFragment,
+        jsConSrc: String,
+    ){
+        execJsUrl(
+            editFragment,
+            JavaScriptLoadUrl.makeFromContents(
+                jsConSrc.split("\n")
+            )
+        )
+    }
+
+    private fun execJsUrl(
+        editFragment: EditFragment,
+        jsCon: String?
+    ){
+        if(
+            jsCon.isNullOrEmpty()
+        ) return
         editFragment.jsExecuteJob?.cancel()
         editFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
             val onLaunchUrl = EnableTerminalWebView.check(
@@ -42,10 +70,7 @@ object ExecJsScriptInEdit {
                 val listenerForWebLaunch =
                     editFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
                 listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
-                    JavaScriptLoadUrl.make(
-                        context,
-                        jsFilePath,
-                    ).toString()
+                    jsCon
                 )
             }
         }

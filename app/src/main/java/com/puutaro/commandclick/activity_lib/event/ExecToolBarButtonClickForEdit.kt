@@ -8,7 +8,7 @@ import com.puutaro.commandclick.activity_lib.event.lib.cmdIndex.ExecCommandEdit
 import com.puutaro.commandclick.activity_lib.event.lib.common.ExecCancel
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOkForEdit
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod

@@ -24,7 +24,8 @@ object EditableSpinnerUpdaterForTerminalFragment {
         if(spinnerId == null) return
         val throughMark = "-"
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
+        val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
+            activity,
             SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir
@@ -33,10 +34,6 @@ object EditableSpinnerUpdaterForTerminalFragment {
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ),
-        )
-        val editExecuteFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
-            activity,
-            cmdEditFragmentTag
         )
         val binding = editExecuteFragment?.binding ?: return
         val editLinearLayout = binding.editLinearLayout

@@ -37,4 +37,6 @@ enum class JsInterfaceVariant {
     jsQrEdit,
     jsBroadcast,
     jsFannelInstaller,
+    jsIconSelectBox,
+    jsMap,
 }

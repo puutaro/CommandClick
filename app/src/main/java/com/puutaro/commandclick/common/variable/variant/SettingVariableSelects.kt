@@ -133,4 +133,13 @@ object SettingVariableSelects {
         foreground,
         background,
     }
+
+    enum class PlayButtonIconSelects {
+        play,
+        ok,
+    }
+
+    enum class SettingButtonIconSelects {
+        setting,
+    }
 }

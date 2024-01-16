@@ -7,4 +7,4 @@ longClick=
 click=
     jsPath=FANNEL_REPO_SYNC
     |onHideFooter=,
-icon=launch,
+

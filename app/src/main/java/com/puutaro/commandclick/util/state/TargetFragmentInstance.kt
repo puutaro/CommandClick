@@ -44,7 +44,7 @@ class TargetFragmentInstance {
         activity: MainActivity,
         cmdVariableEditFragmentTag: String,
     ): Fragment? {
-        val cmdIndexFragment = TargetFragmentInstance().getFromActivity<CommandIndexFragment>(
+        val cmdIndexFragment = getFromActivity<CommandIndexFragment>(
             activity,
             activity.getString(R.string.command_index_fragment)
         )
@@ -55,7 +55,7 @@ class TargetFragmentInstance {
             return cmdIndexFragment
         }
 
-        val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
+        val cmdVariableEditFragment = getFromActivity<EditFragment>(
             activity,
             cmdVariableEditFragmentTag
         )
@@ -77,7 +77,7 @@ class TargetFragmentInstance {
         if(
             activity == null
         ) return null
-        val cmdIndexFragment = TargetFragmentInstance().getFromFragment<CommandIndexFragment>(
+        val cmdIndexFragment = getFromFragment<CommandIndexFragment>(
             activity,
             activity.getString(R.string.command_index_fragment)
         )
@@ -88,7 +88,7 @@ class TargetFragmentInstance {
             return cmdIndexFragment
         }
 
-        val cmdVariableEditFragment = TargetFragmentInstance().getFromFragment<EditFragment>(
+        val cmdVariableEditFragment = getFromFragment<EditFragment>(
             activity,
             cmdVariableEditFragmentTag
         )
@@ -99,6 +99,84 @@ class TargetFragmentInstance {
             && isHeight
         ) {
             return cmdVariableEditFragment
+        }
+        return null
+    }
+
+    fun getCurrentEditFragmentFromActivity(
+        activity: MainActivity,
+        currentAppDirPath: String,
+        currentFannelPath: String,
+    ): EditFragment? {
+        val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
+            currentAppDirPath,
+            currentFannelPath,
+        )
+        val cmdVariableEditFragment = getFromActivity<EditFragment>(
+            activity,
+            cmdEditFragTag
+        )
+        if(
+            cmdVariableEditFragment != null
+            && cmdVariableEditFragment.isVisible
+//            && cmdVariableEditFragment.view?.height != 0
+        ) {
+            return cmdVariableEditFragment
+        }
+        val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
+            currentAppDirPath,
+            currentFannelPath,
+        )
+        val settingVariableEditFragment = getFromActivity<EditFragment>(
+            activity,
+            settingEditFragTag
+        )
+        if(
+            settingVariableEditFragment != null
+            && settingVariableEditFragment.isVisible
+        ) {
+            return settingVariableEditFragment
+        }
+        return null
+    }
+
+    fun getCurrentEditFragmentFromFragment(
+        activity: FragmentActivity?,
+        currentAppDirPath: String,
+        currentFannelPath: String,
+    ): EditFragment? {
+        if(
+            activity == null
+        ) return null
+        val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
+            currentAppDirPath,
+            currentFannelPath,
+        )
+        val cmdVariableEditFragment =
+            getFromFragment<EditFragment>(
+            activity,
+            cmdEditFragTag
+        )
+        if(
+            cmdVariableEditFragment != null
+            && cmdVariableEditFragment.isVisible
+//            && cmdVariableEditFragment.view?.height != 0
+        ) {
+            return cmdVariableEditFragment
+        }
+        val settingEditFragTag = FragmentTagManager.makeSettingValEditTag(
+            currentAppDirPath,
+            currentFannelPath,
+        )
+        val settingVariableEditFragment = getFromFragment<EditFragment>(
+            activity,
+            settingEditFragTag
+        )
+        if(
+            settingVariableEditFragment != null
+            && settingVariableEditFragment.isVisible
+        ) {
+            return settingVariableEditFragment
         }
         return null
     }

@@ -15,11 +15,11 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ListDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
@@ -595,18 +595,6 @@ object ButtonViewProducer {
                     setFOptionMap
                 )
             }
-//            SettingCmdArgs.ListAdd_BY_SB.name -> {
-//                val listConSlSpiOptionsStr = getFromSetVariableValueByIndex(
-//                    currentSetVariableValue,
-//                    0
-//                )
-//                execListAddBySBForSetting(
-//                    editFragment,
-//                    insertEditText,
-//                    listConSlSpiOptionsStr,
-//                    setFOptionMap
-//                )
-//            }
             else -> {}
         }
     }
@@ -731,81 +719,6 @@ object ButtonViewProducer {
             }
         }
     }
-
-    private fun execListAddBySBForSetting(
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        listConSlSpiOptionsStr: String?,
-        setFOptionMap: Map<String, String>
-    ){
-        val context = editFragment.context
-        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val listCon = setFOptionMap.get(
-            SET_F_OPTION_MAP_KEY.ListAddBySB.selectsValues.name
-        )?.replace("&", "\n") ?: return
-        ListDialogForButton.create(
-            editFragment,
-            listCon,
-        )
-        CoroutineScope(Dispatchers.Main).launch {
-            withContext(Dispatchers.IO){
-                for (i in 1..6000) {
-                    delay(100)
-                    if (!terminalViewModel.onDialog) break
-                }
-            }
-            val selectedItem = terminalViewModel.dialogReturnValue
-            terminalViewModel.dialogReturnValue = String()
-            if(
-                selectedItem.isEmpty()
-            ) return@launch
-            val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-            val listFilePath = listConSlSpiOptionsStr
-                ?.split("!")
-                ?.filter {
-                    it.contains(listPathKey)
-                }?.firstOrNull()
-                ?.replace("${listPathKey}=", "")
-                ?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                } ?: return@launch
-            val listFilePathOjb = File(listFilePath)
-            val listDirPath = listFilePathOjb.parent
-                ?: return@launch
-            FileSystems.createDirs(listDirPath)
-            val listFileName = listFilePathOjb.name
-            if(
-                ReadText(
-                    listDirPath,
-                    listFileName
-                ).textToList().filter {
-                    it == selectedItem
-                }.isNotEmpty()
-            ) {
-                Toast.makeText(
-                    context,
-                    "this script already register\n ${selectedItem}",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return@launch
-            }
-            withContext(Dispatchers.IO){
-                val updateListCon = selectedItem + "\n" + ReadText(
-                    listDirPath,
-                    listFileName
-                ).readText()
-                FileSystems.writeFile(
-                    listDirPath,
-                    listFileName,
-                    updateListCon
-                )
-            }
-            withContext(Dispatchers.Main){
-                insertEditText.setText(listFilePath)
-            }
-        }
-    }
-
     private fun execJsFileForButton(
         editFragment: EditFragment,
         terminalViewModel: TerminalViewModel,
@@ -819,8 +732,12 @@ object ButtonViewProducer {
                 jsFilePathIndex
             )
         )
+        val isJsMacro = JsPathForEditButton.JsPathMacroForEditButton.values().map{
+            it.name
+        }.contains(jsFilePath)
         if(
             !File(jsFilePath).isFile
+            && !isJsMacro
         ) return
         val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
         listener?.onKeyBoardVisibleChangeForEditFragment(
@@ -841,10 +758,16 @@ object ButtonViewProducer {
                     )
                 }.joinToString("\t")
         } else String()
-        ExecJsScriptInEdit.exec(
-            editFragment,
-            jsFilePath,
-        )
+        when(isJsMacro){
+            true -> JsPathForEditButton.jsPathMacroHandler(
+                editFragment,
+                jsFilePath,
+            )
+            else -> ExecJsScriptInEdit.exec(
+                editFragment,
+                jsFilePath,
+            )
+        }
     }
 
     private fun makeButtonLabel(
@@ -881,7 +804,7 @@ object ButtonViewProducer {
     ): Boolean {
         return buttonMap?.get(
             ButtonEditKey.isConsec.name
-        ) == "true"
+        ) == true.toString()
     }
 
 
@@ -890,7 +813,7 @@ object ButtonViewProducer {
     ): Boolean {
         return buttonMap?.get(
             ButtonEditKey.disableKeyboardHidden.name
-        ) == "true"
+        ) == true.toString()
     }
 
     private fun getButtonMap(
@@ -967,9 +890,6 @@ object ButtonViewProducer {
             dirPath,
             suffix,
             howFull,
-        }
-        enum class ListAddBySB {
-            selectsValues,
         }
     }
 }

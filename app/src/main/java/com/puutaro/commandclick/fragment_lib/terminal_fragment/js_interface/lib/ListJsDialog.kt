@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -28,7 +29,12 @@ class ListJsDialog(
     private var returnValue = String()
     private val searchSwitchThreshold = 5
     private var listDialog: Dialog? = null
-    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
+
+    companion object {
+        val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
+        val iconNameIndex = 1
+        val nameIconNameSeparator = "???"
+    }
 
     fun create(
         title: String,
@@ -71,11 +77,7 @@ class ListJsDialog(
         val dialogListView =  listDialog?.findViewById<ListView>(
             com.puutaro.commandclick.R.id.list_dialog_list_view
         )
-        val dialogList = listSource.split("\t").filter{
-            it.trim().isNotEmpty()
-        }.map {
-            it to icons8Wheel
-        }
+        val dialogList = makeNameToIconList(listSource)
         val dialogListAdapter = SubMenuAdapter(
             terminalFragment.context as Context,
             dialogList.toMutableList()
@@ -175,18 +177,18 @@ class ListJsDialog(
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
             override fun afterTextChanged(s: Editable?) {
-                if (!searchText.hasFocus()) return
-                val filterTargetList = listSource.split("\t")
+                if (
+                    !searchText.hasFocus()
+                ) return
+                val filterTargetList = makeNameToIconList(listSource)
                 val filteredList = filterTargetList.filter {
                     Regex(
                         searchText.text.toString()
                             .lowercase()
                             .replace("\n", "")
                     ).containsMatchIn(
-                        it.lowercase()
+                        it.first.lowercase()
                     )
-                }.map {
-                    it to icons8Wheel
                 }
                 updateList(
                     dialogListView,
@@ -206,5 +208,27 @@ class ListJsDialog(
         menuListAdapter.clear()
         menuListAdapter.addAll(filteredList)
         menuListAdapter.notifyDataSetChanged()
+    }
+
+    private fun makeNameToIconList(
+        listSource: String
+    ): List<Pair<String, Int>> {
+        return listSource.split("\t").filter{
+            it.trim().isNotEmpty()
+        }.map {
+            val nameIconNameList = it.split(nameIconNameSeparator)
+            val itemName = nameIconNameList.first().trim()
+            val iconId = nameIconNameList.getOrNull(iconNameIndex).let {
+                    getIconNameSrc ->
+                val getIconName = getIconNameSrc?.trim()
+                if(
+                    getIconName.isNullOrEmpty()
+                ) return@let icons8Wheel
+                CmdClickIcons.values().filter {
+                    it.str == getIconName
+                }.firstOrNull()?.id ?: icons8Wheel
+            }
+            itemName to iconId
+        }
     }
 }

@@ -18,9 +18,11 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFa
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHtml
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIconSelectBox
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsLinux
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsListSelect
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMap
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsNetTool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPath
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsPdf
@@ -207,6 +209,14 @@ object WebViewSettings {
         terminalWebView.addJavascriptInterface(
             JsFannelInstaller(terminalFragment),
             JsInterfaceVariant.jsFannelInstaller.name
+        )
+        terminalWebView.addJavascriptInterface(
+            JsIconSelectBox(terminalFragment),
+            JsInterfaceVariant.jsIconSelectBox.name,
+        )
+        terminalWebView.addJavascriptInterface(
+            JsMap(terminalFragment),
+            JsInterfaceVariant.jsMap.name
         )
 //        terminalWebView.addJavascriptInterface(
 //            JsTrans(terminalFragment),
