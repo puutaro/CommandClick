@@ -59,11 +59,11 @@ Config for [list index mode](https://github.com/puutaro/CommandClick/blob/master
 ### shellPath example
 
 ```sh.sh
-echo "FILE_NAME_CON_MARK" | ${b} awk '{print $0}'
+echo "${EDIT_TARGET_CONTENTS}" | ${b} awk '{print $0}'
 ```
 
-- `FILE_NAME_CON_MARK` -> file name value
-- `${b}` -> busybox short cut pass
+- `${EDIT_TARGET_CONTENTS}` -> Auto replace with edit target contents
+- `${b}` -> busybox symlink path
 
 ## Example
 
