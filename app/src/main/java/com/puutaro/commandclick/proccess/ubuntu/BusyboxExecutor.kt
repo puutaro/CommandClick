@@ -50,9 +50,16 @@ class BusyboxExecutor(
         return runCommand(updatedCommand, monitorFileName)
     }
 
-    fun execCommandForOutput(
+    fun getCmdOutput(
+        command: String,
+    ): String {
+        return execCommandForOutput(
+           listOf("sh", "-c", command),
+        )
+    }
+
+    private fun execCommandForOutput(
         command: List<String>,
-        monitorFileName: String
     ): String {
         if (!busyboxWrapper.busyboxIsPresent()) {
             ubuntuFiles.setupLinksForBusyBox()
@@ -67,7 +74,7 @@ class BusyboxExecutor(
             val process = processBuilder.start()
             output = output(
                 process,
-                monitorFileName
+                UsePath.cmdClickMonitorFileName_2
             )
             process.waitFor()
         } catch (err: Exception) {
@@ -324,11 +331,11 @@ class BusyboxExecutor(
 class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
     // For basic commands, CWD should be `applicationFilesDir`
     fun wrapCommand(command: String): List<String> {
-        return listOf(ubuntuFiles.busybox.path, "sh", "-c", command)
+        return listOf(ubuntuFiles.busybox.absolutePath, "sh", "-c", command)
     }
 
     fun wrapScript(command: String): List<String> {
-        return listOf(ubuntuFiles.busybox.path, "sh") + command.split(" ")
+        return listOf(ubuntuFiles.busybox.absolutePath, "sh") + command.split(" ")
     }
 
     fun getBusyboxEnv(): HashMap<String, String> {
@@ -337,6 +344,7 @@ class BusyboxWrapper(private val ubuntuFiles: UbuntuFiles) {
             "ROOT_PATH" to ubuntuFiles.filesDir.absolutePath,
             "ROOTFS_PATH" to ubuntuFiles.filesOneRootfs.absolutePath,
             "APP_ROOT_PATH" to UsePath.cmdclickDirPath,
+            "b" to ubuntuFiles.busybox.absolutePath
 
         )
     }

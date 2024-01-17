@@ -9,6 +9,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigF
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.StartFileMaker
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.FileSystems
@@ -24,6 +25,7 @@ object IndexInitHandler {
         cmdIndexFragment: CommandIndexFragment
     ){
         val context = cmdIndexFragment.context
+            ?: return
         val activity = cmdIndexFragment.activity
         val startUpPref = cmdIndexFragment.activity?.getPreferences(
             Context.MODE_PRIVATE
@@ -32,6 +34,8 @@ object IndexInitHandler {
         TerminalShower.show(
             cmdIndexFragment
         )
+        val ubuntuFiles = UbuntuFiles(context)
+        ubuntuFiles.setupLinksForBusyBox()
 //            val listener = this.context as? CommandIndexFragment.OnBackstackDeleteListner
 //            listener?.onBackstackDelete()
         val cmdclickAppDirAdminPath = UsePath.cmdclickAppDirAdminPath

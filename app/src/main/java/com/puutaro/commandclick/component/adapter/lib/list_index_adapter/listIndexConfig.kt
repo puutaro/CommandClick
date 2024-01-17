@@ -11,7 +11,7 @@ import java.io.File
 
 object ListIndexEditConfig {
 
-    val fileNameConMark = "FILE_NAME_CON_MARK"
+    val editTargetContents = "EDIT_TARGET_CONTENTS"
     private val cmdClickMonitorFileName_2 = UsePath.cmdClickMonitorFileName_2
     enum class ListIndexConfigKey(
         val key: String,
@@ -122,12 +122,11 @@ object ListIndexEditConfig {
                     shellDirPath,
                     shellPathObj.name
                 ).readText().replace(
-                    "\${${fileNameConMark}}",
+                    "\${${editTargetContents}}",
                     compSuffixedFileName,
                 )
-                return@let busyboxExecutor.execCommandForOutput(
-                    listOf("sh", "-c", shellCon),
-                    cmdClickMonitorFileName_2
+                return@let busyboxExecutor.getCmdOutput(
+                    shellCon,
                 )
             }
     }
@@ -195,12 +194,11 @@ object ListIndexEditConfig {
                 shellDirPath,
                 shellPathObj.name
             ).readText().replace(
-                "\${${fileNameConMark}}",
+                "\${${editTargetContents}}",
                 fileCon,
             )
-            return@let busyboxExecutor.execCommandForOutput(
-                listOf("sh", "-c", shellCon),
-                cmdClickMonitorFileName_2
+            return@let busyboxExecutor.getCmdOutput(
+                shellCon,
             )
         }
     }
