@@ -177,41 +177,6 @@ class CommandIndexFragment: Fragment() {
             fannelIndexListAdapter,
         )
 
-        context?.let {
-            val ubuntuFiles = UbuntuFiles(it)
-            val busyBoxExecutor = BusyboxExecutor(
-                it,
-                ubuntuFiles
-            )
-            val output0 = busyBoxExecutor.getCmdOutput(
-                "\${b} --help",
-            )
-            val output1 = busyBoxExecutor.getCmdOutput(
-                "\${b} date",
-            )
-            val output2 = busyBoxExecutor.getCmdOutput(
-                """${'$'}b  echo "aab" | ${'$'}b  sed -r 's/(.*)/cc/g'""",
-            )
-            val output3 = busyBoxExecutor.getCmdOutput(
-                """ ${'$'}{b} awk 'BEGIN {print "aa"}'""",
-            )
-            val output4 = busyBoxExecutor.getCmdOutput(
-                " \${b} echo \"aab\" | \${b} sed -r 's/(.*)/cc/g'",
-            )
-            FileSystems.writeFile(
-                UsePath.cmdclickDefaultAppDirPath,
-                "output.txt",
-                listOf(
-                    "output0: ${output0}",
-                    "output1: ${output1}",
-                    "output2: ${output2}",
-                    "output3: ${output3}",
-                    "output4: ${output4}",
-                    "length: ${ubuntuFiles.busybox.length()}"
-                ).joinToString("\n\n")
-            )
-        }
-
         val cmdindexInternetButton = binding.cmdindexInternetButton
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
