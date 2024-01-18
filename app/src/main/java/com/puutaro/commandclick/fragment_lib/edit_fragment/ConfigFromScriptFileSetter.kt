@@ -62,11 +62,14 @@ object ConfigFromScriptFileSetter {
         editFragment.editBoxTitle = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.EDIT_BOX_TITLE,
-            defaultEditBoxTitle,
+            String(),
         ).let {
             if(
                 it.isNotEmpty()
-            ) return@let it
+            ) return@let TitleImageAndViewSetter.makeTitleForEditTitle(
+                    editFragment,
+                    it
+                )
             defaultEditBoxTitle
         }
 

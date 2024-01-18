@@ -5,6 +5,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrLogo
 
 object TitleImageAndViewSetter {
+
+    private const val backstackCountSeparator = " "
     fun set(
         editFragment: EditFragment,
         currentAppDirPath: String,
@@ -34,15 +36,35 @@ object TitleImageAndViewSetter {
         currentAppDirPath: String,
         currentScriptFileName: String
     ): String {
-        val backstackOrder =
+        val backstackOrder = makeBackstackCount(
             editFragment
-                .activity
-                ?.supportFragmentManager
-                ?.getBackStackEntryCount()
-                ?: 0
-        val titleText = "(${backstackOrder}) " +
-                "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
-        return titleText
+        )
+        return listOf(
+            "(${backstackOrder})",
+            "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
+        ).joinToString(backstackCountSeparator)
+    }
+    fun makeTitleForEditTitle(
+        editFragment: EditFragment,
+        title: String
+    ): String {
+        val backstackOrder = makeBackstackCount(
+            editFragment
+        )
+        return listOf(
+            "(${backstackOrder})",
+            title
+        ).joinToString(backstackCountSeparator)
+    }
+
+    private fun makeBackstackCount(
+        editFragment: EditFragment
+    ): Int {
+        return editFragment
+            .activity
+            ?.supportFragmentManager
+            ?.backStackEntryCount
+            ?: 0
     }
 
     private fun setTitleImage(
