@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 class EditFragmentArgs(
     private val readSharePreferenceMap: Map<String, String>,
     private val editType: EditTypeSettingsKey,
+    private val srcReadSharePreferenceMap: Map<String, String>? = null,
 ) {
 
     companion object {
@@ -18,6 +19,9 @@ class EditFragmentArgs(
             CURRENT_FANNEL_NAME(SharePrefferenceSetting.current_fannel_name.name),
             ON_SHORTCUT(SharePrefferenceSetting.on_shortcut.name),
             EDIT_TYPE("editType"),
+            SRC_CURRENT_APP_DIR_PATH("src_${SharePrefferenceSetting.current_app_dir.name}"),
+            SRC_CURRENT_FANNEL_NAME("src_${SharePrefferenceSetting.current_fannel_name.name}"),
+            SRC_ON_SHORTCUT("src_${SharePrefferenceSetting.on_shortcut.name}"),
         }
 
         enum class EditTypeSettingsKey(val key: String){
@@ -68,6 +72,28 @@ class EditFragmentArgs(
             )
         }
 
+        fun getSrcReadSharePreference(
+            fragArgsBundle: Bundle?,
+        ): Map<String, String>? {
+            val currentAppDirPath =
+                fragArgsBundle?.getString(
+                    FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key
+                ) ?: return null
+            val currentFannelName =
+                fragArgsBundle.getString(
+                    FragmentArgsKey.SRC_CURRENT_FANNEL_NAME.key
+                ) ?: return null
+            val onShortcut =
+                fragArgsBundle.getString(
+                    FragmentArgsKey.SRC_ON_SHORTCUT.key
+                ) ?: SharePrefferenceSetting.on_shortcut.defalutStr
+            return mapOf(
+                FragmentArgsKey.CURRENT_APP_DIR_PATH.key to currentAppDirPath,
+                FragmentArgsKey.CURRENT_FANNEL_NAME.key to currentFannelName,
+                FragmentArgsKey.SRC_ON_SHORTCUT.key to onShortcut,
+            )
+        }
+
         fun getEditType(fragArgsBundle:  Bundle?): EditTypeSettingsKey {
             return fragArgsBundle?.getString(
                     FragmentArgsKey.EDIT_TYPE.key
@@ -84,25 +110,53 @@ class EditFragmentArgs(
         fragment: Fragment,
     ): Fragment {
         val fragArgsBundle = Bundle()
+
+        srcReadSharePreferenceMap?.let {
+            val srcCurrentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                it,
+                SharePrefferenceSetting.current_app_dir
+            )
+            val srcCurrentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                it,
+                SharePrefferenceSetting.current_fannel_name
+            )
+            val srcOnShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
+                it,
+                SharePrefferenceSetting.on_shortcut
+            )
+            fragArgsBundle.putString(
+                FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key,
+                srcCurrentAppDirPath,
+            )
+            fragArgsBundle.putString(
+                FragmentArgsKey.SRC_CURRENT_FANNEL_NAME.key,
+                srcCurrentFannelName,
+            )
+            fragArgsBundle.putString(
+                FragmentArgsKey.SRC_ON_SHORTCUT.key,
+                srcOnShortcut,
+            )
+        }
+
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
-        )
-        fragArgsBundle.putString(
-            FragmentArgsKey.CURRENT_APP_DIR_PATH.key,
-            currentAppDirPath,
         )
         val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-        fragArgsBundle.putString(
-            FragmentArgsKey.CURRENT_FANNEL_NAME.key,
-            currentFannelName,
-        )
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
+        )
+        fragArgsBundle.putString(
+            FragmentArgsKey.CURRENT_APP_DIR_PATH.key,
+            currentAppDirPath,
+        )
+        fragArgsBundle.putString(
+            FragmentArgsKey.CURRENT_FANNEL_NAME.key,
+            currentFannelName,
         )
         fragArgsBundle.putString(
             FragmentArgsKey.ON_SHORTCUT.key,

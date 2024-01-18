@@ -166,15 +166,19 @@ object FileSystems {
         dirPath: String,
         reverse: String = String()
     ): List<String> {
-        val dirfiles = File(dirPath).listFiles()
-        if(dirfiles == null) return listOf(String())
-        if( reverse.isEmpty()) {
-            dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_COMPARATOR)
-        } else {
-            dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_REVERSE)
-        }
-        return dirfiles.map{
-            it.name
+        try {
+            val dirfiles = File(dirPath).listFiles()
+            if(dirfiles == null) return listOf(String())
+            if (reverse.isEmpty()) {
+                dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_COMPARATOR)
+            } else {
+                dirfiles.sortWith(LastModifiedFileComparator.LASTMODIFIED_REVERSE)
+            }
+            return dirfiles.map {
+                it.name
+            }
+        }catch (e: java.lang.Exception){
+            return emptyList()
         }
     }
 

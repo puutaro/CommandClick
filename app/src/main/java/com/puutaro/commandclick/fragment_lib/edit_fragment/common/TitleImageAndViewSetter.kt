@@ -12,8 +12,6 @@ object TitleImageAndViewSetter {
     ) {
         setTitleText(
             editFragment,
-            currentAppDirPath,
-            currentScriptFileName
         )
 
         setTitleImage(
@@ -23,18 +21,12 @@ object TitleImageAndViewSetter {
         )
     }
 
-    fun setTitleText(
+    private fun setTitleText(
         editFragment: EditFragment,
-        currentAppDirPath: String,
-        currentScriptFileName: String
     ){
         val binding = editFragment.binding
         val editTextView = binding.editTextView
-        editTextView.text = makeTitle(
-            editFragment,
-            currentAppDirPath,
-            currentScriptFileName
-        )
+        editTextView.text = editFragment.editBoxTitle
     }
 
     fun makeTitle(

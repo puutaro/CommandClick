@@ -27,9 +27,8 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.re
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
@@ -144,6 +143,9 @@ class CommandIndexFragment: Fragment() {
         readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
+        FDialogTempFile.remove(
+            readSharePreffernceMap
+        )
 
         val cmdListView = binding.cmdList
         cmdListView.setHasFixedSize(true)
@@ -245,7 +247,6 @@ class CommandIndexFragment: Fragment() {
 
         val toolBarHistoryButtonControl = ToolBarHistoryButtonControl(
             this,
-            readSharePreffernceMap,
         )
         toolBarHistoryButtonControl.historyButtonClick()
 

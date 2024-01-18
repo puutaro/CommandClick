@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
@@ -17,19 +16,20 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import java.io.File
 
 class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
-    currentScriptContentsList: List<String>,
     readSharePreffernceMap: Map<String, String>,
 ) {
-
     private val context = editFragment.context
+    private val currentScriptContentsList = editFragment.currentScriptContentsList
     private val insertImageButtonParam = LinearLayout.LayoutParams(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
@@ -39,7 +39,6 @@ class ToolbarButtonProducerForEdit(
         readSharePreffernceMap
     )
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
-    private val sharedPref =  editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
         editFragment,
         readSharePreffernceMap,
@@ -83,18 +82,13 @@ class ToolbarButtonProducerForEdit(
     )
 
     private val scriptFileSaver = ScriptFileSaver(
-        binding,
         editFragment,
-        readSharePreffernceMap,
     )
-
-    private val enableEditExecute = editFragment.enableEditExecute
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
-        shellContentsList: List<String> = listOf(),
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
@@ -113,10 +107,10 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.setOnLongClickListener {
                 buttonInnerView ->
             onLongClickHandler(
+                editFragment,
                 buttonInnerView,
                 makeButtonView,
                 toolbarButtonBariantForEdit,
-                shellContentsList,
                 recordNumToMapNameValueInCommandHolder,
                 recordNumToMapNameValueInSettingHolder,
             )
@@ -146,17 +140,15 @@ class ToolbarButtonProducerForEdit(
                         editFragment.context?.getString(
                             R.string.edit_terminal_fragment
                         ),
-                        readSharePreffernceMap,
                         editFragment.historySwitch,
                         urlHistoryButtonEvent,
-                        sharedPref,
                         CLICLTYPE.SHORT
                     )
                     return@setOnClickListener
                 }
                 ToolbarButtonBariantForEdit.OK -> {
                     execForOk(
-                        shellContentsList,
+                        editFragment,
                         recordNumToMapNameValueInCommandHolder,
                         recordNumToMapNameValueInSettingHolder,
 
@@ -195,10 +187,10 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun onLongClickHandler(
+        editFragment: EditFragment,
         buttonInnerView: View,
         settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
@@ -210,10 +202,8 @@ class ToolbarButtonProducerForEdit(
                     editFragment.context?.getString(
                         R.string.edit_terminal_fragment
                     ),
-                    readSharePreffernceMap,
                     editFragment.historySwitch,
                     urlHistoryButtonEvent,
-                    sharedPref,
                     CLICLTYPE.LONG
                 )
             }
@@ -226,7 +216,7 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.OK -> {
                 try {
                     execForOkLongClick(
-                        shellContentsList,
+                        editFragment,
                         recordNumToMapNameValueInCommandHolder,
                         recordNumToMapNameValueInSettingHolder,
                         editFragment.existIndexList
@@ -241,7 +231,7 @@ class ToolbarButtonProducerForEdit(
             }
             ToolbarButtonBariantForEdit.EDIT -> {
                 execForEditLongClick(
-                    shellContentsList,
+                    editFragment,
                     recordNumToMapNameValueInCommandHolder,
                     recordNumToMapNameValueInSettingHolder,
                     editFragment.existIndexList
@@ -252,14 +242,13 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun execForOkLongClick(
-        shellContentsList: List<String>,
+        editFragment: EditFragment,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         existIndexList: Boolean
     ) {
         if(!existIndexList) {
             execScriptSave(
-                shellContentsList,
                 recordNumToMapNameValueInCommandHolder,
                 recordNumToMapNameValueInSettingHolder,
             )
@@ -276,14 +265,13 @@ class ToolbarButtonProducerForEdit(
     }
 
     private fun execForEditLongClick(
-        shellContentsList: List<String>,
+        editFragment: EditFragment,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
         existIndexList: Boolean
     ) {
         if(!existIndexList) {
             execScriptSave(
-                shellContentsList,
                 recordNumToMapNameValueInCommandHolder,
                 recordNumToMapNameValueInSettingHolder,
             )
@@ -308,7 +296,6 @@ class ToolbarButtonProducerForEdit(
         )
     }
     private fun execScriptSave(
-        shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
@@ -321,14 +308,13 @@ class ToolbarButtonProducerForEdit(
             ) != true
         ) return
         scriptFileSaver.save(
-            shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
     }
 
     private fun execForOk(
-        shellContentsList: List<String>,
+        editFragment: EditFragment,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
@@ -338,7 +324,6 @@ class ToolbarButtonProducerForEdit(
                     CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
 
         scriptFileSaver.save(
-            shellContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
         )
@@ -350,9 +335,13 @@ class ToolbarButtonProducerForEdit(
                 && onPassCmdVariableEdit
         val isSettingEdit = !enableCmdEdit
 
-        val isOnlyCmdEdit = enableCmdEdit
+        val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
+        val isOnlyCmdEditNoFdialog = enableCmdEdit
                 && !editFragment.enableEditExecute
-
+                && !isFdialogFannel
+        val isOnlyCmdEditWithFdialog = enableCmdEdit
+                && !editFragment.enableEditExecute
+                && isFdialogFannel
         when(true) {
             isCmdEditExecute -> {
                 Keyboard.hiddenKeyboardForFragment(
@@ -360,7 +349,6 @@ class ToolbarButtonProducerForEdit(
                 )
                 TerminalShowByTerminalDo.show(
                     editFragment,
-                    shellContentsList
                 )
                 ExecJsOrSellHandler.handle(
                     editFragment,
@@ -368,8 +356,10 @@ class ToolbarButtonProducerForEdit(
                     currentScriptFileName,
                 )
             }
+            isOnlyCmdEditWithFdialog ->
+                fDialalogOkButtonProcess()
             isSettingEditByPass,
-            isOnlyCmdEdit,
+            isOnlyCmdEditNoFdialog,
             isSettingEdit -> {
                 val listener =
                     this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
@@ -382,5 +372,64 @@ class ToolbarButtonProducerForEdit(
             }
             else -> {}
         }
+    }
+
+    private fun fDialalogOkButtonProcess(
+    ){
+        val srcReadSharePreffernceMap = editFragment.srcReadSharePreffernceMap
+            ?: return
+        val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            srcReadSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            srcReadSharePreffernceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val srcFannelCon = ReadText(
+            srcAppDirPath,
+            srcFannelName
+        ).readText()
+        val fDialogConList = ReadText(
+            currentAppDirPath,
+            currentScriptFileName
+        ).textToList()
+        val fDialogCommandValCon = CommandClickVariables.substituteVariableListFromHolder(
+            fDialogConList,
+            editFragment.commandSectionStart,
+            editFragment.commandSectionEnd
+        )?.filter {
+            !it.startsWith(FDialogTempFile.jsDescPrefix)
+                    && it.isNotEmpty()
+        }?.joinToString("\t") ?: String()
+        val replaceSrcFanneCon = CommandClickVariables.replaceVariableInHolder(
+            srcFannelCon,
+            fDialogCommandValCon,
+            editFragment.commandSectionStart,
+            editFragment.commandSectionEnd,
+        )
+        if(
+            replaceSrcFanneCon != srcFannelCon
+        ){
+            FileSystems.writeFile(
+                srcAppDirPath,
+                srcFannelName,
+                replaceSrcFanneCon
+            )
+        }
+        val currentFannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+        val srcFannelDirName = CcPathTool.makeFannelDirName(srcFannelName)
+        FileSystems.copyDirectory(
+            File(currentAppDirPath, currentFannelDirName).absolutePath,
+            File(srcAppDirPath, srcFannelDirName).absolutePath
+        )
+        val listener =
+            this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+        listener?.onToolBarButtonClickForEditFragment(
+            String(),
+            ToolbarButtonBariantForEdit.CANCEL,
+            mapOf(),
+            false
+        )
     }
 }

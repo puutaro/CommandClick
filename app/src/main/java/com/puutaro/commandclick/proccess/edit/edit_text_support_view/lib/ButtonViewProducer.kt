@@ -68,14 +68,11 @@ object ButtonViewProducer {
         currentComponentIndex: Int,
     ): Button {
         val context = editParameters.context
-        val readSharePreffernceMap = editParameters.readSharePreffernceMap
         val currentId = editParameters.currentId
 
         val binding = editFragment.binding
         val scriptFileSaver = ScriptFileSaver(
-            binding,
             editFragment,
-            readSharePreffernceMap,
             true ,
         )
 
@@ -213,7 +210,6 @@ object ButtonViewProducer {
     ){
         val context = editFragment.context
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val currentShellContentsList = editParameters.currentShellContentsList
         val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
@@ -226,7 +222,6 @@ object ButtonViewProducer {
             SharePrefferenceSetting.current_fannel_name
         )
         scriptFileSaver.save(
-            currentShellContentsList,
             recordNumToMapNameValueInCommandHolder,
         )
         val execCmdEditable = insertEditText.text
@@ -315,7 +310,6 @@ object ButtonViewProducer {
             -> execShellHandler(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
-                editParameters,
                 innerExecCmd,
             )
         }
@@ -361,12 +355,11 @@ object ButtonViewProducer {
     private fun execShellHandler(
         editFragment: EditFragment,
         execCmdAfterTrimButtonEditExecVariant: String,
-        editParameters: EditParameters,
         innerExecCmd: String,
     ){
         val substituteSettingVariableList =
             CommandClickVariables.substituteVariableListFromHolder(
-                editParameters.currentShellContentsList,
+                editFragment.currentScriptContentsList,
                 editFragment.settingSectionStart,
                 editFragment.settingSectionEnd,
             )

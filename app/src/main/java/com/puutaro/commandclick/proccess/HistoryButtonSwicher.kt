@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess
 
-import android.content.SharedPreferences
+import android.content.Context
 import android.view.View
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -19,12 +19,19 @@ object HistoryBottunSwitcher {
         fragment: androidx.fragment.app.Fragment,
         innerView: View,
         terminalFragmentTag: String?,
-        readSharePreffernceMap: Map<String, String>,
         historySwitch: String,
         urlHistoryButtonEvent:UrlHistoryButtonEvent,
-        sharedPref: SharedPreferences?,
         clickType: CLICLTYPE
     ) {
+        val readSharePreffernceMap = when(
+            fragment
+        ){
+            is CommandIndexFragment -> fragment.readSharePreffernceMap
+            is EditFragment -> fragment.readSharePreffernceMap
+            else -> return
+        }
+        val activity = fragment.activity
+        val sharedPref = activity?.getPreferences(Context.MODE_PRIVATE)
         val switchOnSource = (
                 historySwitch ==
                         SettingVariableSelects.HistorySwitchSelects.ON.name

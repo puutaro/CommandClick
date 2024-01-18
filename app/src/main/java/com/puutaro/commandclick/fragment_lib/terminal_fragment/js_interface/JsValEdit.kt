@@ -17,6 +17,7 @@ class JsValEdit(
     private val activity = terminalFragment.activity
     private val okReturnCode = "0"
     private val cancelReturnCode = "1"
+    private val readSharePreffernceMap = terminalFragment.readSharedPreferences
 
 
     @JavascriptInterface
@@ -44,6 +45,16 @@ class JsValEdit(
         }
     }
 
+    @JavascriptInterface
+    fun registerFannelConChange(
+        changedFannelCon: String
+    ){
+        val listener = context as? TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm
+        listener?.onEditFannelContentsListUpdateForTerm(
+            readSharePreffernceMap ,
+            changedFannelCon.split("\n")
+        )
+    }
 
     private fun execEditAndSaveCmdVar(
         title: String,
@@ -90,6 +101,9 @@ class JsValEdit(
         val replacedCon =  jsScript.replaceCommandVariable(
             fcon,
             resultKeyValueCon
+        )
+        registerFannelConChange(
+            replacedCon
         )
         if(
             replacedCon.isEmpty()

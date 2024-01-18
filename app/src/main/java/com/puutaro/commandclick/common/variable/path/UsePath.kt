@@ -196,6 +196,7 @@ object UsePath {
     val qrPngRelativePath = "$qrDirName/$qrPngName"
     val qrDesignFileName = "qrDesign.txt"
     val qrDesignRelativePath = "$qrDirName/$qrDesignFileName"
+    val fDialogTempFannelName = "fDialogTempFannel${JS_FILE_SUFFIX}"
 
     fun makeOmitPath(
         path: String

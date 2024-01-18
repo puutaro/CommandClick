@@ -439,14 +439,14 @@ class WithEditComponent(
         insertTextView: TextView,
         horizontalLinearLayout: LinearLayout,
     ){
-        val isVisible = !editParameters.hideSettingVariableList.contains(
-            editParameters.currentVariableName
-        )
-        if(!isVisible) {
-            horizontalLinearLayout.isVisible = isVisible
-            insertTextView.isVisible = isVisible
-            return
-        }
+//        val isVisible = !editParameters.hideSettingVariableList.contains(
+//            editParameters.currentVariableName
+//        )
+//        if(!isVisible) {
+//            horizontalLinearLayout.isVisible = isVisible
+//            insertTextView.isVisible = isVisible
+//            return
+//        }
         val variableTypeList = editParameters.variableTypeList
         val isInsertTextViewVisible = !variableTypeList.contains(
             EditTextSupportViewName.HIDDEN_LABEL.str

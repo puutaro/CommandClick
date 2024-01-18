@@ -44,6 +44,7 @@ import com.puutaro.commandclick.proccess.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
@@ -96,11 +97,13 @@ class EditFragment: Fragment() {
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
     var readSharePreffernceMap: Map<String, String> = mapOf()
+    var srcReadSharePreffernceMap: Map<String, String>? = null
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
+    var currentScriptContentsList = emptyList<String>()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var execPlayBtnLongPress = String()
@@ -110,6 +113,7 @@ class EditFragment: Fragment() {
     var passCmdVariableEdit = String()
     val toolBarButtonDisableMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
+    var editBoxTitle = String()
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
@@ -145,8 +149,11 @@ class EditFragment: Fragment() {
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        readSharePreffernceMap = EditFragmentArgs.getReadSharePreference(arguments)
-
+        readSharePreffernceMap =
+            EditFragmentArgs.getReadSharePreference(arguments)
+        srcReadSharePreffernceMap =
+            EditFragmentArgs.getSrcReadSharePreference(arguments)
+        FDialogTempFile.remove(readSharePreffernceMap)
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
@@ -216,7 +223,7 @@ class EditFragment: Fragment() {
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
 
-        val currentScriptContentsList = ReadText(
+        currentScriptContentsList = ReadText(
             currentAppDirPath,
             currentScriptFileName
         ).textToList()
@@ -267,7 +274,6 @@ class EditFragment: Fragment() {
         val editModeHandler = EditModeHandler(
             this,
             binding,
-            currentScriptContentsList
         )
         editModeHandler.execByHowFullEdit()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()

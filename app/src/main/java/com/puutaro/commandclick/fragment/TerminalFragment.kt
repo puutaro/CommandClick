@@ -43,6 +43,7 @@ class   TerminalFragment: Fragment() {
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
     var readSharedPreferences = mapOf<String, String>()
+    var srcReadSharedPreferences: Map<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var currentAppDirPath = String()
@@ -111,6 +112,7 @@ class   TerminalFragment: Fragment() {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
         readSharedPreferences = EditFragmentArgs.getReadSharePreference(arguments)
+        srcReadSharedPreferences = EditFragmentArgs.getSrcReadSharePreference(arguments)
         currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
             SharePrefferenceSetting.current_app_dir
@@ -329,6 +331,20 @@ class   TerminalFragment: Fragment() {
     interface OnGetPermissionListenerForTerm {
         fun onGetPermission(
             permissionStr: String
+        )
+    }
+
+    interface OnChangeEditFragmentListenerForTerm {
+        fun onChangeEditFragment(
+            editFragmentArgs: EditFragmentArgs,
+            cmdEditFragmentTag: String,
+            editTerminalFragmentTag: String
+        )
+    }
+    interface OnEditFannelContentsListUpdateListenerForTerm {
+        fun onEditFannelContentsListUpdateForTerm(
+            readSharePreffernceMap: Map<String, String>,
+            updateScriptContents: List<String>,
         )
     }
 }

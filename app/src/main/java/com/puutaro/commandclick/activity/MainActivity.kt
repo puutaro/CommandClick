@@ -83,6 +83,8 @@ class MainActivity:
     TerminalFragment.OnTermSizeMinimumListenerForTerm,
     TerminalFragment.OnGetPermissionListenerForTerm,
     TerminalFragment.OnAdBlockListener,
+    TerminalFragment.OnChangeEditFragmentListenerForTerm,
+    TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -637,6 +639,30 @@ class MainActivity:
             this,
             ssid,
             pin
+        )
+    }
+
+    override fun onChangeEditFragment(
+        editFragmentArgs: EditFragmentArgs,
+        cmdEditFragmentTag: String,
+        editTerminalFragmentTag: String
+    ) {
+        ExecCommandEdit.execCommandEdit(
+            this,
+            cmdEditFragmentTag,
+            editFragmentArgs,
+            editTerminalFragmentTag,
+        )
+    }
+
+    override fun onEditFannelContentsListUpdateForTerm(
+        readSharePreffernceMap: Map<String, String>,
+        updateScriptContents: List<String>,
+    ) {
+        ExecFannelConListUpdate.update(
+            this,
+            readSharePreffernceMap,
+            updateScriptContents,
         )
     }
  }

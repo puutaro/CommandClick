@@ -151,4 +151,54 @@ object CommandClickVariables {
             )
         }.split("\n")
     }
+
+    fun replaceVariableInHolder(
+        scriptContents: String,
+        replaceTabList: String,
+        startHolder: String?,
+        endHolder: String?,
+    ): String {
+        var countStartHolder = 0
+        var countEndHolder = 0
+        if(
+            startHolder.isNullOrEmpty()
+        ) return scriptContents
+        if(
+            endHolder.isNullOrEmpty()
+        ) return scriptContents
+        val replaceMap = replaceTabList.split("\t").map {
+            val keyValueList = it.split("=")
+            val keyValueListSize = keyValueList.size
+            if(keyValueList.size < 2) return it
+            val key = keyValueList.first()
+            val value = keyValueList
+                .takeLast(keyValueListSize - 1)
+                .joinToString("=")
+            key to value
+        }.toMap()
+        return scriptContents.split('\n').map {
+            if(
+                it.startsWith(startHolder)
+                && it.endsWith(startHolder)
+            ) countStartHolder++
+            if(
+                it.startsWith(endHolder)
+                && it.endsWith(endHolder)
+            ) countEndHolder++
+            if(
+                countStartHolder == 0
+                || countEndHolder > 0
+            ) return@map it
+            val keyValueList = it.split("=")
+            val keyValueListSize = keyValueList.size
+            val key = keyValueList.first()
+            val replaceValue = replaceMap.get(key)?.let{
+                QuoteTool.trimBothEdgeQuote(it)
+            } ?: return@map it
+            if(
+                keyValueListSize < 2
+            ) return@map it
+            "${key}=\"${replaceValue}\""
+        }.joinToString("\n")
+    }
 }

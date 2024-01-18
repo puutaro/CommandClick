@@ -167,7 +167,6 @@ class ValidationSharePreferenceForEdit(
         }
         TerminalShowByTerminalDo.show(
             editFragment,
-            variablesSettingHolderList
         )
         return true
     }

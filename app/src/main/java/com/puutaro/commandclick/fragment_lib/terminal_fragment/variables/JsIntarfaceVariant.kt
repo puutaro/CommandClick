@@ -39,4 +39,5 @@ enum class JsInterfaceVariant {
     jsFannelInstaller,
     jsIconSelectBox,
     jsMap,
+    jsFDialog,
 }

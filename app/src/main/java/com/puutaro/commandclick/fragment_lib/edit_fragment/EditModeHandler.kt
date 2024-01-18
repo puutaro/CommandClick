@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import android.widget.Toast
+import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.databinding.EditFragmentBinding
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -18,9 +20,9 @@ import kotlinx.coroutines.*
 class EditModeHandler(
     private val editFragment: EditFragment,
     binding: EditFragmentBinding,
-    private val currentScriptContentsList: List<String>
 ) {
     private val context = editFragment.context
+    private val currentScriptContentsList = editFragment.currentScriptContentsList
     private val currentEditFragmentTag = editFragment.tag
     private val onPassCmdVariableEdit =
         editFragment.passCmdVariableEdit ==
@@ -36,6 +38,8 @@ class EditModeHandler(
         SharePrefferenceSetting.current_fannel_name
     )
 
+    private val hideSettingVariableList = makeHideVariableList()
+
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
         currentScriptContentsList,
         editFragment.languageType
@@ -44,7 +48,6 @@ class EditModeHandler(
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,
-        currentScriptContentsList,
         readSharePreffernceMap,
     )
     val settingSectionStart = editFragment.settingSectionStart
@@ -71,16 +74,19 @@ class EditModeHandler(
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
                 .get(editFragment.languageType)
-        val recordNumToMapNameValueInCommandHolder =
-            RecordNumToMapNameValueInHolder.parse(
-                currentScriptContentsList,
-                languageTypeToSectionHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-                ) as String,
-                languageTypeToSectionHolderMap[
-                        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-                ] as String,
-            )
+        val recordNumToMapNameValueInCommandHolderSrc = RecordNumToMapNameValueInHolder.parse(
+            currentScriptContentsList,
+            languageTypeToSectionHolderMap?.get(
+                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+            ) as String,
+            languageTypeToSectionHolderMap[
+                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+            ] as String,
+        )
+        val recordNumToMapNameValueInCommandHolder = filterRecordNumToMapNameValueInHolderByHideVariable(
+            recordNumToMapNameValueInCommandHolderSrc
+        )
+
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentScriptContentsList,
@@ -108,20 +114,18 @@ class EditModeHandler(
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-            shellContentsList=currentScriptContentsList,
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
+            hideSettingVariableList,
         )
         editTextProducerForEdit.adds()
 
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
             recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
-            shellContentsList=currentScriptContentsList,
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
@@ -136,7 +140,7 @@ class EditModeHandler(
                 commandSectionStart,
                 commandSectionEnd
             )
-        val recordNumToMapNameValueInSettingHolder =
+        val recordNumToMapNameValueInSettingHolderSrc =
             RecordNumToMapNameValueInHolder.parse(
                 currentScriptContentsList,
                 settingSectionStart,
@@ -144,6 +148,9 @@ class EditModeHandler(
                 true,
                 currentFannelName
             )
+        val recordNumToMapNameValueInSettingHolder = filterRecordNumToMapNameValueInHolderByHideVariable(
+            recordNumToMapNameValueInSettingHolderSrc
+        )
         if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
             && recordNumToMapNameValueInSettingHolder.isNullOrEmpty()
@@ -179,13 +186,12 @@ class EditModeHandler(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            currentScriptContentsList,
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
-            currentScriptContentsList,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
+            hideSettingVariableList,
         )
         editTextProducerForEdit.adds(
             true
@@ -196,13 +202,41 @@ class EditModeHandler(
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
-        shellContentsList: List<String> = listOf(),
     ){
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            shellContentsList,
         )
+    }
+
+    private fun makeHideVariableList(): List<String>{
+        return ListSettingVariableListMaker.make(
+            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
+            currentAppDirPath,
+            currentFannelName,
+            currentScriptContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+        )
+    }
+
+    private fun filterRecordNumToMapNameValueInHolderByHideVariable(
+        recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
+    ): Map<Int, Map<String, String>?>? {
+        return recordNumToMapNameValueInHolder?.filter {
+                currentRecordNumToMapNameValueInHolder ->
+            val currentRecordNumToNameToValueInHolder =
+                currentRecordNumToMapNameValueInHolder.value
+            val currentVariableName = currentRecordNumToNameToValueInHolder?.get(
+                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
+            )
+            if (
+                currentVariableName.isNullOrEmpty()
+            ) return@filter false
+            !hideSettingVariableList.contains(
+                currentVariableName
+            )
+        }
     }
 }

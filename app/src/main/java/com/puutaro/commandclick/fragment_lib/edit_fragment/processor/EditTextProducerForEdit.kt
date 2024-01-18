@@ -10,22 +10,23 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
-import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 
 class EditTextProducerForEdit(
     private val editFragment: EditFragment,
-    private val currentScriptContentsList: List<String>,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
+    hideSettingVariableList: List<String>,
 ) {
     private val binding = editFragment.binding
     private val context = editFragment.context
+    private val currentScriptContentsList = editFragment.currentScriptContentsList
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     private val readSharePreffernceMap = editFragment.readSharePreffernceMap
@@ -57,7 +58,7 @@ class EditTextProducerForEdit(
         )
 
 
-    private val hideSettingVariableList = makeHideVariableList()
+//    private val hideSettingVariableList = makeHideVariableList()
 
     private val editParameters = EditParameters(
         editFragment,
@@ -81,37 +82,36 @@ class EditTextProducerForEdit(
         onSettingEdit: Boolean = false
     ) {
         editViewModel.variableNameToEditTextIdMap.clear()
-        if (onSettingEdit) {
-            val setVariableListForSettingHolder =
-                CommandClickScriptVariable.setVariableForSettingHolder
-            val recordNumToSetVariableMapsForSettingHolder =
-                SetVariableTyper.makeRecordNumToSetVariableMaps(
-                    setVariableListForSettingHolder,
-                    recordNumToMapNameValueInSettingHolder
-                )
+        when (onSettingEdit) {
+            true -> {
+                val setVariableListForSettingHolder =
+                    CommandClickScriptVariable.setVariableForSettingHolder
+                val recordNumToSetVariableMapsForSettingHolder =
+                    SetVariableTyper.makeRecordNumToSetVariableMaps(
+                        setVariableListForSettingHolder,
+                        recordNumToMapNameValueInSettingHolder
+                    )
 
-            execAdd(
-                recordNumToMapNameValueInSettingHolder,
-                recordNumToSetVariableMapsForSettingHolder,
-                EditTextIdForEdit.SETTING_VARIABLE.id
-            )
-            binding.editLinearLayout.addView(
-                makeDescriptionButton(
-                    editFragment,
-                    currentScriptContentsList,
+                execAdd(
+                    recordNumToMapNameValueInSettingHolder,
+                    recordNumToSetVariableMapsForSettingHolder,
+                    EditTextIdForEdit.SETTING_VARIABLE.id
                 )
-            )
-            return
+            }
+            false -> {
+                execAdd(
+                    recordNumToMapNameValueInCommandHolder,
+                    recordNumToSetVariableMaps,
+                    EditTextIdForEdit.COMMAND_VARIABLE.id
+                )
+            }
         }
-        execAdd(
-            recordNumToMapNameValueInCommandHolder,
-            recordNumToSetVariableMaps,
-            EditTextIdForEdit.COMMAND_VARIABLE.id
-        )
+        if (
+            FDialogTempFile.howFDialogFile(currentScriptFileName)
+        ) return
         binding.editLinearLayout.addView(
             makeDescriptionButton(
                 editFragment,
-                currentScriptContentsList,
             )
         )
     }
@@ -176,11 +176,12 @@ class EditTextProducerForEdit(
                     )
                 }
                 else -> {
-                    val horizontalLinearLayout = withEditComponent.insert(
+                    withEditComponent.insert(
                         insertTextView,
                         editParameters,
-                    )
-                    binding.editLinearLayout.addView(horizontalLinearLayout)
+                    ).let {
+                        binding.editLinearLayout.addView(it)
+                    }
                 }
             }
         }
@@ -188,7 +189,6 @@ class EditTextProducerForEdit(
 
     private fun makeDescriptionButton(
         editFragment: EditFragment,
-        currentShellContentsList: List<String>,
     ): Button {
         val context = editFragment.context
         val readSharePreffernceMap = editFragment.readSharePreffernceMap
@@ -211,8 +211,8 @@ class EditTextProducerForEdit(
         }
         descriptionButton.setOnClickListener { innerButtonView ->
             ScriptFileDescription.show(
-                this.editFragment,
-                currentShellContentsList,
+                editFragment,
+                editFragment.currentScriptContentsList,
                 currentAppDirPath,
                 SharePreferenceMethod.getReadSharePreffernceMap(
                     readSharePreffernceMap,
@@ -221,18 +221,6 @@ class EditTextProducerForEdit(
             )
         }
         return descriptionButton
-    }
-
-    private fun makeHideVariableList(
-    ): List<String>{
-        return ListSettingVariableListMaker.make(
-            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-            currentAppDirPath,
-            currentScriptFileName,
-            currentScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-        )
     }
 }
 

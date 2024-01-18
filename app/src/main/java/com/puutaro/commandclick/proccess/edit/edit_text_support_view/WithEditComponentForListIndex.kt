@@ -59,11 +59,11 @@ class WithEditComponentForListIndex {
         )
         val horizontalLinearLayout = makeHorizontalLayout(context)
         horizontalLinearLayout.addView(insertEditText)
-        hideSettingVariableWhenSettingEdit(
-            editParameters,
-            insertTextView,
-            horizontalLinearLayout,
-        )
+//        hideSettingVariableWhenSettingEdit(
+//            editParameters,
+//            insertTextView,
+//            horizontalLinearLayout,
+//        )
         (variableTypeList.indices).forEach {
             val variableTypeListUntilCurrent =  variableTypeList.take(it + 1)
             val currentComponentIndex = variableTypeListUntilCurrent.filter {
@@ -254,19 +254,19 @@ class WithEditComponentForListIndex {
         return textAndLabelOtherCompLength
     }
 
-    private fun hideSettingVariableWhenSettingEdit(
-        editParameters: EditParameters,
-        insertTextView: TextView,
-        horizontalLinearLayout: LinearLayout,
-    ){
-        val hideSettingVariableList = editParameters.hideSettingVariableList
-        if(
-            hideSettingVariableList.isEmpty()
-        ) return
-        val isHidden = !editParameters.hideSettingVariableList.contains(
-            editParameters.currentVariableName
-        )
-        horizontalLinearLayout.isVisible = isHidden
-        insertTextView.isVisible = isHidden
-    }
+//    private fun hideSettingVariableWhenSettingEdit(
+//        editParameters: EditParameters,
+//        insertTextView: TextView,
+//        horizontalLinearLayout: LinearLayout,
+//    ){
+//        val hideSettingVariableList = editParameters.hideSettingVariableList
+//        if(
+//            hideSettingVariableList.isEmpty()
+//        ) return
+//        val isHidden = !editParameters.hideSettingVariableList.contains(
+//            editParameters.currentVariableName
+//        )
+//        horizontalLinearLayout.isVisible = isHidden
+//        insertTextView.isVisible = isHidden
+//    }
 }

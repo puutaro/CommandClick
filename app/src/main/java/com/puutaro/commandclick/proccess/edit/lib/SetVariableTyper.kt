@@ -109,7 +109,7 @@ object SetVariableTyper {
                     filePrefix
                 )
             ) return@map setTargetVariableValueSource
-            makeSetVariableValueFromFile(
+            makeSetVariableValueFromConfigFile(
                 currentAppDirPath,
                 currentShellFileName,
             )
@@ -118,16 +118,27 @@ object SetVariableTyper {
             ?.filter { it.isNotEmpty() }
     }
 
-    private fun makeSetVariableValueFromFile(
+    private fun makeSetVariableValueFromConfigFile(
+        currentAppDirPath: String,
+        currentShellFileName: String,
+    ): String {
+        return makeSetVariableValueFromFilePath(
+            setVariableTypesConfigPathSrc.removePrefix(
+                filePrefix
+            ),
+            currentAppDirPath,
+            currentShellFileName,
+        )
+    }
+
+    fun makeSetVariableValueFromFilePath(
+        configFilePath: String,
         currentAppDirPath: String,
         currentShellFileName: String,
     ): String {
         val setVariableTypesConfigPath =
             ScriptPreWordReplacer.replace(
-                setVariableTypesConfigPathSrc
-                    .removePrefix(
-                        filePrefix
-                    ),
+                configFilePath,
                 currentAppDirPath,
                 currentShellFileName,
             )

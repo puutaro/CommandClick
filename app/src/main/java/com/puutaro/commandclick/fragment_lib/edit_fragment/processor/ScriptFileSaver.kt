@@ -2,25 +2,23 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 class ScriptFileSaver(
-    private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
-    private val readSharePreffernceMap: Map<String, String>,
     private val onButton: Boolean = false,
 ) {
     private val context = editFragment.context
+    private val binding = editFragment.binding
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_fannel_name
     )
     fun save(
-        shellContentsList: List<String>,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>? = null,
     ){
@@ -40,17 +38,18 @@ class ScriptFileSaver(
         ){
             if(onButton) return
             editedTextContents.updateBySettingVariables(
-                shellContentsList,
+                editFragment.currentScriptContentsList,
                 recordNumToMapNameValueInSettingHolder,
             )
         } else {
             val shellContentsListUpdatedCmdVariable = editedTextContents.updateByCommandVariables(
-                shellContentsList,
+                editFragment.currentScriptContentsList,
                 recordNumToMapNameValueInCommandHolder,
             )
             updateShellScriptNameForEditCmdVriable(
                 shellContentsListUpdatedCmdVariable
             )
+
         }
         editedTextContents.save(
             editedShellContentsList,

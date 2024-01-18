@@ -82,6 +82,7 @@ object CommandClickScriptVariable {
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
     val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
+    val EDIT_BOX_TITLE = "editBoxTitle"
     val TERMINAL_COLOR = "terminalColor"
     val TERMINAL_FONT_COLOR = "terminalFontColor"
     val STATUS_BAR_ICON_COLOR_MODE = "statusBarIconColorMode"
@@ -133,6 +134,7 @@ object CommandClickScriptVariable {
         UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
+        EDIT_BOX_TITLE,
         CMDCLICK_RUN_SHELL,
         CMDCLICK_SHIBAN,
         ON_URL_LAUNCH_MACRO,
@@ -252,6 +254,7 @@ object CommandClickScriptVariable {
     val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
     val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
+    val EIDT_BOX_TITLE_DEFAULT_VALUE = String()
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
         cmdclickStartupJsName
@@ -443,67 +446,35 @@ object CommandClickScriptVariable {
             |#  * [$IGNORE_HISTORY_PATHS](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
             |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
             |#  * [$CMDCLICK_ON_HISTORY_URL_TITLE](#${
-            replaceLowerAdnBlankDash(
-                CMDCLICK_ON_HISTORY_URL_TITLE
-            )
-        })
+            replaceLowerAdnBlankDash(CMDCLICK_ON_HISTORY_URL_TITLE)})
+            |#  * [$EDIT_BOX_TITLE](#${replaceLowerAdnBlankDash(EDIT_BOX_TITLE)})
             |#  * [$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(
-                SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
-            )
-        })
+                SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
             |#  * [$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
-            replaceLowerAdnBlankDash(
-                SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH
-            )
-        })
+            replaceLowerAdnBlankDash(SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH)})
             |#  * [$IMAGE_LONG_PRESS_MENU_FILE_PATH](#${
-            replaceLowerAdnBlankDash(
-                IMAGE_LONG_PRESS_MENU_FILE_PATH
-            )
-        })
+            replaceLowerAdnBlankDash(IMAGE_LONG_PRESS_MENU_FILE_PATH)})
             |#  * [$HOME_SCRIPT_URLS_PATH](#${replaceLowerAdnBlankDash(HOME_SCRIPT_URLS_PATH)})
             |#  * [$CMDCLICK_HOME_FANNELS_PATH](#${
-            replaceLowerAdnBlankDash(
-                CMDCLICK_HOME_FANNELS_PATH
-            )
-        })
+            replaceLowerAdnBlankDash(CMDCLICK_HOME_FANNELS_PATH)})
             |#  * [$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC](#${
-            replaceLowerAdnBlankDash(
-                CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC
-            )
-        })
+            replaceLowerAdnBlankDash(CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC)})
             |#  * [$ON_ADBLOCK](#${replaceLowerAdnBlankDash(ON_ADBLOCK)})
             |#  * [$ON_TERM_BACKEND_WHEN_START](#${
-            replaceLowerAdnBlankDash(
-                ON_TERM_BACKEND_WHEN_START
-            )
-        })
+            replaceLowerAdnBlankDash(ON_TERM_BACKEND_WHEN_START)})
             |#  * [$ON_TERM_VISIBLE_WHEN_KEYBOARD](#${
-            replaceLowerAdnBlankDash(
-                ON_TERM_VISIBLE_WHEN_KEYBOARD
-            )
-        })
+            replaceLowerAdnBlankDash(ON_TERM_VISIBLE_WHEN_KEYBOARD)})
             |#  * [$ON_TERM_SHORT_WHEN_LOAD](#${replaceLowerAdnBlankDash(ON_TERM_SHORT_WHEN_LOAD)})
             |#  * [$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT](#${
-            replaceLowerAdnBlankDash(
-                DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT
-            )
-        })
+            replaceLowerAdnBlankDash(DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT)})
             |#  * [$ON_URL_LAUNCH_MACRO](#${replaceLowerAdnBlankDash(ON_URL_LAUNCH_MACRO)})
             |#  * [$ON_URL_HISTORY_REGISTER](#${replaceLowerAdnBlankDash(ON_URL_HISTORY_REGISTER)})
             |#  * [$DEFAULT_MONITOR_FILE](#${replaceLowerAdnBlankDash(DEFAULT_MONITOR_FILE)})
             |#  * [$EXEC_JS_OR_HTML_PATH](#${replaceLowerAdnBlankDash(EXEC_JS_OR_HTML_PATH)})
             |#  * [$UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF](#${
-            replaceLowerAdnBlankDash(
-                UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF
-            )
-        })
-            |#  * [$CMDCLICK_TERMINAL_FONT_ZOOM](#${
-            replaceLowerAdnBlankDash(
-                CMDCLICK_TERMINAL_FONT_ZOOM
-            )
-        })
+            replaceLowerAdnBlankDash(UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF)})
+            |#  * [$CMDCLICK_TERMINAL_FONT_ZOOM](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
             |#  * [$TERMINAL_FONT_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
             |#  * [$TERMINAL_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
             |#  * [$EXEC_PLAY_BTN_LONG_PRESS](#${replaceLowerAdnBlankDash(EXEC_PLAY_BTN_LONG_PRESS)})
@@ -597,6 +568,9 @@ object CommandClickScriptVariable {
             |# | $mdDash | $mdDash |
             |# | `$onHistoryUrlTitleON` | add |
             |# | `$onHistoryUrlTitleOff` | no |
+            |
+            |# ### $EDIT_BOX_TITLE
+            |# Edit box title
             |
             |# ### $SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
             |# Src image ancher long press menu list

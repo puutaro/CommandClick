@@ -8,9 +8,11 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -40,7 +42,6 @@ object ConfigFromScriptFileSetter {
                 editFragment,
                 currentAppDirPath,
                 currentScriptFileName,
-                currentScriptContentsList
             )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             currentScriptContentsList,
@@ -53,6 +54,22 @@ object ConfigFromScriptFileSetter {
                 currentScriptFileName,
             )
         }?.split("\n")
+        val defaultEditBoxTitle = TitleImageAndViewSetter.makeTitle(
+            editFragment,
+            currentAppDirPath,
+            currentScriptFileName
+        )
+        editFragment.editBoxTitle = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.EDIT_BOX_TITLE,
+            defaultEditBoxTitle,
+        ).let {
+            if(
+                it.isNotEmpty()
+            ) return@let it
+            defaultEditBoxTitle
+        }
+
         if (
             !onShortcut
         ) {
@@ -221,7 +238,6 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         currentAppDirPath: String,
         currentScriptFileName: String,
-        currentShellContentsList: List<String>
     ): Boolean {
         val isSetting =
             editFragment.editTypeSettingKey ==
@@ -231,7 +247,7 @@ object ConfigFromScriptFileSetter {
         ) return false
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
-                currentShellContentsList,
+                editFragment.currentScriptContentsList,
                 editFragment.settingSectionStart,
                 editFragment.settingSectionEnd,
                 true,
@@ -254,6 +270,11 @@ object ConfigFromScriptFileSetter {
         settingVariableList: List<String>?,
         onShortcut: Boolean
     ){
+        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
         editFragment.editExecuteValue = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.EDIT_EXECUTE,
@@ -298,7 +319,8 @@ object ConfigFromScriptFileSetter {
             ToolbarButtonBariantForEdit.EDIT,
             when (true) {
                 isSettingEdit -> true
-                isOnlyCmdEdit -> false
+                isOnlyCmdEdit ->
+                    FDialogTempFile.howFDialogFile(currentFannelName)
                 else -> SettingVariableReader.getCbValue(
                     settingVariableList,
                     CommandClickScriptVariable.DISABLE_EDIT_BUTTON,

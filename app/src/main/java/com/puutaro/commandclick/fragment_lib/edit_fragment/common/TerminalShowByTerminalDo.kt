@@ -9,10 +9,10 @@ class TerminalShowByTerminalDo {
     companion object {
         fun show(
             editFragment: EditFragment,
-            shellContentsList: List<String>?
         ){
+            val shellContentsList = editFragment.currentScriptContentsList
             if(
-                shellContentsList.isNullOrEmpty()
+                shellContentsList.isEmpty()
             ) return
             val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
                 shellContentsList,

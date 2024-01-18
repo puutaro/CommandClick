@@ -44,7 +44,7 @@ class EditedTextContents(
         ) {
             scriptContentsList
         } else {
-            this.scriptContentsLister.update(
+            scriptContentsLister.update(
                 recordNumToMapNameValueInCommandHolder,
                 scriptContentsList,
                 EditTextIdForEdit.COMMAND_VARIABLE.id

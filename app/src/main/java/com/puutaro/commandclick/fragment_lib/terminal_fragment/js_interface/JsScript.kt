@@ -1,17 +1,23 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
+import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 class JsScript(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val languageTypeHolderMap =
@@ -36,6 +42,7 @@ class JsScript(
     private val commandEndHolder = languageTypeHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
+    private val readSharedPreferences = terminalFragment.readSharedPreferences
 
     @JavascriptInterface
     fun subLabelingVars(
@@ -115,6 +122,54 @@ class JsScript(
     }
 
     @JavascriptInterface
+    fun convertSetValPathToOneLine(
+        setVariableFilePath: String,
+    ): String {
+        val setVariableFilePathObj = File(setVariableFilePath)
+        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
+            ?: return String()
+        val setVariableTypesConfigName = setVariableFilePathObj.name
+        return listOf(
+            CommandClickScriptVariable.SET_VARIABLE_TYPE,
+            SettingFile.read(
+                setVariableTypesConfigDirPath,
+                setVariableTypesConfigName
+            )
+        ).filter{ it.isNotEmpty() }.joinToString("=")
+    }
+
+    @JavascriptInterface
+    fun convertRepValPathToOneLine(
+        setVariableFilePath: String,
+    ): String {
+        val setVariableFilePathObj = File(setVariableFilePath)
+        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
+            ?: return String()
+        val setVariableTypesConfigName = setVariableFilePathObj.name
+        return listOf(
+            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
+            SettingFile.read(
+                setVariableTypesConfigDirPath,
+                setVariableTypesConfigName
+            )
+        ).filter{ it.isNotEmpty() }.joinToString("=")
+    }
+
+    @JavascriptInterface
+    fun convertConfigToOneLine(
+        setVariableFilePath: String,
+    ): String {
+        val setVariableFilePathObj = File(setVariableFilePath)
+        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
+            ?: return String()
+        val setVariableTypesConfigName = setVariableFilePathObj.name
+        return SettingFile.read(
+            setVariableTypesConfigDirPath,
+            setVariableTypesConfigName
+        )
+    }
+
+    @JavascriptInterface
     fun bothQuoteTrim(
         valString: String
     ): String {
@@ -126,7 +181,7 @@ class JsScript(
         scriptContents: String,
         replaceTabList: String,
     ): String {
-        return replaceVariableInHolder(
+        return CommandClickVariables.replaceVariableInHolder(
             scriptContents,
             replaceTabList,
             commandStartHolder,
@@ -139,7 +194,7 @@ class JsScript(
         scriptContents: String,
         replaceTabList: String,
     ): String {
-        return replaceVariableInHolder(
+        return CommandClickVariables.replaceVariableInHolder(
             scriptContents,
             replaceTabList,
             settingStartHolder,
@@ -167,53 +222,48 @@ class JsScript(
         )
     }
 
-    private fun replaceVariableInHolder(
-        scriptContents: String,
-        replaceTabList: String,
-        startHolder: String?,
-        endHolder: String?,
+    @JavascriptInterface
+    fun makeFannelCon(
+        settingValCon: String,
+        cmdValCon: String,
     ): String {
-        var countStartHolder = 0
-        var countEndHolder = 0
-        if(
-            startHolder.isNullOrEmpty()
-        ) return scriptContents
-        if(
-            endHolder.isNullOrEmpty()
-        ) return scriptContents
-        val replaceMap = replaceTabList.split("\t").map {
-            val keyValueList = it.split("=")
-            val keyValueListSize = keyValueList.size
-            if(keyValueList.size < 2) return it
-            val key = keyValueList.first()
-            val value = keyValueList
-                .takeLast(keyValueListSize - 1)
-                .joinToString("=")
-            key to value
-        }.toMap()
-        return scriptContents.split('\n').map {
-            if(
-                it.startsWith(startHolder)
-                && it.endsWith(startHolder)
-            ) countStartHolder++
-            if(
-                it.startsWith(endHolder)
-                && it.endsWith(endHolder)
-            ) countEndHolder++
-            if(
-                countStartHolder == 0
-                || countEndHolder > 0
-            ) return@map it
-            val keyValueList = it.split("=")
-            val keyValueListSize = keyValueList.size
-            val key = keyValueList.first()
-            val replaceValue = replaceMap.get(key)?.let{
-                QuoteTool.trimBothEdgeQuote(it)
-            } ?: return@map it
-            if(
-                keyValueListSize < 2
-            ) return@map it
-            "${key}=\"${replaceValue}\""
-        }.joinToString("\n")
+        val languageType = LanguageTypeSelects.JAVA_SCRIPT
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+                languageType
+            )
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+        val cmdSectionStart = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+        ) as String
+
+        val cmdSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+        ) as String
+
+
+        val settingConListWithHolder = listOf(
+            settingSectionStart,
+            settingValCon,
+            settingSectionEnd
+        )
+        val cmdConListWithHolder = listOf(
+            cmdSectionStart,
+            cmdValCon,
+            cmdSectionEnd
+        )
+        return listOf(
+            listOf(String()),
+            settingConListWithHolder,
+            cmdConListWithHolder,
+            listOf(String()),
+        ).flatten().joinToString("\n\n")
     }
+
 }
