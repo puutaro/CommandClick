@@ -12,7 +12,6 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
-import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
@@ -62,10 +61,10 @@ object ExecShellScript {
                 settingSectionEnd,
             )
 
-        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
-            currentFragment,
-            substituteSettingVariableList,
-        )
+//        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
+//            currentFragment,
+//            substituteSettingVariableList,
+//        )
 
         val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,

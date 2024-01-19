@@ -21,6 +21,8 @@ class ToolBarSettingButtonControl(
                 false,
                 ToolbarButtonBariantForEdit.SETTING,
                 settingButtonView,
+                null,
+                null
             )
         }
     }
@@ -32,6 +34,8 @@ class ToolBarSettingButtonControl(
                 true,
                 ToolbarButtonBariantForEdit.SETTING,
                 settingButtonView,
+                null,
+                null,
             )
             true
         }

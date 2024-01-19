@@ -13,11 +13,11 @@ object SettingVariableSelects {
         ALWAYS
     }
 
-    enum class TerminalSizeTypeSelects {
-        OFF,
-        SHORT,
-        LONG,
-    }
+//    enum class TerminalSizeTypeSelects {
+//        OFF,
+//        SHORT,
+//        LONG,
+//    }
 
     enum class AutoExecSelects {
         OFF,

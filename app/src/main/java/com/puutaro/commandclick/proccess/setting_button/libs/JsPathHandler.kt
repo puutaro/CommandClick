@@ -105,15 +105,31 @@ object JsPathHandler {
                 filterdJsPath,
             )
 
-            else -> ExecJsLoad.jsUrlLaunchHandler(
-                fragment,
-                JavaScriptLoadUrl.make(
-                    context,
-                    jsPath,
-                    setReplaceVariableMapSrc = toolbarButtonArgsMaker.setReplaceVariableMap
-                ) ?: String()
+            else -> execJs(
+                toolbarButtonArgsMaker,
+                jsPath,
             )
         }
+    }
+
+    private fun execJs(
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        jsPath: String,
+    ){
+        if(
+            jsPath.isEmpty()
+            || !File(jsPath).isFile
+        ) return
+        val fragment = toolbarButtonArgsMaker.fragment
+        val context = fragment.context
+        ExecJsLoad.jsUrlLaunchHandler(
+            fragment,
+            JavaScriptLoadUrl.make(
+                context,
+                jsPath,
+                setReplaceVariableMapSrc = toolbarButtonArgsMaker.setReplaceVariableMap
+            ) ?: String()
+        )
     }
 
     private fun jsPathMacroHandler(

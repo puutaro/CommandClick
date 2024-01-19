@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
+import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.setting_button.libs.JsPathHandler
 import com.puutaro.commandclick.proccess.setting_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -17,8 +18,8 @@ class SettingButtonHandler(
         isLongClick: Boolean,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         settingButtonView: ImageButton?,
-        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
+        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ){
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             fragment,
@@ -27,6 +28,10 @@ class SettingButtonHandler(
             toolbarButtonBariantForEdit,
             settingButtonView,
             isLongClick,
+        )
+        onMonitorSizingHandler(
+            toolbarButtonArgsMaker,
+            isLongClick
         )
         onScriptSaveHandler(
             toolbarButtonArgsMaker,
@@ -96,34 +101,42 @@ class SettingButtonHandler(
             else -> execOnScriptSave(
                 fragment,
                 toolbarButtonArgsMaker,
-                SettingButtonConfigMapKey.LONG_CLICK.str,
+                SettingButtonConfigMapKey.CLICK.str,
                 ToolbarButtonArgsMaker.onSaveDefaultMapInClick.get(
                     toolbarButtonArgsMaker.toolbarButtonBariantForEdit
                 ) ?: String(),
             )
         }
     }
+
     private fun execMakeJsPathMacro(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         buttonClickMapKey: String,
         defaultButtonMacroStr: String,
     ): String {
-        return toolbarButtonArgsMaker.settingButtonConfigMap?.get(buttonClickMapKey).let {
-                clickConfigMapStr ->
-            if(
-                clickConfigMapStr == null
-            ) return@let defaultButtonMacroStr
-            if(
-                clickConfigMapStr.isEmpty()
-            ) return@let String()
-            val clickJsPathMap =
-                CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
-            val clickJsMacroStr =
-                clickJsPathMap.get(SettingButtonClickConfigMapKey.JS_PATH.str)
-            JsPathMacroForSettingButton.values().firstOrNull {
-                it.name == clickJsMacroStr
-            }?.name ?: defaultButtonMacroStr
-        }
+        return toolbarButtonArgsMaker.settingButtonConfigMap
+            ?.get(buttonClickMapKey).let {
+                    clickConfigMapStr ->
+                if(
+                    clickConfigMapStr == null
+                ) return@let defaultButtonMacroStr
+                if(
+                    clickConfigMapStr.isEmpty()
+                ) return@let String()
+                val clickJsPathMap =
+                    CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
+                val clickJsMacroStr =
+                    clickJsPathMap.get(SettingButtonClickConfigMapKey.JS_PATH.str)
+                JsPathMacroForSettingButton.values().firstOrNull {
+                    it.name == clickJsMacroStr
+                }?.name.let name@ {
+                    if(it != null) return@name it
+                    if(
+                        clickJsMacroStr.isNullOrEmpty()
+                    ) return@name defaultButtonMacroStr
+                    clickJsMacroStr
+                }
+            }
     }
 
     private fun execOnScriptSave(
@@ -160,6 +173,55 @@ class SettingButtonHandler(
         ).save(
             toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
             toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
+        )
+    }
+
+    private fun onMonitorSizingHandler(
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        isLongClick: Boolean
+    ) {
+        if(
+            fragment !is EditFragment
+        ) return
+        when(
+            isLongClick
+        ){
+            true -> execMonitorSizing(
+                toolbarButtonArgsMaker,
+                SettingButtonConfigMapKey.LONG_CLICK.str
+            )
+            else -> execMonitorSizing(
+                toolbarButtonArgsMaker,
+                SettingButtonConfigMapKey.CLICK.str
+            )
+        }
+    }
+
+    private fun execMonitorSizing(
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        buttonClickMapKey: String,
+    ) {
+        val monitorSizeStr = toolbarButtonArgsMaker
+            .settingButtonConfigMap
+            ?.get(buttonClickMapKey)
+            .let { clickConfigMapStr ->
+                if (
+                    clickConfigMapStr == null
+                ) return@let String()
+                if (
+                    clickConfigMapStr.isEmpty()
+                ) return@let String()
+                val clickJsPathMap =
+                    CmdClickMap.createMap(
+                        clickConfigMapStr, "|"
+                    ).toMap()
+                clickJsPathMap.get(
+                    SettingButtonClickConfigMapKey.MONITOR_SIZE.str
+                ) ?: String()
+            }
+        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
+            fragment,
+            monitorSizeStr
         )
     }
 }
@@ -201,7 +263,13 @@ enum class SettingButtonClickConfigMapKey(
     MENU_PATH("menuPath"),
     ON_HIDE_FOOTER("onHideFooter"),
     ON_SCRIPT_SAVE("onScriptSave"),
+    MONITOR_SIZE("monitorSize"),
 }
+
+enum class MonitorSize {
+        SHORT,
+        LONG,
+    }
 
 enum class OnScriptSave {
     ON,

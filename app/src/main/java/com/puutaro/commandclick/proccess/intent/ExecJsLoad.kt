@@ -13,7 +13,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
-import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -85,10 +84,10 @@ object ExecJsLoad {
                 settingSectionEnd,
             )
 
-        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
-            currentFragment,
-            substituteSettingVariableList,
-        )
+//        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
+//            currentFragment,
+//            substituteSettingVariableList,
+//        )
 
 
         val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(

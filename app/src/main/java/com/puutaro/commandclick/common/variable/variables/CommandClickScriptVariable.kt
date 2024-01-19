@@ -56,7 +56,7 @@ object CommandClickScriptVariable {
     val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
     val TERMINAL_DO = "terminalDo"
     val EDIT_EXECUTE = "editExecute"
-    val TERMINAL_SIZE_TYPE = "terminalSizeType"
+//    val TERMINAL_SIZE_TYPE = "terminalSizeType"
     val TERMINAL_OUTPUT_MODE = "terminalOutputMode"
     val SET_VARIABLE_TYPE = "setVariableTypes"
     val SET_REPLACE_VARIABLE = "setReplaceVariables"
@@ -118,7 +118,7 @@ object CommandClickScriptVariable {
         UBUNTU_OUTPUT_FILE,
         TERMINAL_DO,
         EDIT_EXECUTE,
-        TERMINAL_SIZE_TYPE,
+//        TERMINAL_SIZE_TYPE,
         TERMINAL_OUTPUT_MODE,
         SET_VARIABLE_TYPE,
         SET_REPLACE_VARIABLE,
@@ -170,9 +170,6 @@ object CommandClickScriptVariable {
     private val editExecuteNo = SettingVariableSelects.EditExecuteSelects.NO.name
     private val editExecuteOnce = SettingVariableSelects.EditExecuteSelects.ONCE.name
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-    private val terminalSizeTypeOff = SettingVariableSelects.TerminalSizeTypeSelects.OFF.name
-    private val terminalSizeTypeShort = SettingVariableSelects.TerminalSizeTypeSelects.SHORT.name
-    private val terminalSizeTypeLong = SettingVariableSelects.TerminalSizeTypeSelects.LONG.name
     private val autoExecSelectsOn = SettingVariableSelects.AutoExecSelects.ON.name
     private val autoExecSelectsOff = SettingVariableSelects.AutoExecSelects.OFF.name
     private val terminalOutPutModeNormal = SettingVariableSelects.TerminalOutPutModeSelects.NORMAL.name
@@ -231,7 +228,7 @@ object CommandClickScriptVariable {
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val TERMINAL_DO_DEFAULT_VALUE = terminalOn
     val EDIT_EXECUTE_DEFAULT_VALUE = editExecuteNo
-    val TERMINAL_SIZE_TYPE_DEFAULT_VALUE = terminalSizeTypeOff
+
     val TERMINAL_OUTPUT_MODE_DEFAULT_VALUE = terminalOutPutModeNormal
     val HISTORY_SWITCH_DEFAULT_VALUE = historySwitchOff
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
@@ -258,7 +255,6 @@ object CommandClickScriptVariable {
     val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
     val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
-    val EIDT_BOX_TITLE_DEFAULT_VALUE = String()
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
         cmdclickStartupJsName
@@ -362,7 +358,7 @@ object CommandClickScriptVariable {
         "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "$TERMINAL_DO:CB=$terminalOn!$terminalTermux!$terminalOff",
         "$EDIT_EXECUTE:CB=$editExecuteNo!$editExecuteOnce!$editExecuteAlways",
-        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff!$terminalSizeTypeShort!$terminalSizeTypeLong",
+//        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff!$terminalSizeTypeShort!$terminalSizeTypeLong",
         "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal!$terminalOutPutModeReflash!$terminalOutPutModeReflashAndFirstRow!$terminalOutPutModeDebug!$terminalOutPutModeNo",
         "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn!$onUpdateLastModifyOff",
         "$CMDCLICK_ON_AUTO_EXEC:CB=$autoExecSelectsOn!$autoExecSelectsOff",
@@ -443,7 +439,6 @@ object CommandClickScriptVariable {
             |#  * [$SHELL_EXEC_ENV](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
             |#  * [$UBUNTU_EXEC_MODE](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
             |#  * [$UBUNTU_OUTPUT_FILE](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
-	        |#  * [$TERMINAL_SIZE_TYPE](#${replaceLowerAdnBlankDash(TERMINAL_SIZE_TYPE)})
             |#  * [$TERMINAL_OUTPUT_MODE](#${replaceLowerAdnBlankDash(TERMINAL_OUTPUT_MODE)})
             |#  * [$CMDCLICK_ON_AUTO_EXEC](#${replaceLowerAdnBlankDash(CMDCLICK_ON_AUTO_EXEC)})
             |#  * [$ON_UPDATE_LAST_MODIFY](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
@@ -516,15 +511,6 @@ object CommandClickScriptVariable {
             |# | `${UsePath.cmdClickMonitorFileName_2}` | strerr or syslog |
             |# | `${UsePath.cmdClickMonitorFileName_3}` | free |
             |# | `${UsePath.cmdClickMonitorFileName_4}` | /dev/null |
-            |
-            |# ### $TERMINAL_SIZE_TYPE
-            |# `cmdclick terminal` size option
-            |
-            |# | option | descripton |
-            |# | $mdDash | $mdDash |
-            |# | `$terminalSizeTypeOff` | no adjust (default) |
-            |# | `$terminalSizeTypeLong` | LongSize |
-            |# | `$terminalSizeTypeShort` | ShortSize |
             |
             |# ### $TERMINAL_OUTPUT_MODE
             |# Decide output mode in cmdclick terminal (basically, only shellScript)
@@ -775,7 +761,6 @@ object CommandClickScriptVariable {
         |$UBUNTU_OUTPUT_FILE="$UBUNTU_OUTPUT_FILE_DEFAULT_VALUE"
         |$TERMINAL_DO="$TERMINAL_DO_DEFAULT_VALUE"
         |$EDIT_EXECUTE="$EDIT_EXECUTE_DEFAULT_VALUE"
-        |$TERMINAL_SIZE_TYPE="$TERMINAL_SIZE_TYPE_DEFAULT_VALUE"
         |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
         |$ON_UPDATE_LAST_MODIFY="${onUpdateLastModifyValue}"
         |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
@@ -1000,7 +985,6 @@ object CommandClickScriptVariable {
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |$TERMINAL_SIZE_TYPE="$TERMINAL_SIZE_TYPE_DEFAULT_VALUE"
         |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
         |$CMDCLICK_ON_AUTO_EXEC="$CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE"
         |$ON_UPDATE_LAST_MODIFY="$onUpdateLastModifyOff"
