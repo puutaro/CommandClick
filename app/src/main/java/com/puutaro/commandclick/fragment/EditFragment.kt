@@ -232,16 +232,16 @@ class EditFragment: Fragment() {
             currentAppDirPath,
             currentScriptFileName
         ).textToList()
-        ConfigFromScriptFileSetter.set(
-            this,
-            currentScriptContentsList,
-        )
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 currentScriptContentsList,
                 currentAppDirPath,
                 currentScriptFileName,
             )
+        ConfigFromScriptFileSetter.set(
+            this,
+            currentScriptContentsList,
+        )
         buttonWeight = ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
             UpdateLastModifyForEdit().judge(

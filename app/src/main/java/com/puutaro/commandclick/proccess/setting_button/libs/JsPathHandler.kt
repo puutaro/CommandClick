@@ -773,7 +773,6 @@ object JsPathHandler {
                         currentScriptFileName,
                     )
                 }
-
                 isOnlyCmdEditWithFdialog ->
                     fDialalogOkButtonProcess()
 
@@ -821,8 +820,14 @@ object JsPathHandler {
                 !it.startsWith(FDialogTempFile.jsDescPrefix)
                         && it.isNotEmpty()
             }?.joinToString("\t") ?: String()
-            val replaceSrcFanneCon = CommandClickVariables.replaceVariableInHolder(
+            val replaceSrcFannelConInSettingVal = CommandClickVariables.replaceVariableInHolder(
                 srcFannelCon,
+                fDialogCommandValCon,
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd,
+            )
+            val replaceSrcFanneCon = CommandClickVariables.replaceVariableInHolder(
+                replaceSrcFannelConInSettingVal,
                 fDialogCommandValCon,
                 editFragment.commandSectionStart,
                 editFragment.commandSectionEnd,

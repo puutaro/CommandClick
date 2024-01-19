@@ -39,12 +39,17 @@ class EditTextProducerForEdit(
     )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
-
+    private val setVariableForSettingHolder = CommandClickScriptVariable.setVariableForSettingHolder
     private val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder,
         currentAppDirPath,
         currentScriptFileName,
-    )
+    ).let {
+        if(
+            it.isNullOrEmpty()
+        ) return@let setVariableForSettingHolder
+        setVariableForSettingHolder + it
+    }
 
     private val recordNumToSetVariableMaps =
         SetVariableTyper.makeRecordNumToSetVariableMaps(
