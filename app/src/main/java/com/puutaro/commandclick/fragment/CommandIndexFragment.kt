@@ -27,6 +27,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.re
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -59,6 +60,7 @@ class CommandIndexFragment: Fragment() {
     var savedEditTextContents = String()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
+    var fileGetterForSettingButton: FileGetterForSettingButton? = null
 
     private var broadcastReceiverForCmdIndex: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -86,6 +88,7 @@ class CommandIndexFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fileGetterForSettingButton = FileGetterForSettingButton(this)
         val terminalViewModel: TerminalViewModel by activityViewModels()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
@@ -240,7 +243,6 @@ class CommandIndexFragment: Fragment() {
         val toolBarSettingButtonControl = ToolBarSettingButtonControl(
             binding,
             this,
-            readSharePreffernceMap
         )
         toolBarSettingButtonControl.toolbarSettingButtonOnClick()
         toolBarSettingButtonControl.toolbarSettingButtonOnLongClick()

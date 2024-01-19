@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.GoogleSuggest
-import com.puutaro.commandclick.proccess.EditLongPressType
-import com.puutaro.commandclick.proccess.EditToolbarSwitcher
+import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
+import com.puutaro.commandclick.proccess.setting_button.libs.EditToolbarSwitcher
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -64,7 +64,7 @@ class WebSearchToolbarManagerForEdit(
                 if(
                     editFragmentWeight == ReadLines.LONGTH
                 ) {
-                    cmdWebSearchEditText.threshold = 100000;
+                    cmdWebSearchEditText.threshold = 100000
                     return
                 }
                 try {
@@ -73,7 +73,6 @@ class WebSearchToolbarManagerForEdit(
                     print("pass")
                 }
             }
-
             override fun afterTextChanged(s: Editable?) {
                 if(!cmdWebSearchEditText.hasFocus()) return
             }
@@ -85,7 +84,7 @@ class WebSearchToolbarManagerForEdit(
                 cancelView ->
             EditToolbarSwitcher.switch(
                 cmdEditFragment,
-                EditLongPressType.NORMAL.name
+                EditLongPressType.NORMAL.jsMacro
             )
         }
     }

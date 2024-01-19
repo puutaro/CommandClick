@@ -2,70 +2,113 @@ package com.puutaro.commandclick.proccess.setting_button
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.setting_button.libs.JsPathHandler
-import com.puutaro.commandclick.proccess.setting_button.libs.SettingButtonArgsMaker
+import com.puutaro.commandclick.proccess.setting_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 class SettingButtonHandler(
     private val fragment: Fragment,
-    private val readSharePreffernceMap: Map<String, String>,
 ) {
-    private val fileGetterForSettingButton = FileGetterForSettingButton(fragment)
-
 
     fun handle(
         isLongClick: Boolean,
+        toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         settingButtonView: ImageButton?,
+        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
     ){
-        val settingButtonArgsMaker = SettingButtonArgsMaker(
+        val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             fragment,
-            readSharePreffernceMap,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
+            toolbarButtonBariantForEdit,
             settingButtonView,
-            fileGetterForSettingButton,
+            isLongClick,
+        )
+        onScriptSaveHandler(
+            toolbarButtonArgsMaker,
             isLongClick
         )
-       val jsPathMacroStr = makeJsPathMacroStr(
-           settingButtonArgsMaker,
+
+        val jsPathMacroStr = makeJsPathMacroStr(
+           toolbarButtonArgsMaker,
            isLongClick,
-       )
+        )
         if(
             jsPathMacroStr.isEmpty()
         ) return
-        val settingButtonConfigMapList = settingButtonArgsMaker.makeSettingButtonConfigMapList(jsPathMacroStr)
+        val settingButtonConfigMapList =
+            toolbarButtonArgsMaker.makeSettingButtonConfigMapList(
+                jsPathMacroStr
+            )
         JsPathHandler.handle(
-            settingButtonArgsMaker,
+            toolbarButtonArgsMaker,
             jsPathMacroStr,
             settingButtonConfigMapList = settingButtonConfigMapList
         )
     }
 
     private fun makeJsPathMacroStr(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         isLongClick: Boolean,
     ): String {
         return when(
             isLongClick
         ){
             true -> execMakeJsPathMacro(
-                settingButtonArgsMaker,
+                toolbarButtonArgsMaker,
                 SettingButtonConfigMapKey.LONG_CLICK.str,
-                JsPathMacroForSettingButton.MENU.name,
+                ToolbarButtonArgsMaker.defaultLongClickMacroMap.get(
+                    toolbarButtonArgsMaker.toolbarButtonBariantForEdit
+                ) ?: String(),
             )
             else -> execMakeJsPathMacro(
-                settingButtonArgsMaker,
+                toolbarButtonArgsMaker,
                 SettingButtonConfigMapKey.CLICK.str,
-                JsPathMacroForSettingButton.SIZING.name,
+                ToolbarButtonArgsMaker.defaultClickMacroMap.get(
+                    toolbarButtonArgsMaker.toolbarButtonBariantForEdit
+                ) ?: String(),
             )
         }
     }
 
+    private fun onScriptSaveHandler(
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        isLongClick: Boolean
+    ) {
+        if(
+            fragment !is EditFragment
+        ) return
+        when(
+            isLongClick
+        ){
+            true -> execOnScriptSave(
+                fragment,
+                toolbarButtonArgsMaker,
+                SettingButtonConfigMapKey.LONG_CLICK.str,
+                ToolbarButtonArgsMaker.onSaveDefaultMapInLongClick.get(
+                    toolbarButtonArgsMaker.toolbarButtonBariantForEdit
+                ) ?: String(),
+            )
+            else -> execOnScriptSave(
+                fragment,
+                toolbarButtonArgsMaker,
+                SettingButtonConfigMapKey.LONG_CLICK.str,
+                ToolbarButtonArgsMaker.onSaveDefaultMapInClick.get(
+                    toolbarButtonArgsMaker.toolbarButtonBariantForEdit
+                ) ?: String(),
+            )
+        }
+    }
     private fun execMakeJsPathMacro(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
-        settingButtonMapKey: String,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        buttonClickMapKey: String,
         defaultButtonMacroStr: String,
     ): String {
-        return settingButtonArgsMaker.settingButtonConfigMap?.get(settingButtonMapKey).let {
+        return toolbarButtonArgsMaker.settingButtonConfigMap?.get(buttonClickMapKey).let {
                 clickConfigMapStr ->
             if(
                 clickConfigMapStr == null
@@ -73,12 +116,51 @@ class SettingButtonHandler(
             if(
                 clickConfigMapStr.isEmpty()
             ) return@let String()
-            val clickJsPathMap = CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
-            val clickJsMacroStr = clickJsPathMap.get(SettingButtonClickConfigMapKey.JS_PATH.str)
-            JsPathMacroForSettingButton.values().filter {
+            val clickJsPathMap =
+                CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
+            val clickJsMacroStr =
+                clickJsPathMap.get(SettingButtonClickConfigMapKey.JS_PATH.str)
+            JsPathMacroForSettingButton.values().firstOrNull {
                 it.name == clickJsMacroStr
-            }.firstOrNull()?.name ?: defaultButtonMacroStr
+            }?.name ?: defaultButtonMacroStr
         }
+    }
+
+    private fun execOnScriptSave(
+        editFragment: EditFragment,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        buttonClickMapKey: String,
+        defaultOnSaveValue: String,
+    ) {
+         val isScriptSave = toolbarButtonArgsMaker
+            .settingButtonConfigMap
+            ?.get(buttonClickMapKey)
+            .let { clickConfigMapStr ->
+                if (
+                    clickConfigMapStr == null
+                ) return@let defaultOnSaveValue
+                if (
+                    clickConfigMapStr.isEmpty()
+                ) return@let String()
+                val clickJsPathMap =
+                    CmdClickMap.createMap(
+                        clickConfigMapStr, "|"
+                    ).toMap()
+                val onScriptStr = clickJsPathMap.get(
+                    SettingButtonClickConfigMapKey.ON_SCRIPT_SAVE.str
+                )
+                if(
+                    onScriptStr.isNullOrEmpty()
+                ) return@let OnScriptSave.OFF.name
+                onScriptStr
+            } == OnScriptSave.ON.name
+        if (!isScriptSave) return
+        ScriptFileSaver(
+            editFragment,
+        ).save(
+            toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
+            toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
+        )
     }
 }
 
@@ -108,6 +190,8 @@ enum class SettingButtonConfigMapKey(
 ) {
     LONG_CLICK("longClick"),
     CLICK("click"),
+    ICON_NAME("iconName"),
+    DISABLE("disable"),
 }
 
 enum class SettingButtonClickConfigMapKey(
@@ -116,6 +200,12 @@ enum class SettingButtonClickConfigMapKey(
     JS_PATH("jsPath"),
     MENU_PATH("menuPath"),
     ON_HIDE_FOOTER("onHideFooter"),
+    ON_SCRIPT_SAVE("onScriptSave"),
+}
+
+enum class OnScriptSave {
+    ON,
+    OFF
 }
 
 enum class JsPathMacroForSettingButton{
@@ -140,5 +230,11 @@ enum class JsPathMacroForSettingButton{
     SYNC,
     GET_FILE,
     GET_QR_CON,
-    FANNEL_REPO_SYNC
+    FANNEL_REPO_SYNC,
+    EDIT,
+    WEB_SEARCH,
+    PAGE_SEARCH,
+    NORMAL,
+    OK,
 }
+

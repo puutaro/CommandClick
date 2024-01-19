@@ -18,9 +18,9 @@ object AppDirAdder {
     private var promptDialog: Dialog? = null
 
     fun add(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
     ){
-        val fragment = settingButtonArgsMaker.fragment
+        val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
             ?: return
         promptDialog = Dialog(
@@ -68,7 +68,7 @@ object AppDirAdder {
                 UsePath.cmdclickAppDirAdminPath,
                 scriptFileName
             )
-            val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
             val extraMap = ExtraMapTool.createExtraMap(
                 JsPathMacroForSettingButton.ADD_APP_DIR.name,
                 settingButtonMenuMapList,

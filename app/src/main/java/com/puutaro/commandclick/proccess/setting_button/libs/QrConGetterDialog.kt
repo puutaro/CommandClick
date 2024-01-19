@@ -19,9 +19,9 @@ object QrConGetterDialog {
 
     private var qrConGetterDialog: Dialog? = null
     fun launch(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
     ){
-        val fragment = settingButtonArgsMaker.fragment
+        val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
             ?: return
         val activity = fragment.activity
@@ -67,14 +67,14 @@ object QrConGetterDialog {
                 shortcutNameEditable.toString(),
                 ".txt",
             )
-            val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
             val extraMap = ExtraMapTool.createExtraMap(
                 JsPathMacroForSettingButton.GET_QR_CON.name,
                 settingButtonMenuMapList
             )
             val parentDirPath = ExtraMapTool.getParentDirPath(
                 extraMap,
-                settingButtonArgsMaker.currentAppDirPath
+                toolbarButtonArgsMaker.currentAppDirPath
             )
             val filePath = "${parentDirPath}/${fileName}"
             if(File(filePath).isFile) {

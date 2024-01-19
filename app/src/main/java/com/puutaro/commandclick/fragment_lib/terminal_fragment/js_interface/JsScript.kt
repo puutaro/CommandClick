@@ -1,23 +1,18 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 class JsScript(
-    private val terminalFragment: TerminalFragment
+    terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val languageTypeHolderMap =
@@ -43,6 +38,7 @@ class JsScript(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     )
     private val readSharedPreferences = terminalFragment.readSharedPreferences
+    private val filePrefix = "file://"
 
     @JavascriptInterface
     fun subLabelingVars(
@@ -224,8 +220,8 @@ class JsScript(
 
     @JavascriptInterface
     fun makeFannelCon(
-        settingValCon: String,
-        cmdValCon: String,
+        settingValConSrc: String,
+        cmdValConSrc: String,
     ): String {
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =
@@ -246,16 +242,14 @@ class JsScript(
         val cmdSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
-
-
         val settingConListWithHolder = listOf(
             settingSectionStart,
-            settingValCon,
+            makeSettingValCon(settingValConSrc),
             settingSectionEnd
         )
         val cmdConListWithHolder = listOf(
             cmdSectionStart,
-            cmdValCon,
+            cmdValConSrc,
             cmdSectionEnd
         )
         return listOf(
@@ -264,6 +258,42 @@ class JsScript(
             cmdConListWithHolder,
             listOf(String()),
         ).flatten().joinToString("\n\n")
+    }
+
+    private fun makeSettingValCon(
+        settingValConSrc: String,
+    ): String {
+        val valNameRegex = Regex("[a-zA-Z0-9]+=.*")
+        return settingValConSrc.split("\n").filter {
+            val valLineList = it.split("=")
+            it.isNotEmpty()
+                    && it.matches(valNameRegex)
+                    && valLineList.size >= 2
+        }.map {
+            val valLineList = it.split("=")
+            val valName = valLineList.firstOrNull()
+                ?: return@map String()
+            val valValueSrc = QuoteTool.trimBothEdgeQuote(
+                valLineList.filterIndexed { index, s -> index > 0 }
+                    .joinToString("\n")
+            )
+            val valValue = when(
+                valValueSrc.startsWith(filePrefix)
+            ){
+                true -> {
+                    val filePath = valValueSrc.removePrefix(filePrefix)
+                    val filePathObj = File(filePath)
+                    val parentDirPath = filePathObj.parent
+                        ?: return@map String()
+                    SettingFile.read(
+                        parentDirPath,
+                        filePathObj.name
+                    )
+                }
+                else -> valValueSrc
+            }
+            "${valName}=${valValue}"
+        }.joinToString("\n")
     }
 
 }

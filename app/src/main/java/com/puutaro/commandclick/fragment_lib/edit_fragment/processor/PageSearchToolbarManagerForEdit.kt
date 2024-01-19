@@ -10,8 +10,8 @@ import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.proccess.EditLongPressType
-import com.puutaro.commandclick.proccess.EditToolbarSwitcher
+import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
+import com.puutaro.commandclick.proccess.setting_button.libs.EditToolbarSwitcher
 
 class PageSearchToolbarManagerForEdit(
     private val cmdEditFragment: EditFragment,
@@ -33,7 +33,7 @@ class PageSearchToolbarManagerForEdit(
                 cancelView ->
             EditToolbarSwitcher.switch(
                 cmdEditFragment,
-                EditLongPressType.NORMAL.name
+                EditLongPressType.NORMAL.jsMacro
             )
         }
     }

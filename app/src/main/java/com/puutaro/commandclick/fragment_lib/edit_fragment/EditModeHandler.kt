@@ -48,7 +48,6 @@ class EditModeHandler(
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,
-        readSharePreffernceMap,
     )
     val settingSectionStart = editFragment.settingSectionStart
     val settingSectionEnd = editFragment.settingSectionEnd

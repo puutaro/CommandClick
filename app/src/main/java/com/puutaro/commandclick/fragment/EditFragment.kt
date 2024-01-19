@@ -40,9 +40,10 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchTo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
-import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
+import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -100,6 +101,7 @@ class EditFragment: Fragment() {
     var srcReadSharePreffernceMap: Map<String, String>? = null
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+    var setReplaceVariableMap: Map<String, String>? = null
     var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
@@ -111,6 +113,8 @@ class EditFragment: Fragment() {
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
+    var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
+    var fileGetterForSettingButton: FileGetterForSettingButton? = null
     val toolBarButtonDisableMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitle = String()
@@ -148,6 +152,7 @@ class EditFragment: Fragment() {
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
+        fileGetterForSettingButton = FileGetterForSettingButton(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         readSharePreffernceMap =
             EditFragmentArgs.getReadSharePreference(arguments)
@@ -231,6 +236,12 @@ class EditFragment: Fragment() {
             this,
             currentScriptContentsList,
         )
+        setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                currentScriptContentsList,
+                currentAppDirPath,
+                currentScriptFileName,
+            )
         buttonWeight = ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
             UpdateLastModifyForEdit().judge(

@@ -11,8 +11,10 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.proccess.setting_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
+import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -54,6 +56,7 @@ object ConfigFromScriptFileSetter {
                 currentScriptFileName,
             )
         }?.split("\n")
+
         val defaultEditBoxTitle = TitleImageAndViewSetter.makeTitle(
             editFragment,
             currentAppDirPath,
@@ -72,6 +75,9 @@ object ConfigFromScriptFileSetter {
                 )
             defaultEditBoxTitle
         }
+        makeToolbarButtonConfigMap(
+            editFragment,
+        )
 
         if (
             !onShortcut
@@ -420,6 +426,54 @@ object ConfigFromScriptFileSetter {
                     }?.id ?: defaultIconId
                 }
             }
+        )
+    }
+
+    private fun makeToolbarButtonConfigMap(
+        editFragment: EditFragment,
+    ){
+        editFragment.toolbarButtonConfigMap =
+            mapOf(
+                ToolbarButtonBariantForEdit.SETTING to buttonConfigMap(
+                    editFragment,
+                    CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
+                    ToolbarButtonArgsMaker.setingButtonDefaultConfigCon,
+                ),
+                ToolbarButtonBariantForEdit.EDIT to buttonConfigMap(
+                    editFragment,
+                    CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
+                    String(),
+                ),
+                ToolbarButtonBariantForEdit.OK to buttonConfigMap(
+                    editFragment,
+                    CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
+                    String(),
+                ),
+            )
+    }
+
+    private fun buttonConfigMap(
+        editFragment: EditFragment,
+        targetSettingConfigValName: String,
+        defaultButtonConfigCon: String,
+    ): Map<String, String>? {
+        val defaultSettingButtonConfigCon =
+            ToolbarButtonArgsMaker.setingButtonDefaultConfigCon
+        val settingButtonConfigMapStr = SettingVariableReader.getStrValue(
+            editFragment.currentScriptContentsList,
+            targetSettingConfigValName,
+            defaultButtonConfigCon
+        ).let {
+            if(
+                it.isNotEmpty()
+            ) return@let it
+            defaultSettingButtonConfigCon
+        }
+        return ConfigMapTool.createFromSettingVal(
+            settingButtonConfigMapStr,
+            ToolbarButtonArgsMaker.setingButtonDefaultConfigCon,
+            editFragment.readSharePreffernceMap,
+            editFragment.setReplaceVariableMap
         )
     }
 }

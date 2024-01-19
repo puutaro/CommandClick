@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event
 
-import android.content.Context
+
 import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
@@ -22,7 +22,6 @@ object ExecToolBarButtonClickForEdit {
         readSharePreferenceMap: Map<String, String>,
         enableCmdEdit: Boolean,
     ){
-        val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
         when(toolbarButtonBariantForEdit){
             ToolbarButtonBariantForEdit.OK ->
                 ExecOkForEdit.execOkForEdit(
@@ -37,12 +36,12 @@ object ExecToolBarButtonClickForEdit {
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
                 val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
-                val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
-                    sharePref,
+                val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                    readSharePreferenceMap,
                     SharePrefferenceSetting.current_app_dir
                 )
-                val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
-                    sharePref,
+                val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                    readSharePreferenceMap,
                     SharePrefferenceSetting.current_fannel_name
                 )
                 val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(

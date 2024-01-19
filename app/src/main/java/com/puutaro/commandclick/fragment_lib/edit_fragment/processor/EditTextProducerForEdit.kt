@@ -10,7 +10,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
@@ -39,12 +38,8 @@ class EditTextProducerForEdit(
         SharePrefferenceSetting.current_fannel_name
     )
 
-    private val setReplaceVariableMap =
-        SetReplaceVariabler.makeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolder,
-            currentAppDirPath,
-            currentScriptFileName,
-        )
+    private val setReplaceVariableMap = editFragment.setReplaceVariableMap
+
     private val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
         recordNumToMapNameValueInSettingHolder,
         currentAppDirPath,
@@ -193,7 +188,7 @@ class EditTextProducerForEdit(
         val context = editFragment.context
         val readSharePreffernceMap = editFragment.readSharePreffernceMap
         val descriptionButton = Button(context)
-        val buttonLabel = "Desctiption"
+        val buttonLabel = "Description"
         descriptionButton.text = buttonLabel
         val linearParamsForButton = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,

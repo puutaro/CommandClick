@@ -56,7 +56,7 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.proccess.EditLongPressType
+import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.state.EditFragmentArgs

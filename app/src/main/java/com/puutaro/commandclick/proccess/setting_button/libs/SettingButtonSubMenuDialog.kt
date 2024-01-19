@@ -14,10 +14,10 @@ object SettingButtonSubMenuDialog {
     private var settingButtonSubMenuDialog: Dialog? = null
 
     fun launch(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         parentMenuName: String,
     ){
-        val fragment = settingButtonArgsMaker.fragment
+        val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
             ?: return
         settingButtonSubMenuDialog = Dialog(
@@ -27,7 +27,7 @@ object SettingButtonSubMenuDialog {
             R.layout.submenu_dialog
         )
         setListView(
-            settingButtonArgsMaker,
+            toolbarButtonArgsMaker,
             parentMenuName,
         )
         setCancelListener()
@@ -57,10 +57,10 @@ object SettingButtonSubMenuDialog {
     }
 
     private fun setListView(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         parentMenuName: String,
     ) {
-        val fragment = settingButtonArgsMaker.fragment
+        val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
             ?: return
         val subMenuListView =
@@ -68,7 +68,7 @@ object SettingButtonSubMenuDialog {
                 R.id.sub_menu_list_view
             )
         val subMenuPairList = createPopupSubMenuListMap(
-            settingButtonArgsMaker,
+            toolbarButtonArgsMaker,
             parentMenuName,
         )
         val subMenuAdapter = SubMenuAdapter(
@@ -77,13 +77,13 @@ object SettingButtonSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            settingButtonArgsMaker,
+            toolbarButtonArgsMaker,
             subMenuListView,
         )
     }
 
     private fun subMenuItemClickListener(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         subMenuListView: ListView?,
     ){
         subMenuListView?.setOnItemClickListener {
@@ -93,22 +93,22 @@ object SettingButtonSubMenuDialog {
             val clickedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             JsPathHandler.handle(
-                settingButtonArgsMaker,
+                toolbarButtonArgsMaker,
                 clickedSubMenu,
             )
         }
     }
 
     private fun createPopupSubMenuListMap(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         parentMenuName: String,
     ): List<Pair<String, Int>>{
-        val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
         val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
         return settingButtonMenuMapList.filter {
             it?.get(parentMenuKey) == parentMenuName
         }.let {
-            settingButtonArgsMaker.execCreateMenuListMap(
+            toolbarButtonArgsMaker.execCreateMenuListMap(
                 it
             )
         }

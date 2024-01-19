@@ -1,16 +1,17 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.setting_button.libs
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,15 +21,17 @@ import java.io.File
 
 object EditToolbarSwitcher {
     fun switch(
-        cmdEditFragment: EditFragment?,
+        cmdEditFragment: Fragment,
         execPlayBtnLongPress: String,
     ) {
         if(
+            cmdEditFragment !is EditFragment
+        ) return
+        if(
             execPlayBtnLongPress.isEmpty()
         ) return
-        val context = cmdEditFragment?.context
-        val activity = cmdEditFragment?.activity
-        if(cmdEditFragment == null) return
+        val context = cmdEditFragment.context
+        val activity = cmdEditFragment.activity
         val editExecuteTerminalTag = context?.getString(
             R.string.edit_terminal_fragment
         )
@@ -52,11 +55,6 @@ object EditToolbarSwitcher {
                     FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
                 ) != true
         ) return
-        val onExec = execJsFile(
-            cmdEditFragment,
-            execPlayBtnLongPress,
-        )
-        if(onExec) return
         val binding = cmdEditFragment.binding
         val editTextScroll = binding.editTextScroll
         val pageSearch = binding.pageSearch
@@ -90,7 +88,7 @@ object EditToolbarSwitcher {
             context as? EditFragment.OnTermSizeLongListenerForEdit
                 ?: return
         when(execPlayBtnLongPress){
-            EditLongPressType.WEB_SEARCH.name -> {
+            EditLongPressType.WEB_SEARCH.jsMacro -> {
                 onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = true
                 cmdclickPageSearchToolBar.isVisible = false
@@ -102,7 +100,7 @@ object EditToolbarSwitcher {
                 cmdWebSearchEditText.requestFocus()
                 cmdPageSearchEditText.clearFocus()
             }
-            EditLongPressType.PAGE_SEARCH.name -> {
+            EditLongPressType.PAGE_SEARCH.jsMacro -> {
                 onTermSizeLongListenerForEdit.onTermSizeLongForEdit(cmdEditFragment)
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = true
@@ -114,7 +112,7 @@ object EditToolbarSwitcher {
                 cmdWebSearchEditText.clearFocus()
                 cmdPageSearchEditText.requestFocus()
             }
-            EditLongPressType.NORMAL.name -> {
+            EditLongPressType.NORMAL.jsMacro -> {
                 webSearchToolbar.isVisible = false
                 cmdclickPageSearchToolBar.isVisible = false
                 cmdclickToolBar.isVisible = true
@@ -161,66 +159,10 @@ object EditToolbarSwitcher {
     }
 }
 
-
-private fun execJsFile(
-    cmdEditFragment: EditFragment?,
-    editLongPressType: String,
-): Boolean {
-    when(editLongPressType){
-        EditLongPressType.WEB_SEARCH.name,
-        EditLongPressType.PAGE_SEARCH.name,
-        EditLongPressType.NORMAL.name -> {
-            return false
-        }
-    }
-    if(editLongPressType.isEmpty()){
-        LogSystems.stdSys("blank file")
-    }
-    if(
-        !File(editLongPressType).isFile
-    ) {
-        LogSystems.stdWarn("file not found")
-        return true
-    }
-    val isJsSuffix = editLongPressType.endsWith(
-        UsePath.JSX_FILE_SUFFIX
-    )
-            || editLongPressType.endsWith(
-        UsePath.JS_FILE_SUFFIX
-    )
-    if(!isJsSuffix) {
-        LogSystems.stdWarn("no js file")
-        return true
-    }
-    if(cmdEditFragment == null) {
-        LogSystems.stdWarn("web view not found")
-        return true
-    }
-    val context = cmdEditFragment.context ?: return true
-    cmdEditFragment.jsExecuteJob?.cancel()
-    cmdEditFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-        val onLaunchUrl = EnableTerminalWebView.check(
-            cmdEditFragment,
-            context.getString(
-                R.string.edit_terminal_fragment
-            )
-        )
-        if(!onLaunchUrl) return@launch
-        withContext(Dispatchers.Main) {
-            val listenerForWebLaunch = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-            listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
-                JavaScriptLoadUrl.make(
-                    context,
-                    editLongPressType,
-                ).toString()
-            )
-        }
-    }
-    return true
-}
-
-enum class EditLongPressType {
-    WEB_SEARCH,
-    PAGE_SEARCH,
-    NORMAL,
+enum class EditLongPressType(
+    val jsMacro: String
+) {
+    WEB_SEARCH(JsPathMacroForSettingButton.WEB_SEARCH.name),
+    PAGE_SEARCH(JsPathMacroForSettingButton.PAGE_SEARCH.name),
+    NORMAL(JsPathMacroForSettingButton.NORMAL.name),
 }

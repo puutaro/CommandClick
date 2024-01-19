@@ -27,6 +27,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
@@ -36,111 +39,126 @@ import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.proccess.setting_button.SystemFannelLauncher
 import com.puutaro.commandclick.service.GitCloneService
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
+import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 object JsPathHandler {
 
     fun handle(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         menuName: String,
         settingButtonConfigMapList: List<Map<String, String>?>? = null,
-    ){
-        val fragment = settingButtonArgsMaker.fragment
+    ) {
+        val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
-        val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
         val menuNameKey = SettingButtonMenuMapKey.NAME.str
         val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
-        val currentSettingMenuMap = when(settingButtonConfigMapList.isNullOrEmpty()) {
-            false -> (settingButtonMenuMapList + settingButtonConfigMapList).filter {
+        val currentSettingMenuMap = when (settingButtonConfigMapList.isNullOrEmpty()) {
+            false -> (settingButtonMenuMapList + settingButtonConfigMapList).firstOrNull {
                 it?.get(menuNameKey) == menuName
-            }.firstOrNull()
-            else -> settingButtonMenuMapList.filter {
+            }
+
+            else -> settingButtonMenuMapList.firstOrNull {
                 it?.get(menuNameKey) == menuName
-            }.firstOrNull()
+            }
         }
-        if(
+        if (
             currentSettingMenuMap.isNullOrEmpty()
-        ){
+        ) {
             LogSystems.stdWarn("${jsPathKey} key not found in settingMenuMapList: ${settingButtonMenuMapList}")
             return
         }
         val jsPath = currentSettingMenuMap.get(jsPathKey)
-        if(
+        if (
             jsPath.isNullOrEmpty()
-        ){
+        ) {
             LogSystems.stdWarn("${jsPathKey} not found in settingMenuMapList: ${settingButtonMenuMapList}")
             return
         }
         val filterdJsPath = JsPathMacroForSettingButton.values().filter {
             it.name == jsPath
         }.firstOrNull()
-        when(filterdJsPath != null){
+        when (filterdJsPath != null) {
             true -> jsPathMacroHandler(
-                settingButtonArgsMaker,
+                toolbarButtonArgsMaker,
                 filterdJsPath,
             )
+
             else -> ExecJsLoad.jsUrlLaunchHandler(
-                    fragment,
-                    JavaScriptLoadUrl.make(
-                        context,
-                        jsPath,
-                        setReplaceVariableMapSrc = settingButtonArgsMaker.setReplaceVariableMap
-                    ) ?: String()
-                )
+                fragment,
+                JavaScriptLoadUrl.make(
+                    context,
+                    jsPath,
+                    setReplaceVariableMapSrc = toolbarButtonArgsMaker.setReplaceVariableMap
+                ) ?: String()
+            )
         }
     }
 
     private fun jsPathMacroHandler(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         jsPathMacroForSettingButton: JsPathMacroForSettingButton,
-    ){
-        val fragment = settingButtonArgsMaker.fragment
-        val readSharePreffernceMap = settingButtonArgsMaker.readSharePreffernceMap
-        val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
+    ) {
+        val fragment = toolbarButtonArgsMaker.fragment
+        val readSharePreffernceMap = toolbarButtonArgsMaker.readSharePreffernceMap
+        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentScriptFileName = settingButtonArgsMaker.currentScriptFileName
-        when(jsPathMacroForSettingButton){
+        val currentScriptFileName = toolbarButtonArgsMaker.currentScriptFileName
+        when (jsPathMacroForSettingButton) {
             JsPathMacroForSettingButton.KILL ->
                 AppProcessManager.killDialog(
                     fragment,
                     currentAppDirPath,
                     currentScriptFileName
                 )
+
             JsPathMacroForSettingButton.USAGE ->
                 UsageDialog.launch(
                     fragment,
                     currentAppDirPath,
                 )
+
             JsPathMacroForSettingButton.NO_SCROLL_SAVE_URL ->
                 NoScrollUrlSaver.save(
                     fragment,
                     currentAppDirPath,
                     String()
                 )
+
             JsPathMacroForSettingButton.QR_SCAN ->
                 execQrScan(
                     fragment,
                     currentAppDirPath,
                 )
+
             JsPathMacroForSettingButton.SHORTCUT -> {
-                val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                val listener =
+                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                     EditFragmentArgs(
@@ -149,8 +167,10 @@ object JsPathHandler {
                     )
                 )
             }
+
             JsPathMacroForSettingButton.TERMUX_SETUP -> {
-                val listener = fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                val listener =
+                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
                     EditFragmentArgs(
@@ -159,472 +179,677 @@ object JsPathHandler {
                     )
                 )
             }
+
             JsPathMacroForSettingButton.CONFIG ->
                 configEdit(fragment)
+
             JsPathMacroForSettingButton.REFRESH_MONITOR ->
                 TermRefresh.refresh(
                     terminalViewModel.currentMonitorFileName
                 )
+
             JsPathMacroForSettingButton.SELECT_MONITOR ->
                 SelectTermDialog.launch(fragment)
+
             JsPathMacroForSettingButton.RESTART_UBUNTU ->
                 UbuntuServiceManager.launch(
                     fragment.activity
                 )
+
             JsPathMacroForSettingButton.INSTALL_FANNEL ->
                 SystemFannelLauncher.launch(
                     fragment,
                     UsePath.cmdclickSystemAppDirPath,
                     UsePath.fannelRepoFannelName
                 )
+
             JsPathMacroForSettingButton.EDIT_STARTUP ->
                 scriptFileEditForCmdIndex(
                     fragment,
                     currentAppDirPath,
                 )
+
             JsPathMacroForSettingButton.ADD -> AddFileForEdit.add(
                 fragment,
                 currentAppDirPath,
                 settingButtonMenuMapList,
             )
+
             JsPathMacroForSettingButton.ADD_APP_DIR ->
-                AppDirAdder.add(settingButtonArgsMaker)
+                AppDirAdder.add(toolbarButtonArgsMaker)
+
             JsPathMacroForSettingButton.JS_IMPORT -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.jsImportManagerFannelName
             )
+
             JsPathMacroForSettingButton.APP_DIR_MANAGER -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.appDirManagerFannelName
             )
+
             JsPathMacroForSettingButton.SIZING -> monitorSizeChange(fragment)
             JsPathMacroForSettingButton.MENU ->
-                PopupSettingMenu.launchSettingMenu(settingButtonArgsMaker)
+                PopupSettingMenu.launchSettingMenu(toolbarButtonArgsMaker)
+
             JsPathMacroForSettingButton.SYNC -> ListSyncer.sync(
                 fragment,
                 settingButtonMenuMapList,
             )
-            JsPathMacroForSettingButton.GET_FILE -> settingButtonArgsMaker.fileGetterForSettingButton.get(
+
+            JsPathMacroForSettingButton.GET_FILE -> toolbarButtonArgsMaker.fileGetterForSettingButton?.get(
                 settingButtonMenuMapList,
                 currentAppDirPath,
             )
+
             JsPathMacroForSettingButton.GET_QR_CON -> QrConGetterDialog.launch(
-               settingButtonArgsMaker
+                toolbarButtonArgsMaker
             )
+
             JsPathMacroForSettingButton.FANNEL_REPO_SYNC ->
                 syncFannelRepo(fragment)
+
+            JsPathMacroForSettingButton.EDIT ->
+                changeSettingFragment(fragment)
+
+            JsPathMacroForSettingButton.WEB_SEARCH ->
+                EditToolbarSwitcher.switch(
+                    fragment,
+                    JsPathMacroForSettingButton.WEB_SEARCH.name
+                )
+
+            JsPathMacroForSettingButton.PAGE_SEARCH ->
+                EditToolbarSwitcher.switch(
+                    fragment,
+                    JsPathMacroForSettingButton.PAGE_SEARCH.name
+                )
+
+            JsPathMacroForSettingButton.NORMAL ->
+                EditToolbarSwitcher.switch(
+                    fragment,
+                    JsPathMacroForSettingButton.NORMAL.name
+                )
+
+            JsPathMacroForSettingButton.OK -> {
+                if (fragment !is EditFragment) return
+                OkHandler(
+                    fragment,
+                    toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
+                    toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
+                ).execForOk()
+            }
         }
     }
-}
 
-private object PopupSettingMenu{
+    private object PopupSettingMenu {
 
-    private var menuPopupWindow: PopupWindow? = null
-    fun launchSettingMenu(
-        settingButtonArgsMaker: SettingButtonArgsMaker
-    ){
-        val fragment = settingButtonArgsMaker.fragment
-        val context = fragment.context
+        private var menuPopupWindow: PopupWindow? = null
+        fun launchSettingMenu(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
+        ) {
+            val fragment = toolbarButtonArgsMaker.fragment
+            val context = fragment.context
 
-        if(
-            context == null
-        ) return
-        val existEditExecuteTerminalFragment = when(fragment) {
-            is CommandIndexFragment ->
-                ExistTerminalFragment
-                    .how(
-                        fragment,
-                        context.getString(
-                            R.string.index_terminal_fragment
+            if (
+                context == null
+            ) return
+            val existEditExecuteTerminalFragment = when (fragment) {
+                is CommandIndexFragment ->
+                    ExistTerminalFragment
+                        .how(
+                            fragment,
+                            context.getString(
+                                R.string.index_terminal_fragment
+                            )
                         )
-                    )
-            is EditFragment ->
-                ExistTerminalFragment
-                    .how(
-                        fragment,
-                        context.getString(
-                            R.string.edit_terminal_fragment
+
+                is EditFragment ->
+                    ExistTerminalFragment
+                        .how(
+                            fragment,
+                            context.getString(
+                                R.string.edit_terminal_fragment
+                            )
                         )
-                    )
-            else -> null
+
+                else -> null
+            }
+            if (
+                existEditExecuteTerminalFragment == null
+            ) {
+                Toast.makeText(
+                    context,
+                    "no working",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
+            createPopUpForSetting(
+                toolbarButtonArgsMaker
+            )
         }
-        if(
-            existEditExecuteTerminalFragment == null
-        ){
+
+        private fun createPopUpForSetting(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
+        ) {
+            val settingButtonView = toolbarButtonArgsMaker.settingButtonView
+            if (settingButtonView == null) return
+            val context = settingButtonView.context
+            val menuListMap = createPopupMenuListMap(toolbarButtonArgsMaker)
+            if (menuListMap.size == 1) {
+                jsPathOrSubMenuHandler(
+                    menuListMap.first().first,
+                    toolbarButtonArgsMaker
+                )
+                return
+            }
+            menuPopupWindow = PopupWindow(
+                context,
+            ).apply {
+                elevation = 5f
+                isFocusable = true
+                isOutsideTouchable = true
+                setBackgroundDrawable(null)
+                animationStyle = R.style.popup_window_animation_phone
+                val inflater = LayoutInflater.from(context)
+                contentView = inflater.inflate(
+                    R.layout.setting_popup_for_index,
+                    LinearLayoutCompat(context),
+                    false
+                ).apply {
+                    val menuListView =
+                        this.findViewById<NoScrollListView>(
+                            R.id.setting_menu_list_view
+                        )
+                    val menuListAdapter = SubMenuAdapter(
+                        context,
+                        menuListMap.toMutableList()
+                    )
+                    menuListView.adapter = menuListAdapter
+                    menuListViewSetOnItemClickListener(
+                        menuListView,
+                        toolbarButtonArgsMaker,
+                    )
+                    footerSettingHandler(
+                        toolbarButtonArgsMaker,
+                        this
+                    )
+                    measure(
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    )
+                }
+            }.also { popupWindow ->
+                // Absolute location of the anchor view
+                val location = IntArray(2).apply {
+                    settingButtonView.getLocationOnScreen(this)
+                }
+                val size = Size(
+                    popupWindow.contentView.measuredWidth,
+                    popupWindow.contentView.measuredHeight
+                )
+                popupWindow.showAtLocation(
+                    settingButtonView,
+                    Gravity.TOP or Gravity.START,
+                    location[0] - (size.width - settingButtonView.width) / 2,
+                    location[1] - size.height
+                )
+            }
+        }
+
+        private fun howFooterVisible(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        ): Boolean {
+            val clickKey = toolbarButtonArgsMaker.decideClickKey()
+            return toolbarButtonArgsMaker.settingButtonConfigMap?.get(clickKey)
+                .let { clickJsPathMapStr ->
+                    if (
+                        clickJsPathMapStr.isNullOrEmpty()
+                    ) return@let true
+                    val clickConfigMapStr = CmdClickMap.createMap(clickJsPathMapStr, "|").toMap()
+                    !clickConfigMapStr.containsKey(SettingButtonClickConfigMapKey.ON_HIDE_FOOTER.str)
+                }
+        }
+
+        private fun createPopupMenuListMap(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        ): List<Pair<String, Int>> {
+            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
+            val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
+            return settingButtonMenuMapList.filter {
+                it?.get(parentMenuKey).isNullOrEmpty()
+            }.let {
+                execCreateMenuListMap(
+                    it
+                )
+            }
+        }
+
+
+        private fun menuListViewSetOnItemClickListener(
+            menuListView: NoScrollListView,
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        ) {
+            menuListView.setOnItemClickListener { parent, View, pos, id ->
+                menuPopupWindow?.dismiss()
+                val menuListAdapter = menuListView.adapter as SubMenuAdapter
+                val clickedMenuName = menuListAdapter.getItem(pos)
+                    ?: return@setOnItemClickListener
+                jsPathOrSubMenuHandler(
+                    clickedMenuName,
+                    toolbarButtonArgsMaker,
+                )
+            }
+        }
+
+        private fun jsPathOrSubMenuHandler(
+            clickedMenuName: String,
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
+
+        ) {
+            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
+            val parentMenuNameKey = SettingButtonMenuMapKey.PARENT_NAME.str
+            val onSubMenuLabel = !settingButtonMenuMapList.filter {
+                it?.get(parentMenuNameKey) == clickedMenuName
+            }.firstOrNull().isNullOrEmpty()
+            when (onSubMenuLabel) {
+                true ->
+                    SettingButtonSubMenuDialog.launch(
+                        toolbarButtonArgsMaker,
+                        clickedMenuName,
+
+                        )
+
+                else ->
+                    handle(
+                        toolbarButtonArgsMaker,
+                        clickedMenuName,
+                    )
+
+            }
+        }
+
+        private fun footerSettingHandler(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            settingButtonInnerView: View
+        ) {
+            val isFooterVisible = howFooterVisible(
+                toolbarButtonArgsMaker,
+            )
+            when (isFooterVisible) {
+                false -> settingButtonInnerView.findViewById<LinearLayoutCompat>(
+                    R.id.setting_menu_nav_footer
+                )?.isVisible = false
+
+                else -> setNaviBarForEdit(
+                    toolbarButtonArgsMaker,
+                    settingButtonInnerView
+                )
+            }
+        }
+
+        private fun setNaviBarForEdit(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            settingButtonInnerView: View
+        ) {
+            val fragment = toolbarButtonArgsMaker.fragment
+            execSetNavImageButtonForEdit(
+                toolbarButtonArgsMaker,
+                settingButtonInnerView,
+                R.id.setting_menu_nav_back_iamge_view,
+                ToolbarMenuCategoriesVariantForCmdIndex.BACK,
+                EnableNavForWebView.checkForGoBack(fragment)
+            )
+            execSetNavImageButtonForEdit(
+                toolbarButtonArgsMaker,
+                settingButtonInnerView,
+                R.id.setting_menu_nav_reload_iamge_view,
+                ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
+                EnableNavForWebView.checkForReload(fragment),
+            )
+            execSetNavImageButtonForEdit(
+                toolbarButtonArgsMaker,
+                settingButtonInnerView,
+                R.id.setting_menu_nav_forward_iamge_view,
+                ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
+                EnableNavForWebView.checkForGoForward(fragment)
+            )
+        }
+
+        private fun execSetNavImageButtonForEdit(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            settingButtonInnerView: View,
+            buttonId: Int,
+            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
+            buttonEnable: Boolean
+        ) {
+            val fragment = toolbarButtonArgsMaker.fragment
+            val context = fragment.context
+                ?: return
+            val navImageButton =
+                settingButtonInnerView.findViewById<AppCompatImageButton>(
+                    buttonId
+                )
+            navImageButton.setOnClickListener {
+                menuPopupWindow?.dismiss()
+                when (fragment) {
+                    is CommandIndexFragment -> {
+                        val listener =
+                            context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                        listener?.onToolbarMenuCategories(
+                            toolbarMenuCategoriesVariantForCmdIndex,
+                            EditFragmentArgs(
+                                fragment.readSharePreffernceMap,
+                                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                            )
+                        )
+                    }
+
+                    is EditFragment -> {
+                        val listener =
+                            context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+                        listener?.onToolbarMenuCategoriesForEdit(
+                            toolbarMenuCategoriesVariantForCmdIndex,
+                            EditFragmentArgs(
+                                fragment.readSharePreffernceMap,
+                                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                            ),
+                        )
+                    }
+                }
+            }
+            navImageButton.isEnabled = buttonEnable
+            val colorId = if (buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
+            navImageButton.imageTintList = context.getColorStateList(colorId)
+        }
+    }
+
+    private fun monitorSizeChange(
+        fragment: Fragment
+    ) {
+        when (fragment) {
+            is CommandIndexFragment ->
+                ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
+                    fragment,
+                )
+
+            is EditFragment ->
+                monitorSizeChangeForEdit(fragment)
+        }
+    }
+
+
+    private fun monitorSizeChangeForEdit(
+        editFragment: EditFragment
+    ) {
+        if (
+            editFragment.terminalOn
+            == SettingVariableSelects.TerminalDoSelects.OFF.name
+        ) return
+        val context = editFragment.context
+        val existEditExecuteTerminalFragment = ExistTerminalFragment
+            .how(
+                editFragment,
+                editFragment.context?.getString(
+                    R.string.edit_terminal_fragment
+                )
+            )
+        if (
+            existEditExecuteTerminalFragment?.isVisible != true
+        ) {
             Toast.makeText(
                 context,
-                "no working",
+                "no terminal",
                 Toast.LENGTH_SHORT
             ).show()
             return
         }
-        createPopUpForSetting(
-            settingButtonArgsMaker
+        val linearLayoutParam =
+            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
+        val isShow = linearLayoutParam.weight != ReadLines.LONGTH
+        EditLayoutViewHideShow.exec(
+            editFragment,
+            isShow
+        )
+        val listener =
+            context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+        listener?.onToolbarMenuCategoriesForEdit(
+            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
+            EditFragmentArgs(
+                editFragment.readSharePreffernceMap,
+                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+            )
         )
     }
-    private fun createPopUpForSetting(
-        settingButtonArgsMaker: SettingButtonArgsMaker
-    ) {
-        val settingButtonView = settingButtonArgsMaker.settingButtonView
-        if (settingButtonView == null) return
-        val context = settingButtonView.context
-        val menuListMap = createPopupMenuListMap(settingButtonArgsMaker)
-        if(menuListMap.size == 1){
-            jsPathOrSubMenuHandler(
-                menuListMap.first().first,
-                settingButtonArgsMaker
-            )
-            return
-        }
-        menuPopupWindow = PopupWindow(
-            context,
-        ).apply {
-            elevation = 5f
-            isFocusable = true
-            isOutsideTouchable = true
-            setBackgroundDrawable(null)
-            animationStyle = R.style.popup_window_animation_phone
-            val inflater = LayoutInflater.from(context)
-            contentView = inflater.inflate(
-                R.layout.setting_popup_for_index,
-                LinearLayoutCompat(context),
-                false
-            ).apply {
-                val menuListView =
-                    this.findViewById<NoScrollListView>(
-                        R.id.setting_menu_list_view
-                    )
-                val menuListAdapter = SubMenuAdapter(
-                    context,
-                    menuListMap.toMutableList()
-                )
-                menuListView.adapter = menuListAdapter
-                menuListViewSetOnItemClickListener(
-                    menuListView,
-                    settingButtonArgsMaker,
-                )
-                footerSettingHandler(
-                    settingButtonArgsMaker,
-                    this
-                )
-                measure(
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                )
-            }
-        }.also { popupWindow ->
-            // Absolute location of the anchor view
-            val location = IntArray(2).apply {
-                settingButtonView.getLocationOnScreen(this)
-            }
-            val size = Size(
-                popupWindow.contentView.measuredWidth,
-                popupWindow.contentView.measuredHeight
-            )
-            popupWindow.showAtLocation(
-                settingButtonView,
-                Gravity.TOP or Gravity.START,
-                location[0] - (size.width - settingButtonView.width) / 2,
-                location[1] - size.height
-            )
-        }
-    }
 
-    private fun howFooterVisible(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
-    ): Boolean {
-        val clickKey = settingButtonArgsMaker.decideClickKey()
-        return settingButtonArgsMaker.settingButtonConfigMap?.get(clickKey).let {
-                clickJsPathMapStr ->
-            if(
-                clickJsPathMapStr.isNullOrEmpty()
-            ) return@let true
-            val clickConfigMapStr = CmdClickMap.createMap(clickJsPathMapStr, "|").toMap()
-            !clickConfigMapStr.containsKey(SettingButtonClickConfigMapKey.ON_HIDE_FOOTER.str)
-        }
-    }
-
-    private fun createPopupMenuListMap(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+    private fun execCreateMenuListMap(
+        srcMenuMapList: List<Map<String, String>?>
     ): List<Pair<String, Int>> {
-        val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
-        val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
-        return settingButtonMenuMapList.filter {
-            it?.get(parentMenuKey).isNullOrEmpty()
-        }.let {
-            execCreateMenuListMap(
-                it
-            )
-        }
+        val menuNameKey = SettingButtonMenuMapKey.NAME.str
+        val iconKey = SettingButtonMenuMapKey.ICON.str
+        val ringIconId = CmdClickIcons.RING.id
+        return srcMenuMapList.map {
+            val iconMacroName = it?.get(iconKey)
+            val menuName = it?.get(menuNameKey) ?: String()
+            val iconId = CmdClickIcons.values().filter {
+                it.str == iconMacroName
+            }.firstOrNull()?.id ?: ringIconId
+            menuName to iconId
+        }.filter { it.first.isNotEmpty() }
     }
 
-
-    private fun menuListViewSetOnItemClickListener(
-        menuListView: NoScrollListView,
-        settingButtonArgsMaker: SettingButtonArgsMaker,
+    private fun execQrScan(
+        fragment: Fragment,
+        currentAppDirPath: String,
     ) {
-        menuListView.setOnItemClickListener { parent, View, pos, id ->
-            menuPopupWindow?.dismiss()
-            val menuListAdapter = menuListView.adapter as SubMenuAdapter
-            val clickedMenuName = menuListAdapter.getItem(pos)
-                ?: return@setOnItemClickListener
-            jsPathOrSubMenuHandler(
-                clickedMenuName,
-                settingButtonArgsMaker,
+        val activeCurrentDirPath = when (fragment) {
+            is EditFragment -> {
+                val filterDirInWithListIndex = WithIndexListView.filterDir
+                if (
+                    fragment.existIndexList
+                    && filterDirInWithListIndex.isNotEmpty()
+                ) filterDirInWithListIndex
+                else currentAppDirPath
+            }
+
+            else -> currentAppDirPath
+        }
+        QrScanner(
+            fragment,
+            activeCurrentDirPath,
+        ).scanFromCamera()
+    }
+
+    private fun scriptFileEditForCmdIndex(
+        fragment: Fragment,
+        currentAppDirPath: String,
+    ) {
+        when (fragment) {
+            is EditFragment -> {}
+            is CommandIndexFragment
+            -> ScriptFileEdit.edit(
+                fragment,
+                currentAppDirPath,
+                UsePath.cmdclickStartupJsName,
             )
         }
     }
 
-    private fun jsPathOrSubMenuHandler(
-        clickedMenuName: String,
-        settingButtonArgsMaker: SettingButtonArgsMaker
-
-    ){
-        val settingButtonMenuMapList = settingButtonArgsMaker.makeSettingButtonMenuMapList()
-        val parentMenuNameKey = SettingButtonMenuMapKey.PARENT_NAME.str
-        val onSubMenuLabel = !settingButtonMenuMapList.filter {
-            it?.get(parentMenuNameKey) == clickedMenuName
-        }.firstOrNull().isNullOrEmpty()
-        when (onSubMenuLabel) {
-            true ->
-                SettingButtonSubMenuDialog.launch(
-                    settingButtonArgsMaker,
-                    clickedMenuName,
-
-                    )
-
-            else ->
-                JsPathHandler.handle(
-                    settingButtonArgsMaker,
-                    clickedMenuName,
-                )
-
-        }
-    }
-
-    private fun footerSettingHandler(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
-        settingButtonInnerView: View
-    ){
-        val isFooterVisible = howFooterVisible(
-            settingButtonArgsMaker,
+    private fun configEdit(
+        fragment: Fragment
+    ) {
+        val configDirPath = UsePath.cmdclickSystemAppDirPath
+        val configShellName = UsePath.cmdclickConfigFileName
+        CommandClickScriptVariable.makeConfigJsFile(
+            configDirPath,
+            configShellName
         )
-        when(isFooterVisible){
-            false -> settingButtonInnerView.findViewById<LinearLayoutCompat>(
-                R.id.setting_menu_nav_footer
-            )?.isVisible = false
-            else -> setNaviBarForEdit(
-                settingButtonArgsMaker,
-                settingButtonInnerView
-            )
-        }
-    }
-
-    private fun setNaviBarForEdit(
-        settingButtonArgsMaker: SettingButtonArgsMaker,
-        settingButtonInnerView: View
-    ){
-        val fragment = settingButtonArgsMaker.fragment
-        execSetNavImageButtonForEdit(
-            settingButtonArgsMaker,
-            settingButtonInnerView,
-            R.id.setting_menu_nav_back_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.BACK,
-            EnableNavForWebView.checkForGoBack(fragment)
-        )
-        execSetNavImageButtonForEdit(
-            settingButtonArgsMaker,
-            settingButtonInnerView,
-            R.id.setting_menu_nav_reload_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
-            EnableNavForWebView.checkForReload(fragment),
-        )
-        execSetNavImageButtonForEdit(
-            settingButtonArgsMaker,
-            settingButtonInnerView,
-            R.id.setting_menu_nav_forward_iamge_view,
-            ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
-            EnableNavForWebView.checkForGoForward(fragment)
+        SystemFannelLauncher.launch(
+            fragment,
+            UsePath.cmdclickSystemAppDirPath,
+            UsePath.cmdclickConfigFileName,
         )
     }
-    private fun execSetNavImageButtonForEdit (
-        settingButtonArgsMaker: SettingButtonArgsMaker,
-        settingButtonInnerView: View,
-        buttonId: Int,
-        toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
-        buttonEnable: Boolean
-    ){
-        val fragment = settingButtonArgsMaker.fragment
+
+    private fun syncFannelRepo(fragment: Fragment) {
         val context = fragment.context
             ?: return
-        val navImageButton =
-            settingButtonInnerView.findViewById<AppCompatImageButton>(
-                buttonId
+        val intent = Intent(
+            context,
+            GitCloneService::class.java
+        )
+        context.startForegroundService(intent)
+    }
+
+
+    private fun changeSettingFragment(fragment: Fragment) {
+        if (fragment !is EditFragment) return
+        val listener = fragment.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+        listener?.onToolBarButtonClickForEditFragment(
+            fragment.tag,
+            ToolbarButtonBariantForEdit.EDIT,
+            fragment.readSharePreffernceMap,
+            fragment.enableCmdEdit
+        )
+    }
+
+
+    private class OkHandler(
+        private val editFragment: EditFragment,
+        private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+        private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+    ) {
+        private val context = editFragment.context
+        private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        private val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        private val enableCmdEdit = editFragment.enableCmdEdit
+        private val onPassCmdVariableEdit =
+            editFragment.passCmdVariableEdit ==
+                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
+        private val scriptFileSaver = ScriptFileSaver(
+            editFragment,
+        )
+
+        fun execForOk() {
+            scriptFileSaver.save(
+                recordNumToMapNameValueInCommandHolder,
+                recordNumToMapNameValueInSettingHolder,
             )
-        navImageButton.setOnClickListener {
-            menuPopupWindow?.dismiss()
-            when(fragment){
-                is CommandIndexFragment -> {
-                    val listener = context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                    listener?.onToolbarMenuCategories(
-                        toolbarMenuCategoriesVariantForCmdIndex,
-                        EditFragmentArgs(
-                            fragment.readSharePreffernceMap,
-                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                        )
+            val isCmdEditExecute = enableCmdEdit
+                    && editFragment.enableEditExecute
+                    && !onPassCmdVariableEdit
+            val isSettingEditByPass = enableCmdEdit
+                    && editFragment.enableEditExecute
+                    && onPassCmdVariableEdit
+            val isSettingEdit = !enableCmdEdit
+
+            val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
+            val isOnlyCmdEditNoFdialog = enableCmdEdit
+                    && !editFragment.enableEditExecute
+                    && !isFdialogFannel
+            val isOnlyCmdEditWithFdialog = enableCmdEdit
+                    && !editFragment.enableEditExecute
+                    && isFdialogFannel
+            when (true) {
+                isCmdEditExecute -> {
+                    Keyboard.hiddenKeyboardForFragment(
+                        editFragment
+                    )
+                    TerminalShowByTerminalDo.show(
+                        editFragment,
+                    )
+                    ExecJsOrSellHandler.handle(
+                        editFragment,
+                        currentAppDirPath,
+                        currentScriptFileName,
                     )
                 }
-                is EditFragment -> {
-                    val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                    listener?.onToolbarMenuCategoriesForEdit(
-                        toolbarMenuCategoriesVariantForCmdIndex,
-                        EditFragmentArgs(
-                            fragment.readSharePreffernceMap,
-                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                        ),
+
+                isOnlyCmdEditWithFdialog ->
+                    fDialalogOkButtonProcess()
+
+                isSettingEditByPass,
+                isOnlyCmdEditNoFdialog,
+                isSettingEdit -> {
+                    val listener =
+                        context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+                    listener?.onToolBarButtonClickForEditFragment(
+                        String(),
+                        ToolbarButtonBariantForEdit.CANCEL,
+                        mapOf(),
+                        false
                     )
                 }
+
+                else -> {}
             }
         }
-        navImageButton.isEnabled = buttonEnable
-        val colorId = if(buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
-        navImageButton.imageTintList = context.getColorStateList(colorId)
-    }
-}
 
-private fun monitorSizeChange(
-    fragment: Fragment
-){
-    when(fragment){
-        is CommandIndexFragment ->
-            ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-                fragment,
+        private fun fDialalogOkButtonProcess() {
+            val srcReadSharePreffernceMap = editFragment.srcReadSharePreffernceMap
+                ?: return
+            val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                srcReadSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
             )
-        is EditFragment ->
-            monitorSizeChangeForEdit(fragment)
-    }
-}
-
-
-private fun monitorSizeChangeForEdit(
-    editFragment: EditFragment
-){
-    if(
-        editFragment.terminalOn
-        == SettingVariableSelects.TerminalDoSelects.OFF.name
-    ) return
-    val context = editFragment.context
-    val existEditExecuteTerminalFragment = ExistTerminalFragment
-        .how(
-            editFragment,
-            editFragment.context?.getString(
-                R.string.edit_terminal_fragment
+            val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                srcReadSharePreffernceMap,
+                SharePrefferenceSetting.current_fannel_name
             )
-        )
-    if(
-        existEditExecuteTerminalFragment?.isVisible != true
-    ) {
-        Toast.makeText(
-            context,
-            "no terminal",
-            Toast.LENGTH_SHORT
-        ).show()
-        return
-    }
-    val linearLayoutParam =
-        editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
-    val isShow = linearLayoutParam.weight != ReadLines.LONGTH
-    EditLayoutViewHideShow.exec(
-        editFragment,
-        isShow
-    )
-    val listener =
-        context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-    listener?.onToolbarMenuCategoriesForEdit(
-        ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
-        EditFragmentArgs(
-            editFragment.readSharePreffernceMap,
-            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-        )
-    )
-}
-
-private fun execCreateMenuListMap(
-    srcMenuMapList: List<Map<String, String>?>
-): List<Pair<String, Int>>{
-    val menuNameKey = SettingButtonMenuMapKey.NAME.str
-    val iconKey = SettingButtonMenuMapKey.ICON.str
-    val ringIconId = CmdClickIcons.RING.id
-    return srcMenuMapList.map {
-        val iconMacroName = it?.get(iconKey)
-        val menuName = it?.get(menuNameKey) ?: String()
-        val iconId = CmdClickIcons.values().filter {
-            it.str == iconMacroName
-        }.firstOrNull()?.id ?: ringIconId
-        menuName to iconId
-    }.filter { it.first.isNotEmpty() }
-}
-
-private fun execQrScan(
-    fragment: Fragment,
-    currentAppDirPath: String,
-){
-    val activeCurrentDirPath = when(fragment){
-        is EditFragment -> {
-            val filterDirInWithListIndex = WithIndexListView.filterDir
+            val srcFannelCon = ReadText(
+                srcAppDirPath,
+                srcFannelName
+            ).readText()
+            val fDialogConList = ReadText(
+                currentAppDirPath,
+                currentScriptFileName
+            ).textToList()
+            val fDialogCommandValCon = CommandClickVariables.substituteVariableListFromHolder(
+                fDialogConList,
+                editFragment.commandSectionStart,
+                editFragment.commandSectionEnd
+            )?.filter {
+                !it.startsWith(FDialogTempFile.jsDescPrefix)
+                        && it.isNotEmpty()
+            }?.joinToString("\t") ?: String()
+            val replaceSrcFanneCon = CommandClickVariables.replaceVariableInHolder(
+                srcFannelCon,
+                fDialogCommandValCon,
+                editFragment.commandSectionStart,
+                editFragment.commandSectionEnd,
+            )
             if (
-                fragment.existIndexList
-                && filterDirInWithListIndex.isNotEmpty()
-            ) filterDirInWithListIndex
-            else currentAppDirPath
+                replaceSrcFanneCon != srcFannelCon
+            ) {
+                FileSystems.writeFile(
+                    srcAppDirPath,
+                    srcFannelName,
+                    replaceSrcFanneCon
+                )
+            }
+            val currentFannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+            val srcFannelDirName = CcPathTool.makeFannelDirName(srcFannelName)
+            FileSystems.copyDirectory(
+                File(currentAppDirPath, currentFannelDirName).absolutePath,
+                File(srcAppDirPath, srcFannelDirName).absolutePath
+            )
+            val listener =
+                this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+            listener?.onToolBarButtonClickForEditFragment(
+                String(),
+                ToolbarButtonBariantForEdit.CANCEL,
+                mapOf(),
+                false
+            )
         }
-        else -> currentAppDirPath
     }
-    QrScanner(
-        fragment,
-        activeCurrentDirPath,
-    ).scanFromCamera()
-}
-
-private fun scriptFileEditForCmdIndex(
-    fragment: Fragment,
-    currentAppDirPath: String,
-){
-    when(fragment){
-        is EditFragment -> {}
-        is CommandIndexFragment
-        -> ScriptFileEdit.edit(
-            fragment,
-            currentAppDirPath,
-            UsePath.cmdclickStartupJsName,
-        )
-    }
-}
-
-private fun configEdit(
-    fragment: Fragment
-){
-    val configDirPath = UsePath.cmdclickSystemAppDirPath
-    val configShellName = UsePath.cmdclickConfigFileName
-    CommandClickScriptVariable.makeConfigJsFile(
-        configDirPath,
-        configShellName
-    )
-    SystemFannelLauncher.launch(
-        fragment,
-        UsePath.cmdclickSystemAppDirPath,
-        UsePath.cmdclickConfigFileName,
-    )
-}
-
-private fun syncFannelRepo(fragment: Fragment){
-    val context = fragment.context
-        ?: return
-    val intent = Intent(
-        context,
-        GitCloneService::class.java
-    )
-    context.startForegroundService(intent)
 }

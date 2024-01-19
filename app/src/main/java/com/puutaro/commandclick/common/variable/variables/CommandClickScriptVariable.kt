@@ -100,6 +100,9 @@ object CommandClickScriptVariable {
     val DISABLE_PLAY_BUTTON = "disablePlayButton"
     val DISABLE_EDIT_BUTTON = "disableEditButton"
     val PLAY_BUTTON_ICON = "playButtonIcon"
+    val SETTING_BUTTON_CONFIG = "settingButtonConfig"
+    val EDIT_BUTTON_CONFIG = "editButtonConfig"
+    val PLAY_BUTTON_CONFIG = "playButtonConfig"
     val SETTING_BUTTON_ICON = "settingButtonIcon"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
     val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
@@ -154,6 +157,7 @@ object CommandClickScriptVariable {
         DISABLE_SETTING_BUTTON,
         DISABLE_EDIT_BUTTON,
         DISABLE_PLAY_BUTTON,
+        SETTING_BUTTON_CONFIG,
         NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
