@@ -22,7 +22,9 @@ class ScriptFileSaver(
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>? = null,
         recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>? = null,
     ){
-
+        if(
+            editFragment.existIndexList
+        ) return
         val editedTextContents = EditedTextContents(
             binding,
             editFragment,
