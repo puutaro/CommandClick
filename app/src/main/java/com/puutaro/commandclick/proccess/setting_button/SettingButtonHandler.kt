@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.setting_button
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
@@ -19,12 +20,10 @@ class SettingButtonHandler(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         settingButtonView: ImageButton?,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-//        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ){
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             fragment,
             recordNumToMapNameValueInCommandHolder,
-//            recordNumToMapNameValueInSettingHolder,
             toolbarButtonBariantForEdit,
             settingButtonView,
             isLongClick,
@@ -251,8 +250,8 @@ enum class SettingButtonConfigMapKey(
 ) {
     LONG_CLICK("longClick"),
     CLICK("click"),
-    ICON_NAME("iconName"),
-    DISABLE("disable"),
+    ICON("icon"),
+    VISIBLE("visible"),
 }
 
 enum class SettingButtonClickConfigMapKey(
@@ -273,6 +272,20 @@ enum class MonitorSize {
 enum class OnScriptSave {
     ON,
     OFF
+}
+
+enum class ButtonVisibleValue {
+    ON,
+    OFF
+}
+
+enum class ButtonIcons(
+    val str: String,
+) {
+    PLAY(CmdClickIcons.PLAY.str),
+    EDIT(CmdClickIcons.EDIT.str),
+    SETTING(CmdClickIcons.SETTING.str),
+    OK(CmdClickIcons.OK.str),
 }
 
 enum class JsPathMacroForSettingButton{

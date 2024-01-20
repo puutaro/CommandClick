@@ -177,6 +177,10 @@ object UsePath {
     val qrDialogConfigPath =  "$fannelSettingsDirPath/${qrDialogConfigName}"
     private val settingButtonConfigName = "settingButtonConfig.js"
     val settingButtonConfigPath =  "$fannelSettingsDirPath/${settingButtonConfigName}"
+    private val playButtonConfigName = "playButtonConfig.js"
+    val playButtonConfigPath =  "$fannelSettingsDirPath/${playButtonConfigName}"
+    private val editButtonConfigName = "editButtonConfig.js"
+    val editButtonConfigPath =  "$fannelSettingsDirPath/${editButtonConfigName}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"

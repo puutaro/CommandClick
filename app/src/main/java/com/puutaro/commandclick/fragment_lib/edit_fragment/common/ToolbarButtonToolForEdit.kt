@@ -23,8 +23,8 @@ object ToolbarButtonToolForEdit {
     fun culcButtonWeight(
         editFragment: EditFragment,
     ): Float {
-        return editFragment.toolBarButtonDisableMap.values.filter {
-            !it
+        return editFragment.toolBarButtonVisibleMap.values.filter {
+            it
         }.size.let { 1.0F / it }
     }
 }

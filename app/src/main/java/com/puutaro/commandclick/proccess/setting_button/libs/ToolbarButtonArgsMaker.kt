@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.setting_button.ButtonIcons
 import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.OnScriptSave
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
@@ -94,7 +95,6 @@ class ToolbarButtonArgsMaker(
     }
 
     companion object {
-
         val onSaveDefaultMapInClick = mapOf(
             ToolbarButtonBariantForEdit.SETTING to OnScriptSave.OFF.name,
             ToolbarButtonBariantForEdit.EDIT to OnScriptSave.OFF.name,

@@ -99,6 +99,12 @@ object ListSettingVariableListMaker {
             -> "${UsePath.fannelSettingVariablsDirPath}/${UsePath.hideSettingVariablesConfig}"
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS
             -> "${UsePath.fannelSettingVariablsDirPath}/${UsePath.ignoreHistoryPathsConfig}"
+            CommandClickScriptVariable.SETTING_BUTTON_CONFIG
+            -> UsePath.settingButtonConfigPath
+            CommandClickScriptVariable.EDIT_BUTTON_CONFIG
+            -> UsePath.editButtonConfigPath
+            CommandClickScriptVariable.PLAY_BUTTON_CONFIG
+            -> UsePath.playButtonConfigPath
             else -> String()
         }
     }

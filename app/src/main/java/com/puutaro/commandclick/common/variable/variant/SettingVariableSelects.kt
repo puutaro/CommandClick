@@ -95,21 +95,6 @@ object SettingVariableSelects {
         OFF
     }
 
-    enum class disableSettingButtonSelects {
-        ON,
-        OFF
-    }
-
-    enum class disablePlayButtonSelects {
-        ON,
-        OFF
-    }
-
-    enum class disableEditButtonSelects {
-        ON,
-        OFF
-    }
-
     enum class OnTermBackendWhenStartSelects {
         INHERIT,
         ON,
@@ -132,14 +117,5 @@ object SettingVariableSelects {
     enum class UbuntuExecModeSelects {
         foreground,
         background,
-    }
-
-    enum class PlayButtonIconSelects {
-        play,
-        ok,
-    }
-
-    enum class SettingButtonIconSelects {
-        setting,
     }
 }

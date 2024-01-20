@@ -115,7 +115,7 @@ class EditFragment: Fragment() {
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var fileGetterForSettingButton: FileGetterForSettingButton? = null
-    val toolBarButtonDisableMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
+    val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitle = String()
     var buttonWeight = 0.25f

@@ -7,3 +7,4 @@ click=
 	jsPath=MENU
 	|menuPath=`${CMDCLICK_APP_DIR_ADMIN_MENU_PATH}`
 	|onHideFooter=,
+icon=plus,

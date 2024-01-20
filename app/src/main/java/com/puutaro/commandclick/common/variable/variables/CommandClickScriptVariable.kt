@@ -95,14 +95,9 @@ object CommandClickScriptVariable {
     val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
     val OVERRIDE_ITEM_CLICK_EXEC = "overrideItemClickExec"
     val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
-    val DISABLE_SETTING_BUTTON = "disableSettingButton"
-    val DISABLE_PLAY_BUTTON = "disablePlayButton"
-    val DISABLE_EDIT_BUTTON = "disableEditButton"
-    val PLAY_BUTTON_ICON = "playButtonIcon"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
-    val SETTING_BUTTON_ICON = "settingButtonIcon"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
     val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
@@ -150,11 +145,6 @@ object CommandClickScriptVariable {
         IGNORE_HISTORY_PATHS,
         HOME_SCRIPT_URLS_PATH,
         OVERRIDE_ITEM_CLICK_EXEC,
-        PLAY_BUTTON_ICON,
-        SETTING_BUTTON_ICON,
-        DISABLE_SETTING_BUTTON,
-        DISABLE_EDIT_BUTTON,
-        DISABLE_PLAY_BUTTON,
         SETTING_BUTTON_CONFIG,
         NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
@@ -213,14 +203,6 @@ object CommandClickScriptVariable {
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val overrideItemClickExecSelectsOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
     private val overrideItemClickExecSelectsOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
-    private val disableSettingButtonOn = SettingVariableSelects.disableSettingButtonSelects.ON.name
-    private val disableSettingButtonOff = SettingVariableSelects.disableSettingButtonSelects.OFF.name
-    private val disableEditButtonOn = SettingVariableSelects.disableEditButtonSelects.ON.name
-    private val disableEditButtonOff = SettingVariableSelects.disableEditButtonSelects.OFF.name
-    private val disablePlayButtonOn = SettingVariableSelects.disablePlayButtonSelects.ON.name
-    private val disablePlayButtonOff = SettingVariableSelects.disablePlayButtonSelects.OFF.name
-    private val playButtonIconOk = SettingVariableSelects.PlayButtonIconSelects.ok.name
-    private val settingButtonIconSetting = SettingVariableSelects.SettingButtonIconSelects.setting.name
     val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
     val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
@@ -238,20 +220,14 @@ object CommandClickScriptVariable {
     val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
     val ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE = onTermBackendWhenStartSelectsOff
     val ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE = onTermShortWhenLoadSelectsOff
-    val PLAY_BUTTON_ICON_DEFAULT_VALUE = playButtonIconOk
-    val SETTING_BUTTON_ICON_DEFAULT_VALUE = settingButtonIconSetting
     val CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE = 100
     val CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE = SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name
     val ON_ADBLOCK_DEFAULT_VALUE = SettingVariableSelects.OnAdblockSelects.OFF.name
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
-    val DISABLE_WIDE_VIEW_PORT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
     val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
-    val DISABLE_SETTING_BUTTON_DEFAULT_VALUE = disableSettingButtonOff
-    val DISABLE_EDIT_BUTTON_DEFAULT_VALUE = disableEditButtonOff
-    val DISABLE_PLAY_BUTTON_DEFAULT_VALUE = disablePlayButtonOff
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
@@ -339,14 +315,6 @@ object CommandClickScriptVariable {
     val buttonIconNameIdPairListStr = CmdClickIcons.values().reversed().map {
         "${it.str}${buttonIconNameIdSeparator}${it.str}"
     }.joinToString(buttonIconSeparator)
-    private val setVariableValueForPlayButtonIcon =
-        iconSetForEditButton(
-            PLAY_BUTTON_ICON
-        )
-    private val setVariableValueForSettingButtonIcon =
-        iconSetForEditButton(
-            SETTING_BUTTON_ICON
-        )
 
     private val setVariableValueForNoScrollSaveUrlsFilePath =
         "$listPathForListConSlSpi=$noScrollSaveUrlsFilePath"
@@ -372,11 +340,6 @@ object CommandClickScriptVariable {
         "$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT:CB=$disableShowToolbarWhenHighlightOn!$disableShowToolbarWhenHighlightOff",
         "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn!$onUrlHistoryRegisterOff",
         "$OVERRIDE_ITEM_CLICK_EXEC:CB=$overrideItemClickExecSelectsOff!$overrideItemClickExecSelectsOn",
-        "$DISABLE_SETTING_BUTTON:CB=$disableSettingButtonOff!$disableSettingButtonOn",
-        "$DISABLE_EDIT_BUTTON:CB=$disableEditButtonOff!$disableEditButtonOn",
-        "$DISABLE_PLAY_BUTTON:CB=$disablePlayButtonOff!$disablePlayButtonOn",
-        "$PLAY_BUTTON_ICON:TXT:RO:BTN=${setVariableValueForPlayButtonIcon}",
-        "$SETTING_BUTTON_ICON:TXT:RO:BTN=${setVariableValueForSettingButtonIcon}",
         "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000!1",
         "$TERMINAL_COLOR:TXT:CLR=",
@@ -762,8 +725,6 @@ object CommandClickScriptVariable {
         |$ON_TERM_BACKEND_WHEN_START="$ON_TERM_BACKEND_WHEN_START_DEFAULT_VALUE"
         |$ON_TERM_VISIBLE_WHEN_KEYBOARD="$ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE"
         |$ON_TERM_SHORT_WHEN_LOAD="$ON_TERM_SHORT_WHEN_LOAD_DEFAULT_VALUE"
-        |$PLAY_BUTTON_ICON="${PLAY_BUTTON_ICON_DEFAULT_VALUE}"
-        |$SETTING_BUTTON_ICON="${SETTING_BUTTON_ICON_DEFAULT_VALUE}"
         |$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""

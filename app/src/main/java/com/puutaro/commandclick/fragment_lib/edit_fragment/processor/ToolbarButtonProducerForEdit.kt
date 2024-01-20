@@ -125,9 +125,9 @@ class ToolbarButtonProducerForEdit(
     private fun howSetButton(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit
     ): Boolean {
-        return editFragment.toolBarButtonDisableMap.filter {
+        return editFragment.toolBarButtonVisibleMap.filter {
             it.key == toolbarButtonBariantForEdit
-        }.values.firstOrNull()?.let { !it } ?: true
+        }.values.firstOrNull() ?: true
     }
 
     private fun onLongClickHandler(
