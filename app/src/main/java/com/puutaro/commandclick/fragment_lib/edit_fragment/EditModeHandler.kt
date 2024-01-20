@@ -96,7 +96,6 @@ class EditModeHandler(
                         CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
                 ] as String,
                 true,
-                currentFannelName
             )
 
         if(
@@ -145,7 +144,6 @@ class EditModeHandler(
                 settingSectionStart,
                 settingSectionEnd,
                 true,
-                currentFannelName
             )
         val recordNumToMapNameValueInSettingHolder = filterRecordNumToMapNameValueInHolderByHideVariable(
             recordNumToMapNameValueInSettingHolderSrc
@@ -205,7 +203,6 @@ class EditModeHandler(
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
             recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
         )
     }
 

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button
+package com.puutaro.commandclick.proccess.history
 
 import android.app.Dialog
 import android.content.DialogInterface
@@ -8,34 +8,32 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.AppHistoryAdminEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.AppHistoryJsEvent
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
-
 
 class CmdClickHistoryButtonEvent (
     historyButtonInnerView: View,
@@ -247,7 +245,8 @@ class CmdClickHistoryButtonEvent (
         searchText: EditText,
         cmdclickAppHistoryDirAdminPath: String,
     ){
-        historyListAdapter.itemLongClickListener = object : FannelHistoryAdapter.OnItemLongClickListener {
+        historyListAdapter.itemLongClickListener = object :
+            FannelHistoryAdapter.OnItemLongClickListener {
             override fun onItemLongClick(
                 itemView: View,
                 holder: FannelHistoryAdapter.HistoryViewHolder
@@ -313,10 +312,9 @@ class CmdClickHistoryButtonEvent (
         historyRow: String
     ): String {
 //        homeFannelList
-        val selectedAppShellFileName = AppHistoryManager
-            .getScriptFileNameFromAppHistoryFileName(
-                historyRow
-            )
+        val selectedAppShellFileName = AppHistoryManager.getScriptFileNameFromAppHistoryFileName(
+            historyRow
+        )
         if(selectedAppShellFileName != CommandClickScriptVariable.EMPTY_STRING) {
             return historyRow
         }
@@ -346,7 +344,6 @@ class CmdClickHistoryButtonEvent (
     }
 
 }
-
 
 private val mainMenuGroupId = 30000
 

@@ -34,13 +34,13 @@ import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.filer.FileRenamer
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
@@ -155,8 +155,7 @@ class WithIndexListView(
         private var fannelDirPath = String()
         private var fannelMenuDirPath = String()
 
-        val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-        val blankListMark = "Let's press sync button at right bellow"
+        const val blankListMark = "Let's press sync button at right bellow"
 
 
             fun makeFileListHandler(isInstallFannel: Boolean): MutableList<String> {
@@ -321,7 +320,6 @@ class WithIndexListView(
         )
         makeSearchEditText(
             editListSearchEditText,
-            readSharePreffernceMap
         )
     }
 
@@ -376,20 +374,8 @@ class WithIndexListView(
 
     private fun makeSearchEditText(
         searchText: AppCompatEditText,
-        readSharePreffernceMap: Map<String, String>
     ) {
         searchText.hint = editFragment.editBoxTitle
-//            TitleImageAndViewSetter.makeTitle(
-//            editFragment,
-//            SharePreferenceMethod.getReadSharePreffernceMap(
-//                readSharePreffernceMap,
-//                SharePrefferenceSetting.current_app_dir,
-//            ),
-//            SharePreferenceMethod.getReadSharePreffernceMap(
-//                readSharePreffernceMap,
-//                SharePrefferenceSetting.current_fannel_name,
-//            )
-//        )
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -570,8 +556,7 @@ class WithIndexListView(
         selectedItem: String,
     ){
         if(
-            selectedItem == throughMark
-            || selectedItem.trim() == blankListMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -703,7 +688,7 @@ class WithIndexListView(
             }
             PreMenuType.RENAME_APP_DIR.menuName -> {
                 if(
-                    selectedItem == throughMark
+                    judgeNoFile(selectedItem)
                 ) {
                     noFileToast()
                     return
@@ -717,6 +702,12 @@ class WithIndexListView(
                 )
                 return
             }
+            PreMenuType.RENAME.menuName -> {
+                execRenameFile(
+                    selectedItem,
+                )
+                return
+            }
             PreMenuType.DESC.menuName -> {
                 execShowDescription(
                     selectedItem
@@ -725,7 +716,7 @@ class WithIndexListView(
             }
             PreMenuType.EDIT_C.menuName -> {
                 if(
-                    selectedItem == throughMark
+                    judgeNoFile(selectedItem)
                 ) {
                     noFileToast()
                     return
@@ -740,7 +731,7 @@ class WithIndexListView(
             }
             PreMenuType.EDIT_S.menuName -> {
                 if(
-                    selectedItem == throughMark
+                    judgeNoFile(selectedItem)
                 ) {
                     noFileToast()
                     return
@@ -976,11 +967,27 @@ class WithIndexListView(
         promptDialog?.show()
     }
 
+    private fun execRenameFile(
+        selectedItem: String,
+    ){
+        if(
+            judgeNoFile(selectedItem)
+        ) {
+            noFileToast()
+            return
+        }
+        FileRenamer.rename(
+            editFragment,
+            filterDir,
+            selectedItem
+        )
+    }
+
     private fun execShowDescription(
         selectedItem: String,
     ){
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1000,7 +1007,7 @@ class WithIndexListView(
         selectedItem: String
     ){
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1015,7 +1022,7 @@ class WithIndexListView(
         selectedItem: String
     ){
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1039,7 +1046,7 @@ class WithIndexListView(
         selectedItem: String
     ){
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1059,7 +1066,7 @@ class WithIndexListView(
             context == null
         ) return
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1204,7 +1211,7 @@ class WithIndexListView(
         selectedItem: String,
     ){
         if(
-            selectedItem == throughMark
+            judgeNoFile(selectedItem)
         ) {
             noFileToast()
             return
@@ -1437,6 +1444,13 @@ class WithIndexListView(
             Toast.LENGTH_SHORT
         ).show()
     }
+
+    private fun judgeNoFile(
+        selectedItem: String,
+    ): Boolean {
+        return selectedItem == throughMark
+                || selectedItem.trim() == blankListMark
+    }
 }
 
 private enum class MenuMapKey(
@@ -1496,6 +1510,7 @@ enum class PreMenuType(
     WRITE("write", R.drawable.icons8_edit),
     SIMPLE_EDIT("sEdit", R.drawable.icons8_edit_frame),
     RENAME_APP_DIR("rename_app_dir", R.drawable.icons8_edit_frame),
+    RENAME("rename", R.drawable.icons8_edit_frame),
     CAT("cat", R.drawable.icons8_file),
     COPY_PATH("copy_path", com.termux.shared.R.drawable.ic_copy),
     COPY_FILE("copy_file", androidx.appcompat.R.drawable.abc_ic_menu_copy_mtrl_am_alpha),

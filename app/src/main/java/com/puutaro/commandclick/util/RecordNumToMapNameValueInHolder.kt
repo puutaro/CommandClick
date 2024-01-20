@@ -10,7 +10,6 @@ object RecordNumToMapNameValueInHolder {
         startHolderName: String,
         endHolderName: String,
         onForSetting: Boolean = false,
-        currentScriptName: String? = null
     ): Map<Int, Map<String, String>?>? {
         if(scriptContentsList.isEmpty()) return null
         val commandPromptStartNum = scriptContentsList.indexOf(
@@ -60,7 +59,6 @@ object RecordNumToMapNameValueInHolder {
                 substituteCmdStartEndContentStr,
                 filteredSubstituteCmdStartEndContentList,
                 onForSetting,
-                currentScriptName
             )
         }.toMap().filterValues {
             it != null
@@ -75,7 +73,6 @@ private fun makeResultEntryMap(
     substituteCmdStartEndContentStr: String,
     substituteCmdStartEndContentList: List<String>,
     onForSetting: Boolean,
-    currentShellFileName: String?
 ): Pair<Int, Map<String, String>?> {
     return if(result){
         val equalIndex = substituteCmdStartEndContentStr.indexOf("=")
@@ -91,18 +88,9 @@ private fun makeResultEntryMap(
             )
         }
 
-        val variableValue = if (onForSetting) {
-            returnUpdateShellFileName(
-                substituteCmdStartEndContentStr,
-                equalIndex,
-                variableName,
-                currentShellFileName
-            )
-        } else {
-            substituteCmdStartEndContentStr.substring(
+        val variableValue = substituteCmdStartEndContentStr.substring(
                 equalIndex + 1, substituteCmdStartEndContentStr.length
             )
-        }
         val insertVariableMap = if(variableName.isEmpty()) {
             null
         } else {
@@ -117,22 +105,4 @@ private fun makeResultEntryMap(
     } else {
         recordNum to null
     }
-}
-
-
-private fun returnUpdateShellFileName(
-        substituteCmdStartEndContentStr: String,
-        equalIndex: Int,
-        variableName: String?,
-        currentShellFileName: String?
-    ): String {
-        return if (variableName == CommandClickScriptVariable.SCRIPT_FILE_NAME) {
-            currentShellFileName ?: substituteCmdStartEndContentStr.substring(
-                equalIndex + 1, substituteCmdStartEndContentStr.length
-            )
-        } else {
-            substituteCmdStartEndContentStr.substring(
-                equalIndex + 1, substituteCmdStartEndContentStr.length
-            )
-        }
 }

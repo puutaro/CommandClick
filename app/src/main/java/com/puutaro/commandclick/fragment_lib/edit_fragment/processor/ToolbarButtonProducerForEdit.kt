@@ -9,7 +9,9 @@ import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.*
+import com.puutaro.commandclick.proccess.history.CLICLTYPE
+import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
+import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
@@ -48,7 +50,6 @@ class ToolbarButtonProducerForEdit(
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
@@ -72,7 +73,6 @@ class ToolbarButtonProducerForEdit(
                 makeButtonView,
                 toolbarButtonBariantForEdit,
                 recordNumToMapNameValueInCommandHolder,
-                recordNumToMapNameValueInSettingHolder,
             )
             true
         }
@@ -114,7 +114,6 @@ class ToolbarButtonProducerForEdit(
                         toolbarButtonBariantForEdit,
                         makeButtonView,
                         recordNumToMapNameValueInCommandHolder,
-                        recordNumToMapNameValueInSettingHolder,
                     )
                 }
                 ToolbarButtonBariantForEdit.CANCEL -> {}
@@ -137,7 +136,6 @@ class ToolbarButtonProducerForEdit(
         settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
-        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
@@ -160,7 +158,6 @@ class ToolbarButtonProducerForEdit(
                     toolbarButtonBariantForEdit,
                     settingButtonView,
                     recordNumToMapNameValueInCommandHolder,
-                    recordNumToMapNameValueInSettingHolder,
                 )
             }
             ToolbarButtonBariantForEdit.CANCEL -> {}

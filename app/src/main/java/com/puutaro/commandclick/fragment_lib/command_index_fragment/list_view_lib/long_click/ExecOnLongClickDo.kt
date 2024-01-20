@@ -20,10 +20,9 @@ import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.*
 import com.puutaro.commandclick.proccess.AppProcessManager
-import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.filer.FileRenamer
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.editor.EditorByIntent
-import com.puutaro.commandclick.util.ReadText
 
 
 object ExecOnLongClickDo {
@@ -412,9 +411,11 @@ private object UtilitySubMenuDialog {
             val menuListAdapter = copyMenuListView.adapter as SubMenuAdapter
             val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-
-            when(selectedMenuName){
-                UtilitySubMenuEnums.WRITE.itemName
+            val utilitySubMenuEnums = UtilitySubMenuEnums.values().firstOrNull{
+                it.itemName == selectedMenuName
+            } ?: UtilitySubMenuEnums.COPY_PATH
+            when(utilitySubMenuEnums){
+                UtilitySubMenuEnums.WRITE
                 -> EditorByIntent(
                     currentAppDirPath,
                     selectedScriptName,
@@ -427,17 +428,13 @@ private object UtilitySubMenuDialog {
 //                    selectedScriptName,
 //                    cmdIndexFragment.binding.cmdList
 //                )
-                UtilitySubMenuEnums.DESCRIPTION.itemName
-                -> ScriptFileDescription.show(
+                UtilitySubMenuEnums.RENAME
+                -> FileRenamer.rename(
                     cmdIndexFragment,
-                    ReadText(
-                        currentAppDirPath,
-                        selectedScriptName
-                    ).textToList(),
                     currentAppDirPath,
                     selectedScriptName
                 )
-                UtilitySubMenuEnums.COPY_PATH.itemName
+                UtilitySubMenuEnums.COPY_PATH
                 -> {
                     val shellFilePathByTermux = "${currentAppDirPath}/${selectedScriptName}"
                     val clipboard = context.getSystemService(
@@ -454,7 +451,7 @@ private object UtilitySubMenuDialog {
                     ).show()
                 }
 
-                UtilitySubMenuEnums.COPY_FILE.itemName
+                UtilitySubMenuEnums.COPY_FILE
                 -> CopyFileEvent(
                     cmdIndexFragment,
                     currentAppDirPath,
@@ -496,7 +493,7 @@ private enum class UtilitySubMenuEnums(
     val itemName: String,
     val imageId: Int
 ){
-    DESCRIPTION("Description", R.drawable.icons8_info),
+    RENAME("Rename", R.drawable.icons8_update),
     WRITE("Write", R.drawable.icons8_support),
     COPY_PATH("Copy path", com.termux.shared.R.drawable.ic_copy),
     COPY_FILE("Copy file", R.drawable.icons8_file)

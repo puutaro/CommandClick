@@ -242,7 +242,6 @@ object SetReplaceVariabler {
             settingSectionStart,
             settingSectionEnd,
             onForSetting = false,
-            currentScriptName = mainFannelName
         )
         return makeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,

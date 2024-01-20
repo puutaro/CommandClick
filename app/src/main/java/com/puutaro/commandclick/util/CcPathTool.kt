@@ -30,6 +30,15 @@ object CcPathTool {
         } else fileName
     }
 
+    fun subExtend(
+        fileName: String
+    ): String {
+        val fileRawName = trimAllExtend(
+            fileName
+        )
+        return fileName.removePrefix(fileRawName)
+    }
+
 
     fun makeFannelRawName(
         fannelNameSrc: String

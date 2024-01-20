@@ -19,7 +19,6 @@ object WaitQuizPair {
     private val HIDE_SETTING_VARIABLES = CommandClickScriptVariable.HIDE_SETTING_VARIABLES
     private val SET_VARIABLE_TYPE = CommandClickScriptVariable.SET_VARIABLE_TYPE
     private val SET_REPLACE_VARIABLE = CommandClickScriptVariable.SET_REPLACE_VARIABLE
-    private val SCRIPT_FILE_NAME = CommandClickScriptVariable.SCRIPT_FILE_NAME
     private val EDIT_EXECUTE = CommandClickScriptVariable.EDIT_EXECUTE
     private val notiCmd = "noti"
     private val sendBrdCtCmd = "send-broadcast"
@@ -266,18 +265,6 @@ object WaitQuizPair {
         Pair(
             "Where's monitor dir?",
             "-> ${UsePath.cmdclickMonitorDirPath.replace(UsePath.rootPath, documentDir)}"
-        ),
-        Pair(
-            "How to rename fannel?",
-            "-> Use \"${SCRIPT_FILE_NAME}\" in setting variables"
-        ),
-        Pair(
-            "Where's \"${SCRIPT_FILE_NAME}\"?",
-            "-> \"setting variables section\" in fannel script"
-        ),
-        Pair(
-            "What's \"${SCRIPT_FILE_NAME}\"?",
-            "-> Rename fannel"
         ),
         Pair(
             "How to centrally manage to variable fannel ?",

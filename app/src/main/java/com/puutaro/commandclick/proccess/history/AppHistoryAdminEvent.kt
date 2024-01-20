@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.history
 
 import android.content.SharedPreferences
 import android.widget.Toast
@@ -9,7 +9,6 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 

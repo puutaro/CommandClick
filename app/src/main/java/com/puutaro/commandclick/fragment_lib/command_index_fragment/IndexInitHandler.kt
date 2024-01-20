@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.ConfigFromStartUpFileSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSearchToolbarManager
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.proccess.StartFileMaker
+import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.AssetsFileManager

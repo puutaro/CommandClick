@@ -19,12 +19,12 @@ class SettingButtonHandler(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         settingButtonView: ImageButton?,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ){
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             fragment,
             recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
+//            recordNumToMapNameValueInSettingHolder,
             toolbarButtonBariantForEdit,
             settingButtonView,
             isLongClick,
@@ -172,7 +172,6 @@ class SettingButtonHandler(
             editFragment,
         ).save(
             toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
-            toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
         )
     }
 

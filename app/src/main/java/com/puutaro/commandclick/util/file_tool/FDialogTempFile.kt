@@ -158,7 +158,7 @@ object FDialogTempFile {
         val compFannelConWithEditExecute = compRequireSetting(
             fannelCon,
             isEditExecuteValue,
-            "${editExecuteCmdValName}=${SettingVariableSelects.EditExecuteSelects.NO.name}",
+            "${editExecuteCmdValName}=\"${SettingVariableSelects.EditExecuteSelects.NO.name}\"",
         )
 
         FileSystems.writeFile(

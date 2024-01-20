@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.history
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath

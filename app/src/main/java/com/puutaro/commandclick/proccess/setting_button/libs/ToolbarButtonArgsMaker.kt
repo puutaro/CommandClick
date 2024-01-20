@@ -27,7 +27,7 @@ import java.io.File
 class ToolbarButtonArgsMaker(
     val fragment: Fragment,
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+//    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     val settingButtonView: ImageButton?,
     private val isLongClick: Boolean,
@@ -79,7 +79,6 @@ class ToolbarButtonArgsMaker(
             settingSectionStart,
             settingSectionEnd,
             true,
-            currentScriptFileName
         ).let {
             SetReplaceVariabler.makeSetReplaceVariableMap(
                 it,

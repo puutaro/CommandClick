@@ -70,10 +70,8 @@ object ButtonViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
 
-        val binding = editFragment.binding
         val scriptFileSaver = ScriptFileSaver(
             editFragment,
-            true ,
         )
 
         val currentSetVariableValue = SetVariableTypeValue.makeByReplace(

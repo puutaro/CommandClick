@@ -67,7 +67,6 @@ object CommandClickScriptVariable {
     val EXEC_EDIT_BTN_LONG_PRESS = "execEditBtnLongPress"
     val BEFORE_COMMAND = "beforeCommand"
     val AFTER_COMMAND = "afterCommand"
-    val SCRIPT_FILE_NAME = "scriptFileName"
     val CMDCLICK_SHIBAN = "cmdclickShiban"
     val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
@@ -146,7 +145,6 @@ object CommandClickScriptVariable {
         CMDCLICK_HOME_FANNELS_PATH,
         BEFORE_COMMAND,
         AFTER_COMMAND,
-        SCRIPT_FILE_NAME,
         EXEC_PLAY_BTN_LONG_PRESS,
         EXEC_EDIT_BTN_LONG_PRESS,
         IGNORE_HISTORY_PATHS,
@@ -435,7 +433,6 @@ object CommandClickScriptVariable {
         return """# Table of Contents
             |# $mdDash
             |# * [$settingVariableStr](#${replaceLowerAdnBlankDash(settingVariableStr)})
-            |#  * [$SCRIPT_FILE_NAME](#${replaceLowerAdnBlankDash(SCRIPT_FILE_NAME)})
             |#  * [$SHELL_EXEC_ENV](#${replaceLowerAdnBlankDash(SHELL_EXEC_ENV)})
             |#  * [$UBUNTU_EXEC_MODE](#${replaceLowerAdnBlankDash(UBUNTU_EXEC_MODE)})
             |#  * [$UBUNTU_OUTPUT_FILE](#${replaceLowerAdnBlankDash(UBUNTU_OUTPUT_FILE)})
@@ -482,9 +479,6 @@ object CommandClickScriptVariable {
             |
             |# ## $settingVariableStr
             |# $mdDash
-            |# 
-            |# ### $SCRIPT_FILE_NAME
-            |# Rename script name
             |
             |# ### $SHELL_EXEC_ENV
             |# Set shell exec enviroment
@@ -741,7 +735,6 @@ object CommandClickScriptVariable {
 
     fun makeScriptContents(
         shiban: String,
-        shellScriptName: String,
         onUpdateLastModifyValue: String,
         shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
         execJsOrHtmlPathValue: String = String(),
@@ -789,7 +782,6 @@ object CommandClickScriptVariable {
         |$SET_VARIABLE_TYPE=""
         |$BEFORE_COMMAND=""
         |$AFTER_COMMAND=""
-        |$SCRIPT_FILE_NAME="${shellScriptName}"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
         |
@@ -815,7 +807,6 @@ object CommandClickScriptVariable {
     ) {
         val shellContents =  makeScriptContents(
             shiban,
-            shellScriptName,
             onUpdateLastModifyValue,
             shellOrJs,
             execJsOrHtmlPathValue
@@ -842,7 +833,6 @@ object CommandClickScriptVariable {
 
 
     private fun makeAppDirScriptContents(
-        shellScriptName: String,
         shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT
     ): String{
         val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
@@ -853,10 +843,6 @@ object CommandClickScriptVariable {
         |${makeDescription()}
         |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_END)}
         |
-        |
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
-        |$SCRIPT_FILE_NAME="${shellScriptName}"
-        |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
     """.trimMargin()
             .split("\n")
@@ -878,9 +864,7 @@ object CommandClickScriptVariable {
         )
         if(createFile.isFile) return
         createFile.writeText(
-            makeAppDirScriptContents(
-                scriptScriptName,
-            )
+            makeAppDirScriptContents()
         )
     }
 
@@ -972,7 +956,6 @@ object CommandClickScriptVariable {
     }
 
     private fun makeAutoJsContents(
-        jsScriptName: String,
     ): String {
         val shellOrJs = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
@@ -1008,9 +991,7 @@ object CommandClickScriptVariable {
         |$CMDCLICK_TERMINAL_FONT_ZOOM=""
         |$TERMINAL_FONT_COLOR=""
         |$TERMINAL_COLOR=""
-        |$HIDE_SETTING_VARIABLES="$SCRIPT_FILE_NAME"
         |$HIDE_SETTING_VARIABLES="$ON_UPDATE_LAST_MODIFY"
-        |$SCRIPT_FILE_NAME="${jsScriptName}"
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_END)}
         |
         |
@@ -1042,9 +1023,7 @@ object CommandClickScriptVariable {
                 jsScriptName
             ).isFile
         ) return
-        val shellContents = makeAutoJsContents(
-            jsScriptName
-        )
+        val shellContents = makeAutoJsContents()
         val createFile = File(
             dirPath,
             jsScriptName

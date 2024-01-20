@@ -1,12 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdForEdit
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
@@ -15,21 +11,20 @@ import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVar
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import java.io.File
 
 
 class EditedTextContents(
-    binding: EditFragmentBinding,
     private val editFragment: EditFragment,
-    readSharePreffernceMap: Map<String, String>
 ) {
+
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val currentAppDirPath = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
     private val currentScriptFileName = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_fannel_name.name
     ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
+    private val binding = editFragment.binding
     private val scriptContentsLister = ScriptContentsLister(
         binding.editLinearLayout
     )
@@ -52,21 +47,6 @@ class EditedTextContents(
         }
     }
 
-    fun updateBySettingVariables(
-        editedScriptContentsList: List<String>,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
-    ): List<String> {
-        return if (recordNumToMapNameValueInSettingHolder == null) {
-            editedScriptContentsList
-        } else {
-            scriptContentsLister.update(
-                recordNumToMapNameValueInSettingHolder,
-                editedScriptContentsList,
-                EditTextIdForEdit.SETTING_VARIABLE.id
-            )
-        }
-    }
-
     fun save(
         lastScriptContentsList: List<String>,
     ){
@@ -79,40 +59,16 @@ class EditedTextContents(
             currentScriptFileName
         )
 
-        val updateScriptFileName = makeUpdateScriptFileName(
-            submitScriptContentsList,
-            currentScriptFileName
-        )
-
         FileSystems.writeFile(
             currentAppDirPath,
-            updateScriptFileName,
+            currentScriptFileName,
             submitScriptContentsList.joinToString("\n")
         )
-        if(
-            updateScriptFileName.lowercase()
-            == currentScriptFileName.lowercase()
-        ) {
-            judgeAndUpdateWeekAgoLastModify(
-                submitScriptContentsList
+        judgeAndUpdateWeekAgoLastModify(
+            submitScriptContentsList
 
-            )
-            return
-        }
-        val sharePref =
-            editFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreferenceMethod.putSharePreference(
-            sharePref,
-            mapOf(
-                SharePrefferenceSetting.current_fannel_name.name
-                        to updateScriptFileName
-            )
         )
-        FileSystems.moveFileWithDir(
-            File("$currentAppDirPath/$currentScriptFileName"),
-            File("$currentAppDirPath/$updateScriptFileName"),
-            true
-        )
+
     }
 
     private fun judgeAndUpdateWeekAgoLastModify(
@@ -149,28 +105,5 @@ class EditedTextContents(
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
                 ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
                 )
-    }
-
-    private fun makeUpdateScriptFileName(
-        lastScriptContentsList: List<String>,
-        currentScriptFileName: String
-    ): String {
-        val substituteSettingVariableList = substituteVariableListFromHolder(
-            lastScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-        )
-        val updateScriptFileNameSource = substituteCmdClickVariable(
-            substituteSettingVariableList,
-            CommandClickScriptVariable.SCRIPT_FILE_NAME
-        ) ?: currentScriptFileName
-        val scriptFileSuffix = when(editFragment.languageType){
-            LanguageTypeSelects.SHELL_SCRIPT -> UsePath.SHELL_FILE_SUFFIX
-            else -> UsePath.JS_FILE_SUFFIX
-        }
-        return UsePath.compExtend(
-            updateScriptFileNameSource,
-            scriptFileSuffix
-        )
     }
 }

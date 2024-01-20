@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.history
 
 import android.content.Context
 import android.view.View
@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.history_button.CmdClickHistoryButtonEvent
+import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -20,7 +20,7 @@ object HistoryBottunSwitcher {
         innerView: View,
         terminalFragmentTag: String?,
         historySwitch: String,
-        urlHistoryButtonEvent:UrlHistoryButtonEvent,
+        urlHistoryButtonEvent: UrlHistoryButtonEvent,
         clickType: CLICLTYPE
     ) {
         val readSharePreffernceMap = when(
@@ -50,11 +50,10 @@ object HistoryBottunSwitcher {
             return
         }
 
-        ExistTerminalFragment
-            .how(
-                fragment,
-                terminalFragmentTag,
-            )
+        ExistTerminalFragment.how(
+            fragment,
+            terminalFragmentTag,
+        )
             ?: return
         urlHistoryButtonHandler(
             fragment,
@@ -70,7 +69,7 @@ private fun urlHistoryButtonHandler(
     fragment: androidx.fragment.app.Fragment,
     innerView: View,
     readSharePreffernceMap: Map<String, String>,
-    urlHistoryButtonEvent:UrlHistoryButtonEvent,
+    urlHistoryButtonEvent: UrlHistoryButtonEvent,
 ) {
 
     val urlHistoryOrButtonExecUrlHistory =

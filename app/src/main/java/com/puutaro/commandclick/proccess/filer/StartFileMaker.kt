@@ -1,10 +1,10 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.filer
 
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.util.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems

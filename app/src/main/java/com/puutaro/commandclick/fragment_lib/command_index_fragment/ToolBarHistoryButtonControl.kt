@@ -3,9 +3,9 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.proccess.CLICLTYPE
-import com.puutaro.commandclick.proccess.HistoryBottunSwitcher
-import com.puutaro.commandclick.proccess.UrlHistoryButtonEvent
+import com.puutaro.commandclick.proccess.history.CLICLTYPE
+import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
+import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 

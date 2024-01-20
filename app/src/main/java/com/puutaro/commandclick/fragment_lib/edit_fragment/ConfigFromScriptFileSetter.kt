@@ -260,7 +260,6 @@ object ConfigFromScriptFileSetter {
                 editFragment.settingSectionStart,
                 editFragment.settingSectionEnd,
                 true,
-                currentScriptFileName
             )
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
             recordNumToMapNameValueInSettingHolder,

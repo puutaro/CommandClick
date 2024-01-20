@@ -292,7 +292,7 @@ class JsScript(
                 }
                 else -> valValueSrc
             }
-            "${valName}=${valValue}"
+            "${valName}=\"${valValue}\""
         }.joinToString("\n")
     }
 

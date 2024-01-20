@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess
+package com.puutaro.commandclick.proccess.history
 
 import android.app.Dialog
 import android.content.ClipData
@@ -10,11 +10,16 @@ import android.text.TextWatcher
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ListView
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -22,13 +27,15 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
-
 
 class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
@@ -71,17 +78,17 @@ class UrlHistoryButtonEvent(
             historyButtonInnerViewContext,
         )
         urlHistoryDialog.setContentView(
-            com.puutaro.commandclick.R.layout.url_history_list_view_layout
+            R.layout.url_history_list_view_layout
         )
         val urlHistoryListView = urlHistoryDialog.findViewById<ListView>(
-            com.puutaro.commandclick.R.id.url_history_list_view
+            R.id.url_history_list_view
         )
         val urlHistoryListViewLinearParams =
             urlHistoryListView.layoutParams as LinearLayout.LayoutParams
         urlHistoryListViewLinearParams.weight = listLinearWeight
         val urlHistoryList = makeUrlHistoryList()
         val searchText = urlHistoryDialog.findViewById<EditText>(
-            com.puutaro.commandclick.R.id.url_history_search_edit_text
+            R.id.url_history_search_edit_text
         )
         val searchTextLinearParams =
             searchText.layoutParams as LinearLayout.LayoutParams
@@ -89,7 +96,7 @@ class UrlHistoryButtonEvent(
 
         val urlHistoryDisplayListAdapter = UrlHistoryAdapter(
             historyButtonInnerView.context,
-            com.puutaro.commandclick.R.layout.url_history_list_view_adapter_layout,
+            R.layout.url_history_list_view_adapter_layout,
             urlHistoryList.toMutableList()
         )
         urlHistoryListView.adapter = urlHistoryDisplayListAdapter
@@ -451,7 +458,8 @@ class UrlHistoryButtonEvent(
         selectedLine: String?
     ){
         val clipboard = listSelectedView.context?.getSystemService(
-            Context.CLIPBOARD_SERVICE) as ClipboardManager
+            Context.CLIPBOARD_SERVICE
+        ) as ClipboardManager
         val clip: ClipData = ClipData.newPlainText(
             "url",
             selectedLine
@@ -498,16 +506,3 @@ class UrlHistoryButtonEvent(
         urlHistoryAdapter.notifyDataSetChanged()
     }
 }
-
-private val mainMenuGroupId = 70000
-
-private enum class UrlHistoryMenuEnums(
-    val groupId: Int,
-    val itemId: Int,
-    val order: Int,
-    val itemName: String
-) {
-    DELETE(mainMenuGroupId, 70100, 1, "delete"),
-    COPY_URL(mainMenuGroupId, 70200, 2, "copy_url"),
-}
-

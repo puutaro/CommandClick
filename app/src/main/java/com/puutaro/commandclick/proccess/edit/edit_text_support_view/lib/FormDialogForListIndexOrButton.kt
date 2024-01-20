@@ -22,7 +22,6 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
@@ -264,24 +263,6 @@ class FormDialogForListIndexOrButton(
                 parentDirPath,
                 selectedScriptName,
                 updateVirtualJsContentsList.joinToString("\n")
-            )
-            val updateScriptFileName = CommandClickVariables.substituteCmdClickVariable(
-                updateVirtualJsContentsList,
-                CommandClickScriptVariable.SCRIPT_FILE_NAME
-            )
-            if(
-                updateScriptFileName == selectedScriptName
-            ) {
-                terminalViewModel.onDialog = false
-                return@setOnClickListener
-            }
-            FileSystems.copyFile(
-                "${parentDirPath}/${selectedScriptName}",
-                "${parentDirPath}/${updateScriptFileName}",
-            )
-            FileSystems.removeFiles(
-                parentDirPath,
-                selectedScriptName,
             )
             terminalViewModel.onDialog = false
         }
