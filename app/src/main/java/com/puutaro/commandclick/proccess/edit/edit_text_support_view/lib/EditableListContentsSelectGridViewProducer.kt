@@ -16,7 +16,6 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getElsbMap
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getLimitNum
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getListPath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.getSelectJsPath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
@@ -51,9 +50,9 @@ object EditableListContentsSelectGridViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = getListPath(
-            elcbMap,
-        )
+        val listContentsFilePath = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
         val gridButtonView = Button(context)
         gridButtonView.text = gridButtonLabel
         ButtonSetter.set(
@@ -164,9 +163,9 @@ object EditableListContentsSelectGridViewProducer {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-        val listContentsFilePath = getListPath(
-            elcbMap,
-        )
+        val listContentsFilePath = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
         val listLimit = getLimitNum(
             elcbMap,
             defaultListLimit,

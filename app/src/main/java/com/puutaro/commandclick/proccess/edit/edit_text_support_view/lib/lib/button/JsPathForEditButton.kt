@@ -35,7 +35,7 @@ object JsPathForEditButton {
         } ?: return
         when(jsPathMacro){
             JsPathMacroForEditButton.ICON_SELECT_BOX -> {
-                ExecJsScriptInEdit.execJsCon(
+                ExecJsScriptInEdit.execJsConForEdit(
                     editFragment,
                     AssetsFileManager.readFromAssets(
                         editFragment.context,

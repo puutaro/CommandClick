@@ -6,6 +6,7 @@ import android.widget.*
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.setInitMarkToListContents
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
@@ -47,24 +48,32 @@ object EditableListContentsSelectSpinnerViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
-            elcbMap,
-        )
+        when(currentFragment){
+            is EditFragment -> currentFragment.listConSelectBoxMapList.add(elcbMap)
+        }
+        val listContentsFilePath =
+            elcbMap?.get(
+                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name)
+                ?: String()
         val listLimit = ListContentsSelectSpinnerViewProducer.getLimitNum(
             elcbMap,
             defaultListLimit
+        )
+        ListContentsSelectSpinnerViewProducer.compList(
+            elcbMap,
+            listContentsFilePath,
         )
         val selectJsPath = ListContentsSelectSpinnerViewProducer.getSelectJsPath(
             elcbMap,
             currentAppDirPath,
             scriptName,
         )
-        val initMark = ListContentsSelectSpinnerViewProducer.getInitMarkPath(
-            elcbMap,
-        )
-        val initValue = ListContentsSelectSpinnerViewProducer.getInitValuePath(
-            elcbMap
-        )
+        val initMark = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.initMark.name)
+            ?: String()
+        val initValue = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.initValue.name)
+            ?: String()
         setInitMarkToListContents(
             elcbMap,
             currentAppDirPath,

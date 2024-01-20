@@ -3,6 +3,8 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.ReadText
 import java.io.File
@@ -19,35 +21,9 @@ class JsListSelect(
         targetListFilePath: String,
         itemText: String
     ) {
-        if(
-            itemText == escapeCharHyphen
-            || itemText.isEmpty()
-        ) return
-        val listFileObj = File(targetListFilePath)
-        val searchListDirPath = listFileObj.parent
-            ?: return
-        val searchListFileName = listFileObj.name
-        FileSystems.createDirs(searchListDirPath)
-        val listContentsList = ReadText(
-            searchListDirPath,
-            searchListFileName
-        ).textToList()
-        val findSearchText = listContentsList.find {
-            it == itemText
-        }
-        val lastListContentsSourceList = makeUpdatedListCon(
-            findSearchText,
-            listContentsList,
+        ListContentsSelectBoxTool.updateListFileCon(
+            targetListFilePath,
             itemText
-        )
-        val lastListContents = lastListContentsSourceList.filter {
-            it.isNotEmpty()
-                    || it != escapeCharHyphen
-        }.joinToString("\n")
-        FileSystems.writeFile(
-            searchListDirPath,
-            searchListFileName,
-            lastListContents
         )
     }
 
@@ -56,26 +32,9 @@ class JsListSelect(
         targetListFilePath: String,
         itemTextListCon: String
     ){
-        if(
-            itemTextListCon.isEmpty()
-        ) return
-        val itemTextList = itemTextListCon.split("\n")
-        val targetListFilePathObj = File(targetListFilePath)
-        val targetListParentDirPath = targetListFilePathObj.parent
-            ?: return
-        val targetListFileName = targetListFilePathObj.name
-        val currentListConList = ReadText(
-            targetListParentDirPath,
-            targetListFileName
-        ).textToList()
-        val registerItemList = itemTextList.filter {
-            !currentListConList.contains(it)
-        }
-        val registerListConList = registerItemList + currentListConList
-        FileSystems.writeFile(
-            targetListParentDirPath,
-            targetListFileName,
-            registerListConList.joinToString("\n")
+        ListContentsSelectBoxTool.compListFile(
+            targetListFilePath,
+            itemTextListCon
         )
     }
 
@@ -221,20 +180,5 @@ class JsListSelect(
             replaceTargetVariable,
             recentItem,
         )
-    }
-
-    private fun makeUpdatedListCon(
-        findSearchText: String?,
-        listContentsList: List<String>,
-        itemText: String
-    ): List<String> {
-        if(
-            !findSearchText.isNullOrEmpty()
-        ) {
-            return listOf(itemText) + listContentsList.filter {
-                it != itemText
-            }
-        }
-        return listOf(itemText) + listContentsList
     }
 }

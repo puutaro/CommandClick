@@ -46,9 +46,9 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
-            elcbMap,
-        )
+        val listContentsFilePath = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
@@ -144,9 +144,9 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
-            elcbMap,
-        )
+        val listContentsFilePath = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
         val listLimit = ListContentsSelectSpinnerViewProducer.getLimitNum(
             elcbMap,
             defaultListLimit,

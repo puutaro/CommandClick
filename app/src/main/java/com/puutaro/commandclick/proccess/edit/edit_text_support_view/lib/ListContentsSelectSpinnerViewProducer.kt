@@ -7,8 +7,10 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
@@ -45,12 +47,17 @@ object ListContentsSelectSpinnerViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = getListPath(
-            elcbMap,
-        )
+        when(currentFragment){
+            is EditFragment -> currentFragment.listConSelectBoxMapList.add(elcbMap)
+        }
+        val listContentsFilePath = elcbMap?.get(ListContentsEditKey.listPath.name) ?: String()
         val listLimit = getLimitNum(
             elcbMap,
             defaultListLimit,
+        )
+        compList(
+            elcbMap,
+            listContentsFilePath,
         )
 
         val selectJsPath = getSelectJsPath(
@@ -143,40 +150,39 @@ object ListContentsSelectSpinnerViewProducer {
         return insertSpinner
     }
 
-    fun getListPath(
+    fun compList(
         elcbMap: Map<String, String>?,
-    ): String {
-        return elcbMap?.get(ListContentsEditKey.listPath.name)
-            ?.let {
-                if(
-                    it.isEmpty()
-                ) return@let String()
-                it
-            } ?: String()
-    }
-
-    fun getInitMarkPath(
-        elcbMap: Map<String, String>?,
-    ): String? {
-        return elcbMap?.get(ListContentsEditKey.initMark.name)
-            ?.let {
-                if(
-                    it.isEmpty()
-                ) return@let null
-                it
+        targetListFilePath: String?,
+    ){
+        if(
+            targetListFilePath.isNullOrEmpty()
+        ) return
+        val filePrefix = "file://"
+        val separator = "&"
+        val compListOneLineCon =
+            elcbMap?.get(ListContentsEditKey.compList.name)
+        if(
+            compListOneLineCon.isNullOrEmpty()
+        ) return
+        val itemTextListCon = when(compListOneLineCon.startsWith(filePrefix)){
+            true -> {
+                val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))
+                val compListFileParentDirPath = compListFilePathObj.parent
+                    ?: return
+                ReadText(
+                    compListFileParentDirPath,
+                    compListFilePathObj.name
+                ).readText()
             }
-    }
-
-    fun getInitValuePath(
-        elcbMap: Map<String, String>?,
-    ): String {
-        return elcbMap?.get(ListContentsEditKey.initValue.name)
-            ?.let {
-                if(
-                    it.isEmpty()
-                ) return@let String()
-                it
-            }?: String()
+            else -> compListOneLineCon.replace(
+                separator,
+                "\n"
+            )
+        }
+        ListContentsSelectBoxTool.compListFile(
+            targetListFilePath,
+            itemTextListCon
+        )
     }
 
     fun getLimitNum(
@@ -251,20 +257,22 @@ object ListContentsSelectSpinnerViewProducer {
         limitNum,
         selectJsPath,
         initMark,
-        initValue
+        initValue,
+        saveTag,
+        saveFilterShellPath,
+        saveValName,
+        compList,
     }
 
     fun setInitMarkToListContents(
         elcbMap: Map<String, String>?,
         currentAppDirPath: String,
     ){
-        val listContentsFilePath = getListPath(
-            elcbMap
-        )
+        val listContentsFilePath = elcbMap?.get(ListContentsEditKey.listPath.name)
         if(
-            listContentsFilePath.isEmpty()
+            listContentsFilePath.isNullOrEmpty()
         ) return
-        val deleteStr = getInitMarkPath(elcbMap)
+        val deleteStr = elcbMap.get(ListContentsEditKey.initMark.name)
         if(
             deleteStr.isNullOrEmpty()
         ) return

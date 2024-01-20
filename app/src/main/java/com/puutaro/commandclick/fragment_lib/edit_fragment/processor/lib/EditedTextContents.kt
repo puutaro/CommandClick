@@ -99,11 +99,9 @@ class EditedTextContents(
                 currentScriptFileName,
             )
         }?.split("\n")
-        return !(
-                substituteCmdClickVariable(
+        return substituteCmdClickVariable(
                     settingVariableList,
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
-                ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
-                )
+                ) != SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
     }
 }

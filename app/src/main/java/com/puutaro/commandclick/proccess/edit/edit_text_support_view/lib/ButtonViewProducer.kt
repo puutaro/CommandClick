@@ -21,6 +21,8 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Gri
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
@@ -45,7 +47,7 @@ object ButtonViewProducer {
     private const val blankString = "cmdclickBlank"
     private const val buttoLabelThis = "this"
     private var consecutiveJob: Job? = null
-    val doubleColon = "::"
+    const val doubleColon = "::"
     private val backStackMacro = doubleColon +
             SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
             doubleColon
@@ -219,11 +221,21 @@ object ButtonViewProducer {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
         )
+
+        val currentButtonTag = buttonMap?.get(
+            ButtonEditKey.tag.name
+        )
+
         scriptFileSaver.save(
             recordNumToMapNameValueInCommandHolder,
         )
+        saveListContents(editFragment, currentButtonTag)
+        simpleJsExecutor(editParameters, buttonMap)
         val execCmdEditable = insertEditText.text
-
+        val isExecCmd = !buttonMap?.get(
+            ButtonEditKey.cmd.name
+        ).isNullOrEmpty()
+        if(!isExecCmd) return
         val cmdPrefix = getCmdPrefix(
             buttonMap
         )
@@ -241,6 +253,9 @@ object ButtonViewProducer {
             currentScriptPath,
             setReplaceVariableMap,
         )
+        if(
+            innerExecCmd.isEmpty()
+        ) return
 
         val onTermOutMacro = innerExecCmd.contains(termOutMacro)
         if(onTermOutMacro) {
@@ -355,6 +370,9 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
         innerExecCmd: String,
     ){
+        if(
+            innerExecCmd.isEmpty()
+        ) return
         val substituteSettingVariableList =
             CommandClickVariables.substituteVariableListFromHolder(
                 editFragment.currentScriptContentsList,
@@ -590,6 +608,69 @@ object ButtonViewProducer {
         }
     }
 
+    private fun saveListContents(
+        editFragment: EditFragment,
+        currentButtonTag: String?
+    ){
+        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
+        if(
+            currentButtonTag.isNullOrEmpty()
+        ) return
+        val saveTagKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTag.name
+        val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
+            it?.get(saveTagKey) == currentButtonTag
+        }
+        if(
+            listContentsMap.isNullOrEmpty()
+        ) return
+        val saveTargetListFilePath =
+            listContentsMap.get(
+                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+            )
+        if(
+            saveTargetListFilePath.isNullOrEmpty()
+        ) return
+        val saveValName =
+            listContentsMap.get(
+                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveValName.name
+            )
+        if(
+            saveValName.isNullOrEmpty()
+        ) return
+        val saveFilterShellPath =
+            listContentsMap.get(
+                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveFilterShellPath.name
+            )
+        val saveValue = EditVariableName.getText(
+            editFragment,
+            saveValName
+        )
+        val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
+            true -> return
+            else -> {
+                val saveFilterShellPathObj = File(saveFilterShellPath)
+                val shellParentDirPath = saveFilterShellPathObj.parent
+                    ?: return
+                editFragment.busyBoxExecutor?.getCmdOutput(
+                    ReadText(
+                        shellParentDirPath,
+                        saveFilterShellPathObj.name
+                    ).readText().replace(
+                        saveTextCon,
+                        saveValue
+                    )
+                )
+            }
+        }
+        if(
+            filterSaveValue.isNullOrEmpty()
+        ) return
+        ListContentsSelectBoxTool.updateListFileCon(
+            saveTargetListFilePath,
+            filterSaveValue
+        )
+    }
+
     private fun execListAddForSetting(
         editFragment: EditFragment,
         insertEditText: EditText,
@@ -754,6 +835,26 @@ object ButtonViewProducer {
         }
     }
 
+    private fun simpleJsExecutor(
+        editParameters: EditParameters,
+        buttonMap: Map<String, String>?
+    ){
+        val currentEditTextConMark = "\${CMDCLICK_CURRENT_TEXT_CON}"
+        val editFragment = editParameters.currentFragment
+        if(editFragment !is EditFragment) return
+        val currentEditTextCon = editParameters.currentVariableName?.let {
+            EditVariableName.getText(editFragment, it)
+        } ?: String()
+        val oneLineJsCon = buttonMap?.get(
+            ButtonEditKey.oneLineJs.name
+        )
+        if(oneLineJsCon.isNullOrEmpty()) return
+        ExecJsScriptInEdit.execJsConForEdit(
+            editFragment,
+            oneLineJsCon.replace(currentEditTextConMark, currentEditTextCon)
+        )
+    }
+
     private fun makeArgs(
         execCmdReplaceBlankList: List<String>,
     ): String {
@@ -879,7 +980,9 @@ object ButtonViewProducer {
         cmd,
         label,
         isConsec,
-        disableKeyboardHidden
+        disableKeyboardHidden,
+        tag,
+        oneLineJs,
     }
 
     object SET_F_OPTION_MAP_KEY {

@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.util.FileSystems
@@ -92,7 +93,8 @@ object WebViewClientSetter {
                 request: WebResourceRequest?
             ): WebResourceResponse? {
                 if(
-                    terminalFragment.onAdBlock != SettingVariableSelects.OnAdblockSelects.ON.name
+                    terminalFragment.onAdBlock !=
+                    SettingVariableSelects.OnAdblockSelects.ON.name
                 ) return super.shouldInterceptRequest(view, request)
                 val empty3 = ByteArrayInputStream("".toByteArray())
                 val blockListCon = terminalViewModel.blockListCon
@@ -136,6 +138,9 @@ object WebViewClientSetter {
                 }
                 super.onPageFinished(webview, url)
                 CoroutineScope(Dispatchers.Main).launch{
+                    if(
+                        FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
+                    ) return@launch
                     webview?.url?.let {
                         ScrollPosition.execScroll(
                             terminalFragment,
@@ -147,6 +152,9 @@ object WebViewClientSetter {
                 val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
                 terminalFragment.onPageFinishedCoroutineJob = CoroutineScope(Dispatchers.IO).launch {
                     withContext(Dispatchers.IO) {
+                        if(
+                            FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
+                        ) return@withContext
                         FileSystems.writeFile(
                             appUrlSystemDirPath,
                             UsePath.urlLoadFinished,

@@ -145,7 +145,7 @@ class CommandIndexFragment: Fragment() {
         readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
-        FDialogTempFile.remove(
+        FDialogTempFile.removeByCoroutine(
             readSharePreffernceMap
         )
 

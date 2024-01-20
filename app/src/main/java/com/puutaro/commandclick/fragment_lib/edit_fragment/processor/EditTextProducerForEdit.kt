@@ -82,6 +82,7 @@ class EditTextProducerForEdit(
         onSettingEdit: Boolean = false
     ) {
         editViewModel.variableNameToEditTextIdMap.clear()
+        editFragment.listConSelectBoxMapList.clear()
         when (onSettingEdit) {
             true -> {
                 val setVariableListForSettingHolder =

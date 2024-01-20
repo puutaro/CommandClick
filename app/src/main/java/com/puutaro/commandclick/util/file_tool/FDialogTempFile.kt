@@ -54,33 +54,36 @@ object FDialogTempFile {
     }
 
 
-    fun remove(
+    fun removeByCoroutine(
         readSharePreferenceMap: Map<String, String>
     ){
         CoroutineScope(Dispatchers.IO).launch {
-            val currentAppDirPath = withContext(Dispatchers.IO) {
-                SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreferenceMap,
-                    SharePrefferenceSetting.current_app_dir
-                )
-            }
-            val currentFannelName = withContext(Dispatchers.IO) {
-                SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreferenceMap,
-                    SharePrefferenceSetting.current_fannel_name
-                )
-            }
-            val isFDialogFannel = howFDialogFile(currentFannelName)
-            if (isFDialogFannel) return@launch
-            withContext(Dispatchers.IO) {
-                removeFDialogFile(
-                    currentAppDirPath,
-                )
-            }
-            withContext(Dispatchers.IO) {
-                removeFDialogDir(currentAppDirPath,)
+            withContext(Dispatchers.IO){
+                remove(readSharePreferenceMap)
             }
         }
+    }
+
+    fun remove(
+        readSharePreferenceMap: Map<String, String>
+    ){
+        val currentAppDirPath =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreferenceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+
+        val currentFannelName =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreferenceMap,
+                SharePrefferenceSetting.current_fannel_name
+            )
+
+        val isFDialogFannel =
+            howFDialogFile(currentFannelName)
+        if (isFDialogFannel) return
+        removeFDialogFile(currentAppDirPath,)
+        removeFDialogDir(currentAppDirPath,)
     }
 
     private fun removeFDialogFile(
@@ -160,11 +163,23 @@ object FDialogTempFile {
             isEditExecuteValue,
             "${editExecuteCmdValName}=\"${SettingVariableSelects.EditExecuteSelects.NO.name}\"",
         )
+        val onUpdateLastModifyCmdValName = CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+        val onUpdateLastModifyValue = CommandClickVariables.substituteCmdClickVariable(
+            settingVariableList,
+            onUpdateLastModifyCmdValName,
+        )?.trim()
+        val isOnUpdateLastModifyValue = !onUpdateLastModifyValue.isNullOrEmpty()
+        val compFannelConWithOnUpdateLastModify = compRequireSetting(
+            fannelCon,
+            isOnUpdateLastModifyValue,
+            "${onUpdateLastModifyCmdValName}=\"${SettingVariableSelects.OnUpdateLastModifySelects.OFF.name}\"",
+        )
+
 
         FileSystems.writeFile(
             currentAppDirPath,
             destiFDialogFannelName,
-            compFannelConWithEditExecute
+            compFannelConWithOnUpdateLastModify
         )
         copyToFdialogDir(
             currentAppDirPath,

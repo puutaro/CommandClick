@@ -38,6 +38,8 @@ import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
+import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.qr.QrScanner
@@ -754,6 +756,7 @@ object JsPathHandler {
         )
 
         fun execForOk() {
+            val buttonTag = SaveTagForListContents.OK.tag
             scriptFileSaver.save(
                 recordNumToMapNameValueInCommandHolder,
             )
@@ -776,6 +779,10 @@ object JsPathHandler {
                 isCmdEditExecute -> {
                     Keyboard.hiddenKeyboardForFragment(
                         editFragment
+                    )
+                    ListContentsSelectBoxTool.saveListContents(
+                        editFragment,
+                        buttonTag
                     )
                     TerminalShowByTerminalDo.show(
                         editFragment,

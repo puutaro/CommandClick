@@ -44,6 +44,8 @@ import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -81,6 +83,7 @@ class EditFragment: Fragment() {
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
+    var busyBoxExecutor: BusyboxExecutor? = null
     var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
@@ -121,6 +124,7 @@ class EditFragment: Fragment() {
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
     var isInstallFannelForListIndex = false
+    val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -157,7 +161,7 @@ class EditFragment: Fragment() {
             EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharePreffernceMap =
             EditFragmentArgs.getSrcReadSharePreference(arguments)
-        FDialogTempFile.remove(readSharePreffernceMap)
+        FDialogTempFile.removeByCoroutine(readSharePreffernceMap)
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
@@ -288,6 +292,12 @@ class EditFragment: Fragment() {
         editModeHandler.execByHowFullEdit()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
+        context?.let {
+            busyBoxExecutor = BusyboxExecutor(
+                it,
+                UbuntuFiles(it)
+            )
+        }
 //        val terminalViewModel: TerminalViewModel by activityViewModels()
         val listener = context as? OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {

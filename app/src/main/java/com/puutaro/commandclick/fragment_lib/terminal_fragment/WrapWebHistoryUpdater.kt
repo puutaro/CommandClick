@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.QuoteTool
@@ -28,6 +29,9 @@ object WrapWebHistoryUpdater {
         webViewUrl: String?,
         previousUrl: String?
     ){
+        if(
+            FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
+        ) return
         if(
             (previousUrl?.length == webViewUrl?.length
                     && webViewUrl?.contains("/maps/") == true

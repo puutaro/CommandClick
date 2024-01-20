@@ -29,7 +29,7 @@ object ExecJsScriptInEdit {
             return
         }
         val context = editFragment.context
-        execJsUrl(
+        execJsUrlForEdit(
             editFragment,
             JavaScriptLoadUrl.make(
                 context,
@@ -38,19 +38,20 @@ object ExecJsScriptInEdit {
         )
     }
 
-    fun execJsCon(
+    fun execJsConForEdit(
         editFragment: EditFragment,
         jsConSrc: String,
     ){
-        execJsUrl(
+        val jsCon = JavaScriptLoadUrl.makeFromContents(
+            jsConSrc.split("\n")
+        )
+        execJsUrlForEdit(
             editFragment,
-            JavaScriptLoadUrl.makeFromContents(
-                jsConSrc.split("\n")
-            )
+            jsCon
         )
     }
 
-    private fun execJsUrl(
+    private fun execJsUrlForEdit(
         editFragment: EditFragment,
         jsCon: String?
     ){

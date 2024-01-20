@@ -50,9 +50,9 @@ object DragSortListViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
-            elsbMap,
-        )
+        val listContentsFilePath = elsbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()

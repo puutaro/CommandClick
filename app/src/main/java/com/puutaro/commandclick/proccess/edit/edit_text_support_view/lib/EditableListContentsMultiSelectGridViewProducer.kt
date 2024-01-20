@@ -42,9 +42,9 @@ object EditableListContentsMultiSelectGridViewProducer {
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = ListContentsSelectSpinnerViewProducer.getListPath(
-            elcbMap,
-        )
+        val listContentsFilePath = elcbMap?.get(
+            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        ) ?: String()
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
