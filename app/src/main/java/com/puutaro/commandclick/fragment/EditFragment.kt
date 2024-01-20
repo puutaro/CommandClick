@@ -49,7 +49,6 @@ import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -289,12 +288,12 @@ class EditFragment: Fragment() {
         editModeHandler.execByHowFullEdit()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
-        val terminalViewModel: TerminalViewModel by activityViewModels()
+//        val terminalViewModel: TerminalViewModel by activityViewModels()
         val listener = context as? OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
-            if(terminalViewModel.onDialog) return@setEventListener
+//            if(terminalViewModel.onDialog) return@setEventListener
             binding.editTitleLinearlayout.isVisible = !isOpen
             val linearLayoutParam =
                 binding.editFragment.layoutParams as LinearLayout.LayoutParams

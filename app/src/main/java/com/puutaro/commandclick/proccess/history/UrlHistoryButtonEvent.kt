@@ -166,6 +166,7 @@ class UrlHistoryButtonEvent(
         urlHistoryListView.setOnItemClickListener {
                 parent, View, pos, id
             ->
+            terminalViewModel.onDialog = false
             val filteredUrlHistoryTitle =
                 makeSearchFilteredUrlHistoryList(
                     searchText
@@ -288,7 +289,7 @@ class UrlHistoryButtonEvent(
                 ?: return@setOnItemLongClickListener true
             val inflater = popup.menuInflater
             inflater.inflate(
-                com.puutaro.commandclick.R.menu.history_admin_menu,
+                R.menu.history_admin_menu,
                 popup.menu
             )
             popup.menu.add(
@@ -307,6 +308,7 @@ class UrlHistoryButtonEvent(
                 )
             popup.setOnMenuItemClickListener {
                     menuItem ->
+                terminalViewModel.onDialog = false
                 when(menuItem.itemId){
                     UrlHistoryMenuEnums.COPY_URL.itemId -> {
                         Toast.makeText(

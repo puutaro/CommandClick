@@ -37,17 +37,21 @@ object WrapFragmentManager {
         val fragmentManagerForActivity = FragmentManagerForActivity(
             supportFragmentManager
         )
-        if(isKeyboardShowing){
-            fragmentManagerForActivity.hideFragment<TerminalFragment>(
-                terminalFragmentTag
-            )
-            fragmentManagerForActivity.commit()
-            return
+        when (isKeyboardShowing) {
+            true -> {
+                fragmentManagerForActivity.hideFragment<TerminalFragment>(
+                    terminalFragmentTag
+                )
+                fragmentManagerForActivity.commit()
+            }
+
+            else -> {
+                fragmentManagerForActivity.showFragment<TerminalFragment>(
+                    terminalFragmentTag
+                )
+                fragmentManagerForActivity.commit()
+            }
         }
-        fragmentManagerForActivity.showFragment<TerminalFragment>(
-            terminalFragmentTag
-        )
-        fragmentManagerForActivity.commit()
     }
 
 

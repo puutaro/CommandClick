@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment
 
-import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -56,7 +55,6 @@ class CommandIndexFragment: Fragment() {
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null
-    var installFannelDialog: Dialog? = null
     var savedEditTextContents = String()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
@@ -90,6 +88,7 @@ class CommandIndexFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         fileGetterForSettingButton = FileGetterForSettingButton(this)
         val terminalViewModel: TerminalViewModel by activityViewModels()
+        terminalViewModel.onDialog = false
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         val startUpPref = activity?.getPreferences(Context.MODE_PRIVATE)
@@ -188,9 +187,9 @@ class CommandIndexFragment: Fragment() {
             if(
                 !this.isVisible
             ) return@setEventListener
-            if(
-                terminalViewModel.onDialog
-            ) return@setEventListener
+//            if(
+//                terminalViewModel.onDialog
+//            ) return@setEventListener
             val linearLayoutParam =
                 binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
             val cmdIndexFragmentWeight = linearLayoutParam.weight
@@ -272,7 +271,6 @@ class CommandIndexFragment: Fragment() {
         savedEditTextContents = binding.cmdSearchEditText.text.toString()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = binding.cmdSearchEditText.hasFocus()
-        installFannelDialog?.dismiss()
         showTerminalJobWhenReuse?.cancel()
         BroadcastRegister.unregisterBroadcastReceiver(
             this,
@@ -285,7 +283,6 @@ class CommandIndexFragment: Fragment() {
         super.onResume()
         TerminalShower.show(this)
         EditTextWhenReuse.focus(this)
-        installFannelDialog?.dismiss()
         activity?.volumeControlStream = AudioManager.STREAM_MUSIC
         BroadcastRegister.registerBroadcastReceiverMultiActions(
             this,
