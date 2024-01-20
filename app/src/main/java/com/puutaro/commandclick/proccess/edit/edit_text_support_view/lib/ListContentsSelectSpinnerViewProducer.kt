@@ -258,7 +258,7 @@ object ListContentsSelectSpinnerViewProducer {
         selectJsPath,
         initMark,
         initValue,
-        saveTag,
+        saveTags,
         saveFilterShellPath,
         saveValName,
         compList,

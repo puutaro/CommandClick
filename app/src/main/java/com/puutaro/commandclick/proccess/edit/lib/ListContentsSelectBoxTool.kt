@@ -19,12 +19,12 @@ object ListContentsSelectBoxTool {
         if(
             currentButtonTag.isNullOrEmpty()
         ) return
-        val saveTagKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTag.name
+        val saveTagsKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTags.name
         val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
             if(
                 it.isNullOrEmpty()
             ) return@firstOrNull false
-            val saveTagKeyList = it.get(saveTagKey)?.split(buttonTagSeparator)
+            val saveTagKeyList = it.get(saveTagsKey)?.split(buttonTagSeparator)
             if(
                 saveTagKeyList.isNullOrEmpty()
             ) return@firstOrNull false

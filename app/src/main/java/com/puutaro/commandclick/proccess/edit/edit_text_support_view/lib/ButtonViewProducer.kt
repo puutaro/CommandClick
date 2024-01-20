@@ -75,7 +75,6 @@ object ButtonViewProducer {
         val scriptFileSaver = ScriptFileSaver(
             editFragment,
         )
-
         val currentSetVariableValue = SetVariableTypeValue.makeByReplace(
             editParameters
         )
@@ -102,12 +101,13 @@ object ButtonViewProducer {
             insertButton
         )
 //        insertTextView.isVisible = isInsertTextViewVisible
-
+        val currentVariableName = editParameters.currentVariableName
         when(getIsConsec(buttonMap)) {
             true -> buttonTouchListener(
                 insertButton,
                 editFragment,
                 insertEditText,
+                currentVariableName,
                 scriptFileSaver,
                 editParameters,
                 buttonMap,
@@ -117,6 +117,7 @@ object ButtonViewProducer {
                     insertButton,
                     editFragment,
                     insertEditText,
+                    currentVariableName,
                     scriptFileSaver,
                     editParameters,
                     buttonMap,
@@ -130,6 +131,7 @@ object ButtonViewProducer {
         insertButton: Button,
         editFragment: EditFragment,
         insertEditText: EditText,
+        currentVariableName: String?,
         scriptFileSaver: ScriptFileSaver,
         editParameters: EditParameters,
         buttonMap: Map<String, String>?,
@@ -139,6 +141,7 @@ object ButtonViewProducer {
             execButtonClickEvent(
                 editFragment,
                 insertEditText,
+                currentVariableName,
                 scriptFileSaver,
                 editParameters,
                 buttonMap,
@@ -151,6 +154,7 @@ object ButtonViewProducer {
         insertButton: Button,
         editFragment: EditFragment,
         insertEditText: EditText,
+        currentVariableName: String?,
         scriptFileSaver: ScriptFileSaver,
         editParameters: EditParameters,
         buttonMap: Map<String, String>?,
@@ -169,6 +173,7 @@ object ButtonViewProducer {
                                     execButtonClickEvent(
                                         editFragment,
                                         insertEditText,
+                                        currentVariableName,
                                         scriptFileSaver,
                                         editParameters,
                                         buttonMap,
@@ -203,6 +208,7 @@ object ButtonViewProducer {
     private fun execButtonClickEvent(
         editFragment: EditFragment,
         insertEditText: EditText,
+        currentVariableName: String?,
         scriptFileSaver: ScriptFileSaver,
         editParameters: EditParameters,
         buttonMap: Map<String, String>?,
@@ -230,7 +236,11 @@ object ButtonViewProducer {
             recordNumToMapNameValueInCommandHolder,
         )
         saveListContents(editFragment, currentButtonTag)
-        simpleJsExecutor(editParameters, buttonMap)
+        simpleJsExecutor(
+            currentVariableName,
+            editParameters,
+            buttonMap
+        )
         val execCmdEditable = insertEditText.text
         val isExecCmd = !buttonMap?.get(
             ButtonEditKey.cmd.name
@@ -616,9 +626,9 @@ object ButtonViewProducer {
         if(
             currentButtonTag.isNullOrEmpty()
         ) return
-        val saveTagKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTag.name
+        val saveTagsKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTags.name
         val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
-            it?.get(saveTagKey) == currentButtonTag
+            it?.get(saveTagsKey) == currentButtonTag
         }
         if(
             listContentsMap.isNullOrEmpty()
@@ -846,26 +856,32 @@ object ButtonViewProducer {
     }
 
     private fun simpleJsExecutor(
+        currentVariableName: String?,
         editParameters: EditParameters,
         buttonMap: Map<String, String>?
     ){
-        val currentEditTextConMark = "\${CMDCLICK_CURRENT_TEXT_CON}"
+        val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
         val editFragment = editParameters.currentFragment
         if(editFragment !is EditFragment) return
-        val currentEditTextCon = editParameters.currentVariableName?.let {
+        val currentEditTextCon = currentVariableName?.let {
             EditVariableName.getText(editFragment, it)
         } ?: String()
         val oneLineJsCon = buttonMap?.get(
             ButtonEditKey.oneLineJs.name
         )
-        if(oneLineJsCon.isNullOrEmpty()) return
+        if(
+            oneLineJsCon.isNullOrEmpty()
+        ) return
         keyboardHide(
             editFragment,
             buttonMap
         )
         ExecJsScriptInEdit.execJsConForEdit(
             editFragment,
-            oneLineJsCon.replace(currentEditTextConMark, currentEditTextCon)
+            oneLineJsCon.replace(
+                currentEditTextConMark,
+                currentEditTextCon
+            )
         )
     }
 
