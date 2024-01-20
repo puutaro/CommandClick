@@ -56,7 +56,6 @@ object CommandClickScriptVariable {
     val UBUNTU_OUTPUT_FILE = "ubuntuOutputFile"
     val TERMINAL_DO = "terminalDo"
     val EDIT_EXECUTE = "editExecute"
-//    val TERMINAL_SIZE_TYPE = "terminalSizeType"
     val TERMINAL_OUTPUT_MODE = "terminalOutputMode"
     val SET_VARIABLE_TYPE = "setVariableTypes"
     val SET_REPLACE_VARIABLE = "setReplaceVariables"
@@ -112,7 +111,6 @@ object CommandClickScriptVariable {
         UBUNTU_OUTPUT_FILE,
         TERMINAL_DO,
         EDIT_EXECUTE,
-//        TERMINAL_SIZE_TYPE,
         TERMINAL_OUTPUT_MODE,
         SET_VARIABLE_TYPE,
         SET_REPLACE_VARIABLE,
