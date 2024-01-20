@@ -811,16 +811,10 @@ object ButtonViewProducer {
             !File(jsFilePath).isFile
             && !isJsMacro
         ) return
-        val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
-        listener?.onKeyBoardVisibleChangeForEditFragment(
-            false,
-            true,
+        keyboardHide(
+            editFragment,
+            buttonMap
         )
-        if(
-            !getDisableKeyboardHidden(
-                buttonMap
-            )
-        ) Keyboard.hiddenKeyboardForFragment(editFragment)
 
         terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
         when(isJsMacro){
@@ -833,6 +827,22 @@ object ButtonViewProducer {
                 jsFilePath,
             )
         }
+    }
+
+    private fun keyboardHide(
+        editFragment: EditFragment,
+        buttonMap: Map<String, String>?,
+    ){
+        val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+        listener?.onKeyBoardVisibleChangeForEditFragment(
+            false,
+            true,
+        )
+        if(
+            !getDisableKeyboardHidden(
+                buttonMap
+            )
+        ) Keyboard.hiddenKeyboardForFragment(editFragment)
     }
 
     private fun simpleJsExecutor(
@@ -849,6 +859,10 @@ object ButtonViewProducer {
             ButtonEditKey.oneLineJs.name
         )
         if(oneLineJsCon.isNullOrEmpty()) return
+        keyboardHide(
+            editFragment,
+            buttonMap
+        )
         ExecJsScriptInEdit.execJsConForEdit(
             editFragment,
             oneLineJsCon.replace(currentEditTextConMark, currentEditTextCon)
