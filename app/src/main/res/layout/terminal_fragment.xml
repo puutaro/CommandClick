@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_weight="0.4"
+    android:layout_weight="0.0"
     >
 
         <data>

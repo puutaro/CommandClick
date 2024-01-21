@@ -73,6 +73,7 @@ class MainActivity:
     TerminalFragment.onBackstackWhenTermLongInRestartListener,
     TerminalFragment.OnToolBarVisibleChangeListener,
     TerminalFragment.OnTermLongChangeListenerForTerminalFragment,
+    TerminalFragment.OnTermShortSizeListenerForTerminalFragment,
     TerminalFragment.OnPageLoadPageSearchDisableListener,
     TerminalFragment.OnFindPageSearchResultListener,
     TerminalFragment.OnFileChooseListener,
@@ -347,6 +348,13 @@ class MainActivity:
         ExecTermLongChangeHandlerForTerm.handle(
             this,
             bottomFragment,
+        )
+    }
+
+    override fun onTermNormalSizeForTerminalFragment(terminalFragment: TerminalFragment) {
+        ExecTermShortForTerm.short(
+            this,
+            terminalFragment,
         )
     }
 

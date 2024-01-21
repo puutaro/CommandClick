@@ -261,6 +261,12 @@ class   TerminalFragment: Fragment() {
         )
     }
 
+    interface OnTermShortSizeListenerForTerminalFragment {
+        fun onTermNormalSizeForTerminalFragment(
+            terminalFragment: TerminalFragment
+        )
+    }
+
     interface OnPageLoadPageSearchDisableListener {
         fun onPageLoadPageSearchDisable()
     }

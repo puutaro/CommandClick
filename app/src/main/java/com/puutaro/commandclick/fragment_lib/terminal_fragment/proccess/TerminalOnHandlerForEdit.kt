@@ -19,10 +19,15 @@ object TerminalOnHandlerForEdit {
 
         val context = terminalFragment.context
             ?: return
+
         val indexTerminalTag = context.getString(R.string.index_terminal_fragment)
         if(
             terminalFragment.tag == indexTerminalTag
-        ) return
+        ) {
+            val listener = context as? TerminalFragment.OnTermShortSizeListenerForTerminalFragment
+            listener?.onTermNormalSizeForTerminalFragment(terminalFragment)
+            return
+        }
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 for (i in 1..10) {
@@ -30,31 +35,26 @@ object TerminalOnHandlerForEdit {
                     delay(100)
                 }
             }
-            val isCmdValEdit =
+            val isSettingValEdit =
                 withContext(Dispatchers.IO) {
                     terminalFragment.editType ==
-                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                            EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
                 }
-            when (isCmdValEdit) {
-                true -> {
-                    val isShortcut = withContext(Dispatchers.IO) {
-                        SharePreferenceMethod.getReadSharePreffernceMap(
-                            terminalFragment.readSharedPreferences,
-                            SharePrefferenceSetting.on_shortcut
-                        ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-                    }
-                    if (
-                        isShortcut
-                        && terminalFragment.terminalOn !=
-                        SettingVariableSelects.TerminalDoSelects.OFF.name
-                    ) return@launch
-                }
-
-                else -> {}
+            if(isSettingValEdit) return@launch
+            val disableShortcut = withContext(Dispatchers.IO) {
+                SharePreferenceMethod.getReadSharePreffernceMap(
+                    terminalFragment.readSharedPreferences,
+                    SharePrefferenceSetting.on_shortcut
+                ) != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
             }
+            if(disableShortcut) return@launch
+            val disableTerminal = terminalFragment.terminalOn ==
+                    SettingVariableSelects.TerminalDoSelects.OFF.name
+            if (disableTerminal) return@launch
+
             withContext(Dispatchers.Main) {
-                val listener = context as? TerminalFragment.OnTermSizeMinimumListenerForTerm
-                listener?.onTermSizeMinimumForTerm()
+                val listener = context as? TerminalFragment.OnTermShortSizeListenerForTerminalFragment
+                listener?.onTermNormalSizeForTerminalFragment(terminalFragment)
             }
         }
     }
