@@ -19,7 +19,8 @@ class JsFDialog(
 
     @JavascriptInterface
     fun launch(
-        fannelCon: String,
+        settingValConSrc: String,
+        cmdValConSrc: String,
     ){
         val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
@@ -35,7 +36,10 @@ class JsFDialog(
         )
         val destiFDialogFannelName =
             "${CommandClickScriptVariable.makeCopyPrefix()}_${UsePath.fDialogTempFannelName}"
-
+        val fannelCon = JsScript(terminalFragment).makeFannelCon(
+            settingValConSrc,
+            cmdValConSrc,
+        )
         val isSuccess = FDialogTempFile.create(
             terminalFragment,
             readSharedPreferences,
