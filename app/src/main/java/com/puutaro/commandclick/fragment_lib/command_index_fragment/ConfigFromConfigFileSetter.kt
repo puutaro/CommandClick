@@ -91,18 +91,6 @@ object ConfigFromConfigFileSetter {
             homeFannelHistoryNameList.isNotEmpty()
         ) cmdIndexFragment.homeFannelHistoryNameList = homeFannelHistoryNameList
 
-        cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-        )
-
-        cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_SHIBAN,
-            CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
-        )
-
         cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,

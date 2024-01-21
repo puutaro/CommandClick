@@ -15,9 +15,7 @@ object AddShellScript {
     ){
 
         val context = cmdIndexFragment.context
-        val cmdClickShibanStr = cmdIndexFragment.shiban
         CommandClickScriptVariable.makeShellOrJsFile(
-            cmdClickShibanStr,
             currentAppDirPath,
             shellScriptName,
             shellOrJs = languageTypeSelects

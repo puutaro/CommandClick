@@ -9,14 +9,12 @@ import com.termux.shared.termux.TermuxConstants
 object ExecBashScriptIntent {
 
     fun ToTermux(
-        runShell: String,
         context: Context?,
         execCmd: String,
         backgroundExec: Boolean = true,
     ) {
         try {
-            val intent = ToTermux(
-                runShell,
+            val intent = execToTermux(
                 execCmd,
                 backgroundExec,
             )
@@ -32,8 +30,7 @@ object ExecBashScriptIntent {
 }
 
 
-private fun  ToTermux(
-    runShell: String,
+private fun  execToTermux(
     execCmd: String,
     backgroundExec: Boolean
 ): Intent {
@@ -47,7 +44,7 @@ private fun  ToTermux(
     intent.action = TermuxConstants.TERMUX_APP.RUN_COMMAND_SERVICE.ACTION_RUN_COMMAND
     intent.putExtra(
         TermuxConstants.TERMUX_APP.RUN_COMMAND_SERVICE.EXTRA_COMMAND_PATH,
-        "/data/data/com.termux/files/usr/bin/${runShell}"
+        "/data/data/com.termux/files/usr/bin/bash"
     )
     intent.putExtra(
         TermuxConstants.TERMUX_APP.RUN_COMMAND_SERVICE.EXTRA_ARGUMENTS,

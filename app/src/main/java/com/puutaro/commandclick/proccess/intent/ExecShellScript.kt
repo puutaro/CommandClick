@@ -9,7 +9,6 @@ import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentE
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
@@ -200,11 +199,7 @@ object ExecShellScript {
         val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
         val context = currentFragment.context
             ?: return
-        val runShell = when(currentFragment){
-            is com.puutaro.commandclick.fragment.CommandIndexFragment -> currentFragment.runShell
-            is EditFragment -> currentFragment.runShell
-            else -> CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-        }
+        val runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
         val terminalDo = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
@@ -224,7 +219,6 @@ object ExecShellScript {
         terminalViewModel.onDisplayUpdate = true
 
         ExecBashScriptIntent.ToTermux(
-            runShell,
             context,
             execCmd,
             backgroundExec

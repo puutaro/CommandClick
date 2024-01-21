@@ -26,6 +26,97 @@ object QrLogoEditDialogLauncher {
         fannelName: String,
         qrDialogConfigMap: Map<String, String>,
     ){
+
+        val logoConfigMap = QrDialogConfig.makeLogoConfigMap(qrDialogConfigMap)
+        val disableLogo =
+            QrDialogConfig.howDisableQrLogo(logoConfigMap)
+        when(disableLogo){
+            true -> QrDialogMethod.launchPassDialog(
+                fragment,
+                parentDirPath,
+                fannelName,
+            )
+            else -> launchQrConDialog(
+                fragment,
+                parentDirPath,
+                fannelName,
+                logoConfigMap
+            )
+        }
+
+//        val context = fragment.context
+//            ?: return
+//        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
+//        val qrLogoPath = "${parentDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
+//        qrLogoDialogObj = Dialog(
+//            context
+//        )
+//        qrLogoDialogObj?.setContentView(
+//            R.layout.qr_logo_list_index_dialog_layout
+//        )
+//        val titleTextView = qrLogoDialogObj?.findViewById<AppCompatTextView>(
+//            R.id.qr_logo_list_index_dialog_title
+//        )
+//
+//        titleTextView?.text = fannelName
+//        qrLogoDialogObj?.findViewById<AppCompatImageView>(
+//            R.id.qr_logo_list_index_dialog_top_image
+//        )?.load(qrLogoPath)
+//        val isFileCon =
+//            QrDialogConfig.howQrType(logoConfigMap) ==
+//                    QrDialogConfig.QrTypeSettingKey.FILE_CON.type
+//        val buttonWeight = decideButtonWeight(isFileCon)
+//        setPassButton(
+//            fragment,
+//            parentDirPath,
+//            fannelName,
+//            buttonWeight,
+//        )
+//        setShareButton(
+//            fragment,
+//            qrLogoPath,
+//            buttonWeight
+//        )
+//        setConUpdateButton(
+//            fragment,
+//            parentDirPath,
+//            fannelName,
+//            buttonWeight,
+//            isFileCon
+//        )
+//        setChangeButton(
+//            fragment,
+//            parentDirPath,
+//            fannelName,
+//            buttonWeight,
+//            isFileCon
+//        )
+//        setCancelButton(buttonWeight)
+//        val cancelButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+//            R.id.qr_logo_list_index_dialog_cancel
+//        )
+//        cancelButton?.setOnClickListener {
+//            qrLogoDialogObj?.dismiss()
+//        }
+//        qrLogoDialogObj?.setOnCancelListener {
+//            qrLogoDialogObj?.dismiss()
+//        }
+
+
+//                    qrLogoDialogObj?.window?.setLayout(
+//                        ViewGroup.LayoutParams.MATCH_PARENT,
+//                        ViewGroup.LayoutParams.WRAP_CONTENT
+//                    )
+        qrLogoDialogObj?.window?.setGravity(Gravity.BOTTOM)
+        qrLogoDialogObj?.show()
+    }
+
+    private fun launchQrConDialog(
+        fragment: Fragment,
+        parentDirPath: String,
+        fannelName: String,
+        logoConfigMap: Map<String, String>,
+    ){
         val context = fragment.context
             ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
@@ -44,8 +135,9 @@ object QrLogoEditDialogLauncher {
         qrLogoDialogObj?.findViewById<AppCompatImageView>(
             R.id.qr_logo_list_index_dialog_top_image
         )?.load(qrLogoPath)
-        val logoConfigMap = QrDialogConfig.makeLogoConfigMap(qrDialogConfigMap)
-        val isFileCon = QrDialogConfig.howFileConQr(logoConfigMap)
+        val isFileCon =
+            QrDialogConfig.howQrType(logoConfigMap) ==
+                    QrDialogConfig.QrTypeSettingKey.FILE_CON.type
         val buttonWeight = decideButtonWeight(isFileCon)
         setPassButton(
             fragment,
@@ -82,12 +174,6 @@ object QrLogoEditDialogLauncher {
         qrLogoDialogObj?.setOnCancelListener {
             qrLogoDialogObj?.dismiss()
         }
-//                    qrLogoDialogObj?.window?.setLayout(
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.WRAP_CONTENT
-//                    )
-        qrLogoDialogObj?.window?.setGravity(Gravity.BOTTOM)
-        qrLogoDialogObj?.show()
     }
 
     private fun decideButtonWeight(isFileCon: Boolean): Float {

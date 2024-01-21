@@ -373,7 +373,6 @@ object AppProcessManager {
             Toast.LENGTH_SHORT
         ).show()
         ExecBashScriptIntent.ToTermux(
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE,
             context,
             execCmd
         )

@@ -25,7 +25,6 @@ class CmdIntent(
         ) "${execCmdSource};"
         else "$execCmdSource >> \"${outputPath}\""
         ExecBashScriptIntent.ToTermux(
-            terminalFragment.runShell,
             context,
             execCmd,
             true

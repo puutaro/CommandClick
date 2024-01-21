@@ -24,7 +24,22 @@ object QrDialogConfig {
     ){
         ONE_SIDE_LENGTH("oneSideLength"),
         ON_FANNEL_REPO_LOGO_MODE("onFannelRepoLogoMode"),
-        ON_FILE_CON("onFileCon"),
+        DISABLE("disable"),
+        TYPE("type"),
+    }
+
+
+    enum class QrTypeSettingKey(
+        val type: String
+    ){
+        FILE_CON("fileCon"),
+        GIT_CLONE("gitCone"),
+    }
+    enum class QrDisableSettingKey(
+        val key: String
+    ) {
+        ON("ON"),
+        OFF("OFF"),
     }
 
     enum class ClickModeValues(
@@ -60,14 +75,36 @@ object QrDialogConfig {
         }
     }
 
-    fun howFileConQr(
+    fun howDisableQrLogo(
         logoConfigMap: Map<String, String>,
     ): Boolean {
-        val onFileConKeyName = QrLogoSettingKey.ON_FILE_CON.key
+        val disableQrKeyName =
+            QrLogoSettingKey.DISABLE.key
         if(
             logoConfigMap.isEmpty()
         ) return false
-        return logoConfigMap.containsKey(onFileConKeyName)
+        val disableQrValue =
+            logoConfigMap.get(disableQrKeyName)
+        if(
+            disableQrValue.isNullOrEmpty()
+        ) return false
+        return disableQrValue ==
+                QrDisableSettingKey.OFF.key
+    }
+
+    fun howQrType(
+        logoConfigMap: Map<String, String>,
+    ): String {
+        val defaultQrType = QrTypeSettingKey.GIT_CLONE.type
+        val typeKeyName = QrLogoSettingKey.TYPE.key
+        if(
+            logoConfigMap.isEmpty()
+        ) return defaultQrType
+        val qrType = logoConfigMap.get(typeKeyName)
+        if(
+            qrType.isNullOrEmpty()
+        ) return defaultQrType
+        return qrType
     }
 
     private fun howFannelRepoQrMode(
@@ -147,7 +184,9 @@ object QrDialogConfig {
             return
         }
         val qrLogoConfigMap = qrLogoHandlerArgsMaker.qrLogoConfigMap
-        val isFileCon = howFileConQr(qrLogoConfigMap)
+        val isFileCon =
+            howQrType(qrLogoConfigMap) ==
+                    QrTypeSettingKey.FILE_CON.type
         val fragment = qrLogoHandlerArgsMaker.fragment
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
             parentDirPath,

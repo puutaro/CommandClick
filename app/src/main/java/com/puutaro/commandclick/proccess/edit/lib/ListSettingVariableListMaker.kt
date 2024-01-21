@@ -105,6 +105,10 @@ object ListSettingVariableListMaker {
             -> UsePath.editButtonConfigPath
             CommandClickScriptVariable.PLAY_BUTTON_CONFIG
             -> UsePath.playButtonConfigPath
+            CommandClickScriptVariable.LIST_INDEX_CONFIG
+            -> UsePath.listIndexForEditConfigPath
+            CommandClickScriptVariable.QR_DIALOG_CONFIG
+            -> UsePath.qrDialogConfigPath
             else -> String()
         }
     }

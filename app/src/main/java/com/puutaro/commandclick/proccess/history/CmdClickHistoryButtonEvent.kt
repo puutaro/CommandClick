@@ -213,12 +213,13 @@ class CmdClickHistoryButtonEvent (
                 CoroutineScope(Dispatchers.Main).launch {
                     delay(jsExecWaitTime)
                     if(fragment is CommandIndexFragment) {
+                        FileSystems
                         val listener = context
                                 as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
                         listener?.onLongClickMenuItemsforCmdIndex(
                             LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
                             EditFragmentArgs(
-                                mapOf(),
+                                readSharePreferenceMap,
                                 cmdValEdit,
                             ),
                             String(),

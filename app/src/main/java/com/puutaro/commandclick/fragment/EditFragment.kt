@@ -84,13 +84,11 @@ class EditFragment: Fragment() {
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
     var busyBoxExecutor: BusyboxExecutor? = null
-    var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec =
         CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
@@ -110,12 +108,12 @@ class EditFragment: Fragment() {
     var currentScriptContentsList = emptyList<String>()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
-    var execPlayBtnLongPress = String()
-    var execEditBtnLongPress = String()
     var overrideItemClickExec = String()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
+    var listIndexConfigMap: Map<String, String>? = null
+    var qrDialogConfig: Map<String, String>? = null
     var fileGetterForSettingButton: FileGetterForSettingButton? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()

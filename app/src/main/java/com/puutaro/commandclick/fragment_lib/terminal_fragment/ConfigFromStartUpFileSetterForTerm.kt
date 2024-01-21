@@ -105,13 +105,6 @@ object ConfigFromStartUpFileSetterForTerm {
             "1"
         )
 
-
-        terminalFragment.runShell =  SettingVariableReader.getStrValue(
-            settingVariableListFromConfig,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
-        )
-
         terminalFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableListFromConfig,
             CommandClickScriptVariable.TERMINAL_COLOR,
@@ -287,12 +280,6 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
             terminalFragment.fontZoomPercent,
             "1"
-        )
-
-        terminalFragment.runShell =  SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            terminalFragment.runShell
         )
 
         terminalFragment.binding.terminalWebView.settings.textZoom =

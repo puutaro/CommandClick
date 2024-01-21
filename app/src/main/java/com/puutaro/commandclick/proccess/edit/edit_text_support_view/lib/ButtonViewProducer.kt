@@ -314,7 +314,6 @@ object ButtonViewProducer {
         ) "${execCmdAfterTrimButtonEditExecVariant};"
         else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputPath}\""
         ExecBashScriptIntent.ToTermux(
-            editFragment.runShell,
             context,
             execCmd.replace(
                 Regex("^${basht}"),

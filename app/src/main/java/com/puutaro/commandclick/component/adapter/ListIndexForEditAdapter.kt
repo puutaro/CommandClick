@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListIndexEditConfig
@@ -19,7 +18,6 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
@@ -31,12 +29,10 @@ import kotlinx.coroutines.withContext
 class ListIndexForEditAdapter(
     private val editFragment: EditFragment,
     private val filterDir: String,
-    private val readSharePreffernceMap: Map<String, String>,
-    setReplaceVariableMap:  Map<String, String>?,
     var listIndexList: MutableList<String>,
 ): RecyclerView.Adapter<ListIndexForEditAdapter.ListIndexListViewHolder>()
 {
-
+    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private val context = editFragment.context
     private val activity = editFragment.activity
     private val maxTakeSize = 150
@@ -44,21 +40,14 @@ class ListIndexForEditAdapter(
         context,
         UbuntuFiles(context as Context)
     )
-//    private val qrPngNameRelativePath = UsePath.qrPngRelativePath
 
-    val qrDialogConfigMap = QrDialogConfig.makeDialogConfigMap(
-        readSharePreffernceMap,
-    )
+    val qrDialogConfigMap =
+        editFragment.qrDialogConfig ?: mapOf()
 
     val qrLogoConfigMap = QrDialogConfig.makeLogoConfigMap(
         qrDialogConfigMap
     )
-    private val listIndexConfigMap = ConfigMapTool.create(
-        UsePath.listIndexForEditConfigPath,
-        String(),
-        readSharePreffernceMap,
-        setReplaceVariableMap,
-    )
+    private val listIndexConfigMap = editFragment.listIndexConfigMap
 
 
     private val isInstallFannel = editFragment.isInstallFannelForListIndex
@@ -155,22 +144,31 @@ class ListIndexForEditAdapter(
             }
 
             withContext(Dispatchers.Main) {
-                QrDialogConfig.setOneSideLength(
-                    holder.fileContentsQrLogoView,
-                    qrLogoConfigMap
-                )
-                val qrLogoHandlerArgsMaker = QrDialogConfig.QrLogoHandlerArgsMaker(
-                    editFragment,
-                    recentAppDirPath,
-                    readSharePreffernceMap,
-                    qrLogoConfigMap,
-                    filterDir,
-                    holder.fileName,
-                    holder.fileContentsQrLogoView,
-                )
-                QrDialogConfig.setQrLogoHandler(
-                    qrLogoHandlerArgsMaker
-                )
+                val disableQrLogo =
+                    QrDialogConfig.howDisableQrLogo(qrLogoConfigMap)
+                if(disableQrLogo) return@withContext
+                withContext(Dispatchers.Main) {
+                    QrDialogConfig.setOneSideLength(
+                        holder.fileContentsQrLogoView,
+                        qrLogoConfigMap
+                    )
+                }
+                val qrLogoHandlerArgsMaker = withContext(Dispatchers.IO) {
+                    QrDialogConfig.QrLogoHandlerArgsMaker(
+                        editFragment,
+                        recentAppDirPath,
+                        readSharePreffernceMap,
+                        qrLogoConfigMap,
+                        filterDir,
+                        holder.fileName,
+                        holder.fileContentsQrLogoView,
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    QrDialogConfig.setQrLogoHandler(
+                        qrLogoHandlerArgsMaker
+                    )
+                }
             }
             val fileConBackGroundColorInt = withContext(Dispatchers.IO) {
                 setFileContentsBackColor(

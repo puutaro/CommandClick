@@ -62,12 +62,8 @@ object CommandClickScriptVariable {
     val ON_UPDATE_LAST_MODIFY = "onUpdateLastModify"
     val ON_URL_LAUNCH_MACRO = "onUrlLaunchMacro"
     val EXEC_JS_OR_HTML_PATH = "execJsOrHtmlPath"
-    val EXEC_PLAY_BTN_LONG_PRESS = "execPlayBtnLongPress"
-    val EXEC_EDIT_BTN_LONG_PRESS = "execEditBtnLongPress"
     val BEFORE_COMMAND = "beforeCommand"
     val AFTER_COMMAND = "afterCommand"
-    val CMDCLICK_SHIBAN = "cmdclickShiban"
-    val CMDCLICK_RUN_SHELL = "cmdclickRunShell"
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
     val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
     val ON_TERM_VISIBLE_WHEN_KEYBOARD = "onTermVisibleWhenKeyboard"
@@ -97,6 +93,8 @@ object CommandClickScriptVariable {
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
+    val LIST_INDEX_CONFIG = "listIndexConfig"
+    val QR_DIALOG_CONFIG = "qrDialogConfig"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
     val NO_SCROLL_SAVE_URLS = "noScrollSaveUrls"
     val SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH = "srcImageAnchorLongPressMenuFilePath"
@@ -130,20 +128,20 @@ object CommandClickScriptVariable {
         CMDCLICK_TERMINAL_FONT_ZOOM,
         CMDCLICK_ON_HISTORY_URL_TITLE,
         EDIT_BOX_TITLE,
-        CMDCLICK_RUN_SHELL,
-        CMDCLICK_SHIBAN,
         ON_URL_LAUNCH_MACRO,
         EXEC_JS_OR_HTML_PATH,
         ON_URL_HISTORY_REGISTER,
         CMDCLICK_HOME_FANNELS_PATH,
         BEFORE_COMMAND,
         AFTER_COMMAND,
-        EXEC_PLAY_BTN_LONG_PRESS,
-        EXEC_EDIT_BTN_LONG_PRESS,
         IGNORE_HISTORY_PATHS,
         HOME_SCRIPT_URLS_PATH,
         OVERRIDE_ITEM_CLICK_EXEC,
+        PLAY_BUTTON_CONFIG,
+        EDIT_BUTTON_CONFIG,
         SETTING_BUTTON_CONFIG,
+        LIST_INDEX_CONFIG,
+        QR_DIALOG_CONFIG,
         NO_SCROLL_SAVE_URLS,
         SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
@@ -343,8 +341,6 @@ object CommandClickScriptVariable {
         "$TERMINAL_COLOR:TXT:CLR=",
         "$TERMINAL_FONT_COLOR:TXT:CLR=",
         "$EXEC_JS_OR_HTML_PATH:TXT:FL=",
-        "$EXEC_PLAY_BTN_LONG_PRESS:TXT:FL=",
-        "$EXEC_EDIT_BTN_LONG_PRESS:TXT:FL=",
         "$HOME_SCRIPT_URLS_PATH:DSL:BTN=$setVaraibleValueForHomeScriptUrlsPath",
         "$CMDCLICK_HOME_FANNELS_PATH:DSL:BTN=$setVariableValueForHomeFannelsPath",
         "$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH:DSL:BTN=$setVariableValueForSrcImageAnchorLongPressMenuFilePath",
@@ -434,8 +430,6 @@ object CommandClickScriptVariable {
             |#  * [$CMDCLICK_TERMINAL_FONT_ZOOM](#${replaceLowerAdnBlankDash(CMDCLICK_TERMINAL_FONT_ZOOM)})
             |#  * [$TERMINAL_FONT_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_FONT_COLOR)})
             |#  * [$TERMINAL_COLOR](#${replaceLowerAdnBlankDash(TERMINAL_COLOR)})
-            |#  * [$EXEC_PLAY_BTN_LONG_PRESS](#${replaceLowerAdnBlankDash(EXEC_PLAY_BTN_LONG_PRESS)})
-            |#  * [$EXEC_EDIT_BTN_LONG_PRESS](#${replaceLowerAdnBlankDash(EXEC_EDIT_BTN_LONG_PRESS)})
             |
             |
             |# ## $settingVariableStr
@@ -657,24 +651,6 @@ object CommandClickScriptVariable {
             |# ### $TERMINAL_COLOR
             |# Adjust terminal background color
             |
-            |# ### $EXEC_PLAY_BTN_LONG_PRESS
-            |# Execute when play button long press in editExecute=EditExecute
-            |
-            |# | type or name | description |
-            |# | ------- | ------- |
-            |# | `WEB_SEARCH` | apear web search bar |
-            |# | `PAGE_SEARCH` | apear page search bar |
-            |# | js file path | execute js file |
-            |
-            |# ### $EXEC_EDIT_BTN_LONG_PRESS
-            |# Execute when edit button long press
-            |
-            |# | type or name | description |
-            |# | ------- | ------- |
-            |# | `WEB_SEARCH` | apear web search bar |
-            |# | `PAGE_SEARCH` | apear page search bar |
-            |# | js file path | execute js file |
-            |
             |#
             |#
             |#
@@ -695,13 +671,12 @@ object CommandClickScriptVariable {
     }
 
     fun makeScriptContents(
-        shiban: String,
         onUpdateLastModifyValue: String,
         shellOrJs: LanguageTypeSelects = LanguageTypeSelects.JAVA_SCRIPT,
         execJsOrHtmlPathValue: String = String(),
     ): String{
         val languageTypeHolderMap = LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(shellOrJs)
-        return """${shiban}
+        return """${CMDCLICK_SHIBAN_DEFAULT_VALUE}
         |
         |
         |${languageTypeHolderMap?.get(HolderTypeName.LABELING_SEC_START)}
@@ -735,8 +710,6 @@ object CommandClickScriptVariable {
         |$CMDCLICK_TERMINAL_FONT_ZOOM=""            
         |$TERMINAL_COLOR=""
         |$TERMINAL_FONT_COLOR=""
-        |$EXEC_PLAY_BTN_LONG_PRESS=""
-        |$EXEC_EDIT_BTN_LONG_PRESS=""
         |$SET_REPLACE_VARIABLE=""
         |$SET_VARIABLE_TYPE=""
         |$BEFORE_COMMAND=""
@@ -757,7 +730,6 @@ object CommandClickScriptVariable {
 
 
     fun makeShellOrJsFile(
-        shiban: String,
         dirPath: String,
         shellScriptName: String,
         onUpdateLastModifyValue: String = onUpdateLastModifyOn,
@@ -765,7 +737,6 @@ object CommandClickScriptVariable {
         execJsOrHtmlPathValue: String = String(),
     ) {
         val shellContents =  makeScriptContents(
-            shiban,
             onUpdateLastModifyValue,
             shellOrJs,
             execJsOrHtmlPathValue
@@ -841,7 +812,6 @@ object CommandClickScriptVariable {
             ).isFile
         ) return
         makeShellOrJsFile(
-            String(),
             dirPath,
             shellScriptName,
             onUpdateLastModifyOff,
@@ -867,8 +837,6 @@ object CommandClickScriptVariable {
         |${languageTypeHolderMap?.get(HolderTypeName.SETTING_SEC_START)}
         |$TERMINAL_DO="${terminalOff}"
         |$EDIT_EXECUTE="$editExecuteAlways"
-        |$CMDCLICK_RUN_SHELL="$CMDCLICK_RUN_SHELL_DEFAULT_VALUE"
-        |$CMDCLICK_SHIBAN="$CMDCLICK_SHIBAN_DEFAULT_VALUE"
         |$CMDCLICK_HISTORY_SWITCH="$HISTORY_SWITCH_DEFAULT_VALUE"
         |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE"
         |$ON_ADBLOCK="$onAdBlockOn"

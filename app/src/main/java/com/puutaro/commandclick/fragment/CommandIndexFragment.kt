@@ -42,13 +42,11 @@ class CommandIndexFragment: Fragment() {
     private var isKeyboardShowing: Boolean = false
     private var _binding: CommandIndexFragmentBinding? = null
     val binding get() = _binding!!
-    var runShell = CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE
     var WebSearchSwitch = WebSearchSwich.ON.bool
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var shiban = CommandClickScriptVariable.CMDCLICK_SHIBAN_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE

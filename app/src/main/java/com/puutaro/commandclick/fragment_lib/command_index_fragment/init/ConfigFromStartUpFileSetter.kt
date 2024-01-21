@@ -84,19 +84,6 @@ object ConfigFromStartUpFileSetter {
             ),
         )
 
-            cmdIndexFragment.runShell = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            cmdIndexFragment.runShell
-        )
-
-        cmdIndexFragment.shiban = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_SHIBAN,
-            cmdIndexFragment.shiban
-        )
-
-
         cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,

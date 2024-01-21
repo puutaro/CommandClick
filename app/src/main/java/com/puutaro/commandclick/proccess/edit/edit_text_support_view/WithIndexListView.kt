@@ -52,7 +52,6 @@ import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -74,7 +73,6 @@ class WithIndexListView(
     private val context = editFragment.context
     private val binding = editFragment.binding
     private val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
     private var currentSetVariableMap: Map<String, String>? = mapOf()
     private var currentAppDirPath = String()
     private var currentScriptName = String()
@@ -93,12 +91,7 @@ class WithIndexListView(
     private val formDialogForListIndexOrButton = FormDialogForListIndexOrButton(
         editFragment
     )
-    private val listIndexConfigMap = ConfigMapTool.create(
-        UsePath.listIndexForEditConfigPath,
-        String(),
-        readSharePreffernceMap,
-        mapOf(),
-    )
+    private val listIndexConfigMap = editFragment.listIndexConfigMap
     private val isInstallFannel = ListIndexEditConfig.howInstallFannel(
         listIndexConfigMap
     )
@@ -302,8 +295,6 @@ class WithIndexListView(
         val listIndexForEditAdapter = ListIndexForEditAdapter(
             editFragment,
             filterDir,
-            readSharePreffernceMap,
-            editParameters.setReplaceVariableMap,
             fileList,
         )
         editListRecyclerView.adapter = listIndexForEditAdapter
@@ -610,9 +601,8 @@ class WithIndexListView(
             val execShellFilePath =
                 "${filterDir}/${selectedItem}"
             val execCmd =
-                "${editFragment.runShell} \"${execShellFilePath}\" >> ${outputPath}"
+                "${CommandClickScriptVariable.CMDCLICK_RUN_SHELL_DEFAULT_VALUE} \"${execShellFilePath}\" >> ${outputPath}"
             ExecBashScriptIntent.ToTermux(
-                editFragment.runShell,
                 context,
                 execCmd,
                 true

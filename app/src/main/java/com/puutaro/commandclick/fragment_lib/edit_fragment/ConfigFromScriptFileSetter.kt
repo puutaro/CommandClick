@@ -15,7 +15,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.setting_button.ButtonVisibleValue
 import com.puutaro.commandclick.proccess.setting_button.ButtonIcons
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonConfigMapKey
-import com.puutaro.commandclick.proccess.setting_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
@@ -88,6 +87,22 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE,
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
+        editFragment.listIndexConfigMap = makeSettingConfigMap(
+            editFragment,
+            CommandClickScriptVariable.LIST_INDEX_CONFIG,
+            String(),
+        )
+        editFragment.qrDialogConfig = makeSettingConfigMap(
+            editFragment,
+            CommandClickScriptVariable.QR_DIALOG_CONFIG,
+            String(),
+        )
+
+        editFragment.overrideItemClickExec = SettingVariableReader.getStrValue(
+            settingVariableList,
+            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC,
+            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE,
+        )
 
         if (
             !onShortcut
@@ -147,18 +162,6 @@ object ConfigFromScriptFileSetter {
             ),
         )
 
-        editFragment.runShell = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_RUN_SHELL,
-            editFragment.runShell
-        )
-
-        editFragment.shiban = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_SHIBAN,
-            editFragment.shiban
-        )
-
         editFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,
@@ -170,24 +173,6 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM,
             editFragment.fontZoomPercent,
             "1"
-        )
-
-        editFragment.execPlayBtnLongPress = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.EXEC_PLAY_BTN_LONG_PRESS,
-            String()
-        )
-
-        editFragment.overrideItemClickExec = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC,
-            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE,
-        )
-
-        editFragment.execEditBtnLongPress = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.EXEC_EDIT_BTN_LONG_PRESS,
-            String()
         )
 
         editFragment.passCmdVariableEdit = SettingVariableReader.getStrValue(
@@ -374,17 +359,17 @@ object ConfigFromScriptFileSetter {
     ){
         editFragment.toolbarButtonConfigMap =
             mapOf(
-                ToolbarButtonBariantForEdit.SETTING to makeButtonConfigMap(
+                ToolbarButtonBariantForEdit.SETTING to makeSettingConfigMap(
                     editFragment,
                     CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
                     String(),
                 ),
-                ToolbarButtonBariantForEdit.EDIT to makeButtonConfigMap(
+                ToolbarButtonBariantForEdit.EDIT to makeSettingConfigMap(
                     editFragment,
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
                     String(),
                 ),
-                ToolbarButtonBariantForEdit.OK to makeButtonConfigMap(
+                ToolbarButtonBariantForEdit.OK to makeSettingConfigMap(
                     editFragment,
                     CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
                     String(),
@@ -475,7 +460,7 @@ object ConfigFromScriptFileSetter {
         )
     }
 
-    private fun makeButtonConfigMap(
+    private fun makeSettingConfigMap(
         editFragment: EditFragment,
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
@@ -505,7 +490,7 @@ object ConfigFromScriptFileSetter {
         }
         return ConfigMapTool.createFromSettingVal(
             settingButtonConfigMapStr,
-            ToolbarButtonArgsMaker.setingButtonDefaultConfigCon,
+            String(),
             editFragment.readSharePreffernceMap,
             editFragment.setReplaceVariableMap
         )
