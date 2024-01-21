@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -55,7 +56,8 @@ object ListContentsSelectSpinnerViewProducer {
             elcbMap,
             defaultListLimit,
         )
-        compList(
+        execCompList(
+            editParameters,
             elcbMap,
             listContentsFilePath,
         )
@@ -150,7 +152,8 @@ object ListContentsSelectSpinnerViewProducer {
         return insertSpinner
     }
 
-    fun compList(
+    fun execCompList(
+        editParameters: EditParameters,
         elcbMap: Map<String, String>?,
         targetListFilePath: String?,
     ){
@@ -166,13 +169,29 @@ object ListContentsSelectSpinnerViewProducer {
         ) return
         val itemTextListCon = when(compListOneLineCon.startsWith(filePrefix)){
             true -> {
+                val readSharePreferenceMap = editParameters.readSharePreffernceMap
+                val setReplaceVariableMap = editParameters.setReplaceVariableMap
+                val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                    readSharePreferenceMap,
+                    SharePrefferenceSetting.current_app_dir
+                )
+                val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                    readSharePreferenceMap,
+                    SharePrefferenceSetting.current_fannel_name                )
                 val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))
                 val compListFileParentDirPath = compListFilePathObj.parent
                     ?: return
                 ReadText(
                     compListFileParentDirPath,
                     compListFilePathObj.name
-                ).readText()
+                ).readText().let {
+                    SetReplaceVariabler.execReplaceByReplaceVariables(
+                        it,
+                        setReplaceVariableMap,
+                        currentAppDirPath,
+                        currentFannelName
+                    )
+                }
             }
             else -> compListOneLineCon.replace(
                 separator,

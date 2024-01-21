@@ -59,7 +59,8 @@ object EditableListContentsSelectSpinnerViewProducer {
             elcbMap,
             defaultListLimit
         )
-        ListContentsSelectSpinnerViewProducer.compList(
+        ListContentsSelectSpinnerViewProducer.execCompList(
+            editParameters,
             elcbMap,
             listContentsFilePath,
         )

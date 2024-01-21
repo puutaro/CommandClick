@@ -102,64 +102,40 @@ object ButtonViewProducer {
         )
 //        insertTextView.isVisible = isInsertTextViewVisible
         val currentVariableName = editParameters.currentVariableName
+        val buttonEventArgs = ButtonEventArgs(
+            insertButton,
+            editFragment,
+            insertEditText,
+            currentVariableName,
+            scriptFileSaver,
+            editParameters,
+            buttonMap,
+            currentSetVariableValue
+        )
         when(getIsConsec(buttonMap)) {
-            true -> buttonTouchListener(
-                insertButton,
-                editFragment,
-                insertEditText,
-                currentVariableName,
-                scriptFileSaver,
-                editParameters,
-                buttonMap,
-                currentSetVariableValue
+            true -> buttonTouchListener(buttonEventArgs)
+            else -> buttonClickListner(buttonEventArgs
             )
-            else -> buttonClickListner(
-                    insertButton,
-                    editFragment,
-                    insertEditText,
-                    currentVariableName,
-                    scriptFileSaver,
-                    editParameters,
-                    buttonMap,
-                    currentSetVariableValue
-                )
         }
         return insertButton
     }
 
     private fun buttonClickListner(
-        insertButton: Button,
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        currentVariableName: String?,
-        scriptFileSaver: ScriptFileSaver,
-        editParameters: EditParameters,
-        buttonMap: Map<String, String>?,
-        currentSetVariableValue: String?
+        buttonEventArgs: ButtonEventArgs,
     ){
+        val insertButton = buttonEventArgs.insertButton
         insertButton.setOnClickListener {
             execButtonClickEvent(
-                editFragment,
-                insertEditText,
-                currentVariableName,
-                scriptFileSaver,
-                editParameters,
-                buttonMap,
-                currentSetVariableValue
+                buttonEventArgs
             )
         }
     }
 
     private fun buttonTouchListener(
-        insertButton: Button,
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        currentVariableName: String?,
-        scriptFileSaver: ScriptFileSaver,
-        editParameters: EditParameters,
-        buttonMap: Map<String, String>?,
-        currentSetVariableValue: String?
+        buttonEventArgs: ButtonEventArgs,
     ){
+        val insertButton = buttonEventArgs.insertButton
+        val buttonMap = buttonEventArgs.buttonMap
         with(insertButton) {
             setOnTouchListener(android.view.View.OnTouchListener { v, event ->
                 var execTouchJob: Job? = null
@@ -171,13 +147,7 @@ object ButtonViewProducer {
                             while (true) {
                                 execTouchJob = CoroutineScope(Dispatchers.Main).launch {
                                     execButtonClickEvent(
-                                        editFragment,
-                                        insertEditText,
-                                        currentVariableName,
-                                        scriptFileSaver,
-                                        editParameters,
-                                        buttonMap,
-                                        currentSetVariableValue
+                                        buttonEventArgs
                                     )
                                 }
                                 if(
@@ -206,16 +176,12 @@ object ButtonViewProducer {
     }
 
     private fun execButtonClickEvent(
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        currentVariableName: String?,
-        scriptFileSaver: ScriptFileSaver,
-        editParameters: EditParameters,
-        buttonMap: Map<String, String>?,
-        currentSetVariableValue: String?
+        buttonEventArgs: ButtonEventArgs,
     ){
+        val editFragment = buttonEventArgs.editFragment
         val context = editFragment.context
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val editParameters = buttonEventArgs.editParameters
         val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
@@ -227,21 +193,19 @@ object ButtonViewProducer {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-
+        val buttonMap = buttonEventArgs.buttonMap
         val currentButtonTag = buttonMap?.get(
             ButtonEditKey.tag.name
         )
 
-        scriptFileSaver.save(
+        buttonEventArgs.scriptFileSaver.save(
             recordNumToMapNameValueInCommandHolder,
         )
         saveListContents(editFragment, currentButtonTag)
         simpleJsExecutor(
-            currentVariableName,
-            editParameters,
-            buttonMap
+            buttonEventArgs
         )
-        val execCmdEditable = insertEditText.text
+        val execCmdEditable = buttonEventArgs.insertEditText.text
         val isExecCmd = !buttonMap?.get(
             ButtonEditKey.cmd.name
         ).isNullOrEmpty()
@@ -307,11 +271,8 @@ object ButtonViewProducer {
             )
             settingFrag
             -> execSettingCmd(
-                editFragment,
-                insertEditText,
-                readSharePreffernceMap,
+                buttonEventArgs,
                 execCmdReplaceBlankList,
-                currentSetVariableValue,
             )
             basht
             -> execShellScriptByTermux(
@@ -589,11 +550,8 @@ object ButtonViewProducer {
     }
 
     private fun execSettingCmd(
-        editFragment: EditFragment,
-        insertEditText: EditText,
-        readSharePreffernceMap: Map<String, String>,
+        buttonEventArgs: ButtonEventArgs,
         execCmdReplaceBlankList: List<String>,
-        currentSetVariableValue: String?
     ){
         val setFOptionMap = getSetFOptionMap(
             execCmdReplaceBlankList
@@ -603,13 +561,13 @@ object ButtonViewProducer {
         when(settingArg){
             SettingCmdArgs.ListAdd.name -> {
                 val listConSlSpiOptionsStr = getFromSetVariableValueByIndex(
-                    currentSetVariableValue,
+                    buttonEventArgs.currentSetVariableValue,
                     0
                 )
                 execListAddForSetting(
-                    editFragment,
-                    insertEditText,
-                    readSharePreffernceMap,
+                    buttonEventArgs.editFragment,
+                    buttonEventArgs.insertEditText,
+                    buttonEventArgs.editFragment.readSharePreffernceMap,
                     listConSlSpiOptionsStr,
                     setFOptionMap
                 )
@@ -622,7 +580,6 @@ object ButtonViewProducer {
         editFragment: EditFragment,
         currentButtonTag: String?
     ){
-        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
         if(
             currentButtonTag.isNullOrEmpty()
         ) return
@@ -651,26 +608,13 @@ object ButtonViewProducer {
             listContentsMap.get(
                 ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveFilterShellPath.name
             )
-        val saveValue = EditVariableName.getText(
-            editFragment,
-            saveValName
-        )
         val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
             true -> return
-            else -> {
-                val saveFilterShellPathObj = File(saveFilterShellPath)
-                val shellParentDirPath = saveFilterShellPathObj.parent
-                    ?: return
-                editFragment.busyBoxExecutor?.getCmdOutput(
-                    ReadText(
-                        shellParentDirPath,
-                        saveFilterShellPathObj.name
-                    ).readText().replace(
-                        saveTextCon,
-                        saveValue
-                    )
+            else -> makeShellConForListConSBFilter(
+                    editFragment,
+                    saveFilterShellPath,
+                    saveValName,
                 )
-            }
         }
         if(
             filterSaveValue.isNullOrEmpty()
@@ -679,6 +623,44 @@ object ButtonViewProducer {
             saveTargetListFilePath,
             filterSaveValue
         )
+    }
+
+    private fun makeShellConForListConSBFilter(
+        editFragment: EditFragment,
+        saveFilterShellPath: String,
+        saveValName: String,
+    ): String? {
+        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
+        val saveFilterShellPathObj = File(saveFilterShellPath)
+        val shellParentDirPath = saveFilterShellPathObj.parent
+            ?: return null
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            editFragment.readSharePreffernceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentAppFannelPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            editFragment.readSharePreffernceMap,
+            SharePrefferenceSetting.current_fannel_name,
+        )
+        val saveValue = EditVariableName.getText(
+            editFragment,
+            saveValName
+        )
+        val shellCon = ReadText(
+            shellParentDirPath,
+            saveFilterShellPathObj.name
+        ).readText().replace(
+            saveTextCon,
+            saveValue
+        ).let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                editFragment.setReplaceVariableMap,
+                currentAppDirPath,
+                currentAppFannelPath
+            )
+        }
+        return editFragment.busyBoxExecutor?.getCmdOutput(shellCon)
     }
 
     private fun execListAddForSetting(
@@ -856,16 +838,16 @@ object ButtonViewProducer {
     }
 
     private fun simpleJsExecutor(
-        currentVariableName: String?,
-        editParameters: EditParameters,
-        buttonMap: Map<String, String>?
+        buttonEventArgs: ButtonEventArgs,
     ){
         val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
-        val editFragment = editParameters.currentFragment
+        val editFragment = buttonEventArgs.editParameters.currentFragment
         if(editFragment !is EditFragment) return
+        val currentVariableName = buttonEventArgs.currentVariableName
         val currentEditTextCon = currentVariableName?.let {
             EditVariableName.getText(editFragment, it)
         } ?: String()
+        val buttonMap = buttonEventArgs.buttonMap
         val oneLineJsCon = buttonMap?.get(
             ButtonEditKey.oneLineJs.name
         )
@@ -1023,4 +1005,15 @@ object ButtonViewProducer {
             howFull,
         }
     }
+
+    private data class ButtonEventArgs(
+        val insertButton: Button,
+        val editFragment: EditFragment,
+        val insertEditText: EditText,
+        val currentVariableName: String?,
+        val scriptFileSaver: ScriptFileSaver,
+        val editParameters: EditParameters,
+        val buttonMap: Map<String, String>?,
+        val currentSetVariableValue: String?
+        )
 }
