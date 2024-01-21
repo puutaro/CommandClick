@@ -68,7 +68,6 @@ class   TerminalFragment: Fragment() {
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var terminalFontColor = CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
     var currentUrl: String? = null
-    var runShell = "bash"
     var onUrlHistoryRegister = CommandClickScriptVariable.ON_URL_HISTORY_REGISTER_DEFAULT_VALUE
     var ignoreHistoryPathList: List<String>? = null
     var onUrlLaunchIntent: Boolean = false

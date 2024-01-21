@@ -4,35 +4,53 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object TerminalOnHandlerForEdit {
     fun handle(
         terminalFragment: TerminalFragment
     ){
-        if(
-            !terminalFragment.isVisible
-        ) return
-        val isCmdValEdit =
-            terminalFragment.editType ==
-                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-        when(isCmdValEdit){
-            true -> {
-                val isShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-                    terminalFragment.readSharedPreferences,
-                    SharePrefferenceSetting.on_shortcut
-                ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-                if(
-                    isShortcut
-                    && terminalFragment.terminalOn !=
-                    SettingVariableSelects.TerminalDoSelects.OFF.name
-                ) return
-            }
-            else -> {}
-        }
+
         val context = terminalFragment.context
-        val listener = context as? TerminalFragment.OnTermSizeMinimumListenerForTerm
-        listener?.onTermSizeMinimumForTerm()
+            ?: return
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.IO) {
+                for (i in 1..10) {
+                    delay(100)
+                    if (terminalFragment.isVisible) break
+                }
+            }
+            val isCmdValEdit =
+                withContext(Dispatchers.IO) {
+                    terminalFragment.editType ==
+                            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                }
+            when (isCmdValEdit) {
+                true -> {
+                    val isShortcut = withContext(Dispatchers.IO) {
+                        SharePreferenceMethod.getReadSharePreffernceMap(
+                            terminalFragment.readSharedPreferences,
+                            SharePrefferenceSetting.on_shortcut
+                        ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
+                    }
+                    if (
+                        isShortcut
+                        && terminalFragment.terminalOn !=
+                        SettingVariableSelects.TerminalDoSelects.OFF.name
+                    ) return@launch
+                }
+
+                else -> {}
+            }
+            withContext(Dispatchers.Main) {
+                val listener = context as? TerminalFragment.OnTermSizeMinimumListenerForTerm
+                listener?.onTermSizeMinimumForTerm()
+            }
+        }
     }
 }
