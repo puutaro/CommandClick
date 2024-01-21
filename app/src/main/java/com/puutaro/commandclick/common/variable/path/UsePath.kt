@@ -142,6 +142,7 @@ object UsePath {
     val fannelReadmePath = "\${01}/\${001}/${fannelReadmeName}"
 
 
+    const val clickBackupDirNameInAppDir = "backup"
     private const val cmdclickSystemDirName = "system"
     private const val cmdclickJsSystemDirName = "js"
     const val cmdclickJsSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickJsSystemDirName"

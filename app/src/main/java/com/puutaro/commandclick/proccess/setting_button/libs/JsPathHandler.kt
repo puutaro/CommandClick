@@ -62,6 +62,9 @@ import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JsPathHandler {
@@ -861,12 +864,7 @@ object JsPathHandler {
                     replaceSrcFanneCon
                 )
             }
-            val currentFannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-            val srcFannelDirName = CcPathTool.makeFannelDirName(srcFannelName)
-            FileSystems.copyDirectory(
-                File(currentAppDirPath, currentFannelDirName).absolutePath,
-                File(srcAppDirPath, srcFannelDirName).absolutePath
-            )
+            copyDirectoryWithDeleteWithBackup()
             val listener =
                 this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
@@ -874,6 +872,44 @@ object JsPathHandler {
                 ToolbarButtonBariantForEdit.CANCEL,
                 mapOf(),
                 false
+            )
+        }
+
+        private fun copyDirectoryWithDeleteWithBackup(){
+            val srcReadSharePreffernceMap = editFragment.srcReadSharePreffernceMap
+                ?: return
+            val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                srcReadSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+            val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                srcReadSharePreffernceMap,
+                SharePrefferenceSetting.current_fannel_name
+            )
+            val currentFannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
+            val currentFannelDirPath = File(currentAppDirPath, currentFannelDirName).absolutePath
+            val srcFannelDirName = CcPathTool.makeFannelDirName(srcFannelName)
+            val srcFannelDirPath = File(srcAppDirPath, srcFannelDirName).absolutePath
+            CoroutineScope(Dispatchers.IO).launch {
+                val buckupDirPath =
+                    File(
+                        currentAppDirPath,
+                        UsePath.clickBackupDirNameInAppDir
+                    ).absolutePath
+                FileSystems.createDirs(buckupDirPath)
+                val buckupTargetDirPath =
+                    File(buckupDirPath, srcFannelDirName).absolutePath
+                FileSystems.copyDirectory(
+                    currentFannelDirPath,
+                    buckupTargetDirPath
+                )
+            }
+            FileSystems.removeDir(
+                srcFannelDirPath
+            )
+            FileSystems.copyDirectory(
+                currentFannelDirPath,
+                srcFannelDirPath
             )
         }
     }
