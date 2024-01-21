@@ -4,6 +4,7 @@ import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
@@ -13,7 +14,9 @@ import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.dialog.DialogObject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object QrDialogClickHandler {
@@ -106,26 +109,37 @@ object QrDialogClickHandler {
         contents: String,
     ){
         val targetFragmentInstance = TargetFragmentInstance()
-        val terminalFragment =
-            targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
-                ?: return
-        val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
-            ?: return
-        val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
-        val useAppDirPath =
-            when(onLaunchByWebViewDialog){
-                true -> currentAppDirPath
-                else -> parentDirPath
-            }
+        var terminalFragment: TerminalFragment? = null
         CoroutineScope(Dispatchers.Main).launch {
-            QrConfirmDialog(
-                fragment,
-                null,
-                null,
-                useAppDirPath,
-                QrDecodedTitle.makeTitle(contents),
-                contents
-            ).launch()
+            withContext(Dispatchers.Main) {
+                for (i in 1..10) {
+                    terminalFragment =
+                        targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
+                    if (terminalFragment != null) break
+                    delay(100)
+                }
+            }
+            if(terminalFragment == null) return@launch
+            val termLinearParam = terminalFragment?.view?.layoutParams as? LinearLayout.LayoutParams
+                ?: return@launch
+            val onLaunchByWebViewDialog = termLinearParam.weight <= 0f
+            val useAppDirPath =
+                withContext(Dispatchers.IO) {
+                    when (onLaunchByWebViewDialog) {
+                        true -> currentAppDirPath
+                        else -> parentDirPath
+                    }
+                }
+            withContext(Dispatchers.Main) {
+                QrConfirmDialog(
+                    fragment,
+                    null,
+                    null,
+                    useAppDirPath,
+                    QrDecodedTitle.makeTitle(contents),
+                    contents
+                ).launch()
+            }
         }
     }
 }

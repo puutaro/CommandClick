@@ -35,6 +35,7 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListInd
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FormDialogForListIndexOrButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
@@ -52,6 +53,7 @@ import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.editor.EditorByIntent
 import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -213,6 +215,18 @@ class WithIndexListView(
             }
         }
 
+        fun keyboardHide(
+            editFragment: EditFragment,
+        ){
+            editFragment.binding.editListSearchEditText.setText(String())
+            val listener = editFragment.context as? EditFragment.OnKeyboardVisibleListenerForEditFragment
+            listener?.onKeyBoardVisibleChangeForEditFragment(
+                false,
+                true,
+            )
+            Keyboard.hiddenKeyboardForFragment(editFragment)
+        }
+
         private fun judgeBySuffixForIndex(
             targetStr: String,
             filterSuffix: String,
@@ -323,6 +337,9 @@ class WithIndexListView(
                     itemView: View,
                     holder: ListIndexForEditAdapter.ListIndexListViewHolder
                 ) {
+                    keyboardHide(
+                        editFragment,
+                    )
                     val selectedItem = holder.fileName
                     execItemClickJs(
                         clickDirPath,
@@ -342,6 +359,7 @@ class WithIndexListView(
                 itemView: View,
                 holder: ListIndexForEditAdapter.ListIndexListViewHolder
             ) {
+                keyboardHide(editFragment)
                 QrDialogClickHandler.handle(
                     false,
                     editFragment,
