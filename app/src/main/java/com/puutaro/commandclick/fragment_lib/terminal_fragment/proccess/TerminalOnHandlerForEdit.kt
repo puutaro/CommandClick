@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -18,6 +19,10 @@ object TerminalOnHandlerForEdit {
 
         val context = terminalFragment.context
             ?: return
+        val indexTerminalTag = context.getString(R.string.index_terminal_fragment)
+        if(
+            terminalFragment.tag == indexTerminalTag
+        ) return
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 for (i in 1..10) {
