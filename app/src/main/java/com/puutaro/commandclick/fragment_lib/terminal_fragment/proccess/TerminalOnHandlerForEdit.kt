@@ -26,8 +26,8 @@ object TerminalOnHandlerForEdit {
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 for (i in 1..10) {
-                    delay(100)
                     if (terminalFragment.isVisible) break
+                    delay(100)
                 }
             }
             val isCmdValEdit =

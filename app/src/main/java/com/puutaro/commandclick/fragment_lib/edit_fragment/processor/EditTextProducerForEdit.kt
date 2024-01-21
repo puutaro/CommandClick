@@ -64,6 +64,7 @@ class EditTextProducerForEdit(
         editFragment,
         currentScriptContentsList,
         recordNumToMapNameValueInCommandHolder,
+        recordNumToMapNameValueInSettingHolder,
         readSharePreffernceMap,
         setReplaceVariableMap,
         false,

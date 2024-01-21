@@ -31,7 +31,7 @@ class EditedTextContents(
 
     fun updateByCommandVariables(
         scriptContentsList: List<String>,
-        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
+        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
     ): List<String> {
         return if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
@@ -46,6 +46,22 @@ class EditedTextContents(
             )
         }
     }
+
+    fun updateBySettingVariables(
+        editedScriptContentsList: List<String>,
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
+    ): List<String> {
+        return if (recordNumToMapNameValueInSettingHolder == null) {
+            editedScriptContentsList
+        } else {
+            scriptContentsLister.update(
+                recordNumToMapNameValueInSettingHolder,
+                editedScriptContentsList,
+                EditTextIdForEdit.SETTING_VARIABLE.id
+            )
+        }
+    }
+
 
     fun save(
         lastScriptContentsList: List<String>,

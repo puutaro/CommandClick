@@ -11,7 +11,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.proccess.setting_button.ButtonIcons
 import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.setting_button.OnScriptSave
 import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
@@ -28,7 +27,7 @@ import java.io.File
 class ToolbarButtonArgsMaker(
     val fragment: Fragment,
     val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-//    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     val settingButtonView: ImageButton?,
     private val isLongClick: Boolean,

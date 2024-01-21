@@ -183,6 +183,7 @@ object ButtonViewProducer {
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val editParameters = buttonEventArgs.editParameters
         val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
+        val recordNumToMapNameValueInSettingHolder = editParameters.recordNumToMapNameValueInCommandHolder
         val setReplaceVariableMap = editParameters.setReplaceVariableMap
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
@@ -200,6 +201,7 @@ object ButtonViewProducer {
 
         buttonEventArgs.scriptFileSaver.save(
             recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
         )
         saveListContents(editFragment, currentButtonTag)
         simpleJsExecutor(

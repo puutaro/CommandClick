@@ -107,11 +107,14 @@ class EditModeHandler(
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
+            null,
+            null,
         )
 
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
-            recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
         )
         val editTextProducerForEdit = EditTextProducerForEdit(
             editFragment,
@@ -123,10 +126,13 @@ class EditModeHandler(
 
         buttonCreate(
             ToolbarButtonBariantForEdit.EDIT,
-            recordNumToMapNameValueInCommandHolder=recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
+            recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
         )
     }
 
@@ -178,7 +184,7 @@ class EditModeHandler(
 //            ToolbarButtonBariantForEdit.HISTORY,
 //            1f,
 //        )
-
+//
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder,
@@ -191,18 +197,19 @@ class EditModeHandler(
             hideSettingVariableList,
         )
         editTextProducerForEdit.adds(
-            true
+        true
         )
     }
 
     private fun buttonCreate(
         toolbarButtonVariantForEdit: ToolbarButtonBariantForEdit,
-        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null,
+        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ){
         toolbarButtonProducerForEdit.make(
             toolbarButtonVariantForEdit,
             recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
         )
     }
 

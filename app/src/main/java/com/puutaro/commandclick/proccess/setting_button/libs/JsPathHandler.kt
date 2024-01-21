@@ -298,6 +298,7 @@ object JsPathHandler {
                 OkHandler(
                     fragment,
                     toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
+                    toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
                 ).execForOk()
             }
         }
@@ -739,6 +740,7 @@ object JsPathHandler {
     private class OkHandler(
         private val editFragment: EditFragment,
         private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+        private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ) {
         private val context = editFragment.context
         private val readSharePreffernceMap = editFragment.readSharePreffernceMap
@@ -762,6 +764,7 @@ object JsPathHandler {
             val buttonTag = SaveTagForListContents.OK.tag
             scriptFileSaver.save(
                 recordNumToMapNameValueInCommandHolder,
+                recordNumToMapNameValueInSettingHolder,
             )
             val isCmdEditExecute = enableCmdEdit
                     && editFragment.enableEditExecute

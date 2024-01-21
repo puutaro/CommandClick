@@ -161,6 +161,7 @@ class FormJsDialog(
             terminalFragment,
             virtualJsContentsList,
             recordNumToMapNameValueInCommandHolder,
+            recordNumToMapNameValueInSettingHolder,
             virtualReadPreffrenceMap,
             setReplaceVariableMap,
             true,

@@ -6,7 +6,8 @@ import androidx.fragment.app.Fragment
 data class EditParameters(
     val currentFragment: Fragment,
     val currentShellContentsList: List<String>,
-    val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null,
+    val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     val readSharePreffernceMap: Map<String, String>,
     val setReplaceVariableMap: Map<String, String>?,
     val onFixNormalSpinner: Boolean,
