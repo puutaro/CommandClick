@@ -289,7 +289,10 @@ object QrDialogMethod {
                     is EditFragment -> {
                         WithIndexListView.listIndexListUpdateFileList(
                             fragment,
-                            WithIndexListView.makeFileListHandler(fragment.isInstallFannelForListIndex)
+                            WithIndexListView.makeFileListHandler(
+                                fragment.busyboxExecutor,
+                                fragment.isInstallFannelForListIndex
+                            )
                         )
                     }
                 }
@@ -373,7 +376,10 @@ object QrDialogMethod {
                     is EditFragment -> {
                         WithIndexListView.listIndexListUpdateFileList(
                             fragment,
-                            WithIndexListView.makeFileListHandler(fragment.isInstallFannelForListIndex)
+                            WithIndexListView.makeFileListHandler(
+                                fragment.busyboxExecutor,
+                                fragment.isInstallFannelForListIndex
+                            )
                         )
                     }
                 }

@@ -61,7 +61,7 @@ object ListContentsSelectBoxTool {
                 val saveFilterShellPathObj = File(saveFilterShellPath)
                 val shellParentDirPath = saveFilterShellPathObj.parent
                     ?: return
-                editFragment.busyBoxExecutor?.getCmdOutput(
+                editFragment.busyboxExecutor?.getCmdOutput(
                     ReadText(
                         shellParentDirPath,
                         saveFilterShellPathObj.name

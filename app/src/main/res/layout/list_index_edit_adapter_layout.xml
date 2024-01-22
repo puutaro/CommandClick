@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
+    android:id="@+id/list_index_edit_adapter_mterial_card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
@@ -7,7 +8,17 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     card_view:cardElevation="10dp"
-    android:foreground="?android:attr/selectableItemBackground">
+    app:checkedIcon="@drawable/icons8_check_ok"
+    app:checkedIconTint="@color/checked_item_color"
+    app:checkedIconSize="30dp"
+    app:checkedIconMargin="10dp"
+    android:checkable="true"
+    android:clickable="true"
+    android:focusable="true"
+    >
+<!--    app:strokeWidth="4dp"
+        app:strokeColor="@color/list_index_item_selector"
+        android:foreground="?android:attr/selectableItemBackground"-->
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/list_index_edit_adapter_horizontal_linearlayout"
@@ -59,4 +70,4 @@
                 />
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.appcompat.widget.LinearLayoutCompat>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

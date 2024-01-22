@@ -661,7 +661,7 @@ object ButtonViewProducer {
                 currentAppFannelPath
             )
         }
-        return editFragment.busyBoxExecutor?.getCmdOutput(shellCon)
+        return editFragment.busyboxExecutor?.getCmdOutput(shellCon)
     }
 
     private fun execListAddForSetting(

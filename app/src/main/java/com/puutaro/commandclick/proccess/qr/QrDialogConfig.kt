@@ -89,7 +89,7 @@ object QrDialogConfig {
             disableQrValue.isNullOrEmpty()
         ) return false
         return disableQrValue ==
-                QrDisableSettingKey.OFF.key
+                QrDisableSettingKey.ON.key
     }
 
     fun howQrType(

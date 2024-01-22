@@ -171,20 +171,18 @@ class EditTextProducerForEdit(
             val isListIndex = variableTypeList.contains(
                 EditTextSupportViewName.LIST_INDEX.str
             )
-            when(isListIndex) {
-                true -> {
-                    withIndexListView.create(
-                        editParameters
-                    )
-                }
-                else -> {
-                    withEditComponent.insert(
-                        insertTextView,
-                        editParameters,
-                    ).let {
-                        binding.editLinearLayout.addView(it)
-                    }
-                }
+            if(isListIndex){
+                withIndexListView.create(
+                    editParameters
+                )
+                return
+            }
+            if(editFragment.existIndexList) return@forEach
+            withEditComponent.insert(
+                insertTextView,
+                editParameters,
+            ).let {
+                binding.editLinearLayout.addView(it)
             }
         }
     }

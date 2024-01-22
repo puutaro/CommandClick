@@ -268,9 +268,9 @@ enum class SettingButtonClickConfigMapKey(
 }
 
 enum class MonitorSize {
-        SHORT,
-        LONG,
-    }
+    SHORT,
+    LONG,
+}
 
 enum class OnScriptSave {
     ON,
