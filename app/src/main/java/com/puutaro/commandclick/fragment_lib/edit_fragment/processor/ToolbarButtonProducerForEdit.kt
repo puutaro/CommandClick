@@ -12,7 +12,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.proccess.history.CLICLTYPE
 import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
 import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonHandler
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class ToolbarButtonProducerForEdit(

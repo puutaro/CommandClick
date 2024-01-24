@@ -1,10 +1,10 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuExtraKey
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuExtraKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.util.CcScript
 
 object ExtraMapTool {

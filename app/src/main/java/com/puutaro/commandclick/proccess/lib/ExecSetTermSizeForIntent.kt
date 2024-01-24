@@ -6,7 +6,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
-import com.puutaro.commandclick.proccess.setting_button.MonitorSize
+import com.puutaro.commandclick.proccess.tool_bar_button.MonitorSize
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
 

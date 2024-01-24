@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
@@ -11,11 +11,11 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.setting_button.OnScriptSave
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonConfigMapKey
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.OnScriptSave
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonClickConfigMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.ReadText
@@ -193,7 +193,7 @@ class ToolbarButtonArgsMaker(
             }
             else -> {
                 SettingFile.formSettingContents(
-                    makeSettingMenuConHandler(fragment).split("\n")
+                    makeToolbarbuttonMenuConHandler(fragment).split("\n")
                 )
             }
         }
@@ -233,7 +233,7 @@ class ToolbarButtonArgsMaker(
         }
     }
 
-    private fun makeSettingMenuConHandler(
+    private fun makeToolbarbuttonMenuConHandler(
         fragment: Fragment
     ): String {
         return when(fragment){

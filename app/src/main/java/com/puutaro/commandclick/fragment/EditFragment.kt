@@ -25,6 +25,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -40,10 +41,11 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchTo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
-import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
-import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
+import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
@@ -83,7 +85,7 @@ class EditFragment: Fragment() {
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
-    var busyBoxExecutor: BusyboxExecutor? = null
+    var busyboxExecutor: BusyboxExecutor? = null
     var historySwitch = SettingVariableSelects.HistorySwitchSelects.OFF.name
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
@@ -115,13 +117,15 @@ class EditFragment: Fragment() {
     var listIndexConfigMap: Map<String, String>? = null
     var qrDialogConfig: Map<String, String>? = null
     var fileGetterForSettingButton: FileGetterForSettingButton? = null
+    var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
     var editBoxTitle = String()
+    var filterDir = String()
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
-    var isInstallFannelForListIndex = false
+//    var isInstallFannelForListIndex = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
@@ -154,6 +158,7 @@ class EditFragment: Fragment() {
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
         fileGetterForSettingButton = FileGetterForSettingButton(this)
+        directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         readSharePreffernceMap =
             EditFragmentArgs.getReadSharePreference(arguments)
@@ -291,7 +296,7 @@ class EditFragment: Fragment() {
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
         context?.let {
-            busyBoxExecutor = BusyboxExecutor(
+            busyboxExecutor = BusyboxExecutor(
                 it,
                 UbuntuFiles(it)
             )
@@ -373,9 +378,12 @@ class EditFragment: Fragment() {
         if(existIndexList){
             CoroutineScope(Dispatchers.Main).launch {
                 delay(100)
-                WithIndexListView.listIndexListUpdateFileList(
+                ListIndexForEditAdapter.listIndexListUpdateFileList(
                     this@EditFragment,
-                    WithIndexListView.makeFileListHandler(isInstallFannelForListIndex)
+                    ListIndexForEditAdapter.makeFileListHandler(
+                        busyboxExecutor,
+                        ListIndexForEditAdapter.listIndexTypeKey
+                    )
                 )
             }
         }

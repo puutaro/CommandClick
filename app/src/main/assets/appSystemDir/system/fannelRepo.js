@@ -17,7 +17,7 @@ qrDialogConfig="file://"
 listIndexConfig="file://"
 settingButtonConfig="file://"
 setReplaceVariables="file://"
-setVariableTypes="file://"
+setVariableTypes="qrListIndex:LI="
 hideSettingVariables="file://"
 scriptFileName="fannelRepo.js"
 /// SETTING_SECTION_END

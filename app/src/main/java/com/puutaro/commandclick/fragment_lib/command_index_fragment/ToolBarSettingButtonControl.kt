@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonHandler
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonHandler
 
 class ToolBarSettingButtonControl(
     binding: CommandIndexFragmentBinding,

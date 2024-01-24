@@ -1,10 +1,10 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking

@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button
+package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.content.Context
 import androidx.fragment.app.Fragment

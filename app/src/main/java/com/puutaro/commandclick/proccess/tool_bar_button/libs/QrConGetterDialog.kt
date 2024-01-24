@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.app.Dialog
 import android.view.Gravity
@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
 import java.io.File
 
 object QrConGetterDialog {

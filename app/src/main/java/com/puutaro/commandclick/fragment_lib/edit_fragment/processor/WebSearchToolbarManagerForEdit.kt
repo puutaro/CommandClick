@@ -9,8 +9,8 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.internet_button.GoogleSuggest
-import com.puutaro.commandclick.proccess.setting_button.libs.EditLongPressType
-import com.puutaro.commandclick.proccess.setting_button.libs.EditToolbarSwitcher
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditToolbarSwitcher
 import com.puutaro.commandclick.proccess.UrlTexter
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel

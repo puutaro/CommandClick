@@ -26,7 +26,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.broadcast.re
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.CmdClickSystemAppDir
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.setting_button.libs.FileGetterForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs

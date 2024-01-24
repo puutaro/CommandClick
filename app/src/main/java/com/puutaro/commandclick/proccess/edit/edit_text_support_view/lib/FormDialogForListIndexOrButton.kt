@@ -46,7 +46,7 @@ class FormDialogForListIndexOrButton(
 
     private val exitTextStartId = 110000
 
-    private val withEditComponentForListIndex = WithEditComponentForListIndex()
+        private val withEditComponentForListIndex = WithEditComponentForListIndex()
 
     private val languageType =
         LanguageTypeSelects.JAVA_SCRIPT

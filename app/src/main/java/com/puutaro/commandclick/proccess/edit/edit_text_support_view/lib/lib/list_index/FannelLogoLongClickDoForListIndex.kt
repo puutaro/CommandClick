@@ -11,7 +11,6 @@ object FannelLogoLongClickDoForListIndex {
     fun invoke(
         editFragment: EditFragment,
         currentAppDirPath: String,
-        parentDirPath: String,
     ) {
         val binding = editFragment.binding
         val listIndexForEditAdapter = binding.editListRecyclerView.adapter as ListIndexForEditAdapter
@@ -26,7 +25,6 @@ object FannelLogoLongClickDoForListIndex {
                         true,
                         editFragment,
                         currentAppDirPath,
-                        parentDirPath,
                         holder.fileName,
                         listIndexForEditAdapter.qrDialogConfigMap
                     )

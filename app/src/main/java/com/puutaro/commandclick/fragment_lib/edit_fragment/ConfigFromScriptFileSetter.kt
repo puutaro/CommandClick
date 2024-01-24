@@ -12,9 +12,9 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.proccess.setting_button.ButtonVisibleValue
-import com.puutaro.commandclick.proccess.setting_button.ButtonIcons
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonConfigMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.ButtonVisibleValue
+import com.puutaro.commandclick.proccess.tool_bar_button.ButtonIcons
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool

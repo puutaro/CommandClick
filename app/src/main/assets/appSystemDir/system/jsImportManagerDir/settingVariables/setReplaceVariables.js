@@ -9,7 +9,6 @@ LIST_SUFFIX=suffix,
 UPDATE_LIST_INDEX_BROADCAST_ACTION=
 	"com.puutaro.commandclick.edit_frag.update_index_list",
 
-
 // dir path
 CMDCLICK_ROOT_DIR_PATH=
 	"${00}",
@@ -21,7 +20,17 @@ CURRENT_APP_DIR_PATH=
 	"${01}",
 FANNEL_DIR_PATH=
 	`${CURRENT_APP_DIR_PATH}/${001}`,	
+JS_IMPORT_SETTINGS_DIR_PATH=
+	`${FANNEL_DIR_PATH}/settings`,
+JS_IMPORT_CLICK_DIR_PATH=
+	`${FANNEL_DIR_PATH}/click`,
 
 // menu path
 JS_IMPORT_MANAGER_MENU_PATH=
 	`${FANNEL_DIR_PATH}/settings/settingButtonMenu.js`,
+JS_IMPORT_LONG_PRESS_MENU_PATH=
+	`${JS_IMPORT_SETTINGS_DIR_PATH}/longClickMenu.js`,
+
+// js path
+JS_IMPORT_SHOW_CON_JS_PATH=
+	`${JS_IMPORT_CLICK_DIR_PATH}/itemClick.js`,

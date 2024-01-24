@@ -17,6 +17,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
@@ -287,11 +288,11 @@ object QrDialogMethod {
                         context.sendBroadcast(indexfannelListUpdateIntent)
                     }
                     is EditFragment -> {
-                        WithIndexListView.listIndexListUpdateFileList(
+                        ListIndexForEditAdapter.listIndexListUpdateFileList(
                             fragment,
-                            WithIndexListView.makeFileListHandler(
+                            ListIndexForEditAdapter.makeFileListHandler(
                                 fragment.busyboxExecutor,
-                                fragment.isInstallFannelForListIndex
+                                ListIndexForEditAdapter.listIndexTypeKey
                             )
                         )
                     }
@@ -374,11 +375,11 @@ object QrDialogMethod {
 //                        context.sendBroadcast(indexfannelListUpdateIntent)
 //                    }
                     is EditFragment -> {
-                        WithIndexListView.listIndexListUpdateFileList(
+                        ListIndexForEditAdapter.listIndexListUpdateFileList(
                             fragment,
-                            WithIndexListView.makeFileListHandler(
+                            ListIndexForEditAdapter.makeFileListHandler(
                                 fragment.busyboxExecutor,
-                                fragment.isInstallFannelForListIndex
+                                ListIndexForEditAdapter.listIndexTypeKey
                             )
                         )
                     }

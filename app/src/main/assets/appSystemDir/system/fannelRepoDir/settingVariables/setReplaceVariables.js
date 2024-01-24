@@ -19,15 +19,19 @@ fannelRepoIndexListDirPath=
 	`${fannelRepoDirPath}/fannelList`,
 fannelRepoSettingsDirPath=
 	`${fannelRepoDirPath}/settings`,
+fannelRepoClickDirPath=
+	`${fannelRepoDirPath}/click`,
 
 // menu path
 fannelRepoSettingButtonMenuPath=
 	`${fannelRepoSettingsDirPath}/settingButtonMenu.js`,
+
+// click js path
+fannelRepoInstallJsPath=
+	`${fannelRepoClickDirPath}/itemClick.js`,
 
 // file path
 FANNEL_PATH=
 	"${0}",
 fannelName=
 	"${02}",
-
-

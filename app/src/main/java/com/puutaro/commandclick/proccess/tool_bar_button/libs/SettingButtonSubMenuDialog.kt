@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.app.Dialog
 import android.view.Gravity
@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.ListView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
 
 object SettingButtonSubMenuDialog {
 
@@ -92,7 +92,7 @@ object SettingButtonSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            JsPathHandler.handle(
+            JsPathHandlerForToolbarButton.handle(
                 toolbarButtonArgsMaker,
                 clickedSubMenu,
             )

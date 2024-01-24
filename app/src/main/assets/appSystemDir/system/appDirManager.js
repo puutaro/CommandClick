@@ -27,10 +27,11 @@ execPlayBtnLongPress=""
 execEditBtnLongPress=""
 editButtonConfig="visible=OFF"
 playButtonConfig="visible=OFF"
+qrDialogConfig="file://"
+listIndexConfig="file://"
 settingButtonConfig="file://"
 setReplaceVariables="file://"
-setVariableTypes="file://"
-scriptFileName="appDirManager.js"
+setVariableTypes="appDirAdminList:LI="
 /// SETTING_SECTION_END
 
 

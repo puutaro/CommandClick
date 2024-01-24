@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.app.Dialog
 import android.view.Gravity
@@ -13,8 +13,8 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.util.FileSystems
 
 object AddFileForEdit {

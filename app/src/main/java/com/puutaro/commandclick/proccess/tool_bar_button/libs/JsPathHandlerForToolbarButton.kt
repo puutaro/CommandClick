@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import android.util.Size
@@ -20,6 +20,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -43,10 +44,10 @@ import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonClickConfigMapKey
-import com.puutaro.commandclick.proccess.setting_button.SettingButtonMenuMapKey
-import com.puutaro.commandclick.proccess.setting_button.SystemFannelLauncher
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonClickConfigMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -67,7 +68,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 
-object JsPathHandler {
+object JsPathHandlerForToolbarButton {
 
     fun handle(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
@@ -667,7 +668,7 @@ object JsPathHandler {
     ) {
         val activeCurrentDirPath = when (fragment) {
             is EditFragment -> {
-                val filterDirInWithListIndex = WithIndexListView.filterDir
+                val filterDirInWithListIndex = ListIndexForEditAdapter.filterDir
                 if (
                     fragment.existIndexList
                     && filterDirInWithListIndex.isNotEmpty()

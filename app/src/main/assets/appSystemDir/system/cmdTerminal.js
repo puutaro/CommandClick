@@ -20,7 +20,6 @@ terminalFontZoom="100"
 setReplaceVariables="file://"
 setVariableTypes="file://"
 hideSettingVariables="file://"
-scriptFileName="cmdTerminal.js"
 /// SETTING_SECTION_END
 
 

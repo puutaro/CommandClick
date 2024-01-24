@@ -29,8 +29,8 @@ editButtonConfig="visible=OFF"
 playButtonConfig="visible=OFF"
 settingButtonConfig="file://"
 setReplaceVariables="file://"
-setVariableTypes="file://"
-scriptFileName="jsImportManager.js"
+listIndexConfig="file://"
+setVariableTypes="jsImportList:LI="
 /// SETTING_SECTION_END
 
 

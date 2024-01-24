@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button
+package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
@@ -7,8 +7,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
-import com.puutaro.commandclick.proccess.setting_button.libs.JsPathHandler
-import com.puutaro.commandclick.proccess.setting_button.libs.ToolbarButtonArgsMaker
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 class SettingButtonHandler(
@@ -50,7 +50,7 @@ class SettingButtonHandler(
             toolbarButtonArgsMaker.makeSettingButtonConfigMapList(
                 jsPathMacroStr
             )
-        JsPathHandler.handle(
+        JsPathHandlerForToolbarButton.handle(
             toolbarButtonArgsMaker,
             jsPathMacroStr,
             settingButtonConfigMapList = settingButtonConfigMapList

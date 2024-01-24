@@ -541,6 +541,7 @@ object QrUriHandler {
         val terminalFragment =
             targetFragmentInstance.getCurrentTerminalFragmentFromFrag(fragment.activity)
                 ?: return
+
         val termLinearParam = terminalFragment.view?.layoutParams as? LinearLayout.LayoutParams
             ?: return
         val loadUrl =

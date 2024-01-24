@@ -1,2 +1,5 @@
 
-installFannel=,
+type=
+    installFannel=,
+click=
+    jsPath=${fannelRepoInstallJsPath},

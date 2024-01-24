@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -8,7 +8,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl

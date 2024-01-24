@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
@@ -22,13 +23,12 @@ import java.io.File
 object QrDialogClickHandler {
     fun handle(
         isLongClick: Boolean,
-        fragment: Fragment,
+        editFragment: EditFragment,
         currentAppDirPath: String,
-        parentDirPath: String,
         clickFileName: String,
         qrDialogConfigMap: Map<String, String>
     ){
-        val context = fragment.context
+        val context = editFragment.context
         if(
             clickFileName.isEmpty()
             || clickFileName == "-"
@@ -44,19 +44,24 @@ object QrDialogClickHandler {
             true -> QrDialogConfig.QrDialogConfigKey.LONG_CLICK.key
             false -> QrDialogConfig.QrDialogConfigKey.CLICK.key
         }
+        val clickMap = QrDialogConfig.makeQrLogoClickMap(
+            qrDialogConfigMap,
+            clickKey,
+        )
+        val parentDirPath = ListIndexForEditAdapter.filterDir
         val isThisClickEnable = QrDialogConfig.howEnableClick(
             clickKey,
             qrDialogConfigMap,
         )
         val defaultMode = when(isLongClick){
-            true -> QrDialogConfig.ClickModeValues.EDIT_LOGO
-            else -> QrDialogConfig.ClickModeValues.FILE_CONTENTS
+            true -> QrDialogConfig.ClickTypeValuesForQrDialog.EDIT_LOGO
+            else -> QrDialogConfig.ClickTypeValuesForQrDialog.FILE_CONTENTS
         }
         if(!isThisClickEnable){
             return
         }
-        val modeStr = qrDialogConfigMap.get(clickKey)
-        val mode = QrDialogConfig.ClickModeValues.values().find {
+        val modeStr = clickMap.get(QrDialogConfig.ClickSettingKeyForQrDialog.TYPE.key)
+        val mode = QrDialogConfig.ClickTypeValuesForQrDialog.values().find {
             it.mode == modeStr
         } ?: defaultMode
         val contents = if(
@@ -67,37 +72,37 @@ object QrDialogClickHandler {
         ).readText()
         else "no file"
         when(mode){
-            QrDialogConfig.ClickModeValues.EXEC_QR
+            QrDialogConfig.ClickTypeValuesForQrDialog.EXEC_QR
             -> execQr(
-                fragment,
+                editFragment,
                 currentAppDirPath,
                 parentDirPath,
                 contents,
             )
-            QrDialogConfig.ClickModeValues.DESC
+            QrDialogConfig.ClickTypeValuesForQrDialog.DESC
             -> ScriptFileDescription.show(
-                fragment,
+                editFragment,
                 contents.split("\n"),
                 parentDirPath,
                 clickFileName
             )
-            QrDialogConfig.ClickModeValues.EDIT_LOGO
+            QrDialogConfig.ClickTypeValuesForQrDialog.EDIT_LOGO
             -> QrLogoEditDialogLauncher.launch(
-                fragment,
+                editFragment,
                 parentDirPath,
                 clickFileName,
                 qrDialogConfigMap
             )
-            QrDialogConfig.ClickModeValues.FILE_CONTENTS
+            QrDialogConfig.ClickTypeValuesForQrDialog.FILE_CONTENTS
             -> DialogObject.simpleTextShow(
                 context,
                 clickFileName,
                 contents,
             )
         }
-        when(fragment){
+        when(editFragment){
             is EditFragment -> {
-                fragment.binding.editListSearchEditText.setText(String())
+                editFragment.binding.editListSearchEditText.setText(String())
             }
         }
     }

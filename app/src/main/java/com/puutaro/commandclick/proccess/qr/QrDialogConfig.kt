@@ -6,7 +6,6 @@ import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.map.ConfigMapTool
 import java.io.File
 
 object QrDialogConfig {
@@ -42,7 +41,13 @@ object QrDialogConfig {
         OFF("OFF"),
     }
 
-    enum class ClickModeValues(
+    enum class ClickSettingKeyForQrDialog(
+        val key: String
+    ){
+        TYPE("type"),
+        EXTRA("extra"),
+    }
+    enum class ClickTypeValuesForQrDialog(
         val mode: String
     ){
         FILE_CONTENTS("con"),
@@ -51,16 +56,30 @@ object QrDialogConfig {
         EDIT_LOGO("editLogo")
     }
 
-    fun makeDialogConfigMap(
-        readSharePreffernceMap: Map<String, String>
-    ): Map<String, String> {
-        return ConfigMapTool.create(
-            UsePath.qrDialogConfigPath,
-            String(),
-            readSharePreffernceMap
-        ) ?: mapOf()
+    enum class QrDialogExtraKey(
+        val str: String
+    ) {
+        PARENT_DIR_PATH("parentDirPath"),
+        COMP_PREFIX("compPrefix"),
+        COMP_SUFFIX("compSuffix"),
+        BROADCAST_ACTION("broadcastAction"),
+        BROADCAST_SCHEMAS("broadcastSchemas"),
     }
 
+    fun makeQrLogoClickMap(
+        qrDialogConfigMap: Map<String, String>,
+        clickKeyName: String,
+    ): Map<String, String> {
+        return qrDialogConfigMap.get(clickKeyName).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let emptyMap()
+            CmdClickMap.createMap(
+                it,
+                "|"
+            ).toMap()
+        }
+    }
     fun makeLogoConfigMap(
         qrDialogConfigMap: Map<String, String>
     ): Map<String, String> {

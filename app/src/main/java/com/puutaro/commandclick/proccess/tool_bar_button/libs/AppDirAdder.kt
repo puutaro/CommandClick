@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.proccess.setting_button.libs
+package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.app.Dialog
 import android.view.Gravity
@@ -10,7 +10,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.proccess.setting_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.FileSystems
 
 object AppDirAdder {
