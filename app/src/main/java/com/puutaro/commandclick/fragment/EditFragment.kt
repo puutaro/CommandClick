@@ -43,7 +43,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
