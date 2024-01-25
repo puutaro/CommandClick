@@ -91,8 +91,10 @@ class WithIndexListView(
             editFragment
         )
         ListIndexForEditAdapter.listIndexTypeKey = listIndexTypeKey
-        val indexListMap = ListIndexForEditAdapter.getIndexListMap(
-            listIndexConfigMap
+
+        val indexListMap = ListIndexForEditAdapter.getConfigKeyMap(
+            listIndexConfigMap,
+            ListIndexEditConfig.ListIndexConfigKey.LIST.key
         )
 
         ListIndexForEditAdapter.filterDir = ListIndexForEditAdapter.getFilterListDir(
@@ -132,12 +134,14 @@ class WithIndexListView(
         )
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
+
         invokeItemSetClickListenerForFileList()
         invokeQrLogoSetClickListenerForFileList()
         invokeQrLogoSetLongClickListenerForFileList()
         invokeItemSetLongTimeClickListenerForIndexList()
         makeSearchEditText(
             editListSearchEditText,
+            listIndexConfigMap
         )
     }
 
@@ -198,8 +202,25 @@ class WithIndexListView(
 
     private fun makeSearchEditText(
         searchText: AppCompatEditText,
+        listIndexConfigMap: Map<String, String>?
     ) {
-        searchText.hint = editFragment.editBoxTitle
+        val searchBoxMap = ListIndexForEditAdapter.getConfigKeyMap(
+            listIndexConfigMap,
+            ListIndexEditConfig.ListIndexConfigKey.SEARCH_BOX.key
+        )
+        val inVisible =
+            searchBoxMap.get(ListIndexEditConfig.SearchBoxSettingKey.VISIBLE.key) ==
+                    ListIndexEditConfig.SearchBoxVisibleKey.OFF.name
+        if(inVisible){
+            searchText.isVisible = false
+            return
+        }
+        searchText.hint = searchBoxMap.get(ListIndexEditConfig.SearchBoxSettingKey.HINT.key).let {
+            when(it.isNullOrEmpty()) {
+                false -> it
+                else -> editFragment.editBoxTitle
+            }
+        }
         searchText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}

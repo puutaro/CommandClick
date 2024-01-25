@@ -325,13 +325,23 @@ object ListIndexEditConfig {
         TYPE("type"),
         NAME("name"),
         DESC("desc"),
-//        INSTALL_FANEL("installFannel"),
         CHECK_ITEM("checkItem"),
         CLICK("click"),
         LONG_CLICK("longClick"),
         LIST("list"),
+        SEARCH_BOX("searchBox"),
     }
 
+    enum class SearchBoxSettingKey(
+        val key: String,
+    ) {
+        HINT("hint"),
+        VISIBLE("visible"),
+    }
+
+    enum class SearchBoxVisibleKey {
+        OFF
+    }
 
     enum class ListIndexTypeKey(
         val key: String,
@@ -403,7 +413,6 @@ object ListIndexEditConfig {
     enum class ListIndexDescTypeKey(
         val key: String,
     ) {
-        INSTALL_FANNEL("type"),
         NORMAL("normal"),
     }
 

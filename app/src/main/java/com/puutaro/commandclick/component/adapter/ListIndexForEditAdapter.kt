@@ -95,13 +95,13 @@ class ListIndexForEditAdapter(
             )
         }
 
-        fun getIndexListMap(
-            replacedSetVariableMap: Map<String, String>?
+        fun getConfigKeyMap(
+            replacedSetVariableMap: Map<String, String>?,
+            configKey: String,
         ): Map<String, String> {
-            val listDirKeyName = ListIndexEditConfig.ListIndexConfigKey.LIST.key
 
             return replacedSetVariableMap?.get(
-                listDirKeyName
+                configKey
             ).let{
                 CmdClickMap.createMap(
                     it,
