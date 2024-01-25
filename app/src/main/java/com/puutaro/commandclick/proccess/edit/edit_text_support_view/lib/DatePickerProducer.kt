@@ -24,7 +24,8 @@ object DatePickerProducer {
         insertButtonView.text = chooseButtonStr
         ButtonSetter.set(
             context,
-            insertButtonView
+            insertButtonView,
+            mapOf()
         )
 
         setOnButtonClickListener(

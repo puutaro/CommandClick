@@ -69,7 +69,8 @@ object FileSelectOnlyImageGridViewProducer {
         gridButtonView.text = gridButtonLabel
         ButtonSetter.set(
             context,
-            gridButtonView
+            gridButtonView,
+            mapOf()
         )
 
         gridButtonView.setOnClickListener {

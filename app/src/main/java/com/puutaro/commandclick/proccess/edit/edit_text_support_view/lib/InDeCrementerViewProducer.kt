@@ -86,7 +86,8 @@ object InDeCrementerViewProducer {
         }
         ButtonSetter.set(
             context,
-            insertButtonView
+            insertButtonView,
+            mapOf()
         )
 
 

@@ -49,7 +49,8 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         insertTextView.isVisible = isInsertTextViewVisible
         ButtonSetter.set(
             context,
-            insertButton
+            insertButton,
+            mapOf()
         )
         insertButton.setOnClickListener {
                 innerButtonView ->

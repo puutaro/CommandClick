@@ -35,7 +35,8 @@ object MultiSelectSpinnerViewProducer {
         insertButton.tag = "button${currentId + EditTextSupportViewId.BUTTON.id}"
         ButtonSetter.set(
             context,
-            insertButton
+            insertButton,
+            mapOf()
         )
         val buttonLabel = "SLs"
         insertButton.setText(buttonLabel)

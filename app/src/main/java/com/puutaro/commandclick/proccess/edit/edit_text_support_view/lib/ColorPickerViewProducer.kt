@@ -23,7 +23,8 @@ object ColorPickerViewProducer {
         insertButtonView.text = chooseButtonStr
         ButtonSetter.set(
             context,
-            insertButtonView
+            insertButtonView,
+            mapOf()
         )
 
         setOnColorPickerButtonClickListener(

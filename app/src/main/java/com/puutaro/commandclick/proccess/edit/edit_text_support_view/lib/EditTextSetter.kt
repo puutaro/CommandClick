@@ -30,10 +30,7 @@ object EditTextSetter {
         val currentVariableValue = editParameters.currentVariableValue
         val currentVariableName = editParameters.currentVariableName
 
-        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
+
         val insertEditText = EditText(context)
         insertEditText.clearFocus()
         insertEditText.tag = currentVariableName
@@ -76,6 +73,21 @@ object EditTextSetter {
 //        }
         insertEditText.setSelectAllOnFocus(true)
 //        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
+        val layoutHeight = editTextPropertyMap?.get(
+            EditTextPropertySettingKey.HEIGHT.key
+        ).let {
+            val defaultHeight = ViewGroup.LayoutParams.WRAP_CONTENT
+            if(
+                it.isNullOrEmpty()
+            ) return@let defaultHeight
+            try {it.toInt()}catch (e: Exception){
+                defaultHeight
+            }
+        }
+        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
+            0,
+            layoutHeight,
+        )
         linearParamsForEditTextTest.weight = editTextWeight
         insertEditText.layoutParams = linearParamsForEditTextTest
 //        addTextChangeListenerForEditText(
@@ -140,6 +152,7 @@ object EditTextSetter {
         val key: String
     ){
         SIZE("size"),
+        HEIGHT("height"),
         ON_UNDER_LINE("onUnderLine"),
 //        ELLIP_SIZE("ellipSize"),
 //        .setEllipsize(TextUtils.TruncateAt.END);

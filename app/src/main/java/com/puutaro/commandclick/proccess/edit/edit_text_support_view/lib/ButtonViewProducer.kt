@@ -98,7 +98,8 @@ object ButtonViewProducer {
         )
         ButtonSetter.set(
             context,
-            insertButton
+            insertButton,
+            buttonMap,
         )
 //        insertTextView.isVisible = isInsertTextViewVisible
         val currentVariableName = editParameters.currentVariableName
@@ -993,9 +994,15 @@ object ButtonViewProducer {
         cmd,
         label,
         isConsec,
+        textSize,
+        onBorder,
         disableKeyboardHidden,
         tag,
         oneLineJs,
+    }
+
+    enum class OnBoarderKeyForButton {
+        OFF
     }
 
     object SET_F_OPTION_MAP_KEY {

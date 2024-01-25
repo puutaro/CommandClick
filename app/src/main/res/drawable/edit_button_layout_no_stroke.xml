@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ripple
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="?android:attr/colorControlHighlight">
+    <item
+        android:top="5dp"
+        android:bottom="5dp"
+        android:start="4dp"
+        android:end="4dp">
+        <shape>
+            <solid android:color="@color/white"/>
+            <corners android:radius="2dp"/>
+            <stroke
+                android:width="0dp"
+                android:color="@color/terminal_color" />
+            <padding
+                android:left="0dp"
+                android:top="0dp"
+                android:right="0dp"
+                android:bottom="0dp"
+                />
+        </shape>
+    </item>
+</ripple>

@@ -33,7 +33,8 @@ object DirOrFileChooseProducer {
         insertButtonView.text = chooseButtonStr
         ButtonSetter.set(
             context,
-            insertButtonView
+            insertButtonView,
+            mapOf()
         )
 
         val prefixRegex = Regex("^content.*fileprovider/root/storage")

@@ -66,7 +66,8 @@ object DragSortListViewProducer {
         dragSortListViewButtonView.text = dragSortButtonLabel
         ButtonSetter.set(
             context,
-            dragSortListViewButtonView
+            dragSortListViewButtonView,
+            mapOf()
         )
         dragSortListViewButtonView.setOnClickListener {
                 buttonView ->
