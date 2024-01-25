@@ -41,8 +41,18 @@ object TitleImageAndViewSetter {
         )
         return listOf(
             "(${backstackOrder})",
-            "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
+            makeCompressFannelPath(
+                currentAppDirPath,
+                currentScriptFileName
+            ),
         ).joinToString(backstackCountSeparator)
+    }
+
+    fun makeCompressFannelPath(
+        currentAppDirPath: String,
+        currentScriptFileName: String
+    ): String {
+        return "${UsePath.makeOmitPath(currentAppDirPath)}/${currentScriptFileName}"
     }
     fun makeTitleForEditTitle(
         editFragment: EditFragment,
@@ -57,7 +67,7 @@ object TitleImageAndViewSetter {
         ).joinToString(backstackCountSeparator)
     }
 
-    private fun makeBackstackCount(
+    fun makeBackstackCount(
         editFragment: EditFragment
     ): Int {
         return editFragment

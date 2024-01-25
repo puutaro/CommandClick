@@ -23,6 +23,7 @@ enum class EditTextSupportViewName(
     NUM_INDE_CREMENTER("NUM"),
     BUTTON("BTN"),
     EDIT_TEXT_EMPHASIS("TXT"),
+    EDIT_TEXT_PROPERTY("TXTP"),
     READ_ONLY_EDIT_TEXT("RO"),
     PASSWORD("H"),
     HIDDEN_LABEL("HL"),

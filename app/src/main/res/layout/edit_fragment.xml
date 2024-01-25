@@ -85,6 +85,18 @@
             android:layout_above="@+id/edit_tool_bar_linear_layout"
             android:weightSum="1"
             >
+            <LinearLayout
+                android:id="@+id/edit_list_inner_top_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/cmdclick_layout_marginHorizontal"
+                android:orientation="vertical"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:background="@color/white"
+                >
+            </LinearLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/edit_list_recycler_view"
                 android:layout_width="match_parent"
@@ -110,7 +122,18 @@
                 android:autofillHints=""
                 android:inputType="text"
                 />
+            <LinearLayout
+                android:id="@+id/edit_list_inner_bottom_linear_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:descendantFocusability="beforeDescendants"
+                android:focusableInTouchMode="true"
+                android:background="@color/white"
+                >
+            </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/edit_tool_bar_linear_layout"
             android:layout_width="match_parent"

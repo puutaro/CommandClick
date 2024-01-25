@@ -3,12 +3,9 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view
 import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
-import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -20,6 +17,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ColorPi
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DatePickerProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DirOrFileChooseProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DragSortListViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSelectGridViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSeletctSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectGridViewProducer
@@ -36,8 +34,9 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.MultiSe
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.TimePickerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.VariableLabelAdder
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.view_model.activity.EditViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -48,32 +47,54 @@ class WithEditComponent(
 ) {
     private val textAndLabelList = TypeVariable.textAndLabelList
     private val noIndexTypeList = TypeVariable.noIndexTypeList
-    private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     fun insert(
         insertTextView: TextView,
         editParameters: EditParameters,
     ): LinearLayout {
         val context = editParameters.context
-        val textLabelIndex = culcTextLabelMarkIndex(
+        val textLabelIndex = culcSetVariableTypeMarkIndex(
             editParameters,
-            textAndLabelList
+            textAndLabelList,
+            EditTextSupportViewName.VARIABLE_LABEL.str
         )
         VariableLabelAdder.add(
             insertTextView,
             editParameters,
             textLabelIndex
         )
-        val variableTypeList = updateVariableTypeListByLabel(
+        editParameters.variableTypeList = updateVariableTypeListByExcludeSupportView(
             editParameters,
-            textLabelIndex
+            textLabelIndex,
+            EditTextSupportViewName.VARIABLE_LABEL.str
+        )
+        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
+            editParameters,
+            textLabelIndex,
+        )
+
+        val editTextPropertyIndex = culcSetVariableTypeMarkIndex(
+            editParameters,
+            textAndLabelList,
+            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
+        )
+        val setVariableValueForEditText = SetVariableTypeValue.makeByReplace(
+            editParameters
+        )
+        val editTextPropertyMap = SetVariableTyper.getCertainSetValIndexMap(
+            setVariableValueForEditText,
+            editTextPropertyIndex
+        )
+        val variableTypeList = updateVariableTypeListByExcludeSupportView(
+            editParameters,
+            editTextPropertyIndex,
+            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
         )
         editParameters.variableTypeList = variableTypeList
-        editParameters.setVariableMap = updateSetVariableMapByLabelIndex(
-                editParameters,
-                textLabelIndex,
-            )
-
+        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
+            editParameters,
+            editTextPropertyIndex,
+        )
         val editTextWeight = decideTextEditWeight(
             variableTypeList,
         )
@@ -81,8 +102,9 @@ class WithEditComponent(
             editTextWeight,
             variableTypeList,
         )
-        val insertEditText = initEditText(
+        val insertEditText = EditTextSetter.set(
             editParameters,
+            editTextPropertyMap,
             editTextWeight
         )
         val horizontalLinearLayout = makeHorizontalLayout(context)
@@ -317,44 +339,6 @@ class WithEditComponent(
         return horizontalLinearLayout
     }
 
-
-    private fun initEditText(
-        editParameters: EditParameters,
-        editTextWeight: Float
-    ): EditText {
-        val context = editParameters.context
-        val currentId = editParameters.currentId
-        val currentVariableValue = editParameters.currentVariableValue
-        val currentVariableName = editParameters.currentVariableName
-
-        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-        val insertEditText = EditText(context)
-        insertEditText.clearFocus()
-        insertEditText.tag = currentVariableName
-        insertEditText.id = currentId
-//        insertEditText.setTextColor(context?.getColor(R.color.terminal_color) as Int)
-        insertEditText.backgroundTintList = context?.getColorStateList(R.color.gray_out)
-        editViewModel.variableNameToEditTextIdMap.put(
-            currentVariableName as String,
-            currentId
-        )
-
-        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        insertEditText.setText(currentVariableValue)
-        insertEditText.setSelectAllOnFocus(true)
-//        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
-        linearParamsForEditTextTest.weight = editTextWeight
-        insertEditText.layoutParams = linearParamsForEditTextTest
-//        addTextChangeListenerForEditText(
-//            insertEditText,
-//            currentId
-//        )
-        return insertEditText
-    }
-
     private  fun makeHorizontalLayout(
         context: Context?
     ):LinearLayout {
@@ -498,31 +482,36 @@ fun checkIndexNum(
     }
 }
 
-fun culcTextLabelMarkIndex(
+
+
+fun culcSetVariableTypeMarkIndex(
     editParameters: EditParameters,
     textAndLabelList: List<String>,
+    setValTypeMarkStr: String,
 ): Int {
     return editParameters.variableTypeList.filter {
         !textAndLabelList.contains(it)
     }.indexOf (
-        EditTextSupportViewName.VARIABLE_LABEL.str
+        setValTypeMarkStr
     )
 }
 
-fun updateVariableTypeListByLabel(
+
+fun updateVariableTypeListByExcludeSupportView(
     editParameters: EditParameters,
     textLabelIndex: Int,
+    excludeSupportViewName: String
 ): List<String> {
     val variableTypeListSource = editParameters.variableTypeList
     if(
         textLabelIndex < 0
     ) return variableTypeListSource
     return variableTypeListSource.filter {
-        it != EditTextSupportViewName.VARIABLE_LABEL.str
+        it != excludeSupportViewName
     }
 }
 
-fun updateSetVariableMapByLabelIndex(
+fun updateSetVariableMapByEditSupportViewNameIndex(
     editParameters: EditParameters,
     textLabelIndex: Int,
 ): Map<String, String>? {

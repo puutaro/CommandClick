@@ -8,15 +8,20 @@ object EditLayoutViewHideShow {
         editFragment: EditFragment,
         onShow: Boolean
     ){
-        val showEditTextScroll =
-            onShow && !editFragment.existIndexList
-        editFragment.binding.editTextScroll.isVisible =
-            showEditTextScroll
-        editFragment.binding.editTextView.isVisible =
-            showEditTextScroll
-        val showEditListLinearLayout =
-            onShow && editFragment.existIndexList
-        editFragment.binding.editListLinearLayout.isVisible =
-            showEditListLinearLayout
+        val binding = editFragment.binding
+        when(editFragment.existIndexList){
+            true -> {
+                binding.editListInnerTopLinearLayout.isVisible = onShow
+                binding.editListInnerBottomLinearLayout.isVisible = !onShow
+            }
+            else -> {
+                editFragment.binding.editTextScroll.isVisible =
+                    onShow
+                editFragment.binding.editTextView.isVisible =
+                    onShow
+                editFragment.binding.editListLinearLayout.isVisible =
+                    onShow
+            }
+        }
     }
 }

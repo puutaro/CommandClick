@@ -23,7 +23,13 @@ object KeyboardWhenTermLongForEdit {
         val listenerForEditSizeWhenLong =
             context as? EditFragment.OnLongTermKeyBoardOpenAjustListenerForEdit
         val binding = editFragment.binding
-        binding.editTextScroll.isVisible = !isOpen
+        when(editFragment.existIndexList) {
+            true -> {
+                binding.editListInnerTopLinearLayout.isVisible = !isOpen
+                binding.editListInnerBottomLinearLayout.isVisible = !isOpen
+            }
+            else -> binding.editTextScroll.isVisible = !isOpen
+        }
         binding.editToolBar.isVisible = !isOpen
         binding.pageSearch.cmdindexSearchCancel.isVisible = !isOpen
         val isNotVisiblePageOrWebSearch =

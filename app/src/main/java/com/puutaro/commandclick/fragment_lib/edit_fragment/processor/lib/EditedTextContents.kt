@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
+import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -26,7 +27,7 @@ class EditedTextContents(
     ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
     private val binding = editFragment.binding
     private val scriptContentsLister = ScriptContentsLister(
-        binding.editLinearLayout
+        makeEditLinearLayoutList()
     )
 
     fun updateByCommandVariables(
@@ -35,7 +36,7 @@ class EditedTextContents(
     ): List<String> {
         return if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
-            || editFragment.existIndexList
+//            || editFragment.existIndexList
         ) {
             scriptContentsList
         } else {
@@ -119,5 +120,17 @@ class EditedTextContents(
                     settingVariableList,
                     CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
                 ) != SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
+    }
+
+    private fun makeEditLinearLayoutList(): List<LinearLayout> {
+        return when(editFragment.existIndexList){
+            true -> listOf(
+                binding.editListInnerTopLinearLayout,
+                binding.editListInnerBottomLinearLayout,
+            )
+            else -> listOf(
+                binding.editListLinearLayout,
+            )
+        }
     }
 }

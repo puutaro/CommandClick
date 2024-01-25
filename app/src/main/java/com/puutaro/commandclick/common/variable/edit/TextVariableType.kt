@@ -36,5 +36,6 @@ object TypeVariable {
         EditTextSupportViewName.READ_ONLY_EDIT_TEXT.str,
         EditTextSupportViewName.HIDDEN_LABEL.str,
         EditTextSupportViewName.PASSWORD.str,
+        EditTextSupportViewName.EDIT_TEXT_PROPERTY.str,
     )
 }

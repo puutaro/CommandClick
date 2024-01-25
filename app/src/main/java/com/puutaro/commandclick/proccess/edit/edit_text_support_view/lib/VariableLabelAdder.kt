@@ -3,12 +3,11 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 import android.widget.TextView
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CcScript
 
 object VariableLabelAdder {
-
-    private const val setVariableSetSeparator = "|"
 
     fun add(
         insertTextView: TextView,
@@ -22,7 +21,7 @@ object VariableLabelAdder {
             editParameters
         )
 
-        val textViewMap = getTextViewMap(
+        val textViewMap = SetVariableTyper.getCertainSetValIndexMap(
             currentSetVariableValue,
             textLabelIndex
         )
@@ -38,30 +37,6 @@ object VariableLabelAdder {
             "THIS" -> editParameters.currentVariableName?.upperToLower()
             else -> addLabel
         }
-    }
-
-    private fun getTextViewMap(
-        currentSetVariableValue: String?,
-        currentComponentIndex: Int
-    ): Map<String, String>? {
-        return currentSetVariableValue?.let {
-            if(
-                it.contains(
-                    setVariableSetSeparator
-                )
-            ) return@let it.split(
-                setVariableSetSeparator
-            ).getOrNull(currentComponentIndex).let {
-                QuoteTool.trimBothEdgeQuote(it)
-            }
-            QuoteTool.trimBothEdgeQuote(it)
-        }?.split('!')
-            ?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-            }?.toMap()
     }
 
     enum class TextVeiwLabelType {

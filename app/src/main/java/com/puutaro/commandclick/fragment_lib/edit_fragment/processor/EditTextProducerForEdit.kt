@@ -123,6 +123,7 @@ class EditTextProducerForEdit(
         recordNumToSetVariableMaps: Map<Int, Map<String, String>?>?,
         editTextStartId: Int,
     ) {
+        val existIndexList = editFragment.existIndexList
         val recordNumToNameToValueInHolderSize = recordNumToMapNameValueInHolder?.size ?: return
         (1..recordNumToNameToValueInHolderSize).forEach {
                 seedNum ->
@@ -168,14 +169,13 @@ class EditTextProducerForEdit(
                 false
             } ?: emptyList()
             editParameters.variableTypeList = variableTypeList
-            val isListIndex = variableTypeList.contains(
-                EditTextSupportViewName.LIST_INDEX.str
-            )
-            if(isListIndex){
-                withIndexListView.create(
-                    editParameters
+            if(existIndexList){
+                setListIndexLayoutComponent(
+                    recordNumToSetVariableMaps,
+                    currentRecordNum,
+                    insertTextView,
                 )
-                return
+                return@forEach
             }
             if(editFragment.existIndexList) return@forEach
             withEditComponent.insert(
@@ -186,6 +186,42 @@ class EditTextProducerForEdit(
             }
         }
     }
+
+    private fun setListIndexLayoutComponent(
+        recordNumToSetVariableMaps: Map<Int, Map<String, String>?>?,
+        currentRecordNum: Int,
+        insertTextView: TextView,
+    ){
+        val listIndexOrder = recordNumToSetVariableMaps?.filter {
+            val setValTypeEl = it.value
+            val variableType = setValTypeEl?.get(SetVariableTypeColumn.VARIABLE_TYPE.name)
+            variableType?.contains(
+                EditTextSupportViewName.LIST_INDEX.str
+            ) ?: false
+        }?.keys?.firstOrNull() ?: 0
+        when(true){
+            (currentRecordNum < listIndexOrder) ->
+                withEditComponent.insert(
+                    insertTextView,
+                    editParameters,
+                ).let {
+                    binding.editListInnerTopLinearLayout.addView(it)
+                }
+            (currentRecordNum == listIndexOrder) ->
+                withIndexListView.create(
+                    editParameters
+                )
+            else ->
+                withEditComponent.insert(
+                    insertTextView,
+                    editParameters,
+                ).let {
+                    binding.editListInnerBottomLinearLayout.addView(it)
+                }
+        }
+
+    }
+
 
     private fun makeDescriptionButton(
         editFragment: EditFragment,

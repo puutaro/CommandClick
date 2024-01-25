@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.app.Dialog
-import android.text.InputType
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.AppCompatImageButton
@@ -198,7 +196,7 @@ class FormJsDialog(
             ) virtualJsContentsList
             else {
                 ScriptContentsLister(
-                    linearLayout
+                    listOf(linearLayout)
                 ).update(
                     recordNumToMapNameValueInCommandHolder,
                     virtualJsContentsList,
@@ -317,27 +315,5 @@ class FormJsDialog(
             )
             linearLayout.addView(horizontalLinearLayout)
         }
-    }
-
-    private fun execInsertEditText(
-        insertEditText: EditText,
-        linearParams: LinearLayout.LayoutParams,
-        currentVariableValue: String?,
-        textType: EditTextType = EditTextType.PLAIN
-    ): EditText {
-        insertEditText.setText(currentVariableValue)
-        insertEditText.layoutParams = linearParams
-        when(textType){
-            EditTextType.READ_ONLY -> {
-                insertEditText.setEnabled(false)
-                insertEditText.focusable = View.NOT_FOCUSABLE
-            }
-            EditTextType.PASSWORD -> insertEditText.inputType = (
-                    InputType.TYPE_CLASS_TEXT or
-                            InputType.TYPE_TEXT_VARIATION_PASSWORD
-                    )
-            else ->  insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        }
-        return insertEditText
     }
 }

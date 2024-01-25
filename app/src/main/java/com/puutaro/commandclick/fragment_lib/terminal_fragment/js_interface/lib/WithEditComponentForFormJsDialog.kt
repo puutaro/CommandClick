@@ -3,16 +3,15 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 import android.content.Context
 import android.text.InputType
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.core.view.isVisible
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.checkIndexNum
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.culcTextLabelMarkIndex
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.culcSetVariableTypeMarkIndex
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditTextSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
@@ -20,8 +19,10 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.InDeCre
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.SpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.VariableLabelAdder
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateSetVariableMapByLabelIndex
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateVariableTypeListByLabel
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateSetVariableMapByEditSupportViewNameIndex
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.updateVariableTypeListByExcludeSupportView
+import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 
 class WithEditComponentForFormJsDialog {
 
@@ -33,24 +34,51 @@ class WithEditComponentForFormJsDialog {
         editParameters: EditParameters,
     ): LinearLayout {
         val context = editParameters.context
-        val textLabelIndex = culcTextLabelMarkIndex(
+
+        val textLabelIndex = culcSetVariableTypeMarkIndex(
             editParameters,
-            textAndLabelList
+            textAndLabelList,
+            EditTextSupportViewName.VARIABLE_LABEL.str
         )
         VariableLabelAdder.add(
             insertTextView,
             editParameters,
             textLabelIndex
         )
-        val variableTypeList = updateVariableTypeListByLabel(
+        editParameters.variableTypeList = updateVariableTypeListByExcludeSupportView(
             editParameters,
-            textLabelIndex
+            textLabelIndex,
+            EditTextSupportViewName.VARIABLE_LABEL.str
         )
-        editParameters.variableTypeList = variableTypeList
-        editParameters.setVariableMap = updateSetVariableMapByLabelIndex(
+        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
             editParameters,
             textLabelIndex,
         )
+
+        val editTextPropertyIndex = culcSetVariableTypeMarkIndex(
+            editParameters,
+            textAndLabelList,
+            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
+        )
+        val setVariableValueForEditText = SetVariableTypeValue.makeByReplace(
+            editParameters
+        )
+        val editTextPropertyMap = SetVariableTyper.getCertainSetValIndexMap(
+            setVariableValueForEditText,
+            editTextPropertyIndex
+        )
+        val variableTypeList = updateVariableTypeListByExcludeSupportView(
+            editParameters,
+            editTextPropertyIndex,
+            EditTextSupportViewName.EDIT_TEXT_PROPERTY.str
+        )
+        editParameters.variableTypeList = variableTypeList
+        editParameters.setVariableMap = updateSetVariableMapByEditSupportViewNameIndex(
+            editParameters,
+            editTextPropertyIndex,
+        )
+
+
         val editTextWeight = decideTextEditWeight(
             variableTypeList,
         )
@@ -58,8 +86,9 @@ class WithEditComponentForFormJsDialog {
             editTextWeight,
             variableTypeList,
         )
-        val insertEditText = initEditText(
+        val insertEditText = EditTextSetter.set(
             editParameters,
+            editTextPropertyMap,
             editTextWeight
         )
         val isInsertTextViewVisible = !editParameters.variableTypeList.contains(
@@ -156,34 +185,6 @@ class WithEditComponentForFormJsDialog {
             }
         }
         return horizontalLinearLayout
-    }
-
-    private fun initEditText(
-        editParameters: EditParameters,
-        editTextWeight: Float
-    ): EditText {
-        val context = editParameters.context
-        val currentId = editParameters.currentId
-        val currentVariableValue = editParameters.currentVariableValue
-        val currentVariableName = editParameters.currentVariableName
-
-        val linearParamsForEditTextTest = LinearLayout.LayoutParams(
-            0,
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-        )
-        val insertEditText = EditText(context)
-        insertEditText.clearFocus()
-        insertEditText.tag = currentVariableName
-        insertEditText.id = currentId
-        insertEditText.backgroundTintList =
-            context?.getColorStateList(R.color.gray_out)
-        insertEditText.inputType = InputType.TYPE_CLASS_TEXT
-        insertEditText.setText(currentVariableValue)
-        insertEditText.setSelectAllOnFocus(true)
-//        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
-        linearParamsForEditTextTest.weight = editTextWeight
-        insertEditText.layoutParams = linearParamsForEditTextTest
-        return insertEditText
     }
 
     private  fun makeHorizontalLayout(

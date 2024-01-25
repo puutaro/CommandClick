@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
 import android.widget.RelativeLayout
+import androidx.core.view.isVisible
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +26,8 @@ object ListIndexSizingToKeyboard {
             isOpen
         ) layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
         else layoutParams.removeRule(RelativeLayout.ALIGN_PARENT_BOTTOM)
+        binding.editListInnerTopLinearLayout.isVisible = !isOpen
+        binding.editListInnerBottomLinearLayout.isVisible = !isOpen
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
             editListRecyclerView.scrollToPosition(

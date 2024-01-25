@@ -5,7 +5,9 @@ import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHo
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
@@ -150,5 +152,30 @@ object SetVariableTyper {
             setVariableTypesConfigDirPath,
             setVariableTypesConfigName
         )
+    }
+
+    fun getCertainSetValIndexMap(
+        currentSetVariableValue: String?,
+        currentComponentIndex: Int
+    ): Map<String, String>? {
+        val setVariableSetSeparator = "|"
+        return currentSetVariableValue?.let {
+            if(
+                it.contains(
+                    setVariableSetSeparator
+                )
+            ) return@let it.split(
+                setVariableSetSeparator
+            ).getOrNull(currentComponentIndex).let {
+                QuoteTool.trimBothEdgeQuote(it)
+            }
+            QuoteTool.trimBothEdgeQuote(it)
+        }?.split('!')
+            ?.map {
+                CcScript.makeKeyValuePairFromSeparatedString(
+                    it,
+                    "="
+                )
+            }?.toMap()
     }
 }

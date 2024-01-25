@@ -254,7 +254,7 @@ class FormDialogForListIndexOrButton(
             ) scriptContentsList
             else {
                 ScriptContentsLister(
-                    linearLayout
+                    listOf(linearLayout)
                 ).update(
                     recordNumToMapNameValueInHolder,
                     scriptContentsList,
