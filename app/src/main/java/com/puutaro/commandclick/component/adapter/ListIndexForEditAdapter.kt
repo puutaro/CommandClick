@@ -18,6 +18,8 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -71,12 +73,12 @@ class ListIndexForEditAdapter(
         private const val throughMark = "-"
         private const val noExtend = "NoExtend"
         private const val subMenuSeparator = "&"
-        const val blankListMark = "Let's press sync button at right bellow"
+        private const val blankListMark = "Let's press sync button at right bellow"
         var filterDir = String()
         var filterPrefix = String()
         var filterSuffix = String()
         var filterShellCon = String()
-        var listIndexTypeKey = ListIndexEditConfig.ListIndexTypeKey.NORMAL
+        var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
 
         fun clickUpdateFileList(
             editFragment: EditFragment,
@@ -113,7 +115,7 @@ class ListIndexForEditAdapter(
         fun getFilterPrefix(
             indexListMap: Map<String, String>?,
         ): String {
-            return indexListMap?.get(ListIndexEditConfig.ListIndexListSettingKey.prefix.name)?.let {
+            return indexListMap?.get(ListSettingsForListIndex.ListSettingKey.PREFIX.key)?.let {
                 QuoteTool.trimBothEdgeQuote(it)
             } ?: String()
         }
@@ -121,7 +123,7 @@ class ListIndexForEditAdapter(
         fun getFilterSuffix(
             indexListMap: Map<String, String>?,
         ): String {
-            return indexListMap?.get(ListIndexEditConfig.ListIndexListSettingKey.suffix.name)?.let {
+            return indexListMap?.get(ListSettingsForListIndex.ListSettingKey.SUFFIX.key)?.let {
                 QuoteTool.trimBothEdgeQuote(it)
             } ?: String()
         }
@@ -131,7 +133,7 @@ class ListIndexForEditAdapter(
             editParameters: EditParameters
         ): String {
             return indexListMap?.get(
-                ListIndexEditConfig.ListIndexListSettingKey.filterShellPath.name
+                ListSettingsForListIndex.ListSettingKey.FILTER_SHELL_PATH.key
             )?.let {
                 QuoteTool.trimBothEdgeQuote(it)
             }.let {
@@ -153,10 +155,10 @@ class ListIndexForEditAdapter(
         }
         fun makeFileListHandler(
             busyboxExecutor: BusyboxExecutor?,
-            listIndexTypeKey: ListIndexEditConfig.ListIndexTypeKey
+            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
         ): MutableList<String> {
             return when(listIndexTypeKey) {
-                ListIndexEditConfig.ListIndexTypeKey.INSTALL_FANNEL -> makeFannelListForListView().toMutableList()
+                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> makeFannelListForListView().toMutableList()
                 else -> makeFileList(busyboxExecutor)
             }
         }
@@ -246,14 +248,14 @@ class ListIndexForEditAdapter(
 
         fun getFilterListDir(
             indexListMap: Map<String, String>?,
-            listIndexType : ListIndexEditConfig.ListIndexTypeKey,
+            listIndexType : TypeSettingsForListIndex.ListIndexTypeKey,
             currentAppDirPath: String,
             currentScriptName: String,
         ): String {
             if(
-                listIndexType == ListIndexEditConfig.ListIndexTypeKey.INSTALL_FANNEL
+                listIndexType == TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
             ) return UsePath.cmdclickFannelItselfDirPath
-            return indexListMap?.get(ListIndexEditConfig.ListIndexListSettingKey.listDir.name)?.let{
+            return indexListMap?.get(ListSettingsForListIndex.ListSettingKey.LIST_DIR.key)?.let{
                 ScriptPreWordReplacer.replace(
                     it,
                     currentAppDirPath,

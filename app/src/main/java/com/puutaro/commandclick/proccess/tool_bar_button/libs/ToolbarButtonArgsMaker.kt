@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -11,16 +10,14 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.tool_bar_button.OnScriptSave
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonClickConfigMapKey
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -37,8 +34,8 @@ class ToolbarButtonArgsMaker(
         is EditFragment -> fragment.fileGetterForSettingButton
         else -> null
     }
-    private val menuNameKey = SettingButtonMenuMapKey.NAME.str
-    private val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
+    private val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
+    private val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
     private val languageType = LanguageTypeSelects.JAVA_SCRIPT
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -94,15 +91,16 @@ class ToolbarButtonArgsMaker(
     }
 
     companion object {
+        private val onScriptSaveOffInClick = ClickSettingsForToolbarButton.OnScriptSave.OFF.name
         val onSaveDefaultMapInClick = mapOf(
-            ToolbarButtonBariantForEdit.SETTING to OnScriptSave.OFF.name,
-            ToolbarButtonBariantForEdit.EDIT to OnScriptSave.OFF.name,
-            ToolbarButtonBariantForEdit.OK to OnScriptSave.OFF.name,
+            ToolbarButtonBariantForEdit.SETTING to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.EDIT to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.OK to onScriptSaveOffInClick,
         )
         val onSaveDefaultMapInLongClick = mapOf(
-            ToolbarButtonBariantForEdit.SETTING to OnScriptSave.OFF.name,
-            ToolbarButtonBariantForEdit.EDIT to OnScriptSave.OFF.name,
-            ToolbarButtonBariantForEdit.OK to OnScriptSave.OFF.name,
+            ToolbarButtonBariantForEdit.SETTING to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.EDIT to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.OK to onScriptSaveOffInClick,
         )
 
         val defaultClickMacroMap = mapOf(
@@ -116,7 +114,6 @@ class ToolbarButtonArgsMaker(
             ToolbarButtonBariantForEdit.EDIT to JsPathMacroForSettingButton.NORMAL.name,
             ToolbarButtonBariantForEdit.OK to JsPathMacroForSettingButton.NORMAL.name,
         )
-        val setingButtonDefaultConfigCon = makeButtonConfigConForEdit()
 
         private val menuDefaultConForCmdIndex = makeSettingMenuDefaultConForCmdIndex()
         private val menuDefaultConForEdit = makeSettingMenuDefaultConForEdit()
@@ -129,8 +126,11 @@ class ToolbarButtonArgsMaker(
             "${menuNameKey}=${jsPathMacroStr}",
             "${jsPathKey}=${jsPathMacroStr}",
         ).joinToString("|").let {
-            makeSettingMenuMapList(
+            MenuSettingTool.makeMenuMapForMenuList(
                 it,
+                currentAppDirPath,
+                currentScriptFileName,
+                setReplaceVariableMap
             )
         }
     }
@@ -140,22 +140,6 @@ class ToolbarButtonArgsMaker(
             true -> SettingButtonConfigMapKey.LONG_CLICK.str
             else -> SettingButtonConfigMapKey.CLICK.str
         }
-    }
-
-    fun execCreateMenuListMap(
-        srcMenuMapList: List<Map<String, String>?>
-    ): List<Pair<String, Int>>{
-        val menuNameKey = SettingButtonMenuMapKey.NAME.str
-        val iconKey = SettingButtonMenuMapKey.ICON.str
-        val ringIconId = CmdClickIcons.RING.id
-        return srcMenuMapList.map {
-            val iconMacroName = it?.get(iconKey)
-            val menuName = it?.get(menuNameKey) ?: String()
-            val iconId = CmdClickIcons.values().filter {
-                it.str == iconMacroName
-            }.firstOrNull()?.id ?: ringIconId
-            menuName to iconId
-        }.filter { it.first.isNotEmpty() }
     }
 
     fun makeSettingButtonMenuMapList(
@@ -171,7 +155,7 @@ class ToolbarButtonArgsMaker(
             ).toMap()
         }
         val settingMenuSettingFilePath =
-            clickConfigMap.get(SettingButtonClickConfigMapKey.MENU_PATH.str)
+            clickConfigMap.get(ClickSettingsForToolbarButton.ClickConfigMapKey.MENU_PATH.str)
                 ?: String()
         val settingMenuSettingFilePathObj =
             File(settingMenuSettingFilePath)
@@ -197,40 +181,12 @@ class ToolbarButtonArgsMaker(
                 )
             }
         }
-        return makeSettingMenuMapList(
+        return MenuSettingTool.makeMenuMapForMenuList(
             settingMenuMapCon,
+            currentAppDirPath,
+            currentScriptFileName,
+            setReplaceVariableMap
         )
-    }
-
-    private fun makeSettingMenuMapList(
-        settingMenuMapCon: String,
-    ): List<Map<String, String>?> {
-        val menuSeparator = ","
-        val keySeparator = "|"
-        return settingMenuMapCon.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentScriptFileName
-            )
-        }.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentScriptFileName
-            )
-        }.split(menuSeparator).map {
-            if(
-                it.isEmpty()
-            ) return@map mapOf()
-            CmdClickMap.createMap(
-                it,
-                keySeparator
-            ).toMap()
-        }.filter {
-            it.isNotEmpty()
-        }
     }
 
     private fun makeToolbarbuttonMenuConHandler(
@@ -246,21 +202,11 @@ class ToolbarButtonArgsMaker(
     }
 }
 
-private fun makeButtonConfigConForEdit(): String {
-//    val clickMacroKey = SettingButtonMapKey.CLICK_MACRO.str
-//    val longClickMacroKey = SettingButtonMapKey.LONG_CLICK_MACRO.str
-    return String()
-//    return """
-//        ${clickMacroKey}=${JsPathMacro.MENU},
-//        ${longClickMacroKey}=${JsPathMacro.SIZING}
-//    """.trimIndent()
-}
-
 private fun makeSettingMenuDefaultConForCmdIndex(): String {
-    val menuNameKey = SettingButtonMenuMapKey.NAME.str
-    val iconKey = SettingButtonMenuMapKey.ICON.str
-    val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
-    val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
+    val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
+    val iconKey = MenuSettingTool.MenuSettingKey.ICON.key
+    val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
+    val parentMenuKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
     return """
         ${menuNameKey}=usage
             |${iconKey}=info
@@ -321,10 +267,10 @@ private fun makeSettingMenuDefaultConForCmdIndex(): String {
 }
 
 private fun makeSettingMenuDefaultConForEdit(): String {
-    val menuNameKey = SettingButtonMenuMapKey.NAME.str
-    val iconKey = SettingButtonMenuMapKey.ICON.str
-    val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
-    val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
+    val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
+    val iconKey = MenuSettingTool.MenuSettingKey.ICON.key
+    val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
+    val parentMenuKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
     return """
         ${menuNameKey}=kill
             |${iconKey}=cancel

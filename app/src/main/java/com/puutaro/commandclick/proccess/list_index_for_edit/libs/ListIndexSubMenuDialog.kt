@@ -10,7 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 
 object ListIndexSubMenuDialog {
 
@@ -84,8 +85,8 @@ object ListIndexSubMenuDialog {
             listIndexSubMenuDialog?.findViewById<ListView>(
                 R.id.list_dialog_list_view
             )
-        val subMenuPairList = createPopupSubMenuListMap(
-            listIndexArgsMaker,
+        val subMenuPairList = MenuSettingTool.createSubMenuListMap(
+            listIndexArgsMaker.listIndexClickMenuMapList,
             parentMenuName,
         )
         val subMenuAdapter = SubMenuAdapter(
@@ -112,10 +113,13 @@ object ListIndexSubMenuDialog {
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
 
-            val extraMapForJsPath = ExtraMapToolForListIndex.createExtraMapFromSettingMenu(
-                listIndexArgsMaker,
-                clickedSubMenuName
-            )
+            val extraMapForJsPath =
+                ExtraArgsTool.createExtraMapFromMenuMapList(
+                    listIndexArgsMaker.listIndexClickMenuMapList,
+                    clickedSubMenuName,
+                    MenuSettingTool.MenuSettingKey.NAME.key,
+                    "!"
+                )
             val jsPathMacroStr =
                 listIndexArgsMaker.extractJsPathMacroFromSettingMenu(
                     clickedSubMenuName
@@ -128,20 +132,4 @@ object ListIndexSubMenuDialog {
             )
         }
     }
-
-    private fun createPopupSubMenuListMap(
-        listIndexArgsMaker: ListIndexArgsMaker,
-        parentMenuName: String,
-    ): List<Pair<String, Int>>{
-        val settingButtonMenuMapList = listIndexArgsMaker.listIndexClickMenuMapList
-        val parentMenuKey = ListIndexEditConfig.ListIndexMenuMapKey.PARENT_NAME.str
-        return settingButtonMenuMapList.filter {
-            it?.get(parentMenuKey) == parentMenuName
-        }.let {
-            listIndexArgsMaker.execCreateMenuListMap(
-                it
-            )
-        }
-    }
-
 }

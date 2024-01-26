@@ -7,7 +7,7 @@ import android.widget.ImageButton
 import android.widget.ListView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 
 object SettingButtonSubMenuDialog {
 
@@ -67,8 +67,8 @@ object SettingButtonSubMenuDialog {
             settingButtonSubMenuDialog?.findViewById<ListView>(
                 R.id.sub_menu_list_view
             )
-        val subMenuPairList = createPopupSubMenuListMap(
-            toolbarButtonArgsMaker,
+        val subMenuPairList = MenuSettingTool.createSubMenuListMap(
+            toolbarButtonArgsMaker.makeSettingButtonMenuMapList(),
             parentMenuName,
         )
         val subMenuAdapter = SubMenuAdapter(
@@ -95,21 +95,6 @@ object SettingButtonSubMenuDialog {
             JsPathHandlerForToolbarButton.handle(
                 toolbarButtonArgsMaker,
                 clickedSubMenu,
-            )
-        }
-    }
-
-    private fun createPopupSubMenuListMap(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        parentMenuName: String,
-    ): List<Pair<String, Int>>{
-        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-        val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
-        return settingButtonMenuMapList.filter {
-            it?.get(parentMenuKey) == parentMenuName
-        }.let {
-            toolbarButtonArgsMaker.execCreateMenuListMap(
-                it
             )
         }
     }

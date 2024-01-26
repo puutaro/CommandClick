@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.list_index_for_edit.JsPathMacroForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.common_settings.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyAppDir
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyFile
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyFileHere

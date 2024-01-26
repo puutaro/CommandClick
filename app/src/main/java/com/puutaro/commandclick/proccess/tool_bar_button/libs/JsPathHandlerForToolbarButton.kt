@@ -14,7 +14,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -38,16 +37,15 @@ import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonClickConfigMapKey
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -78,8 +76,8 @@ object JsPathHandlerForToolbarButton {
         val fragment = toolbarButtonArgsMaker.fragment
         val context = fragment.context
         val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-        val menuNameKey = SettingButtonMenuMapKey.NAME.str
-        val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
+        val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
+        val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
         val currentSettingMenuMap = when (settingButtonConfigMapList.isNullOrEmpty()) {
             false -> (settingButtonMenuMapList + settingButtonConfigMapList).firstOrNull {
                 it?.get(menuNameKey) == menuName
@@ -261,11 +259,9 @@ object JsPathHandlerForToolbarButton {
                 settingButtonMenuMapList,
             )
 
-            JsPathMacroForSettingButton.GET_FILE -> toolbarButtonArgsMaker.fileGetterForSettingButton?.get(
-                settingButtonMenuMapList,
-                currentAppDirPath,
+            JsPathMacroForSettingButton.GET_FILE -> getFileHandler(
+                toolbarButtonArgsMaker,
             )
-
             JsPathMacroForSettingButton.GET_QR_CON -> QrConGetterDialog.launch(
                 toolbarButtonArgsMaker
             )
@@ -303,6 +299,25 @@ object JsPathHandlerForToolbarButton {
                 ).execForOk()
             }
         }
+    }
+
+    private fun getFileHandler(
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+    ) {
+        val fragment = toolbarButtonArgsMaker.fragment
+        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
+        val parentDirPath = when (fragment) {
+            is EditFragment -> {
+                if (fragment.existIndexList) ListIndexForEditAdapter.filterDir
+                else toolbarButtonArgsMaker.currentAppDirPath
+            }
+
+            else -> toolbarButtonArgsMaker.currentAppDirPath
+        }
+        toolbarButtonArgsMaker.fileGetterForSettingButton?.get(
+            settingButtonMenuMapList,
+            parentDirPath
+        )
     }
 
     private object PopupSettingMenu {
@@ -359,7 +374,9 @@ object JsPathHandlerForToolbarButton {
             val settingButtonView = toolbarButtonArgsMaker.settingButtonView
             if (settingButtonView == null) return
             val context = settingButtonView.context
-            val menuListMap = createPopupMenuListMap(toolbarButtonArgsMaker)
+            val menuListMap = MenuSettingTool.createListMenuListMap(
+                toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
+            )
             if (menuListMap.size == 1) {
                 jsPathOrSubMenuHandler(
                     menuListMap.first().first,
@@ -431,24 +448,9 @@ object JsPathHandlerForToolbarButton {
                         clickJsPathMapStr.isNullOrEmpty()
                     ) return@let true
                     val clickConfigMapStr = CmdClickMap.createMap(clickJsPathMapStr, "|").toMap()
-                    !clickConfigMapStr.containsKey(SettingButtonClickConfigMapKey.ON_HIDE_FOOTER.str)
+                    !clickConfigMapStr.containsKey(ClickSettingsForToolbarButton.ClickConfigMapKey.ON_HIDE_FOOTER.str)
                 }
         }
-
-        private fun createPopupMenuListMap(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        ): List<Pair<String, Int>> {
-            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-            val parentMenuKey = SettingButtonMenuMapKey.PARENT_NAME.str
-            return settingButtonMenuMapList.filter {
-                it?.get(parentMenuKey).isNullOrEmpty()
-            }.let {
-                execCreateMenuListMap(
-                    it
-                )
-            }
-        }
-
 
         private fun menuListViewSetOnItemClickListener(
             menuListView: NoScrollListView,
@@ -472,7 +474,7 @@ object JsPathHandlerForToolbarButton {
 
         ) {
             val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-            val parentMenuNameKey = SettingButtonMenuMapKey.PARENT_NAME.str
+            val parentMenuNameKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
             val onSubMenuLabel = !settingButtonMenuMapList.filter {
                 it?.get(parentMenuNameKey) == clickedMenuName
             }.firstOrNull().isNullOrEmpty()
@@ -644,22 +646,6 @@ object JsPathHandlerForToolbarButton {
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
             )
         )
-    }
-
-    private fun execCreateMenuListMap(
-        srcMenuMapList: List<Map<String, String>?>
-    ): List<Pair<String, Int>> {
-        val menuNameKey = SettingButtonMenuMapKey.NAME.str
-        val iconKey = SettingButtonMenuMapKey.ICON.str
-        val ringIconId = CmdClickIcons.RING.id
-        return srcMenuMapList.map {
-            val iconMacroName = it?.get(iconKey)
-            val menuName = it?.get(menuNameKey) ?: String()
-            val iconId = CmdClickIcons.values().filter {
-                it.str == iconMacroName
-            }.firstOrNull()?.id ?: ringIconId
-            menuName to iconId
-        }.filter { it.first.isNotEmpty() }
     }
 
     private fun execQrScan(

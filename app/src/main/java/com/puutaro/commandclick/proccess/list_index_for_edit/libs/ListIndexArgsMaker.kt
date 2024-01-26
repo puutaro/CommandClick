@@ -2,15 +2,11 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
 import android.content.Context
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -61,7 +57,7 @@ class ListIndexArgsMaker(
     private fun makeListIndexClickMenuMapList(
     ): List<Map<String, String>?> {
         val settingMenuSettingFilePath =
-            clickConfigMap.get(ListIndexEditConfig.ListIndexClickConfigMapKey.MENU_PATH.str)
+            clickConfigMap.get(ClickSettingsForListIndex.ClickSettingKey.MENU_PATH.key)
                 ?: String()
         val settingMenuSettingFilePathObj =
             File(settingMenuSettingFilePath)
@@ -83,65 +79,22 @@ class ListIndexArgsMaker(
             }
             else -> String()
         }
-        return makeSettingMenuMapList(
+        return MenuSettingTool.makeMenuMapForMenuList(
             settingMenuMapCon,
+            currentAppDirPath,
+            currentFannelName,
+            setReplaceVariableMap
         )
-    }
-
-    private fun makeSettingMenuMapList(
-        settingMenuMapCon: String,
-    ): List<Map<String, String>?> {
-        val menuSeparator = ","
-        val keySeparator = "|"
-        return settingMenuMapCon.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentFannelName
-            )
-        }.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentFannelName
-            )
-        }.split(menuSeparator).map {
-            if(
-                it.isEmpty()
-            ) return@map mapOf()
-            CmdClickMap.createMap(
-                it,
-                keySeparator
-            ).toMap()
-        }.filter {
-            it.isNotEmpty()
-        }
-    }
-
-    fun execCreateMenuListMap(
-        srcMenuMapList: List<Map<String, String>?>
-    ): List<Pair<String, Int>> {
-        val menuNameKey = ListIndexEditConfig.ListIndexMenuMapKey.NAME.str
-        val iconKey = ListIndexEditConfig.ListIndexMenuMapKey.ICON.str
-        val ringIconId = CmdClickIcons.RING.id
-        return srcMenuMapList.map {
-            val iconMacroName = it?.get(iconKey)
-            val menuName = it?.get(menuNameKey) ?: String()
-            val iconId = CmdClickIcons.values().filter {
-                it.str == iconMacroName
-            }.firstOrNull()?.id ?: ringIconId
-            menuName to iconId
-        }.filter { it.first.isNotEmpty() }
     }
 
     fun extractJsPathMacroFromSettingMenu(
         menuName: String,
     ): String {
-        val nameKey = ListIndexEditConfig.ListIndexMenuMapKey.NAME.str
+        val nameKey = MenuSettingTool.MenuSettingKey.NAME.key
+        val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
         return listIndexClickMenuMapList.firstOrNull {
             it?.get(nameKey) == menuName
-        }?.get(ListIndexEditConfig.ListIndexMenuMapKey.JS_PATH.str)
+        }?.get(jsPathKey)
             ?: String()
     }
 }

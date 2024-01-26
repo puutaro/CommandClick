@@ -6,8 +6,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ExtraMapToolForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Dispatchers

@@ -10,7 +10,9 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.FileSystems
 
 object AppDirAdder {
@@ -69,11 +71,16 @@ object AppDirAdder {
                 scriptFileName
             )
             val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-            val extraMap = ExtraMapTool.createExtraMap(
-                JsPathMacroForSettingButton.ADD_APP_DIR.name,
+            val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
                 settingButtonMenuMapList,
+                JsPathMacroForSettingButton.ADD_APP_DIR.name,
+                MenuSettingTool.MenuSettingKey.JS_PATH.key,
+                "!",
             )
-            val updateBroadcastIntent = ExtraMapTool.makeBroadcastIntent(extraMap)
+            val updateBroadcastIntent = ExtraArgsTool.makeBroadcastIntent(
+                extraMap,
+                "&"
+            )
             context.sendBroadcast(updateBroadcastIntent)
             val createAppDirName = if (
                 isJsSuffix

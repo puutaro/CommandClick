@@ -12,9 +12,9 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
-import com.puutaro.commandclick.proccess.tool_bar_button.ButtonVisibleValue
-import com.puutaro.commandclick.proccess.tool_bar_button.ButtonIcons
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file_tool.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
@@ -292,7 +292,7 @@ object ConfigFromScriptFileSetter {
             ToolbarButtonBariantForEdit.HISTORY,
             isCmdEditExecute
         )
-        val buttonVisibleOn = ButtonVisibleValue.ON.name
+        val buttonVisibleOn = ButtonVisibleSettingForToolbarButton.ButtonVisibleValue.ON.name
         editFragment.toolBarButtonVisibleMap.put(
             ToolbarButtonBariantForEdit.SETTING,
             when(true) {
@@ -407,7 +407,7 @@ object ConfigFromScriptFileSetter {
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.SETTING)
                     val selectedIconName = settingButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.str
-                    ) ?: ButtonIcons.SETTING.str
+                    ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.SETTING.str
                     iconNameIdPairList.find {
                         it.str == selectedIconName
                     }?.id ?: defaultSettingButtonIconId
@@ -428,7 +428,7 @@ object ConfigFromScriptFileSetter {
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.OK)
                     val selectedIconName = okButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.str
-                    ) ?: ButtonIcons.PLAY.str
+                    ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.PLAY.str
                     val defaultIconId = R.drawable.icons_play
                     iconNameIdPairList.find {
                         it.str == selectedIconName
@@ -450,7 +450,7 @@ object ConfigFromScriptFileSetter {
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
                     val selectedIconName = editButtonConfigMap?.get(
                         SettingButtonConfigMapKey.ICON.str
-                    ) ?: ButtonIcons.EDIT.str
+                    ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EDIT.str
                     val defaultIconId = R.drawable.icons8_check_ok
                     iconNameIdPairList.find {
                         it.str == selectedIconName

@@ -10,11 +10,13 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonMenuMapKey
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.FileSystems
 
 object AddFileForEdit {
@@ -50,7 +52,7 @@ object AddFileForEdit {
     ){
         val context = fragment.context
             ?: return
-        val jsPathKey = SettingButtonMenuMapKey.JS_PATH.str
+        val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
         val addJSMacroStr = JsPathMacroForSettingButton.ADD.name
         val currentSettingMenuMap = settingMenuMapList.filter {
             it?.get(jsPathKey) == addJSMacroStr
@@ -58,16 +60,18 @@ object AddFileForEdit {
         if(
             currentSettingMenuMap.isNullOrEmpty()
         ) return
-        val extraMap = ExtraMapTool.createExtraMap(
+        val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
+            settingMenuMapList,
             JsPathMacroForSettingButton.ADD.name,
-            settingMenuMapList
+            MenuSettingTool.MenuSettingKey.JS_PATH.key,
+            "!"
         )
         val parentDirPath =
-            ExtraMapTool.getParentDirPath(
-                extraMap,
-                currentAppDirPath
-            )
-        val broadcastIntent = ExtraMapTool.makeBroadcastIntent(extraMap)
+            ListIndexForEditAdapter.filterDir
+        val broadcastIntent = ExtraArgsTool.makeBroadcastIntent(
+            extraMap,
+            "&",
+        )
 
         promptDialog = Dialog(
             context
@@ -113,7 +117,7 @@ object AddFileForEdit {
                 ).show()
                 return@setOnClickListener
             }
-            val compFileName = ExtraMapTool.makeCompFileName(
+            val compFileName = ExtraArgsTool.makeCompFileName(
                 inputEditable.toString(),
                 extraMap,
             )

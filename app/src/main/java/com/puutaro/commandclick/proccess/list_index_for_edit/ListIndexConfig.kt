@@ -9,10 +9,15 @@ import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ExtraMapToolForListIndex
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.JsPathHandlerForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
@@ -44,8 +49,9 @@ object ListIndexEditConfig {
             isLongClick,
             clickConfigMap,
         )
-        val extraMapForJsPath = ExtraMapToolForListIndex.createExtraMapFromClickConfigMap(
-            listIndexArgsMaker.clickConfigMap
+        val extraMapForJsPath = ExtraArgsTool.createExtraMapFromMap(
+            listIndexArgsMaker.clickConfigMap,
+            "!",
         )
         FileSystems.writeFile(
             UsePath.cmdclickDefaultAppDirPath,
@@ -89,12 +95,12 @@ object ListIndexEditConfig {
 
     fun getListIndexType(
         editFragment: EditFragment,
-    ): ListIndexTypeKey {
+    ): TypeSettingsForListIndex.ListIndexTypeKey {
         val listIndexTypeStr = editFragment.listIndexConfigMap
             ?.get(ListIndexConfigKey.TYPE.key)
-        return ListIndexTypeKey.values().firstOrNull {
+        return TypeSettingsForListIndex.ListIndexTypeKey.values().firstOrNull {
             it.key == listIndexTypeStr
-        } ?: ListIndexTypeKey.NORMAL
+        } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
 
     private fun execMakeJsPathMacro(
@@ -105,7 +111,7 @@ object ListIndexEditConfig {
             clickConfigMap.isEmpty()
         ) return String()
         val clickJsMacroStr =
-            clickConfigMap.get(ListIndexClickConfigMapKey.JS_PATH.str)
+            clickConfigMap.get(ClickSettingsForListIndex.ClickSettingKey.JS_PATH.key)
         return JsPathMacroForSettingButton.values().firstOrNull {
             it.name == clickJsMacroStr
         }?.name.let name@ {
@@ -125,20 +131,20 @@ object ListIndexEditConfig {
     ){
         val context = materialCardView.context
             ?: return
-        val defaultType = CheckType.NO
+        val defaultType = CheckItemSettingsForListIndex.CheckType.NO
         val getCheckType = checkItemConfigMap.get(
-            CheckItemSettingKey.TYPE.key
+            CheckItemSettingsForListIndex.CheckItemSettingKey.TYPE.key
         ).let {
             typeName ->
             if(
                 typeName.isNullOrEmpty()
             ) return@let defaultType
-            CheckType.values().firstOrNull {
+            CheckItemSettingsForListIndex.CheckType.values().firstOrNull {
                 it.type == typeName
             } ?: defaultType
         }
         when(getCheckType){
-            CheckType.LAST -> {
+            CheckItemSettingsForListIndex.CheckType.LAST -> {
                 val lastIndex = listIndexList.size - 1
                 if(
                     position != lastIndex
@@ -147,12 +153,12 @@ object ListIndexEditConfig {
                     return
                 }
             }
-            CheckType.NO ->
+            CheckItemSettingsForListIndex.CheckType.NO ->
                 return
         }
         val defaultIconId = R.drawable.icons8_check_ok
         val iconId = checkItemConfigMap.get(
-            CheckItemSettingKey.ICON.key
+            CheckItemSettingsForListIndex.CheckItemSettingKey.ICON.key
         ).let {
             fetchIconName ->
             if(
@@ -170,7 +176,7 @@ object ListIndexEditConfig {
     }
 
     fun setFileNameTextView(
-        listIndexTypeKey: ListIndexTypeKey,
+        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameTextView: AppCompatTextView?,
         fileName: String,
         listIndexConfigMap: Map<String, String>?,
@@ -182,7 +188,7 @@ object ListIndexEditConfig {
             ),
             "|"
         ).toMap()
-        val isHide = fileNameConfigMap.containsKey(ListIndexFileNameKey.ON_HIDE.key)
+        val isHide = fileNameConfigMap.containsKey(FileNameKeyForListIndex.ListIndexFileNameKey.ON_HIDE.key)
         if (isHide) {
             fileNameTextView?.isVisible = false
             return
@@ -196,37 +202,37 @@ object ListIndexEditConfig {
     }
 
     private fun makeFileName(
-        listIndexTypeKey: ListIndexTypeKey,
+        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor,
     ): String {
-        if(listIndexTypeKey == ListIndexTypeKey.INSTALL_FANNEL){
+        if(listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL){
             return fileNameSrc
         }
         if (
             fileNameConfigMap.isNullOrEmpty()
         ) return fileNameSrc
         val removedExtendFileName =
-            fileNameConfigMap.containsKey(ListIndexFileNameKey.REMOVE_EXTEND.key).let {
+            fileNameConfigMap.containsKey(FileNameKeyForListIndex.ListIndexFileNameKey.REMOVE_EXTEND.key).let {
                 if (!it) return@let fileNameSrc
                 CcPathTool.trimAllExtend(fileNameSrc)
             }
         val compPrefixedFileName =
-            fileNameConfigMap.get(ListIndexFileNameKey.COMP_PREFIX.key).let {
+            fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.COMP_PREFIX.key).let {
                 if (
                     it.isNullOrEmpty()
                 ) return@let removedExtendFileName
                 UsePath.compPrefix(fileNameSrc, it)
             }
         val compSuffixedFileName =
-            fileNameConfigMap.get(ListIndexFileNameKey.COMP_SUFFIX.key).let {
+            fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.COMP_SUFFIX.key).let {
                 if (
                     it.isNullOrEmpty()
                 ) return@let compPrefixedFileName
                 UsePath.compExtend(fileNameSrc, it)
             }
-        return fileNameConfigMap.get(ListIndexFileNameKey.SHELL_PATH.key).let {
+        return fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.SHELL_PATH.key).let {
                 if (
                     it.isNullOrEmpty()
                 ) return@let compSuffixedFileName
@@ -261,7 +267,7 @@ object ListIndexEditConfig {
     ): String? {
         if(
             ListIndexForEditAdapter.listIndexTypeKey ==
-            ListIndexTypeKey.INSTALL_FANNEL
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
         ) return makeFileDescArgsMaker
             .fileNameOrInstallFannelLine
             .split("\n")
@@ -284,7 +290,7 @@ object ListIndexEditConfig {
             descValue,
             "|"
         ).toMap()
-        descConfigMap.get(ListIndexDescKey.LENGTH.key).let {
+        descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.LENGTH.key).let {
             if (
                 it.isNullOrEmpty()
             ) return@let defaultTakeFileCon
@@ -296,7 +302,7 @@ object ListIndexEditConfig {
             return fileCon.take(maxTakeLength)
         }
         val busyboxExecutor = makeFileDescArgsMaker.busyboxExecutor
-        return descConfigMap.get(ListIndexDescKey.SHELL_PATH.key).let {
+        return descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.SHELL_PATH.key).let {
             if (
                 it.isNullOrEmpty()
             ) return@let defaultTakeFileCon
@@ -331,126 +337,4 @@ object ListIndexEditConfig {
         LIST("list"),
         SEARCH_BOX("searchBox"),
     }
-
-    enum class SearchBoxSettingKey(
-        val key: String,
-    ) {
-        HINT("hint"),
-        VISIBLE("visible"),
-    }
-
-    enum class SearchBoxVisibleKey {
-        OFF
-    }
-
-    enum class ListIndexTypeKey(
-        val key: String,
-    ) {
-        INSTALL_FANNEL("installFannel"),
-        NORMAL("normal"),
-    }
-    enum class ListIndexListSettingKey {
-        listDir,
-        prefix,
-        suffix,
-        filterShellPath,
-    }
-
-
-    enum class ListIndexClickConfigMapKey(
-        val str: String
-    ){
-        JS_PATH("jsPath"),
-        MENU_PATH("menuPath"),
-        ON_SCRIPT_SAVE("onScriptSave"),
-        MONITOR_SIZE("monitorSize"),
-        EXTRA("extra"),
-    }
-
-    enum class MonitorSize {
-        SHORT,
-        LONG,
-    }
-
-    enum class OnScriptSave {
-        ON,
-        OFF
-    }
-
-    enum class CheckItemSettingKey(
-        val key: String,
-    ){
-        ICON("icon"),
-        TYPE("type"),
-        COLOR("color")
-    }
-
-
-    enum class CheckType(
-        val type: String
-    ){
-        LAST("last"),
-        NO("no")
-    }
-
-    enum class ListIndexFileNameKey(
-        val key: String,
-    ) {
-        TYPE("type"),
-        ON_HIDE("onHide"),
-        REMOVE_EXTEND("removeExtend"),
-        COMP_PREFIX("compPrefix"),
-        COMP_SUFFIX("compSuffix"),
-        SHELL_PATH("shellPath"),
-    }
-
-    enum class ListIndexDescKey(
-        val key: String,
-    ) {
-        LENGTH("length"),
-        SHELL_PATH("shellPath"),
-    }
-    enum class ListIndexDescTypeKey(
-        val key: String,
-    ) {
-        NORMAL("normal"),
-    }
-
-    enum class ListIndexMenuMapKey(
-        val str: String,
-    ) {
-        NAME("name"),
-        ICON("icon"),
-        JS_PATH("jsPath"),
-        PARENT_NAME("parentName"),
-        EXTRA("extra"),
-    }
-
-    enum class ListIndexMenuExtraKey(
-        val str: String
-    ) {
-        PARENT_DIR_PATH("parentDirPath"),
-        COMP_PREFIX("compPrefix"),
-        COMP_SUFFIX("compSuffix"),
-        BROADCAST_ACTION("broadcastAction"),
-        BROADCAST_SCHEMAS("broadcastSchemas"),
-    }
-}
-
-enum class JsPathMacroForListIndex(
-) {
-    CAT,
-    COPY_PATH,
-    COPY_FILE,
-    COPY_FILE_HERE,
-    COPY_APP_DIR,
-    DELETE,
-    DESC,
-    EDIT_C,
-    EDIT_S,
-    MENU,
-    RENAME_APP_DIR,
-    RENAME,
-    SIMPLE_EDIT,
-    WRITE,
 }

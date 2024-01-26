@@ -7,6 +7,8 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -127,7 +129,7 @@ class SettingButtonHandler(
                 val clickJsPathMap =
                     CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
                 val clickJsMacroStr =
-                    clickJsPathMap.get(SettingButtonClickConfigMapKey.JS_PATH.str)
+                    clickJsPathMap.get(ClickSettingsForToolbarButton.ClickConfigMapKey.JS_PATH.str)
                 JsPathMacroForSettingButton.values().firstOrNull {
                     it.name == clickJsMacroStr
                 }?.name.let name@ {
@@ -161,13 +163,13 @@ class SettingButtonHandler(
                         clickConfigMapStr, "|"
                     ).toMap()
                 val onScriptStr = clickJsPathMap.get(
-                    SettingButtonClickConfigMapKey.ON_SCRIPT_SAVE.str
+                    ClickSettingsForToolbarButton.ClickConfigMapKey.ON_SCRIPT_SAVE.str
                 )
                 if(
                     onScriptStr.isNullOrEmpty()
-                ) return@let OnScriptSave.OFF.name
+                ) return@let ClickSettingsForToolbarButton.OnScriptSave.OFF.name
                 onScriptStr
-            } == OnScriptSave.ON.name
+            } == ClickSettingsForToolbarButton.OnScriptSave.ON.name
         if (!isScriptSave) return
         ScriptFileSaver(
             editFragment,
@@ -217,7 +219,7 @@ class SettingButtonHandler(
                         clickConfigMapStr, "|"
                     ).toMap()
                 clickJsPathMap.get(
-                    SettingButtonClickConfigMapKey.MONITOR_SIZE.str
+                    ClickSettingsForToolbarButton.ClickConfigMapKey.MONITOR_SIZE.str
                 ) ?: String()
             }
         ExecSetTermSizeForIntent.execSetTermSizeForIntent(
@@ -225,26 +227,6 @@ class SettingButtonHandler(
             monitorSizeStr
         )
     }
-}
-
-enum class SettingButtonMenuMapKey(
-    val str: String,
-) {
-    NAME("name"),
-    ICON("icon"),
-    JS_PATH("jsPath"),
-    PARENT_NAME("parentName"),
-    EXTRA("extra"),
-}
-
-enum class SettingButtonMenuExtraKey(
-    val str: String
-) {
-    PARENT_DIR_PATH("parentDirPath"),
-    COMP_PREFIX("compPrefix"),
-    COMP_SUFFIX("compSuffix"),
-    BROADCAST_ACTION("broadcastAction"),
-    BROADCAST_SCHEMAS("broadcastSchemas"),
 }
 
 
@@ -257,67 +239,4 @@ enum class SettingButtonConfigMapKey(
     VISIBLE("visible"),
 }
 
-enum class SettingButtonClickConfigMapKey(
-    val str: String
-){
-    JS_PATH("jsPath"),
-    MENU_PATH("menuPath"),
-    ON_HIDE_FOOTER("onHideFooter"),
-    ON_SCRIPT_SAVE("onScriptSave"),
-    MONITOR_SIZE("monitorSize"),
-}
-
-enum class MonitorSize {
-    SHORT,
-    LONG,
-}
-
-enum class OnScriptSave {
-    ON,
-    OFF
-}
-
-enum class ButtonVisibleValue {
-    ON,
-    OFF
-}
-
-enum class ButtonIcons(
-    val str: String,
-) {
-    PLAY(CmdClickIcons.PLAY.str),
-    EDIT(CmdClickIcons.EDIT.str),
-    SETTING(CmdClickIcons.SETTING.str),
-    OK(CmdClickIcons.OK.str),
-}
-
-enum class JsPathMacroForSettingButton{
-    KILL,
-    USAGE,
-    NO_SCROLL_SAVE_URL,
-    QR_SCAN,
-    SHORTCUT,
-    TERMUX_SETUP,
-    CONFIG,
-    REFRESH_MONITOR,
-    SELECT_MONITOR,
-    RESTART_UBUNTU,
-    INSTALL_FANNEL,
-    EDIT_STARTUP,
-    JS_IMPORT,
-    ADD,
-    ADD_APP_DIR,
-    APP_DIR_MANAGER,
-    SIZING,
-    MENU,
-    SYNC,
-    GET_FILE,
-    GET_QR_CON,
-    FANNEL_REPO_SYNC,
-    EDIT,
-    WEB_SEARCH,
-    PAGE_SEARCH,
-    NORMAL,
-    OK,
-}
 

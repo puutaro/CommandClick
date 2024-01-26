@@ -4,6 +4,8 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -16,54 +18,6 @@ object QrDialogConfig {
         CLICK("click"),
         LONG_CLICK("longClick"),
         LOGO("logo"),
-    }
-
-    enum class QrLogoSettingKey(
-        val key: String
-    ){
-        ONE_SIDE_LENGTH("oneSideLength"),
-        ON_FANNEL_REPO_LOGO_MODE("onFannelRepoLogoMode"),
-        DISABLE("disable"),
-        TYPE("type"),
-    }
-
-
-    enum class QrTypeSettingKey(
-        val type: String
-    ){
-        FILE_CON("fileCon"),
-        GIT_CLONE("gitCone"),
-    }
-    enum class QrDisableSettingKey(
-        val key: String
-    ) {
-        ON("ON"),
-        OFF("OFF"),
-    }
-
-    enum class ClickSettingKeyForQrDialog(
-        val key: String
-    ){
-        TYPE("type"),
-        EXTRA("extra"),
-    }
-    enum class ClickTypeValuesForQrDialog(
-        val mode: String
-    ){
-        FILE_CONTENTS("con"),
-        EXEC_QR("execQR"),
-        DESC("desc"),
-        EDIT_LOGO("editLogo")
-    }
-
-    enum class QrDialogExtraKey(
-        val str: String
-    ) {
-        PARENT_DIR_PATH("parentDirPath"),
-        COMP_PREFIX("compPrefix"),
-        COMP_SUFFIX("compSuffix"),
-        BROADCAST_ACTION("broadcastAction"),
-        BROADCAST_SCHEMAS("broadcastSchemas"),
     }
 
     fun makeQrLogoClickMap(
@@ -98,7 +52,7 @@ object QrDialogConfig {
         logoConfigMap: Map<String, String>,
     ): Boolean {
         val disableQrKeyName =
-            QrLogoSettingKey.DISABLE.key
+            QrLogoSettingsForQrDialog.QrLogoSettingKey.DISABLE.key
         if(
             logoConfigMap.isEmpty()
         ) return false
@@ -108,14 +62,14 @@ object QrDialogConfig {
             disableQrValue.isNullOrEmpty()
         ) return false
         return disableQrValue ==
-                QrDisableSettingKey.ON.key
+                QrLogoSettingsForQrDialog.QrDisableSettingKey.ON.key
     }
 
     fun howQrType(
         logoConfigMap: Map<String, String>,
     ): String {
-        val defaultQrType = QrTypeSettingKey.GIT_CLONE.type
-        val typeKeyName = QrLogoSettingKey.TYPE.key
+        val defaultQrType = QrTypeSettingsForQrDialog.QrTypeSettingKey.GIT_CLONE.type
+        val typeKeyName = QrLogoSettingsForQrDialog.QrLogoSettingKey.TYPE.key
         if(
             logoConfigMap.isEmpty()
         ) return defaultQrType
@@ -129,7 +83,7 @@ object QrDialogConfig {
     private fun howFannelRepoQrMode(
         logoConfigMap: Map<String, String>,
     ): Boolean {
-        val onFannelLepoQrModeKeyName = QrLogoSettingKey.ON_FANNEL_REPO_LOGO_MODE.key
+        val onFannelLepoQrModeKeyName = QrLogoSettingsForQrDialog.QrLogoSettingKey.ON_FANNEL_REPO_LOGO_MODE.key
         if(
             logoConfigMap.isEmpty()
         ) return false
@@ -205,7 +159,7 @@ object QrDialogConfig {
         val qrLogoConfigMap = qrLogoHandlerArgsMaker.qrLogoConfigMap
         val isFileCon =
             howQrType(qrLogoConfigMap) ==
-                    QrTypeSettingKey.FILE_CON.type
+                    QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
         val fragment = qrLogoHandlerArgsMaker.fragment
         QrLogo(fragment).createAndSaveWithGitCloneOrFileCon(
             parentDirPath,
@@ -257,7 +211,7 @@ object QrDialogConfig {
         qrLogoSettingKey: Map<String, String>,
     ): Int {
         val defaultOneSideLength = 150
-        val oneSideLengthKeyName = QrLogoSettingKey.ONE_SIDE_LENGTH.key
+        val oneSideLengthKeyName = QrLogoSettingsForQrDialog.QrLogoSettingKey.ONE_SIDE_LENGTH.key
         if(
             qrLogoSettingKey.isEmpty()
         ) return defaultOneSideLength

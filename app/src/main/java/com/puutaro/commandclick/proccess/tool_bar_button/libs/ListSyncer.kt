@@ -2,7 +2,9 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 
 object ListSyncer {
     fun sync(
@@ -11,11 +13,16 @@ object ListSyncer {
     ){
         val context = fragment.context
             ?: return
-        val extraMap = ExtraMapTool.createExtraMap(
+        val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
+            settingMenuMapList,
             JsPathMacroForSettingButton.SYNC.name,
-            settingMenuMapList
+            MenuSettingTool.MenuSettingKey.JS_PATH.key,
+            "!",
         )
-        val broadcastIntent = ExtraMapTool.makeBroadcastIntent(extraMap)
+        val broadcastIntent = ExtraArgsTool.makeBroadcastIntent(
+            extraMap,
+            "&"
+        )
         if(
             broadcastIntent?.action.isNullOrEmpty()
         ) {

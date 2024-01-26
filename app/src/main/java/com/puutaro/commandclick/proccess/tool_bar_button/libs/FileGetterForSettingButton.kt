@@ -4,7 +4,9 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -57,20 +59,22 @@ class FileGetterForSettingButton(
 
     fun get(
         settingMenuMapList: List<Map<String, String>?>,
-        currentAppDirPath: String,
+        parentDirPathSrc: String,
     ){
         val extraMap =
-            ExtraMapTool.createExtraMap(
+            ExtraArgsTool.createExtraMapFromMenuMapList(
+                settingMenuMapList,
                 JsPathMacroForSettingButton.ADD.name,
-                settingMenuMapList
+                MenuSettingTool.MenuSettingKey.JS_PATH.key,
+                "!",
             )
         parentDirPath =
-            ExtraMapTool.getParentDirPath(
-                extraMap,
-                currentAppDirPath
-            )
+            parentDirPathSrc
         updateBroadcastIntent =
-            ExtraMapTool.makeBroadcastIntent(extraMap)
+            ExtraArgsTool.makeBroadcastIntent(
+                extraMap,
+                "&"
+            )
         getFile.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
         )

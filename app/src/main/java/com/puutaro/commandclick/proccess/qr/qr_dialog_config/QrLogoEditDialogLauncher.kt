@@ -14,6 +14,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
 
 object QrLogoEditDialogLauncher {
@@ -137,7 +138,7 @@ object QrLogoEditDialogLauncher {
         )?.load(qrLogoPath)
         val isFileCon =
             QrDialogConfig.howQrType(logoConfigMap) ==
-                    QrDialogConfig.QrTypeSettingKey.FILE_CON.type
+                    QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
         val buttonWeight = decideButtonWeight(isFileCon)
         setPassButton(
             fragment,

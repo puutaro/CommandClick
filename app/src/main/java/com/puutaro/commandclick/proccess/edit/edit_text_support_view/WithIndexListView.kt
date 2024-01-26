@@ -14,6 +14,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.FileSystems
@@ -209,13 +210,13 @@ class WithIndexListView(
             ListIndexEditConfig.ListIndexConfigKey.SEARCH_BOX.key
         )
         val inVisible =
-            searchBoxMap.get(ListIndexEditConfig.SearchBoxSettingKey.VISIBLE.key) ==
-                    ListIndexEditConfig.SearchBoxVisibleKey.OFF.name
+            searchBoxMap.get(SearchBoxSettingsForListIndex.SearchBoxSettingKey.VISIBLE.key) ==
+                    SearchBoxSettingsForListIndex.SearchBoxVisibleKey.OFF.name
         if(inVisible){
             searchText.isVisible = false
             return
         }
-        searchText.hint = searchBoxMap.get(ListIndexEditConfig.SearchBoxSettingKey.HINT.key).let {
+        searchText.hint = searchBoxMap.get(SearchBoxSettingsForListIndex.SearchBoxSettingKey.HINT.key).let {
             when(it.isNullOrEmpty()) {
                 false -> it
                 else -> editFragment.editBoxTitle

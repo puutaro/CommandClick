@@ -11,8 +11,11 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.tool_bar_button.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import java.io.File
 
 object QrConGetterDialog {
@@ -68,14 +71,13 @@ object QrConGetterDialog {
                 ".txt",
             )
             val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-            val extraMap = ExtraMapTool.createExtraMap(
+            val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
+                settingButtonMenuMapList,
                 JsPathMacroForSettingButton.GET_QR_CON.name,
-                settingButtonMenuMapList
+                MenuSettingTool.MenuSettingKey.JS_PATH.key,
+                "!",
             )
-            val parentDirPath = ExtraMapTool.getParentDirPath(
-                extraMap,
-                toolbarButtonArgsMaker.currentAppDirPath
-            )
+            val parentDirPath = ListIndexForEditAdapter.filterDir
             val filePath = "${parentDirPath}/${fileName}"
             if(File(filePath).isFile) {
                 Toast.makeText(

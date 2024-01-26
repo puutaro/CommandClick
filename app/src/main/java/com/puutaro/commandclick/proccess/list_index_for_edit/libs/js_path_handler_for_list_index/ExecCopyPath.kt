@@ -5,7 +5,6 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ExtraMapToolForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 
 object ExecCopyPath {
