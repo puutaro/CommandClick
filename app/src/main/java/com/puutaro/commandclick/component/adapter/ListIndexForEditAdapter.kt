@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -147,20 +148,32 @@ class ListIndexForEditAdapter(
             editFragment: EditFragment,
             insertLine: String,
         ){
-            val tsvPath =
-                ListSettingsForListIndex.getListSettingKeyHandler(
-                    editFragment,
-                    indexListMap,
-                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-                )
+            val context = editFragment.context
+                ?: return
             val listIndexForEditAdapter =
                 editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            if(
+                listIndexForEditAdapter.listIndexList.contains(insertLine)
+            ) {
+                Toast.makeText(
+                    context,
+                    "Already exist",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
             val sortType = ListSettingsForListIndex.getSortType(indexListMap)
             val insertIndex = getInsertIndex(
                 sortType,
                 listIndexForEditAdapter,
                 insertLine,
             )
+            val tsvPath =
+                ListSettingsForListIndex.getListSettingKeyHandler(
+                    editFragment,
+                    indexListMap,
+                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+                )
             TsvTool.insertByLastUpdate(
                 tsvPath,
                 insertLine

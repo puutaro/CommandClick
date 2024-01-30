@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
@@ -62,14 +61,6 @@ class FileGetterForSettingButton(
                 sourceFilePath,
             )
         }
-
-
-
-        Toast.makeText(
-            context,
-            "get file ok",
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     fun get(
@@ -103,22 +94,6 @@ class FileGetterForSettingButton(
             editFragment,
             sourceFilePath,
         )
-//        val targetScriptFilePathSource = "${parentDirPath}/${getFileName}"
-//        FileSystems.execCopyFileWithDir(
-//            File(sourceFilePath),
-//            File(targetScriptFilePathSource),
-//            true
-//        )
-//        ListIndexForEditAdapter.sortInAddFile(
-//            editFragment,
-//            listIndexListViewHolder,
-//            targetScriptFilePathSource,
-//        )
-//        updateBroadcastIntent?.let {
-//            context?.sendBroadcast(
-//                it
-//            )
-//        }
     }
 
     private fun execGetForTsv(
