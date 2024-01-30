@@ -2,8 +2,8 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object ListContentsSelectBoxTool {

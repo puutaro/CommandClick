@@ -11,10 +11,10 @@ import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.AppHistoryManager
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import com.puutaro.commandclick.util.UrlFileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

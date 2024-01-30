@@ -1,13 +1,12 @@
 package com.puutaro.commandclick.proccess.import
 
 import android.content.Context
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object CmdVariableReplacer {

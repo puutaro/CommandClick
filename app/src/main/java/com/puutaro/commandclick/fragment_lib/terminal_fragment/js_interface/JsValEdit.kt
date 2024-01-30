@@ -4,9 +4,9 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class JsValEdit(

@@ -22,8 +22,8 @@ import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.StringLength
 import kotlinx.coroutines.*
 import org.jsoup.Jsoup

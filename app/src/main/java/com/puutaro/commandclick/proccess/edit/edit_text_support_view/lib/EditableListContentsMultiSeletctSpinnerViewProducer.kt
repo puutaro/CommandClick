@@ -7,7 +7,8 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object EditableListContentsMultiSeletctSpinnerViewProducer {

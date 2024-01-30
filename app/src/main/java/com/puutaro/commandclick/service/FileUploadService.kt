@@ -21,7 +21,7 @@ import com.puutaro.commandclick.service.lib.file_upload.UploadAcceptTime
 import com.puutaro.commandclick.service.lib.file_upload.libs.FileUploadLabels
 import com.puutaro.commandclick.service.lib.file_upload.libs.FileUploadStatus
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

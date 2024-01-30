@@ -61,7 +61,7 @@ object ExecSetTermSizeForIntent {
                 listener?.onToolbarMenuCategoriesForEdit(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
                     EditFragmentArgs(
-                        currentFragment.readSharePreffernceMap,
+                        currentFragment.readSharePreferenceMap,
                         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                     ),
                 )

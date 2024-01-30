@@ -19,7 +19,7 @@ class ToolbarButtonProducerForEdit(
     private val binding: EditFragmentBinding,
     private val editFragment: EditFragment,
 ) {
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
     private val context = editFragment.context
     private val insertImageButtonParam = LinearLayout.LayoutParams(
         0,

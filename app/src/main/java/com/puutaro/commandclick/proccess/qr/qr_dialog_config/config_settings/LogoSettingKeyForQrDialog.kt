@@ -5,9 +5,9 @@ object QrLogoSettingsForQrDialog {
         val key: String
     ){
         ONE_SIDE_LENGTH("oneSideLength"),
-        ON_FANNEL_REPO_LOGO_MODE("onFannelRepoLogoMode"),
         DISABLE("disable"),
         TYPE("type"),
+        TEXT_SIZE("textSize")
     }
 
     enum class QrDisableSettingKey(

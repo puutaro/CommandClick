@@ -7,6 +7,7 @@ import android.widget.Spinner
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -35,11 +36,12 @@ object SpinnerUpdaterForTerminalFragment {
         val cmdEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,
             cmdEditFragmentTag
-        )
-        val binding = cmdEditFragment?.binding ?: return
-        val editLinearLayout = binding.editLinearLayout
+        ) ?: return
         try {
-            val spinnerInEditFragment = editLinearLayout.findViewById<Spinner>(spinnerId)
+            val spinnerInEditFragment = CcEditComponent.findSpinnerView(
+                    spinnerId,
+                    CcEditComponent.makeEditLinearLayoutList(cmdEditFragment)
+                ) ?: return
             val adapter = spinnerInEditFragment.adapter as ArrayAdapter<String>
 
             val adapterSize = adapter.count

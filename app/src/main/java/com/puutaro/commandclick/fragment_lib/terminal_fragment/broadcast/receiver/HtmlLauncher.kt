@@ -6,8 +6,8 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewMenuMapType
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object HtmlLauncher{

@@ -8,7 +8,7 @@ import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadLabels
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadStatus
 import com.puutaro.commandclick.service.lib.git_download.libs.NotiLauncher
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +18,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
-import java.time.LocalDateTime
 
 object ByCloneDownloader {
 

@@ -11,8 +11,8 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

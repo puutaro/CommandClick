@@ -41,6 +41,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
@@ -49,16 +50,16 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSe
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
-import com.puutaro.commandclick.util.file_tool.FDialogTempFile
+import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -308,7 +309,11 @@ object JsPathHandlerForToolbarButton {
         val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
         val parentDirPath = when (fragment) {
             is EditFragment -> {
-                if (fragment.existIndexList) ListIndexForEditAdapter.filterDir
+                if (fragment.existIndexList) ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                    fragment,
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
+                )
                 else toolbarButtonArgsMaker.currentAppDirPath
             }
 
@@ -577,7 +582,7 @@ object JsPathHandlerForToolbarButton {
                         listener?.onToolbarMenuCategoriesForEdit(
                             toolbarMenuCategoriesVariantForCmdIndex,
                             EditFragmentArgs(
-                                fragment.readSharePreffernceMap,
+                                fragment.readSharePreferenceMap,
                                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                             ),
                         )
@@ -642,7 +647,7 @@ object JsPathHandlerForToolbarButton {
         listener?.onToolbarMenuCategoriesForEdit(
             ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
             EditFragmentArgs(
-                editFragment.readSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
                 EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
             )
         )
@@ -654,7 +659,11 @@ object JsPathHandlerForToolbarButton {
     ) {
         val activeCurrentDirPath = when (fragment) {
             is EditFragment -> {
-                val filterDirInWithListIndex = ListIndexForEditAdapter.filterDir
+                val filterDirInWithListIndex = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                    fragment,
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
+                )
                 if (
                     fragment.existIndexList
                     && filterDirInWithListIndex.isNotEmpty()
@@ -718,7 +727,7 @@ object JsPathHandlerForToolbarButton {
         listener?.onToolBarButtonClickForEditFragment(
             fragment.tag,
             ToolbarButtonBariantForEdit.EDIT,
-            fragment.readSharePreffernceMap,
+            fragment.readSharePreferenceMap,
             fragment.enableCmdEdit
         )
     }
@@ -730,7 +739,7 @@ object JsPathHandlerForToolbarButton {
         private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     ) {
         private val context = editFragment.context
-        private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        private val readSharePreffernceMap = editFragment.readSharePreferenceMap
         private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir

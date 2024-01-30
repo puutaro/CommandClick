@@ -6,7 +6,7 @@ import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope

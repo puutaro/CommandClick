@@ -29,7 +29,7 @@ object ListIndexSizingToKeyboard {
         binding.editListInnerTopLinearLayout.isVisible = !isOpen
         binding.editListInnerBottomLinearLayout.isVisible = !isOpen
         CoroutineScope(Dispatchers.Main).launch {
-            delay(100)
+            delay(300)
             editListRecyclerView.scrollToPosition(
                 listIndexForEditAdapter.itemCount - 1
             )

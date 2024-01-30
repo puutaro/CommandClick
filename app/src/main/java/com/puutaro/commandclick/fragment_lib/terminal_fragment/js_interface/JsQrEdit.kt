@@ -12,8 +12,8 @@ import com.puutaro.commandclick.proccess.qr.QrContents
 import com.puutaro.commandclick.proccess.qr.QrSchema
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

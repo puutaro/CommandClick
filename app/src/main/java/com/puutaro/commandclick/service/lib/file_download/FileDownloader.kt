@@ -10,7 +10,7 @@ import com.puutaro.commandclick.service.FileDownloadService
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadStatus
 import com.puutaro.commandclick.service.lib.file_download.libs.FileDownloadLabels
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.service.lib.ubuntu
 
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import java.time.LocalDateTime
 
 object UbuntuInitProcess {

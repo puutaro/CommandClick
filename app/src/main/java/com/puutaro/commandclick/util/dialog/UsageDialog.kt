@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.UrlFileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 
 object UsageDialog {
     fun launch(

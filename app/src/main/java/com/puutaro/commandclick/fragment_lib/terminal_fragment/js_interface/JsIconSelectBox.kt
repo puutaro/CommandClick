@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class JsIconSelectBox(

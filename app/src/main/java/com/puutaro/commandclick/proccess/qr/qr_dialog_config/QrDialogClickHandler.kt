@@ -7,11 +7,12 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrConfirmDialog
 import com.puutaro.commandclick.proccess.qr.QrDecodedTitle
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.ClickSettingsForQrDialog
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.dialog.DialogObject
 import kotlinx.coroutines.CoroutineScope
@@ -49,7 +50,11 @@ object QrDialogClickHandler {
             qrDialogConfigMap,
             clickKey,
         )
-        val parentDirPath = ListIndexForEditAdapter.filterDir
+        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
         val isThisClickEnable = QrDialogConfig.howEnableClick(
             clickKey,
             qrDialogConfigMap,

@@ -2,22 +2,23 @@ package com.puutaro.commandclick.proccess
 
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.dialog.DialogObject
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.util.UrlFileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import java.io.File
 
 
 object ScriptFileDescription {
 
-    private val filePrefix = "file://"
+    private val filePrefix = EditSettings.filePrefix
     private val httpsPrefix = WebUrlVariables.httpsPrefix
 
     fun show(

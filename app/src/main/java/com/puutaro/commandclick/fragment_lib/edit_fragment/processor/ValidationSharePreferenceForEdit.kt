@@ -9,6 +9,7 @@ import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -26,7 +27,7 @@ class ValidationSharePreferenceForEdit(
             checkCurrentAppDirPathSource.isNullOrEmpty()
         ) {
             SharePreferenceMethod.getReadSharePreffernceMap(
-                editFragment.readSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             )
         } else checkCurrentAppDirPathSource
@@ -50,7 +51,7 @@ class ValidationSharePreferenceForEdit(
         checkCurrentScriptNameSource: String? = null
     ): Boolean {
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreffernceMap,
+            editFragment.readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
         )
 
@@ -58,7 +59,7 @@ class ValidationSharePreferenceForEdit(
             checkCurrentAppDirPathSource.isNullOrEmpty()
         ) {
             SharePreferenceMethod.getReadSharePreffernceMap(
-                editFragment.readSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             )
 
@@ -67,7 +68,7 @@ class ValidationSharePreferenceForEdit(
             checkCurrentScriptNameSource.isNullOrEmpty()
         ) {
             SharePreferenceMethod.getReadSharePreffernceMap(
-                editFragment.readSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
             )
 

@@ -12,8 +12,8 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

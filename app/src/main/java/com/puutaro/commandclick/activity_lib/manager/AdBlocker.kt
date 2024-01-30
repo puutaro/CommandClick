@@ -3,7 +3,7 @@ package com.puutaro.commandclick.activity_lib.manager
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

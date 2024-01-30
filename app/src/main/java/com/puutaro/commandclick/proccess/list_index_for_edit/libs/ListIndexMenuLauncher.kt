@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
@@ -20,18 +21,24 @@ object ListIndexMenuLauncher {
     fun launch(
         listIndexArgsMaker: ListIndexArgsMaker,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        position: Int,
     ){
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context ?: return
         createMenuDialogForListIndex(
             listIndexArgsMaker,
             selectedItem,
+            holder,
+            position,
         )
     }
 
     private fun createMenuDialogForListIndex(
         listIndexArgsMaker: ListIndexArgsMaker,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        position: Int,
     ) {
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
@@ -45,6 +52,8 @@ object ListIndexMenuLauncher {
         setListView(
             listIndexArgsMaker,
             selectedItem,
+            holder,
+            position,
         )
         listIndexMenuDialog?.findViewById<AppCompatTextView>(
             R.id.list_dialog_title
@@ -69,6 +78,8 @@ object ListIndexMenuLauncher {
     private fun setListView(
         listIndexArgsMaker: ListIndexArgsMaker,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        position: Int,
     ) {
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
@@ -89,6 +100,8 @@ object ListIndexMenuLauncher {
             listIndexArgsMaker,
             subMenuListView,
             selectedItem,
+            holder,
+            position,
         )
     }
 
@@ -110,6 +123,8 @@ object ListIndexMenuLauncher {
         listIndexArgsMaker: ListIndexArgsMaker,
         subMenuListView: ListView?,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int,
     ){
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
@@ -121,7 +136,8 @@ object ListIndexMenuLauncher {
                 clickedMenuName,
                 listIndexArgsMaker,
                 selectedItem,
-
+                holder,
+                listIndexPosition,
             )
         }
     }
@@ -131,6 +147,8 @@ object ListIndexMenuLauncher {
         clickedMenuName: String,
         listIndexArgsMaker: ListIndexArgsMaker,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int,
     ) {
         val settingButtonMenuMapList = listIndexArgsMaker.listIndexClickMenuMapList
         val parentMenuNameKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
@@ -143,6 +161,8 @@ object ListIndexMenuLauncher {
                     listIndexArgsMaker,
                     selectedItem,
                     clickedMenuName,
+                    holder,
+                    listIndexPosition,
                 )
 
             else -> {
@@ -161,6 +181,8 @@ object ListIndexMenuLauncher {
                     extraMapForJsPath,
                     jsPathMacroStr,
                     selectedItem,
+                    holder,
+                    listIndexPosition,
                 )
             }
         }

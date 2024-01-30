@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util.file_tool
+package com.puutaro.commandclick.util.file
 
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -10,7 +10,6 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +42,7 @@ object FDialogTempFile {
     private val fDialogTempFannelDirNameSuffix =
         CcPathTool.makeFannelDirName(UsePath.fDialogTempFannelName)
     private val fDialogTemFileDirNameRegex =
-        Regex("[0-9]{1,}_${fDialogTempFannelDirNameSuffix}")
+        Regex("[0-9]{1,}_$fDialogTempFannelDirNameSuffix")
 
     fun howFDialogFile(currentFannelName: String): Boolean {
         return currentFannelName.matches(fDialogTempFileNameRegex)

@@ -15,6 +15,8 @@ import com.puutaro.commandclick.proccess.lib.MakeExecCmdForTermux
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 

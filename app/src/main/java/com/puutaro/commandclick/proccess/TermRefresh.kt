@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 
 class TermRefresh {
     companion object {

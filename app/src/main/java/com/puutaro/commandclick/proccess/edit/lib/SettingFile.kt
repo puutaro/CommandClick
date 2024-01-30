@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 
 object SettingFile {
 

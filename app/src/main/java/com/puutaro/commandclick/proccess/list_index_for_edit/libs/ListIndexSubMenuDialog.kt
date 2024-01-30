@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
@@ -21,6 +22,8 @@ object ListIndexSubMenuDialog {
         listIndexArgsMaker: ListIndexArgsMaker,
         selectedItem: String,
         parentMenuName: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        position: Int,
     ){
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
@@ -46,6 +49,8 @@ object ListIndexSubMenuDialog {
             listIndexArgsMaker,
             parentMenuName,
             selectedItem,
+            holder,
+            position,
         )
         setCancelListener()
         listIndexSubMenuDialog?.window?.setLayout(
@@ -77,6 +82,8 @@ object ListIndexSubMenuDialog {
         listIndexArgsMaker: ListIndexArgsMaker,
         parentMenuName: String,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        position: Int,
     ) {
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
@@ -97,7 +104,9 @@ object ListIndexSubMenuDialog {
         subMenuItemClickListener(
             listIndexArgsMaker,
             subMenuListView,
-            selectedItem
+            selectedItem,
+            holder,
+            position,
         )
     }
 
@@ -105,6 +114,8 @@ object ListIndexSubMenuDialog {
         listIndexArgsMaker: ListIndexArgsMaker,
         subMenuListView: ListView?,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int,
     ){
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
@@ -128,7 +139,9 @@ object ListIndexSubMenuDialog {
                 listIndexArgsMaker,
                 extraMapForJsPath,
                 jsPathMacroStr,
-                selectedItem
+                selectedItem,
+                holder,
+                listIndexPosition,
             )
         }
     }

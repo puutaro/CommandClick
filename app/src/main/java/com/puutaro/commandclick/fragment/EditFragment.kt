@@ -43,12 +43,15 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileGetterForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file_tool.FDialogTempFile
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.FDialogTempFile
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
@@ -98,7 +101,7 @@ class EditFragment: Fragment() {
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
-    var readSharePreffernceMap: Map<String, String> = mapOf()
+    var readSharePreferenceMap: Map<String, String> = mapOf()
     var srcReadSharePreffernceMap: Map<String, String>? = null
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
@@ -159,24 +162,24 @@ class EditFragment: Fragment() {
         fileGetterForSettingButton = FileGetterForSettingButton(this)
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
-        readSharePreffernceMap =
+        readSharePreferenceMap =
             EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharePreffernceMap =
             EditFragmentArgs.getSrcReadSharePreference(arguments)
-        FDialogTempFile.removeByCoroutine(readSharePreffernceMap)
+        FDialogTempFile.removeByCoroutine(readSharePreferenceMap)
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
+                readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             )
         val currentScriptFileName =
             SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
+                readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
             )
         val onShortcutValue =
             SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
+                readSharePreferenceMap,
                 SharePrefferenceSetting.on_shortcut
             )
 
@@ -358,11 +361,11 @@ class EditFragment: Fragment() {
         )
         val shellScriptContentsList = ReadText(
             SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
+                readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             ),
             SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
+                readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
             )
         ).textToList()
@@ -374,17 +377,19 @@ class EditFragment: Fragment() {
 
     override fun onStart() {
         super.onStart()
-        if(existIndexList){
-            CoroutineScope(Dispatchers.Main).launch {
-                delay(100)
-                ListIndexForEditAdapter.listIndexListUpdateFileList(
+        if(
+            !existIndexList
+        ) return
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(100)
+            ListIndexForEditAdapter.listIndexListUpdateFileList(
+                this@EditFragment,
+                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     this@EditFragment,
-                    ListIndexForEditAdapter.makeFileListHandler(
-                        busyboxExecutor,
-                        ListIndexForEditAdapter.listIndexTypeKey
-                    )
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
                 )
-            }
+            )
         }
     }
 

@@ -5,6 +5,7 @@ object TypeSettingsForListIndex {
         val key: String,
     ) {
         INSTALL_FANNEL("installFannel"),
+        TSV_EDIT("tsvEdit"),
         NORMAL("normal"),
     }
 }

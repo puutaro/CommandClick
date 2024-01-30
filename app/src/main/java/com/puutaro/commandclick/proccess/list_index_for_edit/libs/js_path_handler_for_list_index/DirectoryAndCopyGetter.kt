@@ -6,8 +6,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.NoFileChecker
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -21,12 +23,20 @@ class DirectoryAndCopyGetter(
     private var parentDirPath = String()
     private var selectedItemForCopy = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
+    private var listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder? = null
 
     private val getDirectoryAndCopy = editFragment.registerForActivityResult(
         ActivityResultContracts.OpenDocument()) { uri ->
         if (
             uri == null
             || uri.toString() == String()
+        ) return@registerForActivityResult
+        if(
+            NoFileChecker.isNoFile(
+                editFragment.context,
+                parentDirPath,
+                selectedItemForCopy,
+            )
         ) return@registerForActivityResult
         val pathSource = runBlocking {
             File(
@@ -41,19 +51,26 @@ class DirectoryAndCopyGetter(
             pathSource.parent ?: String()
         val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
         val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
-        val targetScriptFilePath = if(
+        val targetScriptFilePath = when(
             targetScriptFilePathSource == sourceScriptFilePath
-        ) "${targetDirectoryPath}/" +
-                "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
-        else targetScriptFilePathSource
-        FileSystems.execCopyFileWithDir(
+        ) {
+            true -> "${targetDirectoryPath}/" +
+                    "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
+            else -> targetScriptFilePathSource
+        }
+        val insertFilePath = FileSystems.execCopyFileWithDir(
             File(sourceScriptFilePath),
             File(targetScriptFilePath),
         )
+        ListIndexForEditAdapter.sortInAddFile(
+            editFragment,
+            insertFilePath,
+        )
         ListIndexForEditAdapter.listIndexListUpdateFileList(
             editFragment,
-            ListIndexForEditAdapter.makeFileListHandler(
-                editFragment.busyboxExecutor,
+            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
                 ListIndexForEditAdapter.listIndexTypeKey
             )
         )
@@ -66,17 +83,16 @@ class DirectoryAndCopyGetter(
 
     fun get(
         listIndexArgsMaker: ListIndexArgsMaker,
-        selectedItem: String,
+        listIndexListViewHolderSrc: ListIndexForEditAdapter.ListIndexListViewHolder,
         extraMapForJsPath:  Map<String, String>?,
     ){
-        if(
-            ListIndexArgsMaker.judgeNoFile(selectedItem)
-        ) {
-            ListIndexArgsMaker.noFileToast(context)
-            return
-        }
-        parentDirPath =
-            ListIndexForEditAdapter.filterDir
+        listIndexListViewHolder = listIndexListViewHolderSrc
+        val selectedItem = listIndexListViewHolderSrc.fileName
+        parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            listIndexArgsMaker.editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
         selectedItemForCopy = selectedItem
         getDirectoryAndCopy.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)

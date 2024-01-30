@@ -17,6 +17,8 @@ import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 
 
 object FannelNameClickListenerSetter {

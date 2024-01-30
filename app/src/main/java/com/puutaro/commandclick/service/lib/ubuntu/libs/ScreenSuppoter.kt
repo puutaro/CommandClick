@@ -6,8 +6,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.SettingVariableReader
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

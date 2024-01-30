@@ -12,7 +12,9 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
@@ -25,6 +27,7 @@ object QrConGetterDialog {
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
     ){
         val fragment = toolbarButtonArgsMaker.fragment
+        if(fragment !is EditFragment) return
         val context = fragment.context
             ?: return
         val activity = fragment.activity
@@ -77,7 +80,11 @@ object QrConGetterDialog {
                 MenuSettingTool.MenuSettingKey.JS_PATH.key,
                 "!",
             )
-            val parentDirPath = ListIndexForEditAdapter.filterDir
+            val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                fragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
             val filePath = "${parentDirPath}/${fileName}"
             if(File(filePath).isFile) {
                 Toast.makeText(

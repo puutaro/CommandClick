@@ -10,7 +10,7 @@ import com.budiyev.android.codescanner.CodeScanner
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 
 
 class QrHistoryListDialog(

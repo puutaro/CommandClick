@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file_tool.FDialogTempFile
+import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
@@ -28,7 +28,7 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         currentScriptContentsList: List<String>
     ){
-        val readSharePreferenceMap = editFragment.readSharePreffernceMap
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
@@ -269,7 +269,7 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         onShortcut: Boolean
     ){
-        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val readSharePreffernceMap = editFragment.readSharePreferenceMap
         val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
@@ -465,7 +465,7 @@ object ConfigFromScriptFileSetter {
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
     ): Map<String, String>? {
-        val readSharePreferenceMap = editFragment.readSharePreffernceMap
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
@@ -491,7 +491,7 @@ object ConfigFromScriptFileSetter {
         return ConfigMapTool.createFromSettingVal(
             settingButtonConfigMapStr,
             String(),
-            editFragment.readSharePreffernceMap,
+            editFragment.readSharePreferenceMap,
             editFragment.setReplaceVariableMap
         )
     }

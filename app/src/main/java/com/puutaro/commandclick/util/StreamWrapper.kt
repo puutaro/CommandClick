@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util
 
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.BufferedReader
 
 object StreamWrapper {

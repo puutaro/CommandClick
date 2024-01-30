@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.component.adapter
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,7 @@ import android.widget.RelativeLayout
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 
 
 class MultiSelectOnlyImageAdapter(

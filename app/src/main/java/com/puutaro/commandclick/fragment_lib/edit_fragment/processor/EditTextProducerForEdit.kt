@@ -12,7 +12,7 @@ import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file_tool.FDialogTempFile
+import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
@@ -28,7 +28,7 @@ class EditTextProducerForEdit(
     private val currentScriptContentsList = editFragment.currentScriptContentsList
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
     private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -227,7 +227,7 @@ class EditTextProducerForEdit(
         editFragment: EditFragment,
     ): Button {
         val context = editFragment.context
-        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val readSharePreffernceMap = editFragment.readSharePreferenceMap
         val descriptionButton = Button(context)
         val buttonLabel = "Description"
         descriptionButton.text = buttonLabel

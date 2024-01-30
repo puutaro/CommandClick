@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.file
 
 import android.content.Context
 import android.util.Log
@@ -12,22 +12,22 @@ object AssetsFileManager {
     private const val assetsFannelsDirName = "fannels"
     const val textImagePingPath = "res/png/text_image.png"
     const val pdfImagePingPath = "res/png/pdf_image.png"
-    private const val assetsBookmarkDirPath = "${assetsFannelsDirName}/bookmark"
-    const val assetsClipToHistoryForBookmark = "${assetsBookmarkDirPath}/clipToHistory.js"
-    private const val assetsDialogWebViewDirPath = "${assetsFannelsDirName}/dialog_webview"
+    private const val assetsBookmarkDirPath = "$assetsFannelsDirName/bookmark"
+    const val assetsClipToHistoryForBookmark = "$assetsBookmarkDirPath/clipToHistory.js"
+    private const val assetsDialogWebViewDirPath = "$assetsFannelsDirName/dialog_webview"
     const val assetsHighlightSchForDialogWebViewPath =
-        "${assetsDialogWebViewDirPath}/highlightSchForDialogWebView.js"
+        "$assetsDialogWebViewDirPath/highlightSchForDialogWebView.js"
     const val assetsHighlightCopy =
-        "${assetsDialogWebViewDirPath}/highlightCopy.js"
-    private const val assetsEditDirPath = "${assetsFannelsDirName}/edit"
-    const val iconSelectBox = "${assetsEditDirPath}/iconSelectBox.js"
-    const val fannelShellDirPath = "${assetsFannelsDirName}/shell"
+        "$assetsDialogWebViewDirPath/highlightCopy.js"
+    private const val assetsEditDirPath = "$assetsFannelsDirName/edit"
+    const val iconSelectBox = "$assetsEditDirPath/iconSelectBox.js"
+    const val fannelShellDirPath = "$assetsFannelsDirName/shell"
     const val ubuntuSetupDirPath = "ubuntu_setup"
-    const val ubunutSupportDirPath = "${ubuntuSetupDirPath}/support"
-    const val ubunutSupportCmdDirPath = "${ubunutSupportDirPath}/cmd"
-    const val cmdTerminalDirPath = "${assetsFannelsDirName}/cmdTerminal"
-    const val cmdListTxt = "${cmdTerminalDirPath}/list/cmdList.txt"
-    const val extraKeyListTxt = "${cmdTerminalDirPath}/list/extraKeyList.txt"
+    const val ubunutSupportDirPath = "$ubuntuSetupDirPath/support"
+    const val ubunutSupportCmdDirPath = "$ubunutSupportDirPath/cmd"
+    const val cmdTerminalDirPath = "$assetsFannelsDirName/cmdTerminal"
+    const val cmdListTxt = "$cmdTerminalDirPath/list/cmdList.txt"
+    const val extraKeyListTxt = "$cmdTerminalDirPath/list/extraKeyList.txt"
 
     fun readFromAssets(
         context: Context?,

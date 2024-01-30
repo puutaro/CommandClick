@@ -12,7 +12,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.component.adapter.lib.SppannableAdapterTool
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 
 
 class MultiSelectSpannableAdapter(

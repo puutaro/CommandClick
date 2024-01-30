@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.list_index_for_edit.common_settings.JsPathMacroForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyAppDir
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyFile
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecCopyFileHere
@@ -16,7 +17,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handle
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecShowDescription
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecWriteItem
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import java.io.File
 
@@ -27,6 +28,8 @@ object JsPathHandlerForListIndex {
         extraMapForJsPath:  Map<String, String>?,
         jsPathMacroStr: String,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int
     ){
         val filterdJsPath = JsPathMacroForListIndex.values().filter {
             it.name == jsPathMacroStr
@@ -37,6 +40,8 @@ object JsPathHandlerForListIndex {
                 filterdJsPath,
                 extraMapForJsPath,
                 selectedItem,
+                holder,
+                listIndexPosition,
             )
 
             else -> execJs(
@@ -53,11 +58,19 @@ object JsPathHandlerForListIndex {
         jsPathMacroForListIndex:  JsPathMacroForListIndex,
         extraMapForJsPath: Map<String, String>?,
         selectedItem: String,
+        listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int,
     ){
         when(jsPathMacroForListIndex){
             JsPathMacroForListIndex.DELETE -> {
+                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                    listIndexArgsMaker.editFragment,
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
+                )
                 ExecItemDelete.execItemDelete(
-                    listIndexArgsMaker,
+                    listIndexArgsMaker.editFragment,
+                    filterDir,
                     selectedItem,
                     extraMapForJsPath,
                 )
@@ -77,14 +90,14 @@ object JsPathHandlerForListIndex {
             JsPathMacroForListIndex.COPY_FILE -> {
                 ExecCopyFile.copyFile(
                     listIndexArgsMaker,
-                    selectedItem,
+                    listIndexListViewHolder,
                     extraMapForJsPath,
                 )
             }
             JsPathMacroForListIndex.COPY_FILE_HERE ->
                 ExecCopyFileHere.copyFileHere(
                     listIndexArgsMaker,
-                    selectedItem,
+                    listIndexListViewHolder,
                     extraMapForJsPath,
                 )
             JsPathMacroForListIndex.COPY_APP_DIR ->
@@ -116,6 +129,8 @@ object JsPathHandlerForListIndex {
                 ListIndexMenuLauncher.launch(
                     listIndexArgsMaker,
                     selectedItem,
+                    listIndexListViewHolder,
+                    listIndexPosition,
                 )
             }
             JsPathMacroForListIndex.DESC ->
@@ -123,16 +138,22 @@ object JsPathHandlerForListIndex {
                     listIndexArgsMaker,
                     selectedItem,
                 )
-            JsPathMacroForListIndex.SIMPLE_EDIT ->
+            JsPathMacroForListIndex.SIMPLE_EDIT -> {
+                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                    listIndexArgsMaker.editFragment,
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
+                )
                 EditorByEditText.byEditText(
                     listIndexArgsMaker.editFragment,
-                    ListIndexForEditAdapter.filterDir,
+                    filterDir,
                     selectedItem,
                     ReadText(
-                        ListIndexForEditAdapter.filterDir,
+                        filterDir,
                         selectedItem
                     ).readText()
                 )
+            }
             JsPathMacroForListIndex.WRITE ->
                 ExecWriteItem.write(
                     listIndexArgsMaker,
@@ -175,6 +196,11 @@ object JsPathHandlerForListIndex {
     ): String {
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
+        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            listIndexArgsMaker.editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
         return JavaScriptLoadUrl.make(
             context,
             jsPath,
@@ -186,7 +212,7 @@ object JsPathHandlerForListIndex {
                 selectedItem,
             ).replace(
                 "\${INDEX_LIST_DIR_PATH}",
-                ListIndexForEditAdapter.filterDir,
+                filterDir,
             )
             extraMap?.forEach {
                 jsCon = jsCon.replace(

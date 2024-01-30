@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.ubuntu
 
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
 

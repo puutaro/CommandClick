@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.app.Dialog
 import android.content.Context
-import android.graphics.Canvas
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.Button
@@ -21,8 +20,9 @@ import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.list.ListTool
 import java.io.File
 
 
@@ -182,93 +182,48 @@ object DragSortListViewProducer {
         recyclerView: RecyclerView,
         dragSortRecyclerAdapter: DragSortRecyclerAdapter,
     ){
-        var moveTimes = 0
-        var fromPos = 0
-        var toPos = 0
-        var insertItem = String()
         val mIth = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(
                 ItemTouchHelper.UP or ItemTouchHelper.DOWN,
                 ItemTouchHelper.LEFT
             ) {
 
-                override fun onChildDraw(
-                    c: Canvas,
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    dX: Float,
-                    dY: Float,
-                    actionState: Int,
-                    isCurrentlyActive: Boolean
-                ) {
-                    super.onChildDraw(
-                        c,
-                        recyclerView,
-                        viewHolder,
-                        dX,
-                        dY,
-                        actionState,
-                        isCurrentlyActive
+                override fun onMove(recyclerView: RecyclerView,
+                                    viewHolder: RecyclerView.ViewHolder,
+                                    target: RecyclerView.ViewHolder): Boolean {
+                    val adapter = recyclerView.adapter as DragSortRecyclerAdapter
+                    val from = viewHolder.bindingAdapterPosition
+                    val to = target.bindingAdapterPosition
+                    adapter.notifyItemMoved(from, to)
+                    ListTool.switchList(
+                        dragSortRecyclerAdapter.dratSortList,
+                        from,
+                        to,
                     )
-                    when (isCurrentlyActive) {
-                        true -> viewHolder.itemView.setBackgroundColor(
-                            context.getColor(R.color.gray_out)
-                        )
-                        else -> {
-                            activeStateFinishedHandler(
-                                context,
-                                viewHolder,
-                                dY,
-                            )
-                        }
-                    }
-                }
-                override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
-                ): Boolean {
-                    if(
-                        moveTimes == 0
-                    ) {
-                        fromPos = viewHolder.bindingAdapterPosition
-                        insertItem = dragSortRecyclerAdapter.dratSortList[fromPos]
-                    }
-                    toPos = target.bindingAdapterPosition
-                    moveTimes++
-                    return true // true if moved, false otherwise
+                    return true
                 }
 
-                override fun onSwiped(
-                    viewHolder: RecyclerView.ViewHolder,
-                    direction: Int
-                ) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                     if(
                         direction != ItemTouchHelper.LEFT
                     ) return
                     val position = viewHolder.layoutPosition
+                    dragSortRecyclerAdapter.notifyItemRemoved(position)
                     dragSortRecyclerAdapter.dratSortList.removeAt(position)
-                    dragSortRecyclerAdapter.notifyDataSetChanged()
                 }
 
+                override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+                    super.onSelectedChanged(viewHolder, actionState)
 
-                private fun activeStateFinishedHandler(
-                    context: Context,
-                    viewHolder: RecyclerView.ViewHolder,
-                    dY: Float,
-                ){
-                    viewHolder.itemView.setBackgroundColor(
-                        context.getColor(R.color.white)
-                    )
-                    if(
-                        -50 < dY && dY < 50
-                    ) return
-                    if(moveTimes > 0){
-                        dragSortRecyclerAdapter.dratSortList.removeAt(fromPos)
-                        dragSortRecyclerAdapter.dratSortList.add(toPos, insertItem)
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
                     }
-                    moveTimes = 0
-                    dragSortRecyclerAdapter.notifyDataSetChanged()
+                }
+
+                override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
+                    super.clearView(recyclerView, viewHolder)
+
+                    viewHolder.itemView.alpha = 1.0f
                 }
             })
         mIth.attachToRecyclerView(recyclerView)

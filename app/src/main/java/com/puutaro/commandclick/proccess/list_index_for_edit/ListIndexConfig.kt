@@ -7,9 +7,11 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.extra_args.MaxStringLength
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.JsPathHandlerForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
@@ -20,20 +22,22 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 
 object ListIndexEditConfig {
 
-    val editTargetContents = "EDIT_TARGET_CONTENTS"
+    private const val editTargetContents = "\${EDIT_TARGET_CONTENTS}"
 
     fun handle(
         editFragment: EditFragment,
         isLongClick: Boolean,
         selectedItem: String,
+        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        listIndexPosition: Int
     ){
         val clickConfigMap = makeClickConfig(
             editFragment,
@@ -70,7 +74,24 @@ object ListIndexEditConfig {
             extraMapForJsPath,
             jsPathMacroStr,
             selectedItem,
+            holder,
+            listIndexPosition,
         )
+    }
+
+    fun getConfigKeyMap(
+        listIndexConfigMap: Map<String, String>?,
+        configKey: String,
+    ): Map<String, String> {
+
+        return listIndexConfigMap?.get(
+            configKey
+        ).let{
+            CmdClickMap.createMap(
+                it,
+                "|"
+            )
+        }.toMap()
     }
 
     private fun makeClickConfig(
@@ -188,16 +209,23 @@ object ListIndexEditConfig {
             ),
             "|"
         ).toMap()
-        val isHide = fileNameConfigMap.containsKey(FileNameKeyForListIndex.ListIndexFileNameKey.ON_HIDE.key)
+        val isHide = fileNameConfigMap.containsKey(
+            FileNameKeyForListIndex.ListIndexFileNameKey.ON_HIDE.key
+        )
         if (isHide) {
             fileNameTextView?.isVisible = false
             return
         }
-        fileNameTextView?.text = makeFileName(
+        val fileNameBeforeCut = makeFileName(
             listIndexTypeKey,
             fileName,
             fileNameConfigMap,
             busyboxExecutor
+        )
+        fileNameTextView?.text = MaxStringLength.cut(
+            fileNameBeforeCut,
+        100,
+                fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.LENGTH.key)
         )
     }
 
@@ -207,9 +235,35 @@ object ListIndexEditConfig {
         fileNameConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor,
     ): String {
-        if(listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL){
-            return fileNameSrc
+        return when(listIndexTypeKey){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+            -> fileNameSrc
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+            -> {
+                makeFannelName(
+                    listIndexTypeKey,
+                    fileNameSrc.split("\t").firstOrNull()
+                        ?: String(),
+                    fileNameConfigMap,
+                    busyboxExecutor,
+                )
+            }
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+            -> makeFannelName(
+                listIndexTypeKey,
+                fileNameSrc,
+                fileNameConfigMap,
+                busyboxExecutor,
+            )
         }
+    }
+
+    private fun makeFannelName(
+        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+        fileNameSrc: String,
+        fileNameConfigMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor,
+    ): String {
         if (
             fileNameConfigMap.isNullOrEmpty()
         ) return fileNameSrc
@@ -233,26 +287,26 @@ object ListIndexEditConfig {
                 UsePath.compExtend(fileNameSrc, it)
             }
         return fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.SHELL_PATH.key).let {
-                if (
-                    it.isNullOrEmpty()
-                ) return@let compSuffixedFileName
-                val shellPathObj = File(it)
-                if (
-                    !shellPathObj.isFile
-                ) return@let compPrefixedFileName
-                val shellDirPath = shellPathObj.parent
-                    ?: return@let compSuffixedFileName
-                val shellCon = ReadText(
-                    shellDirPath,
-                    shellPathObj.name
-                ).readText().replace(
-                    "\${$editTargetContents}",
-                    compSuffixedFileName,
-                )
-                return@let busyboxExecutor.getCmdOutput(
-                    shellCon,
-                )
-            }
+            if (
+                it.isNullOrEmpty()
+            ) return@let compSuffixedFileName
+            val shellPathObj = File(it)
+            if (
+                !shellPathObj.isFile
+            ) return@let compPrefixedFileName
+            val shellDirPath = shellPathObj.parent
+                ?: return@let compSuffixedFileName
+            val shellCon = ReadText(
+                shellDirPath,
+                shellPathObj.name
+            ).readText().replace(
+                editTargetContents,
+                compSuffixedFileName,
+            )
+            return@let busyboxExecutor.getCmdOutput(
+                shellCon,
+            )
+        }
     }
 
     class MakeFileDescArgsMaker(
@@ -265,19 +319,35 @@ object ListIndexEditConfig {
     fun makeFileDesc(
         makeFileDescArgsMaker: MakeFileDescArgsMaker
     ): String? {
-        if(
-            ListIndexForEditAdapter.listIndexTypeKey ==
-            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
-        ) return makeFileDescArgsMaker
-            .fileNameOrInstallFannelLine
-            .split("\n")
-            .getOrNull(1)
-            ?.trim()
-            ?.removePrefix("-")
-            ?: String()
+        return when(ListIndexForEditAdapter.listIndexTypeKey){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL ->
+                FannelListVariable.getDesc(
+                    makeFileDescArgsMaker.fileNameOrInstallFannelLine
+                )
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
+                makeDescCon(
+                    makeFileDescArgsMaker,
+                    makeFileDescArgsMaker
+                        .fileNameOrInstallFannelLine
+                        .split("\t")
+                        .lastOrNull() ?: String()
+                )
+            }
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
+                makeDescCon(
+                    makeFileDescArgsMaker,
+                    makeFileDescArgsMaker.fileCon
+                )
+            }
+        }
+    }
+
+    private fun makeDescCon(
+        makeFileDescArgsMaker: MakeFileDescArgsMaker,
+        srcCon: String,
+    ): String? {
         val defaultMaxTakeLength = 50
-        val fileCon = makeFileDescArgsMaker.fileCon
-        val defaultTakeFileCon = fileCon.take(defaultMaxTakeLength)
+        val defaultTakeFileCon = srcCon.take(defaultMaxTakeLength)
         val listIndexConfigMap = makeFileDescArgsMaker.listIndexConfigMap
         if (
             listIndexConfigMap.isNullOrEmpty()
@@ -290,19 +360,17 @@ object ListIndexEditConfig {
             descValue,
             "|"
         ).toMap()
-        descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.LENGTH.key).let {
-            if (
-                it.isNullOrEmpty()
-            ) return@let defaultTakeFileCon
-            val maxTakeLength = try {
-                it.toInt()
-            } catch (e: Exception) {
-                defaultMaxTakeLength
-            }
-            return fileCon.take(maxTakeLength)
+        val descConByCut = descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.LENGTH.key).let {
+            MaxStringLength.cut(
+                srcCon,
+                defaultMaxTakeLength,
+                it
+            )
         }
         val busyboxExecutor = makeFileDescArgsMaker.busyboxExecutor
-        return descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.SHELL_PATH.key).let {
+        return descConfigMap.get(
+            DescSettingsForListIndex.ListIndexDescKey.SHELL_PATH.key
+        ).let {
             if (
                 it.isNullOrEmpty()
             ) return@let defaultTakeFileCon
@@ -316,8 +384,8 @@ object ListIndexEditConfig {
                 shellDirPath,
                 shellPathObj.name
             ).readText().replace(
-                "\${$editTargetContents}",
-                fileCon,
+                editTargetContents,
+                descConByCut,
             )
             return@let busyboxExecutor.getCmdOutput(
                 shellCon,
@@ -336,5 +404,6 @@ object ListIndexEditConfig {
         LONG_CLICK("longClick"),
         LIST("list"),
         SEARCH_BOX("searchBox"),
+        PERFORM("perform")
     }
 }

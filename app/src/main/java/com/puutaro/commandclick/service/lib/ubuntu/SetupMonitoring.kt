@@ -4,7 +4,7 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.ubuntu.libs.ProcessManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

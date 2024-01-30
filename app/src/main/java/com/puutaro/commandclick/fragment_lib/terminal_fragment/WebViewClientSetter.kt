@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.*
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope

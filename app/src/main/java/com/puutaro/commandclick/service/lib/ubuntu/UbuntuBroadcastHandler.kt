@@ -21,10 +21,9 @@ import com.puutaro.commandclick.service.lib.ubuntu.libs.UbuntuServerServiceManag
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabel
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
-import com.puutaro.commandclick.util.BroadCastIntent
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

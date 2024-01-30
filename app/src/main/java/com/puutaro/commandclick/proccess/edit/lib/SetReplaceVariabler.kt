@@ -8,7 +8,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File

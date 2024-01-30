@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.FileTempDownloader
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download.ImageTempDownloader
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

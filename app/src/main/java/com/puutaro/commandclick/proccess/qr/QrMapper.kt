@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.qr
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.UrlFileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 
 object QrMapper {
 

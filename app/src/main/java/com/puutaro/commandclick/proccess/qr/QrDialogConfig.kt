@@ -1,10 +1,13 @@
 package com.puutaro.commandclick.proccess.qr
 
+import android.view.Gravity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.fragment.app.Fragment
 import coil.load
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -18,6 +21,7 @@ object QrDialogConfig {
         CLICK("click"),
         LONG_CLICK("longClick"),
         LOGO("logo"),
+        MODE("mode"),
     }
 
     fun makeQrLogoClickMap(
@@ -80,16 +84,6 @@ object QrDialogConfig {
         return qrType
     }
 
-    private fun howFannelRepoQrMode(
-        logoConfigMap: Map<String, String>,
-    ): Boolean {
-        val onFannelLepoQrModeKeyName = QrLogoSettingsForQrDialog.QrLogoSettingKey.ON_FANNEL_REPO_LOGO_MODE.key
-        if(
-            logoConfigMap.isEmpty()
-        ) return false
-        return logoConfigMap.containsKey(onFannelLepoQrModeKeyName)
-    }
-
     fun howEnableClick(
         clickKey: String,
         qrDialogConfigMap: Map<String, String>,
@@ -104,12 +98,17 @@ object QrDialogConfig {
     }
 
     fun setOneSideLength(
-        imageView: AppCompatImageView?,
+        fileContentsQrLogoLinearLayout: LinearLayoutCompat?,
         qrLogoConfigMap: Map<String, String>
     ){
         val oneSideLength = decideOneSideLength(qrLogoConfigMap)
-        imageView?.layoutParams?.height = oneSideLength
-        imageView?.layoutParams?.width = oneSideLength
+        val linearLayoutParam = LinearLayoutCompat.LayoutParams(
+            oneSideLength,
+            oneSideLength
+        )
+        linearLayoutParam.setMargins(10, 10, 0, 10)
+        linearLayoutParam.gravity = Gravity.CENTER
+        fileContentsQrLogoLinearLayout?.layoutParams = linearLayoutParam
     }
 
     class QrLogoHandlerArgsMaker(
@@ -131,14 +130,19 @@ object QrDialogConfig {
             fileName.isEmpty()
             || fileName == "-"
         ) return
-        val isFannelRepoQrMode = howFannelRepoQrMode(qrLogoConfigMap)
-        when(isFannelRepoQrMode){
-            true -> setQrLogoForFannelRepo(
-                qrLogoHandlerArgsMaker
-            )
-            else -> setQrLogoForNormal(
-                qrLogoHandlerArgsMaker
-            )
+        val qrMode = QrModeSettingKeysForQrDialog.getQrMode(
+            qrLogoConfigMap
+        )
+        when(qrMode){
+            QrModeSettingKeysForQrDialog.QrMode.FANNEL_REPO ->
+                setQrLogoForFannelRepo(
+                    qrLogoHandlerArgsMaker
+                )
+            QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {}
+            QrModeSettingKeysForQrDialog.QrMode.NORMAL ->
+                setQrLogoForNormal(
+                    qrLogoHandlerArgsMaker
+                )
         }
     }
 
@@ -218,6 +222,21 @@ object QrDialogConfig {
         return qrLogoSettingKey.get(oneSideLengthKeyName).let {
             if(it.isNullOrEmpty()) return@let defaultOneSideLength
             try { it.toInt() } catch (e: Exception){ defaultOneSideLength }
+        }
+    }
+
+    fun decideTextSize(
+        qrLogoConfigMap: Map<String, String>,
+    ): Float {
+        val defaultTextSize = 10F
+        val textSizeKeyName =
+            QrLogoSettingsForQrDialog.QrLogoSettingKey.TEXT_SIZE.key
+        if(
+            qrLogoConfigMap.isEmpty()
+        ) return defaultTextSize
+        return qrLogoConfigMap.get(textSizeKeyName).let {
+            if(it.isNullOrEmpty()) return@let defaultTextSize
+            try { it.toFloat() } catch (e: Exception){ defaultTextSize }
         }
     }
 }

@@ -4,7 +4,7 @@ import android.view.View
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 
 object FannelQrLogoClickListener {
     fun set(

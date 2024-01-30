@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import java.io.File
 
 

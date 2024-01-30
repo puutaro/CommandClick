@@ -5,7 +5,7 @@ import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadLabels
 import com.puutaro.commandclick.service.lib.git_download.libs.GitDownloadStatus
 import com.puutaro.commandclick.service.lib.git_download.libs.NotiLauncher
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

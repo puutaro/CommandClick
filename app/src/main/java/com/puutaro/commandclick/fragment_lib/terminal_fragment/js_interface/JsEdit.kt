@@ -1,15 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.io.File

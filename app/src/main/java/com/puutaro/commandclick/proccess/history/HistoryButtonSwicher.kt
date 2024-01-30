@@ -27,7 +27,7 @@ object HistoryBottunSwitcher {
             fragment
         ){
             is CommandIndexFragment -> fragment.readSharePreffernceMap
-            is EditFragment -> fragment.readSharePreffernceMap
+            is EditFragment -> fragment.readSharePreferenceMap
             else -> return
         }
         val activity = fragment.activity

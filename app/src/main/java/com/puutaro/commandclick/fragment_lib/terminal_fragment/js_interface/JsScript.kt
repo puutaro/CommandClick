@@ -8,7 +8,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class JsScript(

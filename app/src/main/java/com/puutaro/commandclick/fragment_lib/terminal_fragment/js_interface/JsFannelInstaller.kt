@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 class JsFannelInstaller(

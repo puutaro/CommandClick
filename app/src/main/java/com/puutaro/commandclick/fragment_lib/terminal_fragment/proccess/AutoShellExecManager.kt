@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.ReadText
 
 object AutoShellExecManager {
 

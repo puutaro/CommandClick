@@ -8,10 +8,12 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.NoFileChecker
+import com.puutaro.commandclick.util.file.ReadText
 
 object ExecItemDelete {
 
@@ -19,38 +21,26 @@ object ExecItemDelete {
     private var confirmDialog2: Dialog? = null
 
     fun execItemDelete(
-        listIndexArgsMaker: ListIndexArgsMaker,
+        editFragment: EditFragment,
+        parentDirPath: String,
         selectedItem: String,
         extraMapForJsPath: Map<String, String>?,
     ){
-        val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context ?: return
         if(
-            ListIndexArgsMaker.judgeNoFile(selectedItem)
-        ) {
-            ListIndexArgsMaker.noFileToast(
-                context
+            NoFileChecker.isNoFile(
+                context,
+                parentDirPath,
+                selectedItem,
             )
-            return
-        }
+        ) return
 
-        val parentDirPath =
-            ListIndexForEditAdapter.filterDir
         val scriptContents = ReadText(
             parentDirPath,
             selectedItem
         ).readText()
         val displayContents = "\tpath: ${parentDirPath}/${selectedItem}" +
                 "\n---\n${scriptContents}"
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "lExecItemDelete.txt",
-            "parentDirPath: ${parentDirPath}\n\n" +
-                    "nofile: ${ListIndexArgsMaker.judgeNoFile(selectedItem)}\n\n" +
-                    "extraMapForJsPath: ${extraMapForJsPath}\n\n" +
-                    "selectedItem: ${selectedItem}\n\n"
-        )
-
 
         confirmDialog = Dialog(
             context
@@ -81,96 +71,11 @@ object ExecItemDelete {
             )
         confirmOkButton?.setOnClickListener {
             confirmDialog?.dismiss()
-            FileSystems.removeFiles(
-                parentDirPath,
-                selectedItem
-            )
-            val deleteFannelDir =
-                CcPathTool.makeFannelDirName(
-                    selectedItem
-                )
-            FileSystems.removeDir(
-                "${parentDirPath}/${deleteFannelDir}"
-            )
-            ListIndexForEditAdapter.listIndexListUpdateFileList(
+            execDeleteAfterConfirm(
                 editFragment,
-                ListIndexForEditAdapter.makeFileListHandler(
-                    editFragment.busyboxExecutor,
-                    ListIndexForEditAdapter.listIndexTypeKey
-                )
+                parentDirPath,
+                selectedItem,
             )
-            if (
-                parentDirPath.removeSuffix("/")
-                == UsePath.cmdclickAppDirAdminPath
-            ) {
-                val deleteAppDirName = selectedItem.removeSuffix(
-                    UsePath.JS_FILE_SUFFIX
-                )
-                val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
-                val displayDeleteAppDirPath =
-                    "${
-                        UsePath.makeTermuxPathByReplace(
-                            cmdclickAppDirPath
-                        )
-                    }/${deleteAppDirName}"
-
-
-                confirmDialog2 = Dialog(
-                    context
-                )
-                confirmDialog2?.setContentView(
-                    R.layout.confirm_text_dialog
-                )
-                val confirmTitleForDeleteAppDirTextView =
-                    confirmDialog2?.findViewById<AppCompatTextView>(
-                        R.id.confirm_text_dialog_title
-                    )
-                confirmTitleForDeleteAppDirTextView?.text =
-                    "Delete bellow App dir, ok?"
-                val confirmContentTextViewForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatTextView>(
-                        R.id.confirm_text_dialog_text_view
-                    )
-                confirmContentTextViewForDeleteAppDir?.text =
-                    "\tpath: ${displayDeleteAppDirPath}"
-                val confirmCancelButtonForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatImageButton>(
-                        R.id.confirm_text_dialog_cancel
-                    )
-                confirmCancelButtonForDeleteAppDir?.setOnClickListener {
-                    confirmDialog2?.dismiss()
-                }
-                val confirmOkButtonForDeleteAppDir =
-                    confirmDialog2?.findViewById<AppCompatImageButton>(
-                        R.id.confirm_text_dialog_ok
-                    )
-                confirmOkButtonForDeleteAppDir?.setOnClickListener {
-                    confirmDialog2?.dismiss()
-                    val deleteAppDirPath =
-                        "${cmdclickAppDirPath}/${deleteAppDirName}"
-                    FileSystems.removeDir(
-                        deleteAppDirPath
-                    )
-                    ListIndexForEditAdapter.listIndexListUpdateFileList(
-                        editFragment,
-                        ListIndexForEditAdapter.makeFileListHandler(
-                            editFragment.busyboxExecutor,
-                            ListIndexForEditAdapter.listIndexTypeKey
-                        )
-                    )
-                }
-                confirmDialog2?.setOnCancelListener {
-                    confirmDialog2?.dismiss()
-                }
-                confirmDialog2?.window?.setLayout(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT
-                )
-                confirmDialog2?.window?.setGravity(
-                    Gravity.BOTTOM
-                )
-                confirmDialog2?.show()
-            }
         }
         confirmDialog?.setOnCancelListener {
             confirmDialog?.dismiss()
@@ -183,5 +88,106 @@ object ExecItemDelete {
             Gravity.BOTTOM
         )
         confirmDialog?.show()
+    }
+
+    fun execDeleteAfterConfirm(
+        editFragment: EditFragment,
+        parentDirPath: String,
+        selectedItem: String,
+    ){
+        val context = editFragment.context
+            ?: return
+        FileSystems.removeFiles(
+            parentDirPath,
+            selectedItem
+        )
+        val deleteFannelDir =
+            CcPathTool.makeFannelDirName(
+                selectedItem
+            )
+        FileSystems.removeDir(
+            "${parentDirPath}/${deleteFannelDir}"
+        )
+        ListIndexForEditAdapter.listIndexListUpdateFileList(
+            editFragment,
+            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
+        )
+        if (
+            parentDirPath.removeSuffix("/")
+            == UsePath.cmdclickAppDirAdminPath
+        ) {
+            val deleteAppDirName = selectedItem.removeSuffix(
+                UsePath.JS_FILE_SUFFIX
+            )
+            val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
+            val displayDeleteAppDirPath =
+                "${
+                    UsePath.makeTermuxPathByReplace(
+                        cmdclickAppDirPath
+                    )
+                }/${deleteAppDirName}"
+
+
+            confirmDialog2 = Dialog(
+                context
+            )
+            confirmDialog2?.setContentView(
+                R.layout.confirm_text_dialog
+            )
+            val confirmTitleForDeleteAppDirTextView =
+                confirmDialog2?.findViewById<AppCompatTextView>(
+                    R.id.confirm_text_dialog_title
+                )
+            confirmTitleForDeleteAppDirTextView?.text =
+                "Delete bellow App dir, ok?"
+            val confirmContentTextViewForDeleteAppDir =
+                confirmDialog2?.findViewById<AppCompatTextView>(
+                    R.id.confirm_text_dialog_text_view
+                )
+            confirmContentTextViewForDeleteAppDir?.text =
+                "\tpath: ${displayDeleteAppDirPath}"
+            val confirmCancelButtonForDeleteAppDir =
+                confirmDialog2?.findViewById<AppCompatImageButton>(
+                    R.id.confirm_text_dialog_cancel
+                )
+            confirmCancelButtonForDeleteAppDir?.setOnClickListener {
+                confirmDialog2?.dismiss()
+            }
+            val confirmOkButtonForDeleteAppDir =
+                confirmDialog2?.findViewById<AppCompatImageButton>(
+                    R.id.confirm_text_dialog_ok
+                )
+            confirmOkButtonForDeleteAppDir?.setOnClickListener {
+                confirmDialog2?.dismiss()
+                val deleteAppDirPath =
+                    "${cmdclickAppDirPath}/${deleteAppDirName}"
+                FileSystems.removeDir(
+                    deleteAppDirPath
+                )
+                ListIndexForEditAdapter.listIndexListUpdateFileList(
+                    editFragment,
+                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                        editFragment,
+                        ListIndexForEditAdapter.indexListMap,
+                        ListIndexForEditAdapter.listIndexTypeKey
+                    )
+                )
+            }
+            confirmDialog2?.setOnCancelListener {
+                confirmDialog2?.dismiss()
+            }
+            confirmDialog2?.window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+            confirmDialog2?.window?.setGravity(
+                Gravity.BOTTOM
+            )
+            confirmDialog2?.show()
+        }
     }
 }

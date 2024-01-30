@@ -4,10 +4,13 @@ import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
-import com.puutaro.commandclick.util.FileSystems
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -27,6 +30,9 @@ class FileGetterForSettingButton(
             uri == null
             || uri.toString() == String()
         ) return@registerForActivityResult
+        if(
+            fragment !is EditFragment
+        ) return@registerForActivityResult
         val pathSource = runBlocking {
             File(
                 withContext(Dispatchers.IO) {
@@ -38,18 +44,27 @@ class FileGetterForSettingButton(
         }
         val sourceFilePath =
             pathSource.absolutePath ?: String()
-        val getFileName = pathSource.name
-        val targetScriptFilePathSource = "${parentDirPath}/${getFileName}"
-        FileSystems.execCopyFileWithDir(
-            File(sourceFilePath),
-            File(targetScriptFilePathSource),
-            true
+
+        val type = ListIndexEditConfig.getListIndexType(
+            fragment
         )
-        updateBroadcastIntent?.let {
-            context?.sendBroadcast(
-                it
+        when(type){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+            -> {}
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+            -> execGetForNormal(
+                fragment,
+                sourceFilePath,
+            )
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+            -> execGetForTsv(
+                fragment,
+                sourceFilePath,
             )
         }
+
+
+
         Toast.makeText(
             context,
             "get file ok",
@@ -77,6 +92,45 @@ class FileGetterForSettingButton(
             )
         getFile.launch(
             arrayOf(Intent.CATEGORY_OPENABLE)
+        )
+    }
+
+    private fun execGetForNormal(
+        editFragment: EditFragment,
+        sourceFilePath: String,
+    ){
+        ListIndexForEditAdapter.execAddForFile(
+            editFragment,
+            sourceFilePath,
+        )
+//        val targetScriptFilePathSource = "${parentDirPath}/${getFileName}"
+//        FileSystems.execCopyFileWithDir(
+//            File(sourceFilePath),
+//            File(targetScriptFilePathSource),
+//            true
+//        )
+//        ListIndexForEditAdapter.sortInAddFile(
+//            editFragment,
+//            listIndexListViewHolder,
+//            targetScriptFilePathSource,
+//        )
+//        updateBroadcastIntent?.let {
+//            context?.sendBroadcast(
+//                it
+//            )
+//        }
+    }
+
+    private fun execGetForTsv(
+        editFragment: EditFragment,
+        sourceFilePath: String,
+    ){
+        val sourceScriptFilePathObj = File(sourceFilePath)
+        val sourceScriptName = sourceScriptFilePathObj.name
+        val insertLine = "${sourceScriptName}\t${sourceFilePath}"
+        ListIndexForEditAdapter.execAddForTsv(
+            editFragment,
+            insertLine
         )
     }
 }

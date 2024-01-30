@@ -15,9 +15,10 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 
 object AddFileForEdit {
 
@@ -50,6 +51,7 @@ object AddFileForEdit {
         currentAppDirPath: String,
         settingMenuMapList: List<Map<String, String>?>,
     ){
+        if(fragment !is EditFragment) return
         val context = fragment.context
             ?: return
         val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
@@ -67,7 +69,11 @@ object AddFileForEdit {
             "!"
         )
         val parentDirPath =
-            ListIndexForEditAdapter.filterDir
+            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                fragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
         val broadcastIntent = ExtraArgsTool.makeBroadcastIntent(
             extraMap,
             "&",

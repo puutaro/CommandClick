@@ -7,16 +7,11 @@ import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 object EditTextSetter {
 
-    private const val backstackCountMarkForInsertEditText = "\${BACKSTACK_COUNT}"
-    private const val fannelTitleMarkForInsertEditText = "\${FANNEL_TITLE}"
 
     fun set(
         editParameters: EditParameters,
@@ -35,7 +30,6 @@ object EditTextSetter {
         insertEditText.clearFocus()
         insertEditText.tag = currentVariableName
         insertEditText.id = currentId
-//        insertEditText.setTextColor(context?.getColor(R.color.terminal_color) as Int)
         insertEditText.backgroundTintList = context?.getColorStateList(R.color.gray_out)
         editViewModel.variableNameToEditTextIdMap.put(
             currentVariableName as String,
@@ -44,8 +38,8 @@ object EditTextSetter {
 
         insertEditText.inputType = InputType.TYPE_CLASS_TEXT
         insertEditText.setText(
-            makeCurrentVariableValueInEditText(
-                editParameters,
+            SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
+                editParameters.currentFragment,
                 currentVariableValue
             )
         )
@@ -95,57 +89,6 @@ object EditTextSetter {
 //            currentId
 //        )
         return insertEditText
-    }
-
-    private fun makeCurrentVariableValueInEditText(
-        editParameters: EditParameters,
-        currentVariableValue: String?
-    ): String {
-        if(
-            currentVariableValue.isNullOrEmpty()
-        ) return String()
-        val currentFragment = editParameters.currentFragment
-        if(
-            currentFragment !is EditFragment
-        ) return currentVariableValue
-        val readSharePreffernceMap = currentFragment.readSharePreffernceMap
-
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
-        val replaceBackstackCurrentVariableValue =
-            when(
-                currentVariableValue.contains(backstackCountMarkForInsertEditText)
-            ){
-                true -> {
-                    val backstackNum = TitleImageAndViewSetter.makeBackstackCount(currentFragment)
-                    currentVariableValue.replace(
-                        backstackCountMarkForInsertEditText,
-                        backstackNum.toString(),
-                    )
-                }
-                else -> currentVariableValue
-            }
-        return when(
-            replaceBackstackCurrentVariableValue.contains(fannelTitleMarkForInsertEditText)
-        ){
-            true -> {
-                val fannelTitleStr = TitleImageAndViewSetter.makeCompressFannelPath(
-                    currentAppDirPath,
-                    currentFannelName,
-                )
-                replaceBackstackCurrentVariableValue.replace(
-                    fannelTitleMarkForInsertEditText,
-                    fannelTitleStr,
-                )
-            }
-            else -> replaceBackstackCurrentVariableValue
-        }
     }
 
     enum class EditTextPropertySettingKey(

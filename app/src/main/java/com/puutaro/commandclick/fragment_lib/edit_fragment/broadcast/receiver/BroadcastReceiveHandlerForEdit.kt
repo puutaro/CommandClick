@@ -5,7 +5,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 
 object BroadcastReceiveHandlerForEdit {
     fun handle(
@@ -24,8 +24,9 @@ object BroadcastReceiveHandlerForEdit {
                 }
                 ListIndexForEditAdapter.listIndexListUpdateFileList(
                     editFragment,
-                    ListIndexForEditAdapter.makeFileListHandler(
-                        editFragment.busyboxExecutor,
+                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                        editFragment,
+                        ListIndexForEditAdapter.indexListMap,
                         ListIndexForEditAdapter.listIndexTypeKey
                     )
                 )

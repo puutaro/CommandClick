@@ -5,7 +5,9 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.widget.Toast
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
+import com.puutaro.commandclick.util.file.NoFileChecker
 
 object ExecCopyPath {
     fun copyPath(
@@ -15,16 +17,18 @@ object ExecCopyPath {
     ){
         val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context ?: return
+        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            listIndexArgsMaker.editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
         if(
-            ListIndexArgsMaker.judgeNoFile(selectedItem)
-        ) {
-            ListIndexArgsMaker.noFileToast(
-                context
+            NoFileChecker.isNoFile(
+                context,
+                parentDirPath,
+                selectedItem,
             )
-            return
-        }
-        val parentDirPath =
-            ListIndexForEditAdapter.filterDir
+        ) return
         val selectedItemPath = "${parentDirPath}/${selectedItem}"
         val clipboard = context.getSystemService(
             Context.CLIPBOARD_SERVICE) as ClipboardManager

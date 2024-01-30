@@ -7,7 +7,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.HtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 

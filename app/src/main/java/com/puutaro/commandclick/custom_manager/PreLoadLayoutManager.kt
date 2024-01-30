@@ -1,11 +1,13 @@
 package com.puutaro.commandclick.custom_manager
 
 import android.content.Context
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
 
-class PreLoadLayoutManager(context: Context?) :
+class PreLoadLayoutManager(
+    private val context: Context?) :
     LinearLayoutManager(
         context,
         LinearLayoutManager.VERTICAL,
@@ -21,7 +23,7 @@ class PreLoadLayoutManager(context: Context?) :
         state: RecyclerView.State ,
         extraLayoutSpace: IntArray
     ) {
-        extraLayoutSpace[0] = mDisplayHeight * 10
-        extraLayoutSpace[1] = mDisplayHeight * 10
+        extraLayoutSpace[0] = mDisplayHeight * 100
+        extraLayoutSpace[1] = mDisplayHeight * 100
     }
 }

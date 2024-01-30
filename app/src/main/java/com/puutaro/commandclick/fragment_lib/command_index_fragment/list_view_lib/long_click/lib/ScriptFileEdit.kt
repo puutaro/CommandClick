@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 

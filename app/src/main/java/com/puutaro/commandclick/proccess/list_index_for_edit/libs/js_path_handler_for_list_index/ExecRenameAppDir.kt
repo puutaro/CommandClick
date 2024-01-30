@@ -12,9 +12,10 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 
 object ExecRenameAppDir {
 
@@ -31,8 +32,9 @@ object ExecRenameAppDir {
         )
         ListIndexForEditAdapter.listIndexListUpdateFileList(
             editFragment,
-            ListIndexForEditAdapter.makeFileListHandler(
-                editFragment.busyboxExecutor,
+            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
                 ListIndexForEditAdapter.listIndexTypeKey
             )
         )
@@ -132,8 +134,9 @@ object ExecRenameAppDir {
             )
             ListIndexForEditAdapter.listIndexListUpdateFileList(
                 editFragment,
-                ListIndexForEditAdapter.makeFileListHandler(
-                    editFragment.busyboxExecutor,
+                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                    editFragment,
+                    ListIndexForEditAdapter.indexListMap,
                     ListIndexForEditAdapter.listIndexTypeKey
                 )
             )

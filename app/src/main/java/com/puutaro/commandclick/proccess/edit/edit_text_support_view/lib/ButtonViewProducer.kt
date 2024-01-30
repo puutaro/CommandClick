@@ -26,6 +26,8 @@ import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -331,7 +333,7 @@ object ButtonViewProducer {
             listener?.onToolBarButtonClickForEditFragment(
                 editFragment.tag,
                 ToolbarButtonBariantForEdit.OK,
-                editFragment.readSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
                 true,
             )
         }
@@ -452,7 +454,7 @@ object ButtonViewProducer {
         editFragment: EditFragment,
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
-        val readSharePreffernceMap = editFragment.readSharePreffernceMap
+        val readSharePreffernceMap = editFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -569,7 +571,7 @@ object ButtonViewProducer {
                 execListAddForSetting(
                     buttonEventArgs.editFragment,
                     buttonEventArgs.insertEditText,
-                    buttonEventArgs.editFragment.readSharePreffernceMap,
+                    buttonEventArgs.editFragment.readSharePreferenceMap,
                     listConSlSpiOptionsStr,
                     setFOptionMap
                 )
@@ -637,11 +639,11 @@ object ButtonViewProducer {
         val shellParentDirPath = saveFilterShellPathObj.parent
             ?: return null
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreffernceMap,
+            editFragment.readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
         )
         val currentAppFannelPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreffernceMap,
+            editFragment.readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name,
         )
         val saveValue = EditVariableName.getText(

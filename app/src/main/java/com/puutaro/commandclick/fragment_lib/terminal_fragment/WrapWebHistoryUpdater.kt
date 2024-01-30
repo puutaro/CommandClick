@@ -14,10 +14,9 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogT
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.*
 

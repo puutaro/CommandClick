@@ -3,8 +3,8 @@ package com.puutaro.commandclick.proccess.ubuntu
 import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.AssetsFileManager
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.AssetsFileManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool

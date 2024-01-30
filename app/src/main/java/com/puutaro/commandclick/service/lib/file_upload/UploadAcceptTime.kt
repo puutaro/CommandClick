@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.service.lib.file_upload
 
 import com.puutaro.commandclick.service.FileUploadService
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

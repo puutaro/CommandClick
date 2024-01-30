@@ -3,10 +3,9 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class JsListSelect(

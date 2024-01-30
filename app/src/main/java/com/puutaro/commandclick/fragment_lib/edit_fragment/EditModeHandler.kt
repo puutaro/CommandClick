@@ -28,7 +28,7 @@ class EditModeHandler(
         editFragment.passCmdVariableEdit ==
                 CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
     private val enableCmdEdit = editFragment.enableCmdEdit
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
     private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir

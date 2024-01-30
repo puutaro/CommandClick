@@ -18,14 +18,10 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
-import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.ReadText
-import com.puutaro.commandclick.util.UrlFileSystems
 import kotlinx.coroutines.*
 import org.eclipse.jgit.lib.ProgressMonitor
 import java.io.File
@@ -38,7 +34,6 @@ class GitCloneService: Service() {
     private val channelNum = ServiceChannelNum.gitClone
     private val notificationIdToImportance =  NotificationIdToImportance.HIGH
     private val cmdclickFannelListSeparator = FannelListVariable.cmdclickFannelListSeparator
-    private val descriptionFirstLineLimit = FannelListVariable.descriptionFirstLineLimit
     private var notificationManager: NotificationManagerCompat? = null
     private var gitCloneJob: Job? = null
     private var notificationManagefilter: IntentFilter? = null
@@ -127,7 +122,8 @@ class GitCloneService: Service() {
                 FileSystems.writeFile(
                     UsePath.cmdclickFannelListDirPath,
                     UsePath.fannelListMemoryName,
-                    makeFannelListMemoryContents().joinToString(cmdclickFannelListSeparator)
+                    FannelListVariable.makeFannelListMemoryContents()
+                        .joinToString(cmdclickFannelListSeparator)
                 )
                 isProgressCancel = true
             }
@@ -175,80 +171,6 @@ class GitCloneService: Service() {
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         stopSelf()
     }
-
-    private fun makeFannelListMemoryContents(): List<String> {
-        val cmdclickFannelItselfDirPath = UsePath.cmdclickFannelItselfDirPath
-        if(
-            !File(cmdclickFannelItselfDirPath).isDirectory
-        ) return emptyList()
-        val fannelsListSource = FileSystems.filterSuffixShellOrJsOrHtmlFiles(
-            cmdclickFannelItselfDirPath,
-        )
-        val firstDescriptionLineRange = 50
-        return fannelsListSource.map {
-            val descConSrc = ScriptFileDescription.makeDescriptionContents(
-                ReadText(
-                    cmdclickFannelItselfDirPath,
-                    it
-                ).textToList(),
-                cmdclickFannelItselfDirPath,
-                it
-            )
-            val readmeUrl = ScriptFileDescription.getReadmeUrl(descConSrc)
-            val descCon = when(readmeUrl.isNullOrEmpty()){
-                true
-                -> descConSrc
-                else
-                -> CurlManager.get(
-                    makeReadmeRawUrl(readmeUrl),
-                    String(),
-                    String(),
-                    2000
-                ).let {
-                    val isConnOk = CurlManager.isConnOk(it)
-                    if(!isConnOk) return@let String()
-                    String(it)
-                }
-            }
-            val descFirstLineSource = descCon.split('\n').take(firstDescriptionLineRange).filter {
-                val trimLine = it.trim()
-                val isLetter =
-                    trimLine.firstOrNull()?.isLetter()
-                        ?: false
-                isLetter && trimLine.isNotEmpty()
-                }.firstOrNull()
-            val descFirstLine = if(
-                !descFirstLineSource.isNullOrEmpty()
-                && descFirstLineSource.length > descriptionFirstLineLimit
-            ) descFirstLineSource.substring(0, descriptionFirstLineLimit)
-            else descFirstLineSource
-            return@map if(descFirstLine.isNullOrEmpty()) it
-            else {
-                "$it\n\t\t$descFirstLine"
-            }
-        }
-    }
-
-    private fun makeReadmeRawUrl(
-        readmeUrl: String,
-    ): String {
-        val gitComPrefix = UrlFileSystems.gitComPrefix
-        val gitUserContentPrefix = UrlFileSystems.gitUserContentPrefix
-        val readmeSuffix = UrlFileSystems.readmeSuffix
-        val gitSuffix = ".git"
-        return listOf(
-            readmeUrl
-                .replace(Regex("${gitSuffix}#.*$"), "")
-                .replace(Regex("#.*$"), "")
-                .removeSuffix(gitSuffix)
-                .replace(
-                    gitComPrefix,
-                    gitUserContentPrefix
-                ),
-            readmeSuffix
-        ).joinToString("/")
-    }
-
 
     private fun kGitClone(
         repoFileObj: File,

@@ -14,7 +14,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
-import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 

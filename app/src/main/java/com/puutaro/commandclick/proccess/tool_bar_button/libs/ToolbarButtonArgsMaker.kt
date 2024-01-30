@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathM
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -51,7 +51,7 @@ class ToolbarButtonArgsMaker(
 
     val readSharePreffernceMap = when(fragment){
         is CommandIndexFragment -> fragment.readSharePreffernceMap
-        is EditFragment -> fragment.readSharePreffernceMap
+        is EditFragment -> fragment.readSharePreferenceMap
         else -> mapOf()
     }
 

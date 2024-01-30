@@ -4,7 +4,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object CopyAppDirEventForEdit {

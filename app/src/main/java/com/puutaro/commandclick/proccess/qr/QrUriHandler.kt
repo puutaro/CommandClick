@@ -28,7 +28,7 @@ import com.puutaro.commandclick.util.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
-import com.puutaro.commandclick.util.UrlFileSystems
+import com.puutaro.commandclick.util.file.UrlFileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

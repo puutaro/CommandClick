@@ -19,8 +19,8 @@ import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.FileSystems
-import com.puutaro.commandclick.util.ReadText
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

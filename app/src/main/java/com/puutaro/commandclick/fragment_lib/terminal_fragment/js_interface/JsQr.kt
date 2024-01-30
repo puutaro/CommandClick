@@ -28,7 +28,7 @@ import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.service.FileUploadService
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

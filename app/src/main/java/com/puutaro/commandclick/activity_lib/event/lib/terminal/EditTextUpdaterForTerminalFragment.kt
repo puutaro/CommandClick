@@ -2,9 +2,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
 import android.content.Context
 import android.util.Log
-import android.widget.EditText
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -30,13 +30,13 @@ object EditTextUpdaterForTerminalFragment {
                 SharePrefferenceSetting.current_fannel_name
             )
         ) ?: return
-        val binding = editExecuteFragment.binding
-        val editLinearLayout = binding.editLinearLayout
         try {
             CoroutineScope(Dispatchers.Main).launch {
                 val editTextInEditFragment =
-                    editLinearLayout.findViewById<EditText>(editTextId)
-                        ?: return@launch
+                    CcEditComponent.findEditTextView(
+                        editTextId,
+                        CcEditComponent.makeEditLinearLayoutList(editExecuteFragment)
+                    ) ?: return@launch
                 editTextInEditFragment.setText(variableValue)
             }
         } catch(e: Exception){

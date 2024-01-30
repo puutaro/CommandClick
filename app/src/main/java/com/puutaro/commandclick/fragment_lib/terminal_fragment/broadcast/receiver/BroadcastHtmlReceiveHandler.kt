@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.manager.TxtHtmlLauncher
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

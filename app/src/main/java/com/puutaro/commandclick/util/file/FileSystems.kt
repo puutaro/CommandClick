@@ -1,8 +1,10 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.file
 
 import android.graphics.Bitmap
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.LogSystems
 import org.apache.commons.io.FileUtils
 import org.apache.commons.io.comparator.LastModifiedFileComparator
 import java.io.File
@@ -426,19 +428,23 @@ object FileSystems {
         srcFileObj: File,
         destiFilePathObjSrc: File,
         isOverride: Boolean = false
-    ){
+    ): String {
         val sourceFileDirPath = srcFileObj.parent
-            ?: return
+            ?: return String()
         val sourceFilePath = srcFileObj.absolutePath
         val destiFileDirPath = destiFilePathObjSrc.parent
-            ?: return
+            ?: return String()
         val destiFilePath = when(
             destiFilePathObjSrc.isFile
             && !isOverride
         ) {
-            true ->
+            true -> {
+                val fileName = destiFilePathObjSrc.name
+                val fileRawName = CcPathTool.makeFannelRawName(fileName)
+                val extend = CcPathTool.subExtend(destiFilePathObjSrc.name)
                 "${destiFileDirPath}/" +
-                        "${CommandClickScriptVariable.makeCopyPrefix()}_${destiFilePathObjSrc.name}"
+                        "${fileRawName}_${CommandClickScriptVariable.makeCopyPrefix()}${extend}"
+            }
             else ->
                 destiFilePathObjSrc.absolutePath
         }
@@ -460,6 +466,7 @@ object FileSystems {
             sourceFannelDirPath,
             destiFannelDirPath
         )
+        return destiFilePath
     }
 
     fun moveFileWithDir(
@@ -491,5 +498,19 @@ object FileSystems {
             parentDirPath,
             srcFileObj.name,
         )
+    }
+
+    fun switchLastModify(
+        fromFileObj: File,
+        toFileObj: File,
+    ){
+        if(
+            !fromFileObj.isFile
+            || !toFileObj.isFile
+        ) return
+        val fromLastModify = fromFileObj.lastModified()
+        val toLastModify = toFileObj.lastModified()
+        fromFileObj.setLastModified(toLastModify)
+        toFileObj.setLastModified(fromLastModify)
     }
 }

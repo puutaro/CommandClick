@@ -11,5 +11,6 @@ object FileNameKeyForListIndex {
         COMP_PREFIX("compPrefix"),
         COMP_SUFFIX("compSuffix"),
         SHELL_PATH("shellPath"),
+        LENGTH("length"),
     }
 }

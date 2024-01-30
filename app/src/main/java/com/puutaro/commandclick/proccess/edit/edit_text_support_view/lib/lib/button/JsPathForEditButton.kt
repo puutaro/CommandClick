@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.bu
 
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 
 object JsPathForEditButton {
 

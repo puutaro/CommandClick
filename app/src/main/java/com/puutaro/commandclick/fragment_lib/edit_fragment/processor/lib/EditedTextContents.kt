@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib
 
-import android.widget.LinearLayout
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -10,24 +9,24 @@ import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
 import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 
 
 class EditedTextContents(
     private val editFragment: EditFragment,
 ) {
 
-    private val readSharePreffernceMap = editFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
     private val currentAppDirPath = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_app_dir.name
     ) ?: SharePrefferenceSetting.current_app_dir.defalutStr
     private val currentScriptFileName = readSharePreffernceMap.get(
         SharePrefferenceSetting.current_fannel_name.name
     ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
-    private val binding = editFragment.binding
     private val scriptContentsLister = ScriptContentsLister(
-        makeEditLinearLayoutList()
+        CcEditComponent.makeEditLinearLayoutList(editFragment)
     )
 
     fun updateByCommandVariables(
@@ -122,15 +121,4 @@ class EditedTextContents(
                 ) != SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
     }
 
-    private fun makeEditLinearLayoutList(): List<LinearLayout> {
-        return when(editFragment.existIndexList){
-            true -> listOf(
-                binding.editListInnerTopLinearLayout,
-                binding.editListInnerBottomLinearLayout,
-            )
-            else -> listOf(
-                binding.editListLinearLayout,
-            )
-        }
-    }
 }

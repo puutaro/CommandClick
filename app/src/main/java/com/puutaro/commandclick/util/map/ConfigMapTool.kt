@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.util.map
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -10,7 +11,7 @@ import java.io.File
 
 object ConfigMapTool {
 
-    val filePrefix = "file://"
+    val filePrefix = EditSettings.filePrefix
     fun create(
         configPath: String,
         defaultConfigMapStr: String,

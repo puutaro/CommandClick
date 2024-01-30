@@ -7,6 +7,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
@@ -15,6 +16,8 @@ import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -160,7 +163,7 @@ object ListContentsSelectSpinnerViewProducer {
         if(
             targetListFilePath.isNullOrEmpty()
         ) return
-        val filePrefix = "file://"
+        val filePrefix = EditSettings.filePrefix
         val separator = "&"
         val compListOneLineCon =
             elcbMap?.get(ListContentsEditKey.compList.name)

@@ -1,13 +1,9 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CompleteQuote
-import com.puutaro.commandclick.util.LogSystems
-import org.eclipse.jgit.api.errors.CannotDeleteCurrentBranchException
+import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 
 class ScriptContentsLister(
     private val editLinearLayoutList: List<LinearLayout>
@@ -21,7 +17,7 @@ class ScriptContentsLister(
         if(factRecordNumToNameToValueInHolderSize <= -1) return scriptContentsList
         val editedRecordNumToNameToValue = (0..factRecordNumToNameToValueInHolderSize).map {
             val currentId = startIdNum + it
-            val editTextView = findEditTextView(
+            val editTextView = CcEditComponent.findEditTextView(
                 currentId,
                 editLinearLayoutList
             ) ?: return@map String() to emptyMap<String, String>()
@@ -54,21 +50,5 @@ class ScriptContentsLister(
                 "${currentVariableName}=${currentVariableValue}"
             }
         }
-    }
-
-    private fun findEditTextView(
-        currentId: Int,
-        editLinearLayoutList: List<LinearLayout>,
-    ): EditText? {
-        editLinearLayoutList.forEach {
-            val extractedEditText = it.findViewById<EditText>(currentId)
-            if(
-                extractedEditText != null
-            ) return extractedEditText
-        }
-        LogSystems.stdWarn(
-            "no exist editText id: ${currentId}"
-        )
-        return null
     }
 }

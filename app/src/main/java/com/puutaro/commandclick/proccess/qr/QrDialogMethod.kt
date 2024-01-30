@@ -20,12 +20,12 @@ import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.edit.edit_text_support_view.WithIndexListView
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuInfo
 import com.puutaro.commandclick.service.FileUploadService
 import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.IntentVariant
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
@@ -290,8 +290,9 @@ object QrDialogMethod {
                     is EditFragment -> {
                         ListIndexForEditAdapter.listIndexListUpdateFileList(
                             fragment,
-                            ListIndexForEditAdapter.makeFileListHandler(
-                                fragment.busyboxExecutor,
+                            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                                fragment,
+                                ListIndexForEditAdapter.indexListMap,
                                 ListIndexForEditAdapter.listIndexTypeKey
                             )
                         )
@@ -377,8 +378,9 @@ object QrDialogMethod {
                     is EditFragment -> {
                         ListIndexForEditAdapter.listIndexListUpdateFileList(
                             fragment,
-                            ListIndexForEditAdapter.makeFileListHandler(
-                                fragment.busyboxExecutor,
+                            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                                fragment,
+                                ListIndexForEditAdapter.indexListMap,
                                 ListIndexForEditAdapter.listIndexTypeKey
                             )
                         )

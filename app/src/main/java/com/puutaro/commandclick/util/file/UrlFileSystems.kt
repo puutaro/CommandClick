@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.file
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.Intent.CurlManager
@@ -23,7 +23,7 @@ class UrlFileSystems {
             "https://raw.githubusercontent.com"
 
         val cmdclickRepoGitUserContentPrefix =
-            "${gitUserContentPrefix}/" +
+            "$gitUserContentPrefix/" +
                     "puutaro/commandclick-repository/master"
 
         val readmeSuffix = "master/${UsePath.fannelReadmeName}"

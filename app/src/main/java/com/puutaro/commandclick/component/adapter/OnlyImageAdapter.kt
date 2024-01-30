@@ -9,7 +9,7 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
-import com.puutaro.commandclick.util.AssetsFileManager
+import com.puutaro.commandclick.util.file.AssetsFileManager
 
 class OnlyImageAdapter(
     private val mContext: Context?

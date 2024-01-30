@@ -11,7 +11,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupp
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer.setInitMarkToListContents
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
-import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 

@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.view_model.activity
 
 import androidx.lifecycle.ViewModel
-import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
 import java.io.File
-import java.net.ServerSocket
 
 
 class TerminalViewModel: ViewModel() {

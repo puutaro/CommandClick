@@ -1,7 +1,8 @@
 package com.puutaro.commandclick.common.variable.variables
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.FileSystems
+import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object WebUrlVariables {
@@ -19,7 +20,7 @@ object WebUrlVariables {
         "https://github.com/puutaro/CommandClick/tree/master#setup-ubuntu"
     val commandClickRepositoryUrl =
         "https://github.com/puutaro/commandclick-repository.git"
-    val monitorUrlPath = "file://monitor_path"
+    val monitorUrlPath = "${EditSettings.filePrefix}monitor_path"
     val base64Prefix = "data:image/"
     val base64JpegPrefix = "${base64Prefix}jpeg;base64"
     val base64PngPrefix = "${base64Prefix}png;base64"

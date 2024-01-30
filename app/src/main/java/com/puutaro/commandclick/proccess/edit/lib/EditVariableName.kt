@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import android.widget.EditText
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.util.edit_tool.CcEditComponent
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 object EditVariableName {
@@ -14,11 +14,10 @@ object EditVariableName {
         val editViewModel: EditViewModel by editFragment.activityViewModels()
         val editTextId = editViewModel.variableNameToEditTextIdMap.get(targetVariableName)
             ?: return String()
-        val binding = editFragment.binding
-        val editLinearLayout = binding.editLinearLayout
-        val editTextInEditFragment =
-            editLinearLayout.findViewById<EditText>(editTextId)
-                ?: return String()
+        val editTextInEditFragment = CcEditComponent.findEditTextView(
+                editTextId,
+                CcEditComponent.makeEditLinearLayoutList(editFragment)
+            ) ?: return String()
         return editTextInEditFragment.text.toString()
     }
 }
