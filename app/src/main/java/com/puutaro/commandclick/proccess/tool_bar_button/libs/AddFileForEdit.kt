@@ -15,12 +15,14 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button.AddScriptHandler
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
 import com.puutaro.commandclick.util.file.FileSystems
 
-object AddFileForEdit {
+    object AddFileForEdit {
 
     private var promptDialog: Dialog? = null
 
@@ -54,6 +56,17 @@ object AddFileForEdit {
         if(fragment !is EditFragment) return
         val context = fragment.context
             ?: return
+        val type = ListIndexEditConfig.getListIndexType(
+            fragment
+        )
+        when(type){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
+                return
+            }
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+            -> {}
+        }
         val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
         val addJSMacroStr = JsPathMacroForSettingButton.ADD.name
         val currentSettingMenuMap = settingMenuMapList.filter {

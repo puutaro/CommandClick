@@ -90,7 +90,7 @@ class FileGetterForSettingButton(
         editFragment: EditFragment,
         sourceFilePath: String,
     ){
-        ListIndexForEditAdapter.execAddForFile(
+        ListIndexForEditAdapter.execCopyForFile(
             editFragment,
             sourceFilePath,
         )

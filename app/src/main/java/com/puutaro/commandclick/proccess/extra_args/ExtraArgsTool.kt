@@ -7,7 +7,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 
 object ExtraArgsTool {
 
-    val extraSettingKeyName = "extra"
+    const val extraSettingKeyName = "extra"
     enum class ExtraKey(
         val key: String
     ) {

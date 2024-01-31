@@ -111,7 +111,7 @@ class ListIndexForEditAdapter(
             )
         }
 
-        fun execAddForFile(
+        fun execCopyForFile(
             editFragment: EditFragment,
             sourceFilePath: String,
         ){

@@ -77,7 +77,7 @@ object ExecCopyFileHere {
                 ListIndexForEditAdapter.listIndexTypeKey
             )
         val srcFilePath = File(parentDirPath, insertFileName).absolutePath
-        ListIndexForEditAdapter.execAddForFile(
+        ListIndexForEditAdapter.execCopyForFile(
             listIndexArgsMaker.editFragment,
             srcFilePath,
         )
