@@ -14,7 +14,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

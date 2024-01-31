@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.config_settings
 
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+
 object ClickSettingsForToolbarButton {
     enum class ClickConfigMapKey(
         val str: String
@@ -9,6 +11,7 @@ object ClickSettingsForToolbarButton {
         ON_HIDE_FOOTER("onHideFooter"),
         ON_SCRIPT_SAVE("onScriptSave"),
         MONITOR_SIZE("monitorSize"),
+        EXTRA(ExtraArgsTool.extraSettingKeyName)
     }
 
     enum class MonitorSize {

@@ -9,7 +9,7 @@ import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -70,7 +70,7 @@ class FileGetterForSettingButton(
         val extraMap =
             ExtraArgsTool.createExtraMapFromMenuMapList(
                 settingMenuMapList,
-                JsPathMacroForSettingButton.ADD.name,
+                JsPathMacroForToolbarButton.ADD.name,
                 MenuSettingTool.MenuSettingKey.JS_PATH.key,
                 "!",
             )

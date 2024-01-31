@@ -42,4 +42,15 @@ object TsvTool {
             updateTsvCon
         )
     }
+
+    fun uniqByTitle(list: List<String>): List<String> {
+        return list.filterIndexed { index, el ->
+            val titleConLineList = el.split("\t")
+            val title = titleConLineList.firstOrNull()
+                ?: return@filterIndexed false
+            list.indexOfFirst {
+                it.startsWith(title)
+            } == index
+        }
+    }
 }

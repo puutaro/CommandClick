@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
 import kotlinx.coroutines.CoroutineScope
@@ -52,22 +52,29 @@ class BusyboxExecutor(
 
     fun getCmdOutput(
         command: String,
+        env: HashMap<String, String>? = null,
     ): String {
         return execCommandForOutput(
-           listOf("sh", "-c", command),
+            listOf("sh", "-c", command),
+            env
         )
     }
 
     private fun execCommandForOutput(
         command: List<String>,
+        env: HashMap<String, String>?
     ): String {
         if (!busyboxWrapper.busyboxIsPresent()) {
             ubuntuFiles.setupLinksForBusyBox()
         }
-        val env = busyboxWrapper.getBusyboxEnv()
+//        val env = busyboxWrapper.getBusyboxEnv()
         val processBuilder = ProcessBuilder(command)
         processBuilder.directory(ubuntuFiles.filesDir)
-        processBuilder.environment().putAll(env)
+        val busyboxHashMap = busyboxWrapper.getBusyboxEnv()
+        val envHash = env?.let {
+            env + busyboxHashMap
+        } ?: busyboxHashMap
+        processBuilder.environment().putAll(envHash)
         processBuilder.redirectErrorStream(true)
         var output = String()
         try {

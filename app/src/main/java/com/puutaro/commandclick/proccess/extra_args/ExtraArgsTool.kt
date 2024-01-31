@@ -3,7 +3,9 @@ package com.puutaro.commandclick.proccess.extra_args
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import java.io.File
 
 object ExtraArgsTool {
 
@@ -14,6 +16,7 @@ object ExtraArgsTool {
         PARENT_DIR_PATH("parentDirPath"),
         COMP_PREFIX("compPrefix"),
         COMP_SUFFIX("compSuffix"),
+        SHELL_PATH("shellPath"),
         BROADCAST_ACTION("broadcastAction"),
         BROADCAST_SCHEMAS("broadcastSchemas"),
     }
@@ -39,9 +42,12 @@ object ExtraArgsTool {
     }
 
     fun createExtraMapFromMap(
-        srcMap: Map<String, String>,
+        srcMap: Map<String, String>?,
         separator: String,
     ): Map<String, String> {
+        if(
+            srcMap.isNullOrEmpty()
+        ) return emptyMap()
         return CmdClickMap.createMap(
             srcMap.get(extraSettingKeyName),
             separator,
@@ -107,5 +113,25 @@ object ExtraArgsTool {
             schemaMapStr,
             separator,
         )
+    }
+
+    fun makeShellCon(
+        extraMap: Map<String, String>?,
+    ): String {
+        if(
+            extraMap.isNullOrEmpty()
+        ) return String()
+        val shellPath = extraMap.get(
+            ExtraKey.SHELL_PATH.key
+        ) ?: return String()
+        val shellPathObj = File(shellPath)
+        val shellParentDirPath = shellPathObj.parent
+            ?: return String()
+        val shellName = shellPathObj.name
+        return ReadText(
+            shellParentDirPath,
+            shellName
+        ).readText()
+
     }
 }

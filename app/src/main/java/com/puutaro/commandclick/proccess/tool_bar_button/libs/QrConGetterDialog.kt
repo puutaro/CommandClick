@@ -17,7 +17,7 @@ import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import java.io.File
 
 object QrConGetterDialog {
@@ -76,7 +76,7 @@ object QrConGetterDialog {
             val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
             val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
                 settingButtonMenuMapList,
-                JsPathMacroForSettingButton.GET_QR_CON.name,
+                JsPathMacroForToolbarButton.GET_QR_CON.name,
                 MenuSettingTool.MenuSettingKey.JS_PATH.key,
                 "!",
             )

@@ -11,7 +11,7 @@ import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServer
 import com.puutaro.commandclick.service.lib.pulse.PcPulseSetServerForUbuntu
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

@@ -23,7 +23,7 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 

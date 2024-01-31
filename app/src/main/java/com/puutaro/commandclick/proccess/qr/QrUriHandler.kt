@@ -24,7 +24,7 @@ import com.puutaro.commandclick.service.GitDownloadService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.TargetFragmentInstance

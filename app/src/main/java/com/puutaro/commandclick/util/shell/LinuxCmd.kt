@@ -1,7 +1,8 @@
-package com.puutaro.commandclick.util
+package com.puutaro.commandclick.util.shell
 
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
+import com.puutaro.commandclick.util.LogSystems
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.nio.charset.Charset
@@ -87,7 +88,7 @@ object LinuxCmd {
         )
     }
     fun killAllProcess(){
-       LogSystems.stdSys(
+        LogSystems.stdSys(
             "allkill"
         )
         android.os.Process.killProcess(android.os.Process.myPid())
@@ -108,17 +109,17 @@ object LinuxCmd {
             listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
         )
         LogSystems.stdSys(
-           "psOutput ${psOutput}"
+            "psOutput ${psOutput}"
         )
         val pListOutput = psOutput.split("\n").map {
             it.split("\t").getOrNull(1) ?: String()
         }.joinToString("  ")
         LogSystems.stdSys(
-           "pListOutput ${pListOutput}"
+            "pListOutput ${pListOutput}"
         )
         val killCmd = "kill -9 ${pListOutput}"
         LogSystems.stdSys(
-           "killCmd ${killCmd}"
+            "killCmd ${killCmd}"
         )
         val killOutput = execCommand(
             listOf(

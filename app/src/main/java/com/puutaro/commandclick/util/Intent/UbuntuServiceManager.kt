@@ -8,7 +8,7 @@ import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentE
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

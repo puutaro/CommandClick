@@ -2,12 +2,11 @@ package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.widget.ImageButton
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.ToolbarButtonArgsMaker
@@ -117,7 +116,7 @@ class SettingButtonHandler(
         buttonClickMapKey: String,
         defaultButtonMacroStr: String,
     ): String {
-        return toolbarButtonArgsMaker.settingButtonConfigMap
+        return toolbarButtonArgsMaker.toolbarButtonConfigMap
             ?.get(buttonClickMapKey).let {
                     clickConfigMapStr ->
                 if(
@@ -130,7 +129,7 @@ class SettingButtonHandler(
                     CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
                 val clickJsMacroStr =
                     clickJsPathMap.get(ClickSettingsForToolbarButton.ClickConfigMapKey.JS_PATH.str)
-                JsPathMacroForSettingButton.values().firstOrNull {
+                JsPathMacroForToolbarButton.values().firstOrNull {
                     it.name == clickJsMacroStr
                 }?.name.let name@ {
                     if(it != null) return@name it
@@ -149,7 +148,7 @@ class SettingButtonHandler(
         defaultOnSaveValue: String,
     ) {
          val isScriptSave = toolbarButtonArgsMaker
-            .settingButtonConfigMap
+            .toolbarButtonConfigMap
             ?.get(buttonClickMapKey)
             .let { clickConfigMapStr ->
                 if (
@@ -205,7 +204,7 @@ class SettingButtonHandler(
         buttonClickMapKey: String,
     ) {
         val monitorSizeStr = toolbarButtonArgsMaker
-            .settingButtonConfigMap
+            .toolbarButtonConfigMap
             ?.get(buttonClickMapKey)
             .let { clickConfigMapStr ->
                 if (

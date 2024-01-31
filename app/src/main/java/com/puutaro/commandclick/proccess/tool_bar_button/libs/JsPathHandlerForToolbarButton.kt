@@ -45,7 +45,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.CcPathTool
@@ -101,7 +101,7 @@ object JsPathHandlerForToolbarButton {
             LogSystems.stdWarn("${jsPathKey} not found in settingMenuMapList: ${settingButtonMenuMapList}")
             return
         }
-        val filterdJsPath = JsPathMacroForSettingButton.values().filter {
+        val filterdJsPath = JsPathMacroForToolbarButton.values().filter {
             it.name == jsPath
         }.firstOrNull()
         when (filterdJsPath != null) {
@@ -139,7 +139,7 @@ object JsPathHandlerForToolbarButton {
 
     private fun jsPathMacroHandler(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        jsPathMacroForSettingButton: JsPathMacroForSettingButton,
+        jsPathMacroForToolbarButton: JsPathMacroForToolbarButton,
     ) {
         val fragment = toolbarButtonArgsMaker.fragment
         val readSharePreffernceMap = toolbarButtonArgsMaker.readSharePreffernceMap
@@ -150,34 +150,34 @@ object JsPathHandlerForToolbarButton {
             SharePrefferenceSetting.current_app_dir
         )
         val currentScriptFileName = toolbarButtonArgsMaker.currentScriptFileName
-        when (jsPathMacroForSettingButton) {
-            JsPathMacroForSettingButton.KILL ->
+        when (jsPathMacroForToolbarButton) {
+            JsPathMacroForToolbarButton.KILL ->
                 AppProcessManager.killDialog(
                     fragment,
                     currentAppDirPath,
                     currentScriptFileName
                 )
 
-            JsPathMacroForSettingButton.USAGE ->
+            JsPathMacroForToolbarButton.USAGE ->
                 UsageDialog.launch(
                     fragment,
                     currentAppDirPath,
                 )
 
-            JsPathMacroForSettingButton.NO_SCROLL_SAVE_URL ->
+            JsPathMacroForToolbarButton.NO_SCROLL_SAVE_URL ->
                 NoScrollUrlSaver.save(
                     fragment,
                     currentAppDirPath,
                     String()
                 )
 
-            JsPathMacroForSettingButton.QR_SCAN ->
+            JsPathMacroForToolbarButton.QR_SCAN ->
                 execQrScan(
                     fragment,
                     currentAppDirPath,
                 )
 
-            JsPathMacroForSettingButton.SHORTCUT -> {
+            JsPathMacroForToolbarButton.SHORTCUT -> {
                 val listener =
                     fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
@@ -189,7 +189,7 @@ object JsPathHandlerForToolbarButton {
                 )
             }
 
-            JsPathMacroForSettingButton.TERMUX_SETUP -> {
+            JsPathMacroForToolbarButton.TERMUX_SETUP -> {
                 val listener =
                     fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
@@ -201,103 +201,106 @@ object JsPathHandlerForToolbarButton {
                 )
             }
 
-            JsPathMacroForSettingButton.CONFIG ->
+            JsPathMacroForToolbarButton.CONFIG ->
                 configEdit(fragment)
 
-            JsPathMacroForSettingButton.REFRESH_MONITOR ->
+            JsPathMacroForToolbarButton.REFRESH_MONITOR ->
                 TermRefresh.refresh(
                     terminalViewModel.currentMonitorFileName
                 )
 
-            JsPathMacroForSettingButton.SELECT_MONITOR ->
+            JsPathMacroForToolbarButton.SELECT_MONITOR ->
                 SelectTermDialog.launch(fragment)
 
-            JsPathMacroForSettingButton.RESTART_UBUNTU ->
+            JsPathMacroForToolbarButton.RESTART_UBUNTU ->
                 UbuntuServiceManager.launch(
                     fragment.activity
                 )
 
-            JsPathMacroForSettingButton.INSTALL_FANNEL ->
+            JsPathMacroForToolbarButton.INSTALL_FANNEL ->
                 SystemFannelLauncher.launch(
                     fragment,
                     UsePath.cmdclickSystemAppDirPath,
                     UsePath.fannelRepoFannelName
                 )
 
-            JsPathMacroForSettingButton.EDIT_STARTUP ->
+            JsPathMacroForToolbarButton.EDIT_STARTUP ->
                 scriptFileEditForCmdIndex(
                     fragment,
                     currentAppDirPath,
                 )
 
-            JsPathMacroForSettingButton.ADD -> AddFileForEdit.add(
+            JsPathMacroForToolbarButton.ADD -> AddFileForEdit.add(
                 fragment,
                 currentAppDirPath,
                 settingButtonMenuMapList,
             )
 
-            JsPathMacroForSettingButton.ADD_APP_DIR ->
+            JsPathMacroForToolbarButton.ADD_APP_DIR ->
                 AppDirAdder.add(toolbarButtonArgsMaker)
 
-            JsPathMacroForSettingButton.JS_IMPORT -> SystemFannelLauncher.launch(
+            JsPathMacroForToolbarButton.JS_IMPORT -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.jsImportManagerFannelName
             )
 
-            JsPathMacroForSettingButton.APP_DIR_MANAGER -> SystemFannelLauncher.launch(
+            JsPathMacroForToolbarButton.APP_DIR_MANAGER -> SystemFannelLauncher.launch(
                 fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.appDirManagerFannelName
             )
 
-            JsPathMacroForSettingButton.SIZING -> monitorSizeChange(fragment)
-            JsPathMacroForSettingButton.MENU ->
+            JsPathMacroForToolbarButton.SIZING -> monitorSizeChange(fragment)
+            JsPathMacroForToolbarButton.MENU ->
                 PopupSettingMenu.launchSettingMenu(toolbarButtonArgsMaker)
 
-            JsPathMacroForSettingButton.SYNC -> ListSyncer.sync(
+            JsPathMacroForToolbarButton.SYNC -> ListSyncer.sync(
                 fragment,
                 settingButtonMenuMapList,
             )
 
-            JsPathMacroForSettingButton.GET_FILE -> getFileHandler(
+            JsPathMacroForToolbarButton.GET_FILE -> getFileHandler(
                 toolbarButtonArgsMaker,
             )
-            JsPathMacroForSettingButton.GET_QR_CON -> QrConGetterDialog.launch(
+            JsPathMacroForToolbarButton.GET_QR_CON -> QrConGetterDialog.launch(
                 toolbarButtonArgsMaker
             )
 
-            JsPathMacroForSettingButton.FANNEL_REPO_SYNC ->
+            JsPathMacroForToolbarButton.FANNEL_REPO_SYNC ->
                 syncFannelRepo(fragment)
 
-            JsPathMacroForSettingButton.EDIT ->
+            JsPathMacroForToolbarButton.EDIT ->
                 changeSettingFragment(fragment)
 
-            JsPathMacroForSettingButton.WEB_SEARCH ->
+            JsPathMacroForToolbarButton.WEB_SEARCH ->
                 EditToolbarSwitcher.switch(
                     fragment,
-                    JsPathMacroForSettingButton.WEB_SEARCH.name
+                    JsPathMacroForToolbarButton.WEB_SEARCH.name
                 )
 
-            JsPathMacroForSettingButton.PAGE_SEARCH ->
+            JsPathMacroForToolbarButton.PAGE_SEARCH ->
                 EditToolbarSwitcher.switch(
                     fragment,
-                    JsPathMacroForSettingButton.PAGE_SEARCH.name
+                    JsPathMacroForToolbarButton.PAGE_SEARCH.name
                 )
 
-            JsPathMacroForSettingButton.NORMAL ->
+            JsPathMacroForToolbarButton.NORMAL ->
                 EditToolbarSwitcher.switch(
                     fragment,
-                    JsPathMacroForSettingButton.NORMAL.name
+                    JsPathMacroForToolbarButton.NORMAL.name
                 )
 
-            JsPathMacroForSettingButton.OK -> {
+            JsPathMacroForToolbarButton.OK -> {
                 if (fragment !is EditFragment) return
                 OkHandler(
                     fragment,
                     toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
                     toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
                 ).execForOk()
+            }
+            JsPathMacroForToolbarButton.ADD_URL_HISTORY -> {
+                UrlHistoryAddToTsv(toolbarButtonArgsMaker).invoke()
             }
         }
     }
@@ -447,7 +450,7 @@ object JsPathHandlerForToolbarButton {
             toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         ): Boolean {
             val clickKey = toolbarButtonArgsMaker.decideClickKey()
-            return toolbarButtonArgsMaker.settingButtonConfigMap?.get(clickKey)
+            return toolbarButtonArgsMaker.toolbarButtonConfigMap?.get(clickKey)
                 .let { clickJsPathMapStr ->
                     if (
                         clickJsPathMapStr.isNullOrEmpty()

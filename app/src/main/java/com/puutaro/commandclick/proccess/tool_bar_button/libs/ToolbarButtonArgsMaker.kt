@@ -12,7 +12,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -85,7 +85,7 @@ class ToolbarButtonArgsMaker(
         }
 
 //     UsePath.settingButtonConfigPath,
-    val settingButtonConfigMap = when(fragment){
+    val toolbarButtonConfigMap = when(fragment){
         is EditFragment -> fragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)
         else -> mapOf()
     }
@@ -104,15 +104,15 @@ class ToolbarButtonArgsMaker(
         )
 
         val defaultClickMacroMap = mapOf(
-            ToolbarButtonBariantForEdit.SETTING to JsPathMacroForSettingButton.SIZING.name,
-            ToolbarButtonBariantForEdit.EDIT to JsPathMacroForSettingButton.EDIT.name,
-            ToolbarButtonBariantForEdit.OK to JsPathMacroForSettingButton.OK.name,
+            ToolbarButtonBariantForEdit.SETTING to JsPathMacroForToolbarButton.SIZING.name,
+            ToolbarButtonBariantForEdit.EDIT to JsPathMacroForToolbarButton.EDIT.name,
+            ToolbarButtonBariantForEdit.OK to JsPathMacroForToolbarButton.OK.name,
         )
 
         val defaultLongClickMacroMap = mapOf(
-            ToolbarButtonBariantForEdit.SETTING to JsPathMacroForSettingButton.MENU.name,
-            ToolbarButtonBariantForEdit.EDIT to JsPathMacroForSettingButton.NORMAL.name,
-            ToolbarButtonBariantForEdit.OK to JsPathMacroForSettingButton.NORMAL.name,
+            ToolbarButtonBariantForEdit.SETTING to JsPathMacroForToolbarButton.MENU.name,
+            ToolbarButtonBariantForEdit.EDIT to JsPathMacroForToolbarButton.NORMAL.name,
+            ToolbarButtonBariantForEdit.OK to JsPathMacroForToolbarButton.NORMAL.name,
         )
 
         private val menuDefaultConForCmdIndex = makeSettingMenuDefaultConForCmdIndex()
@@ -142,10 +142,23 @@ class ToolbarButtonArgsMaker(
         }
     }
 
+    fun createClickConfigMap(): Map<String, String>?{
+        val buttonConfigMapKey = decideClickKey()
+        return toolbarButtonConfigMap?.get(buttonConfigMapKey).let { clickConfigMapStr ->
+            if (
+                clickConfigMapStr == null
+            ) return@let null
+            if (
+                clickConfigMapStr.isEmpty()
+            ) return@let null
+            CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
+        }
+    }
+
     fun makeSettingButtonMenuMapList(
     ): List<Map<String, String>?> {
         val clickKey = decideClickKey()
-        val clickConfigMap = settingButtonConfigMap?.get(clickKey).let {
+        val clickConfigMap = toolbarButtonConfigMap?.get(clickKey).let {
             if(
                 it.isNullOrEmpty()
             ) return@let mapOf()
@@ -210,58 +223,58 @@ private fun makeSettingMenuDefaultConForCmdIndex(): String {
     return """
         ${menuNameKey}=usage
             |${iconKey}=info
-            |${jsPathKey}=${JsPathMacroForSettingButton.USAGE.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.USAGE.name},
         ${menuNameKey}=edit startup
             |${iconKey}=edit_frame
-            |${jsPathKey}=${JsPathMacroForSettingButton.EDIT_STARTUP.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.EDIT_STARTUP.name},
         ${menuNameKey}=no scroll save url
             |${iconKey}=ok
-            |${jsPathKey}=${JsPathMacroForSettingButton.NO_SCROLL_SAVE_URL.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.NO_SCROLL_SAVE_URL.name},
         ${menuNameKey}=install fannel
             |${iconKey}=puzzle
-            |${jsPathKey}=${JsPathMacroForSettingButton.INSTALL_FANNEL.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.INSTALL_FANNEL.name},
         ${menuNameKey}=scan QR
             |${iconKey}=qr
-            |${jsPathKey}=${JsPathMacroForSettingButton.QR_SCAN.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.QR_SCAN.name},
         ${menuNameKey}=manage
             |${iconKey}=setup,
                 ${menuNameKey}=refresh monitor
                     |${iconKey}=reflesh
-                    |${jsPathKey}=${JsPathMacroForSettingButton.REFRESH_MONITOR.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.REFRESH_MONITOR.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=select monitor
                     |${iconKey}=file
-                    |${jsPathKey}=${JsPathMacroForSettingButton.SELECT_MONITOR.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.SELECT_MONITOR.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=restart ubuntu
                     |${iconKey}=launch
-                    |${jsPathKey}=${JsPathMacroForSettingButton.RESTART_UBUNTU.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.RESTART_UBUNTU.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=js import manager
                     |${iconKey}=folda
-                    |${jsPathKey}=${JsPathMacroForSettingButton.JS_IMPORT.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.JS_IMPORT.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=add
                     |${iconKey}=plus
-                    |${jsPathKey}=${JsPathMacroForSettingButton.ADD.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.ADD.name}
                     |${parentMenuKey}=manage,
         ${menuNameKey}=setting
             |${iconKey}=setting,
                 ${menuNameKey}=app dir manager
                     |${iconKey}=setting
-                    |${jsPathKey}=${JsPathMacroForSettingButton.APP_DIR_MANAGER.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.APP_DIR_MANAGER.name}
                     |${parentMenuKey}=setting,
                 ${menuNameKey}=create short cut
                     |${iconKey}=shortcut
-                    |${jsPathKey}=${JsPathMacroForSettingButton.SHORTCUT.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.SHORTCUT.name}
                     |${parentMenuKey}=setting,
                 ${menuNameKey}=termux setup
                     |${iconKey}=setup
-                    |${jsPathKey}=${JsPathMacroForSettingButton.TERMUX_SETUP.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.TERMUX_SETUP.name}
                     |${parentMenuKey}=setting,
                 ${menuNameKey}=config
                     |${iconKey}=edit_frame
-                    |${jsPathKey}=${JsPathMacroForSettingButton.CONFIG.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.CONFIG.name}
                     |${parentMenuKey}=setting,
     """.trimIndent()
 }
@@ -274,43 +287,43 @@ private fun makeSettingMenuDefaultConForEdit(): String {
     return """
         ${menuNameKey}=kill
             |${iconKey}=cancel
-            |${jsPathKey}=${JsPathMacroForSettingButton.KILL.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.KILL.name},
         ${menuNameKey}=usage
             |${iconKey}=info
-            |${jsPathKey}=${JsPathMacroForSettingButton.USAGE.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.USAGE.name},
         ${menuNameKey}=no scroll save url
             |${iconKey}=ok
-            |${jsPathKey}=${JsPathMacroForSettingButton.NO_SCROLL_SAVE_URL.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.NO_SCROLL_SAVE_URL.name},
         ${menuNameKey}=scan QR
             |${iconKey}=qr
-            |${jsPathKey}=${JsPathMacroForSettingButton.QR_SCAN.name},
+            |${jsPathKey}=${JsPathMacroForToolbarButton.QR_SCAN.name},
         ${menuNameKey}=manage
             |${iconKey}=setup,
                 ${menuNameKey}=refresh monitor
                     |${iconKey}=reflesh
-                    |${jsPathKey}=${JsPathMacroForSettingButton.REFRESH_MONITOR.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.REFRESH_MONITOR.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=select monitor
                     |${iconKey}=file
-                    |${jsPathKey}=${JsPathMacroForSettingButton.SELECT_MONITOR.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.SELECT_MONITOR.name}
                     |${parentMenuKey}=manage,
                 ${menuNameKey}=restart ubuntu
                     |${iconKey}=launch
-                    |${jsPathKey}=${JsPathMacroForSettingButton.RESTART_UBUNTU.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.RESTART_UBUNTU.name}
                     |${parentMenuKey}=manage,
         ${menuNameKey}=setting
             |${iconKey}=setting,
                 ${menuNameKey}=create short cut
                     |${iconKey}=setting
-                    |${jsPathKey}=${JsPathMacroForSettingButton.SHORTCUT.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.SHORTCUT.name}
                     |${parentMenuKey}=setting,
                 ${menuNameKey}=termux setup
                     |${iconKey}=setup
-                    |${jsPathKey}=${JsPathMacroForSettingButton.TERMUX_SETUP.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.TERMUX_SETUP.name}
                     |${parentMenuKey}=setting,
                 ${menuNameKey}=config
                     |${iconKey}=edit_frame
-                    |${jsPathKey}=${JsPathMacroForSettingButton.CONFIG.name}
+                    |${jsPathKey}=${JsPathMacroForToolbarButton.CONFIG.name}
                     |${parentMenuKey}=setting,
     """.trimIndent()
 }

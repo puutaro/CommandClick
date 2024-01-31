@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.common_settings
 
-enum class JsPathMacroForSettingButton{
+enum class JsPathMacroForToolbarButton{
     KILL,
     USAGE,
     NO_SCROLL_SAVE_URL,
@@ -8,6 +8,7 @@ enum class JsPathMacroForSettingButton{
     SHORTCUT,
     TERMUX_SETUP,
     CONFIG,
+    ADD_URL_HISTORY,
     REFRESH_MONITOR,
     SELECT_MONITOR,
     RESTART_UBUNTU,

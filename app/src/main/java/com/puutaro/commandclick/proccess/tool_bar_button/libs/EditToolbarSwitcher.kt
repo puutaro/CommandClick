@@ -8,7 +8,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -162,7 +162,7 @@ object EditToolbarSwitcher {
 enum class EditLongPressType(
     val jsMacro: String
 ) {
-    WEB_SEARCH(JsPathMacroForSettingButton.WEB_SEARCH.name),
-    PAGE_SEARCH(JsPathMacroForSettingButton.PAGE_SEARCH.name),
-    NORMAL(JsPathMacroForSettingButton.NORMAL.name),
+    WEB_SEARCH(JsPathMacroForToolbarButton.WEB_SEARCH.name),
+    PAGE_SEARCH(JsPathMacroForToolbarButton.PAGE_SEARCH.name),
+    NORMAL(JsPathMacroForToolbarButton.NORMAL.name),
 }

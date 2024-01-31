@@ -22,7 +22,7 @@ import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuNotiButtonLabe
 import com.puutaro.commandclick.service.lib.ubuntu.variable.UbuntuStateType
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.LinuxCmd
+import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

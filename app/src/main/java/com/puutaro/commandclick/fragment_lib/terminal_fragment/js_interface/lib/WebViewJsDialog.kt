@@ -26,17 +26,13 @@ import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsToast
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog_js_interface.JsWebViewDialogManager
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.JsInterfaceAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForSrcImageAnchor
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPosition
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJsInterfaceVariant
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.JsInterfaceVariant
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
@@ -156,25 +152,13 @@ class WebViewJsDialog(
         settings.displayZoomControls = false
         settings.textZoom = (terminalFragment.fontZoomPercent * 95 ) / 100
         webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        webView.addJavascriptInterface(
-            JsToast(terminalFragment),
-            JsInterfaceVariant.jsToast.name
-        )
-        webView.addJavascriptInterface(
-            JsFileSystem(terminalFragment),
-            JsInterfaceVariant.jsFileSystem.name
-        )
-        webView.addJavascriptInterface(
-            JsUrl(terminalFragment),
-            JsInterfaceVariant.jsUrl.name
+        JsInterfaceAdder.add(
+            terminalFragment,
+            webView
         )
         webView.addJavascriptInterface(
             JsWebViewDialogManager(terminalFragment),
             DialogJsInterfaceVariant.jsWebViewDialogManager.name
-        )
-        webView.addJavascriptInterface(
-            JsUtil(terminalFragment),
-            JsInterfaceVariant.jsUtil.name
         )
     }
 

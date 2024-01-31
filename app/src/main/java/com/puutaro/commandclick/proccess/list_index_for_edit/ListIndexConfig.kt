@@ -19,7 +19,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Cli
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -133,7 +133,7 @@ object ListIndexEditConfig {
         ) return String()
         val clickJsMacroStr =
             clickConfigMap.get(ClickSettingsForListIndex.ClickSettingKey.JS_PATH.key)
-        return JsPathMacroForSettingButton.values().firstOrNull {
+        return JsPathMacroForToolbarButton.values().firstOrNull {
             it.name == clickJsMacroStr
         }?.name.let name@ {
             if(it != null) return@name it
