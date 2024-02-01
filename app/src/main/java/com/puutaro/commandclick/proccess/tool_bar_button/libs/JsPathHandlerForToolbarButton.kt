@@ -302,6 +302,11 @@ object JsPathHandlerForToolbarButton {
             JsPathMacroForToolbarButton.ADD_URL_HISTORY -> {
                 UrlHistoryAddToTsv(toolbarButtonArgsMaker).invoke()
             }
+            JsPathMacroForToolbarButton.ADD_URL_CON ->
+                AddUrlCon.add(
+                    toolbarButtonArgsMaker,
+                    settingButtonMenuMapList
+                )
         }
     }
 

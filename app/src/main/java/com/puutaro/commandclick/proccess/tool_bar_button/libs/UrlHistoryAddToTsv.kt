@@ -208,7 +208,7 @@ class UrlHistoryAddToTsv (
                 editFragment,
                 currentAppDirPath,
                 webSearcherName,
-                selectedUrl,
+                listOf(selectedUrl),
             )
            true
         }

@@ -183,12 +183,12 @@ object ExecJsLoad {
         fragment: Fragment,
         currentAppDirPath: String,
         fannelName: String,
-        systemExecReplaceText: String,
+        systemExecReplaceTextList: List<String>,
     ){
         val context = fragment.context
             ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-        val externalExecJsPath = "${currentAppDirPath}/${fannelDirName}/${UsePath.externalExecJsDirName}/${UsePath.externalTextForExecFannel}"
+        val externalExecJsPath = "${currentAppDirPath}/${fannelDirName}/${UsePath.externalExecJsDirName}/${UsePath.externalJsForExecFannel}"
         val fannelPathObj = File("${currentAppDirPath}/${fannelName}")
         val externalExecJsPathObj = File(externalExecJsPath)
         val isExternalExecJsPath = externalExecJsPathObj.isFile
@@ -199,24 +199,36 @@ object ExecJsLoad {
         val parentDirPath = execJsPathObj.parent
             ?: return
         val execJsName = execJsPathObj.name
-
+        val cmddlickExternalExecReplaceTxt = CommandClickScriptVariable.CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT
+        val replaceMarkMap = systemExecReplaceTextList.mapIndexed { index, value ->
+            val RepTextSuffix = index + 1
+            val repValMark = "${cmddlickExternalExecReplaceTxt}${RepTextSuffix}"
+            repValMark to value
+        }.toMap()
         val jsContentsListSource = ReadText(
             parentDirPath,
             execJsName,
-        ).readText()
-            .replace(
-                CommandClickScriptVariable.CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT,
-                systemExecReplaceText
-            )
-            .split("\n")
-        val loadLongPressJsCon = JavaScriptLoadUrl.make(
+        ).readText().let {
+            srcJsCon ->
+            var replacedJsCon = srcJsCon
+            replaceMarkMap.forEach {
+                val repMark = "\${${it.key}}"
+                val repValue = it.value
+                replacedJsCon = replacedJsCon.replace(
+                    repMark,
+                    repValue,
+                )
+            }
+            replacedJsCon
+        }.split("\n")
+        val externalJsCon = JavaScriptLoadUrl.make(
             context,
             "${parentDirPath}/${execJsName}",
             jsContentsListSource
         ) ?: return
         jsUrlLaunchHandler(
             fragment,
-            loadLongPressJsCon
+            externalJsCon
         )
     }
 

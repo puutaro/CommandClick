@@ -558,7 +558,7 @@ object QrUriHandler {
                     fragment,
                     currentAppDirPath,
                     webSearcherName,
-                    loadUrl
+                    listOf(loadUrl)
                 )
             }
             else -> BroadCastIntent.sendUrlCon(

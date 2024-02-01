@@ -40,4 +40,5 @@ enum class JsInterfaceVariant {
     jsIconSelectBox,
     jsMap,
     jsFDialog,
+    jsToolbar,
 }

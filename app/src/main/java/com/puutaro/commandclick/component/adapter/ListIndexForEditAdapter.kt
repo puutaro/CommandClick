@@ -85,6 +85,7 @@ class ListIndexForEditAdapter(
     companion object {
         val className = this::class.java.name
         var indexListMap: Map<String, String> = mapOf()
+        var onDeleteConFile = true
         var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
         private var listIndexScrollToBottomJob: Job? = null
 
@@ -219,6 +220,30 @@ class ListIndexForEditAdapter(
             TsvTool.updateTsv(
                 tsvPath,
                 sortListIndexListForTsvSave,
+            )
+        }
+
+        fun updateTsvByRemove(
+            editFragment: EditFragment,
+            removeItemLineList: List<String>,
+        ){
+            val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
+                editFragment,
+                indexListMap,
+                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+            )
+            if(
+                tsvPath.isEmpty()
+            ) return
+//            val sortType = ListSettingsForListIndex.getSortType(indexListMap)
+//            val sortListIndexListForTsvSave =
+//                ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(
+//                    sortType,
+//                    listIndexList
+//                )
+            TsvTool.updateTsvByRemove(
+                tsvPath,
+                removeItemLineList,
             )
         }
 
@@ -378,6 +403,25 @@ class ListIndexForEditAdapter(
                     )
                 }
             }
+        }
+
+        fun removeCon(
+            removeItemLine: String,
+        ){
+            if(
+                !onDeleteConFile
+            ) return
+            val removeTitleConList = removeItemLine.split("\t")
+            if(removeTitleConList.size != 2) return
+            val filePath = removeTitleConList.last()
+            val filePathObj = File(filePath)
+            val fileParentDirPath = filePathObj.parent
+                ?: return
+            val fileName = filePathObj.name
+            FileSystems.removeFiles(
+                fileParentDirPath,
+                fileName
+            )
         }
     }
     class ListIndexListViewHolder(
@@ -706,6 +750,9 @@ class ListIndexForEditAdapter(
         )
         listIndexTypeKey = ListIndexEditConfig.getListIndexType(
             editFragment
+        )
+        onDeleteConFile = ListSettingsForListIndex.howOnDeleteConFileValue(
+            indexListMap
         )
         filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,

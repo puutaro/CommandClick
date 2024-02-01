@@ -138,6 +138,8 @@ object UsePath {
     val appDirManagerFannelPath = "$cmdclickSystemAppDirPath/$appDirManagerFannelName"
     val fannelRepoFannelName = "fannelRepo.js"
     val fannelRepoFannelPath = "$cmdclickSystemAppDirPath/$fannelRepoFannelName"
+    val saveWebConDialogFannelName = "saveWebConDialog.js"
+    val saveWebConDialogFannelPath = "$cmdclickSystemAppDirPath/$saveWebConDialogFannelName"
     val fannelReadmeName = "README.md"
     val fannelReadmePath = "\${01}/\${001}/${fannelReadmeName}"
 
@@ -195,7 +197,7 @@ object UsePath {
     val systemExecJsDirName = "systemJs"
     val appHistoryClickJsName = "appHistoryClick.js"
     val externalExecJsDirName = "externalJs"
-    val externalTextForExecFannel = "externalExec.js"
+    val externalJsForExecFannel = "externalExec.js"
     val qrDirName = "qr"
     val qrPngName = "qr.png"
     val qrPngRelativePath = "$qrDirName/$qrPngName"

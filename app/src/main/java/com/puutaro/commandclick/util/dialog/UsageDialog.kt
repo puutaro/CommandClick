@@ -17,7 +17,7 @@ object UsageDialog {
             fragment,
             currentAppDirPath,
             webSearcherName,
-            WebUrlVariables.commandClickUsageUrl,
+            listOf(WebUrlVariables.commandClickUsageUrl),
         )
     }
 }

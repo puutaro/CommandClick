@@ -23,6 +23,7 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -36,11 +37,12 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.variables.DialogJ
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -296,7 +298,7 @@ class WebViewJsDialog(
             popupMenu.menu
         )
         (menuList.indices).forEach {
-            val menuName = getJsPathFromMenuSrc(menuList[it])
+            val menuName = getTitleFromMenuSrc(menuList[it])
             val itemId = menuGroupId + it * 100
             popupMenu.menu.add(
                 menuGroupId,
@@ -352,6 +354,14 @@ class WebViewJsDialog(
         menuText: String
     ): String {
         return menuText.split("\t").lastOrNull()?.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        } ?: String()
+    }
+
+    private fun getTitleFromMenuSrc(
+        menuText: String
+    ): String {
+        return menuText.split("\t").firstOrNull()?.let {
             QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
     }
@@ -437,16 +447,14 @@ class WebViewJsDialog(
             currentScriptPathObj.name
                 ?: String()
 
-        return centerMenuMapStr.let {
-            ScriptPreWordReplacer.replace(
+        return ScriptPreWordReplacer.replace(
+            centerMenuMapStr,
+            currentAppDirPath,
+            fannelName
+        ).let {
+            CmdClickMap.createMap(
                 it,
-                currentAppDirPath,
-                fannelName
-            )
-        }.split("!").map{
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
+                "!"
             )
         }.toMap()
     }
@@ -640,10 +648,36 @@ class WebViewJsDialog(
         val menuFileDirPath = menuFilePathObj.parent
             ?: String()
         val menuFileName = menuFilePathObj.name
+        val commentOutMark = JavaScriptLoadUrl.commentOutMark
+        FileSystems.updateFile(
+            UsePath.cmdclickDefaultAppDirPath,
+            "menuList.txt",
+            "menuFilePath: ${menuFilePath}\n" +
+                    "listType: ${listType}\n" +
+            "btnOptionMap: ${btnOptionMap}\n" +
+            ReadText(
+                menuFileDirPath,
+                menuFileName
+            ).readText() + "\n-----\n" +
+            ReadText(
+                menuFileDirPath,
+                menuFileName
+            ).textToList().filter {
+                val timeLine = it.trim()
+                !timeLine.startsWith(commentOutMark)
+                        && !timeLine.startsWith("#")
+                        && timeLine.isNotEmpty()
+            }.joinToString("\n") + "\n"
+        )
         return ReadText(
             menuFileDirPath,
             menuFileName
-        ).textToList()
+        ).textToList().filter {
+            val timeLine = it.trim()
+            !timeLine.startsWith(commentOutMark)
+                    && !timeLine.startsWith("#")
+                    && timeLine.isNotEmpty()
+        }
     }
 
     private fun culcBtnWeight(
@@ -683,7 +717,6 @@ class WebViewJsDialog(
         }
     }
 
-
     private fun execLoadJs(
         currentScriptPath: String,
         jsPath: String,
@@ -699,11 +732,7 @@ class WebViewJsDialog(
             ?: return
         val fannelName = fannelPathObj.name
         val execJsPath = SetReplaceVariabler.execReplaceByReplaceVariables(
-            ScriptPreWordReplacer.replace(
-                jsPath,
-                currentAppDirPath,
-                fannelName
-            ),
+            jsPath,
             setReplaceVariableMap,
             currentAppDirPath,
             fannelName

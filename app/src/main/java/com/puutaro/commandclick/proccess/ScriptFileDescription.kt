@@ -49,11 +49,16 @@ object ScriptFileDescription {
             true -> {
                 val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
                         UsePath.JS_FILE_SUFFIX
+                val systemExecRepTextList =
+                    when(readmeUrl == null){
+                        false -> listOf(readmeUrl)
+                        else -> emptyList()
+                    }
                 ExecJsLoad.execExternalJs(
                     fragment,
                     currentAppDirPath,
                     webSearcherName,
-                    readmeUrl ?: String(),
+                    systemExecRepTextList
                 )
             }
             else -> {

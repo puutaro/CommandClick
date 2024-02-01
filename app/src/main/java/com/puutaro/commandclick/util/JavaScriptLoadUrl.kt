@@ -17,6 +17,7 @@ import java.io.File
 
 object JavaScriptLoadUrl {
 
+    val commentOutMark = "//"
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
     private val settingSectionStart = languageTypeToSectionHolderMap?.get(
@@ -38,7 +39,6 @@ object JavaScriptLoadUrl {
         jsListSource: List<String>? = null,
         setReplaceVariableMapSrc: Map<String, String>? = null,
     ):String? {
-        val commentOutMark = "//"
         val jsFileObj = File(execJsPath)
         if(!jsFileObj.isFile) return null
         val recentAppDirPath = jsFileObj.parent
@@ -225,11 +225,9 @@ object JavaScriptLoadUrl {
         )
     }
 
-
     fun makeFromContents (
         jsList: List<String>
     ):String? {
-        val commentOutMark = "//"
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(LanguageTypeSelects.JAVA_SCRIPT)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(

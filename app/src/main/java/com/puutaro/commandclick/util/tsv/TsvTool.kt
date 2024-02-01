@@ -22,6 +22,29 @@ object TsvTool {
         )
     }
 
+    fun updateTsvByRemove(
+        tsvPath: String?,
+        removeItemLineList: List<String>,
+    ){
+        if(tsvPath.isNullOrEmpty()) return
+        val tsvPathObj = File(tsvPath)
+        if(!tsvPathObj.isFile) return
+        val tsvParentDirPath = tsvPathObj.parent
+            ?: return
+        val tsvName = tsvPathObj.name
+        val removeTsvCon = ReadText(
+            tsvParentDirPath,
+            tsvName,
+        ).textToList().filter {
+            !removeItemLineList.contains(it.trim())
+        }.joinToString("\n")
+        FileSystems.writeFile(
+            tsvParentDirPath,
+            tsvName,
+            removeTsvCon
+        )
+    }
+
     fun insertByLastUpdate(
         tsvPath: String,
         insertLine: String,

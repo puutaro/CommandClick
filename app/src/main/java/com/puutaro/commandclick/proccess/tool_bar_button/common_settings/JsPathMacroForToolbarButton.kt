@@ -9,6 +9,7 @@ enum class JsPathMacroForToolbarButton{
     TERMUX_SETUP,
     CONFIG,
     ADD_URL_HISTORY,
+    ADD_URL_CON,
     REFRESH_MONITOR,
     SELECT_MONITOR,
     RESTART_UBUNTU,

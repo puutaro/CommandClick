@@ -1,10 +1,7 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
-import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.url.HistoryUrlContents
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 object UrlLaunchMacro {
@@ -13,43 +10,18 @@ object UrlLaunchMacro {
         recentAppDirPath: String,
         onUrlLaunchMacro: String,
     ) {
-        val appUrlSystemPath = "${recentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-        when(onUrlLaunchMacro){
-            SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name -> {
-                terminalViewModel.launchUrl = ReadText(
-                    appUrlSystemPath,
-                    UsePath.cmdclickUrlHistoryFileName
-                ).textToList()
-                    .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
-                            it.split("\t").lastOrNull()
-                        )
-                    }
-                    .firstOrNull()
-                    ?.split("\t")?.lastOrNull()
-            }
-            SettingVariableSelects.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
-                terminalViewModel.launchUrl = ReadText(
-                    appUrlSystemPath,
-                    UsePath.cmdclickUrlHistoryFileName
-                ).textToList()
-                    .filter {
-                        EnableUrlPrefix.isHttpOrFilePrefix(
-                            it.split("\t").lastOrNull()
-                        )
-                    }
-                    .groupBy { it }
-                    .mapValues { it.value.size }
-                    .maxBy { it.value }
-                    .key
-                    .split("\t")
-                    .lastOrNull()
-            }
-            else -> launchUrl(
-                onUrlLaunchMacro,
-                terminalViewModel
-            )
+        val launchUrl = HistoryUrlContents.extract(
+            recentAppDirPath,
+            onUrlLaunchMacro
+        )
+        if(!launchUrl.isNullOrEmpty()){
+            terminalViewModel.launchUrl = launchUrl
+            return
         }
+        launchUrl(
+            onUrlLaunchMacro,
+            terminalViewModel
+        )
     }
 
     private fun launchUrl(

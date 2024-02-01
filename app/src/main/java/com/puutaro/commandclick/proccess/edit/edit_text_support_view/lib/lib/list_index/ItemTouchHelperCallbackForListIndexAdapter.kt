@@ -181,7 +181,11 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         val position = listIndexViewHolder.layoutPosition
         listIndexForEditAdapter.notifyItemRemoved(position)
         val srcListTotalSize = listIndexForEditAdapter.listIndexList.size
+        val removeItemLine = listIndexForEditAdapter.listIndexList[position]
         listIndexForEditAdapter.listIndexList.removeAt(position)
+        ListIndexForEditAdapter.removeCon(removeItemLine)
+
+        ListIndexForEditAdapter.onDeleteConFile
         val removePosiList = listOf(position)
         ListIndexForEditAdapter.updateAllQrIndexNumTextView(
             recyclerView,
@@ -192,14 +196,15 @@ object ItemTouchHelperCallbackForListIndexAdapter {
             editFragment,
             listIndexForEditAdapter,
             listIndexViewHolder,
+            removeItemLine
         )
-
     }
 
     private fun execRemoveItemHandler(
         editFragment: EditFragment,
         listIndexForEditAdapter: ListIndexForEditAdapter,
         listIndexViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
+        removeItemLine: String,
     ){
         val type = ListIndexEditConfig.getListIndexType(
             editFragment
@@ -219,9 +224,9 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                 )
             }
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                ListIndexForEditAdapter.updateTsv(
+                ListIndexForEditAdapter.updateTsvByRemove(
                     editFragment,
-                    listIndexForEditAdapter.listIndexList,
+                    listOf(removeItemLine),
                 )
         }
     }

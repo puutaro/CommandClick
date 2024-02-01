@@ -1,0 +1,53 @@
+package com.puutaro.commandclick.util.url
+
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
+import com.puutaro.commandclick.util.file.ReadText
+
+object HistoryUrlContents {
+
+    fun extract(
+        currentAppDirPath: String,
+        macroStr: String,
+    ): String? {
+        val appUrlSystemPath = listOf(
+            currentAppDirPath,
+            UsePath.cmdclickUrlSystemDirRelativePath
+        ).joinToString("/")
+        return when(macroStr) {
+            SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name -> {
+                ReadText(
+                    appUrlSystemPath,
+                    UsePath.cmdclickUrlHistoryFileName
+                ).textToList()
+                    .filter {
+                        EnableUrlPrefix.isHttpOrFilePrefix(
+                            it.split("\t").lastOrNull()
+                        )
+                    }
+                    .firstOrNull()
+                    ?.split("\t")?.lastOrNull()
+            }
+
+            SettingVariableSelects.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
+                ReadText(
+                    appUrlSystemPath,
+                    UsePath.cmdclickUrlHistoryFileName
+                ).textToList()
+                    .filter {
+                        EnableUrlPrefix.isHttpOrFilePrefix(
+                            it.split("\t").lastOrNull()
+                        )
+                    }
+                    .groupBy { it }
+                    .mapValues { it.value.size }
+                    .maxBy { it.value }
+                    .key
+                    .split("\t")
+                    .lastOrNull()
+            }
+            else -> macroStr
+        }
+    }
+}

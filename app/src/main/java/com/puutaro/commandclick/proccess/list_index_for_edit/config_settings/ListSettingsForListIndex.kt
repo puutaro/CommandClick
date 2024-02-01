@@ -24,7 +24,8 @@ object ListSettingsForListIndex  {
         SUFFIX("suffix"),
         FILTER_SHELL_PATH("filterShellPath"),
         EDIT_BY_DRAG("editByDrag"),
-        SORT_TYPE("sortType")
+        SORT_TYPE("sortType"),
+        ON_DELETE_CON_FILE("onDeleteConFile"),
     }
 
     enum class EditByDragKey(
@@ -39,6 +40,10 @@ object ListSettingsForListIndex  {
     }
 
     enum class DisableDeleteConfirm {
+        OFF
+    }
+
+    enum class OnDeleteConFileValue {
         OFF
     }
 
@@ -79,6 +84,14 @@ object ListSettingsForListIndex  {
                 it.key == sortKey
             } ?: SortByKey.LAST_UPDATE
         }
+    }
+
+    fun howOnDeleteConFileValue(
+        indexListMap: Map<String, String>?,
+    ): Boolean {
+        return indexListMap?.get(
+            ListSettingKey.ON_DELETE_CON_FILE.key
+        ) != OnDeleteConFileValue.OFF.name
     }
 
 
