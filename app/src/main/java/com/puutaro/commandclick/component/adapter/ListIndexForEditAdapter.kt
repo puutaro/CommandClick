@@ -78,10 +78,6 @@ class ListIndexForEditAdapter(
     private var filterSuffix = String()
 
 
-    init{
-        setListProperty()
-    }
-
     companion object {
         val className = this::class.java.name
         var indexListMap: Map<String, String> = mapOf()
@@ -406,8 +402,17 @@ class ListIndexForEditAdapter(
         }
 
         fun removeCon(
+            listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
             removeItemLine: String,
         ){
+            when(listIndexType) {
+                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+                -> return
+                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+                -> {}
+            }
+
             if(
                 !onDeleteConFile
             ) return
@@ -733,9 +738,11 @@ class ListIndexForEditAdapter(
     }
 
     private fun initListProperty(
-        listIndexPosition: Int
+        listIndexPosition: Int,
     ){
-        if(listIndexPosition != 0) return
+        if(
+            listIndexPosition != listIndexList.size - 1
+        ) return
         setListProperty()
     }
 

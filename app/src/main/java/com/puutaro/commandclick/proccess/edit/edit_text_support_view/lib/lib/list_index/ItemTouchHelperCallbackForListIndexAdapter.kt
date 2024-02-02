@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecItemDelete
@@ -183,7 +182,10 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         val srcListTotalSize = listIndexForEditAdapter.listIndexList.size
         val removeItemLine = listIndexForEditAdapter.listIndexList[position]
         listIndexForEditAdapter.listIndexList.removeAt(position)
-        ListIndexForEditAdapter.removeCon(removeItemLine)
+        ListIndexForEditAdapter.removeCon(
+            ListIndexForEditAdapter.listIndexTypeKey,
+            removeItemLine
+        )
 
         ListIndexForEditAdapter.onDeleteConFile
         val removePosiList = listOf(position)
@@ -194,7 +196,6 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         )
         execRemoveItemHandler(
             editFragment,
-            listIndexForEditAdapter,
             listIndexViewHolder,
             removeItemLine
         )
@@ -202,14 +203,10 @@ object ItemTouchHelperCallbackForListIndexAdapter {
 
     private fun execRemoveItemHandler(
         editFragment: EditFragment,
-        listIndexForEditAdapter: ListIndexForEditAdapter,
         listIndexViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
         removeItemLine: String,
     ){
-        val type = ListIndexEditConfig.getListIndexType(
-            editFragment
-        )
-        when(type){
+        when(ListIndexForEditAdapter.listIndexTypeKey){
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL -> {
                 val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(

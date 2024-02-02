@@ -23,7 +23,6 @@ import java.io.File
 
 object ExecJsLoad {
 
-
     fun execJsLoad(
         currentFragment: Fragment,
         recentAppDirPath: String,
