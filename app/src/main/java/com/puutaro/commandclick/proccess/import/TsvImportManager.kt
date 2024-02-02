@@ -70,16 +70,6 @@ object TsvImportManager {
                     tsvName
                 ).readText()
             }.distinct().joinToString("\n").split("\n")
-//        Toast.makeText(
-//            context,
-//            result.groups.map {it?.value}.joinToString("\n") + "\n" + tsvKeyValueList.joinToString("\n") + "\n" + tsvKeyValueList.map {
-//                CcScript.makeKeyValuePairFromSeparatedString(
-//                    it,
-//                    "\t"
-//                )
-//            }.toMap().toString(),
-//            Toast.LENGTH_SHORT
-//        ).show()
         return tsvKeyValueList.map {
             CcScript.makeKeyValuePairFromSeparatedString(
                 it,
