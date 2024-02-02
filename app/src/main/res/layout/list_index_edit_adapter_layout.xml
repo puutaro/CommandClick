@@ -49,19 +49,6 @@
                 android:clickable="true"
                 android:background="?android:attr/selectableItemBackground"
                 />
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/list_index_edit_adapter_logo_index_num_text_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:visibility="gone"
-                android:gravity="center"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/terminal_color"
-                android:background="@color/terminal_color"
-                />
-            <!--                android:background="?android:attr/selectableItemBackground"-->
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat

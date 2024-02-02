@@ -7,7 +7,6 @@ object QrLogoSettingsForQrDialog {
         ONE_SIDE_LENGTH("oneSideLength"),
         DISABLE("disable"),
         TYPE("type"),
-        TEXT_SIZE("textSize")
     }
 
     enum class QrDisableSettingKey(

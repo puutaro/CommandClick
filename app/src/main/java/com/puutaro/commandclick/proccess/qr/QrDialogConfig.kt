@@ -224,19 +224,4 @@ object QrDialogConfig {
             try { it.toInt() } catch (e: Exception){ defaultOneSideLength }
         }
     }
-
-    fun decideTextSize(
-        qrLogoConfigMap: Map<String, String>,
-    ): Float {
-        val defaultTextSize = 10F
-        val textSizeKeyName =
-            QrLogoSettingsForQrDialog.QrLogoSettingKey.TEXT_SIZE.key
-        if(
-            qrLogoConfigMap.isEmpty()
-        ) return defaultTextSize
-        return qrLogoConfigMap.get(textSizeKeyName).let {
-            if(it.isNullOrEmpty()) return@let defaultTextSize
-            try { it.toFloat() } catch (e: Exception){ defaultTextSize }
-        }
-    }
 }

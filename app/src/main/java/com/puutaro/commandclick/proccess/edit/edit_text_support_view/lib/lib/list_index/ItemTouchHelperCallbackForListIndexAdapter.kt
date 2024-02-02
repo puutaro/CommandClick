@@ -52,11 +52,11 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                             ListIndexForEditAdapter.ListIndexListViewHolder
                     val from = fromViewHolder.bindingAdapterPosition
                     val to = toViewHolder.bindingAdapterPosition
-                   ListIndexForEditAdapter.switchQrIndexNumTextView(
-                       listIndexForEditAdapter,
-                       fromViewHolder,
-                       toViewHolder,
-                   )
+//                   ListIndexForEditAdapter.switchQrIndexNumTextView(
+//                       listIndexForEditAdapter,
+//                       fromViewHolder,
+//                       toViewHolder,
+//                   )
                     adapter.notifyItemMoved(from, to)
                     ListTool.switchList(
                         listIndexForEditAdapter.listIndexList,
@@ -158,7 +158,6 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         when(enableDeleteConfirm){
             false -> removeItem(
                 editFragment,
-                recyclerView,
                 listIndexForEditAdapter,
                 listIndexViewHolder
             )
@@ -173,13 +172,11 @@ object ItemTouchHelperCallbackForListIndexAdapter {
 
     private fun removeItem(
         editFragment: EditFragment,
-        recyclerView: RecyclerView,
         listIndexForEditAdapter: ListIndexForEditAdapter,
         listIndexViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder
     ){
         val position = listIndexViewHolder.layoutPosition
         listIndexForEditAdapter.notifyItemRemoved(position)
-        val srcListTotalSize = listIndexForEditAdapter.listIndexList.size
         val removeItemLine = listIndexForEditAdapter.listIndexList[position]
         listIndexForEditAdapter.listIndexList.removeAt(position)
         ListIndexForEditAdapter.removeCon(
@@ -188,12 +185,6 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         )
 
         ListIndexForEditAdapter.onDeleteConFile
-        val removePosiList = listOf(position)
-        ListIndexForEditAdapter.updateAllQrIndexNumTextView(
-            recyclerView,
-            srcListTotalSize,
-            removePosiList
-        )
         execRemoveItemHandler(
             editFragment,
             listIndexViewHolder,
@@ -282,7 +273,6 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                 getPermissionConfirmDialog?.dismiss()
                 removeItem(
                     editFragment,
-                    recyclerView,
                     listIndexForEditAdapter,
                     listIndexViewHolder
                 )

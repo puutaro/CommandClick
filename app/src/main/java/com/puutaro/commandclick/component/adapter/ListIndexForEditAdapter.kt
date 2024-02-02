@@ -231,53 +231,10 @@ class ListIndexForEditAdapter(
             if(
                 tsvPath.isEmpty()
             ) return
-//            val sortType = ListSettingsForListIndex.getSortType(indexListMap)
-//            val sortListIndexListForTsvSave =
-//                ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(
-//                    sortType,
-//                    listIndexList
-//                )
             TsvTool.updateTsvByRemove(
                 tsvPath,
                 removeItemLineList,
             )
-        }
-
-        fun switchQrIndexNumTextView(
-            listIndexForEditAdapter: ListIndexForEditAdapter,
-            fromViewHolder: ListIndexListViewHolder,
-            toViewHolder: ListIndexListViewHolder,
-        ){
-            val totalListSize = listIndexForEditAdapter.listIndexList.size
-            val from = fromViewHolder.bindingAdapterPosition
-            val to = toViewHolder.bindingAdapterPosition
-            val displayFromNum = "${totalListSize - from}"
-            val displayToNum = "${totalListSize - to}"
-            fromViewHolder.fileContentsQrLogoIndexNumTextView.text = displayToNum
-            toViewHolder.fileContentsQrLogoIndexNumTextView.text = displayFromNum
-        }
-
-        fun updateAllQrIndexNumTextView(
-            recyclerView: RecyclerView,
-            srcListTotalSize: Int,
-            removePosiList: List<Int>,
-        ){
-            val indexNumTextViewListSrc = (0 until srcListTotalSize).map {
-                if(
-                    removePosiList.contains(it)
-                ) return@map null
-                val viewholder = recyclerView.findViewHolderForLayoutPosition(it)
-                    ?: return@map null
-                val listIndexListViewHolder = viewholder as ListIndexListViewHolder
-                listIndexListViewHolder.fileContentsQrLogoIndexNumTextView
-            }
-            val indexNumTextViewList = indexNumTextViewListSrc.filterNotNull()
-            val newTotalListSize = indexNumTextViewList.size
-            (0 until newTotalListSize).forEach {
-                val displayIndexNum = "${newTotalListSize - it}"
-                val currentIndexNumTextView = indexNumTextViewList[it]
-                currentIndexNumTextView.text = displayIndexNum
-            }
         }
 
         fun listIndexListUpdateFileList(
@@ -389,11 +346,6 @@ class ListIndexForEditAdapter(
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.Main) {
                     delay(listInsertWaitTime)
-                    updateAllQrIndexNumTextView(
-                        editListRecyclerView,
-                        listIndexAdapter.listIndexList.size,
-                        emptyList()
-                    )
                     editListRecyclerView.layoutManager?.scrollToPosition(
                         insertIndex
                     )
@@ -444,10 +396,6 @@ class ListIndexForEditAdapter(
         val fileContentsQrLogoView =
             view.findViewById<AppCompatImageView>(
                 com.puutaro.commandclick.R.id.list_index_edit_adapter_contents
-            )
-        val fileContentsQrLogoIndexNumTextView =
-            view.findViewById<AppCompatTextView>(
-                com.puutaro.commandclick.R.id.list_index_edit_adapter_logo_index_num_text_view
             )
         val fileNameTextView =
             view.findViewById<AppCompatTextView>(
@@ -583,7 +531,6 @@ class ListIndexForEditAdapter(
                 qrLogoSetHandler(
                     holder,
                     recentAppDirPath,
-                    listIndexPosition,
                 )
             }
             withContext(Dispatchers.Main) {
@@ -701,20 +648,10 @@ class ListIndexForEditAdapter(
     private suspend fun qrLogoSetHandler(
         holder: ListIndexListViewHolder,
         recentAppDirPath: String,
-        listIndexPosition: Int,
     ){
         val qrMode = QrModeSettingKeysForQrDialog.getQrMode(qrDialogConfigMap)
         when(qrMode){
-            QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {
-                holder.fileContentsQrLogoView.isVisible = false
-                val totalListSize = listIndexList.size
-                val displayIndexNum = "${totalListSize - listIndexPosition}"
-                val fileContentsQrLogoTextView = holder.fileContentsQrLogoIndexNumTextView
-                fileContentsQrLogoTextView.text = displayIndexNum
-                fileContentsQrLogoTextView.isVisible = true
-                fileContentsQrLogoTextView.textSize =
-                    QrDialogConfig.decideTextSize(qrLogoConfigMap)
-            }
+            QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {}
             QrModeSettingKeysForQrDialog.QrMode.NORMAL,
             QrModeSettingKeysForQrDialog.QrMode.FANNEL_REPO -> {
                 val qrLogoHandlerArgsMaker = withContext(Dispatchers.IO) {
