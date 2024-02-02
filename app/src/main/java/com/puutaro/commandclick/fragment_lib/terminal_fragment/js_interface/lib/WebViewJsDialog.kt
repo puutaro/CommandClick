@@ -23,7 +23,6 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -41,7 +40,6 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -110,7 +108,21 @@ class WebViewJsDialog(
             terminalFragment.dialogInstance?.setOnCancelListener {
                 terminalFragment.dialogInstance?.dismiss()
             }
-            val menuMapStrList = menuMapStrListStr.split("|")
+            val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                currentScriptPath,
+            )
+            val mainFannlePath = CcPathTool.getMainFannelFilePath(
+                currentScriptPath
+            )
+            val mainFannlePathObj = File(mainFannlePath)
+
+            val menuMapStrList =  SetReplaceVariabler.execReplaceByReplaceVariables(
+                menuMapStrListStr,
+                setReplaceVariableMap,
+                mainFannlePathObj.parent ?: String(),
+                mainFannlePathObj.name
+
+            ).split("|")
             val btnWeight = culcBtnWeight(menuMapStrList)
             val firstBottomLinearLayout = terminalFragment.dialogInstance?.findViewById<LinearLayout>(
                 R.id.first_bottom_linearlayout
@@ -134,10 +146,18 @@ class WebViewJsDialog(
                 webView,
                 progressBar as ProgressBar
             )
+
+            val longPressMenuMapListStrAfterReplace = SetReplaceVariabler.execReplaceByReplaceVariables(
+                longPressMenuMapListStr,
+                setReplaceVariableMap,
+                mainFannlePathObj.parent ?: String(),
+                mainFannlePathObj.name
+
+            )
             webViewLongClickListener(
                 webView,
                 currentScriptPath,
-                longPressMenuMapListStr
+                longPressMenuMapListStrAfterReplace
             )
         }
     }
@@ -649,26 +669,6 @@ class WebViewJsDialog(
             ?: String()
         val menuFileName = menuFilePathObj.name
         val commentOutMark = JavaScriptLoadUrl.commentOutMark
-        FileSystems.updateFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "menuList.txt",
-            "menuFilePath: ${menuFilePath}\n" +
-                    "listType: ${listType}\n" +
-            "btnOptionMap: ${btnOptionMap}\n" +
-            ReadText(
-                menuFileDirPath,
-                menuFileName
-            ).readText() + "\n-----\n" +
-            ReadText(
-                menuFileDirPath,
-                menuFileName
-            ).textToList().filter {
-                val timeLine = it.trim()
-                !timeLine.startsWith(commentOutMark)
-                        && !timeLine.startsWith("#")
-                        && timeLine.isNotEmpty()
-            }.joinToString("\n") + "\n"
-        )
         return ReadText(
             menuFileDirPath,
             menuFileName

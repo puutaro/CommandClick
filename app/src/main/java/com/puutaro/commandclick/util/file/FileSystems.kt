@@ -81,7 +81,10 @@ object FileSystems {
         fileName: String,
     ) {
         val filePath = File(dirPath, fileName)
-        if(!filePath.exists()) return
+        if(
+            !filePath.exists()
+            || !filePath.isFile
+        ) return
         try {
             filePath.delete()
         } catch (e: java.lang.Exception){

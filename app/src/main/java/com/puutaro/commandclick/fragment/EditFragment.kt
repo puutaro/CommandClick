@@ -45,7 +45,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileGetterForSettingButton
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileOrDirGetterForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
@@ -118,7 +118,7 @@ class EditFragment: Fragment() {
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var listIndexConfigMap: Map<String, String>? = null
     var qrDialogConfig: Map<String, String>? = null
-    var fileGetterForSettingButton: FileGetterForSettingButton? = null
+    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
@@ -159,7 +159,7 @@ class EditFragment: Fragment() {
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
-        fileGetterForSettingButton = FileGetterForSettingButton(this)
+        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         readSharePreferenceMap =

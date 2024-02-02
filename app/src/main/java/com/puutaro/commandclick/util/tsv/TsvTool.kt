@@ -9,16 +9,26 @@ object TsvTool {
         tsvPath: String?,
         listIndexList: MutableList<String>,
     ){
-        if(tsvPath.isNullOrEmpty()) return
+        if(
+            tsvPath.isNullOrEmpty()
+        ) return
         val tsvPathObj = File(tsvPath)
-        if(!tsvPathObj.isFile) return
         val tsvParentDirPath = tsvPathObj.parent
             ?: return
         val tsvName = tsvPathObj.name
+        val saveTsvCon = listIndexList.joinToString("\n")
+        val curTsvCon = ReadText(
+            tsvParentDirPath,
+            tsvName
+        ).readText()
+        if(
+            curTsvCon.isNotEmpty()
+            && saveTsvCon == curTsvCon
+        ) return
         FileSystems.writeFile(
             tsvParentDirPath,
             tsvName,
-            listIndexList.joinToString("\n")
+            saveTsvCon
         )
     }
 

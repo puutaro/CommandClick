@@ -139,7 +139,7 @@ object UsePath {
     val fannelRepoFannelName = "fannelRepo.js"
     val fannelRepoFannelPath = "$cmdclickSystemAppDirPath/$fannelRepoFannelName"
     val saveWebConDialogFannelName = "saveWebConDialog.js"
-    val saveWebConDialogFannelPath = "$cmdclickSystemAppDirPath/$saveWebConDialogFannelName"
+    val savePageUrlDialogFannelName = "savePageUrlDialog.js"
     val fannelReadmeName = "README.md"
     val fannelReadmePath = "\${01}/\${001}/${fannelReadmeName}"
 

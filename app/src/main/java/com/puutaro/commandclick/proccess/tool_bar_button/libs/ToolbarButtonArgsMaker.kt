@@ -29,9 +29,9 @@ class ToolbarButtonArgsMaker(
     val settingButtonView: ImageButton?,
     private val isLongClick: Boolean,
 ) {
-    val fileGetterForSettingButton = when(fragment) {
-        is CommandIndexFragment -> fragment.fileGetterForSettingButton
-        is EditFragment -> fragment.fileGetterForSettingButton
+    val fileOrDirGetterForSettingButton = when(fragment) {
+        is CommandIndexFragment -> fragment.fileOrDirGetterForSettingButton
+        is EditFragment -> fragment.fileOrDirGetterForSettingButton
         else -> null
     }
     private val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key

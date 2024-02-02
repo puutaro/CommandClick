@@ -14,6 +14,11 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.SiteUrl
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 class JsToolbar(
@@ -92,6 +97,32 @@ class JsToolbar(
             parentDirPath,
             compFileName,
         )
+    }
+
+    @JavascriptInterface
+    fun addUrl(
+        urlString: String,
+    ){
+        CoroutineScope(Dispatchers.Main).launch {
+            val siteTitle = withContext(Dispatchers.IO) {
+                val siteTitleSrc = SiteUrl.getTitle(urlString)
+                if(
+                    siteTitleSrc.isNotEmpty()
+                ) return@withContext siteTitleSrc
+                urlString
+            }
+            val insertLine = "${siteTitle}\t${urlString}"
+            val targetFragmentInstance = TargetFragmentInstance()
+            val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+                activity,
+                currentAppDirPath,
+                currentFannelName,
+            ) ?: return@launch
+            ListIndexForEditAdapter.execAddForTsv(
+                editFragment,
+                insertLine
+            )
+        }
     }
 
     private fun makeExtraMap(

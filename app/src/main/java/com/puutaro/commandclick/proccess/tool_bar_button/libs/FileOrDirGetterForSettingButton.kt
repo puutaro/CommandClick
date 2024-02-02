@@ -16,11 +16,12 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.net.URLDecoder
 
-class FileGetterForSettingButton(
+class FileOrDirGetterForSettingButton(
     fragment: Fragment,
 ) {
     private val context = fragment.context
     private var updateBroadcastIntent: Intent? = null
+    private var onDirectoryPick = false
     private var parentDirPath = String()
     private val prefixRegex = Regex("^content.*fileprovider/root/storage")
     private val getFile = fragment.registerForActivityResult(
@@ -41,8 +42,11 @@ class FileGetterForSettingButton(
                 }.replace(prefixRegex, "/storage")
             )
         }
-        val sourceFilePath =
-            pathSource.absolutePath ?: String()
+        val sourceFileOrDirPath = if(onDirectoryPick) {
+            pathSource.parent
+        } else {
+            pathSource.absolutePath
+        }  ?: String()
 
         val type = ListIndexEditConfig.getListIndexType(
             fragment
@@ -51,14 +55,17 @@ class FileGetterForSettingButton(
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
             -> {}
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> execGetForNormal(
-                fragment,
-                sourceFilePath,
-            )
+            -> {
+                if(onDirectoryPick) return@registerForActivityResult
+                execGetForNormal(
+                    fragment,
+                    sourceFileOrDirPath,
+                )
+            }
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> execGetForTsv(
                 fragment,
-                sourceFilePath,
+                sourceFileOrDirPath,
             )
         }
     }
@@ -66,6 +73,7 @@ class FileGetterForSettingButton(
     fun get(
         settingMenuMapList: List<Map<String, String>?>,
         parentDirPathSrc: String,
+        onDirectoryPickSrc: Boolean = false
     ){
         val extraMap =
             ExtraArgsTool.createExtraMapFromMenuMapList(
@@ -74,6 +82,7 @@ class FileGetterForSettingButton(
                 MenuSettingTool.MenuSettingKey.JS_PATH.key,
                 "!",
             )
+        onDirectoryPick = onDirectoryPickSrc
         parentDirPath =
             parentDirPathSrc
         updateBroadcastIntent =

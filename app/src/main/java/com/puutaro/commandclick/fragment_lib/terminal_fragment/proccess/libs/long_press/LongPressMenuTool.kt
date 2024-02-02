@@ -5,7 +5,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -13,6 +13,8 @@ import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object LongPressMenuTool {
+
+    private val icons8Wheel = R.drawable.icons8_wheel
 
     fun makeExecJsPath(
         terminalFragment: TerminalFragment,
@@ -38,6 +40,47 @@ object LongPressMenuTool {
         }
     }
 
+    fun makeMenuList(
+        longPressScriptList: List<String>,
+    ): List<Pair<String, Int>> {
+        return longPressScriptList.map {
+            val menuNameAndPathList = it.split("\t")
+            val menuName = when(menuNameAndPathList.size){
+                2 -> menuNameAndPathList.first()
+                1 -> File(menuNameAndPathList.first()).name
+                else -> String()
+            }
+            menuName to icons8Wheel
+        }.filter {
+            it.first.isNotEmpty()
+        }
+    }
+
+    fun extractJsPathFromLongPressMenuList(
+        selectedMenuName: String,
+        longPressScriptList: List<String>,
+    ): String? {
+        return longPressScriptList.map {
+            val menuNameAndPathList = it.split("\t")
+            return@map when(menuNameAndPathList.size){
+                2 -> {
+                    if(
+                        menuNameAndPathList.first() == selectedMenuName
+                    ) menuNameAndPathList.last()
+                    else String()
+                }
+                1 -> {
+                    val jsPathEntry = menuNameAndPathList.first()
+                    if(File(jsPathEntry).name == selectedMenuName
+                    ) jsPathEntry
+                    else String()
+                }
+                else -> String()
+            }
+        }.filter {
+            it.isNotEmpty()
+        }.firstOrNull()
+    }
 
     fun makeJsConSrc(
         execJsPath: String,
@@ -53,23 +96,21 @@ object LongPressMenuTool {
 
     fun makeLongPressScriptList(
         terminalFragment: TerminalFragment,
-        srcLongPressListConSrc: String,
+        longPressMenuDirPath: String,
+        longPressMenuName: String,
     ): List<String> {
-        val currentAppDirPath =
-            terminalFragment.currentAppDirPath
-        val currentFannelName =
-            makeCurrentFannelName(
-                terminalFragment,
-            )
-        val mainJsList =  ReadText(
-            currentAppDirPath,
-            currentFannelName,
-        ).textToList()
-        val repValMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-            mainJsList,
-            currentAppDirPath,
-            currentFannelName
+        val longPressMenuFilePath =  File(longPressMenuDirPath, longPressMenuName).absolutePath
+        val mainFannelPath = CcPathTool.getMainFannelFilePath(longPressMenuFilePath)
+        val mainFannelPathObj = File(mainFannelPath)
+        val currentAppDirPath = mainFannelPathObj.parent ?: String()
+        val currentFannelName = mainFannelPathObj.name
+        val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            longPressMenuFilePath
         )
+        val srcLongPressListConSrc = ReadText(
+            longPressMenuDirPath,
+            longPressMenuName
+        ).readText()
         val srcLongPressListCon = srcLongPressListConSrc.split("\n").map {
             QuoteTool.trimBothEdgeQuote(it)
         }.joinToString("\n")

@@ -15,7 +15,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class LongPressForSrcImageAnchor(
@@ -28,7 +27,6 @@ class LongPressForSrcImageAnchor(
     private val srcImageAnchorLongPressMenuDirPath = srcImageAnchorLongPressMenuFilePathObj.parent
     private val srcImageAnchorLongPressMenuFileName = srcImageAnchorLongPressMenuFilePathObj.name
     private var longPressSrcImageAnchorDialog: Dialog? = null
-    private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
 
     fun launch(
         title: String?,
@@ -47,20 +45,19 @@ class LongPressForSrcImageAnchor(
         ) return
         val longPressScriptList = LongPressMenuTool.makeLongPressScriptList(
             terminalFragment,
-            ReadText(
-                srcImageAnchorLongPressMenuDirPath,
-                srcImageAnchorLongPressMenuFileName
-            ).readText()
+            srcImageAnchorLongPressMenuDirPath,
+            srcImageAnchorLongPressMenuFileName,
         )
-        val menuList = longPressScriptList.map {
-            File(it).name to icons8Wheel
-        }
+        val menuList = LongPressMenuTool.makeMenuList(longPressScriptList)
         if(
             menuList.size == 1
         ){
-            execJsFile(
+            val jsPath = LongPressMenuTool.extractJsPathFromLongPressMenuList(
                 menuList.first().first,
                 longPressScriptList,
+            )?: return
+            execJsFile(
+                jsPath,
                 longPressLinkUrl,
                 longPressImageUrl,
                 currentUrl,
@@ -110,7 +107,6 @@ class LongPressForSrcImageAnchor(
         longPressSrcImageAnchorDialog?.show()
     }
 
-
     private fun setListView(
         menuList: List<Pair<String, Int>>,
         longpressScriptList: List<String>,
@@ -151,11 +147,14 @@ class LongPressForSrcImageAnchor(
             ->
             longPressSrcImageAnchorDialog?.dismiss()
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
-            val selectedScript = menuListAdapter.getItem(pos)
+            val selectedMenuName = menuListAdapter.getItem(pos)
                 ?: return@setOnItemClickListener
-            execJsFile(
-                selectedScript,
+            val selectedJsPath = LongPressMenuTool.extractJsPathFromLongPressMenuList(
+                selectedMenuName,
                 longpressScriptList,
+            ) ?: return@setOnItemClickListener
+            execJsFile(
+                selectedJsPath,
                 longPressLinkUrl,
                 longPressImageUrl,
                 currentUrl,
@@ -165,16 +164,12 @@ class LongPressForSrcImageAnchor(
     }
 
     private fun execJsFile(
-        selectedScript: String,
-        longPressScriptList: List<String>,
+        selectedJsPath: String,
         longPressLinkUrl: String,
         longPressImageUrl: String,
         currentUrl: String,
     ){
-        val selectedScriptNameOrPath = longPressScriptList.filter {
-            File(it).name == selectedScript
-        }.firstOrNull() ?: return
-        val selectedScriptNameOrPathObj = File(selectedScriptNameOrPath)
+        val selectedScriptNameOrPathObj = File(selectedJsPath)
         val execJsPath = LongPressMenuTool.makeExecJsPath(
             terminalFragment,
             currentAppDirPath,

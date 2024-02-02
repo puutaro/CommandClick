@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.qr
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.util.Intent.CurlManager
+import com.puutaro.commandclick.util.url.SiteUrl
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jsoup.Jsoup
@@ -144,19 +145,7 @@ object QrDecodedTitle {
     private suspend fun makeDocFromUrl(
         targetUrl: String
     ): String {
-        val htmlString =
-            withContext(Dispatchers.IO) {
-                CurlManager.get(
-                    targetUrl,
-                    "",
-                    "",
-                    2000
-                ).let {
-                    CurlManager.convertResToStrByConn(it)
-                }
-            }
-        val doc = Jsoup.parse(htmlString)
-        val titleSrc = doc.title()
+        val titleSrc = SiteUrl.getTitle(targetUrl)
         if(
             titleSrc.isEmpty()
         ) return "Url: ${targetUrl}"

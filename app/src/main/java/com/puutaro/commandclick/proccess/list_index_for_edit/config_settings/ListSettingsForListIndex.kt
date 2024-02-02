@@ -13,6 +13,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
 object ListSettingsForListIndex  {
@@ -26,6 +27,7 @@ object ListSettingsForListIndex  {
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
         ON_DELETE_CON_FILE("onDeleteConFile"),
+        INIT_TSV_PATH("initTsvPath"),
     }
 
     enum class EditByDragKey(
@@ -333,11 +335,11 @@ object ListSettingsForListIndex  {
             val tsvParentDirPath = tsvFilePathObj.parent
                 ?: return mutableListOf()
             val tsvName = tsvFilePathObj.name
-            val tsvConList = ReadText(
+            val tsvConListSrc = ReadText(
                 tsvParentDirPath,
                 tsvName
-            ).textToList().filter {
-                it.split("\t").size == 2
+            ).textToList().let {
+                filter2ColumnLine(it)
             }.map {
                 val titleAndConList = it.split("\t")
                 val con = titleAndConList.last()
@@ -350,11 +352,56 @@ object ListSettingsForListIndex  {
                 }
                 "${title}\t${con}"
             }
+            val tsvConList = concatByInitTsvCon(
+                indexListMap,
+                tsvConListSrc
+            )
             val sortType = getSortType(indexListMap)
-            return sortList(
+            val sortedTsvConList = sortList(
                 sortType,
                 tsvConList,
             )
+            updateTsv(
+                sortType,
+                tsvFilePathObj,
+                sortedTsvConList,
+            )
+            return sortedTsvConList
+        }
+
+        private fun concatByInitTsvCon(
+            indexListMap: Map<String, String>,
+            tsvConList: List<String>
+        ): List<String> {
+            if(
+                tsvConList.isNotEmpty()
+            ) return tsvConList
+            val initTsvPath = indexListMap.get(
+                ListSettingKey.INIT_TSV_PATH.key
+            ) ?: return tsvConList
+            val initTsvPathObj = File(initTsvPath)
+            val initTsvParentDirPath = initTsvPathObj.parent
+                ?: return tsvConList
+            val initTsvCon = when(true){
+                initTsvPathObj.isFile ->
+                   ReadText(
+                       initTsvParentDirPath,
+                       initTsvPathObj.name
+                   ).textToList().let {
+                       filter2ColumnLine(it)
+                   }
+                initTsvPathObj.isDirectory -> {
+                    val initTsvConSrcDir = initTsvPathObj.absolutePath
+                    FileSystems.sortedFiles(
+                        initTsvConSrcDir
+                    ).map {
+                        "${it}\t${File(initTsvConSrcDir, it).absolutePath}"
+                    }
+                }
+                else -> return tsvConList
+            }
+            return tsvConList + initTsvCon
+
         }
 
         fun sortList(
@@ -378,6 +425,20 @@ object ListSettingsForListIndex  {
             }
         }
 
+        private fun updateTsv(
+            sortType: SortByKey,
+            tsvFilePathObj: File,
+            sortedTsvConList: List<String>,
+        ){
+            val saveSortedTsvConList = sortListForTsvSave(
+                sortType,
+                sortedTsvConList,
+            )
+            TsvTool.updateTsv(
+                tsvFilePathObj.absolutePath,
+                saveSortedTsvConList
+            )
+        }
         fun sortListForTsvSave(
             sortType: SortByKey,
             tsvConList: List<String>,
@@ -389,11 +450,11 @@ object ListSettingsForListIndex  {
                         .toMutableList()
                 }
                 SortByKey.SORT -> {
-                    tsvConList.sorted().reversed()
+                    tsvConList.sorted()
                         .toMutableList()
                 }
                 SortByKey.REVERSE -> {
-                    tsvConList.sorted()
+                    tsvConList.sorted().reversed()
                         .toMutableList()
                 }
             }
@@ -479,6 +540,12 @@ object ListSettingsForListIndex  {
                     currentFannelName
                 )
             }
+        }
+    }
+
+    private fun filter2ColumnLine(srcList: List<String>): List<String>{
+        return srcList.filter {
+            it.split("\t").size == 2
         }
     }
 }

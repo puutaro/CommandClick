@@ -260,8 +260,12 @@ object JsPathHandlerForToolbarButton {
                 settingButtonMenuMapList,
             )
 
-            JsPathMacroForToolbarButton.GET_FILE -> getFileHandler(
+            JsPathMacroForToolbarButton.GET_FILE -> getFileOrDirHandler(
                 toolbarButtonArgsMaker,
+            )
+            JsPathMacroForToolbarButton.GET_DIR -> getFileOrDirHandler(
+                toolbarButtonArgsMaker,
+                true
             )
             JsPathMacroForToolbarButton.GET_QR_CON -> QrConGetterDialog.launch(
                 toolbarButtonArgsMaker
@@ -307,11 +311,17 @@ object JsPathHandlerForToolbarButton {
                     toolbarButtonArgsMaker,
                     settingButtonMenuMapList
                 )
+            JsPathMacroForToolbarButton.ADD_URL ->
+                AddUrl.add(
+                    toolbarButtonArgsMaker,
+                    settingButtonMenuMapList,
+                )
         }
     }
 
-    private fun getFileHandler(
+    private fun getFileOrDirHandler(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        onDirectoryPick: Boolean = false,
     ) {
         val fragment = toolbarButtonArgsMaker.fragment
         val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
@@ -327,9 +337,10 @@ object JsPathHandlerForToolbarButton {
 
             else -> toolbarButtonArgsMaker.currentAppDirPath
         }
-        toolbarButtonArgsMaker.fileGetterForSettingButton?.get(
+        toolbarButtonArgsMaker.fileOrDirGetterForSettingButton?.get(
             settingButtonMenuMapList,
-            parentDirPath
+            parentDirPath,
+            onDirectoryPick
         )
     }
 
