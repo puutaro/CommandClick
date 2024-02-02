@@ -2,9 +2,6 @@
 
 /// SETTING_SECTION_START
 setReplaceVariables="file://"
-setVariableTypes="file://"
-hideSettingVariables="setReplaceVariables"
-hideSettingVariables="setVariableTypes"
 /// SETTING_SECTION_END
 
 
@@ -22,14 +19,6 @@ function launchWebview(launchUrlString){
         `clickMenuFilePath=${centerMenuListFilePath}!longPressMenuFilePath=${centerLongPressMenuListFilePath}!iconName=search`,
         `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
     ].join("|");
-    // const tsvCon = [
-    //     `buttonType\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT2}`,
-    //     `clickKey\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
-    // ].join("\n");
-    // jsFileSystem.writeLocalFile(
-    //     `${savePageUrlConArgsTsvPath}`,
-    //     tsvCon,
-    // );
     const longPressMenuListStr = [
         `srcImageAnchorMenuFilePath=${srcImageAnchorMenuListFilePath}`,
         `srcAnchorMenuFilePath=${srcAnchorMenuListFilePath}`,
@@ -49,7 +38,6 @@ function makeUrl(){
         "_ENCRPT",
         ""
     );
-    jsToast.short(`externalExecLink: ${externalExecLink}\n${externalExecLink !== cmdclickExternalExecReplaceTextStr}`);
     if(
         externalExecLink !== cmdclickExternalExecReplaceTextStr
         && externalExecLink !== ""

@@ -2,16 +2,10 @@
 
 /// SETTING_SECTION_START
 setReplaceVariables="file://"
-setVariableTypes="file://"
-hideSettingVariables="setReplaceVariables"
-hideSettingVariables="setVariableTypes"
 /// SETTING_SECTION_END
 
 
 const urlString = makeUrl();
-// jsToast.short(
-//     urlString + "--"
-// );
 if(!urlString) exitZero();
 launchWebview(urlString);
 
@@ -30,11 +24,6 @@ function launchWebview(launchUrlString){
         `${saveWebConArgsTsvPath}`,
         tsvCon,
     );
-    // const longPressMenuListStr = [
-    //     `srcImageAnchorMenuFilePath=${srcImageAnchorMenuListPath}`,
-    //     `srcAnchorMenuFilePath=${srcAnchorMenuListPath}`,
-    //     `imageMenuFilePath=${imageMenuListPath}`,
-    // ].join("!");
     jsDialog.webView(
         launchUrlString,
         "${0}",
@@ -50,7 +39,6 @@ function makeUrl(){
         "_ENCRPT",
         ""
     );
-    jsToast.short(`externalExecLink: ${externalExecLink}\n${externalExecLink !== cmdclickExternalExecReplaceTextStr}`);
     if(
         externalExecLink !== cmdclickExternalExecReplaceTextStr
         && externalExecLink !== ""
