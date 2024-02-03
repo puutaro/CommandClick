@@ -149,8 +149,21 @@ class ListIndexForEditAdapter(
                 ?: return
             val listIndexForEditAdapter =
                 editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+            val tsvPath =
+                ListSettingsForListIndex.getListSettingKeyHandler(
+                    editFragment,
+                    indexListMap,
+                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+                )
+            val tsvPathObj = File(tsvPath)
+            val tsvParentDirPath = tsvPathObj.parent ?: return
+            val tsvName = tsvPathObj.name
+            val currentTsvConList = ReadText(
+                tsvParentDirPath,
+                tsvName
+            ).textToList()
             if(
-                listIndexForEditAdapter.listIndexList.contains(insertLine)
+                currentTsvConList.contains(insertLine)
             ) {
                 Toast.makeText(
                     context,
@@ -165,12 +178,7 @@ class ListIndexForEditAdapter(
                 listIndexForEditAdapter,
                 insertLine,
             )
-            val tsvPath =
-                ListSettingsForListIndex.getListSettingKeyHandler(
-                    editFragment,
-                    indexListMap,
-                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-                )
+
             TsvTool.insertByLastUpdate(
                 tsvPath,
                 insertLine

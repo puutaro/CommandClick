@@ -57,14 +57,6 @@ object ListIndexEditConfig {
             listIndexArgsMaker.clickConfigMap,
             "!",
         )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-    "listIndex.txt",
-    "clickConfigMap: ${clickConfigMap}\n\n" +
-            "jsPathMacroStr: ${jsPathMacroStr}\n\n" +
-            "isLongClick: ${isLongClick}\n\n" +
-            "extraMapForJsPath: ${extraMapForJsPath}"
-        )
         if(
             jsPathMacroStr.isEmpty()
         ) return

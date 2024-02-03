@@ -26,9 +26,15 @@ import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
+import com.puutaro.commandclick.proccess.tool_bar_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -37,11 +43,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class QrScanner(
     private val fragment: Fragment,
     private val currentAppDirPath: String,
+    private val toolbarButtonArgsMaker: ToolbarButtonArgsMaker? = null,
 ) {
     private val fragContext = fragment.context
 
@@ -106,10 +114,6 @@ class QrScanner(
             val isCameraPermission = withContext(Dispatchers.IO) {
                 howCameraPermission(terminalViewModel)
             }
-//            val isCameraPermission = ContextCompat.checkSelfPermission(
-//                activity,
-//                Manifest.permission.CAMERA
-//            ) == PackageManager.PERMISSION_GRANTED
             if(!isCameraPermission) return@launch
             withContext(Dispatchers.Main) {
                 launchCameraDialogForSave(fileName)
@@ -261,19 +265,12 @@ class QrScanner(
                 val decodeText = it.text
                 codeScanner.releaseResources()
                 withContext(Dispatchers.IO) {
-                    FileSystems.writeFile(
-                        currentAppDirPath,
+                    qrSaverForType(
                         fileName,
                         decodeText
                     )
                 }
                 qrScanDialogObj?.dismiss()
-                withContext(Dispatchers.IO) {
-                    BroadcastSender.normalSend(
-                        fragContext,
-                        BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
-                    )
-                }
             }
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
@@ -304,6 +301,82 @@ class QrScanner(
         qrScanDialogObj?.show()
     }
 
+    private suspend fun qrSaverForType(
+        fileName: String,
+        decodeText: String
+    ){
+        if(
+            fragment is CommandIndexFragment
+            || fragment is TerminalFragment
+        ) {
+            addFile(
+                fileName,
+                decodeText
+            )
+            return
+        }
+        if(
+            fragment !is EditFragment
+        ) return
+        val type = ListIndexEditConfig.getListIndexType(
+            fragment
+        )
+        when(type){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+            -> return
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+            -> addFile(
+                fileName,
+                decodeText
+            )
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
+                if(
+                    toolbarButtonArgsMaker == null
+                ) return
+                val clickConfigMap = toolbarButtonArgsMaker.createClickConfigMap()
+                val extraMap = ExtraArgsTool.createExtraMapFromMap(
+                    clickConfigMap,
+                    "!",
+                )
+                val parentDirPath = ExtraArgsTool.getParentDirPath(
+                    extraMap,
+                    currentAppDirPath,
+                )
+                val compFileName = ExtraArgsTool.makeCompFileName(
+                    fileName,
+                    extraMap
+                )
+                FileSystems.writeFile(
+                    parentDirPath,
+                    compFileName,
+                    decodeText,
+                )
+                val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
+                withContext(Dispatchers.Main) {
+                    ListIndexForEditAdapter.execAddForTsv(
+                        fragment,
+                        insertLine
+                    )
+                }
+            }
+        }
+    }
+
+    private fun addFile(
+        fileName: String,
+        decodeText: String
+    ){
+        FileSystems.writeFile(
+            currentAppDirPath,
+            fileName,
+            decodeText
+        )
+        BroadcastSender.normalSend(
+            fragContext,
+            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+        )
+    }
+
     private fun dismissProcess(
         codeScanner: CodeScanner
     ){
@@ -329,8 +402,6 @@ class QrScanner(
             decodeText,
         ).launch()
     }
-
-
 
     private fun makeHistoryButton(
         codeScanner: CodeScanner,

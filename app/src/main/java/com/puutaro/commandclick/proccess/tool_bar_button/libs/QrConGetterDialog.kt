@@ -96,6 +96,7 @@ object QrConGetterDialog {
             }
             getQrHandler(
                 fragment,
+                toolbarButtonArgsMaker,
                 parentDirPath,
                 fileName,
             )
@@ -115,12 +116,14 @@ object QrConGetterDialog {
 
     private fun getQrHandler(
         fragment: Fragment,
+        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
         parentDirPath: String,
         fileName: String,
     ){
         QrScanner(
             fragment,
-            parentDirPath
+            parentDirPath,
+            toolbarButtonArgsMaker,
         ).saveFromCamera(fileName)
     }
 }
