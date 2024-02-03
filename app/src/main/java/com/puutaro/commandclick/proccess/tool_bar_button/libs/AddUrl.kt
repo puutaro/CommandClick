@@ -5,11 +5,17 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 object AddUrl {
     private const val urlExtraKey = "url"
+    private const val onSearchBtnKey = "onSearchBtn"
+
+    private enum class OnSearchBtnValue {
+        OFF,
+    }
 
     fun add(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
@@ -20,11 +26,11 @@ object AddUrl {
             fragment !is EditFragment
         ) return
         val clickConfigMap = toolbarButtonArgsMaker.createClickConfigMap()
-        val urlStringOrMacro = ExtraArgsTool.createExtraMapFromMap(
+        val clickExtraMap = ExtraArgsTool.createExtraMapFromMap(
             clickConfigMap,
             "!"
-        ).get(urlExtraKey)
-            ?: String()
+        )
+        val urlStringOrMacro = clickExtraMap.get(urlExtraKey) ?: String()
         val readSharePreferenceMap = fragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
@@ -34,11 +40,15 @@ object AddUrl {
             currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
+        val onSearchBtn = clickExtraMap.get(onSearchBtnKey) ?: String()
         ExecJsLoad.execExternalJs(
             fragment,
             UsePath.cmdclickSystemAppDirPath,
             UsePath.savePageUrlDialogFannelName,
-            listOf(urlString),
+            listOf(
+                urlString,
+                onSearchBtn,
+            ),
         )
     }
 }

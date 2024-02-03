@@ -11,14 +11,10 @@ launchWebview(urlString);
 
 
 function launchWebview(launchUrlString){
-    const menuMapStrListStr= [
-        `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
-        `clickMenuFilePath=${centerMenuListFilePath}!longPressMenuFilePath=${centerLongPressMenuListFilePath}!iconName=search`,
-        `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
-    ].join("|");
+    const menuMapStrListStr= makeMenuMapStr();
     const tsvCon = [
-        `buttonType\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT2}`,
-        `clickKey\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
+        `buttonType\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
+        `clickKey\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT4}`,
     ].join("\n");
     jsFileSystem.writeLocalFile(
         `${saveWebConArgsTsvPath}`,
@@ -45,3 +41,20 @@ function makeUrl(){
     ) return externalExecLink;
     return "https://www.google.co.id/search?q=";
 };
+
+function makeMenuMapStr(){
+    const onSearchBtn = `${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT2}`;
+    switch(true){
+        case onSearchBtn === "OFF":
+            return [
+                `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
+                `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
+            ].join("|");
+        default:
+            return [
+                `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
+                `clickMenuFilePath=${centerMenuListFilePath}!longPressMenuFilePath=${centerLongPressMenuListFilePath}!iconName=search`,
+                `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
+            ].join("|");
+    }
+}

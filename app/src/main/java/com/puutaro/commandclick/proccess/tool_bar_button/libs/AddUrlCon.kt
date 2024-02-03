@@ -11,6 +11,11 @@ import com.puutaro.commandclick.util.url.HistoryUrlContents
 object AddUrlCon {
 
     private const val urlExtraKey = "url"
+    private const val onSearchBtnKey = "onSearchBtn"
+
+    private enum class OnSearchBtnValue {
+        OFF,
+    }
 
     fun add(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
@@ -21,10 +26,11 @@ object AddUrlCon {
             fragment !is EditFragment
         ) return
         val clickConfigMap = toolbarButtonArgsMaker.createClickConfigMap()
-        val urlStringOrMacro = ExtraArgsTool.createExtraMapFromMap(
+        val clickExtraMap = ExtraArgsTool.createExtraMapFromMap(
             clickConfigMap,
             "!"
-        ).get(urlExtraKey)
+        )
+        val urlStringOrMacro = clickExtraMap.get(urlExtraKey)
             ?: String()
         val readSharePreferenceMap = fragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
@@ -35,12 +41,14 @@ object AddUrlCon {
             currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
+        val onSearchBtn = clickExtraMap.get(onSearchBtnKey) ?: String()
         ExecJsLoad.execExternalJs(
             fragment,
             UsePath.cmdclickSystemAppDirPath,
             UsePath.saveWebConDialogFannelName,
             listOf(
                 urlString,
+                onSearchBtn,
                 toolbarButtonArgsMaker.toolbarButtonBariantForEdit.str,
                 toolbarButtonArgsMaker.decideClickKey()
             ),

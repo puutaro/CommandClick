@@ -5,10 +5,10 @@ const fileName = jsDialog.prompt(
     "Input file name",
     "",
     "",
-);
+).trim().replaceAll("\n", "").trim();
 if(!fileName) exitZero();
 const siteCon = document.body.innerText;
-jsToast.short("sitecon" + siteCon + "\n" + `buttonType: ${buttonType}`);
+jsToast.short(`Register ok`);
 jsToolbar.addUrlCon(
     `${clickKey}`,
     `${buttonType}`,
