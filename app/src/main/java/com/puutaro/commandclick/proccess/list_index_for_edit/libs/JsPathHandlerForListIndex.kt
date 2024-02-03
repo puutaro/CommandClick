@@ -118,6 +118,7 @@ object JsPathHandlerForListIndex {
             JsPathMacroForListIndex.RENAME ->
                 ExecRenameFile.rename(
                     listIndexArgsMaker,
+                    listIndexListViewHolder,
                     selectedItem,
                 )
             JsPathMacroForListIndex.RENAME_APP_DIR ->

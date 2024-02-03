@@ -55,6 +55,43 @@ object TsvTool {
         )
     }
 
+    fun updateTsvByReplace(
+        tsvPath: String?,
+        srcAndRepLinePairList: List<Pair<String, String>>,
+    ){
+        if(
+            tsvPath.isNullOrEmpty()
+        ) return
+        val tsvPathObj = File(tsvPath)
+        if(!tsvPathObj.isFile) return
+        val tsvParentDirPath = tsvPathObj.parent
+            ?: return
+        val tsvName = tsvPathObj.name
+        val srcTsvConList = ReadText(
+            tsvParentDirPath,
+            tsvName,
+        ).textToList()
+        val replaceTsvConList = srcTsvConList.map {
+            srcTsvLine ->
+            val hitTsvLine = srcAndRepLinePairList.find {
+                it.first == srcTsvLine
+            }
+            when(hitTsvLine == null) {
+                true -> srcTsvLine
+                else -> hitTsvLine.second
+            }
+        }
+
+        if(
+            srcTsvConList == replaceTsvConList
+        ) return
+        FileSystems.writeFile(
+            tsvParentDirPath,
+            tsvName,
+            replaceTsvConList.joinToString("\n")
+        )
+    }
+
     fun insertByLastUpdate(
         tsvPath: String,
         insertLine: String,

@@ -127,7 +127,7 @@ class EditFragment: Fragment() {
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
     var onUpdateLastModify = false
-//    var isInstallFannelForListIndex = false
+    var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
@@ -308,6 +308,7 @@ class EditFragment: Fragment() {
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->
             if(!this.isVisible) return@setEventListener
+            if(disableKeyboardFragmentChange) return@setEventListener
 //            if(terminalViewModel.onDialog) return@setEventListener
             binding.editTitleLinearlayout.isVisible = !isOpen
             val linearLayoutParam =

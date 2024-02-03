@@ -187,8 +187,9 @@ class WithIndexListView(
             ListIndexEditConfig.ListIndexConfigKey.SEARCH_BOX.key
         )
         val inVisible =
-            searchBoxMap.get(SearchBoxSettingsForListIndex.SearchBoxSettingKey.VISIBLE.key) ==
-                    SearchBoxSettingsForListIndex.SearchBoxVisibleKey.OFF.name
+            searchBoxMap.get(
+                SearchBoxSettingsForListIndex.SearchBoxSettingKey.VISIBLE.key
+            ) == SearchBoxSettingsForListIndex.SearchBoxVisibleKey.OFF.name
         if(inVisible){
             searchText.isVisible = false
             return
