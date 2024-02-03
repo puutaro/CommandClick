@@ -108,21 +108,7 @@ class WebViewJsDialog(
             terminalFragment.dialogInstance?.setOnCancelListener {
                 terminalFragment.dialogInstance?.dismiss()
             }
-            val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                currentScriptPath,
-            )
-            val mainFannlePath = CcPathTool.getMainFannelFilePath(
-                currentScriptPath
-            )
-            val mainFannlePathObj = File(mainFannlePath)
-
-            val menuMapStrList =  SetReplaceVariabler.execReplaceByReplaceVariables(
-                menuMapStrListStr,
-                setReplaceVariableMap,
-                mainFannlePathObj.parent ?: String(),
-                mainFannlePathObj.name
-
-            ).split("|")
+            val menuMapStrList =  menuMapStrListStr.split("|")
             val btnWeight = culcBtnWeight(menuMapStrList)
             val firstBottomLinearLayout = terminalFragment.dialogInstance?.findViewById<LinearLayout>(
                 R.id.first_bottom_linearlayout
@@ -146,18 +132,10 @@ class WebViewJsDialog(
                 webView,
                 progressBar as ProgressBar
             )
-
-            val longPressMenuMapListStrAfterReplace = SetReplaceVariabler.execReplaceByReplaceVariables(
-                longPressMenuMapListStr,
-                setReplaceVariableMap,
-                mainFannlePathObj.parent ?: String(),
-                mainFannlePathObj.name
-
-            )
             webViewLongClickListener(
                 webView,
                 currentScriptPath,
-                longPressMenuMapListStrAfterReplace
+                longPressMenuMapListStr
             )
         }
     }
