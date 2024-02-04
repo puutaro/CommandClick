@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
@@ -15,7 +14,6 @@ import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -28,17 +26,12 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
 
 
 class ListIndexForEditAdapter(
@@ -79,335 +72,9 @@ class ListIndexForEditAdapter(
 
 
     companion object {
-        val className = this::class.java.name
         var indexListMap: Map<String, String> = mapOf()
         var onDeleteConFile = true
         var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-        private var listIndexScrollToBottomJob: Job? = null
-
-        fun clickUpdateFileList(
-            editFragment: EditFragment,
-            selectedItem: String,
-        ){
-            val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                editFragment,
-                indexListMap,
-                listIndexTypeKey
-            )
-            FileSystems.updateLastModified(
-                filterDir,
-                selectedItem
-            )
-            listIndexListUpdateFileList(
-                editFragment,
-                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                    editFragment,
-                    indexListMap,
-                    listIndexTypeKey
-                )
-            )
-        }
-
-        fun execCopyForFile(
-            editFragment: EditFragment,
-            sourceFilePath: String,
-        ){
-            val context = editFragment.context ?: return
-            val indexListMap = ListIndexForEditAdapter.indexListMap
-            val parentDirPath =
-                ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    editFragment,
-                    indexListMap,
-                    listIndexTypeKey
-                )
-            val sourceFilePathObj = File(sourceFilePath)
-            val srcParentDirPath = sourceFilePathObj.parent
-                ?: return
-            val srcFileName = sourceFilePathObj.name
-            if(
-                NoFileChecker.isNoFile(
-                    context,
-                    srcParentDirPath,
-                    srcFileName,
-                )
-            ) return
-            val destiFilePath = "${parentDirPath}/${srcFileName}"
-            val insertFilePath = FileSystems.execCopyFileWithDir(
-                File(sourceFilePath),
-                File(destiFilePath),
-            )
-            sortInAddFile(
-                editFragment,
-                insertFilePath,
-            )
-        }
-        fun execAddForTsv(
-            editFragment: EditFragment,
-            insertLine: String,
-        ){
-            val context = editFragment.context
-                ?: return
-            val listIndexForEditAdapter =
-                editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
-            val tsvPath =
-                ListSettingsForListIndex.getListSettingKeyHandler(
-                    editFragment,
-                    indexListMap,
-                    ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-                )
-            val tsvPathObj = File(tsvPath)
-            val tsvParentDirPath = tsvPathObj.parent ?: return
-            val tsvName = tsvPathObj.name
-            val currentTsvConList = ReadText(
-                tsvParentDirPath,
-                tsvName
-            ).textToList()
-            if(
-                currentTsvConList.contains(insertLine)
-            ) {
-                Toast.makeText(
-                    context,
-                    "Already exist",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return
-            }
-            val sortType = ListSettingsForListIndex.getSortType(indexListMap)
-            val insertIndex = getInsertIndex(
-                sortType,
-                listIndexForEditAdapter,
-                insertLine,
-            )
-
-            TsvTool.insertByLastUpdate(
-                tsvPath,
-                insertLine
-            )
-            when(sortType){
-                ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
-                    listIndexListUpdateFileList(
-                        editFragment,
-                        ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                            editFragment,
-                            indexListMap,
-                            listIndexTypeKey
-                        )
-                    )
-                ListSettingsForListIndex.SortByKey.SORT,
-                ListSettingsForListIndex.SortByKey.REVERSE ->
-                    listUpdateByInsertItem(
-                        editFragment,
-                        insertLine,
-                        insertIndex
-                    )
-            }
-        }
-
-        fun updateTsv(
-            editFragment: EditFragment,
-            listIndexList: MutableList<String>,
-        ){
-            val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
-                editFragment,
-                indexListMap,
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-            )
-            if(
-                tsvPath.isEmpty()
-            ) return
-            val sortType = ListSettingsForListIndex.getSortType(indexListMap)
-            val sortListIndexListForTsvSave =
-                ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(
-                    sortType,
-                    listIndexList
-                )
-            TsvTool.updateTsv(
-                tsvPath,
-                sortListIndexListForTsvSave,
-            )
-        }
-
-        fun updateTsvByRemove(
-            editFragment: EditFragment,
-            removeItemLineList: List<String>,
-        ){
-            val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
-                editFragment,
-                indexListMap,
-                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-            )
-            if(
-                tsvPath.isEmpty()
-            ) return
-            TsvTool.updateTsvByRemove(
-                tsvPath,
-                removeItemLineList,
-            )
-        }
-
-        fun listIndexListUpdateFileList(
-            editFragment: EditFragment,
-            updateList: List<String>,
-        ){
-            val editListRecyclerView = editFragment.binding.editListRecyclerView
-            if(
-                !editListRecyclerView.isVisible
-            ) return
-            val listIndexForEditAdapter =
-                editListRecyclerView.adapter as? ListIndexForEditAdapter
-                    ?: return
-            if(
-                listIndexForEditAdapter.listIndexList ==
-                updateList
-            ) return
-            listIndexForEditAdapter.listIndexList.clear()
-            listIndexForEditAdapter.listIndexList.addAll(updateList)
-            listIndexForEditAdapter.notifyDataSetChanged()
-            scrollToBottom(
-                editListRecyclerView,
-                listIndexForEditAdapter,
-            )
-        }
-
-        fun scrollToBottom(
-            editListRecyclerView: RecyclerView,
-            listIndexForEditAdapter: ListIndexForEditAdapter,
-        ){
-            listIndexScrollToBottomJob?.cancel()
-            listIndexScrollToBottomJob = CoroutineScope(Dispatchers.Main).launch {
-                val layoutManager = editListRecyclerView.layoutManager as? PreLoadLayoutManager
-                val scrollToPosi = listIndexForEditAdapter.itemCount - 1
-                withContext(Dispatchers.Main){
-                    for(i in 1..30){
-                        val prePosi = layoutManager?.findLastCompletelyVisibleItemPosition()
-                        if(
-                            prePosi == scrollToPosi
-                        ) break
-                        execScroll(
-                            layoutManager,
-                            scrollToPosi,
-                        )
-                        delay(150)
-                    }
-                }
-                withContext(Dispatchers.Main){
-                    for(i in 1..3){
-                        delay(150)
-                        execScroll(
-                            layoutManager,
-                            scrollToPosi,
-                        )
-                    }
-                }
-            }
-        }
-
-        fun getInsertIndex(
-            sortType: ListSettingsForListIndex.SortByKey,
-            listIndexForEditAdapter: ListIndexForEditAdapter,
-            addLine: String,
-        ): Int {
-            val virtualListIndexList = listIndexForEditAdapter.listIndexList + listOf(addLine)
-            return ListSettingsForListIndex.ListIndexListMaker.sortList(
-                sortType,
-                virtualListIndexList,
-            ).indexOf(addLine)
-        }
-
-        fun sortInAddFile(
-            editFragment: EditFragment,
-            insertFilePath: String,
-        ){
-            val sortType = ListSettingsForListIndex.getSortType(indexListMap)
-            when(sortType){
-                ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
-                    listIndexListUpdateFileList(
-                        editFragment,
-                        ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-                            editFragment,
-                            indexListMap,
-                            listIndexTypeKey
-                        )
-                    )
-                ListSettingsForListIndex.SortByKey.SORT,
-                ListSettingsForListIndex.SortByKey.REVERSE -> {
-                    addFileNameLineForSort(
-                        editFragment,
-                        insertFilePath,
-                    )
-                }
-            }
-        }
-
-        fun listUpdateByInsertItem(
-            editFragment: EditFragment,
-            addLine: String,
-            insertIndex: Int,
-        ){
-            val binding = editFragment.binding
-            val editListRecyclerView = binding.editListRecyclerView
-            val listIndexAdapter =
-                binding.editListRecyclerView.adapter as ListIndexForEditAdapter
-            listIndexAdapter.listIndexList.add(insertIndex, addLine)
-            listIndexAdapter.notifyItemInserted(insertIndex)
-            val listInsertWaitTime = 200L
-            CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main) {
-                    delay(listInsertWaitTime)
-                    editListRecyclerView.layoutManager?.scrollToPosition(
-                        insertIndex
-                    )
-                }
-            }
-        }
-
-        fun removeCon(
-            listIndexType: TypeSettingsForListIndex.ListIndexTypeKey,
-            removeItemLine: String,
-        ){
-            when(listIndexType) {
-                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
-                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-                -> return
-                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
-                -> {}
-            }
-
-            if(
-                !onDeleteConFile
-            ) return
-            val removeTitleConList = removeItemLine.split("\t")
-            if(removeTitleConList.size != 2) return
-            val filePath = removeTitleConList.last()
-            val filePathObj = File(filePath)
-            val fileParentDirPath = filePathObj.parent
-                ?: return
-            val fileName = filePathObj.name
-            FileSystems.removeFiles(
-                fileParentDirPath,
-                fileName
-            )
-        }
-
-        fun replaceListElementForTsv(
-            editFragment: EditFragment,
-            srcAndRepLinePairList: List<Pair<String, String>>,
-        ){
-            val binding = editFragment.binding
-            val listIndexAdapter =
-                binding.editListRecyclerView.adapter as ListIndexForEditAdapter
-            val srcAndRepLinePairListSize = srcAndRepLinePairList.size
-            srcAndRepLinePairList.forEach {
-                val srcTsvLine = it.first
-                val replaceItemIndex = listIndexAdapter.listIndexList.indexOf(srcTsvLine)
-                if(replaceItemIndex < 0) return@forEach
-                listIndexAdapter.listIndexList[replaceItemIndex] = it.second
-                listIndexAdapter.notifyItemChanged(replaceItemIndex)
-                if(srcAndRepLinePairListSize != 1) return@forEach
-                val editListRecyclerView = binding.editListRecyclerView
-                editListRecyclerView.layoutManager?.scrollToPosition(replaceItemIndex)
-            }
-        }
     }
     class ListIndexListViewHolder(
         val activity: FragmentActivity?,
@@ -499,6 +166,7 @@ class ListIndexForEditAdapter(
                 ) return@withContext emptyList()
                 if(
                     PerformSettingForListIndex.howFastMode(performMap)
+                    || listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 ) return@withContext emptyList()
                 ReadText(
                     filterDir,
@@ -741,71 +409,5 @@ class ListIndexForEditAdapter(
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.SUFFIX.key
         )
-    }
-}
-
-
-private fun addFileNameLineForSort(
-    editFragment: EditFragment,
-    insertFilePath: String,
-){
-    val indexListMap = ListIndexForEditAdapter.indexListMap
-    val parentDirPath =
-        ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
-        )
-    val filterPrefix = ListSettingsForListIndex.getListSettingKeyHandler(
-        editFragment,
-        indexListMap,
-        ListSettingsForListIndex.ListSettingKey.PREFIX.key
-    )
-    val filterSuffix = ListSettingsForListIndex.getListSettingKeyHandler(
-        editFragment,
-        indexListMap,
-        ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-    )
-    val filterShellCon = ListSettingsForListIndex.ListIndexListMaker.getFilterShellCon(
-        editFragment,
-        indexListMap,
-    )
-    val insertFileName = File(insertFilePath)
-    val fileNameElement = ListSettingsForListIndex.ListIndexListMaker.makeFileListElement(
-        listOf(insertFileName.name),
-        editFragment.busyboxExecutor,
-        parentDirPath,
-        filterPrefix,
-        filterSuffix,
-        filterShellCon,
-    ).firstOrNull()
-    if(
-        fileNameElement.isNullOrEmpty()
-    ) return
-    val listIndexForEditAdapter =
-        editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
-    val sortType = ListSettingsForListIndex.getSortType(ListIndexForEditAdapter.indexListMap)
-    val insertIndex = ListIndexForEditAdapter.getInsertIndex(
-        sortType,
-        listIndexForEditAdapter,
-        fileNameElement,
-    )
-    ListIndexForEditAdapter.listUpdateByInsertItem(
-        editFragment,
-        fileNameElement,
-        insertIndex
-    )
-}
-
-private fun execScroll(
-    layoutManager: PreLoadLayoutManager?,
-    scrollToPosi: Int,
-){
-    try {
-        layoutManager?.scrollToPosition(
-            scrollToPosi
-        )
-    }catch (e: Exception){
-        return
     }
 }

@@ -9,6 +9,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.CopyAppDirEventForEdit
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
@@ -63,7 +64,7 @@ object ExecCopyAppDir {
                 selectedItem,
                 promptEditText
             )
-            ListIndexForEditAdapter.listIndexListUpdateFileList(
+            ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                 editFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     editFragment,

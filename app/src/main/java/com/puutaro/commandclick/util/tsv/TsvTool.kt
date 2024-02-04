@@ -7,7 +7,7 @@ import java.io.File
 object TsvTool {
     fun updateTsv(
         tsvPath: String?,
-        listIndexList: MutableList<String>,
+        listIndexList: List<String>,
     ){
         if(
             tsvPath.isNullOrEmpty()

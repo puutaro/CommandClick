@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
@@ -118,7 +119,7 @@ class JsToolbar(
                 currentAppDirPath,
                 currentFannelName,
             ) ?: return@launch
-            ListIndexForEditAdapter.execAddForTsv(
+            ExecAddForListIndexAdapter.execAddForTsv(
                 editFragment,
                 insertLine
             )
@@ -185,13 +186,13 @@ class JsToolbar(
                     fileName,
                     File(parentDirPath, fileName).absolutePath
                 ).joinToString("\t")
-                ListIndexForEditAdapter.execAddForTsv(
+                ExecAddForListIndexAdapter.execAddForTsv(
                     editFragment,
                     insertLine
                 )
             }
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
-            -> ListIndexForEditAdapter.sortInAddFile(
+            -> ExecAddForListIndexAdapter.sortInAddFile(
                 editFragment,
                 File(listIndexPath, fileName).absolutePath
             )

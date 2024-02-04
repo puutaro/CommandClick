@@ -10,7 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecReWriteForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -56,7 +57,7 @@ object TsvLineRenamer {
                 R.id.prompt_dialog_input
             )
         val titleFileNameAndPathConPair =
-            getTitleFileNameAndPathConPair(tsvLine)
+            TitleFileNameAndPathConPairForListIndexAdapter.get(tsvLine)
                 ?: return
         val fileNameOrTitle = titleFileNameAndPathConPair.first
 
@@ -117,7 +118,7 @@ object TsvLineRenamer {
             return
         }
         val titleFileNameAndPathConPair =
-            getTitleFileNameAndPathConPair(tsvLine)
+            TitleFileNameAndPathConPairForListIndexAdapter.get(tsvLine)
                 ?: return
         val fileNameOrTitle = titleFileNameAndPathConPair.first
         val compExtend = CcPathTool.subExtend(fileNameOrTitle)
@@ -153,21 +154,10 @@ object TsvLineRenamer {
                 renameFilePathOrCon
             )
         }
-        ListIndexForEditAdapter.replaceListElementForTsv(
+        ExecReWriteForListIndexAdapter.replaceListElementForTsv(
             editFragment,
             srcAndRepLinePairList
         )
-    }
-
-    fun getTitleFileNameAndPathConPair(
-        tsvLine: String
-    ): Pair<String, String>? {
-        val titleConList = tsvLine.split("\t")
-        val fileNameOrTitle = titleConList.firstOrNull()
-            ?: return null
-        val filePathOrCon = titleConList.getOrNull(1)
-            ?: return null
-        return fileNameOrTitle to filePathOrCon
     }
 
     private fun dismissProcess(

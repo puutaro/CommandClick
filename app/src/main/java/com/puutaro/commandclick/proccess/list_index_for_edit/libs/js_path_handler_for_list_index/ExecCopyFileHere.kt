@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handl
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -59,7 +60,7 @@ object ExecCopyFileHere {
                     con,
                 ).joinToString("\t")
             }
-        ListIndexForEditAdapter.execAddForTsv(
+        ExecAddForListIndexAdapter.execAddForTsv(
             editFragment,
             addLine
         )
@@ -77,7 +78,7 @@ object ExecCopyFileHere {
                 ListIndexForEditAdapter.listIndexTypeKey
             )
         val srcFilePath = File(parentDirPath, insertFileName).absolutePath
-        ListIndexForEditAdapter.execCopyForFile(
+        ExecAddForListIndexAdapter.execAddByCopyFileHere(
             listIndexArgsMaker.editFragment,
             srcFilePath,
         )

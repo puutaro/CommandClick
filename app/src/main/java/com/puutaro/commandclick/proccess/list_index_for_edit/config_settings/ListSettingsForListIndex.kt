@@ -38,7 +38,7 @@ object ListSettingsForListIndex  {
     }
 
     enum class DisableValue {
-        OFF
+        ON
     }
 
     enum class DisableDeleteConfirm {
@@ -64,7 +64,7 @@ object ListSettingsForListIndex  {
     ): Boolean {
         return editByDragMap.get(
             EditByDragKey.DISABLE.key
-        ) == DisableValue.OFF.name
+        ) == DisableValue.ON.name
     }
 
     fun howDisableDeleteConfirm(

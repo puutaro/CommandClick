@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_DRAG
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecRemoveForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwitcherForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -52,11 +54,6 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                             ListIndexForEditAdapter.ListIndexListViewHolder
                     val from = fromViewHolder.bindingAdapterPosition
                     val to = toViewHolder.bindingAdapterPosition
-//                   ListIndexForEditAdapter.switchQrIndexNumTextView(
-//                       listIndexForEditAdapter,
-//                       fromViewHolder,
-//                       toViewHolder,
-//                   )
                     adapter.notifyItemMoved(from, to)
                     ListTool.switchList(
                         listIndexForEditAdapter.listIndexList,
@@ -136,12 +133,11 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                     File(parentDirPath, toFileName)
                 )
             }
-            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
-                ListIndexForEditAdapter.updateTsv(
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+                ExecSwitcherForListIndexAdapter.updateTsv(
                     editFragment,
                     listIndexForEditAdapter.listIndexList
                 )
-            }
         }
     }
 
@@ -179,7 +175,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         listIndexForEditAdapter.notifyItemRemoved(position)
         val removeItemLine = listIndexForEditAdapter.listIndexList[position]
         listIndexForEditAdapter.listIndexList.removeAt(position)
-        ListIndexForEditAdapter.removeCon(
+        ExecRemoveForListIndexAdapter.removeCon(
             ListIndexForEditAdapter.listIndexTypeKey,
             removeItemLine
         )
@@ -212,7 +208,7 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                 )
             }
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
-                ListIndexForEditAdapter.updateTsvByRemove(
+                ExecRemoveForListIndexAdapter.updateTsv(
                     editFragment,
                     listOf(removeItemLine),
                 )

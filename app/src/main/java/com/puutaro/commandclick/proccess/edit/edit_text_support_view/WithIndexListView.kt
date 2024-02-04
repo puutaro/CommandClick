@@ -10,6 +10,8 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
@@ -95,7 +97,7 @@ class WithIndexListView(
         )
         preLoadLayoutManager.stackFromEnd = true
         editListRecyclerView.layoutManager = preLoadLayoutManager
-        ListIndexForEditAdapter.scrollToBottom(
+        ListViewToolForListIndexAdapter.scrollToBottom(
             editListRecyclerView,
             listIndexForEditAdapter,
         )
@@ -123,7 +125,7 @@ class WithIndexListView(
                         editFragment,
                     )
                     val selectedItem = holder.fileName
-                    ListIndexForEditAdapter.clickUpdateFileList(
+                    ExecClickUpdate.update(
                         editFragment,
                         selectedItem,
                     )
@@ -224,7 +226,7 @@ class WithIndexListView(
                         it.lowercase()
                     )
                 }
-                ListIndexForEditAdapter.listIndexListUpdateFileList(
+                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                     editFragment,
                     filteredUrlHistoryList,
                 )

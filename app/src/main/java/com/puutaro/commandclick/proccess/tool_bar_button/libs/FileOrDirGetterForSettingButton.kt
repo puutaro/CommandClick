@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 import android.content.Intent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -99,7 +99,7 @@ class FileOrDirGetterForSettingButton(
         editFragment: EditFragment,
         sourceFilePath: String,
     ){
-        ListIndexForEditAdapter.execCopyForFile(
+        ExecAddForListIndexAdapter.execAddByCopyFileHere(
             editFragment,
             sourceFilePath,
         )
@@ -112,7 +112,7 @@ class FileOrDirGetterForSettingButton(
         val sourceScriptFilePathObj = File(sourceFilePath)
         val sourceScriptName = sourceScriptFilePathObj.name
         val insertLine = "${sourceScriptName}\t${sourceFilePath}"
-        ListIndexForEditAdapter.execAddForTsv(
+        ExecAddForListIndexAdapter.execAddForTsv(
             editFragment,
             insertLine
         )

@@ -26,6 +26,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifyForEdit
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -383,7 +384,7 @@ class EditFragment: Fragment() {
         ) return
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
-            ListIndexForEditAdapter.listIndexListUpdateFileList(
+            ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                 this@EditFragment,
                 ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                     this@EditFragment,

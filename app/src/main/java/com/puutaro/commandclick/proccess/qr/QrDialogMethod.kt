@@ -18,6 +18,7 @@ import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -288,7 +289,7 @@ object QrDialogMethod {
                         context.sendBroadcast(indexfannelListUpdateIntent)
                     }
                     is EditFragment -> {
-                        ListIndexForEditAdapter.listIndexListUpdateFileList(
+                        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,
@@ -376,7 +377,7 @@ object QrDialogMethod {
 //                        context.sendBroadcast(indexfannelListUpdateIntent)
 //                    }
                     is EditFragment -> {
-                        ListIndexForEditAdapter.listIndexListUpdateFileList(
+                        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
                             fragment,
                             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                                 fragment,

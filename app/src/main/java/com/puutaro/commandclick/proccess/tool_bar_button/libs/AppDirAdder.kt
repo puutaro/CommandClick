@@ -11,6 +11,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -90,25 +91,10 @@ object AppDirAdder {
                 UsePath.cmdclickAppDirAdminPath,
                 scriptFileName
             ).absolutePath
-            ListIndexForEditAdapter.sortInAddFile(
+            ExecAddForListIndexAdapter.sortInAddFile(
                 fragment,
                 addAppDirNameFilePath
             )
-
-//            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-//            val extraMap = ExtraArgsTool.createExtraMapFromMenuMapList(
-//                settingButtonMenuMapList,
-//                JsPathMacroForSettingButton.ADD_APP_DIR.name,
-//                MenuSettingTool.MenuSettingKey.JS_PATH.key,
-//                "!",
-//            )
-//            val updateBroadcastIntent = ExtraArgsTool.makeBroadcastIntent(
-//                extraMap,
-//                "&"
-//            )
-//            context.sendBroadcast(updateBroadcastIntent)
-
-
             val createAppDirName = when (isJsSuffix) {
                 true -> inputScriptFileName.removeSuffix(jsFileSuffix)
                 else -> inputScriptFileName

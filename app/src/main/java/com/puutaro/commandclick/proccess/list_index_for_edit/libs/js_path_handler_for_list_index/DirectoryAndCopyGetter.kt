@@ -5,6 +5,8 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
@@ -62,11 +64,11 @@ class DirectoryAndCopyGetter(
             File(sourceScriptFilePath),
             File(targetScriptFilePath),
         )
-        ListIndexForEditAdapter.sortInAddFile(
+        ExecAddForListIndexAdapter.sortInAddFile(
             editFragment,
             insertFilePath,
         )
-        ListIndexForEditAdapter.listIndexListUpdateFileList(
+        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
             editFragment,
             ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
                 editFragment,

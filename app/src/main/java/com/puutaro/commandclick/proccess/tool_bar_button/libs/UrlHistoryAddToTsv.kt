@@ -10,8 +10,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.extra_args.ShellTool
@@ -174,7 +174,7 @@ class UrlHistoryAddToTsv (
             val selectedUrlHistoryLine = takeFromUrlHistoryList().find {
                 it.startsWith(selectedTitle)
             } ?: return@setOnItemClickListener
-            ListIndexForEditAdapter.execAddForTsv(
+            ExecAddForListIndexAdapter.execAddForTsv(
                 editFragment,
                 selectedUrlHistoryLine
             )

@@ -26,7 +26,7 @@ import com.google.zxing.RGBLuminanceSource
 import com.google.zxing.common.HybridBinarizer
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -353,7 +353,7 @@ class QrScanner(
                 )
                 val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
                 withContext(Dispatchers.Main) {
-                    ListIndexForEditAdapter.execAddForTsv(
+                    ExecAddForListIndexAdapter.execAddForTsv(
                         fragment,
                         insertLine
                     )

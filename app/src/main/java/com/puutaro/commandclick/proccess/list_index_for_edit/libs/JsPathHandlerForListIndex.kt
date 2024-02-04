@@ -158,7 +158,7 @@ object JsPathHandlerForListIndex {
             JsPathMacroForListIndex.WRITE ->
                 ExecWriteItem.write(
                     listIndexArgsMaker,
-                    selectedItem,
+                    listIndexListViewHolder,
                     extraMapForJsPath,
                 )
         }
