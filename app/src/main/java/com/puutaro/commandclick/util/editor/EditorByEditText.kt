@@ -11,7 +11,13 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.file.FileSystems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import java.util.LinkedList
 
@@ -29,6 +35,7 @@ object EditorByEditText {
         val context = fragment.context
             ?: return
         val activity = fragment.activity
+        editDialogStartProcess(fragment)
         editorDialog = Dialog(
             context
         )
@@ -53,7 +60,7 @@ object EditorByEditText {
         redoRedoButtonListener(
             textWatcher,
         )
-        cancelButtonListener()
+        cancelButtonListener(fragment)
         saveButtonListener(
             fragment,
             textWatcher,
@@ -67,7 +74,7 @@ object EditorByEditText {
             confirmTitleTextView?.isVisible = !isOpen
         }
         editorDialog?.setOnCancelListener {
-            editorDialog?.dismiss()
+            editDialogDismissProcess(fragment)
         }
         editorDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
@@ -115,13 +122,14 @@ object EditorByEditText {
 
 
     private fun cancelButtonListener(
+        fragment: Fragment,
     ){
         val confirmCancelButton =
             editorDialog?.findViewById<AppCompatImageButton>(
                 R.id.editor_by_edit_text_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
-            editorDialog?.dismiss()
+            editDialogDismissProcess(fragment)
         }
     }
 
@@ -154,6 +162,26 @@ object EditorByEditText {
             textWatcher.saveButtonEnable = false
             broadcastIntent?.let {
                 context?.sendBroadcast(broadcastIntent)
+            }
+        }
+    }
+
+    private fun editDialogStartProcess(
+        fragment: Fragment
+    ){
+        if(fragment !is EditFragment) return
+        fragment.disableKeyboardFragmentChange = true
+    }
+
+    private fun editDialogDismissProcess(
+        fragment: Fragment,
+    ){
+        editorDialog?.dismiss()
+        if(fragment !is EditFragment) return
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main){
+                delay(200)
+                fragment.disableKeyboardFragmentChange = false
             }
         }
     }

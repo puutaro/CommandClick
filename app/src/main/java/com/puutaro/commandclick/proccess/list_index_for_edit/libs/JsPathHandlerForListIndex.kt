@@ -16,9 +16,8 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handle
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecRenameFile
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecShowDescription
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecWriteItem
+import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecSimpleEditItem
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.editor.EditorByEditText
 import java.io.File
 
 object JsPathHandlerForListIndex {
@@ -140,20 +139,25 @@ object JsPathHandlerForListIndex {
                     selectedItem,
                 )
             JsPathMacroForListIndex.SIMPLE_EDIT -> {
-                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    listIndexArgsMaker.editFragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
+                ExecSimpleEditItem.edit(
+                    listIndexArgsMaker,
+                    listIndexListViewHolder,
+                    extraMapForJsPath,
                 )
-                EditorByEditText.byEditText(
-                    listIndexArgsMaker.editFragment,
-                    filterDir,
-                    selectedItem,
-                    ReadText(
-                        filterDir,
-                        selectedItem
-                    ).readText()
-                )
+//                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//                    listIndexArgsMaker.editFragment,
+//                    ListIndexForEditAdapter.indexListMap,
+//                    ListIndexForEditAdapter.listIndexTypeKey
+//                )
+//                EditorByEditText.byEditText(
+//                    listIndexArgsMaker.editFragment,
+//                    filterDir,
+//                    selectedItem,
+//                    ReadText(
+//                        filterDir,
+//                        selectedItem
+//                    ).readText()
+//                )
             }
             JsPathMacroForListIndex.WRITE ->
                 ExecWriteItem.write(
