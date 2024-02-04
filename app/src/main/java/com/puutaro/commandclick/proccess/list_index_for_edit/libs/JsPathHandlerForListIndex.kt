@@ -86,13 +86,12 @@ object JsPathHandlerForListIndex {
                     selectedItem,
                     extraMapForJsPath,
                 )
-            JsPathMacroForListIndex.COPY_FILE -> {
+            JsPathMacroForListIndex.COPY_FILE ->
                 ExecCopyFile.copyFile(
                     listIndexArgsMaker,
                     listIndexListViewHolder,
                     extraMapForJsPath,
                 )
-            }
             JsPathMacroForListIndex.COPY_FILE_HERE ->
                 ExecCopyFileHere.copyFileHere(
                     listIndexArgsMaker,
@@ -125,40 +124,24 @@ object JsPathHandlerForListIndex {
                     listIndexArgsMaker,
                     selectedItem,
                 )
-            JsPathMacroForListIndex.MENU -> {
+            JsPathMacroForListIndex.MENU ->
                 ListIndexMenuLauncher.launch(
                     listIndexArgsMaker,
                     selectedItem,
                     listIndexListViewHolder,
                     listIndexPosition,
                 )
-            }
             JsPathMacroForListIndex.DESC ->
                 ExecShowDescription.desc(
                     listIndexArgsMaker,
                     selectedItem,
                 )
-            JsPathMacroForListIndex.SIMPLE_EDIT -> {
+            JsPathMacroForListIndex.SIMPLE_EDIT ->
                 ExecSimpleEditItem.edit(
                     listIndexArgsMaker,
                     listIndexListViewHolder,
                     extraMapForJsPath,
                 )
-//                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-//                    listIndexArgsMaker.editFragment,
-//                    ListIndexForEditAdapter.indexListMap,
-//                    ListIndexForEditAdapter.listIndexTypeKey
-//                )
-//                EditorByEditText.byEditText(
-//                    listIndexArgsMaker.editFragment,
-//                    filterDir,
-//                    selectedItem,
-//                    ReadText(
-//                        filterDir,
-//                        selectedItem
-//                    ).readText()
-//                )
-            }
             JsPathMacroForListIndex.WRITE ->
                 ExecWriteItem.write(
                     listIndexArgsMaker,
