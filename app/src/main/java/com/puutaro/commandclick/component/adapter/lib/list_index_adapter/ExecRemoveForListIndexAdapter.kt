@@ -2,6 +2,7 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
@@ -39,10 +40,10 @@ object ExecRemoveForListIndexAdapter {
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> {}
         }
-
-        if(
-            !ListIndexForEditAdapter.onDeleteConFile
-        ) return
+        val onDeleteConFile = DeleteSettingsForListIndex.howOnDeleteConFileValue(
+            ListIndexForEditAdapter.deleteConfigMap
+        )
+        if(!onDeleteConFile) return
         val removeTitleConList = removeItemLine.split("\t")
         if(removeTitleConList.size != 2) return
         val filePath = removeTitleConList.last()

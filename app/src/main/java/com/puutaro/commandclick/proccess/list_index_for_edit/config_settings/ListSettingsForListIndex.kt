@@ -26,7 +26,6 @@ object ListSettingsForListIndex  {
         FILTER_SHELL_PATH("filterShellPath"),
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
-        ON_DELETE_CON_FILE("onDeleteConFile"),
         INIT_TSV_PATH("initTsvPath"),
     }
 
@@ -34,19 +33,10 @@ object ListSettingsForListIndex  {
         val key: String,
     ){
         DISABLE("disable"),
-        DISABLE_DELETE_CONFIRM("disableDeleteConfirm"),
     }
 
     enum class DisableValue {
         ON
-    }
-
-    enum class DisableDeleteConfirm {
-        OFF
-    }
-
-    enum class OnDeleteConFileValue {
-        OFF
     }
 
     enum class SortByKey(
@@ -67,14 +57,6 @@ object ListSettingsForListIndex  {
         ) == DisableValue.ON.name
     }
 
-    fun howDisableDeleteConfirm(
-        editByDragMap: Map<String, String>
-    ): Boolean {
-        return editByDragMap.get(
-            EditByDragKey.DISABLE_DELETE_CONFIRM.key
-        ) == DisableDeleteConfirm.OFF.name
-    }
-
     fun getSortType(
         indexListMap: Map<String, String>?,
     ): SortByKey {
@@ -87,15 +69,6 @@ object ListSettingsForListIndex  {
             } ?: SortByKey.LAST_UPDATE
         }
     }
-
-    fun howOnDeleteConFileValue(
-        indexListMap: Map<String, String>?,
-    ): Boolean {
-        return indexListMap?.get(
-            ListSettingKey.ON_DELETE_CON_FILE.key
-        ) != OnDeleteConFileValue.OFF.name
-    }
-
 
     fun makeEditByDragMap(
         listIndexConfigMap: Map<String, String>?,

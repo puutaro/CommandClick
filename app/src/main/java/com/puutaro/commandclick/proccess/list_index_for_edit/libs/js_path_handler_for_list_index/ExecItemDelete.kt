@@ -10,7 +10,9 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
@@ -27,6 +29,16 @@ object ExecItemDelete {
         selectedItem: String,
         extraMapForJsPath: Map<String, String>?,
     ){
+        val type = ListIndexEditConfig.getListIndexType(
+            editFragment
+        )
+        when(type){
+            TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL,
+            TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
+            -> return
+            TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+            -> {}
+        }
         val context = editFragment.context ?: return
         if(
             NoFileChecker.isNoFile(

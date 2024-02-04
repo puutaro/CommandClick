@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Che
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
@@ -85,7 +86,6 @@ object ListIndexEditConfig {
             )
         }.toMap()
     }
-
     private fun makeClickConfig(
         editFragment: EditFragment,
         isLongClick: Boolean,
@@ -396,6 +396,7 @@ object ListIndexEditConfig {
         LONG_CLICK("longClick"),
         LIST("list"),
         SEARCH_BOX("searchBox"),
-        PERFORM("perform")
+        PERFORM("perform"),
+        DELETE("delete"),
     }
 }

@@ -8,6 +8,7 @@ enum class JsPathMacroForListIndex(
     COPY_FILE_HERE,
     COPY_APP_DIR,
     DELETE,
+    SIMPLE_DELETE,
     DESC,
     EDIT_C,
     EDIT_S,

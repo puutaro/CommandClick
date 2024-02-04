@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handle
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecRenameAppDir
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecRenameFile
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecShowDescription
+import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecSimpleDelete
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecWriteItem
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecSimpleEditItem
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -72,6 +73,19 @@ object JsPathHandlerForListIndex {
                     filterDir,
                     selectedItem,
                     extraMapForJsPath,
+                )
+            }
+            JsPathMacroForListIndex.SIMPLE_DELETE -> {
+                val editFragment = listIndexArgsMaker.editFragment
+                val binding = editFragment.binding
+                val editListRecyclerView = binding.editListRecyclerView
+                val listIndexForEditAdapter =
+                    editListRecyclerView.adapter as ListIndexForEditAdapter
+                ExecSimpleDelete.removeController(
+                    listIndexArgsMaker.editFragment,
+                    editListRecyclerView,
+                    listIndexForEditAdapter,
+                    listIndexListViewHolder
                 )
             }
             JsPathMacroForListIndex.CAT

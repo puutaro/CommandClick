@@ -16,6 +16,7 @@ import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.PerformSettingForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -73,7 +74,7 @@ class ListIndexForEditAdapter(
 
     companion object {
         var indexListMap: Map<String, String> = mapOf()
-        var onDeleteConFile = true
+        var deleteConfigMap: Map<String, String> = mapOf()
         var listIndexTypeKey = TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
     class ListIndexListViewHolder(
@@ -388,11 +389,12 @@ class ListIndexForEditAdapter(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.LIST.key
         )
+        deleteConfigMap = ListIndexEditConfig.getConfigKeyMap(
+            listIndexConfigMap,
+            ListIndexEditConfig.ListIndexConfigKey.DELETE.key
+        )
         listIndexTypeKey = ListIndexEditConfig.getListIndexType(
             editFragment
-        )
-        onDeleteConFile = ListSettingsForListIndex.howOnDeleteConFileValue(
-            indexListMap
         )
         filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
