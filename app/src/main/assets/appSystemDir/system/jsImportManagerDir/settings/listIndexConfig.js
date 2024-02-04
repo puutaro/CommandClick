@@ -8,4 +8,5 @@ longClick=
     jsPath=MENU
     |menuPath=`${JS_IMPORT_LONG_PRESS_MENU_PATH}`,
 click=
-    jsPath=`${JS_IMPORT_SHOW_CON_JS_PATH}`,
+    jsPath=`${JS_IMPORT_SHOW_CON_JS_PATH}`
+    |enableUpdate=ON,

@@ -55,6 +55,30 @@ object TsvTool {
         )
     }
 
+    fun updateTsvByClick(
+        tsvPath: String?,
+        recentUpdateTsvLine: String,
+    ){
+        if(tsvPath.isNullOrEmpty()) return
+        val tsvPathObj = File(tsvPath)
+        if(!tsvPathObj.isFile) return
+        val tsvParentDirPath = tsvPathObj.parent
+            ?: return
+        val tsvName = tsvPathObj.name
+        val srcTsvConList = ReadText(
+            tsvParentDirPath,
+            tsvName,
+        ).textToList()
+        val updateTsvCon = listOf(recentUpdateTsvLine) + srcTsvConList.filter {
+            it != recentUpdateTsvLine
+        }
+        FileSystems.writeFile(
+            tsvParentDirPath,
+            tsvName,
+            updateTsvCon.joinToString("\n")
+        )
+    }
+
     fun updateTsvByReplace(
         tsvPath: String?,
         srcAndRepLinePairList: List<Pair<String, String>>,

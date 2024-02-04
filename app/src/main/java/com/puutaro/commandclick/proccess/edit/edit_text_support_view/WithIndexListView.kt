@@ -125,10 +125,6 @@ class WithIndexListView(
                         editFragment,
                     )
                     val selectedItem = holder.fileName
-                    ExecClickUpdate.update(
-                        editFragment,
-                        selectedItem,
-                    )
                     ListIndexEditConfig.handle(
                         editFragment,
                         false,

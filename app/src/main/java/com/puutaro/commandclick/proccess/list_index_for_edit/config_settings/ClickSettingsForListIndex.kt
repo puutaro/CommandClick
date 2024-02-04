@@ -12,6 +12,7 @@ object ClickSettingsForListIndex {
         ON_SCRIPT_SAVE("onScriptSave"),
         MONITOR_SIZE("monitorSize"),
         EXTRA(ExtraArgsTool.extraSettingKeyName),
+        ENABLE_UPDATE("enableUpdate")
     }
 
     enum class MonitorSize {
@@ -22,6 +23,18 @@ object ClickSettingsForListIndex {
     enum class OnScriptSave {
         ON,
         OFF
+    }
+
+    enum class OnDisableUpdateValue {
+        ON,
+    }
+
+    fun howEnableClickUpdate(
+        clickConfigMap: Map<String, String>?
+    ): Boolean {
+        return clickConfigMap?.get(
+            ClickSettingKey.ENABLE_UPDATE.key
+        ) == OnDisableUpdateValue.ON.name
     }
 
 }

@@ -9,6 +9,7 @@ import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
 import com.puutaro.commandclick.proccess.extra_args.MaxStringLength
@@ -53,6 +54,11 @@ object ListIndexEditConfig {
             editFragment,
             isLongClick,
             clickConfigMap,
+        )
+        ExecClickUpdate.update(
+            editFragment,
+            listIndexArgsMaker,
+            holder,
         )
         val extraMapForJsPath = ExtraArgsTool.createExtraMapFromMap(
             listIndexArgsMaker.clickConfigMap,
