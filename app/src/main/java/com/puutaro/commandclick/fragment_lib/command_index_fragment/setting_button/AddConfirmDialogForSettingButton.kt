@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 object AddConfirmDialogForSettingButton {
@@ -87,8 +88,10 @@ object AddConfirmDialogForSettingButton {
         confirmCancelButton?.setOnClickListener {
             deleteConfirmDialog?.dismiss()
             FileSystems.removeFiles(
-                currentAppDirPath,
-                shellScriptName,
+                File(
+                    currentAppDirPath,
+                    shellScriptName,
+                ).absolutePath
             )
             CommandListManager.execListUpdateForCmdIndex(
                 currentAppDirPath,
@@ -125,8 +128,10 @@ object AddConfirmDialogForSettingButton {
         shellScriptName: String,
     ){
         val shellContentsList = ReadText(
-            currentAppDirPath,
-            shellScriptName
+            File(
+                currentAppDirPath,
+                shellScriptName
+            ).absolutePath
         ).textToList()
 
         val shellScriptContentsLabelCommentOut = CommentOutLabelingSection.commentOut(
@@ -138,8 +143,10 @@ object AddConfirmDialogForSettingButton {
             languageTypeToSectionHolderMap
         )
         FileSystems.writeFile(
-            currentAppDirPath,
-            shellScriptName,
+            File(
+                currentAppDirPath,
+                shellScriptName,
+            ).absolutePath,
             shellScriptContentsQuoteComp
         )
         CommandListManager.execListUpdateForCmdIndex(

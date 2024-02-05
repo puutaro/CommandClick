@@ -82,12 +82,8 @@ object ExecRenameFile {
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         ) ?: String()
-        val tsvPathObj = File(tsvPath)
-        val tsvParentDirPath = tsvPathObj.parent ?: return
-        val tsvName = tsvPathObj.name
         val isExist = ReadText(
-            tsvParentDirPath,
-            tsvName
+            tsvPath
         ).textToList().contains(selectedTsvLine)
         if(!isExist){
             Toast.makeText(

@@ -137,11 +137,9 @@ object EditableListContentsSelectGridViewProducer {
     ): List<String> {
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         return ReadText(
-            parentDir,
-            listFileName
+            listContentsFilePath
         ).textToList().filter {
             it.trim().isNotEmpty()
         }
@@ -176,12 +174,7 @@ object EditableListContentsSelectGridViewProducer {
             elcbMap,
             currentAppDirPath,
             scriptName,
-
         )
-        val fileObj = File(listContentsFilePath)
-        val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
-
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
@@ -190,8 +183,7 @@ object EditableListContentsSelectGridViewProducer {
             )
             gridDialogObj?.dismiss()
             val currentGridList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList()
             val selectedItem = currentGridList.filter {
                 Regex(
@@ -211,8 +203,7 @@ object EditableListContentsSelectGridViewProducer {
                             it != selectedItem
                         }
             FileSystems.writeFile(
-                parentDir,
-                listFileName,
+                listContentsFilePath,
                 updateListContents
                     .take(listLimit)
                     .joinToString("\n")

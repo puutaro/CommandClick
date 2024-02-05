@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.BufferedReader
+import java.io.File
 import java.io.InputStreamReader
 import java.io.OutputStream
 import java.net.ServerSocket
@@ -240,8 +241,10 @@ object PcPulseSetServer {
         updateMonitorContents: String
     ){
         FileSystems.writeFile(
-            cmdclickTempMonitorDirPath,
-            cmdclickTmpUpdateMonitorFileName,
+            File(
+                cmdclickTempMonitorDirPath,
+                cmdclickTmpUpdateMonitorFileName
+            ).absolutePath,
             updateMonitorContents
 
         )

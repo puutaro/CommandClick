@@ -22,8 +22,10 @@ object AppHistoryAdminEvent {
     ): Boolean {
 
         FileSystems.updateLastModified(
-            UsePath.cmdclickAppHistoryDirAdminPath,
-            selectedScriptFileName
+            File(
+                UsePath.cmdclickAppHistoryDirAdminPath,
+                selectedScriptFileName
+            ).absolutePath
         )
         val selectedAppDirName = AppHistoryManager.getAppDirNameFromAppHistoryFileName(
             selectedScriptFileName
@@ -38,8 +40,10 @@ object AppHistoryAdminEvent {
             return false
         }
         FileSystems.updateLastModified(
-            UsePath.cmdclickAppDirAdminPath,
+            File(
+                UsePath.cmdclickAppDirAdminPath,
             selectedAppDirName + UsePath.JS_FILE_SUFFIX
+            ).absolutePath
         )
 
         val selectedAppShellFileName = AppHistoryManager
@@ -48,8 +52,10 @@ object AppHistoryAdminEvent {
             )
 
         val scriptContentsList = ReadText(
-            selectedAppDirPath,
-            selectedAppShellFileName
+            File(
+                selectedAppDirPath,
+                selectedAppShellFileName
+            ).absolutePath
         ).textToList()
         val updateEditExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
             scriptContentsList,
@@ -69,11 +75,12 @@ object AppHistoryAdminEvent {
             )
             return true
         }
+        val selectedAppShellFilePathObj = File(
+            selectedAppDirPath,
+            selectedAppShellFileName
+        )
         if(
-            !File(
-                selectedAppDirPath,
-                selectedAppShellFileName
-            ).isFile
+            !selectedAppShellFilePathObj.isFile
         ) {
             Toast.makeText(
                 fragment.context,
@@ -83,8 +90,7 @@ object AppHistoryAdminEvent {
             return false
         }
         FileSystems.updateLastModified(
-            selectedAppDirPath,
-            selectedAppShellFileName
+            selectedAppShellFilePathObj.absolutePath
         )
         val onShortCut = if(
             selectedAppShellFileName ==

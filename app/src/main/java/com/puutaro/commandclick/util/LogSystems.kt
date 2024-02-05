@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 import java.time.LocalDateTime
 
 object LogSystems {
@@ -15,8 +16,10 @@ object LogSystems {
     ){
         val st = Thread.currentThread().stackTrace[3]
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            sysLogFileName,
+            File(
+                cmdclickMonitorDirPath,
+                sysLogFileName
+            ).absolutePath,
             "### ${LocalDateTime.now()} ${st.className} ${st.methodName}\n${logContents}"
         )
     }
@@ -26,8 +29,10 @@ object LogSystems {
     ){
         val st = Thread.currentThread().stackTrace[3]
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            sysLogFileName,
+            File(
+                cmdclickMonitorDirPath,
+                sysLogFileName
+            ).absolutePath,
             "### ${LocalDateTime.now()} ${st.className} ${st.methodName} ERROR\n${errContents}"
         )
     }
@@ -37,8 +42,10 @@ object LogSystems {
     ){
         val st = Thread.currentThread().stackTrace[3]
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            sysLogFileName,
+            File(
+                cmdclickMonitorDirPath,
+                sysLogFileName
+            ).absolutePath,
             "### ${LocalDateTime.now()} ${st.className} ${st.methodName} WARNING\n${errContents}"
         )
     }

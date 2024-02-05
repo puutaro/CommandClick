@@ -42,14 +42,9 @@ class ListIndexArgsMaker(
                 else -> false
             }
         val settingMenuMapCon = when(isSettingMenuSettingFilePath){
-            true -> {
-                val parentDirPath = settingMenuSettingFilePathObj.parent
-                    ?: return emptyList()
-                SettingFile.read(
-                    parentDirPath,
-                    settingMenuSettingFilePathObj.name
+            true -> SettingFile.read(
+                    settingMenuSettingFilePathObj.absolutePath
                 )
-            }
             else -> String()
         }
         return MenuSettingTool.makeMenuMapForMenuList(

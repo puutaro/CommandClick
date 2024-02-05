@@ -36,13 +36,9 @@ object CmdVariableReplacer {
         if(
             !mainFannelPathObj.isFile
         ) return setReplaceVariableCompleteMap
-        val mainFannelDirPath = mainFannelPathObj.parent
-            ?: return setReplaceVariableCompleteMap
-        val mainFannelName = mainFannelPathObj.name
 
         val jsList = ReadText(
-            mainFannelDirPath,
-            mainFannelName
+            mainFannelPath
         ).textToList()
        val cmdValMap = CommandClickVariables.substituteVariableListFromHolder(
             jsList,

@@ -65,10 +65,12 @@ class CmdClickHistoryButtonEvent (
             cmdclickAppHistoryDirAdminPath
         )
         FileSystems.createFiles(
-            cmdclickAppHistoryDirAdminPath,
-            AppHistoryManager.makeAppHistoryFileNameForInit(
-                UsePath.cmdclickDefaultAppDirName,
-            )
+            File(
+                cmdclickAppHistoryDirAdminPath,
+                AppHistoryManager.makeAppHistoryFileNameForInit(
+                    UsePath.cmdclickDefaultAppDirName,
+                )
+            ).absolutePath
         )
         val historyList =  makeUpdateHistoryList()
         val historyListAdapter = FannelHistoryAdapter(
@@ -300,8 +302,10 @@ class CmdClickHistoryButtonEvent (
                 .firstOrNull()
                 ?: return
         FileSystems.removeFiles(
-            cmdclickAppHistoryDirAdminPath,
-            selectedDeleteFile,
+            File(
+                cmdclickAppHistoryDirAdminPath,
+                selectedDeleteFile,
+            ).absolutePath
         )
         historyListAdapter.historyList.remove(selectedHistoryFile)
         historyListAdapter.notifyDataSetChanged()
@@ -331,8 +335,10 @@ class CmdClickHistoryButtonEvent (
             !File(currentUrlHistoryPath).isFile
         ) return historyRow
         val urlTitleSource = ReadText(
-            appUrlSystemDirPath,
-            UsePath.cmdclickFirstHistoryTitle
+            File(
+                appUrlSystemDirPath,
+                UsePath.cmdclickFirstHistoryTitle
+            ).absolutePath
         ).textToList()
             .firstOrNull()
             ?.split("\t")

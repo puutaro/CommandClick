@@ -10,6 +10,7 @@ import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
+import java.io.File
 
 
 object DisplaySwitch {
@@ -37,8 +38,10 @@ private fun monitorOutput(
         terminalFragment.repeatOnLifecycle(Lifecycle.State.STARTED){
             var terminalContents = withContext(Dispatchers.IO){
                 val readText = ReadText(
-                    UsePath.cmdclickMonitorDirPath,
-                    currentMonitorFileName,
+                    File(
+                        UsePath.cmdclickMonitorDirPath,
+                        currentMonitorFileName,
+                    ).absolutePath
                 )
                 readText.readTextForHtml()
             }
@@ -66,8 +69,10 @@ private fun monitorOutput(
                     previousMilliTime = currentTime
                     val currentMonitorFileNameLast = terminalViewModel.currentMonitorFileName
                     val readTextLast = ReadText(
-                        UsePath.cmdclickMonitorDirPath,
-                        currentMonitorFileNameLast,
+                        File(
+                            UsePath.cmdclickMonitorDirPath,
+                            currentMonitorFileNameLast,
+                        ).absolutePath
                     )
                     val secondTerminalContents =
                         readTextLast

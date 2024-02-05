@@ -18,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayInputStream
+import java.io.File
 
 
 object WebViewClientSetter {
@@ -156,8 +157,10 @@ object WebViewClientSetter {
                             FdialogToolForTerm.howExitExecThisProcess(terminalFragment)
                         ) return@withContext
                         FileSystems.writeFile(
-                            appUrlSystemDirPath,
-                            UsePath.urlLoadFinished,
+                            File(
+                                appUrlSystemDirPath,
+                                UsePath.urlLoadFinished,
+                            ).absolutePath,
                             System.currentTimeMillis().toString()
                         )
                     }

@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util
 
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.BufferedReader
+import java.io.File
 
 object StreamWrapper {
     fun writeByReader(
@@ -15,15 +16,19 @@ object StreamWrapper {
                     line.trim().isEmpty()
                 ) return@forEachLine
                 FileSystems.updateFile(
-                    monitorDirPath,
-                    monitorFileName,
+                    File(
+                        monitorDirPath,
+                        monitorFileName,
+                    ).absolutePath,
                     line
                 )
             }
         } catch (e: Exception) {
             FileSystems.updateFile(
-                monitorDirPath,
-                monitorFileName,
+                File(
+                    monitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "## ${this::javaClass.name} ${e.toString()}"
             )
         }

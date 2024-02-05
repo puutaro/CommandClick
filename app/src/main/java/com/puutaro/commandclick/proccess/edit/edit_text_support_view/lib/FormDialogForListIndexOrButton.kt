@@ -31,6 +31,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class FormDialogForListIndexOrButton(
@@ -75,8 +76,10 @@ class FormDialogForListIndexOrButton(
         onSetting: String,
     ) {
         val scriptContents = ReadText(
-            parentDirPath,
-            selectedScriptName,
+            File(
+                parentDirPath,
+                selectedScriptName
+            ).absolutePath,
         ).textToList()
         terminalViewModel.onDialog = true
         CoroutineScope(Dispatchers.Main).launch {
@@ -228,8 +231,6 @@ class FormDialogForListIndexOrButton(
         terminalViewModel.onDialog = true
         returnValue = String()
 
-
-
         val confirmCancelButton =
             formDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.form_dialog_cancel
@@ -262,8 +263,10 @@ class FormDialogForListIndexOrButton(
                 )
             }
             FileSystems.writeFile(
-                parentDirPath,
-                selectedScriptName,
+                File(
+                    parentDirPath,
+                    selectedScriptName
+                ).absolutePath,
                 updateVirtualJsContentsList.joinToString("\n")
             )
             terminalViewModel.onDialog = false

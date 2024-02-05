@@ -66,8 +66,10 @@ class ToolbarButtonArgsMaker(
     val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
 
     private val currentScriptContentsList = ReadText(
-        currentAppDirPath,
-        currentScriptFileName
+        File(
+            currentAppDirPath,
+            currentScriptFileName
+        ).absolutePath
     ).textToList()
 
     val setReplaceVariableMap =
@@ -180,19 +182,12 @@ class ToolbarButtonArgsMaker(
                 else -> false
             }
         val settingMenuMapCon = when(isSettingMenuSettingFilePath){
-            true -> {
-                val parentDirPath = settingMenuSettingFilePathObj.parent
-                    ?: return emptyList()
-                SettingFile.read(
-                    parentDirPath,
-                    settingMenuSettingFilePathObj.name
-                )
-            }
-            else -> {
-                SettingFile.formSettingContents(
-                    makeToolbarbuttonMenuConHandler(fragment).split("\n")
-                )
-            }
+            true -> SettingFile.read(
+                settingMenuSettingFilePathObj.absolutePath
+            )
+            else -> SettingFile.formSettingContents(
+                makeToolbarbuttonMenuConHandler(fragment).split("\n")
+            )
         }
         return MenuSettingTool.makeMenuMapForMenuList(
             settingMenuMapCon,

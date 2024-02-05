@@ -8,7 +8,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
-import java.io.File
 
 object ExecRemoveForListIndexAdapter {
 
@@ -48,13 +47,6 @@ object ExecRemoveForListIndexAdapter {
         val removeTitleConList = removeItemLine.split("\t")
         if(removeTitleConList.size != 2) return
         val filePath = removeTitleConList.last()
-        val filePathObj = File(filePath)
-        val fileParentDirPath = filePathObj.parent
-            ?: return
-        val fileName = filePathObj.name
-        FileSystems.removeFiles(
-            fileParentDirPath,
-            fileName
-        )
+        FileSystems.removeFiles(filePath)
     }
 }

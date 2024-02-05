@@ -76,18 +76,14 @@ object ExecUpdateNoSaveUrlPaths {
         val settingsDirPath = noScrollSaveUrlsFilePathObj.parent
             ?: return
         FileSystems.createDirs(settingsDirPath)
-        val noScrollSaveUrlsFileName = noScrollSaveUrlsFilePathObj.name
-            ?: return
         val noScrollSaveUrlsFileCon =
             domain + "\n" + ReadText(
-                settingsDirPath,
-                noScrollSaveUrlsFileName
+                noScrollSaveUrlsFilePath
             ).textToList().filter {
                 it != domain
             }.joinToString("\n")
         FileSystems.writeFile(
-            settingsDirPath,
-            noScrollSaveUrlsFileName,
+            noScrollSaveUrlsFilePath,
             noScrollSaveUrlsFileCon
         )
         terminalFragment.noScrollSaveUrls = noScrollSaveUrlsFileCon.split("\n")

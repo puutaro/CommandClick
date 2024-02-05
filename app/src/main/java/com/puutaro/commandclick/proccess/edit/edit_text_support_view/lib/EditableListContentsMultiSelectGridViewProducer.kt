@@ -48,7 +48,6 @@ object EditableListContentsMultiSelectGridViewProducer {
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         val gridButtonView = Button(context)
         gridButtonView.text = gridButtonLabel
@@ -61,8 +60,7 @@ object EditableListContentsMultiSelectGridViewProducer {
                 buttonView ->
             val buttonContext = buttonView.context
             val editableSpinnerList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList().filter {
                 it.trim().isNotEmpty()
             }

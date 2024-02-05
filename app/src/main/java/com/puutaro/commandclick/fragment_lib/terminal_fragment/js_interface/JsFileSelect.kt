@@ -201,8 +201,10 @@ class JsFileSelect(
                 return@setOnClickListener
             }
             FileSystems.removeFiles(
-                targetDirPath,
-                editFileNameForDialog
+                File(
+                    targetDirPath,
+                    editFileNameForDialog
+                ).absolutePath
             )
             Toast.makeText(
                 context,
@@ -264,8 +266,10 @@ class JsFileSelect(
             "${targetDirPath}/${renameFileNameOkForDialog}",
         )
         FileSystems.removeFiles(
-            targetDirPath,
-            editFileNameForDialog
+            File(
+                targetDirPath,
+                editFileNameForDialog
+            ).absolutePath
         )
         updateScriptFile(
             parentDirPath,
@@ -283,11 +287,12 @@ class JsFileSelect(
         scriptFileName: String,
         replaceString: String
     ){
+        val scriptFilePathObj = File(
+            parentDirPath,
+            scriptFileName
+        )
         if(
-            !File(
-                parentDirPath,
-                scriptFileName
-            ).isFile
+            !scriptFilePathObj.isFile
         ) {
             Toast.makeText(
                 context,
@@ -298,16 +303,14 @@ class JsFileSelect(
         }
         val jsScript = JsScript(terminalFragment)
         val scriptContents = ReadText(
-            parentDirPath,
-            scriptFileName
+            scriptFilePathObj.absolutePath
         ).readText()
         val replaceContents = jsScript.replaceCommandVariable(
             scriptContents,
             replaceString,
         )
         FileSystems.writeFile(
-            parentDirPath,
-            scriptFileName,
+            scriptFilePathObj.absolutePath,
             replaceContents
         )
     }

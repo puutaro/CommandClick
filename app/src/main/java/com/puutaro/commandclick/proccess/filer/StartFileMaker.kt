@@ -43,8 +43,6 @@ object StartFileMaker {
     ){
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
         CoroutineScope(Dispatchers.IO).launch {
-        }
-        CoroutineScope(Dispatchers.IO).launch {
             val urlFileSystems = UrlFileSystems()
             withContext(Dispatchers.IO) {
                 urlFileSystems.getFannelList()
@@ -83,11 +81,12 @@ object StartFileMaker {
         fanneName: String,
         assetsRelativePath: String
     ){
+        val fannelPathObj = File(
+            currentAppDirPath,
+            fanneName
+        )
         if(
-            File(
-                currentAppDirPath,
-                fanneName
-            ).isFile
+            fannelPathObj.isFile
         ) return
         val context = fragment.context
         val content = AssetsFileManager.readFromAssets(
@@ -95,8 +94,7 @@ object StartFileMaker {
             assetsRelativePath
         )
         FileSystems.writeFile(
-            currentAppDirPath,
-            fanneName,
+            fannelPathObj.absolutePath,
             content
         )
     }
@@ -121,13 +119,9 @@ private object InitSettingListFile {
         if(
             settingListFilePathObj.isFile
         ) return
-        val settingListDirPath = settingListFilePathObj.parent
-            ?: return
-        val settingListFileName = settingListFilePathObj.name
         val contents = settingConList.joinToString("\n")
         FileSystems.writeFile(
-            settingListDirPath,
-            settingListFileName,
+            settingListFilePathObj.absolutePath,
             contents
         )
     }
@@ -147,13 +141,8 @@ private fun makeCmdTerminalListFile(
     if(
         listFilePathObj.isFile
     ) return
-    val listFileDirPath = listFilePathObj.parent
-        ?: return
-    val listFileName = listFilePathObj.name
-        ?: return
     FileSystems.writeFile(
-        listFileDirPath,
-        listFileName,
+        listFilePath,
         AssetsFileManager.readFromAssets(
             context,
             targetAssetsFilePath

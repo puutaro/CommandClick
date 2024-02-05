@@ -6,6 +6,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.dialog.DialogObject
 import com.puutaro.commandclick.util.file.NoFileChecker
+import java.io.File
 
 object ExecItemCatForListIndex {
 
@@ -31,8 +32,10 @@ object ExecItemCatForListIndex {
             )
         ) return
         val scriptContents = ReadText(
-            parentDirPath,
-            selectedItem
+            File(
+                parentDirPath,
+                selectedItem
+            ).absolutePath
         ).readText()
         val displayContents = "\tpath: ${parentDirPath}/${selectedItem}" +
                 "\n---\n${scriptContents}"

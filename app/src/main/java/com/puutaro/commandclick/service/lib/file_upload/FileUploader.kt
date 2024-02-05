@@ -66,8 +66,10 @@ object CopyFannelServer {
             val client = withContext(Dispatchers.IO) {
                 try {
                     FileSystems.writeFile(
-                        cmdclickTempFileTransferServiceDirPath,
-                        transferServiceAcceptTimeTxtName,
+                        File(
+                            cmdclickTempFileTransferServiceDirPath,
+                            transferServiceAcceptTimeTxtName
+                        ).absolutePath,
                         LocalDateTime.now().toString()
                     )
                     LogSystems.stdSys(

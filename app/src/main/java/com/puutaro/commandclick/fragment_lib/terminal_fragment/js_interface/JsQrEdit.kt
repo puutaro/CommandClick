@@ -43,8 +43,10 @@ class JsQrEdit(
             qrCon
         )
         FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qr.txt",
+            File(
+                UsePath.cmdclickDefaultAppDirPath,
+                "qr.txt",
+            ).absolutePath,
             "qrCon: ${qrCon}\n\n" +
                     "qrMap: ${qrMap}"
         )
@@ -64,13 +66,8 @@ class JsQrEdit(
         val broadcastIntent = createBroadcastIntentForQr(
             broadcastIntentMapStr,
         )
-        val fannelPathObj = File(qrConFilePath)
-        val parentDirPath = fannelPathObj.parent
-            ?: return
-        val qrConFileName = fannelPathObj.name
         val qrConWithNewLine = ReadText(
-            parentDirPath,
-            qrConFileName
+            qrConFilePath
         ).readText()
         val qrMap = QrSchema.makeQrMapFromCon(
             qrConWithNewLine
@@ -125,10 +122,6 @@ class JsQrEdit(
         qrConWithNewLine: String,
         qrMap: Map<String, String>
     ) {
-        val qrConFilePathObj = File(qrConFilePath)
-        val parentDirPath = qrConFilePathObj.parent
-            ?: return
-        val qrConFileName = qrConFilePathObj.name
         val fannelDirPath = CcPathTool.getMainFannelDirPath(qrConFilePath)
         val listSaveDirPath = "${fannelDirPath}/cmdclickQrList"
         val resultKeyValueConSrc = makeResultKeyValueConSrc(
@@ -166,8 +159,7 @@ class JsQrEdit(
             updateQrCon.isEmpty()
         ) return
         FileSystems.writeFile(
-            parentDirPath,
-            qrConFileName,
+            qrConFilePath,
             updateQrCon
         )
     }

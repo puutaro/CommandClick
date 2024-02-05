@@ -57,8 +57,10 @@ internal fun deleteInvalieMonitorFile(){
             validMonitorFileList.contains(it)
         ) return@forEach
         FileSystems.removeFiles(
-            cmdclickMonitorDirPath,
-            it
+            File(
+                cmdclickMonitorDirPath,
+                it
+            ).absolutePath
         )
     }
 }

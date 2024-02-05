@@ -51,8 +51,7 @@ object FannelListVariable {
         val firstDescriptionLineRange = 50
         return fannelsListSource.map {
             val fannelConList = ReadText(
-                cmdclickFannelItselfDirPath,
-                it
+                File(cmdclickFannelItselfDirPath, it).absolutePath,
             ).textToList()
             val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
                 fannelConList,

@@ -21,8 +21,9 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
-    object AddFileForEdit {
+object AddFileForEdit {
 
     private var promptDialog: Dialog? = null
 
@@ -141,8 +142,10 @@ import com.puutaro.commandclick.util.file.FileSystems
                 extraMap,
             )
             FileSystems.writeFile(
-                parentDirPath,
-                compFileName,
+                File(
+                    parentDirPath,
+                    compFileName
+                ).absolutePath,
                 String()
             )
             broadcastIntent?.let {

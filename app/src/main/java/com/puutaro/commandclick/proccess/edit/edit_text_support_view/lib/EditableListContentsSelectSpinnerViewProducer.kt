@@ -83,11 +83,9 @@ object EditableListContentsSelectSpinnerViewProducer {
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         val editableSpinnerList = ReadText(
-            parentDir,
-            listFileName
+            listContentsFilePath
         ).textToList().filter {
             it.trim().isNotEmpty()
         }
@@ -110,8 +108,7 @@ object EditableListContentsSelectSpinnerViewProducer {
         insertSpinner.setOnTouchListener(View.OnTouchListener {
                 v, event ->
             val currentSpinnerList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList().filter {
                 it.trim().isNotEmpty()
             }
@@ -129,8 +126,7 @@ object EditableListContentsSelectSpinnerViewProducer {
                 val selectedItem = adapter.getItem(pos)
                     ?: return
                 val currentSpinnerList = ReadText(
-                    parentDir,
-                    listFileName
+                    listContentsFilePath
                 ).textToList().filter {
                     it.trim().isNotEmpty()
                    }
@@ -145,8 +141,7 @@ object EditableListContentsSelectSpinnerViewProducer {
                     }
                 }
                 FileSystems.writeFile(
-                    parentDir,
-                    listFileName,
+                    listContentsFilePath,
                     updateListContents
                         .take(listLimit)
                         .joinToString("\n")

@@ -6,7 +6,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
-import java.io.File
 
 object ExecSwitcherForListIndexAdapter {
 
@@ -31,13 +30,8 @@ object ExecSwitcherForListIndexAdapter {
                 sortType,
                 listIndexList
             )
-        val tsvPathObj = File(tsvPath)
-        val tsvParentDirPath = tsvPathObj.parent
-            ?: return
-        val tsvName = tsvPathObj.name
         val curTsvConList = ReadText(
-            tsvParentDirPath,
-            tsvName
+            tsvPath
         ).textToList().filter {
             it.isNotEmpty()
         }

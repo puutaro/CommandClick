@@ -52,7 +52,6 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         val gridButtonView = Button(context)
         gridButtonView.text = gridButtonLabel
@@ -65,8 +64,7 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
                 buttonView ->
             val buttonContext = buttonView.context
             val editableSpinnerList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList().filter {
                 it.trim().isNotEmpty()
             }
@@ -158,9 +156,6 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
             currentAppDirPath,
             scriptName,
         )
-        val fileObj = File(listContentsFilePath)
-        val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
 
         gridView.setOnItemClickListener {
                 parent, View, pos, id
@@ -170,8 +165,7 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
             )
             alertDialog?.dismiss()
             val currentGridList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList()
             val selectedItem = currentGridList.get(pos)
 
@@ -181,8 +175,7 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
                             it != selectedItem
                         }
             FileSystems.writeFile(
-                parentDir,
-                listFileName,
+                listContentsFilePath,
                 updateListContents
                     .take(listLimit)
                     .joinToString("\n")

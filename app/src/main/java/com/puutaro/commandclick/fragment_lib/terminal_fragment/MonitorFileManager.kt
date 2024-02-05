@@ -37,13 +37,15 @@ object MonitorFileManager {
                             it
                         ).isFile
                     ) return@forEach
-                    val trimedMonitorCon = ReadText(
+                    val currentMonitorFilePath = File(
                         cmdclickMonitorDirPath,
                         it,
+                    ).absolutePath
+                    val trimedMonitorCon = ReadText(
+                        currentMonitorFilePath,
                     ).textToList().takeLast(trimSize).joinToString("\n")
                     FileSystems.writeFile(
-                        cmdclickMonitorDirPath,
-                        it,
+                        currentMonitorFilePath,
                         trimedMonitorCon,
                     )
                 }

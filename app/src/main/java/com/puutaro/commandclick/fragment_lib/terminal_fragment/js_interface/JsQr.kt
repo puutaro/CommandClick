@@ -125,14 +125,11 @@ class JsQr(
         qrSrcFilePath: String,
         qrSrcMapStr: String,
     ){
-        val arSrcMapCon = qrSrcMapStr.split("|").map{it.trim()}.joinToString("\n")
-        val pathObj = File(qrSrcFilePath)
-        val parentDirPath = pathObj.parent
-            ?: return
-        val qrSrcFileName = pathObj.name
+        val arSrcMapCon = qrSrcMapStr.split("|")
+            .map{ it.trim() }
+            .joinToString("\n")
         FileSystems.writeFile(
-            parentDirPath,
-            qrSrcFileName,
+            qrSrcFilePath,
             arSrcMapCon,
         )
     }
@@ -192,8 +189,10 @@ class JsQr(
             val qrBitMap = QrLogo.toBitMapWrapper(qrDrawable)
                 ?: return
             FileSystems.savePngFromBitMap(
-                UsePath.cmdclickTempDownloadDirPath,
-                "qr.png",
+                File(
+                    UsePath.cmdclickTempDownloadDirPath,
+                "qr.png"
+                ).absolutePath,
                 qrBitMap
             )
         }catch(e: Exception){
@@ -231,13 +230,8 @@ class JsQr(
                 ) ?: return
         val qrBitMap = QrLogo.toBitMapWrapper(drawable)
             ?: return
-        val savePathObj = File(savePath)
-        val parentDirPath = savePathObj.parent
-            ?: return
-        val imageFileName = savePathObj.name
         FileSystems.savePngFromBitMap(
-            parentDirPath,
-            imageFileName,
+            savePath,
             qrBitMap
         )
 
@@ -406,8 +400,10 @@ class JsQr(
             val qrBitMap = QrLogo.toBitMapWrapper(qrLogoDrawable)
                 ?: return
             FileSystems.savePngFromBitMap(
-                UsePath.cmdclickTempDownloadDirPath,
-                "qr.png",
+                File(
+                    UsePath.cmdclickTempDownloadDirPath,
+                "qr.png"
+                ).absolutePath,
                 qrBitMap
             )
         }catch(e: Exception){

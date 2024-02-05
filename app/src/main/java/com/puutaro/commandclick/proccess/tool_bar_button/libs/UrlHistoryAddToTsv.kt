@@ -20,6 +20,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.tsv.TsvTool
+import java.io.File
 
 
 class UrlHistoryAddToTsv (
@@ -30,7 +31,6 @@ class UrlHistoryAddToTsv (
     private val context = editFragment.context
     private var urlHistoryToTsvDialog: Dialog? = null
     private val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
-    private val toolbarButtonConfigMap = toolbarButtonArgsMaker.toolbarButtonConfigMap
 
     fun invoke(){
         if(
@@ -141,13 +141,15 @@ class UrlHistoryAddToTsv (
             SharePrefferenceSetting.current_app_dir
         )
 
-        val urlHistoryParentDirPath = listOf(
+        val urlHistoryParentDirPath = File(
             currentAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
-        ).joinToString("/")
+        ).absolutePath
         val srcTsvCon = ReadText(
-            urlHistoryParentDirPath,
-            UsePath.cmdclickUrlHistoryFileName,
+            File(
+                urlHistoryParentDirPath,
+                UsePath.cmdclickUrlHistoryFileName,
+            ).absolutePath
         ).textToList().let {
             TsvTool.uniqByTitle(it)
         }.take(historyFirstExtractNum).joinToString("\n")

@@ -115,8 +115,7 @@ object HtmlLauncher{
                     "const extraLabel = \"${extraLabel}\";",
                 )
         FileSystems.writeFile(
-            parentDir,
-            htmlFileName,
+            htmlFilePath,
             htmlContents
         )
         if(

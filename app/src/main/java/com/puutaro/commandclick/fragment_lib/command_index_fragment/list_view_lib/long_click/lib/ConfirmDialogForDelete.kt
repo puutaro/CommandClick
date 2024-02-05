@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 object ConfirmDialogForDelete {
@@ -28,8 +29,7 @@ object ConfirmDialogForDelete {
 
         val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
         val shellContents = ReadText(
-            currentAppDirPath,
-            scriptFileName
+            File(currentAppDirPath, scriptFileName).absolutePath
         ).readText()
         val displayContents = "\tpath: ${currentAppDirPathTermux}/${scriptFileName}" +
                 "\n---\n${shellContents}"
@@ -86,8 +86,10 @@ object ConfirmDialogForDelete {
         confirmOkButtonView?.setOnClickListener {
             addConfirmDialog?.dismiss()
             FileSystems.removeFiles(
-                currentAppDirPath,
-                scriptFileName,
+                File(
+                    currentAppDirPath,
+                    scriptFileName,
+                ).absolutePath
             )
             val fannelDirName = scriptFileName
                 .removeSuffix(

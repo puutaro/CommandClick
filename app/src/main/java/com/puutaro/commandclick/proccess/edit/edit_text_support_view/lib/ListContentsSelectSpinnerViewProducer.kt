@@ -73,11 +73,9 @@ object ListContentsSelectSpinnerViewProducer {
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         val editableSpinnerList = ReadText(
-            parentDir,
-            listFileName
+            listContentsFilePath
         ).textToList().filter {
             it.trim().isNotEmpty()
         }
@@ -99,8 +97,7 @@ object ListContentsSelectSpinnerViewProducer {
         insertSpinner.setOnTouchListener(View.OnTouchListener {
                 v, event ->
             val currentEditableSpinnerList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList().filter {
                 it.trim().isNotEmpty()
             }
@@ -117,8 +114,7 @@ object ListContentsSelectSpinnerViewProducer {
                 val selectedItem = adapter.getItem(pos)
                     ?: return
                 val currentSpinnerList = ReadText(
-                    parentDir,
-                    listFileName
+                    listContentsFilePath
                 ).textToList().filter {
                     it.trim().isNotEmpty()
                 }
@@ -126,8 +122,7 @@ object ListContentsSelectSpinnerViewProducer {
                         it != selectedItem
                     }
                 FileSystems.writeFile(
-                    parentDir,
-                    listFileName,
+                    listContentsFilePath,
                     updateListContents
                         .take(listLimit)
                         .joinToString("\n")
@@ -182,11 +177,8 @@ object ListContentsSelectSpinnerViewProducer {
                     readSharePreferenceMap,
                     SharePrefferenceSetting.current_fannel_name                )
                 val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))
-                val compListFileParentDirPath = compListFilePathObj.parent
-                    ?: return
                 ReadText(
-                    compListFileParentDirPath,
-                    compListFilePathObj.name
+                    compListFilePathObj.absolutePath
                 ).readText().let {
                     SetReplaceVariabler.execReplaceByReplaceVariables(
                         it,
@@ -302,13 +294,8 @@ object ListContentsSelectSpinnerViewProducer {
             !listContentsFilePath.startsWith(currentAppDirPath)
             || listContentsFilePath == currentAppDirPath
         ) return
-        val listContentsFilePathObj = File(listContentsFilePath)
-        val listContentsParentDirPath = listContentsFilePathObj.parent
-            ?: return
-        val listContentsFileName = listContentsFilePathObj.name
         val listContentsList = ReadText(
-            listContentsParentDirPath,
-            listContentsFileName
+            listContentsFilePath
         ).textToList()
         if(
             listContentsList.contains(deleteStr)
@@ -317,8 +304,7 @@ object ListContentsSelectSpinnerViewProducer {
             it != deleteStr
         }
         FileSystems.writeFile(
-            listContentsParentDirPath,
-            listContentsFileName,
+            listContentsFilePath,
             insertListConList.joinToString("\n")
         )
     }

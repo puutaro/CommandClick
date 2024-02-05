@@ -27,25 +27,19 @@ class JsEdit(
         updateVariableValue: String,
     ){
         val jsScript = JsScript(terminalFragment)
-        val fannelScriptPathObj = File(fannelScriptPath)
-        val parentDirPath = fannelScriptPathObj.parent
-            ?: return
-        val scriptName = fannelScriptPathObj.name
         updateEditText(
             targetVariableName,
             updateVariableValue
         )
         val jsContents = ReadText(
-            parentDirPath,
-            scriptName
+            fannelScriptPath
         ).readText()
         val updateJsContents = jsScript.replaceCommandVariable(
             jsContents,
             "${targetVariableName}=${updateVariableValue}"
         )
         FileSystems.writeFile(
-            parentDirPath,
-            scriptName,
+            fannelScriptPath,
             updateJsContents
         )
     }
@@ -110,19 +104,14 @@ class JsEdit(
             ).show()
             return
         }
-        val parentDir = editPathObj.parent
-            ?: return
-        val editFileName = editPathObj.name
         val removedUrlList = ReadText(
-            parentDir,
-            editFileName
+            editPath
         ).textToList().filter {
             val path = it.split("\t").lastOrNull()
             path != removeUri
         }.joinToString("\n")
         FileSystems.writeFile(
-            parentDir,
-            editFileName,
+            editPath,
             removedUrlList
         )
     }

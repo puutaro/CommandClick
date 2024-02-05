@@ -7,14 +7,12 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
-import java.io.File
 
 class JsValEdit(
     private val terminalFragment: TerminalFragment
 ) {
 
     private val context = terminalFragment.context
-    private val activity = terminalFragment.activity
     private val okReturnCode = "0"
     private val cancelReturnCode = "1"
     private val readSharePreffernceMap = terminalFragment.readSharedPreferences
@@ -62,10 +60,6 @@ class JsValEdit(
         setVariableTypes: String,
         targetVariables: String,
     ): String {
-        val fannelPathObj = File(fannelPath)
-        val parentDirPath = fannelPathObj.parent
-            ?: return cancelReturnCode
-        val fannelName = fannelPathObj.name
         val resultKeyValueConSrc = JsDialog(terminalFragment).formDialog(
             title,
             setVariableTypes,
@@ -95,8 +89,7 @@ class JsValEdit(
         }
         val jsScript = JsScript(terminalFragment)
         val fcon = ReadText(
-            parentDirPath,
-            fannelName
+            fannelPath
         ).readText()
         val replacedCon =  jsScript.replaceCommandVariable(
             fcon,
@@ -109,8 +102,7 @@ class JsValEdit(
             replacedCon.isEmpty()
         ) return okReturnCode
         FileSystems.writeFile(
-            parentDirPath,
-            fannelName,
+            fannelPath,
             replacedCon
         )
         return okReturnCode

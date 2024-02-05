@@ -17,7 +17,7 @@ object ConfigMapTool {
         defaultConfigMapStr: String,
         readSharePreffernceMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
-    ): Map<String, String>? {
+    ): Map<String, String> {
         val propertySeparator = ","
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -35,11 +35,8 @@ object ConfigMapTool {
         val settingMenuSettingFilePathObj = File(settingMenuSettingFilePath)
         return when (settingMenuSettingFilePathObj.isFile) {
             true -> {
-                val parentDirPath = settingMenuSettingFilePathObj.parent
-                    ?: return null
                 SettingFile.read(
-                    parentDirPath,
-                    settingMenuSettingFilePathObj.name
+                    settingMenuSettingFilePathObj.absolutePath
                 )
             }
 
@@ -74,7 +71,7 @@ object ConfigMapTool {
         defaultConfigMapStr: String,
         readSharePreffernceMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
-    ): Map<String, String>? {
+    ): Map<String, String> {
         val propertySeparator = ","
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -97,12 +94,8 @@ object ConfigMapTool {
                     currentScriptFileName,
                     setReplaceVariableMap,
                 )
-                val settingButtonConfigPathObj = File(settingButtonConfigPath)
-                val parentDirPath = settingButtonConfigPathObj.parent
-                    ?: return null
                 SettingFile.read(
-                    parentDirPath,
-                    settingButtonConfigPathObj.name
+                    settingButtonConfigPath
                 )
             }
             settingValCon.isNotEmpty() ->

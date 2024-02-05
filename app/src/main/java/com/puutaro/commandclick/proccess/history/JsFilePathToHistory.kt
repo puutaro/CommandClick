@@ -26,13 +26,15 @@ object JsFilePathToHistory {
                 jsFullPathObj.name
             )
         if(isFDialogFannelUri) return
-        val insertedHistoryContentsList = listOf("${jsFullPath}\t${jsFullPath}") + ReadText(
+        val cmdclickUrlHistoryFilePath = File(
             appUrlSystemPath,
             cmdclickUrlHistoryFileName
+        ).absolutePath
+        val insertedHistoryContentsList = listOf("${jsFullPath}\t${jsFullPath}") + ReadText(
+            cmdclickUrlHistoryFilePath
         ).textToList()
         FileSystems.writeFile(
-            appUrlSystemPath,
-            cmdclickUrlHistoryFileName,
+            cmdclickUrlHistoryFilePath,
             insertedHistoryContentsList.joinToString("\n")
         )
     }

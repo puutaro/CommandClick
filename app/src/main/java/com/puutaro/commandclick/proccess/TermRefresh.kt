@@ -2,20 +2,19 @@ package com.puutaro.commandclick.proccess
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 class TermRefresh {
     companion object {
         fun refresh(
             currentMonitorFileName: String
         ){
-            FileSystems.removeFiles(
+            val currentMonitorFilePath = File(
                 UsePath.cmdclickMonitorDirPath,
-                currentMonitorFileName,
-            )
-            FileSystems.createFiles(
-                UsePath.cmdclickMonitorDirPath,
-                currentMonitorFileName,
-            )
+                currentMonitorFileName
+            ).absolutePath
+            FileSystems.removeFiles(currentMonitorFilePath)
+            FileSystems.createFiles(currentMonitorFilePath)
         }
     }
 }

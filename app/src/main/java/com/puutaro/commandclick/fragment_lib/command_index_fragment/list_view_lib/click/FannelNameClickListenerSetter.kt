@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 object FannelNameClickListenerSetter {
@@ -76,8 +77,7 @@ object FannelNameClickListenerSetter {
                     cmdIndexFragment.tag ?: String()
 
                 val shellContentsList = ReadText(
-                    currentAppDirPath,
-                    selectedShellFileName
+                    File(currentAppDirPath, selectedShellFileName).absolutePath
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     cmdIndexFragment,
@@ -176,8 +176,10 @@ private fun updateLastModifiedListView (
     selectecJsFileName: String
 ) {
     FileSystems.updateLastModified(
-        currentAppDirPath,
-        selectecJsFileName
+        File(
+            currentAppDirPath,
+            selectecJsFileName
+        ).absolutePath
     )
     CommandListManager.execListUpdateForCmdIndex(
         currentAppDirPath,

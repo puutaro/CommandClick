@@ -247,8 +247,10 @@ object QrDialogMethod {
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO){
                 FileSystems.checkSum(
-                    qrLogoParentDirPath,
-                    qrLogoName
+                    File(
+                        qrLogoParentDirPath,
+                        qrLogoName
+                    ).absolutePath
                 )
             }
             withContext(Dispatchers.IO) {
@@ -327,10 +329,7 @@ object QrDialogMethod {
         val qrLogoName = qrLogoPathObj.name
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO){
-                FileSystems.checkSum(
-                    qrLogoParentDirPath,
-                    qrLogoName
-                )
+                FileSystems.checkSum(qrLogoPath)
             }
             withContext(Dispatchers.IO) {
                 qrLogo.createAndSaveFromDesignMap(
@@ -359,8 +358,7 @@ object QrDialogMethod {
                 }
             }
             val updateChecksum = FileSystems.checkSum(
-                qrLogoParentDirPath,
-                qrLogoName
+                qrLogoPath
             )
             if(
                 updateChecksum == previousChecksum
@@ -396,19 +394,17 @@ object QrDialogMethod {
         qrLogoParentDirPath: String,
         qrLogoName: String
     ): Boolean {
-        val updateChecksum = FileSystems.checkSum(
+        val qrLogoPath = File(
             qrLogoParentDirPath,
             qrLogoName
-        )
+        ).absolutePath
+        val updateChecksum = FileSystems.checkSum(qrLogoPath)
         return when(
             updateChecksum != previousChecksum
         ) {
             true -> {
                 delay(100)
-                val confirmUpdateChecksum = FileSystems.checkSum(
-                    qrLogoParentDirPath,
-                    qrLogoName
-                )
+                val confirmUpdateChecksum = FileSystems.checkSum(qrLogoPath)
                 if(
                     confirmUpdateChecksum == updateChecksum
                 ) return true

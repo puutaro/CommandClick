@@ -96,8 +96,10 @@ class BusyboxExecutor(
         val functionName = object{}.javaClass.enclosingMethod?.name
         if (!busyboxWrapper.busyboxIsPresent()) {
             return FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "${className} ${functionName} no busybox"
             )
         }
@@ -123,8 +125,10 @@ class BusyboxExecutor(
             )
         } catch (err: Exception) {
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "$err"
             )
         }
@@ -174,24 +178,30 @@ class BusyboxExecutor(
         when {
             !busyboxWrapper.busyboxIsPresent() -> {
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
+                    File(
+                        cmdclickMonitorDirPath,
+                        monitorFileName
+                    ).absolutePath,
                     "${className} ${functionName}, no busybox"
                 )
                 return
             }
             !busyboxWrapper.prootIsPresent() -> {
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
+                    File(
+                        cmdclickMonitorDirPath,
+                        monitorFileName
+                    ).absolutePath,
                     "${className} ${functionName}, no proot cmd"
                 )
                 return
             }
             !busyboxWrapper.executionScriptIsPresent() -> {
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
+                    File(
+                        cmdclickMonitorDirPath,
+                        monitorFileName
+                    ).absolutePath,
                     "${className} ${functionName}, no execution script"
                 )
                 return
@@ -228,8 +238,10 @@ class BusyboxExecutor(
             )
         } catch (err: Exception) {
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "${className} ${functionName} ${err}"
             )
         }
@@ -256,8 +268,10 @@ class BusyboxExecutor(
     ){
         if(exitCode == 0) return
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
+            File(
+                cmdclickMonitorDirPath,
+                monitorFileName
+            ).absolutePath,
             "${className} ${functionName} failure ${process.exitValue()}"
         )
     }
@@ -273,8 +287,10 @@ class BusyboxExecutor(
                 line.trim().isEmpty()
             ) return@forEachLine
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorName
+                ).absolutePath,
                 line
             )
         }
@@ -288,8 +304,10 @@ class BusyboxExecutor(
                 line.trim().isEmpty()
             ) return@forEachLine
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorName
+                ).absolutePath,
                 line
             )
         }
@@ -321,8 +339,10 @@ class BusyboxExecutor(
                 line.trim().isEmpty()
             ) return@forEachLine
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorName
+                ).absolutePath,
                 line
             )
         }

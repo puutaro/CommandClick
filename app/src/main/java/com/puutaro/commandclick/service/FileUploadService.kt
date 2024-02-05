@@ -28,6 +28,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.net.ServerSocket
 import java.time.LocalDateTime
 
@@ -160,8 +161,10 @@ class FileUploadService: Service() {
         fileUploadJob = CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
                 FileSystems.writeFile(
-                    cmdclickTempFileUploadServiceDirPath,
-                    uploadServiceAcceptTimeTxtName,
+                    File(
+                        cmdclickTempFileUploadServiceDirPath,
+                        uploadServiceAcceptTimeTxtName
+                    ).absolutePath,
                     LocalDateTime.now().toString()
                 )
             }

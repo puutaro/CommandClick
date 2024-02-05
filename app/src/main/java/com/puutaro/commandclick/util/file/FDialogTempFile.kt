@@ -125,8 +125,10 @@ object FDialogTempFile {
             SharePrefferenceSetting.current_fannel_name.name to currentFdialogFannelName
         )
         FileSystems.removeFiles(
-            fdialogDirPath,
-            fDialogSrcSharePrefTsv,
+            File(
+                fdialogDirPath,
+                fDialogSrcSharePrefTsv
+            ).absolutePath,
         )
         FreeDialogReflector.reflect(
             mainFannelSharePrefMap,
@@ -197,8 +199,7 @@ object FDialogTempFile {
             "${onUpdateLastModifyCmdValName}=\"${SettingVariableSelects.OnUpdateLastModifySelects.OFF.name}\"",
         )
         FileSystems.writeFile(
-            currentAppDirPath,
-            destiFDialogFannelName,
+            File(currentAppDirPath, destiFDialogFannelName).absolutePath,
             compFannelConWithOnUpdateLastModify
         )
         copyToFdialogDir(
@@ -233,9 +234,12 @@ object FDialogTempFile {
                 "${SharePrefferenceSetting.current_fannel_name.name}\t" +
                         currentFannelName,
             ).joinToString("\n")
-        FileSystems.writeFile(
+        val fDialogSrcSharePrefTsvPath = listOf(
             File(currentAppDirPath, destiFreedialogDirName).absolutePath,
             UsePath.fDialogSrcSharePrefTsv,
+        ).joinToString("/")
+        FileSystems.writeFile(
+            fDialogSrcSharePrefTsvPath,
             fDialogReflectToMainFannelSignalTsvCon
         )
     }
@@ -336,8 +340,10 @@ object FDialogTempFile {
         fdialogDirPath: String,
     ): Map<String, String> {
         return ReadText(
-            fdialogDirPath,
-            fDialogSrcSharePrefTsv,
+            File(
+                fdialogDirPath,
+                fDialogSrcSharePrefTsv
+            ).absolutePath,
         ).readText().replace("\t", "=").let {
             CmdClickMap.createMap(
                 it,

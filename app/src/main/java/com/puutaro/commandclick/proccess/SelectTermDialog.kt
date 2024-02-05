@@ -12,6 +12,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 object SelectTermDialog {
     private var subMenuDialog: Dialog? = null
@@ -108,8 +109,10 @@ object SelectTermDialog {
                         UsePath.cmdclickMonitorDirPath,
                     )
                     FileSystems.createFiles(
-                        UsePath.cmdclickMonitorDirPath,
-                        selectedSubMenu
+                        File(
+                            UsePath.cmdclickMonitorDirPath,
+                            selectedSubMenu
+                        ).absolutePath
                     )
                     terminalViewModel.currentMonitorFileName = selectedSubMenu
                     Toast.makeText(

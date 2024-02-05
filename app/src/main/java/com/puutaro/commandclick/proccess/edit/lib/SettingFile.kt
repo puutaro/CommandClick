@@ -6,12 +6,10 @@ import com.puutaro.commandclick.util.file.ReadText
 object SettingFile {
 
     fun read(
-        settingFileDirPath: String,
-        settingFileName: String,
+        settingFilePath: String,
     ): String {
         return ReadText(
-            settingFileDirPath,
-            settingFileName
+            settingFilePath
         ).textToList().let {
             formSettingContents(it)
         }

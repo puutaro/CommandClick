@@ -347,8 +347,10 @@ class QrScanner(
                     extraMap
                 )
                 FileSystems.writeFile(
-                    parentDirPath,
-                    compFileName,
+                    File(
+                        parentDirPath,
+                        compFileName
+                    ).absolutePath,
                     decodeText,
                 )
                 val insertLine = "${compFileName}\t${File(parentDirPath, compFileName).absolutePath}"
@@ -367,8 +369,10 @@ class QrScanner(
         decodeText: String
     ){
         FileSystems.writeFile(
-            currentAppDirPath,
-            fileName,
+            File(
+                currentAppDirPath,
+                fileName
+            ).absolutePath,
             decodeText
         )
         BroadcastSender.normalSend(

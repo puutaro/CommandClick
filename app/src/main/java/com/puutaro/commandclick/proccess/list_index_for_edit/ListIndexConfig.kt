@@ -19,12 +19,10 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Che
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
@@ -292,11 +290,8 @@ object ListIndexEditConfig {
             if (
                 !shellPathObj.isFile
             ) return@let compPrefixedFileName
-            val shellDirPath = shellPathObj.parent
-                ?: return@let compSuffixedFileName
             val shellCon = ReadText(
-                shellDirPath,
-                shellPathObj.name
+                shellPathObj.absolutePath
             ).readText().replace(
                 editTargetContents,
                 compSuffixedFileName,
@@ -376,11 +371,8 @@ object ListIndexEditConfig {
             if (
                 !shellPathObj.isFile
             ) return@let defaultTakeFileCon
-            val shellDirPath = shellPathObj.parent
-                ?: return@let defaultTakeFileCon
             val shellCon = ReadText(
-                shellDirPath,
-                shellPathObj.name
+                shellPathObj.absolutePath
             ).readText().replace(
                 editTargetContents,
                 descConByCut,

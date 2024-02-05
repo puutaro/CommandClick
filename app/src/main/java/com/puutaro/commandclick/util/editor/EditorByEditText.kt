@@ -19,6 +19,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import java.io.File
 import java.util.LinkedList
 
 object EditorByEditText {
@@ -154,8 +155,10 @@ object EditorByEditText {
             val editableText = editView?.text
                 ?: return@setOnClickListener
             FileSystems.writeFile(
-                dirPath,
-                fileName,
+                File(
+                    dirPath,
+                    fileName
+                ).absolutePath,
                 editableText.toString()
             )
             saveButton.imageTintList = fragment.context?.getColorStateList(R.color.gray_out)

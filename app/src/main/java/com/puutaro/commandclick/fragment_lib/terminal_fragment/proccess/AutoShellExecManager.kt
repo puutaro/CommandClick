@@ -8,6 +8,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object AutoShellExecManager {
 
@@ -23,8 +24,10 @@ object AutoShellExecManager {
         val currentAppDirPath = terminalFrgment.currentAppDirPath
 
         val jsContentsList = ReadText(
-            currentAppDirPath,
-            cmdclickStartupOrEndShellName
+            File(
+                currentAppDirPath,
+                cmdclickStartupOrEndShellName
+            ).absolutePath
         ).textToList()
         val languageType = LanguageTypeSelects.JAVA_SCRIPT
         val languageTypeToSectionHolderMap =

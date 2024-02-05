@@ -642,14 +642,9 @@ class WebViewJsDialog(
             ?.get(
                 listType
             ) ?: String()
-        val menuFilePathObj = File(menuFilePath)
-        val menuFileDirPath = menuFilePathObj.parent
-            ?: String()
-        val menuFileName = menuFilePathObj.name
         val commentOutMark = JavaScriptLoadUrl.commentOutMark
         return ReadText(
-            menuFileDirPath,
-            menuFileName
+            menuFilePath
         ).textToList().filter {
             val timeLine = it.trim()
             !timeLine.startsWith(commentOutMark)

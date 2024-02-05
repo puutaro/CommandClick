@@ -38,9 +38,7 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         ) ?: String()
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
-
 
         val insertButton = Button(context)
         insertButton.id = currentId + EditTextSupportViewId.BUTTON.id
@@ -56,8 +54,7 @@ object EditableListContentsMultiSeletctSpinnerViewProducer {
         insertButton.setOnClickListener {
                 innerButtonView ->
             val updatedEditableSpinnerList = ReadText(
-                parentDir,
-                listFileName
+                listContentsFilePath
             ).textToList().filter {
                 it.trim().isNotEmpty()
             }

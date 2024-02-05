@@ -51,8 +51,10 @@ object ExecShellScript {
 
         val shellContentsList = if(shellContentsListSource.isNullOrEmpty()) {
             ReadText(
-                recentAppDirPath,
-                selectedShellFileName
+                File(
+                    recentAppDirPath,
+                    selectedShellFileName
+                ).absolutePath
             ).textToList()
         } else shellContentsListSource
         val substituteSettingVariableList =
@@ -122,8 +124,10 @@ object ExecShellScript {
             == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
         ) return
         FileSystems.updateLastModified(
-            recentAppDirPath,
-            selectedShellFileName
+            File(
+                recentAppDirPath,
+                selectedShellFileName
+            ).absolutePath
         )
     }
 
@@ -243,13 +247,15 @@ private object ShellFilePathToHistory {
         if(
             !File(shellFullPath).isFile
         ) return
-        val insertedHistoryContentsList = listOf("${shellFullPath}\t${shellFullPath}") + ReadText(
+        val cmdclickUrlHistoryFilePath = File(
             appUrlSystemPath,
             cmdclickUrlHistoryFileName
+        ).absolutePath
+        val insertedHistoryContentsList = listOf("${shellFullPath}\t${shellFullPath}") + ReadText(
+            cmdclickUrlHistoryFilePath
         ).textToList()
         FileSystems.writeFile(
-            appUrlSystemPath,
-            cmdclickUrlHistoryFileName,
+            cmdclickUrlHistoryFilePath,
             insertedHistoryContentsList.joinToString("\n")
         )
     }

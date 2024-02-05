@@ -7,6 +7,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object UrlHistoryBackUp {
     fun backup(
@@ -21,15 +22,19 @@ object UrlHistoryBackUp {
             val cmdclickUrlHistoryFileName =
                 UsePath.cmdclickUrlHistoryFileName
             val urlHistoryConList = ReadText(
-                appUrlSystemDirPath,
-                cmdclickUrlHistoryFileName
+                File(
+                    appUrlSystemDirPath,
+                    cmdclickUrlHistoryFileName
+                ).absolutePath
             ).textToList()
             val urlHistoryConListSize = urlHistoryConList.size
             val cmdclickUrlHistoryBackupFileName =
                 UsePath.cmdclickUrlHistoryBackupFileName
             val urlHistoryBackupConList = ReadText(
-                appUrlSystemDirPath,
-                cmdclickUrlHistoryBackupFileName
+                File(
+                    appUrlSystemDirPath,
+                    cmdclickUrlHistoryBackupFileName
+                ).absolutePath
             ).textToList().take(leavesLineForTerm)
             val urlHistoryBuckupConListSize =
                 urlHistoryBackupConList.size
@@ -37,15 +42,19 @@ object UrlHistoryBackUp {
                 urlHistoryConListSize < urlHistoryBuckupConListSize
             ) {
                 FileSystems.writeFile(
-                    appUrlSystemDirPath,
-                    cmdclickUrlHistoryFileName,
+                    File(
+                        appUrlSystemDirPath,
+                        cmdclickUrlHistoryFileName,
+                    ).absolutePath,
                     urlHistoryBackupConList.joinToString("\n")
                 )
                 return@launch
             }
             FileSystems.writeFile(
-                appUrlSystemDirPath,
-                cmdclickUrlHistoryBackupFileName,
+                File(
+                    appUrlSystemDirPath,
+                    cmdclickUrlHistoryBackupFileName,
+                ).absolutePath,
                 urlHistoryConList.joinToString("\n")
             )
         }

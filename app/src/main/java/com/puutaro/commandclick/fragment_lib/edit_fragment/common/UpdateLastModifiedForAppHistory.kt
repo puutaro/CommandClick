@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import java.io.File
 
 object UpdateLastModifiedForAppHistory {
     fun update (
@@ -47,11 +48,13 @@ object UpdateLastModifiedForAppHistory {
             isFDialogFannel
         ) return
         FileSystems.updateLastModified(
-            UsePath.cmdclickAppHistoryDirAdminPath,
-            AppHistoryManager.makeAppHistoryFileNameForInit(
-                currentAppDirPath,
-                currentFannelName
-            )
+            File(
+                UsePath.cmdclickAppHistoryDirAdminPath,
+                AppHistoryManager.makeAppHistoryFileNameForInit(
+                    currentAppDirPath,
+                    currentFannelName
+                )
+            ).absolutePath
         )
     }
 }

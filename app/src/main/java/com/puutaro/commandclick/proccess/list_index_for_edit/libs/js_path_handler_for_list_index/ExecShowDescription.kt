@@ -6,6 +6,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object ExecShowDescription {
     fun desc(
@@ -29,8 +30,10 @@ object ExecShowDescription {
         ScriptFileDescription.show(
             editFragment,
             ReadText(
-                parentDirPath,
-                selectedItem
+                File(
+                    parentDirPath,
+                    selectedItem
+                ).absolutePath
             ).textToList(),
             parentDirPath,
             selectedItem

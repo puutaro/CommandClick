@@ -28,16 +28,9 @@ object SetupMonitoring {
         ) {
             return
         }
-        val ubuntuSupportDir =
-            ubuntuLaunchCompFile.parent
-                ?: return
-        val ubuntuLaunchCompFileName =
-            ubuntuLaunchCompFile.name
-                ?: return
         try {
             FileSystems.removeFiles(
-                ubuntuSupportDir,
-                ubuntuLaunchCompFileName
+                ubuntuLaunchCompFile.absolutePath
             )
         } catch (e: Exception){
             print("pass")

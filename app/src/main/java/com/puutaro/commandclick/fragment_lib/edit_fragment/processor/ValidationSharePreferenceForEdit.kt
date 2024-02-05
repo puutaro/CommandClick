@@ -99,8 +99,10 @@ class ValidationSharePreferenceForEdit(
             onShortcut != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         ) return true
         shellContentsList = ReadText(
-            checkCurrentAppDirPath,
-            recentShellFileName
+            File(
+                checkCurrentAppDirPath,
+                recentShellFileName
+            ).absolutePath
         ).textToList()
         val languageType =
             CommandClickVariables.judgeJsOrShellFromSuffix(

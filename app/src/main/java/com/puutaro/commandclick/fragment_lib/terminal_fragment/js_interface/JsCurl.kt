@@ -11,7 +11,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
-import java.io.File
 
 
 class JsCurl(
@@ -42,9 +41,6 @@ class JsCurl(
         header: String = String(),
         timeout: Int
     ) {
-        val file = File(path)
-        val parentDirPath = file.parent ?: return
-        val fileName = file.name
         CurlManager.get(
             mainUrl,
             queryParameter,
@@ -55,8 +51,7 @@ class JsCurl(
                 !CurlManager.isConnOk(it)
             ) return@let
             FileSystems.writeFromByteArray(
-                parentDirPath,
-                fileName,
+                path,
                 it
             )
         }
@@ -87,9 +82,6 @@ class JsCurl(
         bodyStr: String,
         timeout: Int
     ) {
-        val file = File(path)
-        val parentDirPath = file.parent ?: return
-        val fileName = file.name
         return CurlManager.post(
             mainUrl,
             header,
@@ -100,8 +92,7 @@ class JsCurl(
                 !CurlManager.isConnOk(it)
             ) return@let
             FileSystems.writeFromByteArray(
-                parentDirPath,
-                fileName,
+                path,
                 it
             )
         }

@@ -30,15 +30,15 @@ object WebUrlVariables {
     ){
         val urlHistoryContents = "CommandClick\t$commandClickFirstLaunchUrl\n"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+        val cmdclickUrlHistoryFilePathObj = File(
+            dirPath,
+            cmdclickUrlHistoryFileName
+        )
         if(
-            File(
-                dirPath,
-                cmdclickUrlHistoryFileName
-            ).isFile
+            cmdclickUrlHistoryFilePathObj.isFile
         ) return
         FileSystems.writeFile(
-            dirPath,
-            cmdclickUrlHistoryFileName,
+            cmdclickUrlHistoryFilePathObj.absolutePath,
             urlHistoryContents
         )
     }

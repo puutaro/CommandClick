@@ -17,6 +17,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object ExecItemDelete {
 
@@ -49,8 +50,10 @@ object ExecItemDelete {
         ) return
 
         val scriptContents = ReadText(
-            parentDirPath,
-            selectedItem
+            File(
+                parentDirPath,
+                selectedItem
+            ).absolutePath
         ).readText()
         val displayContents = "\tpath: ${parentDirPath}/${selectedItem}" +
                 "\n---\n${scriptContents}"
@@ -111,8 +114,10 @@ object ExecItemDelete {
         val context = editFragment.context
             ?: return
         FileSystems.removeFiles(
-            parentDirPath,
-            selectedItem
+            File(
+                parentDirPath,
+                selectedItem
+            ).absolutePath
         )
         val deleteFannelDir =
             CcPathTool.makeFannelDirName(

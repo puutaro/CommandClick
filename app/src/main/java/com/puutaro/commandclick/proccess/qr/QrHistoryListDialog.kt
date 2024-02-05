@@ -11,6 +11,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 class QrHistoryListDialog(
@@ -138,8 +139,10 @@ class QrHistoryListDialog(
         val qrHistoryParentDirPath = "$currentAppDirPath/${UsePath.cmdclickQrSystemDirRelativePath}"
         val cmdclickQrHistoryFileName = UsePath.cmdclickQrHistoryFileName
         return ReadText(
-            qrHistoryParentDirPath,
-            cmdclickQrHistoryFileName
+            File(
+                qrHistoryParentDirPath,
+                cmdclickQrHistoryFileName
+            ).absolutePath
         ).textToList()
     }
 }

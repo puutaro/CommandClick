@@ -16,6 +16,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 object ProcessManager {
 
@@ -88,8 +89,10 @@ object ProcessManager {
         val cmdclickTempProcessDirPath = UsePath.cmdclickTempProcessDirPath
         val cmdclickTempProcessesTxt = UsePath.cmdclickTempProcessesTxt
         FileSystems.writeFile(
-            cmdclickTempProcessDirPath,
-            cmdclickTempProcessesTxt,
+            File(
+                cmdclickTempProcessDirPath,
+                cmdclickTempProcessesTxt
+            ).absolutePath,
             makeProcessTypeList(ubuntuService).joinToString("\n")
         )
         val notificationManager = ubuntuService.getSystemService(Service.NOTIFICATION_SERVICE) as NotificationManager
@@ -117,8 +120,10 @@ object ProcessManager {
                 ubuntuService.sendBroadcast(processNumUpdateIntent)
                 val processTypeList = makeProcessTypeList(ubuntuService)
                 FileSystems.writeFile(
-                    cmdclickTempProcessDirPath,
-                    cmdclickTempProcessesTxt,
+                    File(
+                        cmdclickTempProcessDirPath,
+                        cmdclickTempProcessesTxt
+                    ).absolutePath,
                     processTypeList.joinToString("\n")
                 )
             }
@@ -145,13 +150,11 @@ object ProcessManager {
     fun removeLaunchCompFile(
         ubuntuService: UbuntuService
     ) {
-        val ubuntuLaunchCompFile = ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
-            ?:return
-        val supportDirPath = ubuntuLaunchCompFile.parent ?: return
-        val ubuntuLaunchCompFileName = ubuntuLaunchCompFile.name
+        val ubuntuLaunchCompFile =
+            ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile
+                ?:return
         FileSystems.removeFiles(
-            supportDirPath,
-            ubuntuLaunchCompFileName
+            ubuntuLaunchCompFile.absolutePath
         )
     }
 }

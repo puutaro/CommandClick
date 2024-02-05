@@ -94,11 +94,13 @@ object FileDownloader {
             "${CpFileKey.PATH.key}=$parentDirPath",
             "${CpFileKey.CURRENT_APP_DIR_PATH_FOR_SERVER.key}=${parendDirPathForUploader}"
         ).joinToString("\t")
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrReq.txt",
-            cpFileMapStr
-        )
+//        FileSystems.writeFile(
+//            File(
+//                UsePath.cmdclickDefaultAppDirPath,
+//                "qrReq.txt"
+//            ).absolutePath,
+//            cpFileMapStr
+//        )
         for (i in 1..3) {
             val fileListConSrcByteArray = CurlManager.post(
                 mainUrl,
@@ -173,16 +175,16 @@ object FileDownloader {
             getPathOrFannelRawName,
             fileListCon,
         )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrFileListCon.txt",
-            fileListCon
-        )
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrCpFileList.txt",
-            cpFileList.joinToString("\n")
-        )
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrFileListCon.txt",
+//            fileListCon
+//        )
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrCpFileList.txt",
+//            cpFileList.joinToString("\n")
+//        )
         if(
             cpFileList.isEmpty()
         ){
@@ -202,11 +204,11 @@ object FileDownloader {
         val parendDirPathForUploader =
             fileDownloadService.currentAppDirPathForUploader ?: String()
 
-        FileSystems.writeFile(
-            UsePath.cmdclickDefaultAppDirPath,
-            "qrProcessLog.txt",
-            String()
-        )
+//        FileSystems.writeFile(
+//            UsePath.cmdclickDefaultAppDirPath,
+//            "qrProcessLog.txt",
+//            String()
+//        )
         (cpFileList.indices).forEach {
             delay(100)
             val cpUploaderFilePath = cpFileList[it]
@@ -215,12 +217,12 @@ object FileDownloader {
                 currentAppDirPath,
                 commonDirPath
             )
-            FileSystems.updateFile(
-                UsePath.cmdclickDefaultAppDirPath,
-                "qrProcessLog.txt",
-                "cpUploaderFilePath: $cpUploaderFilePath\ncpDownloaderFilePath: $cpDownloaderFilePath\n" +
-                        "currentAppDirPath: $currentAppDirPath\ncommonDirPath: $commonDirPath"
-            )
+//            FileSystems.updateFile(
+//                UsePath.cmdclickDefaultAppDirPath,
+//                "qrProcessLog.txt",
+//                "cpUploaderFilePath: $cpUploaderFilePath\ncpDownloaderFilePath: $cpDownloaderFilePath\n" +
+//                        "currentAppDirPath: $currentAppDirPath\ncommonDirPath: $commonDirPath"
+//            )
             val con = withContext(Dispatchers.IO) {
                 getFileCon(
                     mainUrl,
@@ -240,10 +242,6 @@ object FileDownloader {
             val destiFileObj = withContext(Dispatchers.IO) {
                 File(cpDownloaderFilePath)
             }
-            val destiFileParentDirPath =  withContext(Dispatchers.IO) {
-                destiFileObj.parent
-                    ?: String()
-            }
             val destiFileName = withContext(Dispatchers.IO) {
                 destiFileObj.name
             }
@@ -254,8 +252,7 @@ object FileDownloader {
             CoroutineScope(Dispatchers.IO).launch {
                 withContext(Dispatchers.IO) {
                     FileSystems.writeFromByteArray(
-                        destiFileParentDirPath,
-                        destiFileName,
+                        cpDownloaderFilePath,
                         con
                     )
                 }

@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.qr
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object QrHistoryManager {
 
@@ -16,8 +17,10 @@ object QrHistoryManager {
             "${currentAppDirPath}/${UsePath.cmdclickQrSystemDirRelativePath}"
         val cmdclickQrHistoryFileName = UsePath.cmdclickQrHistoryFileName
         val qrHistoryList = ReadText(
-            qrHistoryParentDirPath,
-            cmdclickQrHistoryFileName
+            File(
+                qrHistoryParentDirPath,
+                cmdclickQrHistoryFileName
+            ).absolutePath
         ).textToList().take(qrHistoryLimitRowSize)
         val registerTitle = title.replace("\n", "").replace("\t", " ")
         val registerQUri = selectedQrUri.replace("\n", "")
@@ -28,8 +31,10 @@ object QrHistoryManager {
             registerTitle != hisTitle
         }
         FileSystems.writeFile(
-            qrHistoryParentDirPath,
-            cmdclickQrHistoryFileName,
+            File(
+                qrHistoryParentDirPath,
+                cmdclickQrHistoryFileName
+            ).absolutePath,
             registerHistoryList.joinToString("\n")
         )
     }

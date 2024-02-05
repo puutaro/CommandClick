@@ -11,6 +11,7 @@ import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import java.io.File
 
 object ScriptFileEdit {
     fun edit(
@@ -29,8 +30,10 @@ object ScriptFileEdit {
             )
         )
         val shellContentsList = ReadText(
-            currentAppDirPath,
-            shellScriptName
+            File(
+                currentAppDirPath,
+                shellScriptName
+            ).absolutePath,
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
             cmdIndexFragment,

@@ -26,6 +26,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 object AppProcessManager {
 
@@ -207,8 +208,10 @@ object AppProcessManager {
     private fun createProcessList(
     ): List<Pair<String, Int>> {
         val processListSrc = ReadText(
-            UsePath.cmdclickTempProcessDirPath,
-            UsePath.cmdclickTempProcessesTxt,
+            File(
+                UsePath.cmdclickTempProcessDirPath,
+                UsePath.cmdclickTempProcessesTxt
+            ).absolutePath,
         ).textToList()
         return processListSrc.filter {
                 it.isNotEmpty()
@@ -280,8 +283,10 @@ object AppProcessManager {
             )
         val settingVariable = CommandClickVariables.returnSettingVariableList(
             ReadText(
-                currentAppDirPath,
-                fannelName,
+                File(
+                    currentAppDirPath,
+                    fannelName
+                ).absolutePath,
             ).textToList(),
             languageType
         )

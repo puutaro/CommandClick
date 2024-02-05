@@ -46,8 +46,10 @@ object CopyAppDirEventForEdit {
             return
         }
         FileSystems.createFiles(
-            currentAppDirPath,
-            destiAppFileName
+            File(
+                currentAppDirPath,
+                destiAppFileName
+            ).absolutePath
         )
         FileSystems.copyDirectory(
             sourceAppDirPath,

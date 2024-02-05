@@ -94,13 +94,9 @@ object ExecSimpleEditItem {
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-        )
-        val tsvPathObj = File(tsvPath)
-        val tsvParentDirPath = tsvPathObj.parent ?: return
-        val tsvName = tsvPathObj.name
+        ) ?: return
         val isExist = ReadText(
-            tsvParentDirPath,
-            tsvName
+            tsvPath
         ).textToList().contains(selectedTsvLine)
         if(!isExist){
             Toast.makeText(
@@ -136,8 +132,10 @@ object ExecSimpleEditItem {
         listIndexUpdateIntent: Intent?
     ){
         val firstCon = ReadText(
-            parentDirPath,
-            selectedItem
+            File(
+                parentDirPath,
+                selectedItem
+            ).absolutePath
         ).readText()
         EditorByEditText.byEditText(
             editFragment,

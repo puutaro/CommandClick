@@ -19,8 +19,10 @@ object AppHistoryJsEvent {
     ): Boolean {
 
         FileSystems.updateLastModified(
-            UsePath.cmdclickAppHistoryDirAdminPath,
-            selectedScriptFileName
+            File(
+                UsePath.cmdclickAppHistoryDirAdminPath,
+                selectedScriptFileName
+            ).absolutePath
         )
         val selectedAppDirName = AppHistoryManager.getAppDirNameFromAppHistoryFileName(
             selectedScriptFileName

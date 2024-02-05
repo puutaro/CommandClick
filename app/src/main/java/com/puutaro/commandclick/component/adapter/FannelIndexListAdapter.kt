@@ -86,8 +86,7 @@ class FannelIndexListAdapter(
             }
             val fannelConList = withContext(Dispatchers.IO) {
                 ReadText(
-                    currentAppDirPath,
-                    fannelName
+                    File(currentAppDirPath, fannelName).absolutePath,
                 ).textToList().take(maxTakeSize)
             }
             val fannelDirName = CcPathTool.makeFannelDirName(fannelName)

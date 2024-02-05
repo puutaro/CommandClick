@@ -7,6 +7,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import java.io.File
 
 object SystemFannelLauncher {
     fun launch(
@@ -21,8 +22,10 @@ object SystemFannelLauncher {
                 Context.MODE_PRIVATE
             )
         val shellContentsList = ReadText(
-            parentDirPath,
-            fannelScriptName
+            File(
+                parentDirPath,
+                fannelScriptName
+            ).absolutePath
         ).textToList()
         val editFragmentTag = DecideEditTag(
             shellContentsList,

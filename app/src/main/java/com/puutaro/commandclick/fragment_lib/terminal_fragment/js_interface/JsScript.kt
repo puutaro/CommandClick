@@ -121,47 +121,32 @@ class JsScript(
     fun convertSetValPathToOneLine(
         setVariableFilePath: String,
     ): String {
-        val setVariableFilePathObj = File(setVariableFilePath)
-        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
-            ?: return String()
-        val setVariableTypesConfigName = setVariableFilePathObj.name
         return listOf(
             CommandClickScriptVariable.SET_VARIABLE_TYPE,
             SettingFile.read(
-                setVariableTypesConfigDirPath,
-                setVariableTypesConfigName
+                setVariableFilePath
             )
         ).filter{ it.isNotEmpty() }.joinToString("=")
     }
 
     @JavascriptInterface
     fun convertRepValPathToOneLine(
-        setVariableFilePath: String,
+        setVariableConfigPath: String,
     ): String {
-        val setVariableFilePathObj = File(setVariableFilePath)
-        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
-            ?: return String()
-        val setVariableTypesConfigName = setVariableFilePathObj.name
         return listOf(
             CommandClickScriptVariable.SET_REPLACE_VARIABLE,
             SettingFile.read(
-                setVariableTypesConfigDirPath,
-                setVariableTypesConfigName
+                setVariableConfigPath
             )
         ).filter{ it.isNotEmpty() }.joinToString("=")
     }
 
     @JavascriptInterface
     fun convertConfigToOneLine(
-        setVariableFilePath: String,
+        setVariableConfigPath: String,
     ): String {
-        val setVariableFilePathObj = File(setVariableFilePath)
-        val setVariableTypesConfigDirPath = setVariableFilePathObj.parent
-            ?: return String()
-        val setVariableTypesConfigName = setVariableFilePathObj.name
         return SettingFile.read(
-            setVariableTypesConfigDirPath,
-            setVariableTypesConfigName
+            setVariableConfigPath,
         )
     }
 
@@ -205,13 +190,8 @@ class JsScript(
         val fannelPath = CcPathTool.getMainFannelFilePath(
             subFannelOrFannelPath
         )
-        val fannelPathObj = File(fannelPath)
-        val parentDirPath = fannelPathObj.parent
-            ?: return String()
-        val fannelName = fannelPathObj.name
         val mainFannelCon = ReadText(
-            parentDirPath,
-            fannelName
+            fannelPath
         ).readText()
         return subCmdVars(
             mainFannelCon
@@ -282,12 +262,8 @@ class JsScript(
             ){
                 true -> {
                     val filePath = valValueSrc.removePrefix(filePrefix)
-                    val filePathObj = File(filePath)
-                    val parentDirPath = filePathObj.parent
-                        ?: return@map String()
                     SettingFile.read(
-                        parentDirPath,
-                        filePathObj.name
+                        filePath
                     )
                 }
                 else -> valValueSrc

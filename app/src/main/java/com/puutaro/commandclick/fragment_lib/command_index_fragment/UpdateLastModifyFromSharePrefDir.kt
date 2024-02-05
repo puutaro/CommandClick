@@ -39,8 +39,10 @@ object UpdateLastModifyFromSharePrefDir {
         ) return
         val currentDirName = currenDirObj.name
         FileSystems.updateLastModified(
-            cmdclickAppDirAdminPath,
-            currentDirName + UsePath.JS_FILE_SUFFIX
+            File(
+                cmdclickAppDirAdminPath,
+                currentDirName + UsePath.JS_FILE_SUFFIX
+            ).absolutePath
         )
     }
 }

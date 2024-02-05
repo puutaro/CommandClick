@@ -5,6 +5,7 @@ import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object FannelQrLogoClickListener {
     fun set(
@@ -23,8 +24,10 @@ object FannelQrLogoClickListener {
                 ScriptFileDescription.show(
                     cmdIndexFragment,
                     ReadText(
-                        currentAppDirPath,
-                        fannelName,
+                        File(
+                            currentAppDirPath,
+                            fannelName
+                        ).absolutePath
                     ).textToList(),
                     currentAppDirPath,
                     fannelName

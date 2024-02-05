@@ -69,8 +69,10 @@ object ExecJsLoad {
 
         val jsContents = if (jsContentsListSource.isNullOrEmpty()) {
             ReadText(
-                recentAppDirPath,
-                selectedJsFileName
+                File(
+                    recentAppDirPath,
+                    selectedJsFileName
+                ).absolutePath
             ).readText()
         } else jsContentsListSource.joinToString("\n")
         val jsContentsList =
@@ -174,8 +176,10 @@ object ExecJsLoad {
             == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
         ) return
         FileSystems.updateLastModified(
-            recentAppDirPath,
-            selectedJsFileName
+            File(
+                recentAppDirPath,
+                selectedJsFileName
+            ).absolutePath
         )
     }
 
@@ -196,9 +200,6 @@ object ExecJsLoad {
             true -> externalExecJsPathObj
             else -> fannelPathObj
         }
-        val parentDirPath = execJsPathObj.parent
-            ?: return
-        val execJsName = execJsPathObj.name
         val cmddlickExternalExecReplaceTxt = CommandClickScriptVariable.CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT
         val replaceMarkMap = systemExecReplaceTextList.mapIndexed { index, value ->
             val RepTextSuffix = index + 1
@@ -206,8 +207,7 @@ object ExecJsLoad {
             repValMark to value
         }.toMap()
         val jsContentsListSource = ReadText(
-            parentDirPath,
-            execJsName,
+            execJsPathObj.absolutePath
         ).readText().let {
             srcJsCon ->
             var replacedJsCon = srcJsCon
@@ -223,7 +223,7 @@ object ExecJsLoad {
         }.split("\n")
         val externalJsCon = JavaScriptLoadUrl.make(
             context,
-            "${parentDirPath}/${execJsName}",
+            execJsPathObj.absolutePath,
             jsContentsListSource
         ) ?: return
         jsUrlLaunchHandler(

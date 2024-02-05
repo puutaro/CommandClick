@@ -36,6 +36,7 @@ import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
+import java.io.File
 
 
 class CommandIndexFragment: Fragment() {
@@ -105,10 +106,12 @@ class CommandIndexFragment: Fragment() {
             UsePath.cmdclickJsImportDirPath
         )
         FileSystems.createFiles(
-            cmdclickAppHistoryDirAdminPath,
-            AppHistoryManager.makeAppHistoryFileNameForInit(
-                UsePath.cmdclickDefaultAppDirName,
-            )
+            File(
+                cmdclickAppHistoryDirAdminPath,
+                AppHistoryManager.makeAppHistoryFileNameForInit(
+                    UsePath.cmdclickDefaultAppDirName,
+                )
+            ).absolutePath
         )
         CmdClickSystemAppDir.create(
             this

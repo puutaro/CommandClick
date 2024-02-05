@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
+import java.io.File
 
 object Shell2Http {
 
@@ -21,8 +22,10 @@ object Shell2Http {
                 exec bash "${executeShellPath}" ${tabSepaArgs}
             """.trimIndent()
             FileSystems.writeFile(
-                UsePath.cmdclickTempCmdDirPath,
-                UsePath.cmdclickTempCmdShellName,
+                File(
+                    UsePath.cmdclickTempCmdDirPath,
+                    UsePath.cmdclickTempCmdShellName
+                ).absolutePath,
                 shellCon
             )
             val shellOutput = CurlManager.get(

@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object UbuntuBroadcastHandler {
     fun handle(
@@ -172,8 +173,10 @@ object UbuntuBroadcastHandler {
         val cmdclickMonitorDirPath = ubuntuService.cmdclickMonitorDirPath
         val cmdclickMonitorFileName = ubuntuService.cmdclickMonitorFileName
         val monitorLastLine = ReadText(
-            cmdclickMonitorDirPath,
-            cmdclickMonitorFileName
+            File(
+                cmdclickMonitorDirPath,
+                cmdclickMonitorFileName
+            ).absolutePath
         ).textToList().lastOrNull() ?: return
         val titleEntry = "${UbuntuStateType.ON_SETUP.title}\t${monitorLastLine}"
         val title = RestoreLabel.decide(
@@ -240,8 +243,10 @@ object UbuntuBroadcastHandler {
     private fun execIsActiveUbuntuService(
     ){
         FileSystems.writeFile(
-            UsePath.cmdclickTempUbuntuServiceDirPath,
-            UsePath.cmdclickTmpUbuntuServiceActiveFileName,
+            File(
+                UsePath.cmdclickTempUbuntuServiceDirPath,
+                UsePath.cmdclickTmpUbuntuServiceActiveFileName
+            ).absolutePath,
             String()
         )
     }

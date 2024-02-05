@@ -19,6 +19,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 object ExecRenameAppDir {
 
@@ -129,8 +130,10 @@ object ExecRenameAppDir {
                 renamedAppDirName
             )
             FileSystems.removeFiles(
-                UsePath.cmdclickAppDirAdminPath,
-                selectedItem
+                File(
+                    UsePath.cmdclickAppDirAdminPath,
+                    selectedItem
+                ).absolutePath
             )
             val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
             val beforeMoveDirPath = cmdclickAppDirPath + '/' +

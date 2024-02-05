@@ -156,8 +156,10 @@ object AssetsFileManager {
         val assetsFileObj = File("$targetDirPath/$fileName")
         if(assetsFileObj.isFile) return
         FileSystems.writeFile(
-            targetDirPath,
-            fileName,
+            File(
+                targetDirPath,
+                fileName
+            ).absolutePath,
             clipToHistoryCon
         )
     }

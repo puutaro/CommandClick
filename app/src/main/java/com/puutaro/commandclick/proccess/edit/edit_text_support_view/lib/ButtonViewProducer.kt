@@ -476,8 +476,10 @@ object ButtonViewProducer {
         else "$execCmdAfterTrimButtonEditExecVariant >> \"${outputMonitorPath}\""
         val tempBtnShellDirPath = "$fannelDirPath/temp_btn_shell"
         FileSystems.writeFile(
-            tempBtnShellDirPath,
-            cmdclickTempButtonExecShellName,
+            File(
+                tempBtnShellDirPath,
+                cmdclickTempButtonExecShellName
+            ).absolutePath,
             execCmd
                 .replace(Regex("^${bashb}"), "bash")
                 .replace(Regex("^${bashf}"), "bash")
@@ -651,8 +653,10 @@ object ButtonViewProducer {
             saveValName
         )
         val shellCon = ReadText(
-            shellParentDirPath,
-            saveFilterShellPathObj.name
+            File(
+                shellParentDirPath,
+                saveFilterShellPathObj.name
+            ).absolutePath
         ).readText().replace(
             saveTextCon,
             saveValue
@@ -751,11 +755,9 @@ object ButtonViewProducer {
             val listDirPath = listFilePathOjb.parent
                 ?: return@launch
             FileSystems.createDirs(listDirPath)
-            val listFileName = listFilePathOjb.name
             if(
                 ReadText(
-                    listDirPath,
-                    listFileName
+                    listFilePath
                 ).textToList().filter {
                     it == selectedScript
                 }.isNotEmpty()
@@ -773,12 +775,10 @@ object ButtonViewProducer {
                 ) "$addSourceDirPath/$selectedScript"
                 else selectedScript
                 val updateListCon = insertSelectedScript + "\n" + ReadText(
-                    listDirPath,
-                    listFileName
+                    listFilePath
                 ).readText()
                 FileSystems.writeFile(
-                    listDirPath,
-                    listFileName,
+                    listFilePath,
                     updateListCon
                 )
             }

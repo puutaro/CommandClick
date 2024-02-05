@@ -7,7 +7,6 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
-import java.io.File
 
 object ListSettingVariableListMaker {
     fun make(
@@ -64,15 +63,8 @@ object ListSettingVariableListMaker {
                     currentScriptFileName
                 )
             }
-//                it.removePrefix(filePrefix)
-            val listSettingVariablePathObj = File(listSettingVariablePath)
-            val listSettingVariableDirPath = listSettingVariablePathObj.parent
-                ?: return@map QuoteTool.trimBothEdgeQuote(it)
-                    .replace(",", "\n")
-            val hideSettingVariableFileName = listSettingVariablePathObj.name
             SettingFile.read(
-                listSettingVariableDirPath,
-                hideSettingVariableFileName
+                listSettingVariablePath
             ).replace(",", "\n")
         }
             .joinToString("\n")

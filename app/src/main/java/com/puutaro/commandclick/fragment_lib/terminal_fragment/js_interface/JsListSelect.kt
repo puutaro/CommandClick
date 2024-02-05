@@ -49,11 +49,9 @@ class JsListSelect(
         val listFileObj = File(targetListFilePath)
         val searchListDirPath = listFileObj.parent
             ?: return
-        val searchListFileName = listFileObj.name
         FileSystems.createDirs(searchListDirPath)
         val listContentsList = ReadText(
-            searchListDirPath,
-            searchListFileName
+            targetListFilePath
         ).textToList()
         val findSearchText = listContentsList.find {
             it == itemText
@@ -69,16 +67,14 @@ class JsListSelect(
             return
         }
         val updateListContents = ReadText(
-            searchListDirPath,
-            searchListFileName,
+            targetListFilePath
         ).textToList().filter {
             it.isNotEmpty()
                     && it != escapeCharHyphen
                     && it != itemText
         }.joinToString("\n")
         FileSystems.writeFile(
-            searchListDirPath,
-            searchListFileName,
+            targetListFilePath,
             updateListContents
         )
     }
@@ -131,21 +127,13 @@ class JsListSelect(
             targetListFilePath,
             removeTargetItem
         )
-        val searchListDirPath = searchListFileObj.parent
-            ?: return
-        val searchListFileName = searchListFileObj.name
         val recentItem =  ReadText(
-            searchListDirPath,
-            searchListFileName
+            targetListFilePath
         ).textToList().firstOrNull() ?: String()
 
         val jsScript = JsScript(terminalFragment)
-        val currentAppDirPath = currentScriptObj.parent
-            ?: return
-        val scriptName = currentScriptObj.name
         val scriptContents = ReadText(
-            currentAppDirPath,
-            scriptName
+            currentScriptPath
         ).readText()
         val replacedScriptContentsTargetVariable = if(
             replaceTargetVariable.isEmpty()
@@ -162,8 +150,7 @@ class JsListSelect(
                 "${defaultVariable}=",
             )
         FileSystems.writeFile(
-            currentAppDirPath,
-            scriptName,
+            currentScriptPath,
             replacedScriptContents
         )
         val jsEdit = JsEdit(terminalFragment)

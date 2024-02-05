@@ -36,8 +36,10 @@ object UbuntuServiceManager {
             }
             withContext(Dispatchers.IO){
                 FileSystems.removeFiles(
-                    cmdclickTempUbuntuServiceDirPath,
-                    cmdclickTmpUbuntuServiceActiveFileName
+                    File(
+                        cmdclickTempUbuntuServiceDirPath,
+                        cmdclickTmpUbuntuServiceActiveFileName
+                    ).absolutePath
                 )
             }
             withContext(Dispatchers.IO){

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 object CommandClickVariables {
@@ -142,8 +143,10 @@ object CommandClickVariables {
         scriptName: String,
     ): List<String> {
         return ReadText(
-            currentAppDirPath,
-            scriptName
+            File(
+                currentAppDirPath,
+                scriptName
+            ).absolutePath
         ).readText().let {
             ScriptPreWordReplacer.replace(
                 it,

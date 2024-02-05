@@ -19,6 +19,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object IndexInitHandler {
     fun handle(
@@ -46,9 +47,11 @@ object IndexInitHandler {
 
         if(onUrlLaunchIntent){
             FileSystems.updateLastModified(
-                cmdclickAppDirAdminPath,
-                UsePath.cmdclickDefaultAppDirName +
-                        UsePath.JS_FILE_SUFFIX
+                File(
+                    cmdclickAppDirAdminPath,
+                    UsePath.cmdclickDefaultAppDirName +
+                            UsePath.JS_FILE_SUFFIX
+                ).absolutePath
             )
         } else {
             UpdateLastModifyFromSharePrefDir.update(startUpPref)
@@ -94,10 +97,12 @@ object IndexInitHandler {
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
         ) return
         FileSystems.updateLastModified(
-            UsePath.cmdclickAppHistoryDirAdminPath,
-            AppHistoryManager.makeAppHistoryFileNameForInit(
-                currentAppDirPath,
-            )
+            File(
+                UsePath.cmdclickAppHistoryDirAdminPath,
+                AppHistoryManager.makeAppHistoryFileNameForInit(
+                    currentAppDirPath,
+                )
+            ).absolutePath
         )
         val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {

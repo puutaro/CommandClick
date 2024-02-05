@@ -220,13 +220,8 @@ object ScriptFileDescription {
         if(
             !mdPathObj.isFile
         ) return inputDescLine
-        val mdParent = mdPathObj.parent
-            ?: return inputDescLine
-        val mdName = mdPathObj.name
-            ?: return inputDescLine
         return ReadText(
-            mdParent,
-            mdName
+            fannelReadmePath
         ).readText()
     }
 }

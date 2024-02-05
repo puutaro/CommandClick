@@ -85,13 +85,7 @@ object LongPressMenuTool {
     fun makeJsConSrc(
         execJsPath: String,
     ): String {
-        val execJsPathObj = File(execJsPath)
-        val parentDirPath = execJsPathObj.parent ?: String()
-        val jsName = execJsPathObj.name
-        return ReadText(
-            parentDirPath,
-            jsName,
-        ).readText()
+        return ReadText(execJsPath).readText()
     }
 
     fun makeLongPressScriptList(
@@ -107,10 +101,7 @@ object LongPressMenuTool {
         val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             longPressMenuFilePath
         )
-        val srcLongPressListConSrc = ReadText(
-            longPressMenuDirPath,
-            longPressMenuName
-        ).readText()
+        val srcLongPressListConSrc = ReadText(mainFannelPath).readText()
         val srcLongPressListCon = srcLongPressListConSrc.split("\n").map {
             QuoteTool.trimBothEdgeQuote(it)
         }.joinToString("\n")

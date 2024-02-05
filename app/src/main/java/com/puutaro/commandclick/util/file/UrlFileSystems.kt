@@ -89,9 +89,6 @@ class UrlFileSystems {
             if(
                 destiFileObj.isFile
             ) return@forEach
-            val destiFileParentDirPath = destiFileObj.parent
-                ?: return
-            val destiFileName = destiFileObj.name
             val downloadUrl = "$gitUserContentFannelPrefix/$it"
             val conByteArray = CurlManager.get(
                 downloadUrl,
@@ -103,8 +100,7 @@ class UrlFileSystems {
                 !CurlManager.isConnOk(conByteArray)
             ) return@forEach
             FileSystems.writeFromByteArray(
-                destiFileParentDirPath,
-                destiFileName,
+                destiFileObj.absolutePath,
                 conByteArray
             )
         }

@@ -49,8 +49,10 @@ object JavaScriptLoadUrl {
             jsListSource.isNullOrEmpty()
         ) {
             ReadText(
-                recentAppDirPath,
-                scriptFileName
+                File(
+                    recentAppDirPath,
+                    scriptFileName
+                ).absolutePath
             ).textToList()
         } else jsListSource
         if(
@@ -192,8 +194,10 @@ object JavaScriptLoadUrl {
             jsListSource.isNullOrEmpty()
         ) {
             ReadText(
-                recentAppDirPath,
-                scriptFileName
+                File(
+                    recentAppDirPath,
+                    scriptFileName
+                ).absolutePath
             ).textToList()
         } else jsListSource
         if (
@@ -368,8 +372,10 @@ object JavaScriptLoadUrl {
             scriptFileName,
         )
         FileSystems.writeFile(
-            fannelSettingsDirPath,
-            UsePath.replaceVariablesTsv,
+            File(
+                fannelSettingsDirPath,
+                UsePath.replaceVariablesTsv
+            ).absolutePath,
             "${preWordTsvTable}\n${replaceVariableTable}"
         )
     }

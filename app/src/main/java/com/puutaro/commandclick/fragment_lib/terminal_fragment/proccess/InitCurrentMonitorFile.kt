@@ -6,6 +6,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 object InitCurrentMonitorFile {
     fun trim(
@@ -16,12 +17,16 @@ object InitCurrentMonitorFile {
         val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         val trimedMonitorContents = ReadText(
-            cmdclickMonitorDirPath,
-            currentMonitorFileName
+            File(
+                cmdclickMonitorDirPath,
+                currentMonitorFileName
+            ).absolutePath
         ).textToList().takeLast(leavesLineForTerm).joinToString("\n")
         FileSystems.writeFile(
-            cmdclickMonitorDirPath,
-            currentMonitorFileName,
+            File(
+                cmdclickMonitorDirPath,
+                currentMonitorFileName
+            ).absolutePath,
             trimedMonitorContents
         )
     }

@@ -4,6 +4,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 object HistoryUrlContents {
 
@@ -11,15 +12,17 @@ object HistoryUrlContents {
         currentAppDirPath: String,
         macroStr: String,
     ): String? {
-        val appUrlSystemPath = listOf(
+        val appUrlSystemPath = File(
             currentAppDirPath,
             UsePath.cmdclickUrlSystemDirRelativePath
-        ).joinToString("/")
+        ).absolutePath
         return when(macroStr) {
             SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name -> {
                 ReadText(
-                    appUrlSystemPath,
-                    UsePath.cmdclickUrlHistoryFileName
+                    File(
+                        appUrlSystemPath,
+                        UsePath.cmdclickUrlHistoryFileName
+                    ).absolutePath
                 ).textToList()
                     .filter {
                         EnableUrlPrefix.isHttpOrFilePrefix(
@@ -29,11 +32,12 @@ object HistoryUrlContents {
                     .firstOrNull()
                     ?.split("\t")?.lastOrNull()
             }
-
             SettingVariableSelects.OnUrlLaunchMacroSelects.FREQUENCY.name -> {
                 ReadText(
-                    appUrlSystemPath,
-                    UsePath.cmdclickUrlHistoryFileName
+                    File(
+                        appUrlSystemPath,
+                        UsePath.cmdclickUrlHistoryFileName
+                    ).absolutePath
                 ).textToList()
                     .filter {
                         EnableUrlPrefix.isHttpOrFilePrefix(

@@ -70,11 +70,11 @@ object QrDialogClickHandler {
         val mode = ClickSettingsForQrDialog.ClickTypeValues.values().find {
             it.mode == modeStr
         } ?: defaultMode
+        val clicFilePathObj = File(parentDirPath, clickFileName)
         val contents = if(
-            File("${parentDirPath}/${clickFileName}").isFile
+            clicFilePathObj.isFile
         ) ReadText(
-            parentDirPath,
-            clickFileName
+            clicFilePathObj.absolutePath
         ).readText()
         else "no file"
         when(mode){

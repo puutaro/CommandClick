@@ -11,6 +11,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
+import java.io.File
 
 object ExecClickUpdate {
 
@@ -86,8 +87,10 @@ object ExecClickUpdate {
             ListIndexForEditAdapter.listIndexTypeKey
         )
         FileSystems.updateLastModified(
-            filterDir,
-            selectedItem
+            File(
+                filterDir,
+                selectedItem
+            ).absolutePath
         )
         BroadcastSender.normalSend(
             editFragment.context,

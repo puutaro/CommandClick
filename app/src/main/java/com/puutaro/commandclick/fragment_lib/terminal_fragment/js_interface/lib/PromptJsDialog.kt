@@ -61,8 +61,10 @@ class PromptJsDialog(
         val suggestSrcListEntry = makeExtraSuggestList(
             suggestMap.get(SuggestVars.concatFilePathList.name)?.split(secondSeparator)
         ) + ReadText(
-            suggestDirPath,
-            suggestTxtName
+            File(
+                suggestDirPath,
+                suggestTxtName
+            ).absolutePath
         ).textToList()
         val suggestSrcList = suggestSrcListEntry.distinct()
         terminalViewModel.onDialog = true
@@ -270,14 +272,7 @@ class PromptJsDialog(
             suggestConcatFilePathList.isNullOrEmpty()
         ) return emptyList()
         return suggestConcatFilePathList.map {
-            val suggestConcatFile = File(it)
-            val suggestConcatDirPath = suggestConcatFile.parent
-                ?: return emptyList()
-            val suggestConcatFileName = suggestConcatFile.name
-            ReadText(
-                suggestConcatDirPath,
-                suggestConcatFileName
-            ).textToList()
+            ReadText(it).textToList()
         }.flatten().filter { it.trim().isNotEmpty()}
 
     }
@@ -302,8 +297,10 @@ class PromptJsDialog(
                         trimedReturnValue != it
                     }.distinct().take(200)
         FileSystems.writeFile(
-            suggestDirPath,
-            suggestTxtName,
+            File(
+                suggestDirPath,
+                suggestTxtName
+            ).absolutePath,
             updateSuggestList.joinToString("\n")
         )
     }
@@ -324,8 +321,10 @@ class PromptJsDialog(
         suggestTxtName: String,
     ): List<String> {
         val curSuggestList = ReadText(
-            suggestDirPath,
-            suggestTxtName
+            File(
+                suggestDirPath,
+                suggestTxtName
+            ).absolutePath
         ).textToList()
         if(
             trimedReturnValue.isNotEmpty()

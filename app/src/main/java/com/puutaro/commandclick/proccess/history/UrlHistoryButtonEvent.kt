@@ -204,7 +204,7 @@ class UrlHistoryButtonEvent(
 
             if (
                 fragmentTag == context?.getString(
-                    com.puutaro.commandclick.R.string.command_index_fragment
+                    R.string.command_index_fragment
                 )
             ) {
                 val listener = context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
@@ -241,8 +241,10 @@ class UrlHistoryButtonEvent(
         val usedTitle = mutableSetOf<String>()
         val usedUrl = mutableSetOf<String>()
         return makeBottomScriptUrlList() + ReadText(
-            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
-            UsePath.cmdclickUrlHistoryFileName
+            File(
+                "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}",
+                UsePath.cmdclickUrlHistoryFileName
+            ).absolutePath
         ).textToList()
             .distinct()
             .take(takeUrlListNum)
@@ -489,16 +491,18 @@ class UrlHistoryButtonEvent(
         }
         val urlHistoryDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
-        val urlHistoryCon = ReadText(
+        val cmdclickUrlHistoryFilePath = File(
             urlHistoryDirPath,
             cmdclickUrlHistoryFileName
+        ).absolutePath
+        val urlHistoryCon = ReadText(
+            cmdclickUrlHistoryFilePath
         ).textToList().filter {
             val url = it.split("\t").lastOrNull()
             url != selectedLine
         }.joinToString("\n")
         FileSystems.writeFile(
-            urlHistoryDirPath,
-            cmdclickUrlHistoryFileName,
+            cmdclickUrlHistoryFilePath,
             urlHistoryCon
         )
         val urlHistoryList = makeUrlHistoryList()

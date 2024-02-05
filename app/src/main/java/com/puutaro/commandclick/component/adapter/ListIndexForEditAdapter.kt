@@ -16,7 +16,6 @@ import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DeleteSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.PerformSettingForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
@@ -34,6 +33,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 class ListIndexForEditAdapter(
@@ -171,8 +171,7 @@ class ListIndexForEditAdapter(
                     || listIndexTypeKey == TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 ) return@withContext emptyList()
                 ReadText(
-                    filterDir,
-                    holder.fileName
+                    File(filterDir, holder.fileName).absolutePath,
                 ).textToList().take(maxTakeSize)
             }
             val descCon = withContext(Dispatchers.IO){

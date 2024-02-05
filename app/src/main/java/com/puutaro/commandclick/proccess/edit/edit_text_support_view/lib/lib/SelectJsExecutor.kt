@@ -64,8 +64,10 @@ private fun makeSelectJsContents(
     selectedItem: String,
 ): List<String> {
     return ReadText(
-        currentAppDir,
-        scriptName
+        File(
+            currentAppDir,
+            scriptName
+        ).absolutePath
     ).readText().let {
         ScriptPreWordReplacer.replace(
             it,

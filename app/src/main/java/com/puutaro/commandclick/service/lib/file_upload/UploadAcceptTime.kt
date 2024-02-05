@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.time.LocalDateTime
 
 object UploadAcceptTime {
@@ -23,16 +24,20 @@ object UploadAcceptTime {
                     val currentDateTime = LocalDateTime.now()
                     val closeMinutes = 5L
                     val previousAcceptTime = ReadText(
-                        cmdclickTempFileTransferServiceDirPath,
-                        transferServiceAcceptTimeTxtName,
+                        File(
+                            cmdclickTempFileTransferServiceDirPath,
+                            transferServiceAcceptTimeTxtName
+                        ).absolutePath,
                     ).readText().let { previousAcceptTimeStringSrc ->
                         val previousAcceptTimeString = previousAcceptTimeStringSrc.replace("\n", "")
                         try {
                             LocalDateTime.parse(previousAcceptTimeString)
                         } catch (e: Exception) {
                             FileSystems.writeFile(
-                                cmdclickTempFileTransferServiceDirPath,
-                                transferServiceAcceptTimeTxtName,
+                                File(
+                                    cmdclickTempFileTransferServiceDirPath,
+                                    transferServiceAcceptTimeTxtName
+                                ).absolutePath,
                                 currentDateTime.toString()
                             )
                             currentDateTime

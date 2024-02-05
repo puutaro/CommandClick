@@ -35,15 +35,16 @@ object FileSystems {
     }
 
     fun createFiles(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
     ) {
-        if(fileName == "-") return
-        val filePath = File(dirPath, fileName)
-        if(filePath.isDirectory) return
-        if(filePath.exists()) return
+        if(
+            filePath.isEmpty()
+        ) return
+        val filePathObj = File(filePath)
+        if(filePathObj.isDirectory) return
+        if(filePathObj.exists()) return
         try {
-            filePath.createNewFile()
+            filePathObj.createNewFile()
         } catch (e: java.lang.Exception){
             LogSystems.stdErr(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
@@ -52,22 +53,24 @@ object FileSystems {
     }
 
     fun writeFile(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
         contents: String
     ) {
+        val filePathObj = File(filePath)
+        val dirPath = filePathObj.parent
+            ?: return
         if(
             dirPath == "-"
             || dirPath.isEmpty()
         ) return
+        val fileName = filePathObj.name
         if(
             fileName == "-"
             || fileName.isEmpty()
         ) return
         createDirs(dirPath)
-        val filePath = File(dirPath, fileName)
         try {
-            filePath.writeText(contents)
+            filePathObj.writeText(contents)
         } catch (e: java.lang.Exception){
             LogSystems.stdErr(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
@@ -77,16 +80,15 @@ object FileSystems {
 
 
     fun removeFiles(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
     ) {
-        val filePath = File(dirPath, fileName)
+        val filePathObj = File(filePath)
         if(
-            !filePath.exists()
-            || !filePath.isFile
+            !filePathObj.exists()
+            || !filePathObj.isFile
         ) return
         try {
-            filePath.delete()
+            filePathObj.delete()
         } catch (e: java.lang.Exception){
             LogSystems.stdErr(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
@@ -110,9 +112,10 @@ object FileSystems {
 
 
     fun updateLastModified(
-        dirPath: String,
-        fileName: String
+        filePath: String
     ){
+        val monitor1File = File(filePath)
+        val fileName = monitor1File.name
         if(
             fileName ==
             CommandClickScriptVariable.EMPTY_STRING
@@ -120,16 +123,11 @@ object FileSystems {
                     CommandClickScriptVariable.EMPTY_STRING +
             UsePath.SHELL_FILE_SUFFIX
         ) return
-        val monitor1File = File(
-            dirPath,
-            fileName
-        )
         if(
             !monitor1File.exists()
         ) {
            createFiles(
-                dirPath,
-                fileName
+               monitor1File.absolutePath
             )
             return
         }
@@ -138,9 +136,10 @@ object FileSystems {
     }
 
     fun updateWeekPastLastModified(
-        dirPath: String,
-        fileName: String
+        filePath: String
     ){
+        val monitor1File = File(filePath)
+        val fileName = monitor1File.name
         if(
             fileName ==
             CommandClickScriptVariable.EMPTY_STRING
@@ -148,17 +147,10 @@ object FileSystems {
             CommandClickScriptVariable.EMPTY_STRING +
             UsePath.SHELL_FILE_SUFFIX
         ) return
-        val monitor1File = File(
-            dirPath,
-            fileName
-        )
         if(
             !monitor1File.exists()
         ) {
-            createFiles(
-                dirPath,
-                fileName
-            )
+            createFiles(monitor1File.absolutePath)
             return
         }
         val currentTime= System.currentTimeMillis()
@@ -298,12 +290,8 @@ object FileSystems {
                 sourceShellFilePath,
                 destiShellFilePath,
             )
-            val removeFileObj = File(sourceShellFilePath)
-            val removeFileParentDirPath = removeFileObj.parent
-                ?: return
             removeFiles(
-                removeFileParentDirPath,
-                removeFileObj.name
+                sourceShellFilePath
             )
         } catch (e: Exception) {
             return
@@ -343,52 +331,44 @@ object FileSystems {
     }
 
     fun updateFile(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
         updateCon: String,
     ){
         val currentCon =
             ReadText(
-                dirPath,
-                fileName,
+                filePath
             ).readText()
         writeFile(
-            dirPath,
-            fileName,
+            filePath,
             "${currentCon}\n${updateCon}"
         )
     }
 
     fun writeFromByteArray(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
         byteArrayCon: ByteArray,
     ){
-        val file = File(dirPath, fileName)
-        removeFiles(dirPath, fileName)
+        val file = File(filePath)
+        removeFiles(file.absolutePath)
+        val dirPath = file.parent ?: return
         createDirs(dirPath)
         if(file.isDirectory) return
         FileUtils.writeByteArrayToFile(file, byteArrayCon)
     }
 
     fun savePngFromBitMap(
-        dirPath: String,
-        fileName: String,
+        filePath: String,
         bitmap: Bitmap
     ){
         try {
+            val filePathObj = File(filePath)
+            val dirPath = filePathObj.parent
+                ?: return
             createDirs(
                 dirPath
             )
-            removeFiles(
-                dirPath,
-                fileName
-            )
-            val maskFile = File(
-                dirPath,
-                fileName,
-            )
-            val outputStream = FileOutputStream(maskFile)
+            removeFiles(filePath)
+            val outputStream = FileOutputStream(filePathObj)
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
             //outputStream.flush()
             outputStream.close()
@@ -399,14 +379,12 @@ object FileSystems {
     }
 
     fun checkSum(
-        dirPath: String,
-        fileName: String
+        filePath: String
     ): String {
-        val targetFile = File(dirPath, fileName)
-        val fullFilePath = "$dirPath/$fileName"
+        val targetFile = File(filePath)
         if(
             !targetFile.isFile
-        ) return fullFilePath
+        ) return filePath
         try {
             val inputStream = FileInputStream(targetFile)
             return DigestInputStream(
@@ -423,7 +401,7 @@ object FileSystems {
             }
         } catch (e: Exception){
             LogSystems.stdErr(e.toString())
-            return fullFilePath
+            return filePath
         }
     }
 
@@ -494,13 +472,8 @@ object FileSystems {
             ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(srcFileObj.name)
         val fannelDirPath = "${parentDirPath}/${fannelDirName}"
-        removeDir(
-            fannelDirPath
-        )
-        removeFiles(
-            parentDirPath,
-            srcFileObj.name,
-        )
+        removeDir(fannelDirPath)
+        removeFiles(srcFileObj.absolutePath)
     }
 
     fun switchLastModify(

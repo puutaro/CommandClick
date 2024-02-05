@@ -62,12 +62,8 @@ object TsvImportManager {
                     )
                     return@map String()
                 }
-                val parentDirPath = tsvImportPathObj.parent
-                    ?: return@map String()
-                val tsvName = tsvImportPathObj.name
                 ReadText(
-                    parentDirPath,
-                    tsvName
+                    tsvImportPathObj.absolutePath
                 ).readText()
             }.distinct().joinToString("\n").split("\n")
         return tsvKeyValueList.map {

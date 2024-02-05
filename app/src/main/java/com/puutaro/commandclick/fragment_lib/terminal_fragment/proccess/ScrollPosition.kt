@@ -10,6 +10,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object ScrollPosition {
 
@@ -87,8 +88,10 @@ object ScrollPosition {
                         "})()",
                 ValueCallback<String?> { scrollY ->
                     FileSystems.writeFile(
-                        scrollPosiSaveDirPath,
-                        cmdclickMonitorScrollPosiFileName,
+                        File(
+                            scrollPosiSaveDirPath,
+                            cmdclickMonitorScrollPosiFileName
+                        ).absolutePath,
                         scrollY
                     )
                 })
@@ -125,8 +128,10 @@ object ScrollPosition {
         FileSystems.createDirs(cmdclickSiteScrollPosiDirPath)
         val insertLine = "${currentUrl}\t${scrollPosi}"
         val sitePosiLineList = ReadText(
-            cmdclickSiteScrollPosiDirPath,
-            cmdclickSiteScrollPosiFileName
+            File(
+                cmdclickSiteScrollPosiDirPath,
+                cmdclickSiteScrollPosiFileName
+            ).absolutePath
         )
             .textToList()
             .take(takePosiLines)
@@ -136,8 +141,10 @@ object ScrollPosition {
         val updateScrollPosList = listOf(insertLine) + sitePosiLineListFiltered
         val updateScrollPosCon = updateScrollPosList.joinToString("\n")
         FileSystems.writeFile(
-            cmdclickSiteScrollPosiDirPath,
-            cmdclickSiteScrollPosiFileName,
+            File(
+                cmdclickSiteScrollPosiDirPath,
+                cmdclickSiteScrollPosiFileName
+            ).absolutePath,
             updateScrollPosCon
         )
     }
@@ -158,8 +165,10 @@ object ScrollPosition {
         )
         if(!isRegisterPrefix) return 0f
         val sitePosiLineList = ReadText(
-            cmdclickSiteScrollPosiDirPath,
-            cmdclickSiteScrollPosiFileName
+            File(
+                cmdclickSiteScrollPosiDirPath,
+                cmdclickSiteScrollPosiFileName
+            ).absolutePath
         ).textToList()
         val urlPosiLine = sitePosiLineList.filter {
             it.startsWith(currentUrl)

@@ -109,8 +109,10 @@ object FileSelectSpinnerViewProducer {
                     && File(selectedItem).isFile
                 ) {
                     FileSystems.updateLastModified(
-                        filterDir,
-                        selectedItem
+                        File(
+                            filterDir,
+                            selectedItem
+                        ).absolutePath
                     )
                 }
                 val currentSpinnerList = makeSpinnerList(

@@ -204,8 +204,10 @@ object FileSelectGridViewProducer {
                 currentAppDirPath != UsePath.cmdclickAppHistoryDirAdminPath
             ) {
                 FileSystems.updateLastModified(
-                    filterDir,
-                    selectedFileName
+                    File(
+                        filterDir,
+                        selectedFileName
+                    ).absolutePath
                 )
             }
             val selectUpdatedGridList = listOf(

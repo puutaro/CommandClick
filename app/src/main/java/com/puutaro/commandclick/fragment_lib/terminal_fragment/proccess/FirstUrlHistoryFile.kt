@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import java.io.File
 
 
 class FirstUrlHistoryFile {
@@ -18,8 +19,10 @@ class FirstUrlHistoryFile {
                 SettingVariableSelects.OnHistoryUrlTitle.ON.name
             ) return
             FileSystems.removeFiles(
-                currentAppDirPath,
-                UsePath.cmdclickFirstHistoryTitle
+                File(
+                    currentAppDirPath,
+                    UsePath.cmdclickFirstHistoryTitle
+                ).absolutePath
             )
         }
 
@@ -32,16 +35,20 @@ class FirstUrlHistoryFile {
             ) return
             val appUrlSystemDirPath = "${terminalFragment.currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
             val firstRow = ReadText(
-                appUrlSystemDirPath,
-                UsePath.cmdclickUrlHistoryFileName
+                File(
+                    appUrlSystemDirPath,
+                    UsePath.cmdclickUrlHistoryFileName
+                ).absolutePath
             )
                 .textToList()
                 .firstOrNull()
                 ?: return
             if(firstRow.isEmpty()) return
             FileSystems.writeFile(
-                appUrlSystemDirPath,
-                UsePath.cmdclickFirstHistoryTitle,
+                File(
+                    appUrlSystemDirPath,
+                    UsePath.cmdclickFirstHistoryTitle
+                ).absolutePath,
                 firstRow
             )
         }

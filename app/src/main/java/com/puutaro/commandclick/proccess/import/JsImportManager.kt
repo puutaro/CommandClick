@@ -122,12 +122,8 @@ object JsImportManager {
         if(
             !readPathObj.isFile
         ) return String()
-        val parentDir = readPathObj.parent
-            ?: return String()
-        val importFileName = readPathObj.name
         return ReadText(
-            parentDir,
-            importFileName
+            readPathObj.absolutePath
         ).readText()
 
     }

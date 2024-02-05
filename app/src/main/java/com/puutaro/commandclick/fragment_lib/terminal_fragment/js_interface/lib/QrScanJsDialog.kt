@@ -45,7 +45,6 @@ class QrScanJsDialog(
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var qrScanDialogObj: Dialog? = null
     private var webView = terminalFragment.binding.terminalWebView
-    private val qrDecodeTextReplaceMark = "QR_DECODE_TEXT"
 
     fun create(
         title: String,
@@ -361,37 +360,10 @@ class QrScanJsDialog(
 
     private fun makeJsList(
         execJsPath: String,
-//        replaceMapStr: String?
     ): List<String> {
-        val execJsPathObj = File(execJsPath)
-        val execJsDirPath = execJsPathObj.parent
-            ?: return emptyList()
-        val execJsName = execJsPathObj.name
         return ReadText(
-            execJsDirPath,
-            execJsName
+            execJsPath
         ).textToList()
-//        if(
-//            replaceMapStr.isNullOrEmpty()
-//        ) return ReadText(
-//            execJsDirPath,
-//            execJsName
-//        ).textToList()
-//        var replaceJsCon = ReadText(
-//            execJsDirPath,
-//            execJsName
-//        ).readText()
-//        val replacedStr = CmdClickMap.createMap(
-//            replaceMapStr,
-//            "\n"
-//        )
-//        replacedStr.forEach {
-//            replaceJsCon = replaceJsCon.replace(
-//                it.first,
-//                it.second
-//            )
-//        }
-//        return replaceJsCon.split("\n")
     }
 
     private fun getJsPathFromSelectedMenuStr(
@@ -451,15 +423,8 @@ class QrScanJsDialog(
         val menuFilePath = btnOptionMap
             ?.get(
                 listType
-            ) ?: String()
-        val menuFilePathObj = File(menuFilePath)
-        val menuFileDirPath = menuFilePathObj.parent
-            ?: String()
-        val menuFileName = menuFilePathObj.name
-        return ReadText(
-            menuFileDirPath,
-            menuFileName
-        ).textToList()
+            ) ?: return emptyList()
+        return ReadText(menuFilePath).textToList()
     }
 
     private fun makeImageButton(

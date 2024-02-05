@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object ScreenMonitor {
 
@@ -20,8 +21,10 @@ object ScreenMonitor {
         ubuntuService: UbuntuService
     ){
         FileSystems.writeFile(
-            UsePath.cmdclickTempUbuntuServiceDirPath,
-            UsePath.cmdclickTmpUbuntuMonitorOff,
+            File(
+                UsePath.cmdclickTempUbuntuServiceDirPath,
+                UsePath.cmdclickTmpUbuntuMonitorOff
+            ).absolutePath,
             String()
         )
         val ubuntuRunningProcessNum =
@@ -62,8 +65,10 @@ object ScreenMonitor {
         ubuntuService: UbuntuService
     ){
         FileSystems.removeFiles(
-            UsePath.cmdclickTempUbuntuServiceDirPath,
-            UsePath.cmdclickTmpUbuntuMonitorOff
+            File(
+                UsePath.cmdclickTempUbuntuServiceDirPath,
+                UsePath.cmdclickTmpUbuntuMonitorOff
+            ).absolutePath
         )
         ubuntuService.monitorScreenJob?.cancel()
         if(!ubuntuService.screenOffKill) return

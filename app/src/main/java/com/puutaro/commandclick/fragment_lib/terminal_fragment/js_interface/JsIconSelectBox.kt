@@ -6,7 +6,6 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ListJsDialog
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.util.file.ReadText
-import java.io.File
 
 class JsIconSelectBox(
     private val terminalFragment: TerminalFragment
@@ -74,12 +73,8 @@ class JsIconSelectBox(
                 }.joinToString(JsPathForEditButton.buttonIconSeparator)
             }
             else -> {
-                val listPathObj = File(listPath)
-                val parentDirPath = listPathObj.parent
-                    ?: return String()
                 ReadText(
-                    parentDirPath,
-                    listPathObj.name
+                    listPath
                 ).readText().replace("\n", "\t")
             }
         }

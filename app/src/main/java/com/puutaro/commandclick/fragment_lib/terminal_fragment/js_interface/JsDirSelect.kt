@@ -250,31 +250,30 @@ class JsDirSelect(
         scriptFileName: String,
         replaceString: String
     ){
+        val scriptFilePathObj = File(
+            parentDirPath,
+            scriptFileName
+        )
         if(
-            !File(
-                parentDirPath,
-                scriptFileName
-            ).isFile
+            !scriptFilePathObj.isFile
         ) {
             Toast.makeText(
                 context,
-                "no exist: ${scriptFileName}",
+                "no exist : ${scriptFileName}",
                 Toast.LENGTH_LONG
             ).show()
             return
         }
         val jsScript = JsScript(terminalFragment)
         val scriptContents = ReadText(
-            parentDirPath,
-            scriptFileName
+            scriptFilePathObj.absolutePath
         ).readText()
         val replaceContents = jsScript.replaceCommandVariable(
             scriptContents,
             replaceString,
         )
         FileSystems.writeFile(
-            parentDirPath,
-            scriptFileName,
+            scriptFilePathObj.absolutePath,
             replaceContents
         )
     }

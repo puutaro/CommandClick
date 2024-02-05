@@ -238,8 +238,7 @@ class EditFragment: Fragment() {
         ) as String
 
         currentScriptContentsList = ReadText(
-            currentAppDirPath,
-            currentScriptFileName
+            File(currentAppDirPath, currentScriptFileName).absolutePath
         ).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
@@ -259,12 +258,16 @@ class EditFragment: Fragment() {
             )
         ) {
             FileSystems.updateLastModified(
-                UsePath.cmdclickAppDirAdminPath,
-                File(currentAppDirPath).name + UsePath.JS_FILE_SUFFIX
+                File(
+                    UsePath.cmdclickAppDirAdminPath,
+                    File(currentAppDirPath).name + UsePath.JS_FILE_SUFFIX
+                ).absolutePath
             )
             FileSystems.updateLastModified(
-                currentAppDirPath,
-                currentScriptFileName,
+                File(
+                    currentAppDirPath,
+                    currentScriptFileName
+                ).absolutePath,
             )
             val pageSearchToolbarManagerForEdit =
                 PageSearchToolbarManagerForEdit(this)
@@ -361,15 +364,16 @@ class EditFragment: Fragment() {
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action,
             )
         )
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
         val shellScriptContentsList = ReadText(
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_name
-            )
+            File(currentAppDirPath, currentFannelName).absolutePath
         ).textToList()
         TerminalShowByTerminalDoWhenReuse.show(
             this,

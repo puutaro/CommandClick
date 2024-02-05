@@ -7,7 +7,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import java.io.File
 
 object FilePrefixGetter {
 
@@ -64,14 +63,7 @@ object FilePrefixGetter {
             SharePrefferenceSetting.current_app_dir
         )
         val listDirFilePath = replaceListDirValue.removePrefix(ConfigMapTool.filePrefix)
-        val listDirFilePathObj = File(listDirFilePath)
-        val listDirFileParentDirPath = listDirFilePathObj.parent
-            ?: return String()
-        val listDirFileName = listDirFilePathObj.name
-        return ReadText(
-            listDirFileParentDirPath,
-            listDirFileName,
-        ).readText().let {
+        return ReadText(listDirFilePath).readText().let {
             val listSettingKeyMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,

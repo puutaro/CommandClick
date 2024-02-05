@@ -49,8 +49,10 @@ object FreeDialogReflector {
             SharePrefferenceSetting.current_fannel_name
         )
         val mainFannelCon = ReadText(
-            mainFannelAppDirPath,
-            mainFannelName
+            File(
+                mainFannelAppDirPath,
+                mainFannelName
+            ).absolutePath
         ).readText()
         if(
             freeDialogReadSharePreffernceMap.isNullOrEmpty()
@@ -64,8 +66,10 @@ object FreeDialogReflector {
             SharePrefferenceSetting.current_fannel_name
         )
         val fDialogConList = ReadText(
-            freeDialogAppDirPath,
-            freeDialogFannelName
+            File(
+                freeDialogAppDirPath,
+                freeDialogFannelName
+            ).absolutePath
         ).textToList()
         val fDialogCommandValCon = CommandClickVariables.substituteVariableListFromHolder(
             fDialogConList,
@@ -104,8 +108,10 @@ object FreeDialogReflector {
             replaceSrcFanneCon != mainFannelCon
         ) {
             FileSystems.writeFile(
-                mainFannelAppDirPath,
-                mainFannelName,
+                File(
+                    mainFannelAppDirPath,
+                    mainFannelName
+                ).absolutePath,
                 replaceSrcFanneCon
             )
         }

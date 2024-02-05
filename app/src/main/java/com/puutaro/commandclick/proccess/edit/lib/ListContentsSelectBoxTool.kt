@@ -58,13 +58,9 @@ object ListContentsSelectBoxTool {
         val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
             true -> return
             else -> {
-                val saveFilterShellPathObj = File(saveFilterShellPath)
-                val shellParentDirPath = saveFilterShellPathObj.parent
-                    ?: return
                 editFragment.busyboxExecutor?.getCmdOutput(
                     ReadText(
-                        shellParentDirPath,
-                        saveFilterShellPathObj.name
+                        saveFilterShellPath
                     ).readText().replace(
                         saveTextCon,
                         saveValue
@@ -95,8 +91,7 @@ object ListContentsSelectBoxTool {
         val searchListFileName = listFileObj.name
         FileSystems.createDirs(searchListDirPath)
         val listContentsList = ReadText(
-            searchListDirPath,
-            searchListFileName
+            targetListFilePath
         ).textToList()
         val findSearchText = listContentsList.find {
             it == itemText
@@ -111,8 +106,7 @@ object ListContentsSelectBoxTool {
                     || it != escapeCharHyphen
         }.joinToString("\n")
         FileSystems.writeFile(
-            searchListDirPath,
-            searchListFileName,
+            targetListFilePath,
             lastListContents
         )
     }
@@ -141,21 +135,15 @@ object ListContentsSelectBoxTool {
             itemTextListCon.isEmpty()
         ) return
         val itemTextList = itemTextListCon.split("\n")
-        val targetListFilePathObj = File(targetListFilePath)
-        val targetListParentDirPath = targetListFilePathObj.parent
-            ?: return
-        val targetListFileName = targetListFilePathObj.name
         val currentListConList = ReadText(
-            targetListParentDirPath,
-            targetListFileName
+            targetListFilePath
         ).textToList()
         val registerItemList = itemTextList.filter {
             !currentListConList.contains(it)
         }
         val registerListConList = registerItemList + currentListConList
         FileSystems.writeFile(
-            targetListParentDirPath,
-            targetListFileName,
+            targetListFilePath,
             registerListConList.joinToString("\n")
         )
     }

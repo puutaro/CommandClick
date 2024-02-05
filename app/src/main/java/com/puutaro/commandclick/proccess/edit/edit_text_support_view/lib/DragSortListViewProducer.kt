@@ -56,7 +56,6 @@ object DragSortListViewProducer {
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
 
         val dragSortListViewButtonView = Button(context)
@@ -110,8 +109,7 @@ object DragSortListViewProducer {
                 dragSortDialogObj?.dismiss()
                 dragSortAdapter?.let {
                     FileSystems.writeFile(
-                        parentDir,
-                        listFileName,
+                        listContentsFilePath,
                         dragSortAdapter.dratSortList.joinToString("\n")
                     )
                 }
@@ -167,11 +165,9 @@ object DragSortListViewProducer {
     ): List<String> {
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
-        val listFileName = fileObj.name
         FileSystems.createDirs(parentDir)
         return ReadText(
-            parentDir,
-            listFileName
+            listContentsFilePath
         ).textToList().filter {
             it.trim().isNotEmpty()
         }

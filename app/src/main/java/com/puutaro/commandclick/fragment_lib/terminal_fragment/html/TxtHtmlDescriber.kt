@@ -22,12 +22,8 @@ object TxtHtmlDescriber {
         val filePath = urlStr.removePrefix(
             WebUrlVariables.filePrefix
         )
-        val fileObj = File(filePath)
-        val parent = fileObj.parent ?: String()
-        val fileName = fileObj.name
         val contents = ReadText(
-            parent,
-            fileName
+            filePath
         ).readText()
         val fannelRawName = SharePreferenceMethod.getStringFromSharePreference(
                 sharePref,
@@ -41,6 +37,8 @@ object TxtHtmlDescriber {
         ) indexDirName
         else "${UsePath.cmdclickScrollPosiDirPath}/${fannelRawName}"
         FileSystems.createDirs(currentFannelHtmlPosiDirPath)
+        val fileObj = File(filePath)
+        val fileName = fileObj.name
         val htmlPosiFilePath =
             "${currentFannelHtmlPosiDirPath}/${fileName}"
         val insertContents =

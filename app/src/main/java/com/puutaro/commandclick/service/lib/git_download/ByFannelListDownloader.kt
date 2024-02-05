@@ -119,10 +119,6 @@ object ByFannelListDownloader {
                     val cpDestiFilePath = "$currentAppDirPath/${fileRelativePath}"
                     File(cpDestiFilePath)
                 }
-                val destiFileParentDirPath =  withContext(Dispatchers.IO) {
-                    destiFileObj.parent
-                        ?: String()
-                }
                 val destiFileName = withContext(Dispatchers.IO) {
                     destiFileObj.name
                 }
@@ -180,8 +176,7 @@ object ByFannelListDownloader {
 
                 withContext(Dispatchers.IO) {
                     FileSystems.writeFromByteArray(
-                        destiFileParentDirPath,
-                        destiFileName,
+                        destiFileObj.absolutePath,
                         con
                     )
                 }

@@ -297,10 +297,6 @@ class TextToSpeechService:
         val listFilePath = intent?.getStringExtra(
             TextToSpeechIntentExtra.listFilePath.scheme
         ) ?: return Service.START_NOT_STICKY
-        val listFilePathObj = File(listFilePath)
-        val listFilePathParentDir = listFilePathObj.parent
-            ?: return Service.START_NOT_STICKY
-        val listFileName = listFilePathObj.name
         val playMode = intent.getStringExtra(
             TextToSpeechIntentExtra.playMode.scheme
         )
@@ -330,8 +326,7 @@ class TextToSpeechService:
             intent
         )
         val factListSource = ReadText(
-            listFilePathParentDir,
-            listFileName
+            listFilePath
         ).textToList()
         val factListSize = factListSource.size
 
@@ -357,8 +352,7 @@ class TextToSpeechService:
             return Service.START_NOT_STICKY
         }
         val fileList = makePlayList(
-            listFilePathParentDir,
-            listFileName,
+            listFilePath,
             playMode,
             onRoop,
             playNumber,
@@ -376,8 +370,10 @@ class TextToSpeechService:
         )
         val fileListSize = fileList.size - 1
         val pastTrackKeyValueList = ReadText(
-            UsePath.cmdclickTempTextToSpeechDirPath,
-            currentTrackFileName,
+            File(
+                UsePath.cmdclickTempTextToSpeechDirPath,
+                currentTrackFileName
+            ).absolutePath,
         ).textToList()
         val readLength = getIntValue(
             pastTrackKeyValueList,
@@ -532,15 +528,15 @@ class TextToSpeechService:
     }
 
     private fun makePlayList(
-        listFilePathParentDir: String,
-        listFileName: String,
+//        listFilePathParentDir: String,
+//        listFileName: String,
+        listFilePath: String,
         playMode: String?,
         onRoop: String?,
         playNumber: String?,
     ): List<String>? {
         val fileListBeforePlayMode = ReadText(
-            listFilePathParentDir,
-            listFileName
+            listFilePath
         ).textToList()
         val repeatTimes = 100
         return when(
@@ -652,8 +648,10 @@ class TextToSpeechService:
                         |${PlayTrackFileKey.blockNum.name}=${currentBlockNum}
                     """.trimMargin()
                     FileSystems.writeFile(
-                        UsePath.cmdclickTempTextToSpeechDirPath,
-                        currentTrackFileName,
+                        File(
+                            UsePath.cmdclickTempTextToSpeechDirPath,
+                            currentTrackFileName,
+                        ).absolutePath,
                         trackFileCon
                     )
                     if(onCurrentRoopBreak) break
@@ -817,13 +815,8 @@ class TextToSpeechService:
                 return null
             }
         }
-        val playModeObj = File(playPath)
-        val parentDir = playModeObj.parent
-            ?: return String()
-        val playFileName = playModeObj.name
         return ReadText(
-            parentDir,
-            playFileName
+            playPath
         ).readText().let {
             chunkText(it)
         }

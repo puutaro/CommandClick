@@ -105,15 +105,11 @@ object SettingVariableReader {
             ?: String()
         if(
             setListFileDirPath.isNotEmpty()
-        ) {
-            FileSystems.createDirs(
+        ) FileSystems.createDirs(
                 setListFileDirPath
             )
-        }
-        val setListFileName = setListFilePathObj.name
         return ReadText(
-            setListFileDirPath,
-            setListFileName
+            setListFilePath
         ).textToList()
     }
 }

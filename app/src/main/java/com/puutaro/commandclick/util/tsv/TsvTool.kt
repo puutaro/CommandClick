@@ -12,22 +12,14 @@ object TsvTool {
         if(
             tsvPath.isNullOrEmpty()
         ) return
-        val tsvPathObj = File(tsvPath)
-        val tsvParentDirPath = tsvPathObj.parent
-            ?: return
-        val tsvName = tsvPathObj.name
         val saveTsvCon = listIndexList.joinToString("\n")
-        val curTsvCon = ReadText(
-            tsvParentDirPath,
-            tsvName
-        ).readText()
+        val curTsvCon = ReadText(tsvPath).readText()
         if(
             curTsvCon.isNotEmpty()
             && saveTsvCon == curTsvCon
         ) return
         FileSystems.writeFile(
-            tsvParentDirPath,
-            tsvName,
+            tsvPath,
             saveTsvCon
         )
     }
@@ -39,18 +31,11 @@ object TsvTool {
         if(tsvPath.isNullOrEmpty()) return
         val tsvPathObj = File(tsvPath)
         if(!tsvPathObj.isFile) return
-        val tsvParentDirPath = tsvPathObj.parent
-            ?: return
-        val tsvName = tsvPathObj.name
-        val removeTsvCon = ReadText(
-            tsvParentDirPath,
-            tsvName,
-        ).textToList().filter {
+        val removeTsvCon = ReadText(tsvPath,).textToList().filter {
             !removeItemLineList.contains(it.trim())
         }.joinToString("\n")
         FileSystems.writeFile(
-            tsvParentDirPath,
-            tsvName,
+            tsvPath,
             removeTsvCon
         )
     }
@@ -62,19 +47,12 @@ object TsvTool {
         if(tsvPath.isNullOrEmpty()) return
         val tsvPathObj = File(tsvPath)
         if(!tsvPathObj.isFile) return
-        val tsvParentDirPath = tsvPathObj.parent
-            ?: return
-        val tsvName = tsvPathObj.name
-        val srcTsvConList = ReadText(
-            tsvParentDirPath,
-            tsvName,
-        ).textToList()
+        val srcTsvConList = ReadText(tsvPath).textToList()
         val updateTsvCon = listOf(recentUpdateTsvLine) + srcTsvConList.filter {
             it != recentUpdateTsvLine
         }
         FileSystems.writeFile(
-            tsvParentDirPath,
-            tsvName,
+            tsvPath,
             updateTsvCon.joinToString("\n")
         )
     }
@@ -88,13 +66,7 @@ object TsvTool {
         ) return
         val tsvPathObj = File(tsvPath)
         if(!tsvPathObj.isFile) return
-        val tsvParentDirPath = tsvPathObj.parent
-            ?: return
-        val tsvName = tsvPathObj.name
-        val srcTsvConList = ReadText(
-            tsvParentDirPath,
-            tsvName,
-        ).textToList()
+        val srcTsvConList = ReadText(tsvPath).textToList()
         val replaceTsvConList = srcTsvConList.map {
             srcTsvLine ->
             val hitTsvLine = srcAndRepLinePairList.find {
@@ -110,8 +82,7 @@ object TsvTool {
             srcTsvConList == replaceTsvConList
         ) return
         FileSystems.writeFile(
-            tsvParentDirPath,
-            tsvName,
+            tsvPath,
             replaceTsvConList.joinToString("\n")
         )
     }
@@ -120,19 +91,12 @@ object TsvTool {
         tsvPath: String,
         insertLine: String,
     ){
-        val tsvPathObj = File(tsvPath)
-        val tsvParentPath = tsvPathObj.parent ?: return
-        val tsvName = tsvPathObj.name
         val updateTsvCon = listOf(
             insertLine,
-            ReadText(
-                tsvParentPath,
-                tsvName
-            ).readText(),
+            ReadText(tsvPath).readText(),
         ).joinToString("\n")
         FileSystems.writeFile(
-            tsvParentPath,
-            tsvName,
+            tsvPath,
             updateTsvCon
         )
     }

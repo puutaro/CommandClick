@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 object BroadcastHtmlReceiveHandler {
     fun handle(
@@ -65,15 +66,19 @@ object BroadcastHtmlReceiveHandler {
         CoroutineScope(Dispatchers.IO).launch {
             val previousChecksum = withContext(Dispatchers.IO) {
                 FileSystems.checkSum(
-                    appUrlSystemDirPath,
-                    urlLoadFinished
+                    File(
+                        appUrlSystemDirPath,
+                        urlLoadFinished
+                    ).absolutePath
                 )
             }
             withContext(Dispatchers.IO) {
                 for (i in 1..20) {
                     val updateChecksum = FileSystems.checkSum(
-                        appUrlSystemDirPath,
-                        urlLoadFinished
+                        File(
+                            appUrlSystemDirPath,
+                            urlLoadFinished
+                        ).absolutePath
                     )
                     if (
                         updateChecksum != previousChecksum

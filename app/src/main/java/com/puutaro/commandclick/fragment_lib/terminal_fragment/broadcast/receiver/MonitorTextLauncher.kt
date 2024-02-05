@@ -7,6 +7,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
+import java.io.File
 
 object MonitorTextLauncher {
     fun handle(
@@ -20,20 +21,28 @@ object MonitorTextLauncher {
         val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
         val currentMonitorFileName = terminalViewModel.currentMonitorFileName
         val monitorText = ReadText(
-            cmdclickMonitorDirPath,
-            currentMonitorFileName
+            File(
+                cmdclickMonitorDirPath,
+                currentMonitorFileName
+            ).absolutePath
         ).readText() + "\n" + ReadText(
-            cmdclickTempMonitorDirPath,
-            cmdclickTmpUpdateMonitorFileName
+            File(
+                cmdclickTempMonitorDirPath,
+                cmdclickTmpUpdateMonitorFileName
+            ).absolutePath
         ).readText()
         FileSystems.writeFile(
-            UsePath.cmdclickMonitorDirPath,
-            currentMonitorFileName,
+            File(
+                UsePath.cmdclickMonitorDirPath,
+                currentMonitorFileName
+            ).absolutePath,
             monitorText
         )
         FileSystems.removeFiles(
-            cmdclickTempMonitorDirPath,
-            cmdclickTmpUpdateMonitorFileName
+            File(
+                cmdclickTempMonitorDirPath,
+                cmdclickTmpUpdateMonitorFileName
+            ).absolutePath
         )
     }
 }

@@ -2,12 +2,9 @@ package com.puutaro.commandclick.proccess.extra_args
 
 import android.content.Intent
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import java.io.File
 
 object ExtraArgsTool {
 
@@ -126,14 +123,7 @@ object ExtraArgsTool {
         val shellPath = extraMap.get(
             ExtraKey.SHELL_PATH.key
         ) ?: return String()
-        val shellPathObj = File(shellPath)
-        val shellParentDirPath = shellPathObj.parent
-            ?: return String()
-        val shellName = shellPathObj.name
-        return ReadText(
-            shellParentDirPath,
-            shellName
-        ).readText()
+        return ReadText(shellPath).readText()
 
     }
 }

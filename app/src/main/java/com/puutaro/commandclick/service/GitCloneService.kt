@@ -120,8 +120,10 @@ class GitCloneService: Service() {
             }
             withContext(Dispatchers.IO){
                 FileSystems.writeFile(
-                    UsePath.cmdclickFannelListDirPath,
-                    UsePath.fannelListMemoryName,
+                    File(
+                        UsePath.cmdclickFannelListDirPath,
+                        UsePath.fannelListMemoryName
+                    ).absolutePath,
                     FannelListVariable.makeFannelListMemoryContents()
                         .joinToString(cmdclickFannelListSeparator)
                 )

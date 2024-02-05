@@ -95,8 +95,10 @@ class QrLogo(
         val fannelRawName = CcPathTool.makeFannelRawName(fannelName)
         val qrContents = when(isFileCon) {
             true -> ReadText(
-                currentAppDirPath,
-                fannelName
+                File(
+                    currentAppDirPath,
+                    fannelName
+                ).absolutePath
             ).readText().take(maxQrConLength)
             else ->
                 QrMapper.onGitTemplate.format(fannelRawName)
@@ -283,14 +285,10 @@ class QrLogo(
                 withContext(Dispatchers.IO) {
                     val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
                     val qrPngPath = "${currentAppDirPath}/${fannelDirName}/$qrPngRelativePath"
-                    val qrPngPathObj = File(qrPngPath)
-                    val qrDirPath = qrPngPathObj.parent
-                        ?: return@withContext
                     val qrBitMap = toBitMapWrapper(qrDrawable)
                         ?: return@withContext
                     FileSystems.savePngFromBitMap(
-                        qrDirPath,
-                        qrPngPathObj.name,
+                        qrPngPath,
                         qrBitMap
                     )
                 }
@@ -329,8 +327,10 @@ class QrLogo(
         selectedScriptName: String,
     ): Boolean {
         val scriptContentsList = ReadText(
-            currentAppDirPath,
-            selectedScriptName,
+            File(
+                currentAppDirPath,
+                selectedScriptName
+            ).absolutePath,
         ).textToList()
         val editExecuteAlwaysStr = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         val isEditExecuteForJs = CommandClickVariables.returnEditExecuteValueStr(
@@ -407,8 +407,10 @@ class QrLogo(
             when(currentKeyName == contentsKeyName) {
                 true -> {
                     currentKeyName to ReadText(
-                        currentAppDirPath,
-                        fannelName,
+                        File(
+                            currentAppDirPath,
+                            fannelName
+                        ).absolutePath,
                     ).readText()
                 }
                 false ->
@@ -433,8 +435,10 @@ class QrLogo(
             decideDarkColor(rnd).toString(),
             decideDarkColor(rnd).toString(),
             ReadText(
-                currentAppDirPath,
-                fannelName,
+                File(
+                    currentAppDirPath,
+                    fannelName
+                ).absolutePath,
             ).readText()
         )
         saveQrDesignMap(
@@ -465,12 +469,8 @@ class QrLogo(
     private fun readQrDesignMap(
         qrDesignFilePath: String,
     ): Map<String, String> {
-        val qrDesignFilePathObj = File(qrDesignFilePath)
-        val qrDesignDirPath = qrDesignFilePathObj.parent
-            ?: return mapOf()
         return ReadText(
-            qrDesignDirPath,
-            qrDesignFilePathObj.name
+            qrDesignFilePath
         ).readText().split("\n").map {
             CcScript.makeKeyValuePairFromSeparatedString(
                 it,
@@ -497,12 +497,8 @@ class QrLogo(
         qrDesignFilePath: String,
         qrDesignMap: Map<String, String>
     ){
-        val qrDesignPathObj = File(qrDesignFilePath)
-        val parentDirPath = qrDesignPathObj.parent
-            ?: return
         FileSystems.writeFile(
-            parentDirPath,
-            qrDesignPathObj.name,
+            qrDesignFilePath,
             qrDesignMap.map {
                 "${it.key}=${it.value.replace("\n", qrNewLine)}"
             }.joinToString("\n")

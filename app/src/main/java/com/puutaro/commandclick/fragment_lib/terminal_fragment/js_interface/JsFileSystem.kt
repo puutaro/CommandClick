@@ -24,20 +24,18 @@ class JsFileSystem(
     fun readLocalFile(path: String): String {
         val fileObj = File(path)
         if(!fileObj.isFile) return String()
-        val parentDir = fileObj.parent ?: return String()
         return ReadText(
-            parentDir,
-            fileObj.name
+            fileObj.absolutePath
         ).readText()
     }
 
     @JavascriptInterface
-    fun writeLocalFile(path: String, contents: String) {
-        val fileObj = File(path)
-        val parentDir = fileObj.parent ?: return
+    fun writeLocalFile(
+        filePath: String,
+        contents: String
+    ) {
         FileSystems.writeFile(
-            parentDir,
-            fileObj.name,
+            filePath,
             contents
         )
     }
@@ -51,10 +49,10 @@ class JsFileSystem(
             SettingVariableSelects.TerminalOutPutModeSelects.NO.name
             == outPutOption
         ) return
-        val currentMonitorPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
-        val fileObj = File(currentMonitorPath)
-        val parentDir = fileObj.parent
-            ?: return
+        val currentMonitorPath = File(
+            UsePath.cmdclickMonitorDirPath,
+            terminalViewModel.currentMonitorFileName
+        ).absolutePath
         val currentTime = ZonedDateTime.now(
             ZoneId.of("Asia/Tokyo")
         ).format(
@@ -72,19 +70,16 @@ class JsFileSystem(
             == outPutOption
         ) {
             FileSystems.writeFile(
-                parentDir,
-                fileObj.name,
+                currentMonitorPath,
                 addContents
             )
             return
         }
         val echoContents = ReadText(
-            parentDir,
-            fileObj.name
+            currentMonitorPath
         ).readText() + addContents
         FileSystems.writeFile(
-            parentDir,
-            fileObj.name,
+            currentMonitorPath,
             echoContents
         )
     }
@@ -118,10 +113,10 @@ class JsFileSystem(
             == outPutOption
         ) return
         val currentMonitorPath =
-            "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"
-        val fileObj = File(currentMonitorPath)
-        val parentDir = fileObj.parent
-            ?: return
+            File(
+                UsePath.cmdclickMonitorDirPath,
+                terminalViewModel.currentMonitorFileName
+            ).absolutePath
         terminalViewModel.onBottomScrollbyJs = !(
                 outPutOption ==
                         SettingVariableSelects.TerminalOutPutModeSelects.REFLASH_AND_FIRST_ROW.name
@@ -133,22 +128,19 @@ class JsFileSystem(
             == outPutOption
         ) {
             FileSystems.writeFile(
-                parentDir,
-                fileObj.name,
+                currentMonitorPath,
                 contents
             )
             return
         }
         val echoContents = ReadText(
-            parentDir,
-            fileObj.name
+            currentMonitorPath,
         ).readText() + contents
         val wrapChar = if(wrap == "yes"){
             "\n"
         } else String()
         FileSystems.writeFile(
-            parentDir,
-            fileObj.name,
+            currentMonitorPath,
             "${echoContents}${wrapChar}"
         )
     }
@@ -165,26 +157,17 @@ class JsFileSystem(
 
     @JavascriptInterface
     fun removeFile(path: String){
-        val fileObj = File(path)
-        val parentDir = fileObj.parent ?: return
-        FileSystems.removeFiles(
-            parentDir,
-            fileObj.name
-        )
+        FileSystems.removeFiles(path)
     }
 
     @JavascriptInterface
     fun createDir(path: String){
-        FileSystems.createDirs(
-            path
-        )
+        FileSystems.createDirs(path)
     }
 
     @JavascriptInterface
     fun removeDir(path: String){
-        FileSystems.removeDir(
-            path
-        )
+        FileSystems.removeDir(path)
     }
 
     @JavascriptInterface

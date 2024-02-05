@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.io.File
 
 object ScrollYPosiBackUp {
     fun backup(
@@ -20,15 +21,19 @@ object ScrollYPosiBackUp {
             val cmdclickSiteScrollPosiFileName = UsePath.cmdclickSiteScrollPosiFileName
             FileSystems.createDirs(cmdclickSiteScrollPosiDirPath)
             val scrollPosiConList = ReadText(
-                cmdclickSiteScrollPosiDirPath,
-                cmdclickSiteScrollPosiFileName
+                File(
+                    cmdclickSiteScrollPosiDirPath,
+                    cmdclickSiteScrollPosiFileName
+                ).absolutePath
             ).textToList()
             val scrollPosiConListSize = scrollPosiConList.size
             val cmdclickSiteScrollPosiBkFileName =
                 UsePath.cmdclickSiteScrollPosiBkFileName
             val scrollPosiBackupConList = ReadText(
-                cmdclickSiteScrollPosiDirPath,
-                cmdclickSiteScrollPosiBkFileName
+                File(
+                    cmdclickSiteScrollPosiDirPath,
+                    cmdclickSiteScrollPosiBkFileName
+                ).absolutePath
             ).textToList().take(takePosiLinesForBackup)
             val scrollPosiBuckupConListSize =
                 scrollPosiBackupConList.size
@@ -36,15 +41,19 @@ object ScrollYPosiBackUp {
                 scrollPosiConListSize < scrollPosiBuckupConListSize
             ) {
                 FileSystems.writeFile(
-                    cmdclickSiteScrollPosiDirPath,
-                    cmdclickSiteScrollPosiFileName,
+                    File(
+                        cmdclickSiteScrollPosiDirPath,
+                        cmdclickSiteScrollPosiFileName
+                    ).absolutePath,
                     scrollPosiBackupConList.joinToString("\n")
                 )
                 return@launch
             }
             FileSystems.writeFile(
-                cmdclickSiteScrollPosiDirPath,
-                cmdclickSiteScrollPosiBkFileName,
+                File(
+                    cmdclickSiteScrollPosiDirPath,
+                    cmdclickSiteScrollPosiBkFileName
+                ).absolutePath,
                 scrollPosiConList.joinToString("\n")
             )
         }

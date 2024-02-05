@@ -149,12 +149,16 @@ object WrapWebHistoryUpdater {
         val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
         val takeHistoryNum = 500
         val updatingHistory = "${ulrTitle}\t${webViewUrl}\n" + ReadText(
-            appUrlSystemDirPath,
-            cmdclickUrlHistoryFileName
+            File(
+                appUrlSystemDirPath,
+                cmdclickUrlHistoryFileName
+            ).absolutePath
         ).textToList().take(takeHistoryNum).joinToString("\n")
         FileSystems.writeFile(
-            appUrlSystemDirPath,
-            cmdclickUrlHistoryFileName,
+            File(
+                appUrlSystemDirPath,
+                cmdclickUrlHistoryFileName,
+            ).absolutePath,
             updatingHistory
         )
 

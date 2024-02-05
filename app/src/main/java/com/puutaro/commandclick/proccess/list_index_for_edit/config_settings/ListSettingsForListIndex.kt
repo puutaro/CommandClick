@@ -252,12 +252,8 @@ object ListSettingsForListIndex  {
                 ListSettingKey.LIST_DIR.key,
             ) ?: String()
             val tsvFilePathObj = File(tsvFilePath)
-            val tsvParentDirPath = tsvFilePathObj.parent
-                ?: return mutableListOf()
-            val tsvName = tsvFilePathObj.name
             val tsvConListSrc = ReadText(
-                tsvParentDirPath,
-                tsvName
+                tsvFilePath
             ).textToList().let {
                 filter2ColumnLine(it)
             }.map {
@@ -310,13 +306,10 @@ object ListSettingsForListIndex  {
                 initTsvPath.isNullOrEmpty()
             ) return tsvConList
             val initTsvPathObj = File(initTsvPath)
-            val initTsvParentDirPath = initTsvPathObj.parent
-                ?: return tsvConList
             val initTsvCon = when(true){
                 initTsvPathObj.isFile ->
                    ReadText(
-                       initTsvParentDirPath,
-                       initTsvPathObj.name
+                       initTsvPathObj.absolutePath
                    ).textToList().let {
                        filter2ColumnLine(it)
                    }
@@ -409,8 +402,10 @@ object ListSettingsForListIndex  {
 
         private fun makeFannelListForListView(): List<String> {
             val fannelListSource = ReadText(
-                UsePath.cmdclickFannelListDirPath,
-                UsePath.fannelListMemoryName,
+                File(
+                    UsePath.cmdclickFannelListDirPath,
+                    UsePath.fannelListMemoryName
+                ).absolutePath,
             ).readText()
                 .replace(Regex("\\*\\*([a-zA-Z0-9]*)\\*\\*"), "*$1")
                 .split(FannelListVariable.cmdclickFannelListSeparator)
@@ -442,10 +437,10 @@ object ListSettingsForListIndex  {
 
         private fun execGetFilterShellCon(
             editFragment: EditFragment,
-            shellPath: String,
+            filterShellPath: String,
         ): String {
             if(
-                shellPath.isEmpty()
+                filterShellPath.isEmpty()
             ) return String()
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
             val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
@@ -456,12 +451,8 @@ object ListSettingsForListIndex  {
                 readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
             )
-            val filterShellPathObj = File(shellPath)
-            val shellParentDirPath = filterShellPathObj.parent
-                ?: return String()
             return ReadText(
-                shellParentDirPath,
-                filterShellPathObj.name
+                filterShellPath
             ).readText().let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,

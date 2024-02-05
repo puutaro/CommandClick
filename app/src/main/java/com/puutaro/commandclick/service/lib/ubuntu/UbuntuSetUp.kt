@@ -45,8 +45,10 @@ object UbuntuSetUp {
             }
         } catch (e: Exception){
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                     "\n\n${e}"
             )
            null
@@ -89,8 +91,10 @@ object UbuntuSetUp {
             -> {
                 withContext(Dispatchers.IO) {
                     FileSystems.updateFile(
-                        cmdclickMonitorDirPath,
-                        UsePath.cmdClickMonitorFileName_2,
+                        File(
+                            cmdclickMonitorDirPath,
+                            UsePath.cmdClickMonitorFileName_2
+                        ).absolutePath,
                         "copy start"
                     )
                     FileSystems.copyFile(
@@ -126,8 +130,10 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO) {
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "\nextract file"
             )
         }
@@ -154,8 +160,10 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO) {
             FileSystems.removeFiles(
-                ubuntuFiles.filesDir.absolutePath,
-                UbuntuFiles.rootfsTarGzName
+                File(
+                    ubuntuFiles.filesDir.absolutePath,
+                    UbuntuFiles.rootfsTarGzName
+                ).absolutePath
             )
             ubuntuFiles.filesOneRootfsSupportDir.mkdirs()
 
@@ -179,13 +187,17 @@ object UbuntuSetUp {
             )
             val filesOneRootfsSupportDirPath = ubuntuFiles.filesOneRootfsSupportDir.absolutePath
             FileSystems.writeFile(
-                filesOneRootfsSupportDirPath,
-                UbuntuFiles.waitQuizTsvName,
+                File(
+                    filesOneRootfsSupportDirPath,
+                    UbuntuFiles.waitQuizTsvName
+                ).absolutePath,
                 WaitQuizPair.makeQuizPairCon()
             )
             FileSystems.writeFile(
-                filesOneRootfsSupportDirPath,
-                UbuntuFiles.ubuntuEnvTsvName,
+                File(
+                    filesOneRootfsSupportDirPath,
+                    UbuntuFiles.ubuntuEnvTsvName
+                ).absolutePath,
                 UbuntuEnvTsv.makeTsv()
             )
         }
@@ -199,8 +211,10 @@ object UbuntuSetUp {
         ) return
         withContext(Dispatchers.IO) {
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "\nexec setup"
             )
             FileSystems.createDirs(
@@ -219,8 +233,10 @@ object UbuntuSetUp {
         val isInvalidDownload = downloadProgress != downLoadCompPercent
         if(isInvalidDownload) {
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "retry, invalid download ${downloadProgress}%"
             )
         }
@@ -260,8 +276,10 @@ object UbuntuSetUp {
                 UbuntuInfo.onForDev
             ) return@withContext
             FileSystems.removeFiles(
-                UbuntuFiles.downloadDirPath,
-                UbuntuFiles.rootfsTarGzName
+                File(
+                    UbuntuFiles.downloadDirPath,
+                    UbuntuFiles.rootfsTarGzName
+                ).absolutePath
             )
             // put your url.this is sample url.
             val url = URL(UbuntuInfo.arm64UbuntuRootfsUrl)
@@ -294,8 +312,10 @@ object UbuntuSetUp {
                     && !cmdclickTmpUbuntuMonitorOffFile.isFile
                 ) {
                     FileSystems.removeFiles(
-                        UbuntuFiles.downloadDirPath,
-                        UbuntuFiles.rootfsTarGzName
+                        File(
+                            UbuntuFiles.downloadDirPath,
+                            UbuntuFiles.rootfsTarGzName
+                        ).absolutePath
                     )
                     break
                 }
@@ -305,19 +325,25 @@ object UbuntuSetUp {
                 output.write(data, 0, count)
                 if (downloadProgress <= previousDisplayProgress) continue
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
+                    File(
+                        cmdclickMonitorDirPath,
+                        monitorFileName
+                    ).absolutePath,
                     "download ${downloadProgress}%"
                 )
             }
             if(downloadProgress != downLoadCompPercent){
                 FileSystems.removeFiles(
-                    UbuntuFiles.downloadDirPath,
-                    UbuntuFiles.rootfsTarGzName
+                    File(
+                        UbuntuFiles.downloadDirPath,
+                        UbuntuFiles.rootfsTarGzName
+                    ).absolutePath
                 )
                 FileSystems.updateFile(
-                    cmdclickMonitorDirPath,
-                    monitorFileName,
+                    File(
+                        cmdclickMonitorDirPath,
+                        monitorFileName
+                    ).absolutePath,
                     "invalid download: ${downloadProgress}%"
                 )
             }
@@ -329,8 +355,10 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO){
             FileSystems.updateFile(
-                cmdclickMonitorDirPath,
-                monitorFileName,
+                File(
+                    cmdclickMonitorDirPath,
+                    monitorFileName
+                ).absolutePath,
                 "\ndownload comp"
             )
         }
@@ -345,8 +373,10 @@ object UbuntuSetUp {
             ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
+            File(
+                cmdclickMonitorDirPath,
+                monitorFileName
+            ).absolutePath,
             "support copy start"
         )
         AssetsFileManager.copyFileOrDirFromAssets(
@@ -356,8 +386,10 @@ object UbuntuSetUp {
             ubuntuFiles.supportDir.absolutePath
         )
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
+            File(
+                cmdclickMonitorDirPath,
+                monitorFileName
+            ).absolutePath,
             "chmod start"
         )
         ubuntuFiles.supportDir.listFiles()?.forEach {
@@ -370,16 +402,20 @@ object UbuntuSetUp {
             ubuntuFiles.filesOneRootfs.absolutePath
         )
         FileSystems.updateFile(
-            cmdclickMonitorDirPath,
-            monitorFileName,
+            File(
+                cmdclickMonitorDirPath,
+                monitorFileName
+            ).absolutePath,
             "rootfs copy start"
         )
         if(
             !UbuntuInfo.onForDev
         ) {
             FileSystems.removeFiles(
-                UbuntuFiles.downloadDirPath,
-                UbuntuFiles.rootfsTarGzName
+                File(
+                    UbuntuFiles.downloadDirPath,
+                    UbuntuFiles.rootfsTarGzName
+                ).absolutePath
             )
         }
 

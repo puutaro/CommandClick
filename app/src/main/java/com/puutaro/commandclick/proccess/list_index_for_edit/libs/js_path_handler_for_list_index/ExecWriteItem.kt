@@ -88,14 +88,10 @@ object ExecWriteItem {
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-        )
-        val tsvPathObj = File(tsvPath)
-        val tsvParentDirPath = tsvPathObj.parent ?: return
-        val tsvName = tsvPathObj.name
-        val isExist = ReadText(
-            tsvParentDirPath,
-            tsvName
-        ).textToList().contains(selectedTsvLine)
+        ) ?: return
+        val isExist = ReadText(tsvPath)
+            .textToList()
+            .contains(selectedTsvLine)
         if(!isExist){
             Toast.makeText(
                 context,

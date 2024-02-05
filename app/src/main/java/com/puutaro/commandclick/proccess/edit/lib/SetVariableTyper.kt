@@ -144,13 +144,8 @@ object SetVariableTyper {
                 currentAppDirPath,
                 currentShellFileName,
             )
-        val setVariableTypesConfigObj = File(setVariableTypesConfigPath)
-        val setVariableTypesConfigDirPath = setVariableTypesConfigObj.parent
-            ?: String()
-        val setVariableTypesConfigName = setVariableTypesConfigObj.name
         return SettingFile.read(
-            setVariableTypesConfigDirPath,
-            setVariableTypesConfigName
+            setVariableTypesConfigPath
         )
     }
 

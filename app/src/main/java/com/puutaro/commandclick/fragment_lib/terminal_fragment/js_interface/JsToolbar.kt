@@ -89,8 +89,10 @@ class JsToolbar(
             extraMap
         )
         FileSystems.writeFile(
-            parentDirPath,
-            compFileName,
+            File(
+                parentDirPath,
+                compFileName
+            ).absolutePath,
             con,
         )
         addAndSort(

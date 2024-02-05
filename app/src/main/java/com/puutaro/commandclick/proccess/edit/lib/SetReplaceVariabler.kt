@@ -151,13 +151,8 @@ object SetReplaceVariabler {
                 currentAppDirPath,
                 currentScriptFileName,
             )
-        val setReplaceVariablesConfigObj = File(setReplaceVariablesConfigPath)
-        val setReplaceVariableConfigDirPath = setReplaceVariablesConfigObj.parent
-            ?: return String()
-        val setReplaceVariableConfigName = setReplaceVariablesConfigObj.name
         return SettingFile.read(
-            setReplaceVariableConfigDirPath,
-            setReplaceVariableConfigName
+            setReplaceVariablesConfigPath
         ).let {
             ScriptPreWordReplacer.replace(
                 it,
@@ -215,8 +210,7 @@ object SetReplaceVariabler {
             }
         val mainFannelName = currentMainFannelPathObj.name
         val mainFannelConList = ReadText(
-            currentAppDirPath,
-            mainFannelName,
+            mainFannlePath
         ).readText().let {
             ScriptPreWordReplacer.replace(
                 it,
@@ -283,16 +277,8 @@ object SetReplaceVariabler {
             )
             return String()
         }
-        val settingVariablesDirPath = replaceVariablesTsvPathObj.parent ?: let{
-            LogSystems.stdErr(
-                "settingVarialesDirPath not found: ${replaceVariablesTsvPath}"
-            )
-            return String()
-        }
-        val replaceVariableTsvName = replaceVariablesTsvPathObj.name
         return ReadText(
-            settingVariablesDirPath,
-            replaceVariableTsvName
+            replaceVariablesTsvPathObj.absolutePath
         ).readText()
     }
 

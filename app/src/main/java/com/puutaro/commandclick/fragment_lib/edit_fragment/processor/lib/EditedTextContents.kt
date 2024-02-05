@@ -12,6 +12,7 @@ import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableLis
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
+import java.io.File
 
 
 class EditedTextContents(
@@ -76,8 +77,10 @@ class EditedTextContents(
         )
 
         FileSystems.writeFile(
-            currentAppDirPath,
-            currentScriptFileName,
+            File(
+                currentAppDirPath,
+                currentScriptFileName,
+            ).absolutePath,
             submitScriptContentsList.joinToString("\n")
         )
         judgeAndUpdateWeekAgoLastModify(
@@ -96,8 +99,10 @@ class EditedTextContents(
             )
         ) return
         FileSystems.updateWeekPastLastModified(
-            currentAppDirPath,
-            currentScriptFileName
+            File(
+                currentAppDirPath,
+                currentScriptFileName
+            ).absolutePath
         )
     }
 
