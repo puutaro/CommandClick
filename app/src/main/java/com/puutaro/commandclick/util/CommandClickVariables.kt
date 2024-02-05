@@ -167,16 +167,24 @@ object CommandClickVariables {
         if(
             endHolder.isNullOrEmpty()
         ) return scriptContents
+        if(
+            replaceTabList.isEmpty()
+        ) return scriptContents
         val replaceMap = replaceTabList.split("\t").map {
             val keyValueList = it.split("=")
             val keyValueListSize = keyValueList.size
-            if(keyValueList.size < 2) return it
+            if(
+                keyValueList.size < 2
+            ) return@map String() to String()
             val key = keyValueList.first()
             val value = keyValueList
                 .takeLast(keyValueListSize - 1)
                 .joinToString("=")
             key to value
-        }.toMap()
+        }.toMap().filterKeys { it.isNotEmpty() }
+        if(
+            replaceMap.isEmpty()
+        ) return scriptContents
         return scriptContents.split('\n').map {
             if(
                 it.startsWith(startHolder)

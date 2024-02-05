@@ -7,6 +7,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,7 @@ import java.io.File
 
 object ExecAddForListIndexAdapter {
 
-    fun getInsertIndex(
+    private fun getInsertIndex(
         sortType: ListSettingsForListIndex.SortByKey,
         listIndexForEditAdapter: ListIndexForEditAdapter,
         addLine: String,
@@ -94,11 +95,11 @@ object ExecAddForListIndexAdapter {
         val listIndexForEditAdapter =
             editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
         val tsvPath =
-            ListSettingsForListIndex.getListSettingKeyHandler(
+            FilePrefixGetter.get(
                 editFragment,
                 ListIndexForEditAdapter.indexListMap,
                 ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-            )
+            )  ?: String()
         val tsvPathObj = File(tsvPath)
         val tsvParentDirPath = tsvPathObj.parent ?: return
         val tsvName = tsvPathObj.name
@@ -116,7 +117,10 @@ object ExecAddForListIndexAdapter {
             ).show()
             return
         }
-        val sortType = ListSettingsForListIndex.getSortType(ListIndexForEditAdapter.indexListMap)
+        val sortType = ListSettingsForListIndex.getSortType(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap
+        )
         val insertIndex = getInsertIndex(
             sortType,
             listIndexForEditAdapter,
@@ -151,7 +155,10 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertFilePath: String,
     ){
-        val sortType = ListSettingsForListIndex.getSortType(ListIndexForEditAdapter.indexListMap)
+        val sortType = ListSettingsForListIndex.getSortType(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap
+        )
         when(sortType){
             ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
                 ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
@@ -183,16 +190,16 @@ object ExecAddForListIndexAdapter {
                 indexListMap,
                 ListIndexForEditAdapter.listIndexTypeKey
             )
-        val filterPrefix = ListSettingsForListIndex.getListSettingKeyHandler(
+        val filterPrefix = FilePrefixGetter.get(
             editFragment,
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.PREFIX.key
-        )
-        val filterSuffix = ListSettingsForListIndex.getListSettingKeyHandler(
+        ) ?: String()
+        val filterSuffix = FilePrefixGetter.get(
             editFragment,
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-        )
+        ) ?: String()
         val filterShellCon = ListSettingsForListIndex.ListIndexListMaker.getFilterShellCon(
             editFragment,
             indexListMap,
@@ -211,7 +218,10 @@ object ExecAddForListIndexAdapter {
         ) return
         val listIndexForEditAdapter =
             editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
-        val sortType = ListSettingsForListIndex.getSortType(ListIndexForEditAdapter.indexListMap)
+        val sortType = ListSettingsForListIndex.getSortType(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap
+        )
         val insertIndex = getInsertIndex(
             sortType,
             listIndexForEditAdapter,

@@ -29,6 +29,7 @@ import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -401,15 +402,15 @@ class ListIndexForEditAdapter(
             indexListMap,
             listIndexTypeKey
         )
-        filterPrefix = ListSettingsForListIndex.getListSettingKeyHandler(
+        filterPrefix = FilePrefixGetter.get(
             editFragment,
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.PREFIX.key
-        )
-        filterSuffix = ListSettingsForListIndex.getListSettingKeyHandler(
+        )  ?: String()
+        filterSuffix = FilePrefixGetter.get(
             editFragment,
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.SUFFIX.key
-        )
+        )  ?: String()
     }
 }

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -37,14 +38,19 @@ object UpdateLastModifiedForAppHistory {
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
             && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val isFDialogFannel = FDialogTempFile.howFDialogFile(currentFannelName)
+        if(
+            isFDialogFannel
+        ) return
         FileSystems.updateLastModified(
             UsePath.cmdclickAppHistoryDirAdminPath,
             AppHistoryManager.makeAppHistoryFileNameForInit(
                 currentAppDirPath,
-                SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreffernceMap,
-                    SharePrefferenceSetting.current_fannel_name
-                )
+                currentFannelName
             )
         )
     }

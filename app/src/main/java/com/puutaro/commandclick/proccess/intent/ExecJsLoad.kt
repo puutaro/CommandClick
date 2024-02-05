@@ -11,6 +11,7 @@ import com.puutaro.commandclick.common.variable.variant.ScriptArgs
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.history.JsFilePathToHistory
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.*

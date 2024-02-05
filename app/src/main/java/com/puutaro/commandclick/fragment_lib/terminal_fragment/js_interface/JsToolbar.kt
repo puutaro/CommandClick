@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.SiteUrl
@@ -48,7 +49,7 @@ class JsToolbar(
         if(
             editFragment == null
         ) return null
-        return ListSettingsForListIndex.getListSettingKeyHandler(
+        return FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,

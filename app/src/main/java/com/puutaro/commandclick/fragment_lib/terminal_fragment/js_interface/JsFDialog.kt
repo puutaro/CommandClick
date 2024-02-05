@@ -22,6 +22,29 @@ class JsFDialog(
         settingValConSrc: String,
         cmdValConSrc: String,
     ){
+        execLaunch(
+            settingValConSrc,
+            cmdValConSrc,
+        )
+    }
+
+    @JavascriptInterface
+    fun launchByFree(
+        settingValConSrc: String,
+        cmdValConSrc: String,
+    ){
+        execLaunch(
+            settingValConSrc,
+            cmdValConSrc,
+            EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
+        )
+    }
+
+    private fun execLaunch(
+        settingValConSrc: String,
+        cmdValConSrc: String,
+        destiOnShortcut: String = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key,
+    ){
         val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
             SharePrefferenceSetting.current_app_dir
@@ -45,6 +68,7 @@ class JsFDialog(
             readSharedPreferences,
             destiFDialogFannelName,
             fannelCon,
+            destiOnShortcut
         )
         if(!isSuccess) return
 
@@ -62,7 +86,7 @@ class JsFDialog(
             SharePrefferenceSetting.current_fannel_name.name
                     to destiFDialogFannelName,
             SharePrefferenceSetting.on_shortcut.name
-                    to EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key,
+                    to destiOnShortcut,
         )
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
             srcAppDirPath,

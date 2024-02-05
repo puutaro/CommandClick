@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvLineRenamer
 import java.io.File
 
@@ -76,11 +77,11 @@ object ExecRenameFile {
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexListViewHolder.bindingAdapterPosition
             ) ?: return
-        val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
+        val tsvPath = FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
-        )
+        ) ?: String()
         val tsvPathObj = File(tsvPath)
         val tsvParentDirPath = tsvPathObj.parent ?: return
         val tsvName = tsvPathObj.name

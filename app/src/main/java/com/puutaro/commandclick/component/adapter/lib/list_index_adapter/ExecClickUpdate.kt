@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 
 object ExecClickUpdate {
@@ -43,6 +44,7 @@ object ExecClickUpdate {
         listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
     ){
         val sortType = ListSettingsForListIndex.getSortType(
+            editFragment,
             ListIndexForEditAdapter.indexListMap
         )
         when(sortType){
@@ -59,7 +61,7 @@ object ExecClickUpdate {
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexListViewHolder.bindingAdapterPosition
             ) ?: return
-        val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
+        val tsvPath = FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,

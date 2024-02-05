@@ -1,17 +1,16 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
@@ -32,7 +31,7 @@ object ListSettingsForListIndex  {
     enum class EditByDragKey(
         val key: String,
     ){
-        DISABLE("disable"),
+        EDIT_BY_DRAG_DISABLE("editByDragDisable"),
     }
 
     enum class DisableValue {
@@ -50,24 +49,28 @@ object ListSettingsForListIndex  {
 
 
     fun howDisableEditByDrag(
+        editFragment: EditFragment,
         editByDragMap: Map<String, String>
     ): Boolean {
-        return editByDragMap.get(
-            EditByDragKey.DISABLE.key
+        return FilePrefixGetter.get(
+            editFragment,
+            editByDragMap,
+            EditByDragKey.EDIT_BY_DRAG_DISABLE.key
         ) == DisableValue.ON.name
     }
 
     fun getSortType(
+        editFragment: EditFragment,
         indexListMap: Map<String, String>?,
     ): SortByKey {
-        return indexListMap?.get(
+        val sortByKeyStr = FilePrefixGetter.get(
+            editFragment,
+            indexListMap,
             ListSettingKey.SORT_TYPE.key
-        ).let {
-            sortKey ->
-            SortByKey.values().firstOrNull {
-                it.key == sortKey
-            } ?: SortByKey.LAST_UPDATE
-        }
+        )
+        return SortByKey.values().firstOrNull {
+            it.key == sortByKeyStr
+        }  ?: SortByKey.LAST_UPDATE
     }
 
     fun makeEditByDragMap(
@@ -82,65 +85,6 @@ object ListSettingsForListIndex  {
         )
     }
 
-    fun getListSettingKeyHandler(
-        editFragment: EditFragment,
-        indexListMap: Map<String, String>?,
-        listKeyName: String,
-    ): String {
-        val filePrefix = EditSettings.filePrefix
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
-        val setReplaceVariableMap = editFragment.setReplaceVariableMap
-        val listDirGetValue = indexListMap?.get(listKeyName)
-        if(
-            listDirGetValue.isNullOrEmpty()
-        ) return String()
-        val replaceListDirValue = SetReplaceVariabler.execReplaceByReplaceVariables(
-            listDirGetValue,
-            setReplaceVariableMap,
-            currentAppDirPath,
-            currentFannelName,
-        )
-        val listDirValue = QuoteTool.trimBothEdgeQuote(replaceListDirValue)
-        val isFileSpecify = listDirValue.startsWith(filePrefix)
-        return when(isFileSpecify){
-            false -> replaceListDirValue
-            else -> {
-                val listDirFilePath = replaceListDirValue.removePrefix(filePrefix)
-                val listDirFilePathObj = File(listDirFilePath)
-                val listDirFileParentDirPath = listDirFilePathObj.parent
-                    ?: return String()
-                val listDirFileName = listDirFilePathObj.name
-                ReadText(
-                    listDirFileParentDirPath,
-                    listDirFileName,
-                ).readText().let {
-                    val listSettingKeyMapCon = SetReplaceVariabler.execReplaceByReplaceVariables(
-                        it,
-                        setReplaceVariableMap,
-                        currentAppDirPath,
-                        currentFannelName,
-                    ).replace(
-                        "\t",
-                        "=",
-                    )
-                    CmdClickMap.createMap(
-                        listSettingKeyMapCon,
-                        "\n"
-                    ).toMap().get(
-                        listKeyName
-                    )
-                } ?: String()
-            }
-        }
-    }
     private fun execMakeEditByDragMap(
         listConfigMap: Map<String, String>?,
     ): Map<String, String> {
@@ -210,11 +154,11 @@ object ListSettingsForListIndex  {
                 TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
                 -> String()
                 TypeSettingsForListIndex.ListIndexTypeKey.NORMAL ->
-                    getListSettingKeyHandler(
+                    FilePrefixGetter.get(
                         editFragment,
                         indexListMap,
                         ListSettingKey.LIST_DIR.key,
-                    )
+                    ) ?: String()
             }
         }
 
@@ -230,16 +174,16 @@ object ListSettingsForListIndex  {
                 listIndexTypeKey
             )
             FileSystems.createDirs(filterDir)
-            val filterPrefix = getListSettingKeyHandler(
+            val filterPrefix = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.PREFIX.key
-            )
-            val filterSuffix = getListSettingKeyHandler(
+            ) ?: String()
+            val filterSuffix = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.SUFFIX.key
-            )
+            ) ?: String()
             val filterShellCon = getFilterShellCon(
                 editFragment,
                 indexListMap,
@@ -258,7 +202,10 @@ object ListSettingsForListIndex  {
             if(
                 fileListSource.isEmpty()
             ) return mutableListOf(throughMark)
-            val sortType = getSortType(indexListMap)
+            val sortType = getSortType(
+                editFragment,
+                indexListMap
+            )
             return sortList(
                 sortType,
                 fileListSource,
@@ -299,11 +246,11 @@ object ListSettingsForListIndex  {
                 editFragment,
                 indexListMap,
             )
-            val tsvFilePath = getListSettingKeyHandler(
+            val tsvFilePath = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.LIST_DIR.key,
-            )
+            ) ?: String()
             val tsvFilePathObj = File(tsvFilePath)
             val tsvParentDirPath = tsvFilePathObj.parent
                 ?: return mutableListOf()
@@ -326,10 +273,14 @@ object ListSettingsForListIndex  {
                 "${title}\t${con}"
             }
             val tsvConList = concatByInitTsvCon(
+                editFragment,
                 indexListMap,
                 tsvConListSrc
             )
-            val sortType = getSortType(indexListMap)
+            val sortType = getSortType(
+                editFragment,
+                indexListMap
+            )
             val sortedTsvConList = sortList(
                 sortType,
                 tsvConList,
@@ -343,15 +294,21 @@ object ListSettingsForListIndex  {
         }
 
         private fun concatByInitTsvCon(
+            editFragment: EditFragment,
             indexListMap: Map<String, String>,
             tsvConList: List<String>
         ): List<String> {
             if(
                 tsvConList.isNotEmpty()
             ) return tsvConList
-            val initTsvPath = indexListMap.get(
+            val initTsvPath = FilePrefixGetter.get(
+                editFragment,
+                indexListMap,
                 ListSettingKey.INIT_TSV_PATH.key
-            ) ?: return tsvConList
+            )
+            if(
+                initTsvPath.isNullOrEmpty()
+            ) return tsvConList
             val initTsvPathObj = File(initTsvPath)
             val initTsvParentDirPath = initTsvPathObj.parent
                 ?: return tsvConList
@@ -472,11 +429,11 @@ object ListSettingsForListIndex  {
             editFragment: EditFragment,
             indexListMap: Map<String, String>?,
         ): String {
-            val shellPath = getListSettingKeyHandler(
+            val shellPath = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.FILTER_SHELL_PATH.key,
-            )
+            ) ?: String()
             return execGetFilterShellCon(
                 editFragment,
                 shellPath,

@@ -23,7 +23,10 @@ object ItemTouchHelperCallbackForListIndexAdapter {
         val editByDragMap = ListSettingsForListIndex.makeEditByDragMap(
             editFragment.listIndexConfigMap,
         )
-        val enableEditByDrag = !ListSettingsForListIndex.howDisableEditByDrag(editByDragMap)
+        val enableEditByDrag = !ListSettingsForListIndex.howDisableEditByDrag(
+            editFragment,
+            editByDragMap
+        )
         if(!enableEditByDrag) return
         val mIth = ItemTouchHelper(
             object : ItemTouchHelper.SimpleCallback(

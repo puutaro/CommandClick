@@ -48,23 +48,17 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.file.FDialogTempFile
+import com.puutaro.commandclick.util.file.FreeDialogReflector
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.io.File
 
 object JsPathHandlerForToolbarButton {
@@ -815,7 +809,7 @@ object JsPathHandlerForToolbarButton {
                     )
                 }
                 isOnlyCmdEditWithFdialog ->
-                    fDialalogOkButtonProcess()
+                    fDialogOkButtonProcess()
 
                 isSettingEditByPass,
                 isOnlyCmdEditNoFdialog,
@@ -834,55 +828,11 @@ object JsPathHandlerForToolbarButton {
             }
         }
 
-        private fun fDialalogOkButtonProcess() {
-            val srcReadSharePreffernceMap = editFragment.srcReadSharePreffernceMap
-                ?: return
-            val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                srcReadSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
+        private fun fDialogOkButtonProcess() {
+            FreeDialogReflector.reflect(
+                editFragment.srcReadSharePreffernceMap,
+                editFragment.readSharePreferenceMap,
             )
-            val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                srcReadSharePreffernceMap,
-                SharePrefferenceSetting.current_fannel_name
-            )
-            val srcFannelCon = ReadText(
-                srcAppDirPath,
-                srcFannelName
-            ).readText()
-            val fDialogConList = ReadText(
-                currentAppDirPath,
-                currentScriptFileName
-            ).textToList()
-            val fDialogCommandValCon = CommandClickVariables.substituteVariableListFromHolder(
-                fDialogConList,
-                editFragment.commandSectionStart,
-                editFragment.commandSectionEnd
-            )?.filter {
-                !it.startsWith(FDialogTempFile.jsDescPrefix)
-                        && it.isNotEmpty()
-            }?.joinToString("\t") ?: String()
-            val replaceSrcFannelConInSettingVal = CommandClickVariables.replaceVariableInHolder(
-                srcFannelCon,
-                fDialogCommandValCon,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd,
-            )
-            val replaceSrcFanneCon = CommandClickVariables.replaceVariableInHolder(
-                replaceSrcFannelConInSettingVal,
-                fDialogCommandValCon,
-                editFragment.commandSectionStart,
-                editFragment.commandSectionEnd,
-            )
-            if (
-                replaceSrcFanneCon != srcFannelCon
-            ) {
-                FileSystems.writeFile(
-                    srcAppDirPath,
-                    srcFannelName,
-                    replaceSrcFanneCon
-                )
-            }
-            copyDirectoryWithDeleteWithBackup()
             val listener =
                 this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
             listener?.onToolBarButtonClickForEditFragment(
@@ -890,44 +840,6 @@ object JsPathHandlerForToolbarButton {
                 ToolbarButtonBariantForEdit.CANCEL,
                 mapOf(),
                 false
-            )
-        }
-
-        private fun copyDirectoryWithDeleteWithBackup(){
-            val srcReadSharePreffernceMap = editFragment.srcReadSharePreffernceMap
-                ?: return
-            val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                srcReadSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
-            )
-            val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                srcReadSharePreffernceMap,
-                SharePrefferenceSetting.current_fannel_name
-            )
-            val currentFannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
-            val currentFannelDirPath = File(currentAppDirPath, currentFannelDirName).absolutePath
-            val srcFannelDirName = CcPathTool.makeFannelDirName(srcFannelName)
-            val srcFannelDirPath = File(srcAppDirPath, srcFannelDirName).absolutePath
-            CoroutineScope(Dispatchers.IO).launch {
-                val buckupDirPath =
-                    File(
-                        currentAppDirPath,
-                        UsePath.clickBackupDirNameInAppDir
-                    ).absolutePath
-                FileSystems.createDirs(buckupDirPath)
-                val buckupTargetDirPath =
-                    File(buckupDirPath, srcFannelDirName).absolutePath
-                FileSystems.copyDirectory(
-                    currentFannelDirPath,
-                    buckupTargetDirPath
-                )
-            }
-            FileSystems.removeDir(
-                srcFannelDirPath
-            )
-            FileSystems.copyDirectory(
-                currentFannelDirPath,
-                srcFannelDirPath
             )
         }
     }

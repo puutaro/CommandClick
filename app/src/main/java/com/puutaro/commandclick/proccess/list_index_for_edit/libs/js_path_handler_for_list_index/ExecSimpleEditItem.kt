@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.util.editor.EditorByEditText
 import com.puutaro.commandclick.util.file.NoFileChecker
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
 
 object ExecSimpleEditItem {
@@ -89,7 +90,7 @@ object ExecSimpleEditItem {
             listIndexForEditAdapter.listIndexList.getOrNull(
                 listIndexListViewHolder.bindingAdapterPosition
             ) ?: return
-        val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
+        val tsvPath = FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,

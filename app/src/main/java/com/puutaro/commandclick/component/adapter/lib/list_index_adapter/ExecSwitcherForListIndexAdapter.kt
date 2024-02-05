@@ -4,6 +4,7 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -13,15 +14,18 @@ object ExecSwitcherForListIndexAdapter {
         editFragment: EditFragment,
         listIndexList: List<String>,
     ){
-        val tsvPath = ListSettingsForListIndex.getListSettingKeyHandler(
+        val tsvPath = FilePrefixGetter.get(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
         if(
-            tsvPath.isEmpty()
+            tsvPath.isNullOrEmpty()
         ) return
-        val sortType = ListSettingsForListIndex.getSortType(ListIndexForEditAdapter.indexListMap)
+        val sortType = ListSettingsForListIndex.getSortType(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap
+        )
         val sortListIndexListForTsvSave =
             ListSettingsForListIndex.ListIndexListMaker.sortListForTsvSave(
                 sortType,

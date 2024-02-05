@@ -295,5 +295,4 @@ class JsScript(
             "${valName}=\"${valValue}\""
         }.joinToString("\n")
     }
-
 }
