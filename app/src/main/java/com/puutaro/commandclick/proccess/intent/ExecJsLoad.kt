@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variant.ScriptArgs
+import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -23,6 +23,11 @@ import java.io.File
 
 
 object ExecJsLoad {
+
+    private val nameKey = ScriptArgsMapList.ScriptArgsKey.NAME.key
+    private val dirNameKey = ScriptArgsMapList.ScriptArgsKey.DIR_NAME.key
+    private val jsNameKey = ScriptArgsMapList.ScriptArgsKey.JS_NAME.key
+
 
     fun execJsLoad(
         currentFragment: Fragment,
@@ -128,17 +133,26 @@ object ExecJsLoad {
         JavascriptExecuter.enableJsLoadInWebView(
             terminalViewModel
         )
-
+        val updateScriptArgsMapList = updateScriptArgsMapList(
+            recentAppDirPath,
+            selectedJsFileName,
+        )
         val execJsPath = decideLoadJsPath(
             recentAppDirPath,
             selectedJsFileName,
+            updateScriptArgsMapList,
             jsArgs,
         )
-        val loadJsContentsList = ScriptArgs.values().filter {
-            it.str == jsArgs
-        }.firstOrNull()?.let {
+        val loadJsContentsList = updateScriptArgsMapList.firstOrNull {
+            it.get(nameKey) == jsArgs
+        }?.let {
             emptyList()
         } ?: jsContentsList
+//            ScriptArgsMapList.values().firstOrNull {
+//            it.str == jsArgs
+//        }?.let {
+//            emptyList()
+//        } ?: jsContentsList
         val launchUrlString = JavaScriptLoadUrl.make(
             context,
             execJsPath,
@@ -232,6 +246,37 @@ object ExecJsLoad {
         )
     }
 
+    private fun updateScriptArgsMapList(
+        scriptDirPath: String,
+        scriptName: String,
+    ): List<Map<String, String>> {
+        val currentScriptPath =
+            File(scriptDirPath, scriptName).absolutePath
+        val currentScriptConList = ReadText(currentScriptPath).textToList()
+        val languageType =
+            CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
+
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+
+        val settingSectionVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            currentScriptConList,
+            settingSectionStart,
+            settingSectionEnd,
+        )
+        return ScriptArgsMapList.updateScriptArgsMapList(
+            scriptDirPath,
+            scriptName,
+            settingSectionVariableList
+        )
+    }
+
     fun jsUrlLaunchHandler(
         currentFragment: Fragment,
         launchUrlString: String,
@@ -275,21 +320,47 @@ object ExecJsLoad {
         }
     }
 
+
     private fun decideLoadJsPath(
         scriptDirPath: String,
         scriptName: String,
+        updateScriptArgsMapList: List<Map<String, String>>,
         jsArgs: String,
     ): String {
-        val currentScriptPath = "$scriptDirPath/$scriptName"
-        return ScriptArgs.values().filter {
-            it.str == jsArgs
-        }.firstOrNull()?.let {
+        val currentScriptPath =
+            File(scriptDirPath, scriptName).absolutePath
+        return updateScriptArgsMapList.firstOrNull {
+            it.get(nameKey) == jsArgs
+        }?.let {
             val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
-            val exeJsPath = "${scriptDirPath}/$fannelDirName/${it.dirName}/${it.jsName}"
-            val urlHistoryClickPathObj = File(exeJsPath)
-            if(!urlHistoryClickPathObj.isFile) return currentScriptPath
+            val dirName = it.get(dirNameKey)
+            if(dirName.isNullOrEmpty()){
+                LogSystems.stdWarn("Blank dirName: ${dirName}")
+                return@let currentScriptPath
+            }
+            val jsName = it.get(jsNameKey)
+            if(jsName.isNullOrEmpty()){
+                LogSystems.stdWarn("Blank jsName: ${jsName}")
+                return@let currentScriptPath
+            }
+            val exeJsPath = "${scriptDirPath}/$fannelDirName/${dirName}/${jsName}"
+            val exeJsPathObj = File(exeJsPath)
+            if(
+                !exeJsPathObj.isFile
+            ) return currentScriptPath
             exeJsPath
         } ?: currentScriptPath
+//        return ScriptArgsMapList.values().firstOrNull {
+//            it.str == jsArgs
+//        }?.let {
+//            val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
+//            val exeJsPath = "${scriptDirPath}/$fannelDirName/${it.dirName}/${it.jsName}"
+//            val exeJsPathObj = File(exeJsPath)
+//            if(
+//                !exeJsPathObj.isFile
+//            ) return currentScriptPath
+//            exeJsPath
+//        } ?: currentScriptPath
     }
 
     private suspend fun launchUrlByWebView(

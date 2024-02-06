@@ -2,9 +2,7 @@ package com.puutaro.commandclick.view_model.activity
 
 import androidx.lifecycle.ViewModel
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.Job
-import java.io.File
 
 
 class TerminalViewModel: ViewModel() {
@@ -25,42 +23,3 @@ class TerminalViewModel: ViewModel() {
     var onPermDialog = false
 }
 
-
-private fun makeDetectCurrentMonitorFileName(): String {
-    deleteInvalieMonitorFile()
-    val recentUpdatedFileSource = FileSystems.sortedFiles(
-        UsePath.cmdclickMonitorDirPath,
-        "on"
-    ).firstOrNull() ?: UsePath.cmdClickMonitorFileName_1
-    return if(recentUpdatedFileSource.isEmpty()) {
-        UsePath.cmdClickMonitorFileName_1
-    } else {
-        recentUpdatedFileSource
-    }
-}
-
-
-internal fun deleteInvalieMonitorFile(){
-    val validMonitorFileList = listOf(
-        UsePath.cmdClickMonitorFileName_1,
-        UsePath.cmdClickMonitorFileName_2,
-        UsePath.cmdClickMonitorFileName_3,
-        UsePath.cmdClickMonitorFileName_4
-    )
-
-    val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
-    val cmdclickMonitorDirPathFiles = File(
-        cmdclickMonitorDirPath
-    ).listFiles()?.map{ it.name } ?: return
-    cmdclickMonitorDirPathFiles.forEach {
-        if(
-            validMonitorFileList.contains(it)
-        ) return@forEach
-        FileSystems.removeFiles(
-            File(
-                cmdclickMonitorDirPath,
-                it
-            ).absolutePath
-        )
-    }
-}

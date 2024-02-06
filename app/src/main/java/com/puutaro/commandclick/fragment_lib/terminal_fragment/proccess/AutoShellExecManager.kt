@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.variant.ScriptArgs
+import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.*
@@ -12,7 +12,7 @@ import java.io.File
 
 object AutoShellExecManager {
 
-    private val onAutoExecArg = ScriptArgs.ON_AUTO_EXEC.str
+    private val onAutoExecArg = ScriptArgsMapList.ScriptArgsName.ON_AUTO_EXEC.str
 
     fun fire(
         terminalFrgment: TerminalFragment,

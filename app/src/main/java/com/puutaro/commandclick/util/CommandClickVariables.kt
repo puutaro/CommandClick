@@ -4,11 +4,14 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
 
 
 object CommandClickVariables {
+
     fun substituteCmdClickVariable(
         substituteSettingVariableList: List<String>?,
         substituteVariableName: String,
@@ -25,6 +28,44 @@ object CommandClickVariables {
             QuoteTool.trimBothEdgeQuote(it)
         }
     }
+
+    fun substituteFilePrefixPath(
+        substituteSettingVariableList: List<String>?,
+        substituteVariableName: String,
+        pathInNoValue: String,
+        pathInOnlyFilePrefix: String
+    ): String? {
+        val withFilePrefixSettingValue = substituteCmdClickVariable(
+            substituteSettingVariableList,
+            substituteVariableName
+        ) ?: return null
+        val filePrefix = EditSettings.filePrefix
+        val isOnlyFilePrefix =
+            withFilePrefixSettingValue.trim() == filePrefix
+        val isFilePrefix =
+            withFilePrefixSettingValue.startsWith(filePrefix)
+                    && withFilePrefixSettingValue.trim() != filePrefix
+        val filePrefixPath = when {
+            isOnlyFilePrefix
+            -> ReadText(
+                pathInOnlyFilePrefix
+            ).readText()
+            isFilePrefix
+            -> ReadText(
+                withFilePrefixSettingValue
+                    .removePrefix(filePrefix)
+                    .trim()
+            ).readText()
+            else -> String()
+        }
+        val filePrefixPathObj = File(filePrefixPath)
+        if(
+            filePrefixPathObj.isFile
+        ) return filePrefixPath
+        return  pathInNoValue
+    }
+
+
 
     fun isExist(
         substituteSettingVariableList: List<String>?,

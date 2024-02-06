@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import java.io.File
 
 object CcPathTool {
     fun makeFannelDirName(
@@ -75,21 +76,29 @@ object CcPathTool {
     ): String {
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
         val fannelDirListLength = 2
-        val pathListStartAppDirName = currentSubFannelPath.replace(
+        val pathListAfterAppDirName = currentSubFannelPath.replace(
             "${cmdclickAppDirPath}/",
             ""
-        ).split("/")
+        ).split("/").filter {
+            it.isNotEmpty()
+        }
+        if(
+            pathListAfterAppDirName.size == 1
+        ) return File(
+                cmdclickAppDirPath,
+                pathListAfterAppDirName.first()
+            ).absolutePath
         if (
-            pathListStartAppDirName.size < fannelDirListLength
+            pathListAfterAppDirName.size < fannelDirListLength
         ) {
             LogSystems.stdErr("fannel dir not found: ${currentSubFannelPath}")
             return String()
         }
         val js_suffix = UsePath.JS_FILE_SUFFIX
         val currentAppDirName =
-            pathListStartAppDirName.first()
+            pathListAfterAppDirName.first()
         val mainFannelName =
-            pathListStartAppDirName.take(2).last().let {
+            pathListAfterAppDirName.take(2).last().let {
                 if(it.endsWith(js_suffix)) return@let it
                 it.removeSuffix("Dir") + js_suffix
             }
