@@ -38,12 +38,13 @@ class SpinnerViewProducer {
                 )
                     ?.split('|')
                     ?.getOrNull(currentComponentIndex)
-                    .let {
-                        ReplaceVariableMapReflecter.reflect(
-                            QuoteTool.trimBothEdgeQuote(it),
-                            editParameters
-                        )
-                    }?.split('!')
+//                    .let {
+//                        ReplaceVariableMapReflecter.reflect(
+//                            QuoteTool.trimBothEdgeQuote(it),
+//                            editParameters
+//                        )
+//                    }
+                    ?.split('!')
                     ?: listOf()
             val currentExistItem = insertEditText.text.toString()
             val updatedSppinerList = if(

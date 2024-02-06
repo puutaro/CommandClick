@@ -107,6 +107,7 @@ class EditFragment: Fragment() {
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var setReplaceVariableMap: Map<String, String>? = null
+    var setVariableTypeList: List<String>? = null
     var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false

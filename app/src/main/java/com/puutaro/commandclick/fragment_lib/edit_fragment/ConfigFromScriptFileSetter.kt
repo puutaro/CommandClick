@@ -42,6 +42,12 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.current_fannel_name
         )
 
+        editFragment.setVariableTypeList = SetVariableTypesSetter.set(
+            editFragment,
+            currentAppDirPath,
+            currentScriptFileName
+        )
+
         editFragment.existIndexList =
             judgeExistListIndex(
                 editFragment,
@@ -263,6 +269,33 @@ object ConfigFromScriptFileSetter {
                 ":${EditTextSupportViewName.LIST_INDEX.str}="
             )
         } ?: false
+    }
+
+    private fun setSetVariableType(
+        editFragment: EditFragment,
+        currentAppDirPath: String,
+        currentScriptFileName: String,
+    ) {
+        val recordNumToMapNameValueInSettingHolder =
+            RecordNumToMapNameValueInHolder.parse(
+                editFragment.currentScriptContentsList,
+                editFragment.settingSectionStart,
+                editFragment.settingSectionEnd,
+                true,
+            )
+        val setVariableTypeListSrc = SetVariableTyper.makeSetVariableTypeList(
+            recordNumToMapNameValueInSettingHolder,
+            currentAppDirPath,
+            currentScriptFileName,
+        )
+        val setVariableForSettingHolder =
+            CommandClickScriptVariable.setVariableForSettingHolder
+        setVariableTypeListSrc.let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let setVariableForSettingHolder
+            setVariableForSettingHolder + it
+        }
     }
 
     private fun setButtonVisible(

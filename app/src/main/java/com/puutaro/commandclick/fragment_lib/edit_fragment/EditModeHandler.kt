@@ -70,17 +70,10 @@ class EditModeHandler(
 
     private fun editCommandVariable(
     ) {
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP
-                .get(editFragment.languageType)
         val recordNumToMapNameValueInCommandHolderSrc = RecordNumToMapNameValueInHolder.parse(
             currentScriptContentsList,
-            languageTypeToSectionHolderMap?.get(
-                CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
-            ) as String,
-            languageTypeToSectionHolderMap[
-                    CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
-            ] as String,
+            commandSectionStart,
+            commandSectionEnd
         )
         val recordNumToMapNameValueInCommandHolder = filterRecordNumToMapNameValueInHolderByHideVariable(
             recordNumToMapNameValueInCommandHolderSrc
@@ -89,12 +82,8 @@ class EditModeHandler(
         val recordNumToMapNameValueInSettingHolder =
             RecordNumToMapNameValueInHolder.parse(
                 currentScriptContentsList,
-                languageTypeToSectionHolderMap.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-                ) as String,
-                languageTypeToSectionHolderMap[
-                        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-                ] as String,
+                settingSectionStart,
+                settingSectionEnd,
                 true,
             )
 
@@ -180,11 +169,6 @@ class EditModeHandler(
             }
             return
         }
-//        buttonCreate(
-//            ToolbarButtonBariantForEdit.HISTORY,
-//            1f,
-//        )
-//
         buttonCreate(
             ToolbarButtonBariantForEdit.OK,
             recordNumToMapNameValueInCommandHolder,

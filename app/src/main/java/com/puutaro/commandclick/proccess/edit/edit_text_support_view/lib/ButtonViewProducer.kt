@@ -493,11 +493,11 @@ object ButtonViewProducer {
         currentScriptPath: String,
         setReplaceVariableMap: Map<String, String>?
     ): String {
-        val scriptFileObj = File(currentScriptPath)
-        val currentAppDirPath = scriptFileObj.parent
-            ?: return String()
-        val currentScriptName = scriptFileObj.name
-            ?: return String()
+//        val scriptFileObj = File(currentScriptPath)
+//        val currentAppDirPath = scriptFileObj.parent
+//            ?: return String()
+//        val currentScriptName = scriptFileObj.name
+//            ?: return String()
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
                 QuoteTool.trimBothEdgeQuote(
@@ -505,20 +505,20 @@ object ButtonViewProducer {
                 )
         return innerExecCmdSourceBeforeReplace.trim(';')
             .replace(Regex("  *"), " ")
-            .let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    currentAppDirPath,
-                    currentScriptName
-                )
-            }.let {
-                SetReplaceVariabler.execReplaceByReplaceVariables(
-                    it,
-                    setReplaceVariableMap,
-                    currentAppDirPath,
-                    currentScriptName
-                )
-        }
+//            .let {
+//                ScriptPreWordReplacer.replace(
+//                    it,
+//                    currentAppDirPath,
+//                    currentScriptName
+//                )
+//            }.let {
+//                SetReplaceVariabler.execReplaceByReplaceVariables(
+//                    it,
+//                    setReplaceVariableMap,
+//                    currentAppDirPath,
+//                    currentScriptName
+//                )
+//        }
     }
 
     private fun surroundBlankReplace(

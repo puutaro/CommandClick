@@ -14,6 +14,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.SetVariableTypesSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
@@ -114,21 +115,29 @@ class FormJsDialog(
                 settingSectionEnd,
             )
 
-        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
-            recordNumToMapNameValueInSettingHolder,
-            String(),
-            String(),
-        )
-
-        val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
-            setVariableTypeList,
-            recordNumToMapNameValueInCommandHolder
-        )
-
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
             recordNumToMapNameValueInSettingHolder,
             String(),
             String(),
+        )
+
+        val setVariabletypeTempConcatStr = SetVariableTypesSetter.setVariabletypeTempConcatStr
+        val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
+            recordNumToMapNameValueInSettingHolder,
+            String(),
+            String(),
+        )?.joinToString(setVariabletypeTempConcatStr)?.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableMap,
+                String(),
+                String()
+            )
+        }?.split(setVariabletypeTempConcatStr)
+
+        val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
+            setVariableTypeList,
+            recordNumToMapNameValueInCommandHolder
         )
 
 

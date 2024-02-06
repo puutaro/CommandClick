@@ -36,12 +36,13 @@ object EditableSpinnerViewProducer {
         )
             ?.split('|')
             ?.getOrNull(currentComponentIndex)
-            .let {
-                ReplaceVariableMapReflecter.reflect(
-                    QuoteTool.trimBothEdgeQuote(it),
-                    editParameters
-                )
-            }?.split('!')
+//            .let {
+//                ReplaceVariableMapReflecter.reflect(
+//                    QuoteTool.trimBothEdgeQuote(it),
+//                    editParameters
+//                )
+//            }
+            ?.split('!')
             ?: listOf()
 
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList

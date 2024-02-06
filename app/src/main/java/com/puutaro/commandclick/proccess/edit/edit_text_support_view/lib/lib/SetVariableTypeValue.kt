@@ -13,27 +13,28 @@ object SetVariableTypeValue {
         editParameters: EditParameters,
     ): String? {
         val currentSetVariableMap = editParameters.setVariableMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
+//        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+//            editParameters.readSharePreffernceMap,
+//            SharePrefferenceSetting.current_app_dir
+//        )
+//        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
+//            editParameters.readSharePreffernceMap,
+//            SharePrefferenceSetting.current_fannel_name
+//        )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-        )?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentScriptName
-            )
-        }.let {
-            ReplaceVariableMapReflecter.reflect(
-                QuoteTool.trimBothEdgeQuote(it),
-                editParameters
-            )
-        }
+        )
+//            ?.let {
+//            ScriptPreWordReplacer.replace(
+//                it,
+//                currentAppDirPath,
+//                currentScriptName
+//            )
+//        }.let {
+//            ReplaceVariableMapReflecter.reflect(
+//                QuoteTool.trimBothEdgeQuote(it),
+//                editParameters
+//            )
+//        }
     }
 }

@@ -133,7 +133,7 @@ object SetVariableTyper {
         )
     }
 
-    fun makeSetVariableValueFromFilePath(
+    private fun makeSetVariableValueFromFilePath(
         configFilePath: String,
         currentAppDirPath: String,
         currentShellFileName: String,

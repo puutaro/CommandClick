@@ -270,12 +270,14 @@ object FileSelectSpinnerViewProducer {
                     currentAppDirPath,
                     currentScriptName
                 )
-            }.let {
-                ReplaceVariableMapReflecter.reflect(
-                    QuoteTool.trimBothEdgeQuote(it),
-                    editParameters
-                )
-            }?.split('!')?.map {
+            }
+//            .let {
+//                ReplaceVariableMapReflecter.reflect(
+//                    QuoteTool.trimBothEdgeQuote(it),
+//                    editParameters
+//                )
+//            }
+            ?.split('!')?.map {
                 CcScript.makeKeyValuePairFromSeparatedString(
                     it,
                     "="
