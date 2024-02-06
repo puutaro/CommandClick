@@ -48,17 +48,6 @@ object SetConfigInfo {
             ),
         )
 
-        editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
-            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
-            ),
-        )
-
         editFragment.urlHistoryOrButtonExec = SettingVariableReader.getCbValue(
             settingVariableList,
             CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,

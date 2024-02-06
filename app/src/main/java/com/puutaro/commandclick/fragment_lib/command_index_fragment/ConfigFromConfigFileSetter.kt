@@ -70,16 +70,6 @@ object ConfigFromConfigFileSetter {
             ),
         )
 
-        cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
-            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE,
-            listOf(
-                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
-            ),
-        )
         val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
                 UsePath.homeFannelsFilePath,

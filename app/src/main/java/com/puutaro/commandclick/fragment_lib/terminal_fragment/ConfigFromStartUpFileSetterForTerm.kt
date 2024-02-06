@@ -8,7 +8,6 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
@@ -284,15 +283,6 @@ object ConfigFromStartUpFileSetterForTerm {
 
         terminalFragment.binding.terminalWebView.settings.textZoom =
             terminalFragment.fontZoomPercent
-
-        terminalFragment.onHistoryUrlTitle = CommandClickVariables.substituteCmdClickVariable(
-            settingVariableList,
-            CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE
-        ) ?: terminalFragment.onHistoryUrlTitle
-        FirstUrlHistoryFile.delete(
-            terminalFragment,
-            terminalFragment.currentAppDirPath
-        )
 
         terminalFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,

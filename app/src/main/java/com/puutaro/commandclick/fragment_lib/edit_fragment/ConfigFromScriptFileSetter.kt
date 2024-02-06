@@ -104,12 +104,6 @@ object ConfigFromScriptFileSetter {
             String(),
         )
 
-        editFragment.overrideItemClickExec = SettingVariableReader.getStrValue(
-            settingVariableList,
-            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC,
-            CommandClickScriptVariable.OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE,
-        )
-
         if (
             !onShortcut
         ) {
@@ -119,7 +113,6 @@ object ConfigFromScriptFileSetter {
             )
             return
         }
-
 
         editFragment.onTermVisibleWhenKeyboard = SettingVariableReader.getCbValue(
             settingVariableList,
@@ -154,17 +147,6 @@ object ConfigFromScriptFileSetter {
             listOf(
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.URL_HISTORY.name,
                 SettingVariableSelects.UrlHistoryOrButtonExecSelects.BUTTON_EXEC.name,
-            ),
-        )
-
-        editFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-            editFragment.statusBarIconColorMode,
-            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
-            editFragment.statusBarIconColorMode,
-            listOf(
-                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
             ),
         )
 

@@ -97,8 +97,6 @@ class EditFragment: Fragment() {
     var fontZoomPercent = CommandClickScriptVariable.CMDCLICK_TERMINAL_FONT_ZOOM_DEFAULT_VALUE
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
-    var statusBarIconColorMode =
-        CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var popBackStackToIndexImmediateJob: Job? = null
     var suggestJob: Job? = null
@@ -114,7 +112,6 @@ class EditFragment: Fragment() {
     var currentScriptContentsList = emptyList<String>()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
-    var overrideItemClickExec = String()
     var existIndexList: Boolean = false
     var passCmdVariableEdit = String()
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null

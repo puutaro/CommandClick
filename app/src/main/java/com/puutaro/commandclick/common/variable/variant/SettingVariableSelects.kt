@@ -54,12 +54,6 @@ object SettingVariableSelects {
         OFF,
     }
 
-    enum class StatusBarIconColorModeSelects {
-        BLACK,
-        WHITE,
-        INHERIT,
-    }
-
     enum class OnUrlLaunchMacroSelects {
         OFF,
         RECENT,
@@ -88,11 +82,6 @@ object SettingVariableSelects {
         INHERIT,
         OFF,
         ON,
-    }
-
-    enum class overrideItemClickExecSelects {
-        ON,
-        OFF
     }
 
     enum class OnTermBackendWhenStartSelects {

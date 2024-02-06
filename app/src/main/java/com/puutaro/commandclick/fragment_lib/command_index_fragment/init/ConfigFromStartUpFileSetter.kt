@@ -73,17 +73,6 @@ object ConfigFromStartUpFileSetter {
             ),
         )
 
-        cmdIndexFragment.statusBarIconColorMode = SettingVariableReader.getCbValue(
-            settingVariableList,
-            CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE,
-            cmdIndexFragment.statusBarIconColorMode,
-            SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name,
-            cmdIndexFragment.urlHistoryOrButtonExec,
-            listOf(
-                SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
-            ),
-        )
-
         cmdIndexFragment.terminalColor = SettingVariableReader.getStrValue(
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_COLOR,

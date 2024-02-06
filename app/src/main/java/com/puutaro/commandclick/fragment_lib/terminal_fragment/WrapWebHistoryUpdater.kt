@@ -11,7 +11,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FirstUrlHistoryFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FDialogTempFile
@@ -80,12 +79,6 @@ object WrapWebHistoryUpdater {
                     terminalFragment,
                     urlTitleString,
                     webViewUrl,
-                )
-            }
-            withContext(Dispatchers.IO) {
-                registerUrlHistoryTitle(
-                    terminalFragment,
-                    webViewUrl
                 )
             }
         }
@@ -162,28 +155,5 @@ object WrapWebHistoryUpdater {
             updatingHistory
         )
 
-    }
-
-    private fun registerUrlHistoryTitle(
-        terminalFragment: TerminalFragment,
-        ulrTitle: String?
-    ){
-        if(ulrTitle.isNullOrEmpty()) return
-        val registerUrlTitle = if(
-            terminalFragment.onHistoryUrlTitle !=
-            CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
-        ) ulrTitle
-        else String()
-        if(
-            registerUrlTitle.endsWith(
-                UsePath.JS_FILE_SUFFIX
-            )
-            || registerUrlTitle.endsWith(
-                UsePath.JSX_FILE_SUFFIX
-            )
-        ) return
-        FirstUrlHistoryFile.update(
-            terminalFragment
-        )
     }
 }

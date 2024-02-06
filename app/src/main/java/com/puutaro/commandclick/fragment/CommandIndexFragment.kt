@@ -51,7 +51,6 @@ class CommandIndexFragment: Fragment() {
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
     var readSharePreffernceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
-    var statusBarIconColorMode = CommandClickScriptVariable.STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
     var showTerminalJobWhenReuse: Job? = null

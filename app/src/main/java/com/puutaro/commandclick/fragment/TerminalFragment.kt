@@ -57,7 +57,6 @@ class   TerminalFragment: Fragment() {
     private var outputFileLength: Int = 0
     var terminalOn = CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
     var firstDisplayUpdate = true
-    var onHistoryUrlTitle = CommandClickScriptVariable.CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE
     var onAdBlock = CommandClickScriptVariable.ON_ADBLOCK_DEFAULT_VALUE
     var onTermBackendWhenStart = CommandClickScriptVariable.ON_TERM_BACKEND_WHEN_START
     var onTermShortWhenLoad =

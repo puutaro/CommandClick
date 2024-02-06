@@ -166,10 +166,7 @@ object UsePath {
     val cmdclickSiteScrollPosiBkFileName = "scrollBuckupPosi$tsvExtend"
     val cmdclickMonitorScrollPosiFileName = "monitorScrollPosi$tsvExtend"
     const val assetsFannelsReplacePrefix = "fannels/startUp"
-    const val startUpFannelAsetsDirPath = assetsFannelsReplacePrefix
-    const val startUpFannleAssetsPath = assetsFannelsReplacePrefix
     const val cmdclickStartupJsName = "cmdclickStartup.js"
-    val cmdclickFirstHistoryTitle = "firstHistoryTitle$tsvExtend"
     val urlLoadFinished = "urlLoadFinished"
     val fannelDirSuffix = "Dir"
     private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"

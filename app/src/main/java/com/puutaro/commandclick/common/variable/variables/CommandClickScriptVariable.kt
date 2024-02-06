@@ -78,20 +78,13 @@ object CommandClickScriptVariable {
     val ON_ADBLOCK = "onAdBlock"
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT="disableShowToolbarWhenHighlight"
     val CMDCLICK_TERMINAL_FONT_ZOOM = "terminalFontZoom"
-    val CMDCLICK_ON_HISTORY_URL_TITLE = "onHistoryUrlTitle"
     val EDIT_BOX_TITLE = "editBoxTitle"
     val TERMINAL_COLOR = "terminalColor"
     val TERMINAL_FONT_COLOR = "terminalFontColor"
-    val STATUS_BAR_ICON_COLOR_MODE = "statusBarIconColorMode"
     val HOME_SCRIPT_URLS_PATH = "homeScriptUrlsPath"
     val CMDCLICK_SHIBAN_DEFAULT_VALUE = "#!/bin/bash"
     val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
-    val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
-    val CMDCLICK_LONG_PRESS_IMAGE_URL = "CMDCLICK_LONG_PRESS_IMAGE_URL"
-    val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"
-    val CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT = "CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT"
     val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
-    val OVERRIDE_ITEM_CLICK_EXEC = "overrideItemClickExec"
     val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
@@ -105,6 +98,10 @@ object CommandClickScriptVariable {
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
     val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
+    val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
+    val CMDCLICK_LONG_PRESS_IMAGE_URL = "CMDCLICK_LONG_PRESS_IMAGE_URL"
+    val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"
+    val CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT = "CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT"
 
     val SETTING_VARIABLE_NAMES_LIST = listOf(
         SHELL_EXEC_ENV,
@@ -122,7 +119,6 @@ object CommandClickScriptVariable {
         ON_UPDATE_LAST_MODIFY,
         TERMINAL_COLOR,
         TERMINAL_FONT_COLOR,
-        STATUS_BAR_ICON_COLOR_MODE,
         CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC,
         ON_ADBLOCK,
         ON_TERM_BACKEND_WHEN_START,
@@ -131,7 +127,6 @@ object CommandClickScriptVariable {
         DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT,
         UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF,
         CMDCLICK_TERMINAL_FONT_ZOOM,
-        CMDCLICK_ON_HISTORY_URL_TITLE,
         EDIT_BOX_TITLE,
         ON_URL_LAUNCH_MACRO,
         EXEC_JS_OR_HTML_PATH,
@@ -141,7 +136,6 @@ object CommandClickScriptVariable {
         AFTER_COMMAND,
         IGNORE_HISTORY_PATHS,
         HOME_SCRIPT_URLS_PATH,
-        OVERRIDE_ITEM_CLICK_EXEC,
         PLAY_BUTTON_CONFIG,
         EDIT_BUTTON_CONFIG,
         SETTING_BUTTON_CONFIG,
@@ -174,11 +168,6 @@ object CommandClickScriptVariable {
     private val urlHistoryOrButtonExecUrlInherit = SettingVariableSelects.UrlHistoryOrButtonExecSelects.INHERIT.name
     private val onUpdateLastModifyOn = SettingVariableSelects.OnUpdateLastModifySelects.ON.name
     private val onUpdateLastModifyOff = SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
-    private val onHistoryUrlTitleON = SettingVariableSelects.OnHistoryUrlTitle.ON.name
-    private val onHistoryUrlTitleOff = SettingVariableSelects.OnHistoryUrlTitle.OFF.name
-    private val statusBarIconColorModeWhite = SettingVariableSelects.StatusBarIconColorModeSelects.WHITE.name
-    private val statusBarIconColorModeBlack = SettingVariableSelects.StatusBarIconColorModeSelects.BLACK.name
-    private val statusBarIconColorInherit = SettingVariableSelects.StatusBarIconColorModeSelects.INHERIT.name
     private val onUrlLaunchMacroRecent = SettingVariableSelects.OnUrlLaunchMacroSelects.RECENT.name
     private val onUrlLaunchMacroFrequency = SettingVariableSelects.OnUrlLaunchMacroSelects.FREQUENCY.name
     private val onUrlLaunchMacroOff = SettingVariableSelects.OnUrlLaunchMacroSelects.OFF.name
@@ -202,8 +191,6 @@ object CommandClickScriptVariable {
     private val disableShowToolbarWhenHighlightOff = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.OFF.name
     private val onUrlHistoryRegisterOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
     private val onUrlHistoryRegisterOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
-    private val overrideItemClickExecSelectsOn = SettingVariableSelects.OnUrlHistoryRegisterSelects.ON.name
-    private val overrideItemClickExecSelectsOff = SettingVariableSelects.OnUrlHistoryRegisterSelects.OFF.name
     val SHELL_EXEC_ENV_DEFAULT_VALUE = shellExecEnvUbuntu
     val UBUNTU_EXEC_MODE_DEFAULT_VALUE = ubuntuExecModeSelectsBackground
     val UBUNTU_OUTPUT_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
@@ -215,7 +202,6 @@ object CommandClickScriptVariable {
     val ON_UPDATE_LAST_MODIFY_DEFAULT_VALUE = onUpdateLastModifyOn
     val TERMINAL_COLOR_DEFAULT_VALUE = "#043d02"
     val TERMINAL_FONT_COLOR_DEFAULT_VALUE = "#f2f2f2"
-    val STATUS_BAR_ICON_COLOR_MODE_DEFAULT_VALUE = statusBarIconColorModeWhite
     val ON_URL_LAUNCH_MACRO_DEFAULT_VALUE = onUrlLaunchMacroOff
     val ON_URL_HISTORY_REGISTER_DEFAULT_VALUE = onUrlHistoryRegisterOn
     val PASS_CMDVARIABLE_EDIT_ON_VALUE = "ON"
@@ -227,8 +213,6 @@ object CommandClickScriptVariable {
     val CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE =  SettingVariableSelects.AutoExecSelects.ON.name
     val ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE = SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.OFF.name
     val DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT_DEFAULT_VALUE = SettingVariableSelects.DisableShowToolbarWhenHighlightSelects.ON.name
-    val CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE =  onHistoryUrlTitleOff
-    val OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE = overrideItemClickExecSelectsOn
     val DEFAULT_MONITOR_FILE_DEFAULT_VALUE = UsePath.cmdClickMonitorFileName_1
     val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
     val fannelDirName = CcPathTool.makeFannelDirName(
@@ -329,10 +313,8 @@ object CommandClickScriptVariable {
         "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal!$terminalOutPutModeReflash!$terminalOutPutModeReflashAndFirstRow!$terminalOutPutModeDebug!$terminalOutPutModeNo",
         "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn!$onUpdateLastModifyOff",
         "$CMDCLICK_ON_AUTO_EXEC:CB=$autoExecSelectsOn!$autoExecSelectsOff",
-        "$CMDCLICK_ON_HISTORY_URL_TITLE:CB=$onHistoryUrlTitleON!$onHistoryUrlTitleOff",
         "$CMDCLICK_HISTORY_SWITCH:CB=$historySwitchOff!$historySwitchOn!$historySwitchInherit",
         "$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC:CB=$urlHistoryOrButtonExecUrlHistory!$urlHistoryOrButtonExecUrlButtonExec!$urlHistoryOrButtonExecUrlInherit",
-        "$STATUS_BAR_ICON_COLOR_MODE:CB=$statusBarIconColorModeWhite!$statusBarIconColorModeBlack!$statusBarIconColorInherit",
         "$ON_URL_LAUNCH_MACRO:TXT:ECB=$onUrlLaunchMacroOff!$onUrlLaunchMacroRecent!$onUrlLaunchMacroFrequency",
         "$ON_ADBLOCK:CB=$onAdBlockInherit!$onAdBlockOff!$onAdBlockOn",
         "$ON_TERM_BACKEND_WHEN_START:CB=$onTermBackendWhenStartSelectsInherit!$onTermBackendWhenStartSelectsOff!$onTermBackendWhenStartSelectsOn",
@@ -340,7 +322,6 @@ object CommandClickScriptVariable {
         "$ON_TERM_SHORT_WHEN_LOAD:CB=$onTermShortWhenLoadSelectsInherit!$onTermShortWhenLoadSelectsOn!$onTermShortWhenLoadSelectsOff",
         "$DISABLE_SHOW_TOOLBAR_WHEN_HIGHLIGHT:CB=$disableShowToolbarWhenHighlightOn!$disableShowToolbarWhenHighlightOff",
         "$ON_URL_HISTORY_REGISTER:CB=$onUrlHistoryRegisterOn!$onUrlHistoryRegisterOff",
-        "$OVERRIDE_ITEM_CLICK_EXEC:CB=$overrideItemClickExecSelectsOff!$overrideItemClickExecSelectsOn",
         "$DEFAULT_MONITOR_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "$CMDCLICK_TERMINAL_FONT_ZOOM:TXT:NUM=0..1000!1",
         "$TERMINAL_COLOR:TXT:CLR=",
@@ -403,8 +384,6 @@ object CommandClickScriptVariable {
             |#  * [$ON_UPDATE_LAST_MODIFY](#${replaceLowerAdnBlankDash(ON_UPDATE_LAST_MODIFY)})
             |#  * [$IGNORE_HISTORY_PATHS](#${replaceLowerAdnBlankDash(IGNORE_HISTORY_PATHS)})
             |#  * [$CMDCLICK_HISTORY_SWITCH](#${replaceLowerAdnBlankDash(CMDCLICK_HISTORY_SWITCH)})
-            |#  * [$CMDCLICK_ON_HISTORY_URL_TITLE](#${
-            replaceLowerAdnBlankDash(CMDCLICK_ON_HISTORY_URL_TITLE)})
             |#  * [$EDIT_BOX_TITLE](#${replaceLowerAdnBlankDash(EDIT_BOX_TITLE)})
             |#  * [$SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH](#${
             replaceLowerAdnBlankDash(
@@ -504,14 +483,6 @@ object CommandClickScriptVariable {
             |# | `$historySwitchOn` | switch |
             |# | `$historySwitchOff` | no switch |
             |# | `$historySwitchInherit` | inherit config setting (default) |
-            |
-            |# ### $CMDCLICK_ON_HISTORY_URL_TITLE
-            |# How adding url title to history
-            |
-            |# | switch | $mdDescription |
-            |# | $mdDash | $mdDash |
-            |# | `$onHistoryUrlTitleON` | add |
-            |# | `$onHistoryUrlTitleOff` | no |
             |
             |# ### $EDIT_BOX_TITLE
             |# Edit box title
@@ -707,7 +678,6 @@ object CommandClickScriptVariable {
         |$SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH=""
         |$IMAGE_LONG_PRESS_MENU_FILE_PATH=""
         |$NO_SCROLL_SAVE_URLS=""
-        |$OVERRIDE_ITEM_CLICK_EXEC="$OVERRIDE_ITEM_CLICK_EXEC_DEFAULT_VALUE
         |$ON_URL_HISTORY_REGISTER="$ON_URL_HISTORY_REGISTER_DEFAULT_VALUE"
         |$DEFAULT_MONITOR_FILE="$DEFAULT_MONITOR_FILE_DEFAULT_VALUE"
         |$IGNORE_HISTORY_PATHS=""
@@ -903,7 +873,6 @@ object CommandClickScriptVariable {
         |$TERMINAL_OUTPUT_MODE="$TERMINAL_OUTPUT_MODE_DEFAULT_VALUE"
         |$CMDCLICK_ON_AUTO_EXEC="$CMDCLICK_ON_AUTO_EXEC_DEFAULT_VALUE"
         |$ON_UPDATE_LAST_MODIFY="$onUpdateLastModifyOff"
-        |$CMDCLICK_ON_HISTORY_URL_TITLE="$CMDCLICK_ON_HISTORY_URL_TITLE_DEFAULT_VALUE"
         |$CMDCLICK_HISTORY_SWITCH="$historySwitchInherit"
         |$CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC="$urlHistoryOrButtonExecUrlInherit"
         |$ON_ADBLOCK="$onAdBlockInherit"

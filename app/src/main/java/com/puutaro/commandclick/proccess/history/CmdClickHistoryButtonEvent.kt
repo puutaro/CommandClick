@@ -16,7 +16,6 @@ import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.FannelHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -25,8 +24,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.Too
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -171,9 +168,7 @@ class CmdClickHistoryButtonEvent (
         ).filter {
             !homeFannelList.contains(it)
         } + homeFannelList.reversed()
-        return historyListSource.map {
-            makeHistoryListRow(it)
-        }
+        return historyListSource
     }
 
     private fun invokeItemSetClickListenerForHistory(
@@ -310,46 +305,6 @@ class CmdClickHistoryButtonEvent (
         historyListAdapter.historyList.remove(selectedHistoryFile)
         historyListAdapter.notifyDataSetChanged()
     }
-
-
-
-    private fun makeHistoryListRow(
-        historyRow: String
-    ): String {
-//        homeFannelList
-        val selectedAppShellFileName = AppHistoryManager.getScriptFileNameFromAppHistoryFileName(
-            historyRow
-        )
-        if(selectedAppShellFileName != CommandClickScriptVariable.EMPTY_STRING) {
-            return historyRow
-        }
-        val appDirName =
-            AppHistoryManager.getAppDirNameFromAppHistoryFileName(
-                historyRow
-            )
-        val appDirPath = "${UsePath.cmdclickAppDirPath}/${appDirName}"
-        val appUrlSystemDirPath = "${appDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-        val currentUrlHistoryPath =
-            "${appUrlSystemDirPath}/${UsePath.cmdclickUrlHistoryFileName}"
-        if(
-            !File(currentUrlHistoryPath).isFile
-        ) return historyRow
-        val urlTitleSource = ReadText(
-            File(
-                appUrlSystemDirPath,
-                UsePath.cmdclickFirstHistoryTitle
-            ).absolutePath
-        ).textToList()
-            .firstOrNull()
-            ?.split("\t")
-            ?.firstOrNull() ?: return historyRow
-        val urlTitle = UrlTool.trimTitle(
-            urlTitleSource
-        )
-        return "${historyRow}\n\t- ${urlTitle}"
-
-    }
-
 }
 
 private val mainMenuGroupId = 30000
