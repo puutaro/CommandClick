@@ -5,10 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
 
 
@@ -34,7 +31,6 @@ object CommandClickVariables {
     fun substituteFilePrefixPath(
         substituteSettingVariableList: List<String>?,
         substituteVariableName: String,
-        pathInNoValue: String,
         pathInOnlyFilePrefix: String
     ): String? {
         val withFilePrefixSettingValue = substituteCmdClickVariable(

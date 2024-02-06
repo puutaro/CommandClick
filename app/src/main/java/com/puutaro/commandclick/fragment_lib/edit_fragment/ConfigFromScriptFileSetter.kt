@@ -307,7 +307,8 @@ object ConfigFromScriptFileSetter {
             ToolbarButtonBariantForEdit.HISTORY,
             isCmdEditExecute
         )
-        val buttonVisibleOn = ButtonVisibleSettingForToolbarButton.ButtonVisibleValue.ON.name
+        val buttonVisibleOn =
+            ButtonVisibleSettingForToolbarButton.ButtonVisibleValue.ON.name
         editFragment.toolBarButtonVisibleMap.put(
             ToolbarButtonBariantForEdit.SETTING,
             when(true) {

@@ -52,7 +52,6 @@ object ScriptArgsMapList {
         val settingPathSrc = CommandClickVariables.substituteFilePrefixPath(
             settingSectionVariableList,
             settingValName,
-            scriptPath,
             listOf(
                 fannelDirPath,
                 settingArgMap.get(ScriptArgsKey.DIR_NAME.key),
@@ -132,11 +131,11 @@ object ScriptArgsMapList {
             ScriptArgsKey.DIR_NAME.key,
             dirName
         )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath,
-            "args_make.txt").absolutePath,
-            "dirName: ${dirName}"
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath,
+//            "args_make.txt").absolutePath,
+//            "dirName: ${dirName}"
+//        )
         updateAutoExecArgMap.put(
             ScriptArgsKey.JS_NAME.key,
             autoExecPathObj.name

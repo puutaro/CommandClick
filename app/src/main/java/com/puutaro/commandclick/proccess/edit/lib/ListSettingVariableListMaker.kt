@@ -56,13 +56,14 @@ object ListSettingVariableListMaker {
                 !it.startsWith(filePrefix)
             ) return@map QuoteTool.trimBothEdgeQuote(it)
                 .replace(",", "\n")
-            val listSettingVariablePath = decideSettingVariableName(settingVariableName).let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    currentAppDirPath,
-                    currentScriptFileName
-                )
-            }
+            val listSettingVariablePath =
+                decideSettingVariableListPath(settingVariableName).let {
+                    ScriptPreWordReplacer.replace(
+                        it,
+                        currentAppDirPath,
+                        currentScriptFileName
+                    )
+                }
             SettingFile.read(
                 listSettingVariablePath
             ).replace(",", "\n")
@@ -83,7 +84,7 @@ object ListSettingVariableListMaker {
             }
     }
 
-    private fun decideSettingVariableName(
+    private fun decideSettingVariableListPath(
         variableName: String
     ): String {
         return when(variableName){
