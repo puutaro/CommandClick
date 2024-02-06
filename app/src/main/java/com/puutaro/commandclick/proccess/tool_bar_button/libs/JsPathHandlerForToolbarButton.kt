@@ -293,8 +293,7 @@ object JsPathHandlerForToolbarButton {
                 if (fragment !is EditFragment) return
                 OkHandler(
                     fragment,
-                    toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder,
-                    toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder,
+                    toolbarButtonArgsMaker,
                 ).execForOk()
             }
             JsPathMacroForToolbarButton.ADD_URL_HISTORY -> {
@@ -748,10 +747,11 @@ object JsPathHandlerForToolbarButton {
 
     private class OkHandler(
         private val editFragment: EditFragment,
-        private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-        private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+        private val toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
     ) {
         private val context = editFragment.context
+        private val recordNumToMapNameValueInCommandHolder = toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder
+        private val recordNumToMapNameValueInSettingHolder = toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder
         private val readSharePreffernceMap = editFragment.readSharePreferenceMap
         private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -802,6 +802,8 @@ object JsPathHandlerForToolbarButton {
                     TerminalShowByTerminalDo.show(
                         editFragment,
                     )
+
+
                     ExecJsOrSellHandler.handle(
                         editFragment,
                         currentAppDirPath,

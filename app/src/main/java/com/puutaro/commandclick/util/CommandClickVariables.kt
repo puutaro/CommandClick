@@ -5,6 +5,8 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import java.io.File
@@ -45,24 +47,21 @@ object CommandClickVariables {
         val isFilePrefix =
             withFilePrefixSettingValue.startsWith(filePrefix)
                     && withFilePrefixSettingValue.trim() != filePrefix
-        val filePrefixPath = when {
-            isOnlyFilePrefix
-            -> ReadText(
-                pathInOnlyFilePrefix
-            ).readText()
-            isFilePrefix
-            -> ReadText(
-                withFilePrefixSettingValue
-                    .removePrefix(filePrefix)
-                    .trim()
-            ).readText()
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "awithFilePrefixSettingValue.txt").absolutePath,
+//            listOf(
+//                "withFilePrefixSettingValue: ${withFilePrefixSettingValue}",
+//                "isOnlyFilePrefix: ${isOnlyFilePrefix}",
+//                "isFilePrefix: ${isFilePrefix}"
+//            ).joinToString("\n")
+//        )
+        return when {
+            isOnlyFilePrefix -> pathInOnlyFilePrefix
+            isFilePrefix -> withFilePrefixSettingValue
+                .removePrefix(filePrefix)
+                .trim()
             else -> String()
         }
-        val filePrefixPathObj = File(filePrefixPath)
-        if(
-            filePrefixPathObj.isFile
-        ) return filePrefixPath
-        return  pathInNoValue
     }
 
 

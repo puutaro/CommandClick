@@ -66,6 +66,7 @@ object CommandClickScriptVariable {
     val AFTER_COMMAND = "afterCommand"
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
     val AUTO_EXEC_PATH = "autoExecPath"
+    val NO_ARG_JS_PATH = "noArgJsPath"
     val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
     val ON_TERM_VISIBLE_WHEN_KEYBOARD = "onTermVisibleWhenKeyboard"
     val ON_TERM_SHORT_WHEN_LOAD = "onTermShortWhenLoad"
@@ -116,6 +117,7 @@ object CommandClickScriptVariable {
         CMDCLICK_HISTORY_SWITCH,
         CMDCLICK_ON_AUTO_EXEC,
         AUTO_EXEC_PATH,
+        NO_ARG_JS_PATH,
         ON_UPDATE_LAST_MODIFY,
         TERMINAL_COLOR,
         TERMINAL_FONT_COLOR,

@@ -148,11 +148,15 @@ object ExecJsLoad {
         }?.let {
             emptyList()
         } ?: jsContentsList
-//            ScriptArgsMapList.values().firstOrNull {
-//            it.str == jsArgs
-//        }?.let {
-//            emptyList()
-//        } ?: jsContentsList
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath,
+//                "args_jsLoad.txt").absolutePath,
+//            listOf(
+//                "execJsPath: ${execJsPath}",
+//                "loadJsContentsList: ${loadJsContentsList}",
+//                "updateScriptArgsMapList: ${updateScriptArgsMapList}"
+//            ).joinToString("\n\n")
+//        )
         val launchUrlString = JavaScriptLoadUrl.make(
             context,
             execJsPath,
@@ -270,10 +274,11 @@ object ExecJsLoad {
             settingSectionStart,
             settingSectionEnd,
         )
+
         return ScriptArgsMapList.updateScriptArgsMapList(
             scriptDirPath,
             scriptName,
-            settingSectionVariableList
+            settingSectionVariableList,
         )
     }
 
@@ -350,17 +355,6 @@ object ExecJsLoad {
             ) return currentScriptPath
             exeJsPath
         } ?: currentScriptPath
-//        return ScriptArgsMapList.values().firstOrNull {
-//            it.str == jsArgs
-//        }?.let {
-//            val fannelDirName = CcPathTool.makeFannelDirName(scriptName)
-//            val exeJsPath = "${scriptDirPath}/$fannelDirName/${it.dirName}/${it.jsName}"
-//            val exeJsPathObj = File(exeJsPath)
-//            if(
-//                !exeJsPathObj.isFile
-//            ) return currentScriptPath
-//            exeJsPath
-//        } ?: currentScriptPath
     }
 
     private suspend fun launchUrlByWebView(
