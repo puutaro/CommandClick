@@ -16,7 +16,7 @@ object SettingVariableReader {
         ) ?: variableDefaultStrValue
         val runShellSourceTrim = QuoteTool.trimBothEdgeQuote(runShellSource)
         return if(
-            runShellSourceTrim == String()
+            runShellSourceTrim.isEmpty()
         ) variableDefaultStrValue
         else runShellSourceTrim
     }
@@ -101,6 +101,7 @@ object SettingVariableReader {
         setListFilePath: String,
     ): List<String> {
         val setListFilePathObj = File(setListFilePath)
+        if(!setListFilePathObj.isFile) return emptyList()
         val setListFileDirPath = setListFilePathObj.parent
             ?: String()
         if(

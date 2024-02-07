@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.R
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.EditFragment
@@ -21,7 +20,6 @@ class EditTextProducerForEdit(
     private val editFragment: EditFragment,
     private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
     private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
-    hideSettingVariableList: List<String>,
 ) {
     private val binding = editFragment.binding
     private val context = editFragment.context
@@ -39,23 +37,7 @@ class EditTextProducerForEdit(
     )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
-//    private val setVariableForSettingHolder = CommandClickScriptVariable.setVariableForSettingHolder
-//    private val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
-//        recordNumToMapNameValueInSettingHolder,
-//        currentAppDirPath,
-//        currentScriptFileName,
-//    ).let {
-//        if(
-//            it.isNullOrEmpty()
-//        ) return@let setVariableForSettingHolder
-//        setVariableForSettingHolder + it
-//    }
 
-    private val recordNumToSetVariableMaps =
-        SetVariableTyper.makeRecordNumToSetVariableMaps(
-            editFragment.setVariableTypeList,
-            recordNumToMapNameValueInCommandHolder
-        )
 
     private val editParameters = EditParameters(
         editFragment,
@@ -65,7 +47,7 @@ class EditTextProducerForEdit(
         readSharePreffernceMap,
         setReplaceVariableMap,
         false,
-        hideSettingVariableList,
+        editFragment.hideSettingVariableList,
     )
 
     private val withEditComponent = WithEditComponent(
@@ -82,28 +64,14 @@ class EditTextProducerForEdit(
         editViewModel.variableNameToEditTextIdMap.clear()
         editFragment.listConSelectBoxMapList.clear()
         when (onSettingEdit) {
-            true -> {
-                val setVariableListForSettingHolder =
-                    CommandClickScriptVariable.setVariableForSettingHolder
-                val recordNumToSetVariableMapsForSettingHolder =
-                    SetVariableTyper.makeRecordNumToSetVariableMaps(
-                        setVariableListForSettingHolder,
-                        recordNumToMapNameValueInSettingHolder
-                    )
-
-                execAdd(
-                    recordNumToMapNameValueInSettingHolder,
-                    recordNumToSetVariableMapsForSettingHolder,
-                    EditTextIdForEdit.SETTING_VARIABLE.id
-                )
-            }
-            false -> {
-                execAdd(
-                    recordNumToMapNameValueInCommandHolder,
-                    recordNumToSetVariableMaps,
-                    EditTextIdForEdit.COMMAND_VARIABLE.id
-                )
-            }
+            true -> execAddEditComponent(
+                recordNumToMapNameValueInSettingHolder,
+                EditTextIdForEdit.SETTING_VARIABLE.id
+            )
+            false -> execAddEditComponent(
+                recordNumToMapNameValueInCommandHolder,
+                EditTextIdForEdit.COMMAND_VARIABLE.id
+            )
         }
         if (
             FDialogTempFile.howFDialogFile(currentScriptFileName)
@@ -112,6 +80,22 @@ class EditTextProducerForEdit(
             makeDescriptionButton(
                 editFragment,
             )
+        )
+    }
+
+    private fun execAddEditComponent(
+        recordNumToMapNameValueInCommandOrSettingHolder:  Map<Int, Map<String, String>?>?,
+        editTextStartId: Int,
+    ){
+        val recordNumToSetVariableMaps =
+            SetVariableTyper.makeRecordNumToSetVariableMaps(
+                editFragment.setVariableTypeList,
+                recordNumToMapNameValueInCommandOrSettingHolder
+            )
+        execAdd(
+            recordNumToMapNameValueInCommandOrSettingHolder,
+            recordNumToSetVariableMaps,
+            editTextStartId
         )
     }
 

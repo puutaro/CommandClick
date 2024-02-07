@@ -11,6 +11,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
@@ -42,11 +43,20 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.current_fannel_name
         )
 
-        editFragment.setVariableTypeList = SetVariableTypesSetter.set(
+        editFragment.setVariableTypeList = SetVariableTypesSetterForEdit.set(
             editFragment,
             currentAppDirPath,
             currentScriptFileName
         )
+        editFragment.hideSettingVariableList = ListSettingVariableListMaker.make(
+            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
+            currentAppDirPath,
+            currentScriptFileName,
+            currentScriptContentsList,
+            editFragment.settingSectionStart,
+            editFragment.settingSectionEnd,
+        )
+
 
         editFragment.existIndexList =
             judgeExistListIndex(
@@ -178,24 +188,22 @@ object ConfigFromScriptFileSetter {
             onShortcut
         )
 
-        val bottomScriptUrlList = SettingVariableReader.setListFromPath(
-            ScriptPreWordReplacer.replace(
-                UsePath.homeScriptUrlsFilePath,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
+        val bottomScriptUrlList = makeListFromSettingPath(
+            editFragment,
+            settingVariableList,
+            CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH,
+            UsePath.homeScriptUrlsFilePath,
         )
         if(
             bottomScriptUrlList.isNotEmpty()
         ) editFragment.bottomScriptUrlList = bottomScriptUrlList
 
 
-        val homeFannelHistoryNameList = SettingVariableReader.setListFromPath(
-            ScriptPreWordReplacer.replace(
-                UsePath.homeFannelsFilePath,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
+        val homeFannelHistoryNameList = makeListFromSettingPath(
+            editFragment,
+            settingVariableList,
+            CommandClickScriptVariable.CMDCLICK_HOME_FANNELS_PATH,
+            UsePath.homeFannelsFilePath,
         )
         if(
             homeFannelHistoryNameList.isNotEmpty()
@@ -251,33 +259,6 @@ object ConfigFromScriptFileSetter {
                 ":${EditTextSupportViewName.LIST_INDEX.str}="
             )
         } ?: false
-    }
-
-    private fun setSetVariableType(
-        editFragment: EditFragment,
-        currentAppDirPath: String,
-        currentScriptFileName: String,
-    ) {
-        val recordNumToMapNameValueInSettingHolder =
-            RecordNumToMapNameValueInHolder.parse(
-                editFragment.currentScriptContentsList,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd,
-                true,
-            )
-        val setVariableTypeListSrc = SetVariableTyper.makeSetVariableTypeList(
-            recordNumToMapNameValueInSettingHolder,
-            currentAppDirPath,
-            currentScriptFileName,
-        )
-        val setVariableForSettingHolder =
-            CommandClickScriptVariable.setVariableForSettingHolder
-        setVariableTypeListSrc.let {
-            if(
-                it.isNullOrEmpty()
-            ) return@let setVariableForSettingHolder
-            setVariableForSettingHolder + it
-        }
     }
 
     private fun setButtonVisible(
@@ -480,7 +461,7 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
-    ): Map<String, String>? {
+    ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
@@ -509,6 +490,43 @@ object ConfigFromScriptFileSetter {
             String(),
             editFragment.readSharePreferenceMap,
             editFragment.setReplaceVariableMap
+        )
+    }
+
+
+    private fun makeListFromSettingPath(
+        editFragment: EditFragment,
+        settingVariableList: List<String>?,
+        settingValName: String,
+        defaultPath: String,
+    ): List<String> {
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val bottomScriptUrlPath =  SettingVariableReader.getStrValue(
+            settingVariableList,
+            settingValName,
+            defaultPath,
+        ).let {
+            val repPath = when(it.isEmpty()){
+                true -> defaultPath
+                else -> it
+            }
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                repPath,
+                editFragment.setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName,
+            )
+        }
+        return SettingVariableReader.setListFromPath(
+            bottomScriptUrlPath
         )
     }
 }

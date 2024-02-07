@@ -20,6 +20,8 @@ import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
+import com.puutaro.commandclick.proccess.edit.lib.ProducerMacro
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.list.ListTool
@@ -30,6 +32,8 @@ object DragSortListViewProducer {
 
     private var dragSortDialogObj: Dialog? = null
     private const val dragSortButtonLabel = "DST"
+    val macroStrForDragSortGetListPathFromVar =
+        ProducerMacro.macroStrForDragSortGetListPathFromVar
 
     fun make(
         editFragment: EditFragment,
@@ -45,14 +49,16 @@ object DragSortListViewProducer {
             LinearLayout.LayoutParams.MATCH_PARENT,
         )
         linearParamsForDragSortListView.weight = weight
-        val curSetValMap = editParameters.setVariableMap
         val elsbMap = ListContentsSelectSpinnerViewProducer.getElsbMap(
             editParameters,
             currentComponentIndex
         )
-        val listContentsFilePath = elsbMap?.get(
-            ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-        ) ?: String()
+        val currentVariableName = editParameters.currentVariableName
+        val listContentsFilePath = ListPathGetterForDragSort.get(
+            elsbMap,
+            editFragment,
+            currentVariableName ?: String(),
+        )
 
         val fileObj = File(listContentsFilePath)
         val parentDir = fileObj.parent ?: String()
@@ -157,7 +163,6 @@ object DragSortListViewProducer {
             recyclerView,
             dragSortRecyclerAdapter,
         )
-
     }
 
     private fun makeDragSortList(

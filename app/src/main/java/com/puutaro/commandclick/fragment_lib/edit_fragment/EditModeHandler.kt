@@ -2,18 +2,14 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment
 
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifiedForAppHistory
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.*
 
 
@@ -23,22 +19,8 @@ class EditModeHandler(
 ) {
     private val context = editFragment.context
     private val currentScriptContentsList = editFragment.currentScriptContentsList
-    private val currentEditFragmentTag = editFragment.tag
-    private val onPassCmdVariableEdit =
-        editFragment.passCmdVariableEdit ==
-                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
     private val enableCmdEdit = editFragment.enableCmdEdit
-    private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
-    )
-    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_fannel_name
-    )
-
-    private val hideSettingVariableList = makeHideVariableList()
+    private val readSharePreferenceMap = editFragment.readSharePreferenceMap
 
     private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
         currentScriptContentsList,
@@ -57,15 +39,12 @@ class EditModeHandler(
 
 
     fun execByHowFullEdit(){
-        if(
-            currentEditFragmentTag?.startsWith(
-                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
-            ) != true
-            && !onPassCmdVariableEdit
+        when(
+            IsCmdEdit.judge(editFragment)
         ) {
-            editCommandVariable()
+            false -> editSettingVariable()
+            else -> editCommandVariable()
         }
-        else editSettingVariable()
     }
 
     private fun editCommandVariable(
@@ -86,13 +65,12 @@ class EditModeHandler(
                 settingSectionEnd,
                 true,
             )
-
         if(
             recordNumToMapNameValueInCommandHolder.isNullOrEmpty()
         ) return
         UpdateLastModifiedForAppHistory.update(
             editExecuteValue,
-            readSharePreffernceMap,
+            readSharePreferenceMap,
         )
         buttonCreate(
             ToolbarButtonBariantForEdit.HISTORY,
@@ -109,7 +87,6 @@ class EditModeHandler(
             editFragment,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            hideSettingVariableList,
         )
         editTextProducerForEdit.adds()
 
@@ -162,7 +139,7 @@ class EditModeHandler(
                     listener?.onToolBarButtonClickForEditFragment(
                         editFragment.tag,
                         ToolbarButtonBariantForEdit.CANCEL,
-                        readSharePreffernceMap,
+                        readSharePreferenceMap,
                         enableCmdEdit,
                     )
                 }
@@ -178,7 +155,6 @@ class EditModeHandler(
             editFragment,
             recordNumToMapNameValueInCommandHolder,
             recordNumToMapNameValueInSettingHolder,
-            hideSettingVariableList,
         )
         editTextProducerForEdit.adds(
         true
@@ -197,20 +173,10 @@ class EditModeHandler(
         )
     }
 
-    private fun makeHideVariableList(): List<String>{
-        return ListSettingVariableListMaker.make(
-            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-            currentAppDirPath,
-            currentFannelName,
-            currentScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-        )
-    }
-
     private fun filterRecordNumToMapNameValueInHolderByHideVariable(
         recordNumToMapNameValueInHolder: Map<Int, Map<String, String>?>?,
     ): Map<Int, Map<String, String>?>? {
+        val hideSettingVariableList = editFragment.hideSettingVariableList
         return recordNumToMapNameValueInHolder?.filter {
                 currentRecordNumToMapNameValueInHolder ->
             val currentRecordNumToNameToValueInHolder =

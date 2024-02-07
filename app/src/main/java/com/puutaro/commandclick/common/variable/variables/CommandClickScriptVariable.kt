@@ -6,8 +6,10 @@ import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DragSortListViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
+import com.puutaro.commandclick.proccess.edit.lib.ProducerMacro
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
@@ -218,11 +220,11 @@ object CommandClickScriptVariable {
     val fannelDirName = CcPathTool.makeFannelDirName(
         cmdclickStartupJsName
     )
-    private val homeScriptUrlsFilePath =
-        UsePath.homeScriptUrlsFilePath
+    private val homeScriptUrlsFilePath = UsePath.homeScriptUrlsFilePath
     private val homeFannelsFilePath =
         UsePath.homeFannelsFilePath
-
+    private val macroStrForDragSortGetListPathFromVar =
+        ProducerMacro.macroStrForDragSortGetListPathFromVar
     private val buttonCmd = ButtonViewProducer.ButtonEditKey.cmd.name
     private val buttonLabel = ButtonViewProducer.ButtonEditKey.label.name
     private val buttonSetfType =
@@ -239,7 +241,8 @@ object CommandClickScriptVariable {
         ListContentsSelectSpinnerViewProducer.ListContentsEditKey.limitNum.name
     private val setVaraibleValueForHomeScriptUrlsPath =
         "$listPathForListConSlSpi=" +
-                "$homeScriptUrlsFilePath!$limitNumForListConSlSpi=20" +
+                "$macroStrForDragSortGetListPathFromVar:${homeScriptUrlsFilePath}" +
+                    "!$limitNumForListConSlSpi=20" +
                 "|$buttonCmd=" +
                     listOf(
                         "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
@@ -249,7 +252,8 @@ object CommandClickScriptVariable {
                     ).joinToString(" ")
     private val setVariableValueForHomeFannelsPath =
         "$listPathForListConSlSpi=" +
-                "$homeFannelsFilePath!$limitNumForListConSlSpi=20" +
+                "$macroStrForDragSortGetListPathFromVar:$homeFannelsFilePath" +
+                    "!$limitNumForListConSlSpi=20" +
                 "|$buttonCmd=" +
                 listOf(
                     "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",

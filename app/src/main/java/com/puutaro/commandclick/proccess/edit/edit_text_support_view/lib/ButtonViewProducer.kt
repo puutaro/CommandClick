@@ -23,6 +23,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.but
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
+import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
@@ -82,6 +83,7 @@ object ButtonViewProducer {
         )
 
         val buttonMap = getButtonMap(
+            editFragment,
             currentSetVariableValue,
             currentComponentIndex
         )
@@ -572,8 +574,7 @@ object ButtonViewProducer {
                 )
                 execListAddForSetting(
                     buttonEventArgs.editFragment,
-                    buttonEventArgs.insertEditText,
-                    buttonEventArgs.editFragment.readSharePreferenceMap,
+                    buttonEventArgs.currentVariableName,
                     listConSlSpiOptionsStr,
                     setFOptionMap
                 )
@@ -673,8 +674,7 @@ object ButtonViewProducer {
 
     private fun execListAddForSetting(
         editFragment: EditFragment,
-        insertEditText: EditText,
-        readSharePreffernceMap: Map<String, String>,
+        currentVariableName: String?,
         listConSlSpiOptionsStr: String?,
         setFOptionMap: Map<String, String>
     ){
@@ -690,7 +690,7 @@ object ButtonViewProducer {
         ).isNullOrEmpty()
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
+            editFragment.readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
         val listCon = FileSystems.sortedFiles(
@@ -741,16 +741,11 @@ object ButtonViewProducer {
                 ).show()
                 return@launch
             }
-            val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-            val listFilePath = listConSlSpiOptionsStr
-                ?.split("!")
-                ?.filter {
-                    it.contains(listPathKey)
-                }?.firstOrNull()
-                ?.replace("${listPathKey}=", "")
-                ?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                } ?: return@launch
+            val listFilePath = getListPathForDragSort(
+                editFragment,
+                listConSlSpiOptionsStr,
+                currentVariableName
+            ) ?: return@launch
             val listFilePathOjb = File(listFilePath)
             val listDirPath = listFilePathOjb.parent
                 ?: return@launch
@@ -782,10 +777,33 @@ object ButtonViewProducer {
                     updateListCon
                 )
             }
-            withContext(Dispatchers.Main){
-                insertEditText.setText(listFilePath)
-            }
+//            withContext(Dispatchers.Main){
+//                insertEditText.setText(listFilePath)
+//            }
         }
+    }
+
+    private fun getListPathForDragSort(
+        editFragment: EditFragment,
+        listConSlSpiOptionsStr: String?,
+        currentVariableName: String?
+    ): String? {
+        val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
+        return listConSlSpiOptionsStr
+            ?.split("!")
+            ?.filter {
+                it.contains(listPathKey)
+            }?.firstOrNull()
+            ?.replace("${listPathKey}=", "")
+            ?.let {
+                QuoteTool.trimBothEdgeQuote(it)
+            }?.let {
+                ListPathGetterForDragSort.getByListPathSrc(
+                    it,
+                    editFragment,
+                    currentVariableName ?: String(),
+                )
+            }
     }
     private fun execJsFileForButton(
         editFragment: EditFragment,
@@ -932,9 +950,19 @@ object ButtonViewProducer {
     }
 
     private fun getButtonMap(
+        editFragment: EditFragment,
         currentSetVariableValue: String?,
         currentComponentIndex: Int
     ): Map<String, String>? {
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
         return currentSetVariableValue?.let {
             if(
                 it.contains(
@@ -946,6 +974,13 @@ object ButtonViewProducer {
                 QuoteTool.trimBothEdgeQuote(it)
             }
             QuoteTool.trimBothEdgeQuote(it)
+        }?.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                editFragment.setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName
+            )
         }?.split('!')
             ?.map {
                 CcScript.makeKeyValuePairFromSeparatedString(
