@@ -18,12 +18,10 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonI
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FDialogTempFile
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import java.io.File
 
 object ConfigFromScriptFileSetter {
 
