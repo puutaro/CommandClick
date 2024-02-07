@@ -271,7 +271,8 @@ object CommandClickScriptVariable {
         UsePath.noScrollSaveUrlsFilePath
     private val setVariableValueForSrcImageAnchorLongPressMenuFilePath =
         "$listPathForListConSlSpi=" +
-                "$srcImageAnchorLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "$macroStrForDragSortGetListPathFromVar:$srcImageAnchorLongPressMenuFilePath" +
+                    "!$limitNumForListConSlSpi=20" +
                 "|$buttonCmd=" +
                 listOf(
                     "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
@@ -281,7 +282,8 @@ object CommandClickScriptVariable {
                 ).joinToString(" ")
     private val setVariableValueForSrcAnchorLongPressMenuFilePath =
         "$listPathForListConSlSpi=" +
-                "$srcAnchorLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "$macroStrForDragSortGetListPathFromVar:$srcAnchorLongPressMenuFilePath" +
+                    "!$limitNumForListConSlSpi=20" +
                 "|$buttonCmd=" +
                 listOf(
                     "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
@@ -291,7 +293,8 @@ object CommandClickScriptVariable {
                 ).joinToString(" ")
     private val setVariableValueForImageLongPressMenuFilePath =
         "$listPathForListConSlSpi=" +
-                "$imageLongPressMenuFilePath!$limitNumForListConSlSpi=20" +
+                "$macroStrForDragSortGetListPathFromVar:$imageLongPressMenuFilePath" +
+                    "!$limitNumForListConSlSpi=20" +
                 "|$buttonCmd=" +
                 listOf(
                     "setf $buttonSetfType=${SettingCmdArgs.ListAdd.name}",
