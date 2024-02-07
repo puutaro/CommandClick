@@ -22,6 +22,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
@@ -180,7 +181,11 @@ class FormDialogForListIndexOrButton(
             onSetting.isEmpty()
         ) {
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                recordNumToMapNameValueInSettingHolder,
+                CommandClickVariables.substituteVariableListFromHolder(
+                    scriptContentsList,
+                    settingSectionStart,
+                    settingSectionEnd
+                ),
                 parentDirPath,
                 selectedScriptName,
             )
@@ -204,8 +209,8 @@ class FormDialogForListIndexOrButton(
         } else {
             val hideSettingVariableList = ListSettingVariableListMaker.make(
                 CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-                parentDirPath,
-                selectedScriptName,
+                virtualReadPreffrenceMap,
+                editFragment.setReplaceVariableMap,
                 scriptContentsList,
                 settingSectionStart,
                 settingSectionEnd,

@@ -183,11 +183,12 @@ object ConfigFromStartUpFileSetterForTerm {
                 ),
             )
         }
+        val fannelContentsList = CommandClickVariables.makeScriptContentsList(
+            terminalFragment.currentAppDirPath,
+            currentScriptFileName
+        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            CommandClickVariables.makeScriptContentsList(
-                terminalFragment.currentAppDirPath,
-                currentScriptFileName
-            ),
+            fannelContentsList,
             settingSectionStart,
             settingSectionEnd
         )
@@ -195,10 +196,15 @@ object ConfigFromStartUpFileSetterForTerm {
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
-        terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
-            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
+        val setRepValMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+            fannelContentsList,
             terminalFragment.currentAppDirPath,
             currentScriptFileName,
+        )
+        terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
+            CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
+            terminalFragment.readSharedPreferences,
+            setRepValMap,
             settingVariableList ?: emptyList(),
         )
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(

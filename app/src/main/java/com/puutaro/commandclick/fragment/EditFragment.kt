@@ -245,6 +245,7 @@ class EditFragment: Fragment() {
                 currentAppDirPath,
                 currentScriptFileName,
             )
+
         ConfigFromScriptFileSetter.set(
             this,
             currentScriptContentsList,

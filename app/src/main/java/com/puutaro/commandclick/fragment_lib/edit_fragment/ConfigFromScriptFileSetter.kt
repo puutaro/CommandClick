@@ -18,10 +18,12 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonI
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FDialogTempFile
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import java.io.File
 
 object ConfigFromScriptFileSetter {
 
@@ -43,15 +45,15 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.current_fannel_name
         )
 
-        editFragment.setVariableTypeList = SetVariableTypesSetterForEdit.set(
+        editFragment.setVariableTypeList =
+            SetVariableTypesSetterForEdit.set(
             editFragment,
-            currentAppDirPath,
-            currentScriptFileName
+            readSharePreferenceMap
         )
         editFragment.hideSettingVariableList = ListSettingVariableListMaker.make(
             CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-            currentAppDirPath,
-            currentScriptFileName,
+            readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             currentScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
@@ -463,18 +465,10 @@ object ConfigFromScriptFileSetter {
         defaultButtonConfigCon: String,
     ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
         val settingButtonConfigMapStr = ListSettingVariableListMaker.make(
             targetSettingConfigValName,
-            currentAppDirPath,
-            currentScriptFileName,
+            readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             editFragment.currentScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,

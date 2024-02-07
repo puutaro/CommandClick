@@ -1,33 +1,42 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import java.io.File
 
 object SetReplaceVariabler {
 
-    private val filePrefix = EditSettings.filePrefix
-    private val setReplaceVariablesConfigPathSrc = "${UsePath.fannelSettingVariablsDirPath}/${UsePath.setReplaceVariablesConfig}"
-
     fun makeSetReplaceVariableMap(
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
+        settingVariableList: List<String>?,
         currentAppDirPath: String,
         currentScriptFileName: String,
     ): Map<String, String>? {
-        val setReplaceVariableMapBeforeRecursiveReplace = execMakeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolder,
-            currentAppDirPath,
-            currentScriptFileName,
+        if(
+            settingVariableList.isNullOrEmpty()
+        ) return null
+        val readSharePrefMap = mapOf(
+            SharePrefferenceSetting.current_app_dir.name to currentAppDirPath,
+            SharePrefferenceSetting.current_fannel_name.name to currentScriptFileName,
         )
+        val setReplaceVariableMapBeforeRecursiveReplace = ListSettingVariableListMaker.makeFromSettingVariableList(
+            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
+            readSharePrefMap,
+            null,
+            settingVariableList,
+        ).joinToString(",")
+            .let {
+                convertReplaceVariableConToMap(
+                    it
+                )
+            }
         return recursiveReplaceForReplaceVariableMap(
             setReplaceVariableMapBeforeRecursiveReplace
         )
@@ -73,42 +82,6 @@ object SetReplaceVariabler {
         }.toMap()
     }
 
-    private fun execMakeSetReplaceVariableMap(
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
-        currentAppDirPath: String,
-        currentScriptFileName: String,
-    ): Map<String, String>? {
-        return recordNumToMapNameValueInSettingHolder?.filter {
-                entry ->
-            entry.value?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_NAME.name
-            ) == CommandClickScriptVariable.SET_REPLACE_VARIABLE
-        }?.map {
-                entry ->
-            val entryValue = entry.value
-            val setTargetVariableValueBeforeTrim = entryValue?.get(
-                RecordNumToMapNameValueInHolderColumn.VARIABLE_VALUE.name
-            ) ?: return null
-            val setTargetVariableValueSource = QuoteTool.trimBothEdgeQuote(
-                setTargetVariableValueBeforeTrim
-            )
-            if(
-                !setTargetVariableValueSource.startsWith(
-                    filePrefix
-                )
-            ) return@map setTargetVariableValueSource
-            makeSetVariableValueFromFile(
-                currentAppDirPath,
-                currentScriptFileName,
-            )
-        }?.joinToString(",")
-            ?.let {
-                convertReplaceVariableConToMap(
-                    it
-                )
-            }
-    }
-
     private fun convertReplaceVariableConToMap(
         replaceVariableCon: String?,
     ): Map<String, String>? {
@@ -136,30 +109,6 @@ object SetReplaceVariabler {
                 else return null
                 replaceVariableName to replaceString
             }?.toMap()
-    }
-
-    private fun makeSetVariableValueFromFile(
-        currentAppDirPath: String,
-        currentScriptFileName: String,
-    ): String {
-        val setReplaceVariablesConfigPath =
-            ScriptPreWordReplacer.replace(
-                setReplaceVariablesConfigPathSrc
-                    .removePrefix(
-                        filePrefix
-                    ),
-                currentAppDirPath,
-                currentScriptFileName,
-            )
-        return SettingFile.read(
-            setReplaceVariablesConfigPath
-        ).let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
-        }
     }
 
     fun execReplaceByReplaceVariables(
@@ -231,14 +180,22 @@ object SetReplaceVariabler {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             mainFannelConList,
             settingSectionStart,
-            settingSectionEnd,
-            onForSetting = false,
+            settingSectionEnd
         )
+
+//        val recordNumToMapNameValueInSettingHolder =
+//            RecordNumToMapNameValueInHolder.parse(
+//            mainFannelConList,
+//            settingSectionStart,
+//            settingSectionEnd,
+//            onForSetting = false,
+//        )
         return makeSetReplaceVariableMap(
-            recordNumToMapNameValueInSettingHolder,
+            settingVariableList,
+//            recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             mainFannelName,
         )

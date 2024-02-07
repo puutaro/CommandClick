@@ -247,15 +247,20 @@ object JavaScriptLoadUrl {
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
-        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+//        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+//            jsList,
+//            settingSectionStart,
+//            settingSectionEnd,
+//            true
+//        )
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             jsList,
             settingSectionStart,
-            settingSectionEnd,
-            true
+            settingSectionEnd
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                recordNumToMapNameValueInSettingHolder,
+                settingVariableList,
                 String(),
                 String()
             )
@@ -389,15 +394,20 @@ object JavaScriptLoadUrl {
         if(
             !setReplaceVariableMapSrc.isNullOrEmpty()
         ) return setReplaceVariableMapSrc
-        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+//        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
+//            jsList,
+//            settingSectionStart,
+//            settingSectionEnd,
+//            true
+//        )
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             jsList,
             settingSectionStart,
-            settingSectionEnd,
-            true
+            settingSectionEnd
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                recordNumToMapNameValueInSettingHolder,
+                settingVariableList,
                 recentAppDirPath,
                 scriptFileName
             )

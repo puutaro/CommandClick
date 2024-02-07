@@ -15,9 +15,9 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -71,20 +71,17 @@ class ToolbarButtonArgsMaker(
             currentScriptFileName
         ).absolutePath
     ).textToList()
-
+    val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        currentScriptContentsList,
+        settingSectionStart,
+        settingSectionEnd
+    )
     val setReplaceVariableMap =
-        RecordNumToMapNameValueInHolder.parse(
-            currentScriptContentsList,
-            settingSectionStart,
-            settingSectionEnd,
-            true,
-        ).let {
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                it,
+                settingVariableList,
                 currentAppDirPath,
                 currentScriptFileName,
             )
-        }
 
 //     UsePath.settingButtonConfigPath,
     val toolbarButtonConfigMap = when(fragment){
