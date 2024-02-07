@@ -101,7 +101,7 @@ object LongPressMenuTool {
         val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
             longPressMenuFilePath
         )
-        val srcLongPressListConSrc = ReadText(mainFannelPath).readText()
+        val srcLongPressListConSrc = ReadText(longPressMenuFilePath).readText()
         val srcLongPressListCon = srcLongPressListConSrc.split("\n").map {
             QuoteTool.trimBothEdgeQuote(it)
         }.joinToString("\n")

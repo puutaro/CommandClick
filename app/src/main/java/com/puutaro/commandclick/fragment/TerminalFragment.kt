@@ -19,6 +19,7 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -29,11 +30,13 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
+import java.io.File
 
 
 class   TerminalFragment: Fragment() {
@@ -48,6 +51,7 @@ class   TerminalFragment: Fragment() {
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var currentAppDirPath = String()
     var currentFannelName = String()
+    var setReplaceVariableMap: Map<String, String>? = null
     var displayUpdateCoroutineJob: Job? = null
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null

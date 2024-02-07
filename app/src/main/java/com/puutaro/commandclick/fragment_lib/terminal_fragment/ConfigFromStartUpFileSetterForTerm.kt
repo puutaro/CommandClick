@@ -10,9 +10,9 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
-
 
 object ConfigFromStartUpFileSetterForTerm {
 
@@ -39,6 +39,15 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
+        val readSharedPreferences = terminalFragment.readSharedPreferences
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_fannel_name
+        )
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
             CommandClickVariables.makeScriptContentsList(
@@ -144,23 +153,32 @@ object ConfigFromStartUpFileSetterForTerm {
                 settingSectionStart,
                 settingSectionEnd
             )
-            terminalFragment.srcImageAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
-                UsePath.srcImageAnchorLongPressMenuFilePath,
-                terminalFragment.currentAppDirPath,
-                cmdclickStartupJsName,
-            )
+            terminalFragment.srcImageAnchorLongPressMenuFilePath =
+                LongPressPathDecider.decide(
+                    terminalFragment,
+                    currentAppDirPath,
+                    cmdclickStartupJsName,
+                    settingVariableListFromStartup,
+                    CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+                )
 
-            terminalFragment.srcAnchorLongPressMenuFilePath = ScriptPreWordReplacer.replace(
-                UsePath.srcAnchorLongPressMenuFilePath,
-                terminalFragment.currentAppDirPath,
-                cmdclickStartupJsName,
-            )
+            terminalFragment.srcAnchorLongPressMenuFilePath =
+                LongPressPathDecider.decide(
+                    terminalFragment,
+                    currentAppDirPath,
+                    cmdclickStartupJsName,
+                    settingVariableListFromStartup,
+                    CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+                )
 
-            terminalFragment.imageLongPressMenuFilePath = ScriptPreWordReplacer.replace(
-                UsePath.imageLongPressMenuFilePath,
-                terminalFragment.currentAppDirPath,
-                cmdclickStartupJsName,
-            )
+            terminalFragment.imageLongPressMenuFilePath =
+                LongPressPathDecider.decide(
+                    terminalFragment,
+                    currentAppDirPath,
+                    cmdclickStartupJsName,
+                    settingVariableListFromStartup,
+                    CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+                )
 
             terminalFragment.noScrollSaveUrls = SettingVariableReader.setListFromPath(
                 ScriptPreWordReplacer.replace(
@@ -187,6 +205,11 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.currentAppDirPath,
             currentScriptFileName
         )
+        terminalFragment.setReplaceVariableMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+            fannelContentsList,
+            terminalFragment.currentAppDirPath,
+            currentScriptFileName,
+        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             fannelContentsList,
             settingSectionStart,
@@ -196,15 +219,10 @@ object ConfigFromStartUpFileSetterForTerm {
             settingVariableList,
             CommandClickScriptVariable.TERMINAL_DO
         ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
-        val setRepValMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-            fannelContentsList,
-            terminalFragment.currentAppDirPath,
-            currentScriptFileName,
-        )
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.readSharedPreferences,
-            setRepValMap,
+            terminalFragment.setReplaceVariableMap,
             settingVariableList ?: emptyList(),
         )
         terminalFragment.onAdBlock = SettingVariableReader.getCbValue(
@@ -308,11 +326,13 @@ object ConfigFromStartUpFileSetterForTerm {
         if(
             isSrcImageAnchorLongPressMenuFilePathVal
         ) terminalFragment.srcImageAnchorLongPressMenuFilePath =
-            ScriptPreWordReplacer.replace(
-                UsePath.srcImageAnchorLongPressMenuFilePath,
-                terminalFragment.currentAppDirPath,
-                currentScriptFileName,
-            )
+                LongPressPathDecider.decide(
+                    terminalFragment,
+                    currentAppDirPath,
+                    currentFannelName,
+                    settingVariableList,
+                    CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
+                )
 
         val isSrcAnchorLongPressMenuFilePathVal = SettingVariableReader.isExist(
             settingVariableList,
@@ -321,10 +341,12 @@ object ConfigFromStartUpFileSetterForTerm {
         if(
             isSrcAnchorLongPressMenuFilePathVal
         ) terminalFragment.srcAnchorLongPressMenuFilePath =
-            ScriptPreWordReplacer.replace(
-                UsePath.srcAnchorLongPressMenuFilePath,
-                terminalFragment.currentAppDirPath,
-                currentScriptFileName,
+            LongPressPathDecider.decide(
+                terminalFragment,
+                currentAppDirPath,
+                currentFannelName,
+                settingVariableList,
+                CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
             )
 
 
@@ -335,11 +357,13 @@ object ConfigFromStartUpFileSetterForTerm {
         if(
             isImageLongPressMenuFilePathVal
         ) terminalFragment.imageLongPressMenuFilePath =
-                ScriptPreWordReplacer.replace(
-                    UsePath.imageLongPressMenuFilePath,
-                    terminalFragment.currentAppDirPath,
-                    currentScriptFileName,
-                )
+            LongPressPathDecider.decide(
+                terminalFragment,
+                currentAppDirPath,
+                currentFannelName,
+                settingVariableList,
+                CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+            )
 
         val noScrollSaveUrls = SettingVariableReader.setListFromPath(
             ScriptPreWordReplacer.replace(
@@ -352,5 +376,60 @@ object ConfigFromStartUpFileSetterForTerm {
             noScrollSaveUrls.isNotEmpty()
         ) terminalFragment.noScrollSaveUrls =
             noScrollSaveUrls
+    }
+
+}
+
+private object LongPressPathDecider {
+
+    fun decide(
+        terminalFragment: TerminalFragment,
+        currentAppDirPath: String,
+        currentFannelNameSrc: String,
+        settingVariableList: List<String>?,
+        settingValName: String,
+    ): String {
+        val currentFannelName = currentFannelNameSrc.let {
+            val isEmptyFanneName =
+                it.isEmpty()
+                        || it == CommandClickScriptVariable.EMPTY_STRING
+            when(isEmptyFanneName){
+                true -> UsePath.cmdclickStartupJsName
+                else -> it
+            }
+        }
+        val defaultPath = decideFixLongPressFilePath(settingValName)
+        return SettingVariableReader.getStrValue(
+            settingVariableList,
+            settingValName,
+            defaultPath,
+        ).let {
+            val repPath = when(it.isEmpty()){
+                true -> defaultPath
+                else -> it
+            }
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                repPath,
+                terminalFragment.setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName,
+            )
+        }
+    }
+    private fun decideFixLongPressFilePath(
+        variableName: String,
+    ): String {
+        return when (variableName) {
+            CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
+            -> UsePath.imageLongPressMenuFilePath
+
+            CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH
+            -> UsePath.srcAnchorLongPressMenuFilePath
+
+            CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
+            -> UsePath.srcImageAnchorLongPressMenuFilePath
+
+            else -> String()
+        }
     }
 }
