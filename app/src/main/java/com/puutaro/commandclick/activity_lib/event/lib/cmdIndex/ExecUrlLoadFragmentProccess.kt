@@ -57,15 +57,22 @@ object ExecUrlLoadFragmentProccess {
         activity: MainActivity,
     ){
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.fannel_state
+        )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            ),
+            currentAppDirPath,
+            currentFannelName,
+            currentFannelState
         )
         val supportFragmentManager = activity.supportFragmentManager
         val editFragment = try {

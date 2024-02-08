@@ -11,6 +11,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -64,14 +65,12 @@ object AppHistoryAdminEvent {
         val onEditExecute = updateEditExecuteValue ==
                 SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         if (!onEditExecute) {
-            SharePreferenceMethod.putSharePreference(
+            SharePreferenceMethod.putAllSharePreference(
                 sharedPref,
-                mapOf(
-                    SharePrefferenceSetting.current_app_dir.name to
-                            selectedAppDirPath,
-                    SharePrefferenceSetting.current_fannel_name.name to
-                            SharePrefferenceSetting.current_fannel_name.defalutStr,
-                )
+                selectedAppDirPath,
+                SharePrefferenceSetting.current_fannel_name.defalutStr,
+                SharePrefferenceSetting.on_shortcut.defalutStr,
+                SharePrefferenceSetting.fannel_state.defalutStr,
             )
             return true
         }
@@ -103,16 +102,16 @@ object AppHistoryAdminEvent {
         } else {
             EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         }
-        SharePreferenceMethod.putSharePreference(
+        val fannelState = FannelStateManager.getSate(
+            selectedAppDirPath,
+            selectedAppShellFileName,
+        )
+        SharePreferenceMethod.putAllSharePreference(
             sharedPref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name to
-                        selectedAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.name to
-                        selectedAppShellFileName,
-                SharePrefferenceSetting.on_shortcut.name to
-                        onShortCut,
-            )
+            selectedAppDirPath,
+            selectedAppShellFileName,
+            onShortCut,
+            fannelState,
         )
         return true
     }

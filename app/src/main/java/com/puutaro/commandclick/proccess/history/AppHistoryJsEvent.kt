@@ -3,7 +3,6 @@ package com.puutaro.commandclick.proccess.history
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.JavaScriptLoadUrl

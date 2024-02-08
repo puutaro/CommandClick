@@ -1,5 +1,7 @@
 package com.puutaro.commandclick.util.state
 
+import com.puutaro.commandclick.fragment.EditFragment
+
 object FragmentTagManager {
 
     enum class Prefix(
@@ -11,15 +13,19 @@ object FragmentTagManager {
     }
 
     private const val separateUnderBar = "___"
+    private const val fannelStateIndex = 4
+
 
     fun makeCmdValEditTag(
         parentAppDirPath: String,
         scriptFileName: String,
+        fannelState: String,
     ): String {
         return makeTag(
             Prefix.CMD_EDIT_PREFIX.str,
             parentAppDirPath,
             scriptFileName,
+            fannelState,
         )
     }
 
@@ -38,12 +44,23 @@ object FragmentTagManager {
         prefix: String,
         parentAppDirPath: String,
         scriptFileName: String,
+        fannelState: String = String(),
     ): String {
         return listOf(
             prefix,
             parentAppDirPath,
             scriptFileName,
+            fannelState,
         ).joinToString(separateUnderBar)
-//                mode
+    }
+
+    fun execGetStateFromEditFragTag(
+        editFragment: EditFragment,
+    ): String {
+        val tag = editFragment.tag
+            ?: return String()
+        return tag.split(separateUnderBar).getOrNull(fannelStateIndex)
+            ?: String()
+
     }
 }

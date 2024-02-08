@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
@@ -19,6 +20,7 @@ import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelStateManager
 import java.io.File
 
 
@@ -123,7 +125,8 @@ object FannelNameClickListenerSetter {
                         val editFragmentTag = DecideEditTag(
                             shellContentsList,
                             currentAppDirPath,
-                            selectedShellFileName
+                            selectedShellFileName,
+                            SharePrefferenceSetting.fannel_state.defalutStr,
                         ).decide()
                             ?: return
                         OnOnceEditExecuteEvent.invoke(
@@ -135,17 +138,23 @@ object FannelNameClickListenerSetter {
                         return
                     }
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name -> {
+                        val fannelState = FannelStateManager.getSate(
+                            currentAppDirPath,
+                            selectedShellFileName,
+                        )
                         val editFragmentTag = DecideEditTag(
                             shellContentsList,
                             currentAppDirPath,
-                            selectedShellFileName
+                            selectedShellFileName,
+                            fannelState
                         ).decide() ?: return
 
                         OnEditExecuteEvent.invoke(
                             cmdIndexFragment,
                             editFragmentTag,
-                            sharedPref,
+                            currentAppDirPath,
                             selectedShellFileName,
+                            fannelState
                         )
                         return
                     }

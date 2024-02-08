@@ -10,8 +10,6 @@ import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object SetVariableTypesSetterForEdit {
 
-    const val setVariabletypeTempConcatStr = "SET_VARIABLE_TYPE_CONCAT_STR"
-
     fun set(
         editFragment: EditFragment,
         readSharePreferenceMap: Map<String, String>
@@ -44,13 +42,15 @@ object SetVariableTypesSetterForEdit {
                 ) return@let setVariableForSettingHolder
                 setVariableForSettingHolder + it
             }
-        }.joinToString(setVariabletypeTempConcatStr).let {
+        }.joinToString("\n").let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 editFragment.setReplaceVariableMap,
                 currentAppDirPath,
                 currentFannelName
             )
-        }.split(setVariabletypeTempConcatStr)
+        }.split("\n").filter {
+            it.trim().isNotEmpty()
+        }
     }
 }

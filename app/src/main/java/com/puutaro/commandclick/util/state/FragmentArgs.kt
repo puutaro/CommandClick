@@ -42,11 +42,13 @@ class EditFragmentArgs(
             currentAppDirPath: String,
             currentFannelName: String,
             onShortcut: String,
+            fannelState: String,
         ): Map<String, String> {
             return mapOf(
                 SharePrefferenceSetting.current_app_dir.name to currentAppDirPath,
                 SharePrefferenceSetting.current_fannel_name.name to currentFannelName,
                 SharePrefferenceSetting.on_shortcut.name to onShortcut,
+                SharePrefferenceSetting.fannel_state.name to fannelState,
             )
         }
 

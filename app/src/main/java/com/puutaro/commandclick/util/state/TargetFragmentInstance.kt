@@ -107,10 +107,12 @@ class TargetFragmentInstance {
         activity: MainActivity,
         currentAppDirPath: String,
         currentFannelPath: String,
+        fannelState: String,
     ): EditFragment? {
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,
             currentFannelPath,
+            fannelState,
         )
         val cmdVariableEditFragment = getFromActivity<EditFragment>(
             activity,
@@ -144,6 +146,7 @@ class TargetFragmentInstance {
         activity: FragmentActivity?,
         currentAppDirPath: String,
         currentFannelPath: String,
+        fannelState: String,
     ): EditFragment? {
         if(
             activity == null
@@ -151,6 +154,7 @@ class TargetFragmentInstance {
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,
             currentFannelPath,
+            fannelState,
         )
         val cmdVariableEditFragment =
             getFromFragment<EditFragment>(
@@ -206,15 +210,22 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.fannel_state
+        )
         return FragmentTagManager.makeCmdValEditTag(
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            ),
+            currentAppDirPath,
+            currentFannelName,
+            fannelState
         )
     }
 

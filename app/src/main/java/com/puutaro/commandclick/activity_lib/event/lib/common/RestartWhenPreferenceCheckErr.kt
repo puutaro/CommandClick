@@ -5,6 +5,7 @@ import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 class RestartWhenPreferenceCheckErr {
@@ -14,16 +15,12 @@ class RestartWhenPreferenceCheckErr {
         ){
             val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
             if(sharePref == null) return
-            SharePreferenceMethod.putSharePreference(
+            SharePreferenceMethod.putAllSharePreference(
                 sharePref,
-                mapOf(
-                    SharePrefferenceSetting.current_app_dir.name
-                            to SharePrefferenceSetting.current_app_dir.defalutStr,
-                    SharePrefferenceSetting.current_fannel_name.name
-                            to CommandClickScriptVariable.EMPTY_STRING,
-                    SharePrefferenceSetting.on_shortcut.name
-                            to SharePrefferenceSetting.on_shortcut.defalutStr
-                )
+                SharePrefferenceSetting.current_app_dir.defalutStr,
+                SharePrefferenceSetting.current_fannel_name.defalutStr,
+                SharePrefferenceSetting.on_shortcut.defalutStr,
+                SharePrefferenceSetting.fannel_state.defalutStr
             )
             val execIntent = Intent(activity, activity::class.java)
             execIntent.setAction(Intent.ACTION_MAIN)

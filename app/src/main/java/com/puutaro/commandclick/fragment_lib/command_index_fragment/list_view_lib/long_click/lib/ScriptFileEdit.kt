@@ -17,31 +17,29 @@ object ScriptFileEdit {
     fun edit(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
-        shellScriptName: String,
+        fannelName: String,
     ){
         val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreferenceMethod.putSharePreference(
+        SharePreferenceMethod.putAllSharePreference(
             sharedPref,
-            mapOf(
-                SharePrefferenceSetting.current_fannel_name.name
-                        to shellScriptName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to SharePrefferenceSetting.on_shortcut.defalutStr,
-            )
+            currentAppDirPath,
+            fannelName,
+            SharePrefferenceSetting.on_shortcut.defalutStr,
+            SharePrefferenceSetting.fannel_state.defalutStr
         )
         val shellContentsList = ReadText(
             File(
                 currentAppDirPath,
-                shellScriptName
+                fannelName
             ).absolutePath,
         ).textToList()
         val validateErrMessage = ValidateShell.correct(
             cmdIndexFragment,
             shellContentsList,
-            shellScriptName
+            fannelName
         )
         if(validateErrMessage.isNotEmpty()){
-            val shellScriptPath = "${currentAppDirPath}/${shellScriptName}"
+            val shellScriptPath = "${currentAppDirPath}/${fannelName}"
             VariationErrDialog.show(
                 cmdIndexFragment,
                 shellScriptPath,
@@ -52,13 +50,15 @@ object ScriptFileEdit {
         val editFragmentTag = DecideEditTag(
             shellContentsList,
             currentAppDirPath,
-            shellScriptName
+            fannelName,
+            SharePrefferenceSetting.fannel_state.defalutStr,
         ).decideForEdit()
             ?: return
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             currentAppDirPath,
-            shellScriptName,
+            fannelName,
             SharePrefferenceSetting.on_shortcut.defalutStr,
+            SharePrefferenceSetting.fannel_state.defalutStr,
         )
         val context = cmdIndexFragment.context
             ?: return

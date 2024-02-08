@@ -8,6 +8,7 @@ class DecideEditTag(
     private val shellContentsList: List<String>,
     private val currentAppDirPath: String,
     private val selectedScriptFileName: String,
+    private val fannelState: String,
 ) {
 
     private val languageType =
@@ -47,6 +48,7 @@ class DecideEditTag(
             FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
+                fannelState
             )
         } else {
             FragmentTagManager.makeSettingValEditTag(
@@ -66,6 +68,7 @@ class DecideEditTag(
             FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,
                 selectedScriptFileName,
+                fannelState
             )
         } else {
             FragmentTagManager.makeSettingValEditTag(

@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -57,6 +58,10 @@ class JsFDialog(
             readSharedPreferences,
             SharePrefferenceSetting.on_shortcut
         )
+        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.fannel_state
+        )
         val destiFDialogFannelName =
             "${CommandClickScriptVariable.makeCopyPrefix()}_${UsePath.fDialogTempFannelName}"
         val fannelCon = JsScript(terminalFragment).makeFannelCon(
@@ -78,7 +83,13 @@ class JsFDialog(
             SharePrefferenceSetting.current_fannel_name.name
                     to srcFannelName,
             SharePrefferenceSetting.on_shortcut.name
-                    to onShortcut
+                    to onShortcut,
+            SharePrefferenceSetting.fannel_state.name
+                    to fannelState,
+        )
+        val destiFannelState = FannelStateManager.getSate(
+            srcAppDirPath,
+            destiFDialogFannelName
         )
         val desiReadSharePreferenceMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name
@@ -87,10 +98,13 @@ class JsFDialog(
                     to destiFDialogFannelName,
             SharePrefferenceSetting.on_shortcut.name
                     to destiOnShortcut,
+            SharePrefferenceSetting.fannel_state.name
+                    to destiFannelState
         )
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(
             srcAppDirPath,
             destiFDialogFannelName,
+            destiFannelState,
         )
         val editFragArg = EditFragmentArgs(
             desiReadSharePreferenceMap,

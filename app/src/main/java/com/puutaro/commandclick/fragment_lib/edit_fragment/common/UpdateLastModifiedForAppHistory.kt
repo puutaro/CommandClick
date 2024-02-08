@@ -4,7 +4,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod

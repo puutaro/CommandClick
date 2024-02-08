@@ -35,25 +35,26 @@ object MultiSelectDialogForEdit {
                     dataString: String
                 ) {
                     val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-                    val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-                        SharePreferenceMethod.getStringFromSharePreference(
-                            sharePref,
-                            SharePrefferenceSetting.current_app_dir
-                        ),
-                        SharePreferenceMethod.getStringFromSharePreference(
-                            sharePref,
-                            SharePrefferenceSetting.current_fannel_name
-                        ),
+                    val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+                        sharePref,
+                        SharePrefferenceSetting.current_app_dir
                     )
-                    val settingEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-                        SharePreferenceMethod.getStringFromSharePreference(
-                            sharePref,
-                            SharePrefferenceSetting.current_app_dir
-                        ),
-                        SharePreferenceMethod.getStringFromSharePreference(
-                            sharePref,
-                            SharePrefferenceSetting.current_fannel_name
-                        ),
+                    val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+                        sharePref,
+                        SharePrefferenceSetting.current_fannel_name
+                    )
+                    val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+                        sharePref,
+                        SharePrefferenceSetting.fannel_state
+                    )
+                    val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
+                        currentAppDirPath,
+                        currentFannelName,
+                        currentFannelState
+                    )
+                    val settingEditFragmentTag = FragmentTagManager.makeSettingValEditTag(
+                        currentAppDirPath,
+                        currentFannelName,
                     )
                     val editFragmentSource = TargetFragmentInstance().getFromActivity<EditFragment>(
                         activity,

@@ -57,7 +57,6 @@ object ConfigFromScriptFileSetter {
             editFragment.settingSectionEnd,
         )
 
-
         editFragment.existIndexList =
             judgeExistListIndex(
                 editFragment,

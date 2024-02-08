@@ -17,6 +17,30 @@ object SharePreferenceMethod {
         ) ?: defaultStrValue
     }
 
+    fun putAllSharePreference(
+        sharedPref: SharedPreferences?,
+        currentAppDirPath: String,
+        currentScriptFileName: String,
+        onShortcutValue: String,
+        currentFannelState: String,
+
+    ){
+        val sharePrefMap = mapOf(
+            SharePrefferenceSetting.current_app_dir.name
+                    to currentAppDirPath,
+            SharePrefferenceSetting.current_fannel_name.name
+                    to currentScriptFileName,
+            SharePrefferenceSetting.on_shortcut.name
+                    to onShortcutValue,
+            SharePrefferenceSetting.fannel_state.name
+                    to currentFannelState,
+        )
+        putSharePreference (
+            sharedPref,
+            sharePrefMap
+        )
+    }
+
 
     fun putSharePreference (
         sharedPref: SharedPreferences?,

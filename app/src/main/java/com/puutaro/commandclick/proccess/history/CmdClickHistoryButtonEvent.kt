@@ -22,9 +22,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
-import com.puutaro.commandclick.util.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -200,10 +200,15 @@ class CmdClickHistoryButtonEvent (
                 val jsExecWaitTime =
                     if(isJsExec) 200L
                     else 0L
+                val fannelState = FannelStateManager.getSate(
+                    appDirName,
+                    fannelName,
+                )
                 val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
                     appDirName,
                     fannelName,
-                    EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
+                    EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
+                    fannelState
                 )
                 val cmdValEdit =
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT

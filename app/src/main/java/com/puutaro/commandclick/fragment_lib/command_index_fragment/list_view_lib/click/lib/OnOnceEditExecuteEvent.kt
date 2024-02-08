@@ -30,7 +30,8 @@ object OnOnceEditExecuteEvent {
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             currentAppDirPath,
             selectedShellFileName,
-            String()
+            String(),
+            SharePrefferenceSetting.fannel_state.defalutStr,
         )
         val listener = context
                 as CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener

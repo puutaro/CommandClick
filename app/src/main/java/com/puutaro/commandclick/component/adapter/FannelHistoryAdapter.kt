@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.AppHistoryManager
 
 
 class FannelHistoryAdapter(

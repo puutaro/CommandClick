@@ -63,6 +63,10 @@ class InitFragmentManager(
             startUpPref,
             SharePrefferenceSetting.on_shortcut
         )
+        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+            startUpPref,
+            SharePrefferenceSetting.fannel_state
+        )
 
         val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
 
@@ -88,11 +92,13 @@ class InitFragmentManager(
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             startUpAppDirPath,
             startUpScriptFileName,
+            fannelState,
         )
         val readSharePreferenceMapForNext = EditFragmentArgs.createReadSharePreferenceMap(
             startUpAppDirPath,
             startUpScriptFileName,
             onShortcut,
+            fannelState
         )
         val cmdVariableEditFragment = TargetFragmentInstance().getFromActivity<EditFragment>(
             activity,
@@ -123,7 +129,9 @@ class InitFragmentManager(
                 SharePrefferenceSetting.current_fannel_name.name
                         to SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.name
-                        to SharePrefferenceSetting.on_shortcut.defalutStr
+                        to SharePrefferenceSetting.on_shortcut.defalutStr,
+                SharePrefferenceSetting.fannel_state.name
+                        to SharePrefferenceSetting.fannel_state.defalutStr
             )
         )
         exedRestartIntent(
@@ -136,6 +144,9 @@ class InitFragmentManager(
         val recieveAppDirPath = intent.getStringExtra(
             SharePrefferenceSetting.current_app_dir.name
         )
+        val fannelState = intent.getStringExtra(
+            SharePrefferenceSetting.fannel_state.name
+        ) ?: SharePrefferenceSetting.fannel_state.defalutStr
         if (
             recieveAppDirPath.isNullOrEmpty()
         ) return
@@ -143,14 +154,12 @@ class InitFragmentManager(
         val currentShellFileName = intent.getStringExtra(
             SharePrefferenceSetting.current_fannel_name.name
         ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
-        SharePreferenceMethod.putSharePreference(
+        SharePreferenceMethod.putAllSharePreference(
             startUpPref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name to recieveAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.name to currentShellFileName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-            )
+            recieveAppDirPath,
+            currentShellFileName,
+            EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
+            fannelState
         )
         exedRestartIntent(
             Intent(activity, activity::class.java)

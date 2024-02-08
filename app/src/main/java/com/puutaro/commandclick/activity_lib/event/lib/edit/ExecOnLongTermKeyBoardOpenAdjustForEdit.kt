@@ -6,7 +6,6 @@ import android.widget.LinearLayout
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -16,15 +15,22 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
         weight: Float
     ){
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.fannel_state
+        )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            ),
+            currentAppDirPath,
+            currentFannelName,
+            currentFannelState,
         )
         val targetFragment = try {
             activity.supportFragmentManager.findFragmentByTag(cmdEditFragmentTag) as EditFragment

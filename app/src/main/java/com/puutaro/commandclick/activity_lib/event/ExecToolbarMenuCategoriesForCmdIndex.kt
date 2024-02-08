@@ -15,10 +15,12 @@ import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.ShortCutManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateManager
 
 object ExecToolbarMenuCategoriesForCmdIndex {
     fun <T: Fragment> execToolbarMenuCategories(
@@ -53,29 +55,11 @@ object ExecToolbarMenuCategoriesForCmdIndex {
                 shortCutManager.createShortCut()
             }
             ToolbarMenuCategoriesVariantForCmdIndex.CONFIG -> {
-                val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-                val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-                SharePreferenceMethod.putSharePreference(
-                    sharedPref,
-                    mapOf(
-                        SharePrefferenceSetting.current_app_dir.name
-                                to UsePath.cmdclickSystemAppDirPath,
-                        SharePrefferenceSetting.current_fannel_name.name
-                                to cmdclickConfigFileName,
-                        SharePrefferenceSetting.on_shortcut.name
-                                to EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-                    )
-                )
-                val cmdEditFragmentTag =
-                    FragmentTagManager.makeCmdValEditTag(
-                    UsePath.cmdclickSystemAppDirPath,
-                    cmdclickConfigFileName,
-                )
-                WrapFragmentManager.changeFragmentEdit(
-                    activity.supportFragmentManager,
-                    cmdEditFragmentTag,
-                    String(),
+                SystemFannelLauncher.launchFromActivity(
+                    activity,
                     editFragmentArgs,
+                    UsePath.cmdclickSystemAppDirPath,
+                    UsePath.cmdclickConfigFileName,
                 )
             }
             ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP -> {

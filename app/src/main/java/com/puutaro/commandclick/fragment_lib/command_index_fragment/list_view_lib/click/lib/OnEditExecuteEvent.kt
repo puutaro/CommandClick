@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
+import android.content.Context
 import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
@@ -16,29 +17,26 @@ object OnEditExecuteEvent {
     fun invoke(
         fragment: Fragment,
         editFragmentTag: String,
-        sharedPref: SharedPreferences?,
+        currentAppDirPath: String,
         selectedShellFileName: String,
+        fannelState: String,
     ) {
         val context = fragment.context
             ?: return
+        val sharedPref =  fragment.activity?.getPreferences(Context.MODE_PRIVATE)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        SharePreferenceMethod.putSharePreference(
+        SharePreferenceMethod.putAllSharePreference(
             sharedPref,
-            mapOf(
-                SharePrefferenceSetting.current_fannel_name.name
-                        to selectedShellFileName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to shortcutOnMark
-            )
-        )
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
-            sharedPref,
-            SharePrefferenceSetting.current_app_dir
+            currentAppDirPath,
+            selectedShellFileName,
+            shortcutOnMark,
+            fannelState
         )
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             currentAppDirPath,
             selectedShellFileName,
-            shortcutOnMark
+            shortcutOnMark,
+            fannelState,
         )
         val cmdValEdit = EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
         when(fragment){

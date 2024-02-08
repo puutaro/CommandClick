@@ -19,16 +19,23 @@ object EditTextUpdaterForTerminalFragment {
     ) {
         if(editTextId == null) return
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.fannel_state
+        )
         val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            )
+            currentAppDirPath,
+            currentFannelName,
+            fannelState
         ) ?: return
         try {
             CoroutineScope(Dispatchers.Main).launch {

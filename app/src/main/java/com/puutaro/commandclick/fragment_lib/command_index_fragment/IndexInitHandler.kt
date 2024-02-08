@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.init.PageSea
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.util.AppHistoryManager
+import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -73,15 +73,12 @@ object IndexInitHandler {
         FileSystems.createDirs(
             "${currentAppDirPath}/${UsePath.cmdclickScrollSystemDirRelativePath}"
         )
-        SharePreferenceMethod.putSharePreference(
+        SharePreferenceMethod.putAllSharePreference(
             startUpPref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name
-                        to currentAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.name
-                        to SharePrefferenceSetting.current_fannel_name.defalutStr,
-                SharePrefferenceSetting.on_shortcut.name to SharePrefferenceSetting.on_shortcut.defalutStr,
-            )
+            currentAppDirPath,
+            SharePrefferenceSetting.current_fannel_name.defalutStr,
+            SharePrefferenceSetting.on_shortcut.defalutStr,
+            SharePrefferenceSetting.fannel_state.defalutStr
         )
 
         val pageSearchToolbarManager =

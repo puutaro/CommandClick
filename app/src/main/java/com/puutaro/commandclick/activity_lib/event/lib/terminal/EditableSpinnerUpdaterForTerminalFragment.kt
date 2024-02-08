@@ -7,8 +7,6 @@ import android.widget.Spinner
 import android.widget.Toast
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
@@ -24,16 +22,23 @@ object EditableSpinnerUpdaterForTerminalFragment {
         if(spinnerId == null) return
         val throughMark = "-"
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+            sharePref,
+            SharePrefferenceSetting.fannel_state
+        )
         val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_app_dir
-            ),
-            SharePreferenceMethod.getStringFromSharePreference(
-                sharePref,
-                SharePrefferenceSetting.current_fannel_name
-            ),
+            currentAppDirPath,
+            currentFannelName,
+            fannelState
         )
         val binding = editExecuteFragment?.binding ?: return
         val editLinearLayout = binding.editLinearLayout

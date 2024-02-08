@@ -19,10 +19,15 @@ object ExecFannelConListUpdate {
             readSharePreffernceMap,
             SharePrefferenceSetting.current_fannel_name
         )
+        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreffernceMap,
+            SharePrefferenceSetting.fannel_state
+        )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,
             currentAppDirPath,
             currentFannelName,
+            fannelState
         ) ?: return
         editFragment.currentScriptContentsList = updateFannelConList
     }

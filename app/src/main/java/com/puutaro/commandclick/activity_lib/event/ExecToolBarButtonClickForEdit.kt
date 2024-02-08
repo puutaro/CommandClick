@@ -52,6 +52,7 @@ object ExecToolBarButtonClickForEdit {
                     currentAppDirPath,
                     currentFannelName,
                     onShortcutOff,
+                    SharePrefferenceSetting.fannel_state.defalutStr,
                 )
                 ExecCommandEdit.execCommandEdit(
                     activity,

@@ -37,11 +37,16 @@ class JsToolbar(
         readSharedPreferences,
         SharePrefferenceSetting.current_fannel_name
     )
+    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharedPreferences,
+        SharePrefferenceSetting.fannel_state
+    )
     private val targetFragmentInstance = TargetFragmentInstance()
     private val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
         activity,
         currentAppDirPath,
         currentFannelName,
+        currentFannelState
     )
 
     @JavascriptInterface
@@ -70,6 +75,7 @@ class JsToolbar(
             activity,
             currentAppDirPath,
             currentFannelName,
+            currentFannelState
         ) ?: return
         val listIndexType = ListIndexEditConfig.getListIndexType(
             editFragment
@@ -121,6 +127,7 @@ class JsToolbar(
                 activity,
                 currentAppDirPath,
                 currentFannelName,
+                currentFannelState
             ) ?: return@launch
             ExecAddForListIndexAdapter.execAddForTsv(
                 editFragment,

@@ -54,6 +54,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -206,16 +207,20 @@ class EditFragment: Fragment() {
             validationSharePreferenceForEdit
                 .checkIndexList()
         if(!checkOkIndexList) return
-        SharePreferenceMethod.putSharePreference(
+        val currentFannelState = FannelStateManager.getStateFromEditFragTag(
+            this
+        )
+        SharePreferenceMethod.putAllSharePreference(
             sharePref,
-            mapOf(
-                SharePrefferenceSetting.current_app_dir.name
-                        to currentAppDirPath,
-                SharePrefferenceSetting.current_fannel_name.name
-                        to currentScriptFileName,
-                SharePrefferenceSetting.on_shortcut.name
-                        to onShortcutValue
-            )
+            currentAppDirPath,
+            currentScriptFileName,
+            onShortcutValue,
+            currentFannelState
+        )
+        FannelStateManager.updateState(
+            currentAppDirPath,
+            currentScriptFileName,
+            currentFannelState
         )
 
         languageType =

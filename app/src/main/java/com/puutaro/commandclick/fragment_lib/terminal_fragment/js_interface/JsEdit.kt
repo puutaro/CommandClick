@@ -3,11 +3,13 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.io.File
@@ -61,10 +63,24 @@ class JsEdit(
     fun getFromEditText(
         targetVariableName: String,
     ): String {
+        val readSharedPreferences = terminalFragment.readSharedPreferences
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.fannel_state
+        )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
-            terminalFragment.currentAppDirPath,
-            terminalFragment.currentFannelName,
+            currentAppDirPath,
+            currentFannelName,
+            fannelState
         ) ?: return String()
         return EditVariableName.getText(
             editFragment,
