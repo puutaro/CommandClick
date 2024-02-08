@@ -17,7 +17,7 @@ object FannelStateManager {
         currentFannelName: String,
     ): String {
         val fannelStateFilePath = ScriptPreWordReplacer.replace(
-            UsePath.fannelStateFilePath,
+            UsePath.fannelStateStockFilePath,
             currentAppDirPath,
             currentFannelName
         )
@@ -45,7 +45,7 @@ object FannelStateManager {
             updateFannelState.trim().isEmpty()
         ) return
         val fannelStateFilePath = ScriptPreWordReplacer.replace(
-            UsePath.fannelStateFilePath,
+            UsePath.fannelStateStockFilePath,
             currentAppDirPath,
             currentFannelName
         )
