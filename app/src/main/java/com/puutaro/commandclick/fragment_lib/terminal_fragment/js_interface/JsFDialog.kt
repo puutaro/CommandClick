@@ -60,7 +60,7 @@ class JsFDialog(
         )
         val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val destiFDialogFannelName =
             "${CommandClickScriptVariable.makeCopyPrefix()}_${UsePath.fDialogTempFannelName}"
@@ -84,7 +84,7 @@ class JsFDialog(
                     to srcFannelName,
             SharePrefferenceSetting.on_shortcut.name
                     to onShortcut,
-            SharePrefferenceSetting.fannel_state.name
+            SharePrefferenceSetting.current_fannel_state.name
                     to fannelState,
         )
         val destiFannelState = FannelStateManager.getSate(
@@ -98,7 +98,7 @@ class JsFDialog(
                     to destiFDialogFannelName,
             SharePrefferenceSetting.on_shortcut.name
                     to destiOnShortcut,
-            SharePrefferenceSetting.fannel_state.name
+            SharePrefferenceSetting.current_fannel_state.name
                     to destiFannelState
         )
         val cmdEditFragTag = FragmentTagManager.makeCmdValEditTag(

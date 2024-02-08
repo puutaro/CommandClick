@@ -25,7 +25,7 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
         )
         val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
             sharePref,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

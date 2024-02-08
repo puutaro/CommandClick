@@ -171,6 +171,8 @@ object UsePath {
     val fannelDirSuffix = "Dir"
     private const val fannelStateStockFileName = "fannelStateStock.tsv"
     val fannelStateStockFilePath =  "$fannelSettingsDirPath/${fannelStateStockFileName}"
+    private const val fannelStateRootTableFileName = "fannelStateRootTable.tsv"
+    val fannelStateRootTableFilePath =  "$fannelSettingsDirPath/${fannelStateRootTableFileName}"
     private val homeScriptUrlsFileName = "homeScriptUrlsPath.txt"
     val homeScriptUrlsFilePath =  "$fannelSettingsDirPath/${homeScriptUrlsFileName}"
     private val listIndexForEditConfigName = "listIndexConfig.js"

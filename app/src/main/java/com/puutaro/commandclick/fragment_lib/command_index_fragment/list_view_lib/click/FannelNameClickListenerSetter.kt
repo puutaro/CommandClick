@@ -126,7 +126,7 @@ object FannelNameClickListenerSetter {
                             shellContentsList,
                             currentAppDirPath,
                             selectedShellFileName,
-                            SharePrefferenceSetting.fannel_state.defalutStr,
+                            SharePrefferenceSetting.current_fannel_state.defalutStr,
                         ).decide()
                             ?: return
                         OnOnceEditExecuteEvent.invoke(

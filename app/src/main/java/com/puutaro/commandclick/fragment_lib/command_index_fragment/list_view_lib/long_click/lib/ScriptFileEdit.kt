@@ -25,7 +25,7 @@ object ScriptFileEdit {
             currentAppDirPath,
             fannelName,
             SharePrefferenceSetting.on_shortcut.defalutStr,
-            SharePrefferenceSetting.fannel_state.defalutStr
+            SharePrefferenceSetting.current_fannel_state.defalutStr
         )
         val shellContentsList = ReadText(
             File(
@@ -51,14 +51,14 @@ object ScriptFileEdit {
             shellContentsList,
             currentAppDirPath,
             fannelName,
-            SharePrefferenceSetting.fannel_state.defalutStr,
+            SharePrefferenceSetting.current_fannel_state.defalutStr,
         ).decideForEdit()
             ?: return
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             currentAppDirPath,
             fannelName,
             SharePrefferenceSetting.on_shortcut.defalutStr,
-            SharePrefferenceSetting.fannel_state.defalutStr,
+            SharePrefferenceSetting.current_fannel_state.defalutStr,
         )
         val context = cmdIndexFragment.context
             ?: return

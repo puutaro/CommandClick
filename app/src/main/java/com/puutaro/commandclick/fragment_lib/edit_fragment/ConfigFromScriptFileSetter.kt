@@ -20,6 +20,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -42,20 +43,27 @@ object ConfigFromScriptFileSetter {
             readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
-
-        editFragment.setVariableTypeList =
-            SetVariableTypesSetterForEdit.set(
-            editFragment,
-            readSharePreferenceMap
-        )
-        editFragment.hideSettingVariableList = ListSettingVariableListMaker.make(
-            CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
-            readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
+        val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
             currentScriptContentsList,
+            editFragment.readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
         )
+
+        editFragment.setVariableTypeList =
+            SetVariableTypesSetterForEdit.set(
+                editFragment,
+                readSharePreferenceMap,
+                settingVariableList,
+            )
+        editFragment.hideSettingVariableList =
+            ListSettingVariableListMaker.makeFromSettingVariableList(
+                CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
+                readSharePreferenceMap,
+                editFragment.setReplaceVariableMap,
+                settingVariableList
+            )
 
         editFragment.existIndexList =
             judgeExistListIndex(
@@ -63,17 +71,6 @@ object ConfigFromScriptFileSetter {
                 currentAppDirPath,
                 currentScriptFileName,
             )
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            currentScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd
-        )?.joinToString("\n")?.let {
-            ScriptPreWordReplacer.replace(
-                it,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
-        }?.split("\n")
 
         val defaultEditBoxTitle = TitleImageAndViewSetter.makeTitle(
             editFragment,
@@ -95,6 +92,7 @@ object ConfigFromScriptFileSetter {
         }
         makeToolbarButtonConfigMap(
             editFragment,
+            settingVariableList,
         )
 
         editFragment.editExecuteValue = SettingVariableReader.getStrValue(
@@ -104,11 +102,13 @@ object ConfigFromScriptFileSetter {
         )
         editFragment.listIndexConfigMap = makeSettingConfigMap(
             editFragment,
+            settingVariableList,
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
             String(),
         )
         editFragment.qrDialogConfig = makeSettingConfigMap(
             editFragment,
+            settingVariableList,
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
             String(),
         )
@@ -352,21 +352,25 @@ object ConfigFromScriptFileSetter {
 
     private fun makeToolbarButtonConfigMap(
         editFragment: EditFragment,
+        settingVariableList: List<String>?,
     ){
         editFragment.toolbarButtonConfigMap =
             mapOf(
                 ToolbarButtonBariantForEdit.SETTING to makeSettingConfigMap(
                     editFragment,
+                    settingVariableList,
                     CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
                     String(),
                 ),
                 ToolbarButtonBariantForEdit.EDIT to makeSettingConfigMap(
                     editFragment,
+                    settingVariableList,
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
                     String(),
                 ),
                 ToolbarButtonBariantForEdit.OK to makeSettingConfigMap(
                     editFragment,
+                    settingVariableList,
                     CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
                     String(),
                 ),
@@ -458,24 +462,24 @@ object ConfigFromScriptFileSetter {
 
     private fun makeSettingConfigMap(
         editFragment: EditFragment,
+        settingVariableList: List<String>?,
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
     ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val settingButtonConfigMapStr = ListSettingVariableListMaker.make(
-            targetSettingConfigValName,
-            readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
-            editFragment.currentScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
-        ).joinToString(",")
-        .let {
-            if(
-                it.isNotEmpty()
-            ) return@let it
-            defaultButtonConfigCon
-        }
+        val settingButtonConfigMapStr =
+            ListSettingVariableListMaker.makeFromSettingVariableList(
+                targetSettingConfigValName,
+                readSharePreferenceMap,
+                editFragment.setReplaceVariableMap,
+                settingVariableList
+            ).joinToString(",")
+                .let {
+                    if(
+                        it.isNotEmpty()
+                    ) return@let it
+                    defaultButtonConfigCon
+                }
         return ConfigMapTool.createFromSettingVal(
             settingButtonConfigMapStr,
             String(),

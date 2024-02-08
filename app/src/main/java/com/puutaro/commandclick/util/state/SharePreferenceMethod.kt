@@ -32,7 +32,7 @@ object SharePreferenceMethod {
                     to currentScriptFileName,
             SharePrefferenceSetting.on_shortcut.name
                     to onShortcutValue,
-            SharePrefferenceSetting.fannel_state.name
+            SharePrefferenceSetting.current_fannel_state.name
                     to currentFannelState,
         )
         putSharePreference (

@@ -13,7 +13,7 @@ object FragmentTagManager {
     }
 
     private const val separateUnderBar = "___"
-    private const val fannelStateIndex = 4
+    private const val fannelStateIndex = 3
 
 
     fun makeCmdValEditTag(

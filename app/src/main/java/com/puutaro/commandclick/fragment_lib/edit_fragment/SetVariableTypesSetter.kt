@@ -12,7 +12,8 @@ object SetVariableTypesSetterForEdit {
 
     fun set(
         editFragment: EditFragment,
-        readSharePreferenceMap: Map<String, String>
+        readSharePreferenceMap: Map<String, String>,
+        settingVariableList: List<String>?,
     ): List<String> {
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
@@ -23,13 +24,11 @@ object SetVariableTypesSetterForEdit {
             SharePrefferenceSetting.current_fannel_name
         )
 
-        val setVariableTypeListSrc = ListSettingVariableListMaker.make(
+        val setVariableTypeListSrc = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.SET_VARIABLE_TYPE,
             readSharePreferenceMap,
             editFragment.setReplaceVariableMap,
-            editFragment.currentScriptContentsList,
-            editFragment.settingSectionStart,
-            editFragment.settingSectionEnd,
+            settingVariableList,
         )
         val setVariableForSettingHolder =
             CommandClickScriptVariable.setVariableForSettingHolder

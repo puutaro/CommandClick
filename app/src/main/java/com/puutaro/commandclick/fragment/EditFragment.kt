@@ -183,6 +183,19 @@ class EditFragment: Fragment() {
                 readSharePreferenceMap,
                 SharePrefferenceSetting.on_shortcut
             )
+        val currentFannelState =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreferenceMap,
+                SharePrefferenceSetting.current_fannel_state
+            )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "vfane_tag.txt").absolutePath,
+//            listOf(
+//                "tag: ${tag}",
+//                "currentFannelState: ${currentFannelState}",
+//                "readSharePreferenceMap: ${readSharePreferenceMap}"
+//            ).joinToString("\n\n")
+//        )
 
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
         enableCmdEdit =
@@ -207,9 +220,6 @@ class EditFragment: Fragment() {
             validationSharePreferenceForEdit
                 .checkIndexList()
         if(!checkOkIndexList) return
-        val currentFannelState = FannelStateManager.getStateFromEditFragTag(
-            this
-        )
         SharePreferenceMethod.putAllSharePreference(
             sharePref,
             currentAppDirPath,
@@ -298,7 +308,6 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-
         val editModeHandler = EditModeHandler(
             this,
             binding,

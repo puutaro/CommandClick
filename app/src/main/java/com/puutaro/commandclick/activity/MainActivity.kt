@@ -244,7 +244,7 @@ class MainActivity:
                 ),
                 SharePreferenceMethod.getStringFromSharePreference(
                     startUpPref,
-                    SharePrefferenceSetting.fannel_state
+                    SharePrefferenceSetting.current_fannel_state
                 )
             )
         ExecToolbarMenuCategoriesForCmdIndex.execToolbarMenuCategories<EditFragment>(

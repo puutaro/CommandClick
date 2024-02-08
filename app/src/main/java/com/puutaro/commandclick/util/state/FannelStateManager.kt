@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.FileSystems
@@ -16,6 +15,14 @@ object FannelStateManager {
         currentAppDirPath: String,
         currentFannelName: String,
     ): String {
+        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelStateRootTableFilePath,
+            currentAppDirPath,
+            currentFannelName
+        )
+        if(
+            !File(fannelStateRootTableFilePath).isFile
+        ) return String()
         val fannelStateFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateStockFilePath,
             currentAppDirPath,
@@ -41,8 +48,16 @@ object FannelStateManager {
         currentFannelName: String,
         updateFannelState: String,
     ) {
+//        if(
+//            updateFannelState.trim().isEmpty()
+//        ) return
+        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelStateRootTableFilePath,
+            currentAppDirPath,
+            currentFannelName
+        )
         if(
-            updateFannelState.trim().isEmpty()
+            !File(fannelStateRootTableFilePath).isFile
         ) return
         val fannelStateFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateStockFilePath,
@@ -52,14 +67,6 @@ object FannelStateManager {
         FileSystems.writeFile(
             fannelStateFilePath,
             "${fannelStateKey}\t${updateFannelState}"
-        )
-    }
-
-    fun getStateFromEditFragTag(
-        editFragment: EditFragment
-    ): String {
-        return FragmentTagManager.execGetStateFromEditFragTag(
-            editFragment
         )
     }
 

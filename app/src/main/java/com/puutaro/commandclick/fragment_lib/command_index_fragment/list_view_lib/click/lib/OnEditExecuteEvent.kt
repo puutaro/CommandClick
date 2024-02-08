@@ -1,17 +1,13 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
-
 
 object OnEditExecuteEvent {
     fun invoke(

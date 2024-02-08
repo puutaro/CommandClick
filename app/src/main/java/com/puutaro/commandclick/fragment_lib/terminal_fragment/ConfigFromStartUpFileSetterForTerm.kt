@@ -12,6 +12,7 @@ import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ConfigFromStartUpFileSetterForTerm {
@@ -205,15 +206,18 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.currentAppDirPath,
             currentScriptFileName
         )
-        terminalFragment.setReplaceVariableMap = JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+        terminalFragment.setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                fannelContentsList,
+                terminalFragment.currentAppDirPath,
+                currentScriptFileName,
+            )
+        val settingVariableList = makeSettingVariableListForTerm(
+            terminalFragment,
             fannelContentsList,
-            terminalFragment.currentAppDirPath,
             currentScriptFileName,
-        )
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            fannelContentsList,
             settingSectionStart,
-            settingSectionEnd
+            settingSectionEnd,
         )
         terminalFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
             settingVariableList,
@@ -432,4 +436,32 @@ private object LongPressPathDecider {
             else -> String()
         }
     }
+}
+
+private fun makeSettingVariableListForTerm(
+    terminalFragment: TerminalFragment,
+    fannelContentsList: List<String>,
+    currentScriptFileName: String,
+    settingSectionStart: String,
+    settingSectionEnd: String,
+): List<String>? {
+    val isIndexTerminal = terminalFragment.tag == terminalFragment.context?.getString(
+        R.string.index_terminal_fragment
+    )
+    val isStartupScript = currentScriptFileName == UsePath.cmdclickStartupJsName
+    if(
+        isIndexTerminal
+        || isStartupScript
+    ) return CommandClickVariables.substituteVariableListFromHolder(
+        fannelContentsList,
+        settingSectionStart,
+        settingSectionEnd
+    )
+    return FannelStateRooterManager.makeSettingVariableList(
+        fannelContentsList,
+        terminalFragment.readSharedPreferences,
+        terminalFragment.setReplaceVariableMap,
+        settingSectionStart,
+        settingSectionEnd,
+    )
 }

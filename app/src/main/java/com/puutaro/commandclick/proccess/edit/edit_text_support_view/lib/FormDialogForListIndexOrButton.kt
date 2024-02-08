@@ -177,15 +177,16 @@ class FormDialogForListIndexOrButton(
             )
         }
 
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            scriptContentsList,
+            settingSectionStart,
+            settingSectionEnd
+        )
         val setReplaceVariableMap = if(
             onSetting.isEmpty()
         ) {
             SetReplaceVariabler.makeSetReplaceVariableMap(
-                CommandClickVariables.substituteVariableListFromHolder(
-                    scriptContentsList,
-                    settingSectionStart,
-                    settingSectionEnd
-                ),
+                settingVariableList,
                 parentDirPath,
                 selectedScriptName,
             )
@@ -207,13 +208,11 @@ class FormDialogForListIndexOrButton(
                 emptyList()
             )
         } else {
-            val hideSettingVariableList = ListSettingVariableListMaker.make(
+            val hideSettingVariableList = ListSettingVariableListMaker.makeFromSettingVariableList(
                 CommandClickScriptVariable.HIDE_SETTING_VARIABLES,
                 virtualReadPreffrenceMap,
                 editFragment.setReplaceVariableMap,
-                scriptContentsList,
-                settingSectionStart,
-                settingSectionEnd,
+                settingVariableList,
             )
             EditParameters(
                 editFragment,

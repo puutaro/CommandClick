@@ -21,7 +21,7 @@ object ExecFannelConListUpdate {
         )
         val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,

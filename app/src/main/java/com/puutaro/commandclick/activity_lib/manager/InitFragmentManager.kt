@@ -65,7 +65,7 @@ class InitFragmentManager(
         )
         val fannelState = SharePreferenceMethod.getStringFromSharePreference(
             startUpPref,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
 
         val emptyShellFileName = CommandClickScriptVariable.EMPTY_STRING
@@ -130,8 +130,8 @@ class InitFragmentManager(
                         to SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.name
                         to SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.fannel_state.name
-                        to SharePrefferenceSetting.fannel_state.defalutStr
+                SharePrefferenceSetting.current_fannel_state.name
+                        to SharePrefferenceSetting.current_fannel_state.defalutStr
             )
         )
         exedRestartIntent(
@@ -145,8 +145,8 @@ class InitFragmentManager(
             SharePrefferenceSetting.current_app_dir.name
         )
         val fannelState = intent.getStringExtra(
-            SharePrefferenceSetting.fannel_state.name
-        ) ?: SharePrefferenceSetting.fannel_state.defalutStr
+            SharePrefferenceSetting.current_fannel_state.name
+        ) ?: SharePrefferenceSetting.current_fannel_state.defalutStr
         if (
             recieveAppDirPath.isNullOrEmpty()
         ) return

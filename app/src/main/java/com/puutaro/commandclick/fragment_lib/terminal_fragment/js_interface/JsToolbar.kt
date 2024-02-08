@@ -39,7 +39,7 @@ class JsToolbar(
     )
     private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharedPreferences,
-        SharePrefferenceSetting.fannel_state
+        SharePrefferenceSetting.current_fannel_state
     )
     private val targetFragmentInstance = TargetFragmentInstance()
     private val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(

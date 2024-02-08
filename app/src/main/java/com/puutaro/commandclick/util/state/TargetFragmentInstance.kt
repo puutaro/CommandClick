@@ -220,7 +220,7 @@ class TargetFragmentInstance {
         )
         val fannelState = SharePreferenceMethod.getStringFromSharePreference(
             sharePref,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         return FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

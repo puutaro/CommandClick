@@ -36,7 +36,7 @@ object SearchViewAndAutoCompUpdater {
         )
         val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

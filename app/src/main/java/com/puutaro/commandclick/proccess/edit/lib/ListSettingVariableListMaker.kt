@@ -5,7 +5,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -13,32 +12,12 @@ import java.io.File
 object ListSettingVariableListMaker {
 
     private val filePrefix = EditSettings.filePrefix
-    fun make(
-        settingVariableName: String,
-        readSharePreferenceMap: Map<String, String>,
-        setReplaceVariableMap: Map<String, String>?,
-        scriptContentsList: List<String>,
-        settingSectionStart: String,
-        settingSectionEnd: String,
-    ): List<String> {
-        val settingVariables = CommandClickVariables.substituteVariableListFromHolder(
-            scriptContentsList,
-            settingSectionStart,
-            settingSectionEnd
-        )?: emptyList()
-        return makeFromSettingVariableList(
-            settingVariableName,
-            readSharePreferenceMap,
-            setReplaceVariableMap,
-            settingVariables
-        )
-    }
 
     fun makeFromSettingVariableList(
         settingVariableName: String,
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
-        settingVariablesList: List<String>,
+        settingVariablesList: List<String>?,
     ): List<String> {
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,

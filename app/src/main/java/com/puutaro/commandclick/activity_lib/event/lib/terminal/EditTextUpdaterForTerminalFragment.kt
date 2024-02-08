@@ -29,7 +29,7 @@ object EditTextUpdaterForTerminalFragment {
         )
         val fannelState = SharePreferenceMethod.getStringFromSharePreference(
             sharePref,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val editExecuteFragment = TargetFragmentInstance().getCurrentEditFragmentFromActivity(
             activity,

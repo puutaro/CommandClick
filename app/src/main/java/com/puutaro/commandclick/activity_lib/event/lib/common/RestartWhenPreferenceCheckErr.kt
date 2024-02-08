@@ -3,9 +3,7 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 class RestartWhenPreferenceCheckErr {
@@ -20,7 +18,7 @@ class RestartWhenPreferenceCheckErr {
                 SharePrefferenceSetting.current_app_dir.defalutStr,
                 SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.fannel_state.defalutStr
+                SharePrefferenceSetting.current_fannel_state.defalutStr
             )
             val execIntent = Intent(activity, activity::class.java)
             execIntent.setAction(Intent.ACTION_MAIN)

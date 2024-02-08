@@ -70,7 +70,7 @@ object AppHistoryAdminEvent {
                 selectedAppDirPath,
                 SharePrefferenceSetting.current_fannel_name.defalutStr,
                 SharePrefferenceSetting.on_shortcut.defalutStr,
-                SharePrefferenceSetting.fannel_state.defalutStr,
+                SharePrefferenceSetting.current_fannel_state.defalutStr,
             )
             return true
         }

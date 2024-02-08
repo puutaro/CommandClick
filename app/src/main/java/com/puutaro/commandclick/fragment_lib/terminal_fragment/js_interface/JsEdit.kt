@@ -74,7 +74,7 @@ class JsEdit(
         )
         val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
-            SharePrefferenceSetting.fannel_state
+            SharePrefferenceSetting.current_fannel_state
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,

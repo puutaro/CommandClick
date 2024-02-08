@@ -31,7 +31,7 @@ object OnOnceEditExecuteEvent {
             currentAppDirPath,
             selectedShellFileName,
             String(),
-            SharePrefferenceSetting.fannel_state.defalutStr,
+            SharePrefferenceSetting.current_fannel_state.defalutStr,
         )
         val listener = context
                 as CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
