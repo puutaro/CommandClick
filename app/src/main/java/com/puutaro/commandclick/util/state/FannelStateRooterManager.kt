@@ -73,7 +73,7 @@ object FannelStateRooterManager {
         val settingVariablePath =
             fannelStateRooterMap.get(
                 currentFannelState
-            )?: String()
+            )?: defaultSettingValFilePath
         if(
             settingVariablePath.isEmpty()
             || !File(settingVariablePath).isFile
