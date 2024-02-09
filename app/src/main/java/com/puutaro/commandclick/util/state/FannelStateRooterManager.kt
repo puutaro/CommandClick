@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -55,6 +56,18 @@ object FannelStateRooterManager {
             currentAppDirPath,
             currentFannelName
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "vfanenl_before_fannelStateRootTableFilePathNoFile.txt").absolutePath,
+//            listOf(
+//                "currentAppDirPath: ${currentAppDirPath}",
+//                "currentFannelName: ${currentFannelName}",
+//                "onShortcut: ${onShortcut}",
+//                "currentFannelState: ${currentFannelState}",
+//                "fannelStateRootTableFilePath: ${fannelStateRootTableFilePath}"
+//            ).joinToString("\n\n")
+//        )
+
+
         if(
             !File(fannelStateRootTableFilePath).isFile
         ) return mainFannelSettingVariableList
@@ -64,6 +77,19 @@ object FannelStateRooterManager {
             currentFannelName,
             setReplaceVariableMap
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "vfanenl_before_fannelStateRooterMap_empty.txt").absolutePath,
+//            listOf(
+//                "currentAppDirPath: ${currentAppDirPath}",
+//                "currentFannelName: ${currentFannelName}",
+//                "onShortcut: ${onShortcut}",
+//                "currentFannelState: ${currentFannelState}",
+//                "fannelStateRootTableFilePath: ${fannelStateRootTableFilePath}",
+//                "fanenlStateRooterMapSrcCon: ${ReadText(fannelStateRootTableFilePath).readText()}",
+//                "fannelStateRooterMap: ${fannelStateRooterMap}",
+//            ).joinToString("\n\n")
+//        )
+
         if(
             fannelStateRooterMap.isEmpty()
         ) return mainFannelSettingVariableList
@@ -74,6 +100,21 @@ object FannelStateRooterManager {
             fannelStateRooterMap.get(
                 currentFannelState
             )?: defaultSettingValFilePath
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "vfanenl_before_settingVariablePathEmpty.txt").absolutePath,
+//            listOf(
+//                "readSharePreferenceMap: ${readSharePreferenceMap}",
+//                "currentAppDirPath: ${currentAppDirPath}",
+//                "currentFannelName: ${currentFannelName}",
+//                "onShortcut: ${onShortcut}",
+//                "currentFannelState: ${currentFannelState}",
+//                "fannelStateRootTableFilePath: ${fannelStateRootTableFilePath}",
+//                "fanenlStateRooterMapSrcCon: ${ReadText(fannelStateRootTableFilePath).readText()}",
+//                "fannelStateRooterMap: ${fannelStateRooterMap}",
+//                "defaultSettingValFilePath: ${defaultSettingValFilePath}",
+//                "settingVariablePath: ${settingVariablePath}",
+//            ).joinToString("\n\n")
+//            )
         if(
             settingVariablePath.isEmpty()
             || !File(settingVariablePath).isFile
@@ -85,6 +126,33 @@ object FannelStateRooterManager {
                 currentAppDirPath,
                 currentFannelName,
             ).split("\n")
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "vfanenl_last.txt").absolutePath,
+//            listOf(
+//                "readSharePreferenceMap: ${readSharePreferenceMap}",
+//                "currentAppDirPath: ${currentAppDirPath}",
+//                "currentFannelName: ${currentFannelName}",
+//                "onShortcut: ${onShortcut}",
+//                "currentFannelState: ${currentFannelState}",
+//                "fannelStateRootTableFilePath: ${fannelStateRootTableFilePath}",
+//                "fanenlStateRooterMapSrcCon: ${ReadText(fannelStateRootTableFilePath).readText()}",
+//                "fannelStateFooterMapListCon: ${ReadText(fannelStateRootTableFilePath).textToList().filter {
+//                    val stateToSettingValPathList =
+//                        it.trim().split("\t")
+//                    stateToSettingValPathList.size == 2
+//                }}",
+//                "fannelStateRooterMap: ${fannelStateRooterMap}",
+//                "defaultSettingValFilePath: ${defaultSettingValFilePath}",
+//                "settingVariablePath: ${settingVariablePath}",
+//                "virtualFannelConListSrc: ${virtualFannelConList}",
+//                "virtualFannelConList: ${CommandClickVariables.substituteVariableListFromHolder(
+//                    virtualFannelConList,
+//                    settingSectionStart,
+//                    settingSectionEnd,
+//                )}"
+//            ).joinToString("\n\n")
+//        )
+
         return CommandClickVariables.substituteVariableListFromHolder(
             virtualFannelConList,
             settingSectionStart,
