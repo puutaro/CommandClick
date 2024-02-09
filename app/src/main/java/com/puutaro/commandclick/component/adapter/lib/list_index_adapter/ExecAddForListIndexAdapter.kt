@@ -30,7 +30,7 @@ object ExecAddForListIndexAdapter {
         ).indexOf(addLine)
     }
 
-    fun listUpdateByInsertItem(
+    private fun listUpdateByInsertItem(
         editFragment: EditFragment,
         addLine: String,
         insertIndex: Int,

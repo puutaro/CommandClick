@@ -69,7 +69,7 @@ class QrScanner(
         }
         return errMessage
     }
-    fun execScanFromImage(
+    private fun execScanFromImage(
         qrImagePath: String,
     ): String {
         try {
