@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumToMapNameValueInHolderMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
@@ -30,6 +31,7 @@ object ConfigFromScriptFileSetter {
 
     fun set(
         editFragment: EditFragment,
+        mainFannelConList: List<String>
     ){
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
@@ -65,7 +67,13 @@ object ConfigFromScriptFileSetter {
                 editFragment.setReplaceVariableMap,
                 settingVariableList
             )
-
+        editFragment.recordNumToMapNameValueInSettingHolder =
+            RecordNumToMapNameValueInHolderMaker.makeForSetting(editFragment)
+        editFragment.recordNumToMapNameValueInCommandHolder =
+            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
+                editFragment,
+                mainFannelConList
+            )
         editFragment.existIndexList =
             judgeExistListIndex(
                 editFragment,

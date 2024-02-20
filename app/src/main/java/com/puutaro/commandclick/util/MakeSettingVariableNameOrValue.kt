@@ -15,12 +15,11 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
             )
             val factSettingVariableNamesList =
                 CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST
-            return if (
+            return when (
                     factSettingVariableNamesList.contains(variableNameSource)
                 ) {
-                    variableNameSource
-                } else {
-                    null
+                    true -> variableNameSource
+                    else -> null
                 }
 //            val variableNameFirstElement = substituteCmdStartEndContentList.lastOrNull {
 //                it.startsWith("${variableNameChecked}=")

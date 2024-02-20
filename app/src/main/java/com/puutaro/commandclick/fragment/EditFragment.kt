@@ -42,7 +42,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.CurrentFannelConListMaker
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumToMapNameValueInHolderMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -268,6 +267,7 @@ class EditFragment: Fragment() {
         )
         ConfigFromScriptFileSetter.set(
             this,
+            mainFannelConList
         )
         buttonWeight =
             ToolbarButtonToolForEdit.culcButtonWeight(this)
@@ -313,13 +313,6 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
-        recordNumToMapNameValueInSettingHolder =
-                RecordNumToMapNameValueInHolderMaker.makeForSetting(this)
-        recordNumToMapNameValueInCommandHolder =
-            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
-                this,
-                mainFannelConList
-            )
         val editModeHandler = EditModeHandler(
             this,
             binding,

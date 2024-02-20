@@ -100,6 +100,7 @@ object CommandClickScriptVariable {
     val IMAGE_LONG_PRESS_MENU_FILE_PATH = "imageLongPressMenuFilePath"
     val UBUNTU_SLEEP_DELAY_MIN_IN_SCREEN_OFF = "ubuntuSleepDelayMinInScreenOff"
     val DEFAULT_MONITOR_FILE = "defaultMonitorFile"
+    val SETTING_IMPORT = "settingImport"
     val CMDCLICK_LONG_PRESS_LINK_URL = "CMDCLICK_LONG_PRESS_LINK_URL"
     val CMDCLICK_LONG_PRESS_IMAGE_URL = "CMDCLICK_LONG_PRESS_IMAGE_URL"
     val CMDCLICK_CURRENT_PAGE_URL = "CMDCLICK_CURRENT_PAGE_URL"

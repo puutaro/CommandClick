@@ -78,7 +78,7 @@ object CommandClickVariables {
             val targetSettingValue =
                 it.removePrefix("${substituteVariableName}=")
             QuoteTool.replaceBySurroundedIgnore(
-                targetSettingValue,
+                QuoteTool.trimBothEdgeQuote(targetSettingValue),
                 ',',
                 "\n"
             )

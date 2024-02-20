@@ -21,7 +21,6 @@ object FannelStateRooterManager {
         settingSectionEnd: String,
         settingFannelPath: String,
     ): List<String>? {
-
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
@@ -38,7 +37,16 @@ object FannelStateRooterManager {
                 setReplaceVariableMap,
                 settingSectionStart,
                 settingSectionEnd,
+            ).let {
+            SettingVariableImportManager.import(
+                it,
+                currentAppDirPath,
+                currentFannelName,
+                setReplaceVariableMap,
+                settingSectionStart,
+                settingSectionEnd,
             )
+        }
 //        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
 //            readSharePreferenceMap,
 //            SharePrefferenceSetting.on_shortcut

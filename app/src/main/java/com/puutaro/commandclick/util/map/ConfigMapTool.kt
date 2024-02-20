@@ -92,7 +92,7 @@ object ConfigMapTool {
             currentAppDirPath,
             currentScriptFileName,
         )
-        return when (true) {
+        val configMapPairList = when (true) {
             settingValCon.startsWith(filePrefix) -> {
                 val settingButtonConfigPath = replaceByPreWordAndRepValMap(
                     UsePath.settingButtonConfigPath,
@@ -124,7 +124,9 @@ object ConfigMapTool {
                 it,
                 propertySeparator
             )
-        }.reversed().toMap().filterKeys { it.isNotEmpty() }
+        }.reversed()
+        val configMap = configMapPairList.toMap().filterKeys { it.isNotEmpty() }
+        return configMap
     }
 
     private fun replaceByPreWordAndRepValMap(
