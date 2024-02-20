@@ -14,10 +14,10 @@ import java.io.File
 
 object JsImportManager {
 
-    private val importPreWord = "jsimport"
+    val jsImportPreWord = "jsimport"
     private val assetsPrefix = "/android_asset/"
 
-    fun replace(
+    fun import(
         context: Context?,
         row: String,
         scriptPath: String,
@@ -32,10 +32,10 @@ object JsImportManager {
             .trim()
             .trim(';')
         if(
-            !trimRow.contains(importPreWord)
+            !trimRow.contains(jsImportPreWord)
         ) return row
         val trimImportPathSource = trimRow
-            .replace(importPreWord, "")
+            .replace(jsImportPreWord, "")
             .trim()
             .let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(

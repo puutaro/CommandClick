@@ -18,8 +18,6 @@ import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 class EditTextProducerForEdit(
     private val editFragment: EditFragment,
-    private val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
-    private val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String,String>?>?,
 ) {
     private val binding = editFragment.binding
     private val context = editFragment.context
@@ -42,8 +40,8 @@ class EditTextProducerForEdit(
     private val editParameters = EditParameters(
         editFragment,
         currentScriptContentsList,
-        recordNumToMapNameValueInCommandHolder,
-        recordNumToMapNameValueInSettingHolder,
+        editFragment.recordNumToMapNameValueInCommandHolder,
+        editFragment.recordNumToMapNameValueInSettingHolder,
         readSharePreffernceMap,
         setReplaceVariableMap,
         false,
@@ -65,11 +63,11 @@ class EditTextProducerForEdit(
         editFragment.listConSelectBoxMapList.clear()
         when (onSettingEdit) {
             true -> execAddEditComponent(
-                recordNumToMapNameValueInSettingHolder,
+                editFragment.recordNumToMapNameValueInSettingHolder,
                 EditTextIdForEdit.SETTING_VARIABLE.id
             )
             false -> execAddEditComponent(
-                recordNumToMapNameValueInCommandHolder,
+                editFragment.recordNumToMapNameValueInCommandHolder,
                 EditTextIdForEdit.COMMAND_VARIABLE.id
             )
         }

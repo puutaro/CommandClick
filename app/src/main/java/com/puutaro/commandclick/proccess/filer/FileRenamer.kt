@@ -18,6 +18,10 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object FileRenamer {
@@ -25,6 +29,21 @@ object FileRenamer {
     private var promptDialog: Dialog? = null
 
     fun rename(
+        fragment: Fragment,
+        parentDirPath: String,
+        fileName: String,
+    ){
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main){
+                execRename(
+                    fragment,
+                    parentDirPath,
+                    fileName,
+                )
+            }
+        }
+    }
+    fun execRename(
         fragment: Fragment,
         parentDirPath: String,
         fileName: String,

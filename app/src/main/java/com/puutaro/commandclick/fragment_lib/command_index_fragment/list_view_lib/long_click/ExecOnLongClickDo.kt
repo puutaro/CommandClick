@@ -446,7 +446,7 @@ private object UtilitySubMenuDialog {
                     clipboard.setPrimaryClip(clip)
                     Toast.makeText(
                         context,
-                        "copy ok",
+                        "copy ok ${shellFilePathByTermux}",
                         Toast.LENGTH_SHORT
                     ).show()
                 }

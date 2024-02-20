@@ -1,0 +1,109 @@
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
+
+import android.webkit.JavascriptInterface
+import android.widget.Toast
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
+import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+
+class JsQrGetter(
+    private val terminalFragment: TerminalFragment
+) {
+    private val context = terminalFragment.context
+    private val activity = terminalFragment.activity
+    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_app_dir
+    )
+    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_fannel_name
+    )
+    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_fannel_state
+    )
+
+    @JavascriptInterface
+    fun get_S(
+        stockConDirPathForTsv: String,
+        compPrefix: String,
+        compSuffix: String,
+    ){
+        val contentsName = JsDialog(terminalFragment).prompt(
+            "Input contents name",
+            String(),
+            String()
+        )
+        if(
+            contentsName.isEmpty()
+        ) return
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main){
+                execGet(
+                    contentsName,
+                    stockConDirPathForTsv,
+                    compPrefix,
+                    compSuffix,
+                )
+            }
+        }
+    }
+
+    private fun execGet(
+        contentsName: String,
+        stockConDirPathForTsv: String,
+        compPrefix: String,
+        compSuffix: String,
+    ){
+        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+            activity,
+            currentAppDirPath,
+            currentFannelName,
+            currentFannelState,
+        ) ?: return
+        val fileName = UsePath.compExtend(
+            contentsName,
+            ".txt",
+        )
+        val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
+        val filePath = "${parentDirPath}/${fileName}"
+        if(
+            File(filePath).isFile
+        ) {
+            Toast.makeText(
+                context,
+                "Already exist: ${filePath}",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val stockDirAndCompMap = mapOf(
+            EditSettingExtraArgsTool.ExtraKey.PARENT_DIR_PATH.key to stockConDirPathForTsv,
+            EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key to compPrefix,
+            EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key to compSuffix,
+        )
+        QrScanner(
+            editFragment,
+            parentDirPath,
+            stockDirAndCompMap,
+        ).saveFromCamera(fileName)
+    }
+}

@@ -7,6 +7,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receive
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
 
 object BroadcastHandlerForTerm {
     fun handle(
@@ -32,6 +33,11 @@ object BroadcastHandlerForTerm {
             )
             BroadCastIntentSchemeTerm.MONITOR_MANAGER.action
             -> MonitorBroadcastManager.handle(
+                terminalFragment,
+                intent
+            )
+            BroadCastIntentSchemeTerm.MONITOR_TOAST.action
+            -> MonitorToast.launch(
                 terminalFragment,
                 intent
             )

@@ -347,7 +347,7 @@ object FDialogTempFile {
         ).readText().replace("\t", "=").let {
             CmdClickMap.createMap(
                 it,
-                "\n"
+                '\n'
             )
         }.toMap()
     }

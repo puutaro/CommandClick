@@ -190,7 +190,12 @@ object MultiFileSelectGridViewProducer {
         filterSuffix: String,
     ): Boolean{
         if(filterSuffix != noExtend) {
-            return filterSuffix.split("&").any {
+            return QuoteTool.splitBySurroundedIgnore(
+                filterSuffix,
+                '&'
+            )
+//            filterSuffix.split("&")
+                .any {
                 targetStr.endsWith(it)
             }
         }

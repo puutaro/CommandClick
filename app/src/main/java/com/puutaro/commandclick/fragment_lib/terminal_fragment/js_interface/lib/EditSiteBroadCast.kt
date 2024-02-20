@@ -10,7 +10,7 @@ class EditSiteBroadCast(
     terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
-    private val keySeparator = "|"
+    private val keySeparator = '|'
 
     fun send(
         editPath: String,

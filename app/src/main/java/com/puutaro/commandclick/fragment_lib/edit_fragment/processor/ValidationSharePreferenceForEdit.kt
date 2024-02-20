@@ -47,32 +47,19 @@ class ValidationSharePreferenceForEdit(
     }
 
     fun checkCurrentShellNamePreference(
-        checkCurrentAppDirPathSource: String? = null,
-        checkCurrentScriptNameSource: String? = null
     ): Boolean {
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
             editFragment.readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
         )
-
-        val checkCurrentAppDirPath = if(
-            checkCurrentAppDirPathSource.isNullOrEmpty()
-        ) {
-            SharePreferenceMethod.getReadSharePreffernceMap(
+        val checkCurrentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
                 editFragment.readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             )
-
-        } else checkCurrentAppDirPathSource
-        val checkCurrentScriptName = if(
-            checkCurrentScriptNameSource.isNullOrEmpty()
-        ) {
-            SharePreferenceMethod.getReadSharePreffernceMap(
+        val checkCurrentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
                 editFragment.readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
             )
-
-        } else  checkCurrentScriptNameSource
         if(
             checkCurrentScriptName !=
             SharePrefferenceSetting.current_fannel_name.defalutStr
@@ -80,10 +67,10 @@ class ValidationSharePreferenceForEdit(
                 "${checkCurrentAppDirPath}/${checkCurrentScriptName}"
             ).isFile
         ) return editExecuteCheck(
-                onShortcut,
-                checkCurrentAppDirPath,
-                checkCurrentScriptName
-            )
+            onShortcut,
+            checkCurrentAppDirPath,
+            checkCurrentScriptName
+        )
         val listener = context
                 as? EditFragment.OnInitEditFragmentListener
         listener?.onInitEditFragment()

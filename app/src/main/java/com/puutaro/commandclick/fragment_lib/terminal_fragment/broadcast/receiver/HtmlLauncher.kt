@@ -4,8 +4,8 @@ import android.content.Intent
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForHtml
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.WebViewMenuMapType
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewMenuMapType
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File

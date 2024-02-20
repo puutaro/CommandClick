@@ -99,10 +99,14 @@ object QrDialogMethod {
             R.id.image_dialog_ok
         )
         cancelButton?.setOnClickListener {
-            imageDialogObj?.dismiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                imageDialogObj?.dismiss()
+            }
         }
         imageDialogObj?.setOnCancelListener {
-            imageDialogObj?.dismiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                imageDialogObj?.dismiss()
+            }
         }
 //        imageDialogObj?.window?.setLayout(
 //            ViewGroup.LayoutParams.MATCH_PARENT,
@@ -189,10 +193,12 @@ object QrDialogMethod {
             R.id.image_dialog_share
         )
         shareButton?.setOnClickListener {
-            execShare(
-                fragment,
-                myBitmap
-            )
+            CoroutineScope(Dispatchers.Main).launch {
+                execShare(
+                    fragment,
+                    myBitmap
+                )
+            }
         }
     }
 
@@ -219,10 +225,12 @@ object QrDialogMethod {
         FileOutputStream(file).use { stream ->
             myBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
         }
-        IntentVariant.sharePngImage(
-            file,
-            activity
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            IntentVariant.sharePngImage(
+                file,
+                activity
+            )
+        }
     }
 
 

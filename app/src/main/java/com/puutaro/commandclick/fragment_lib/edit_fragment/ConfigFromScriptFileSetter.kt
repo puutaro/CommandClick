@@ -13,6 +13,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
+import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
@@ -21,14 +23,13 @@ import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ConfigFromScriptFileSetter {
 
     fun set(
         editFragment: EditFragment,
-        currentScriptContentsList: List<String>
     ){
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
@@ -44,7 +45,7 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.current_fannel_name
         )
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
-            currentScriptContentsList,
+            editFragment.currentScriptContentsList,
             editFragment.readSharePreferenceMap,
             editFragment.setReplaceVariableMap,
             editFragment.settingSectionStart,
@@ -112,6 +113,7 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
             String(),
         )
+
 
         if (
             !onShortcut
@@ -210,22 +212,27 @@ object ConfigFromScriptFileSetter {
 
         if(
             editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
+                FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str
             ) == true
         ) return
-        editFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
+        editFragment.terminalOn = SettingVariableReader.getStrValue(
             settingVariableList,
-            CommandClickScriptVariable.TERMINAL_DO
-        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+            CommandClickScriptVariable.TERMINAL_DO,
+            CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
 
-        editFragment.onNoUrlSaveMenu = !CommandClickVariables.substituteCmdClickVariable(
+        )
+
+        editFragment.onNoUrlSaveMenu = SettingVariableReader.getStrValue(
             settingVariableList,
-            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS
-        ).isNullOrEmpty()
+            CommandClickScriptVariable.NO_SCROLL_SAVE_URLS,
+            String()
+        ).isNotEmpty()
+
         editFragment.onUpdateLastModify = !(
-                CommandClickVariables.substituteCmdClickVariable(
+                SettingVariableReader.getStrValue(
                     settingVariableList,
-                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
+                    CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY,
+                    String()
                 ) == SettingVariableSelects.OnUpdateLastModifySelects.OFF.name
                 )
     }
@@ -252,6 +259,7 @@ object ConfigFromScriptFileSetter {
             recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             currentScriptFileName,
+            editFragment.setReplaceVariableMap
         )
         return setVariableTypeList?.any {
             it.contains(
@@ -368,12 +376,10 @@ object ConfigFromScriptFileSetter {
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
                     String(),
                 ),
-                ToolbarButtonBariantForEdit.OK to makeSettingConfigMap(
+                ToolbarButtonBariantForEdit.OK to makePlayButtonConfigMap(
                     editFragment,
                     settingVariableList,
-                    CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
-                    String(),
-                ),
+                )
             )
     }
 
@@ -460,6 +466,30 @@ object ConfigFromScriptFileSetter {
         )
     }
 
+    private fun makePlayButtonConfigMap(
+        editFragment: EditFragment,
+        settingVariableList: List<String>?,
+    ): Map<String, String> {
+        val isSettingEdit = !editFragment.enableCmdEdit
+                || editFragment.passCmdVariableEdit ==
+                CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
+        return when(isSettingEdit) {
+            true -> mapOf(
+                SettingButtonConfigMapKey.CLICK.str to
+                        listOf(
+                            JsActionKeyManager.JsActionsKey.JS_PATH.key,
+                            MacroForToolbarButton.Macro.OK.name
+                        ).joinToString("=")
+            )
+            else -> makeSettingConfigMap(
+                editFragment,
+                settingVariableList,
+                CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
+                String(),
+            )
+        }
+    }
+
     private fun makeSettingConfigMap(
         editFragment: EditFragment,
         settingVariableList: List<String>?,
@@ -487,7 +517,6 @@ object ConfigFromScriptFileSetter {
             editFragment.setReplaceVariableMap
         )
     }
-
 
     private fun makeListFromSettingPath(
         editFragment: EditFragment,

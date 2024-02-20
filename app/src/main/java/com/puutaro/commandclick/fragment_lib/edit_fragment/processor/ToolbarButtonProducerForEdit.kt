@@ -49,8 +49,8 @@ class ToolbarButtonProducerForEdit(
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
+//        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
@@ -73,8 +73,8 @@ class ToolbarButtonProducerForEdit(
                 buttonInnerView,
                 makeButtonView,
                 toolbarButtonBariantForEdit,
-                recordNumToMapNameValueInCommandHolder,
-                recordNumToMapNameValueInSettingHolder,
+//                recordNumToMapNameValueInCommandHolder,
+//                recordNumToMapNameValueInSettingHolder,
             )
             true
         }
@@ -115,8 +115,8 @@ class ToolbarButtonProducerForEdit(
                         false,
                         toolbarButtonBariantForEdit,
                         makeButtonView,
-                        recordNumToMapNameValueInCommandHolder,
-                        recordNumToMapNameValueInSettingHolder,
+//                        recordNumToMapNameValueInCommandHolder,
+//                        recordNumToMapNameValueInSettingHolder,
                     )
                 }
                 ToolbarButtonBariantForEdit.CANCEL -> {}
@@ -138,8 +138,8 @@ class ToolbarButtonProducerForEdit(
         buttonInnerView: View,
         settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
-        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
+//        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
@@ -161,8 +161,8 @@ class ToolbarButtonProducerForEdit(
                     true,
                     toolbarButtonBariantForEdit,
                     settingButtonView,
-                    recordNumToMapNameValueInCommandHolder,
-                    recordNumToMapNameValueInSettingHolder,
+//                    recordNumToMapNameValueInCommandHolder,
+//                    recordNumToMapNameValueInSettingHolder,
                 )
             }
             ToolbarButtonBariantForEdit.CANCEL -> {}

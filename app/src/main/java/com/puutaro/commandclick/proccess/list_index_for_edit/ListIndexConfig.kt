@@ -11,16 +11,14 @@ import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
-import com.puutaro.commandclick.proccess.extra_args.MaxStringLength
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.JsPathHandlerForListIndex
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ClickSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -39,39 +37,33 @@ object ListIndexEditConfig {
         holder: ListIndexForEditAdapter.ListIndexListViewHolder,
         listIndexPosition: Int
     ){
-        val clickConfigMap = makeClickConfig(
+        val clickConfigListCon = makeClickConfigListStr(
             editFragment,
-            isLongClick
+            isLongClick,
         )
-
-        val jsPathMacroStr = execMakeJsPathMacro(
-            clickConfigMap,
-            String()
+        val jsActionMap = EditSettingJsTool.makeJsActionMap(
+            editFragment,
+            clickConfigListCon
+        )
+        val clickConfigPairList = CmdClickMap.createMap(
+            clickConfigListCon,
+            '|'
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
             editFragment,
             isLongClick,
-            clickConfigMap,
+            clickConfigPairList,
         )
         ExecClickUpdate.update(
             editFragment,
             listIndexArgsMaker,
             holder,
         )
-        val extraMapForJsPath = ExtraArgsTool.createExtraMapFromMap(
-            listIndexArgsMaker.clickConfigMap,
-            "!",
-        )
-        if(
-            jsPathMacroStr.isEmpty()
-        ) return
 
-        JsPathHandlerForListIndex.handle(
-            listIndexArgsMaker,
-            extraMapForJsPath,
-            jsPathMacroStr,
+        JsPathHandlerForQrAndListIndex.handle(
+            editFragment,
+            jsActionMap,
             selectedItem,
-            holder,
             listIndexPosition,
         )
     }
@@ -86,14 +78,15 @@ object ListIndexEditConfig {
         ).let{
             CmdClickMap.createMap(
                 it,
-                "|"
+                '|'
             )
         }.toMap()
     }
-    private fun makeClickConfig(
+
+    private fun makeClickConfigListStr(
         editFragment: EditFragment,
         isLongClick: Boolean,
-    ): Map<String, String> {
+    ): String? {
         val buttonClickMapKey = when(
             isLongClick
         ){
@@ -102,12 +95,7 @@ object ListIndexEditConfig {
 
         }
         return editFragment.listIndexConfigMap
-            ?.get(buttonClickMapKey).let { clickConfigMapStr ->
-                if (
-                    clickConfigMapStr.isNullOrEmpty()
-                ) return@let emptyMap()
-                CmdClickMap.createMap(clickConfigMapStr, "|").toMap()
-            }
+            ?.get(buttonClickMapKey)
     }
 
     fun getListIndexType(
@@ -120,25 +108,29 @@ object ListIndexEditConfig {
         } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
 
-    private fun execMakeJsPathMacro(
-        clickConfigMap: Map<String, String>,
-        defaultButtonMacroStr: String,
-    ): String {
-        if(
-            clickConfigMap.isEmpty()
-        ) return String()
-        val clickJsMacroStr =
-            clickConfigMap.get(ClickSettingsForListIndex.ClickSettingKey.JS_PATH.key)
-        return JsPathMacroForToolbarButton.values().firstOrNull {
-            it.name == clickJsMacroStr
-        }?.name.let name@ {
-            if(it != null) return@name it
-            if(
-                clickJsMacroStr.isNullOrEmpty()
-            ) return@name defaultButtonMacroStr
-            clickJsMacroStr
-        }
-    }
+//    private fun execMakeJsPathMacro(
+//        clickConfigMap: Map<String, String>,
+//        defaultButtonMacroStr: String,
+//    ): String {
+//        if(
+//            clickConfigMap.isEmpty()
+//        ) return String()
+//        val clickJsMacroStr =
+//            clickConfigMap.get(
+//                ClickSettingsForListIndex.ClickSettingKey.JS_PATH.key
+//            )
+//        return MacroForToolbarButton.Macro.values().firstOrNull {
+//            it.name == clickJsMacroStr
+//        }?.name.let name@ {
+//            if(
+//                it != null
+//            ) return@name it
+//            if(
+//                clickJsMacroStr.isNullOrEmpty()
+//            ) return@name defaultButtonMacroStr
+//            clickJsMacroStr
+//        }
+//    }
 
     fun setCheckToMaterialCardView(
         materialCardView: MaterialCardView,
@@ -185,11 +177,8 @@ object ListIndexEditConfig {
                 it.str == fetchIconName
             }?.id ?:defaultIconId
         }
-
         materialCardView.checkedIcon = AppCompatResources.getDrawable(context, iconId)
         materialCardView.isChecked = true
-
-
     }
 
     fun setFileNameTextView(
@@ -203,7 +192,7 @@ object ListIndexEditConfig {
             listIndexConfigMap?.get(
                 ListIndexConfigKey.NAME.key
             ),
-            "|"
+            '|'
         ).toMap()
         val isHide = fileNameConfigMap.containsKey(
             FileNameKeyForListIndex.ListIndexFileNameKey.ON_HIDE.key
@@ -237,7 +226,6 @@ object ListIndexEditConfig {
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT
             -> {
                 makeFannelName(
-                    listIndexTypeKey,
                     fileNameSrc.split("\t").firstOrNull()
                         ?: String(),
                     fileNameConfigMap,
@@ -246,7 +234,6 @@ object ListIndexEditConfig {
             }
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> makeFannelName(
-                listIndexTypeKey,
                 fileNameSrc,
                 fileNameConfigMap,
                 busyboxExecutor,
@@ -255,7 +242,6 @@ object ListIndexEditConfig {
     }
 
     private fun makeFannelName(
-        listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor,
@@ -351,7 +337,7 @@ object ListIndexEditConfig {
         ) return null
         val descConfigMap = CmdClickMap.createMap(
             descValue,
-            "|"
+            '|'
         ).toMap()
         val descConByCut = descConfigMap.get(DescSettingsForListIndex.ListIndexDescKey.LENGTH.key).let {
             MaxStringLength.cut(

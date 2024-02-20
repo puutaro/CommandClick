@@ -9,7 +9,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
-import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
+import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecBackstackHandle {
@@ -97,7 +97,7 @@ private fun execBack(
     }
     when(currentBottomFragment){
         is CommandIndexFragment -> {
-            ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
+            MonitorSizeManager.changeForCmdIndexFragment(
                 currentBottomFragment
             )
             return

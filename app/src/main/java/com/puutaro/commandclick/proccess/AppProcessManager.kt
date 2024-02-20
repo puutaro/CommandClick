@@ -69,7 +69,6 @@ object AppProcessManager {
         setKillTypeListView(
             fragment,
             createKillTypeList(),
-            UbuntuFiles(context),
             currentAppDirPath,
             fannelName,
         )
@@ -87,7 +86,6 @@ object AppProcessManager {
     private fun setKillTypeListView(
         fragment: Fragment,
         killTypeList: List<Pair<String, Int>>,
-        ubuntuFiles: UbuntuFiles,
         currentAppDirPath: String,
         fannelName: String,
     ) {
@@ -105,7 +103,6 @@ object AppProcessManager {
         invokeKillTypeListItemSetClickListener(
             fragment,
             killTypeListView,
-            ubuntuFiles,
             currentAppDirPath,
             fannelName,
         )
@@ -141,7 +138,6 @@ object AppProcessManager {
     private fun invokeKillTypeListItemSetClickListener(
         fragment: Fragment,
         dialogListView: ListView,
-        ubuntuFiles: UbuntuFiles,
         currentAppDirPath: String,
         fannelName: String,
     ) {
@@ -156,7 +152,6 @@ object AppProcessManager {
             killTypeHandler(
                 fragment,
                 selectedProcess,
-                ubuntuFiles,
                 currentAppDirPath,
                 fannelName,
             )
@@ -167,7 +162,6 @@ object AppProcessManager {
     private fun killTypeHandler(
         fragment: Fragment,
         selectedProcess: String,
-        ubuntuFiles: UbuntuFiles,
         currentAppDirPath: String,
         fannelName: String,
     ){
@@ -301,7 +295,6 @@ object AppProcessManager {
         ) {
             killThisTermuxShell(
                 fragment,
-                currentAppDirPath,
                 fannelName
             )
             return
@@ -359,7 +352,6 @@ object AppProcessManager {
 
     private fun killThisTermuxShell(
         fragment: Fragment,
-        currentAppDirPath: String,
         fannelName: String
     ){
         val context = fragment.context

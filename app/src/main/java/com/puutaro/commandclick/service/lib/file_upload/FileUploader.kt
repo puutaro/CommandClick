@@ -9,6 +9,7 @@ import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -140,13 +141,17 @@ object CopyFannelServer {
         currentAppDirPath: String,
         cpFileMapStr: String,
     ): ByteArray {
-        val cpFileMap = cpFileMapStr
-            .split("\t").map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                "="
-                )
-        }.toMap()
+        val cpFileMap = CmdClickMap.createMap(
+            cpFileMapStr,
+            '\t'
+        ) .toMap()
+//            cpFileMapStr
+//            .split("\t").map {
+//                CcScript.makeKeyValuePairFromSeparatedString(
+//                    it,
+//                "="
+//                )
+//        }.toMap()
         val cpFileMacro = cpFileMap.get(CpFileKey.CP_FILE_MACRO_FOR_SERVICE.key)
         return  when(cpFileMacro) {
             ReceivePathMacroType.GET_FILE_LIST.name

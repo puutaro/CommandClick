@@ -4,13 +4,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 
 object FragmentTagManager {
 
-    enum class Prefix(
-
-        val str: String
-    ) {
-        CMD_EDIT_PREFIX("cmd_edit"),
-        SETTING_EDIT_PREFIX("setting_edit"),
-    }
 
     private const val separateUnderBar = "___"
     private const val fannelStateIndex = 3
@@ -22,7 +15,7 @@ object FragmentTagManager {
         fannelState: String,
     ): String {
         return makeTag(
-            Prefix.CMD_EDIT_PREFIX.str,
+            FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str,
             parentAppDirPath,
             scriptFileName,
             fannelState,
@@ -34,7 +27,7 @@ object FragmentTagManager {
         scriptFileName: String,
     ): String {
         return makeTag(
-            Prefix.SETTING_EDIT_PREFIX.str,
+            FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str,
             parentAppDirPath,
             scriptFileName,
         )

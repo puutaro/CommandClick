@@ -8,7 +8,7 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecSwi
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.ExecSimpleDelete
+import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecSimpleDelete
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.list.ListTool
 import java.io.File
@@ -68,11 +68,14 @@ object ItemTouchHelperCallbackForListIndexAdapter {
                     if(
                         direction != ItemTouchHelper.LEFT
                     ) return
+                    val listIndexViewHolder =
+                        viewHolder as ListIndexForEditAdapter.ListIndexListViewHolder
                     ExecSimpleDelete.removeController(
                         editFragment,
                         recyclerView,
                         listIndexForEditAdapter,
-                        viewHolder as ListIndexForEditAdapter.ListIndexListViewHolder
+                        listIndexViewHolder.fileName,
+                        listIndexViewHolder.bindingAdapterPosition,
                     )
                 }
 

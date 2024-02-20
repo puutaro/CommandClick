@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
 
 
-class ValidateShell() {
+class ValidateShell {
     companion object {
         fun correct (
             fragment: Fragment,

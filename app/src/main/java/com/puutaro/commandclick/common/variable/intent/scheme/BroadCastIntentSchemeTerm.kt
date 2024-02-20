@@ -24,4 +24,8 @@ enum class BroadCastIntentSchemeTerm(
         "com.puutaro.commandclick.fzhtml.launch",
         "edit_path",
     ),
+    MONITOR_TOAST(
+        "com.puutaro.commandclick.monitorToast.launch",
+        "message"
+    )
 }

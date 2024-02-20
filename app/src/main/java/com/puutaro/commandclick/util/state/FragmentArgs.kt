@@ -27,10 +27,10 @@ class EditFragmentArgs(
         }
 
         enum class EditTypeSettingsKey(val key: String){
-            CMD_VAL_EDIT("cmdValEdit"),
+            CMD_VAL_EDIT(FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str),
 //            CMD_VAL_EDIT_EXECUTE("cmdValEditExecute"),
 //            CMD_VAL_EDIT("cmdValEdit"),
-            SETTING_VAL_EDIT("settingValEdit"),
+            SETTING_VAL_EDIT(FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str),
         }
 
         enum class OnShortcutSettingKey(

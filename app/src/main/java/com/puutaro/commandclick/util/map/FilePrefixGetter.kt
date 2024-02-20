@@ -75,7 +75,7 @@ object FilePrefixGetter {
             )
             CmdClickMap.createMap(
                 listSettingKeyMapCon,
-                "\n"
+                '\n'
             ).toMap().get(
                 keyName
             )

@@ -19,7 +19,6 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -30,13 +29,13 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.FileOrDirGetterForSettingButton
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
-import java.io.File
 
 
 class   TerminalFragment: Fragment() {
@@ -45,7 +44,7 @@ class   TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
-    var readSharedPreferences = mapOf<String, String>()
+    var readSharePreferenceMap = mapOf<String, String>()
     var srcReadSharedPreferences: Map<String, String>? = null
     var editType =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
@@ -83,6 +82,7 @@ class   TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var dialogInstance: Dialog? = null
     var goBackFlag = false
+    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
 
 
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
@@ -113,17 +113,18 @@ class   TerminalFragment: Fragment() {
         if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
         }
-        readSharedPreferences = EditFragmentArgs.getReadSharePreference(arguments)
+        readSharePreferenceMap = EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharedPreferences = EditFragmentArgs.getSrcReadSharePreference(arguments)
         currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
         )
         currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
         editType = EditFragmentArgs.getEditType(arguments)
+        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
 
         ExecDownLoadManager.set(
             this,
@@ -161,6 +162,14 @@ class   TerminalFragment: Fragment() {
     override fun onStart() {
         super.onStart()
         TerminalOnHandlerForEdit.handle(this)
+        BroadcastSender.normalSend(
+            context,
+            BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
+            listOf(
+                BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
+                        to "start"
+            )
+        )
     }
 
 
@@ -225,6 +234,7 @@ class   TerminalFragment: Fragment() {
                 BroadCastIntentSchemeTerm.ULR_LAUNCH.action,
                 BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,
                 BroadCastIntentSchemeTerm.MONITOR_MANAGER.action,
+                BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
             )
         )
         previousTerminalTag = tag
@@ -354,5 +364,15 @@ class   TerminalFragment: Fragment() {
             readSharePreffernceMap: Map<String, String>,
             updateScriptContents: List<String>,
         )
+    }
+
+    interface OnMonitorSizeChangeingForTerm {
+        fun onMonitorSizeChangeingForTerm(
+            readSharePreffernceMap: Map<String, String>,
+        )
+    }
+
+    interface OnPopStackImmediateListenerForTerm {
+        fun onPopStackImmediateForTerm()
     }
 }

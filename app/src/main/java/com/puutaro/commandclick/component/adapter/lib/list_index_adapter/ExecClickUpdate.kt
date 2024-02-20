@@ -20,7 +20,7 @@ object ExecClickUpdate {
         listIndexArgsMaker: ListIndexArgsMaker,
         listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
     ){
-        val clickConfigMap = listIndexArgsMaker.clickConfigMap
+        val clickConfigMap = listIndexArgsMaker.clickConfigPairList
         val enableClickUpdate = ClickSettingsForListIndex.howEnableClickUpdate(clickConfigMap)
         if(!enableClickUpdate) return
         when(ListIndexForEditAdapter.listIndexTypeKey) {

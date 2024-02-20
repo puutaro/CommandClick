@@ -1,17 +1,14 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
-import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.util.QuoteTool
 
 object ClickSettingsForListIndex {
 
     enum class ClickSettingKey(
         val key: String
     ){
-        JS_PATH("jsPath"),
-        MENU_PATH("menuPath"),
         ON_SCRIPT_SAVE("onScriptSave"),
         MONITOR_SIZE("monitorSize"),
-        EXTRA(ExtraArgsTool.extraSettingKeyName),
         ENABLE_UPDATE("enableUpdate")
     }
 
@@ -30,11 +27,15 @@ object ClickSettingsForListIndex {
     }
 
     fun howEnableClickUpdate(
-        clickConfigMap: Map<String, String>?
+        clickConfigPairList: List<Pair<String, String>>?
     ): Boolean {
-        return clickConfigMap?.get(
-            ClickSettingKey.ENABLE_UPDATE.key
-        ) == OnDisableUpdateValue.ON.name
+        val enableUpdateValue = clickConfigPairList?.firstOrNull {
+            val mainKey = it.first
+            mainKey == ClickSettingKey.ENABLE_UPDATE.key
+        }?.second.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+        return enableUpdateValue == OnDisableUpdateValue.ON.name
     }
 
 }

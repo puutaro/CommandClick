@@ -42,11 +42,11 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchTo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumToMapNameValueInHolderMaker
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.libs.js_path_handler_for_list_index.DirectoryAndCopyGetter
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.FileOrDirGetterForSettingButton
+import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.DirectoryAndCopyGetter
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
@@ -119,7 +119,7 @@ class EditFragment: Fragment() {
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var listIndexConfigMap: Map<String, String>? = null
     var qrDialogConfig: Map<String, String>? = null
-    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
+//    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
@@ -130,6 +130,9 @@ class EditFragment: Fragment() {
     var onUpdateLastModify = false
     var disableKeyboardFragmentChange = false
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
+    var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
+    var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
+
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -160,7 +163,6 @@ class EditFragment: Fragment() {
         binding.pageSearch.cmdclickPageSearchToolBar.isVisible = false
         binding.webSearch.webSearchToolbar.isVisible = false
         binding.editListLinearLayout.isVisible = false
-        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
         directoryAndCopyGetter = DirectoryAndCopyGetter(this)
         val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         readSharePreferenceMap =
@@ -173,7 +175,7 @@ class EditFragment: Fragment() {
                 readSharePreferenceMap,
                 SharePrefferenceSetting.current_app_dir
             )
-        val currentScriptFileName =
+        val currentFannelName =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_name
@@ -205,36 +207,36 @@ class EditFragment: Fragment() {
             this
         )
         SetConfigInfo.set(this)
-        val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
-            this,
-        )
-        val checkOkForAppDirPath =
-            validationSharePreferenceForEdit
-                .checkCurrentAppDirPreference()
-        if(!checkOkForAppDirPath) return
-        val checkOkForShellName =
-            validationSharePreferenceForEdit
-                .checkCurrentShellNamePreference()
-        if(!checkOkForShellName) return
-        val checkOkIndexList =
-            validationSharePreferenceForEdit
-                .checkIndexList()
-        if(!checkOkIndexList) return
+//        val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
+//            this,
+//        )
+//        val checkOkForAppDirPath =
+//            validationSharePreferenceForEdit
+//                .checkCurrentAppDirPreference()
+//        if(!checkOkForAppDirPath) return
+//        val checkOkForShellName =
+//            validationSharePreferenceForEdit
+//                .checkCurrentShellNamePreference()
+//        if(!checkOkForShellName) return
+//        val checkOkIndexList =
+//            validationSharePreferenceForEdit
+//                .checkIndexList()
+//        if(!checkOkIndexList) return
         SharePreferenceMethod.putAllSharePreference(
             sharePref,
             currentAppDirPath,
-            currentScriptFileName,
+            currentFannelName,
             onShortcutValue,
             currentFannelState
         )
         FannelStateManager.updateState(
             currentAppDirPath,
-            currentScriptFileName,
+            currentFannelName,
             currentFannelState
         )
 
         languageType =
-            CommandClickVariables.judgeJsOrShellFromSuffix(currentScriptFileName)
+            CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
 
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
@@ -252,18 +254,17 @@ class EditFragment: Fragment() {
         ) as String
 
         currentScriptContentsList = ReadText(
-            File(currentAppDirPath, currentScriptFileName).absolutePath
+            File(currentAppDirPath, currentFannelName).absolutePath
         ).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
                 currentScriptContentsList,
                 currentAppDirPath,
-                currentScriptFileName,
+                currentFannelName,
             )
 
         ConfigFromScriptFileSetter.set(
             this,
-            currentScriptContentsList,
         )
         buttonWeight = ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
@@ -281,7 +282,7 @@ class EditFragment: Fragment() {
             FileSystems.updateLastModified(
                 File(
                     currentAppDirPath,
-                    currentScriptFileName
+                    currentFannelName
                 ).absolutePath,
             )
             val pageSearchToolbarManagerForEdit =
@@ -300,7 +301,7 @@ class EditFragment: Fragment() {
         TitleImageAndViewSetter.set(
             this,
             currentAppDirPath,
-            currentScriptFileName
+            currentFannelName
         )
 
         val window = activity?.window
@@ -308,6 +309,10 @@ class EditFragment: Fragment() {
         context?.let {
             window?.statusBarColor = Color.parseColor(terminalColor)
         }
+        recordNumToMapNameValueInSettingHolder =
+                RecordNumToMapNameValueInHolderMaker.makeForSetting(this)
+        recordNumToMapNameValueInCommandHolder =
+            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(this)
         val editModeHandler = EditModeHandler(
             this,
             binding,

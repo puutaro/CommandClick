@@ -2,14 +2,20 @@ package com.puutaro.commandclick.util
 
 import TsvImportManager
 import android.content.Context
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -68,7 +74,6 @@ object JavaScriptLoadUrl {
             setReplaceVariableMapSrc,
         )
         val setReplaceVariableMapBeforeConcatCmdVal = TsvImportManager.concatRepValWithTsvImport(
-            context,
             execJsPath,
             jsListBeforeRemoveTsv,
             setReplaceVariableMapBeforeConcatTsvMap
@@ -102,7 +107,7 @@ object JavaScriptLoadUrl {
         var countCmdSectionStart = 0
         var countCmdSectionEnd = 0
         val loadJsUrl = jsList.map {
-            val afterJsImport = JsImportManager.replace(
+            val afterJsImport = JsImportManager.import(
                 context,
                 it,
                 execJsPath,
@@ -178,54 +183,65 @@ object JavaScriptLoadUrl {
         return makeLastJsCon(loadJsUrl)
     }
 
-    fun makeOnlyReplaceVariableTsv (
-        execJsPathSrc: String,
-        jsListSource: List<String>? = null,
-        setReplaceVariableMapSrc: Map<String, String>? = null,
-    ) {
-        val execJsPath = CcPathTool.getMainFannelFilePath(execJsPathSrc)
-        val jsFileObj = File(execJsPath)
-        if (!jsFileObj.isFile) return
-        val recentAppDirPath = jsFileObj.parent
-        if (recentAppDirPath.isNullOrEmpty()) return
 
-        val scriptFileName = jsFileObj.name
-        val jsList = if (
-            jsListSource.isNullOrEmpty()
-        ) {
-            ReadText(
-                File(
-                    recentAppDirPath,
-                    scriptFileName
-                ).absolutePath
-            ).textToList()
-        } else jsListSource
-        if (
-            jsList.isEmpty()
-        ) return
-        if (
-            jsList.joinToString().replace("\n", "").trim().isEmpty()
-        ) return
-        val setReplaceVariableMap = createMakeReplaceVariableMapHandler(
-            jsList,
-            recentAppDirPath,
-            scriptFileName,
-            setReplaceVariableMapSrc,
-        )
 
-        val currentJsPath = "$recentAppDirPath/$scriptFileName"
-        val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
-            currentJsPath
+    fun makeRawJsConFromContents(
+        fragment: Fragment,
+        jsConBeforeJsImport: String,
+    ): String {
+        val readSharedPreferences = when(fragment){
+            is EditFragment -> fragment.readSharePreferenceMap
+            is CommandIndexFragment -> fragment.readSharePreffernceMap
+            is TerminalFragment -> fragment.readSharePreferenceMap
+            else -> emptyMap()
+        }
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_app_dir
         )
-        val mainFannelName = File(
-            CcPathTool.getMainFannelFilePath(
-                currentJsPath
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharedPreferences,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath
+        val setReplaceVariableMap = when(fragment){
+            is EditFragment -> fragment.setReplaceVariableMap
+            is CommandIndexFragment -> {
+                SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                    currentFannelPath
+                )
+            }
+            is TerminalFragment -> fragment.setReplaceVariableMap
+            else -> emptyMap()
+        }
+        val jsConBeforeJsImportCompNewLine = "\n${jsConBeforeJsImport}"
+        val setReplaceVariableMapByConcat =
+            TsvImportManager.concatRepValMapWithTsvImportFromContents(
+                jsConBeforeJsImportCompNewLine,
+                setReplaceVariableMap
             )
-        ).name
-        makeReplaceVariableTableTsv(
-            setReplaceVariableMap,
-            mainCurrentAppDirPath,
-            mainFannelName,
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "jsJavaLoadUrl.txt").absolutePath,
+            listOf(
+                "jsConBeforeJsImport: ${jsConBeforeJsImport}",
+                "setReplaceVariableMapByConcat: ${setReplaceVariableMapByConcat}"
+            ).joinToString("\n")
+        )
+            val jsConBeforeReplace = TsvImportManager.removeTsvImport(
+            jsConBeforeJsImportCompNewLine.split("\n")
+        ).map {
+            JsImportManager.import(
+                fragment.context,
+                it,
+                currentFannelPath,
+                setReplaceVariableMap
+            )
+        }.joinToString("\n")
+        return SetReplaceVariabler.execReplaceByReplaceVariables(
+            jsConBeforeReplace,
+            setReplaceVariableMapByConcat,
+            currentAppDirPath,
+            currentFannelName
         )
     }
 
@@ -247,12 +263,6 @@ object JavaScriptLoadUrl {
         val commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
-//        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
-//            jsList,
-//            settingSectionStart,
-//            settingSectionEnd,
-//            true
-//        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             jsList,
             settingSectionStart,
@@ -340,7 +350,7 @@ object JavaScriptLoadUrl {
         return makeLastJsCon(loadJsUrl)
     }
 
-    private fun makeLastJsCon(
+    fun makeLastJsCon(
         loadJsUrl: String
     ): String {
         return "javascript:(function() { " +
@@ -394,12 +404,6 @@ object JavaScriptLoadUrl {
         if(
             !setReplaceVariableMapSrc.isNullOrEmpty()
         ) return setReplaceVariableMapSrc
-//        val recordNumToMapNameValueInSettingHolder = RecordNumToMapNameValueInHolder.parse(
-//            jsList,
-//            settingSectionStart,
-//            settingSectionEnd,
-//            true
-//        )
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
             jsList,
             settingSectionStart,

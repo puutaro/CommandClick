@@ -18,7 +18,7 @@ object FindListenerSetter {
         binding.terminalWebView.setFindListener {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
-            val readSharedPreferences = terminalFragment.readSharedPreferences
+            val readSharedPreferences = terminalFragment.readSharePreferenceMap
             val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharedPreferences,
                 SharePrefferenceSetting.current_app_dir

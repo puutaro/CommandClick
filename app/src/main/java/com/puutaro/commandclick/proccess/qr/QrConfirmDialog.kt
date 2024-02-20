@@ -8,6 +8,10 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.Fragment
 import com.budiyev.android.codescanner.CodeScanner
 import com.puutaro.commandclick.R
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class QrConfirmDialog(
@@ -63,12 +67,16 @@ class QrConfirmDialog(
         confirmOkButton?.setOnClickListener {
             qrScanDialogObj?.dismiss()
             confirmDialogObj?.dismiss()
-            QrUriHandler.handle(
-                fragment,
-                currentAppDirPath,
-                body,
-                isMoveCurrentDir
-            )
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
+                    QrUriHandler.handle(
+                        fragment,
+                        currentAppDirPath,
+                        body,
+                        isMoveCurrentDir
+                    )
+                }
+            }
             QrHistoryManager.registerQrUriToHistory(
                 currentAppDirPath,
                 title,

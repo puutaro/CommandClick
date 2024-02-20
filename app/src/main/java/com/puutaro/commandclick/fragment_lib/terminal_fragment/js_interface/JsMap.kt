@@ -8,16 +8,32 @@ class JsMap(
     terminalFragment: TerminalFragment
 ) {
 
+    companion object {
+        fun createMapFromCon(
+            mapCon: String,
+            separator: String,
+        ): Map<String, String>? {
+            return separator.getOrNull(0)?.let {
+                CmdClickMap.createMap(
+                    mapCon,
+                    it
+                ).toMap()
+            }
+        }
+    }
+
     @JavascriptInterface
     fun get(
         mapCon: String,
         separator: String,
         key: String
     ): String {
-        return CmdClickMap.createMap(
-            mapCon,
-            separator
-        ).toMap().get(key) ?: String()
+        return separator.getOrNull(0)?.let {
+            CmdClickMap.createMap(
+                mapCon,
+                it
+            ).toMap().get(key) ?: String()
+        } ?: String()
 
     }
 
@@ -27,6 +43,8 @@ class JsMap(
         separator: String,
         keyValueStr: String,
     ): String {
+        val separatorChar = separator.getOrNull(0)
+            ?: return mapCon
         val keyValList = keyValueStr.split("=")
         val targetKey = keyValList.firstOrNull()
             ?: return mapCon
@@ -34,7 +52,7 @@ class JsMap(
             ?: String()
         val updateMap = CmdClickMap.createMap(
             mapCon,
-            separator
+            separatorChar
         ).toMap().toMutableMap()
         updateMap.put(
             targetKey,

@@ -29,6 +29,7 @@ import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -471,12 +472,18 @@ class QrLogo(
     ): Map<String, String> {
         return ReadText(
             qrDesignFilePath
-        ).readText().split("\n").map {
-            CcScript.makeKeyValuePairFromSeparatedString(
+        ).readText().let {
+            CmdClickMap.createMap(
                 it,
-                "="
+                '\n'
             )
         }.toMap().filterKeys { it.isNotEmpty() }
+//            .split("\n").map {
+//            CcScript.makeKeyValuePairFromSeparatedString(
+//                it,
+//                "="
+//            )
+//        }.toMap().filterKeys { it.isNotEmpty() }
     }
 
     private fun makeQrDesignMap(

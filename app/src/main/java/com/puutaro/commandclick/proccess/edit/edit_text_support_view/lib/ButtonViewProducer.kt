@@ -29,6 +29,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +42,7 @@ import java.io.File
 
 
 object ButtonViewProducer {
-    private const val setVariableSetSeparator = "|"
+    private const val setVariableSetSeparator = '|'
     private const val jsFrag = "jsf"
     private const val settingFrag = "setf"
     private const val basht = "basht"
@@ -51,9 +52,9 @@ object ButtonViewProducer {
     private const val buttoLabelThis = "this"
     private var consecutiveJob: Job? = null
     const val doubleColon = "::"
-    private val backStackMacro = doubleColon +
-            SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
-            doubleColon
+//    private val backStackMacro = doubleColon +
+//            SettingVariableSelects.ButtonEditExecVariantSelects.BackStack.name +
+//            doubleColon
     private val termOutMacro = doubleColon +
             SettingVariableSelects.ButtonEditExecVariantSelects.TermOut.name +
             doubleColon
@@ -105,7 +106,6 @@ object ButtonViewProducer {
             insertButton,
             buttonMap,
         )
-//        insertTextView.isVisible = isInsertTextViewVisible
         val currentVariableName = editParameters.currentVariableName
         val buttonEventArgs = ButtonEventArgs(
             insertButton,
@@ -186,28 +186,12 @@ object ButtonViewProducer {
         val editFragment = buttonEventArgs.editFragment
         val context = editFragment.context
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val editParameters = buttonEventArgs.editParameters
-        val recordNumToMapNameValueInCommandHolder = editParameters.recordNumToMapNameValueInCommandHolder
-        val recordNumToMapNameValueInSettingHolder = editParameters.recordNumToMapNameValueInCommandHolder
-        val setReplaceVariableMap = editParameters.setReplaceVariableMap
-        val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
         val buttonMap = buttonEventArgs.buttonMap
         val currentButtonTag = buttonMap?.get(
             ButtonEditKey.tag.name
         )
 
-        buttonEventArgs.scriptFileSaver.save(
-            recordNumToMapNameValueInCommandHolder,
-            recordNumToMapNameValueInSettingHolder,
-        )
+        buttonEventArgs.scriptFileSaver.save()
         saveListContents(editFragment, currentButtonTag)
         simpleJsExecutor(
             buttonEventArgs
@@ -227,12 +211,9 @@ object ButtonViewProducer {
             execCmdEditable.isNullOrEmpty()
             && cmdPrefix.isEmpty()
         ) return
-        val currentScriptPath = "${currentAppDirPath}/${currentScriptName}"
         val innerExecCmd =  makeInnerExecCmd(
             cmdPrefix,
             execCmdEditable.toString(),
-            currentScriptPath,
-            setReplaceVariableMap,
         )
         if(
             innerExecCmd.isEmpty()
@@ -252,7 +233,7 @@ object ButtonViewProducer {
         }
         val execCmdAfterTrimButtonEditExecVariant =
             innerExecCmd
-                .replace(backStackMacro, "")
+//                .replace(backStackMacro, "")
                 .replace(termOutMacro, "")
                 .replace(noJsTermOut, "")
                 .replace(termLong, "")
@@ -328,17 +309,17 @@ object ButtonViewProducer {
             ),
             true
         )
-        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
-        if(onEditExecuteOnce) {
-            val listener =
-                context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                editFragment.tag,
-                ToolbarButtonBariantForEdit.OK,
-                editFragment.readSharePreferenceMap,
-                true,
-            )
-        }
+//        val onEditExecuteOnce = innerExecCmd.contains(backStackMacro)
+//        if(onEditExecuteOnce) {
+//            val listener =
+//                context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+//            listener?.onToolBarButtonClickForEditFragment(
+//                editFragment.tag,
+//                ToolbarButtonBariantForEdit.OK,
+//                editFragment.readSharePreferenceMap,
+//                true,
+//            )
+//        }
     }
 
 
@@ -492,14 +473,7 @@ object ButtonViewProducer {
     private fun makeInnerExecCmd(
         cmdPrefix: String,
         execCmdEditableString: String,
-        currentScriptPath: String,
-        setReplaceVariableMap: Map<String, String>?
     ): String {
-//        val scriptFileObj = File(currentScriptPath)
-//        val currentAppDirPath = scriptFileObj.parent
-//            ?: return String()
-//        val currentScriptName = scriptFileObj.name
-//            ?: return String()
         val innerExecCmdSourceBeforeReplace =
             "$cmdPrefix " +
                 QuoteTool.trimBothEdgeQuote(
@@ -507,20 +481,6 @@ object ButtonViewProducer {
                 )
         return innerExecCmdSourceBeforeReplace.trim(';')
             .replace(Regex("  *"), " ")
-//            .let {
-//                ScriptPreWordReplacer.replace(
-//                    it,
-//                    currentAppDirPath,
-//                    currentScriptName
-//                )
-//            }.let {
-//                SetReplaceVariabler.execReplaceByReplaceVariables(
-//                    it,
-//                    setReplaceVariableMap,
-//                    currentAppDirPath,
-//                    currentScriptName
-//                )
-//        }
     }
 
     private fun surroundBlankReplace(
@@ -681,7 +641,13 @@ object ButtonViewProducer {
         val context = editFragment.context
         val suffixList = setFOptionMap.get(
             SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
-        )?.split("&") ?: emptyList()
+        )?.let {
+            QuoteTool.splitBySurroundedIgnore(
+                it,
+                '&'
+            )
+        }
+            ?: emptyList()
         val addSourceDirPath = setFOptionMap.get(
             SET_F_OPTION_MAP_KEY.ListAdd.dirPath.name
         ) ?: return
@@ -777,9 +743,6 @@ object ButtonViewProducer {
                     updateListCon
                 )
             }
-//            withContext(Dispatchers.Main){
-//                insertEditText.setText(listFilePath)
-//            }
         }
     }
 
@@ -790,7 +753,12 @@ object ButtonViewProducer {
     ): String? {
         val listPathKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
         return listConSlSpiOptionsStr
-            ?.split("!")
+            ?.let {
+                QuoteTool.splitBySurroundedIgnore(
+                    it,
+                    '!'
+                )
+            }
             ?.filter {
                 it.contains(listPathKey)
             }?.firstOrNull()
@@ -953,7 +921,7 @@ object ButtonViewProducer {
         editFragment: EditFragment,
         currentSetVariableValue: String?,
         currentComponentIndex: Int
-    ): Map<String, String>? {
+    ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
@@ -968,9 +936,11 @@ object ButtonViewProducer {
                 it.contains(
                     setVariableSetSeparator
                 )
-            ) return@let it.split(
+            ) return@let QuoteTool.splitBySurroundedIgnore(
+                it,
                 setVariableSetSeparator
-            ).getOrNull(currentComponentIndex).let {
+            )
+                .getOrNull(currentComponentIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
             QuoteTool.trimBothEdgeQuote(it)
@@ -981,13 +951,12 @@ object ButtonViewProducer {
                 currentAppDirPath,
                 currentFannelName
             )
-        }?.split('!')
-            ?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-            }?.toMap()
+        }.let {
+            CmdClickMap.createMap(
+                it,
+                '!'
+            ).toMap()
+        }
     }
 
     private fun getSetFOptionMap(
@@ -1017,9 +986,14 @@ object ButtonViewProducer {
                 it.contains(
                     setVariableSetSeparator
                 )
-            ) return@let it.split(
+            ) return@let QuoteTool.splitBySurroundedIgnore(
+                it,
                 setVariableSetSeparator
-            ).getOrNull(targetIndex).let {
+            )
+//            it.split(
+//                setVariableSetSeparator
+//            )
+                .getOrNull(targetIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
             QuoteTool.trimBothEdgeQuote(it)

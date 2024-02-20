@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.map.CmdClickMap
 
 object TextToSpeechIntentSender {
 
-    private const val keySeparator = "|"
+    private const val keySeparator = '|'
 
     fun send(
         context: Context?,

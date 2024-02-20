@@ -186,16 +186,8 @@ object SetReplaceVariabler {
             settingSectionEnd
         )
 
-//        val recordNumToMapNameValueInSettingHolder =
-//            RecordNumToMapNameValueInHolder.parse(
-//            mainFannelConList,
-//            settingSectionStart,
-//            settingSectionEnd,
-//            onForSetting = false,
-//        )
         return makeSetReplaceVariableMap(
             settingVariableList,
-//            recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             mainFannelName,
         )

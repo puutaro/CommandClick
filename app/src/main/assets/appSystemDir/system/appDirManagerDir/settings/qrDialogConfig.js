@@ -1,5 +1,5 @@
 
 click=
-    type=editLogo,
+    jsPath=EDIT_LOGO,
 longClick=
-    type=editLogo,
+    jsPath=EDIT_LOGO,

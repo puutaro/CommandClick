@@ -10,6 +10,8 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 class JsUrl(
     private val terminalFragment: TerminalFragment
@@ -23,6 +25,40 @@ class JsUrl(
             terminalFragment.context,
             jsPath
         ) ?: String()
+    }
+
+    @JavascriptInterface
+    fun makeJsRawCon(
+        jsPath: String
+    ): String {
+        return JavaScriptLoadUrl.makeRawJsConFromContents(
+            terminalFragment,
+            ReadText(jsPath).readText()
+        )
+    }
+
+    @JavascriptInterface
+    fun loadJsPath(
+        jsPath: String,
+        replaceMapCon: String,
+    ) {
+        val replaceMap = CmdClickMap.createMap(
+            replaceMapCon,
+            '|'
+        ).toMap()
+        val jsCon = JavaScriptLoadUrl.make(
+            terminalFragment.context,
+            jsPath
+        )?.let {
+            CmdClickMap.replace(
+                it,
+                replaceMap
+            )
+        } ?: String()
+        BroadCastIntent.sendUrlCon(
+            terminalFragment,
+            jsCon
+        )
     }
     @JavascriptInterface
     fun makeJsUrlFromCon(

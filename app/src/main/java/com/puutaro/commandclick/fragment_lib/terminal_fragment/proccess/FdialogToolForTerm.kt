@@ -25,7 +25,7 @@ object FdialogToolForTerm {
             !isCmdValEdit
         ) return true
         val isShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            terminalFragment.readSharedPreferences,
+            terminalFragment.readSharePreferenceMap,
             SharePrefferenceSetting.on_shortcut
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         if(

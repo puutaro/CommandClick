@@ -26,8 +26,23 @@ object TsvLineRenamer {
 
     private var renamePromptDialog: Dialog? = null
 
-    
     fun rename(
+        editFragment: EditFragment,
+        tsvPath: String,
+        tsvLine: String,
+    ){
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                execRename(
+                    editFragment,
+                    tsvPath,
+                    tsvLine,
+                )
+            }
+        }
+    }
+    
+    fun execRename(
         editFragment: EditFragment,
         tsvPath: String,
         tsvLine: String,
@@ -76,13 +91,19 @@ object TsvLineRenamer {
                 R.id.prompt_dialog_ok
             )
         promptOkButtonView?.setOnClickListener {
-            execRenameProcess(
-                editFragment,
-                tsvPath,
-                tsvLine,
-                promptEditText,
-            )
-            dismissProcess(editFragment)
+            CoroutineScope(Dispatchers.Main).launch {
+                withContext(Dispatchers.Main) {
+                    execRenameProcess(
+                        editFragment,
+                        tsvPath,
+                        tsvLine,
+                        promptEditText,
+                    )
+                }
+                withContext(Dispatchers.Main) {
+                    dismissProcess(editFragment)
+                }
+            }
         }
         renamePromptDialog?.setOnCancelListener {
             dismissProcess(editFragment)

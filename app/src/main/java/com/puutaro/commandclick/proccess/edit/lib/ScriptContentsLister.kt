@@ -21,7 +21,8 @@ class ScriptContentsLister(
                 currentId,
                 editLinearLayoutList
             ) ?: return@map String() to emptyMap<String, String>()
-            val currentRecordNumToMapNameValue = recordNumToMapNameValueInHolder.entries.elementAt(it)
+            val currentRecordNumToMapNameValue =
+                recordNumToMapNameValueInHolder.entries.elementAt(it)
             val currentVriableValue = editTextView.text.toString()
             currentRecordNumToMapNameValue.key to
                     mapOf(

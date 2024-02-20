@@ -2,9 +2,11 @@
 
 longClick=
     jsPath=MENU
-    |menuPath=`${fannelRepoSettingButtonMenuPath}`
-    |onHideFooter=,
+    |args=
+        menuPath=`${fannelRepoSettingButtonMenuPath}`
+        !onHideFooter=,
 click=
     jsPath=FANNEL_REPO_SYNC
-    |onHideFooter=,
+    |args=
+        onHideFooter=,
 icon=launch,

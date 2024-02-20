@@ -24,7 +24,8 @@ object TerminalOnHandlerForEdit {
         if(
             terminalFragment.tag == indexTerminalTag
         ) {
-            val listener = context as? TerminalFragment.OnTermShortSizeListenerForTerminalFragment
+            val listener =
+                context as? TerminalFragment.OnTermShortSizeListenerForTerminalFragment
             listener?.onTermNormalSizeForTerminalFragment(terminalFragment)
             return
         }
@@ -43,7 +44,7 @@ object TerminalOnHandlerForEdit {
             if(isSettingValEdit) return@launch
             val disableShortcut = withContext(Dispatchers.IO) {
                 SharePreferenceMethod.getReadSharePreffernceMap(
-                    terminalFragment.readSharedPreferences,
+                    terminalFragment.readSharePreferenceMap,
                     SharePrefferenceSetting.on_shortcut
                 ) != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
             }

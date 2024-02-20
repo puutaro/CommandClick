@@ -9,23 +9,26 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
-import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
+import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 
 object ListIndexSubMenuDialog {
 
     private var listIndexSubMenuDialog: Dialog? = null
 
     fun launch(
-        listIndexArgsMaker: ListIndexArgsMaker,
+        editFragment: EditFragment,
+        jsActionMap: Map<String,String>?,
         selectedItem: String,
         parentMenuName: String,
-        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
         position: Int,
     ){
-        val editFragment = listIndexArgsMaker.editFragment
+        if(
+            jsActionMap.isNullOrEmpty()
+        ) return
         val context = editFragment.context
             ?: return
         listIndexSubMenuDialog = Dialog(
@@ -46,10 +49,10 @@ object ListIndexSubMenuDialog {
             R.id.list_dialog_search_edit_text
         )?.isVisible = false
         setListView(
-            listIndexArgsMaker,
+            editFragment,
+            jsActionMap,
             parentMenuName,
             selectedItem,
-            holder,
             position,
         )
         setCancelListener()
@@ -79,13 +82,12 @@ object ListIndexSubMenuDialog {
     }
 
     private fun setListView(
-        listIndexArgsMaker: ListIndexArgsMaker,
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>,
         parentMenuName: String,
         selectedItem: String,
-        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
         position: Int,
     ) {
-        val editFragment = listIndexArgsMaker.editFragment
         val context = editFragment.context
             ?: return
         val subMenuListView =
@@ -93,7 +95,10 @@ object ListIndexSubMenuDialog {
                 R.id.list_dialog_list_view
             )
         val subMenuPairList = MenuSettingTool.createSubMenuListMap(
-            listIndexArgsMaker.listIndexClickMenuMapList,
+            ListIndexArgsMaker.makeListIndexClickMenuPairList(
+                editFragment,
+                jsActionMap
+            ),
             parentMenuName,
         )
         val subMenuAdapter = SubMenuAdapter(
@@ -102,19 +107,19 @@ object ListIndexSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            listIndexArgsMaker,
+            editFragment,
+            jsActionMap,
             subMenuListView,
             selectedItem,
-            holder,
             position,
         )
     }
 
     private fun subMenuItemClickListener(
-        listIndexArgsMaker: ListIndexArgsMaker,
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
         selectedItem: String,
-        holder: ListIndexForEditAdapter.ListIndexListViewHolder,
         listIndexPosition: Int,
     ){
         subMenuListView?.setOnItemClickListener {
@@ -123,24 +128,20 @@ object ListIndexSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-
-            val extraMapForJsPath =
-                ExtraArgsTool.createExtraMapFromMenuMapList(
-                    listIndexArgsMaker.listIndexClickMenuMapList,
-                    clickedSubMenuName,
-                    MenuSettingTool.MenuSettingKey.NAME.key,
-                    "!"
-                )
-            val jsPathMacroStr =
-                listIndexArgsMaker.extractJsPathMacroFromSettingMenu(
+            val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+                editFragment,
+                MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+                    ListIndexArgsMaker.makeListIndexClickMenuPairList(
+                        editFragment,
+                        jsActionMap
+                    ),
                     clickedSubMenuName
                 )
-            JsPathHandlerForListIndex.handle(
-                listIndexArgsMaker,
-                extraMapForJsPath,
-                jsPathMacroStr,
+            )
+            JsPathHandlerForQrAndListIndex.handle(
+                editFragment,
+                updateJsActionMap,
                 selectedItem,
-                holder,
                 listIndexPosition,
             )
         }

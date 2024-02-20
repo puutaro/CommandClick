@@ -3,18 +3,33 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment
 import android.app.Dialog
 import android.graphics.Bitmap
 import android.net.Uri
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.*
+import android.webkit.ConsoleMessage
+import android.webkit.JsPromptResult
+import android.webkit.JsResult
+import android.webkit.PermissionRequest
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebView
 import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.time.LocalDateTime
 
 
 object WebChromeClientSetter {
@@ -28,6 +43,8 @@ object WebChromeClientSetter {
         webView: WebView,
         progressBar: ProgressBar
     ){
+        val context = terminalFragment.context
+        val packageName = context?.packageName
 
         webView.webChromeClient = object : WebChromeClient() {
             override fun onProgressChanged(view: WebView, newProgress: Int) {
@@ -83,6 +100,43 @@ object WebChromeClientSetter {
                      */
                     request.grant(PERMISSIONS)
                 }
+            }
+
+            override fun onConsoleMessage(cm: ConsoleMessage): Boolean {
+                val message = cm.message()
+                val noOutPutErr = !message.contains("Uncaught")
+                        || !message.lowercase().contains("error")
+                        || !message.lowercase().contains("syntax")
+                if(
+                    noOutPutErr
+                ) return false
+                CoroutineScope(Dispatchers.IO).launch {
+                    val output = withContext(Dispatchers.IO) {
+                        listOf(
+                            cm.sourceId(),
+                            message
+                        ).joinToString("\t")
+                    }
+                    withContext(Dispatchers.IO) {
+                        BroadcastSender.normalSend(
+                            context,
+                            BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
+                            listOf(
+                                BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
+                                        to output
+                            )
+                        )
+                    }
+                    withContext(Dispatchers.IO) {
+                        LogSystems.stdErr(output)
+                        Log.e(
+                            packageName,
+                            cm.message() + " -- From line " + cm.lineNumber()
+                                    + " of " + cm.sourceId()
+                        )
+                    }
+                }
+                return true
             }
 
             override fun onJsAlert(

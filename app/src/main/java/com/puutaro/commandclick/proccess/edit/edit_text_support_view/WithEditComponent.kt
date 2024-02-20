@@ -37,6 +37,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.Variabl
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.QuoteTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -466,8 +467,14 @@ fun checkIndexNum(
             }
         val currentSetVariableValueIndexSize =
             withContext(Dispatchers.IO) {
-                currentSetVariableValue?.split("|")
-                    ?.size ?: 0
+                currentSetVariableValue?.let {
+                    QuoteTool.splitBySurroundedIgnore(
+                        currentSetVariableValue,
+                        '|'
+                    ).size
+                } ?: 0
+//                currentSetVariableValue?.split("|")
+//                    ?.size ?: 0
             }
         if (variableTypeIsIndexListSize == currentSetVariableValueIndexSize) return@launch
         withContext(Dispatchers.IO) {
@@ -515,14 +522,20 @@ fun updateSetVariableMapByEditSupportViewNameIndex(
     editParameters: EditParameters,
     textLabelIndex: Int,
 ): Map<String, String>? {
-    val setVariableSetSeparator = "|"
+    val setVariableSetSeparator = '|'
     val setVariableMapSource = editParameters.setVariableMap
     if(
         textLabelIndex < 0
     ) return setVariableMapSource
     val setVariableMapValueList = editParameters.setVariableMap?.get(
         SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
-    )?.split(setVariableSetSeparator)
+    )?.let {
+        QuoteTool.splitBySurroundedIgnore(
+            it,
+            setVariableSetSeparator
+        )
+    }
+//        ?.split(setVariableSetSeparator)
         ?.toMutableList()
     val setVariableMapValueListLimitIndex =
         setVariableMapValueList?.size ?: 0
@@ -531,7 +544,7 @@ fun updateSetVariableMapByEditSupportViewNameIndex(
     ) return setVariableMapSource
     setVariableMapValueList?.removeAt(textLabelIndex)
     val setVariableMapValue =
-        setVariableMapValueList?.joinToString(setVariableSetSeparator) ?: String()
+        setVariableMapValueList?.joinToString(setVariableSetSeparator.toString()) ?: String()
     if(
         setVariableMapSource.isNullOrEmpty()
     ) return null

@@ -165,6 +165,7 @@ class FormDialogForListIndexOrButton(
                 recordNumToMapNameValueInSettingHolder,
                 parentDirPath,
                 selectedScriptName,
+                editFragment.setReplaceVariableMap
             )
             SetVariableTyper.makeRecordNumToSetVariableMaps(
                 setVariableForCmdHolder,

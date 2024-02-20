@@ -10,15 +10,15 @@ object SettingVariableReader {
         variableName: String,
         variableDefaultStrValue: String,
     ): String {
-        val runShellSource =  CommandClickVariables.substituteCmdClickVariable(
+        val variableValue =  CommandClickVariables.substituteCmdClickVariable(
             cmdVariableList,
             variableName
         ) ?: variableDefaultStrValue
-        val runShellSourceTrim = QuoteTool.trimBothEdgeQuote(runShellSource)
+        val variableValueTrim = QuoteTool.trimBothEdgeQuote(variableValue)
         return if(
-            runShellSourceTrim.isEmpty()
+            variableValueTrim.isEmpty()
         ) variableDefaultStrValue
-        else runShellSourceTrim
+        else variableValueTrim
     }
 
     fun isExist(
@@ -72,7 +72,7 @@ object SettingVariableReader {
             ){
                 defaultNum.toString()
             } else fontZoomShellValueSource
-            fontZoomShellValue.toInt() ?: defaultNum
+            fontZoomShellValue.toInt()
         } catch (e: Exception) {
             defaultNum
         }
@@ -87,14 +87,18 @@ object SettingVariableReader {
         val variableValueListSource = CommandClickVariables.substituteCmdClickVariableList(
             settingVariableList,
             variableName
-        )?.joinToString(",").let {
-            QuoteTool.removeDoubleQuoteByIgnoreBackSlash(it)
-        } ?: String()
+        )?.joinToString(",") ?: String()
         return ScriptPreWordReplacer.replace(
             variableValueListSource,
             currentAppDirPath,
             scriptName
-        ).split(",")
+        ).let {
+            QuoteTool.splitBySurroundedIgnore(
+                it,
+                ','
+            )
+        }
+//            .split(",")
     }
 
     fun setListFromPath(

@@ -19,7 +19,8 @@ object ScriptFileEdit {
         currentAppDirPath: String,
         fannelName: String,
     ){
-        val sharedPref = cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
+        val sharedPref =
+            cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
         SharePreferenceMethod.putAllSharePreference(
             sharedPref,
             currentAppDirPath,

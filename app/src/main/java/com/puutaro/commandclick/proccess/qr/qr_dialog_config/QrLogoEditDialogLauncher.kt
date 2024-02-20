@@ -16,6 +16,10 @@ import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 object QrLogoEditDialogLauncher {
 
@@ -44,70 +48,6 @@ object QrLogoEditDialogLauncher {
                 logoConfigMap
             )
         }
-
-//        val context = fragment.context
-//            ?: return
-//        val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
-//        val qrLogoPath = "${parentDirPath}/$fannelDirName/${UsePath.qrPngRelativePath}"
-//        qrLogoDialogObj = Dialog(
-//            context
-//        )
-//        qrLogoDialogObj?.setContentView(
-//            R.layout.qr_logo_list_index_dialog_layout
-//        )
-//        val titleTextView = qrLogoDialogObj?.findViewById<AppCompatTextView>(
-//            R.id.qr_logo_list_index_dialog_title
-//        )
-//
-//        titleTextView?.text = fannelName
-//        qrLogoDialogObj?.findViewById<AppCompatImageView>(
-//            R.id.qr_logo_list_index_dialog_top_image
-//        )?.load(qrLogoPath)
-//        val isFileCon =
-//            QrDialogConfig.howQrType(logoConfigMap) ==
-//                    QrDialogConfig.QrTypeSettingKey.FILE_CON.type
-//        val buttonWeight = decideButtonWeight(isFileCon)
-//        setPassButton(
-//            fragment,
-//            parentDirPath,
-//            fannelName,
-//            buttonWeight,
-//        )
-//        setShareButton(
-//            fragment,
-//            qrLogoPath,
-//            buttonWeight
-//        )
-//        setConUpdateButton(
-//            fragment,
-//            parentDirPath,
-//            fannelName,
-//            buttonWeight,
-//            isFileCon
-//        )
-//        setChangeButton(
-//            fragment,
-//            parentDirPath,
-//            fannelName,
-//            buttonWeight,
-//            isFileCon
-//        )
-//        setCancelButton(buttonWeight)
-//        val cancelButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-//            R.id.qr_logo_list_index_dialog_cancel
-//        )
-//        cancelButton?.setOnClickListener {
-//            qrLogoDialogObj?.dismiss()
-//        }
-//        qrLogoDialogObj?.setOnCancelListener {
-//            qrLogoDialogObj?.dismiss()
-//        }
-
-
-//                    qrLogoDialogObj?.window?.setLayout(
-//                        ViewGroup.LayoutParams.MATCH_PARENT,
-//                        ViewGroup.LayoutParams.WRAP_CONTENT
-//                    )
         qrLogoDialogObj?.window?.setGravity(Gravity.BOTTOM)
         qrLogoDialogObj?.show()
     }
@@ -170,10 +110,14 @@ object QrLogoEditDialogLauncher {
             R.id.qr_logo_list_index_dialog_cancel
         )
         cancelButton?.setOnClickListener {
-            qrLogoDialogObj?.dismiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                qrLogoDialogObj?.dismiss()
+            }
         }
         qrLogoDialogObj?.setOnCancelListener {
-            qrLogoDialogObj?.dismiss()
+            CoroutineScope(Dispatchers.Main).launch {
+                qrLogoDialogObj?.dismiss()
+            }
         }
     }
 
@@ -191,21 +135,35 @@ object QrLogoEditDialogLauncher {
         qrLogoPath: String,
         buttonWeight: Float,
     ){
-        val shareButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-            R.id.qr_logo_list_index_dialog_share
-        )?: return
-        val layoutParams = shareButton.layoutParams as LinearLayoutCompat.LayoutParams
-        layoutParams.weight = buttonWeight
-        shareButton.setOnClickListener {
-            qrLogoDialogObj?.dismiss()
-            val myBitmap =
-                BitmapFactory.decodeFile(
-                    qrLogoPath
+        CoroutineScope(Dispatchers.Main).launch {
+            val shareButton = withContext(Dispatchers.Main) {
+                qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.qr_logo_list_index_dialog_share
                 )
-            QrDialogMethod.execShare(
-                fragment,
-                myBitmap
-            )
+            } ?: return@launch
+            withContext(Dispatchers.Main) {
+                val layoutParams = shareButton.layoutParams as LinearLayoutCompat.LayoutParams
+                layoutParams.weight = buttonWeight
+            }
+            shareButton.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.Main) {
+                        qrLogoDialogObj?.dismiss()
+                    }
+                    val myBitmap =
+                        withContext(Dispatchers.Main) {
+                            BitmapFactory.decodeFile(
+                                qrLogoPath
+                            )
+                        }
+                    withContext(Dispatchers.Main) {
+                        QrDialogMethod.execShare(
+                            fragment,
+                            myBitmap
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -215,18 +173,30 @@ object QrLogoEditDialogLauncher {
         fannelName: String,
         buttonWeight: Float,
     ){
-        val passButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-            R.id.qr_logo_list_index_dialog_pass
-        )?: return
-        val layoutParams = passButton.layoutParams as LinearLayoutCompat.LayoutParams
-        layoutParams.weight = buttonWeight
-        passButton.setOnClickListener {
-            qrLogoDialogObj?.dismiss()
-            QrDialogMethod.launchPassDialog(
-                fragment,
-                parentDirPath,
-                fannelName,
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            val passButton = withContext(Dispatchers.Main) {
+                qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.qr_logo_list_index_dialog_pass
+                )
+            } ?: return@launch
+            withContext(Dispatchers.Main) {
+                val layoutParams = passButton.layoutParams as LinearLayoutCompat.LayoutParams
+                layoutParams.weight = buttonWeight
+            }
+            passButton.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    withContext(Dispatchers.Main){
+                        qrLogoDialogObj?.dismiss()
+                    }
+                    withContext(Dispatchers.Main) {
+                        QrDialogMethod.launchPassDialog(
+                            fragment,
+                            parentDirPath,
+                            fannelName,
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -237,20 +207,28 @@ object QrLogoEditDialogLauncher {
         buttonWeight: Float,
         isFileCon: Boolean
     ){
-        val changeButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-            R.id.qr_logo_list_index_dialog_change
-        )?: return
-        val layoutParams = changeButton.layoutParams as LinearLayoutCompat.LayoutParams
-        layoutParams.weight = buttonWeight
-        changeButton.setOnClickListener {
-            QrDialogMethod.execChange(
-                fragment,
-                parentDirPath,
-                fannelName,
-                qrLogoDialogObj,
-                R.id.qr_logo_list_index_dialog_top_image,
-                isFileCon,
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            val changeButton = withContext(Dispatchers.Main) {
+                qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.qr_logo_list_index_dialog_change
+                )
+            } ?: return@launch
+            withContext(Dispatchers.Main) {
+                val layoutParams = changeButton.layoutParams as LinearLayoutCompat.LayoutParams
+                layoutParams.weight = buttonWeight
+            }
+            changeButton.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    QrDialogMethod.execChange(
+                        fragment,
+                        parentDirPath,
+                        fannelName,
+                        qrLogoDialogObj,
+                        R.id.qr_logo_list_index_dialog_top_image,
+                        isFileCon,
+                    )
+                }
+            }
         }
     }
 
@@ -261,36 +239,54 @@ object QrLogoEditDialogLauncher {
         buttonWeight: Float,
         isFileCon: Boolean,
     ){
-        val conUpdateButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-            R.id.qr_logo_list_index_dialog_con_update
-        )?: return
-        if(!isFileCon){
-            conUpdateButton.isVisible = false
-            return
-        }
-        val layoutParams = conUpdateButton.layoutParams as LinearLayoutCompat.LayoutParams
-        layoutParams.weight = buttonWeight
-        conUpdateButton.setOnClickListener {
-            QrDialogMethod.execConUpdate(
-                fragment,
-                parentDirPath,
-                fannelName,
-                qrLogoDialogObj,
-                R.id.qr_logo_list_index_dialog_top_image
-            )
+        CoroutineScope(Dispatchers.Main).launch {
+            val conUpdateButton = withContext(Dispatchers.Main) {
+                qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.qr_logo_list_index_dialog_con_update
+                )
+            } ?: return@launch
+            if (!isFileCon) {
+                withContext(Dispatchers.Main) {
+                    conUpdateButton.isVisible = false
+                }
+                return@launch
+            }
+            withContext(Dispatchers.Main) {
+                val layoutParams = conUpdateButton.layoutParams as LinearLayoutCompat.LayoutParams
+                layoutParams.weight = buttonWeight
+            }
+            conUpdateButton.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    QrDialogMethod.execConUpdate(
+                        fragment,
+                        parentDirPath,
+                        fannelName,
+                        qrLogoDialogObj,
+                        R.id.qr_logo_list_index_dialog_top_image
+                    )
+                }
+            }
         }
     }
 
     private fun setCancelButton(
         buttonWeight: Float,
     ) {
-        val cancelButton = qrLogoDialogObj?.findViewById<AppCompatImageButton>(
-            R.id.qr_logo_list_index_dialog_cancel
-        )?: return
-        val layoutParams = cancelButton.layoutParams as LinearLayoutCompat.LayoutParams
-        layoutParams.weight = buttonWeight
-        cancelButton.setOnClickListener {
-            qrLogoDialogObj?.dismiss()
+        CoroutineScope(Dispatchers.Main).launch {
+            val cancelButton = withContext(Dispatchers.Main) {
+                qrLogoDialogObj?.findViewById<AppCompatImageButton>(
+                    R.id.qr_logo_list_index_dialog_cancel
+                )
+            } ?: return@launch
+            withContext(Dispatchers.Main) {
+                val layoutParams = cancelButton.layoutParams as LinearLayoutCompat.LayoutParams
+                layoutParams.weight = buttonWeight
+            }
+            cancelButton.setOnClickListener {
+                CoroutineScope(Dispatchers.Main).launch {
+                    qrLogoDialogObj?.dismiss()
+                }
+            }
         }
     }
 }

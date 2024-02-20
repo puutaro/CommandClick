@@ -9,6 +9,7 @@ import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
 object SetVariableTyper {
@@ -87,6 +88,7 @@ object SetVariableTyper {
         recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
         currentAppDirPath: String,
         currentShellFileName: String,
+        setReplaceVariableMap: Map<String, String>?
     ): List<String>? {
         return recordNumToMapNameValueInSettingHolder?.filter {
                 entry ->
@@ -114,15 +116,23 @@ object SetVariableTyper {
             makeSetVariableValueFromConfigFile(
                 currentAppDirPath,
                 currentShellFileName,
+                setReplaceVariableMap
             )
         }?.joinToString(",")
-            ?.split(',')
+            ?.let {
+                QuoteTool.splitBySurroundedIgnore(
+                    QuoteTool.trimBothEdgeQuote(it),
+                    ','
+                )
+            }
+//            ?.split(',')
             ?.filter { it.isNotEmpty() }
     }
 
     private fun makeSetVariableValueFromConfigFile(
         currentAppDirPath: String,
         currentShellFileName: String,
+        setReplaceVariableMap: Map<String, String>?
     ): String {
         return makeSetVariableValueFromFilePath(
             setVariableTypesConfigPathSrc.removePrefix(
@@ -130,6 +140,7 @@ object SetVariableTyper {
             ),
             currentAppDirPath,
             currentShellFileName,
+            setReplaceVariableMap,
         )
     }
 
@@ -137,6 +148,7 @@ object SetVariableTyper {
         configFilePath: String,
         currentAppDirPath: String,
         currentShellFileName: String,
+        setReplaceVariableMap: Map<String, String>?
     ): String {
         val setVariableTypesConfigPath =
             ScriptPreWordReplacer.replace(
@@ -145,7 +157,9 @@ object SetVariableTyper {
                 currentShellFileName,
             )
         return SettingFile.read(
-            setVariableTypesConfigPath
+            File(currentAppDirPath, currentShellFileName).absolutePath,
+            setVariableTypesConfigPath,
+            setReplaceVariableMap,
         )
     }
 
@@ -153,24 +167,41 @@ object SetVariableTyper {
         currentSetVariableValue: String?,
         currentComponentIndex: Int
     ): Map<String, String>? {
-        val setVariableSetSeparator = "|"
+        val setVariableSetSeparator = '|'
         return currentSetVariableValue?.let {
             if(
                 it.contains(
                     setVariableSetSeparator
                 )
-            ) return@let it.split(
+            ) return@let QuoteTool.splitBySurroundedIgnore(
+                it,
                 setVariableSetSeparator
-            ).getOrNull(currentComponentIndex).let {
+            )
+//            it.split(
+//                setVariableSetSeparator
+//            )
+                .getOrNull(currentComponentIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
             QuoteTool.trimBothEdgeQuote(it)
-        }?.split('!')
-            ?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-            }?.toMap()
+        }?.let {
+            CmdClickMap.createMap(
+                it,
+                '!'
+            )
+        }?.toMap()
+//            ?.let {
+//            QuoteTool.splitBySurroundedIgnore(
+//                QuoteTool.trimBothEdgeQuote(it),
+//                '!'
+//            )
+//        }
+//            ?.split('!')
+//            ?.map {
+//                CcScript.makeKeyValuePairFromSeparatedString(
+//                    it,
+//                    "="
+//                )
+//            }?.toMap()
     }
 }

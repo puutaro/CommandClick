@@ -105,7 +105,6 @@
                 android:scrollbars="vertical"
                 android:fadeScrollbars="false"
                 android:layout_weight="1"
-                android:stackFromBottom="true"
                 />
 <!--            android:stackFromBottom="true"-->
             <androidx.appcompat.widget.AppCompatEditText

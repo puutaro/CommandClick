@@ -12,7 +12,7 @@ import java.io.File
 
 object FannelStateRooterManager {
 
-    private val tsvDefaultKeyNameForFannelStateRooterMap = "default"
+    private const val tsvDefaultKeyNameForFannelStateRooterMap = "default"
 
     fun makeSettingVariableList(
         currentScriptContentsList: List<String>,
@@ -182,7 +182,7 @@ object FannelStateRooterManager {
             )
             CmdClickMap.createMap(
                 replaceMapSrc,
-                "\n"
+                '\n'
             )
         }.toMap()
     }

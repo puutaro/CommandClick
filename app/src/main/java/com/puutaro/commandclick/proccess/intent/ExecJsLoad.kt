@@ -93,12 +93,6 @@ object ExecJsLoad {
                 settingSectionEnd,
             )
 
-//        ExecSetTermSizeForIntent.execSetTermSizeForIntent(
-//            currentFragment,
-//            substituteSettingVariableList,
-//        )
-
-
         val onUpdateLastModify = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickScriptVariable.ON_UPDATE_LAST_MODIFY
@@ -282,6 +276,19 @@ object ExecJsLoad {
         )
     }
 
+    fun jsConLaunchHandler(
+        fragment: Fragment,
+        jsConSrc: String,
+    ){
+        val jsCon = JavaScriptLoadUrl.makeFromContents(
+            jsConSrc.split("\n")
+        ) ?: return
+        jsUrlLaunchHandler(
+            fragment,
+            jsCon
+        )
+    }
+
     fun jsUrlLaunchHandler(
         currentFragment: Fragment,
         launchUrlString: String,
@@ -320,7 +327,10 @@ object ExecJsLoad {
                 }
             }
             is TerminalFragment -> {
-                currentFragment.binding.terminalWebView.loadUrl(launchUrlString)
+                BroadCastIntent.sendUrlCon(
+                    currentFragment,
+                    launchUrlString
+                )
             }
         }
     }

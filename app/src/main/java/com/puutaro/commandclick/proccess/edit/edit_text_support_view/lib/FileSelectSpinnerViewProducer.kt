@@ -14,6 +14,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -157,7 +158,12 @@ object FileSelectSpinnerViewProducer {
         filterSuffix: String,
     ): Boolean{
         if(filterSuffix != noExtend) {
-            return filterSuffix.split("&").any {
+            return QuoteTool.splitBySurroundedIgnore(
+                filterSuffix,
+                '&'
+            )
+//            filterSuffix.split("&")
+                .any {
                 targetStr.endsWith(it)
             }
         }
@@ -270,19 +276,24 @@ object FileSelectSpinnerViewProducer {
                     currentAppDirPath,
                     currentScriptName
                 )
-            }
+            }?.let{
+                CmdClickMap.createMap(
+                    it,
+                    '!'
+                )
+            }?.toMap()
 //            .let {
 //                ReplaceVariableMapReflecter.reflect(
 //                    QuoteTool.trimBothEdgeQuote(it),
 //                    editParameters
 //                )
 //            }
-            ?.split('!')?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
-                    it,
-                    "="
-                )
-            }?.toMap()
+//            ?.split('!')?.map {
+//                CcScript.makeKeyValuePairFromSeparatedString(
+//                    it,
+//                    "="
+//                )
+//            }?.toMap()
     }
 
     private enum class FileSelectEditKey {

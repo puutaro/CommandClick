@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
+import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 
@@ -14,15 +14,10 @@ object ExecSetTermSizeForIntent {
     fun execSetTermSizeForIntent(
         currentFragment: androidx.fragment.app.Fragment,
         monitorSize: String,
-//        substituteSettingVariableList: List<String>?,
         ) {
 
         val context = currentFragment.context
 
-//        val terminalSizeType = CommandClickVariables.substituteCmdClickVariable(
-//            substituteSettingVariableList,
-//            CommandClickScriptVariable.TERMINAL_SIZE_TYPE
-//        ) ?: String()
         val currentFragmentWeight = when(currentFragment){
             is CommandIndexFragment -> {
                 val linearLayoutParam =
@@ -52,7 +47,7 @@ object ExecSetTermSizeForIntent {
         ) return
         when(currentFragment){
             is CommandIndexFragment -> {
-                ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
+                MonitorSizeManager.changeForCmdIndexFragment(
                     currentFragment,
                 )
             }

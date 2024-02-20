@@ -1,23 +1,20 @@
 package com.puutaro.commandclick.util.dialog
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsCcUsage
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.file.UrlFileSystems
 
 object UsageDialog {
     fun launch(
         fragment: Fragment,
-        currentAppDirPath: String,
     ){
-        val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
-                UsePath.JS_FILE_SUFFIX
-        ExecJsLoad.execExternalJs(
+        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsCcUsage::class.java.simpleName
+        )
+        ExecJsLoad.jsConLaunchHandler(
             fragment,
-            currentAppDirPath,
-            webSearcherName,
-            listOf(WebUrlVariables.commandClickUsageUrl),
+            "${useClassName}.launch_S();",
         )
     }
 }

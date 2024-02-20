@@ -6,11 +6,9 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
-import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
@@ -21,7 +19,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
 class WithIndexListView(
@@ -95,7 +92,10 @@ class WithIndexListView(
         val preLoadLayoutManager = PreLoadLayoutManager(
             context,
         )
-        preLoadLayoutManager.stackFromEnd = true
+        preLoadLayoutManager.reverseLayout = ListSettingsForListIndex.howReverseLayout(
+            editFragment,
+            indexListMap
+        )
         editListRecyclerView.layoutManager = preLoadLayoutManager
         ListViewToolForListIndexAdapter.scrollToBottom(
             editListRecyclerView,
@@ -139,10 +139,6 @@ class WithIndexListView(
     private fun invokeQrLogoSetClickListenerForFileList(
         editFragment: EditFragment,
     ) {
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
         val listIndexForEditAdapter =
             editListRecyclerView.adapter as ListIndexForEditAdapter
         listIndexForEditAdapter.fileQrLogoClickListener = object: ListIndexForEditAdapter.OnFileQrLogoItemClickListener {
@@ -155,9 +151,8 @@ class WithIndexListView(
                 QrDialogClickHandler.handle(
                     false,
                     editFragment,
-                    currentAppDirPath,
                     holder.fileName,
-                    listIndexForEditAdapter.qrDialogConfigMap
+                    holder.bindingAdapterPosition,
                 )
             }
         }
@@ -166,13 +161,8 @@ class WithIndexListView(
     private fun invokeQrLogoSetLongClickListenerForFileList(
         editFragment: EditFragment,
     ) {
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
         FannelLogoLongClickDoForListIndex.invoke(
             editFragment,
-            currentAppDirPath,
         )
     }
 

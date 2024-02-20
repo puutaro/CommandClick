@@ -19,8 +19,6 @@ object SystemFannelLauncher {
         parentDirPath: String,
         fannelScriptName: String,
     ) {
-
-        val context = fragment.context
         val shellContentsList = ReadText(
             File(
                 parentDirPath,

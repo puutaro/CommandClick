@@ -10,8 +10,8 @@ import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditToolbarSwitcher
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditToolbarSwitcher
 
 class PageSearchToolbarManagerForEdit(
     private val cmdEditFragment: EditFragment,

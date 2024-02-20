@@ -5,42 +5,41 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 
     object MakeSettingVariableNameOrValue {
 
-    fun returnValidVariableName (
-        substituteCmdStartEndContentStr: String,
-        equalIndex: Int,
-        substituteCmdStartEndContentList: List<String>,
-    ): String? {
-        val variableNameSource = substituteCmdStartEndContentStr.substring(
-            0, equalIndex
-        )
-        val factSettingVariableNamesList =
-            CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST
-        val variableNameChecked =
-            if (
-                factSettingVariableNamesList.contains(variableNameSource)
-            ) {
-                variableNameSource
-            } else {
-                return null
-            }
-        val variableNameFirstElement = substituteCmdStartEndContentList.filter {
-            it.startsWith("${variableNameChecked}=")
-        }.firstOrNull()
-        return if(
-            (
-                    variableNameFirstElement != null
-                            && variableNameFirstElement == substituteCmdStartEndContentStr
-                    )
-            || substituteCmdStartEndContentStr.startsWith(
-                "${CommandClickScriptVariable.SET_VARIABLE_TYPE}="
+        fun returnValidVariableName (
+            substituteCmdStartEndContentStr: String,
+            equalIndex: Int,
+            substituteCmdStartEndContentList: List<String>,
+        ): String? {
+            val variableNameSource = substituteCmdStartEndContentStr.substring(
+                0, equalIndex
             )
-            || substituteCmdStartEndContentStr.startsWith(
-                "${CommandClickScriptVariable.SET_REPLACE_VARIABLE}="
-            )
-        ) {
-            variableNameChecked
-        } else {
-            null
+            val factSettingVariableNamesList =
+                CommandClickScriptVariable.SETTING_VARIABLE_NAMES_LIST
+            return if (
+                    factSettingVariableNamesList.contains(variableNameSource)
+                ) {
+                    variableNameSource
+                } else {
+                    null
+                }
+//            val variableNameFirstElement = substituteCmdStartEndContentList.lastOrNull {
+//                it.startsWith("${variableNameChecked}=")
+//            }
+//            return if(
+//                (
+//                        variableNameFirstElement != null
+////                                && variableNameFirstElement == substituteCmdStartEndContentStr
+//                        )
+////                || substituteCmdStartEndContentStr.startsWith(
+////                    "${CommandClickScriptVariable.SET_VARIABLE_TYPE}="
+////                )
+////                || substituteCmdStartEndContentStr.startsWith(
+////                    "${CommandClickScriptVariable.SET_REPLACE_VARIABLE}="
+////                )
+//            ) {
+//                variableNameChecked
+//            } else {
+//                null
+//            }
         }
-    }
 }

@@ -40,7 +40,7 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val readSharedPreferences = terminalFragment.readSharedPreferences
+        val readSharedPreferences = terminalFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
             SharePrefferenceSetting.current_app_dir
@@ -219,13 +219,18 @@ object ConfigFromStartUpFileSetterForTerm {
             settingSectionStart,
             settingSectionEnd,
         )
-        terminalFragment.terminalOn = CommandClickVariables.substituteCmdClickVariable(
+        terminalFragment.terminalOn = SettingVariableReader.getStrValue(
             settingVariableList,
-            CommandClickScriptVariable.TERMINAL_DO
-        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+            CommandClickScriptVariable.TERMINAL_DO,
+            CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
+        )
+//            CommandClickVariables.substituteCmdClickVariable(
+//            settingVariableList,
+//            CommandClickScriptVariable.TERMINAL_DO
+//        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
-            terminalFragment.readSharedPreferences,
+            terminalFragment.readSharePreferenceMap,
             terminalFragment.setReplaceVariableMap,
             settingVariableList ?: emptyList(),
         )
@@ -459,7 +464,7 @@ private fun makeSettingVariableListForTerm(
     )
     return FannelStateRooterManager.makeSettingVariableList(
         fannelContentsList,
-        terminalFragment.readSharedPreferences,
+        terminalFragment.readSharePreferenceMap,
         terminalFragment.setReplaceVariableMap,
         settingSectionStart,
         settingSectionEnd,

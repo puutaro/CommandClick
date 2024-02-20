@@ -31,10 +31,9 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.extra_args.ExtraArgsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -49,7 +48,7 @@ import java.io.File
 class QrScanner(
     private val fragment: Fragment,
     private val currentAppDirPath: String,
-    private val toolbarButtonArgsMaker: ToolbarButtonArgsMaker? = null,
+    private val stockDirAndCompMap: Map<String, String>? = null,
 ) {
     private val fragContext = fragment.context
 
@@ -227,7 +226,7 @@ class QrScanner(
         qrScanDialogObj?.show()
     }
 
-    fun launchCameraDialogForSave(
+    private fun launchCameraDialogForSave(
         fileName: String,
     ) {
         val context = fragment.context
@@ -331,20 +330,16 @@ class QrScanner(
             )
             TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT -> {
                 if(
-                    toolbarButtonArgsMaker == null
+                    stockDirAndCompMap == null
                 ) return
-                val clickConfigMap = toolbarButtonArgsMaker.createClickConfigMap()
-                val extraMap = ExtraArgsTool.createExtraMapFromMap(
-                    clickConfigMap,
-                    "!",
-                )
-                val parentDirPath = ExtraArgsTool.getParentDirPath(
-                    extraMap,
+                val parentDirPath = EditSettingExtraArgsTool.getParentDirPath(
+                    stockDirAndCompMap,
                     currentAppDirPath,
                 )
-                val compFileName = ExtraArgsTool.makeCompFileName(
+                val compFileName = EditSettingExtraArgsTool.makeCompFileName(
+                    fragment.busyboxExecutor,
                     fileName,
-                    extraMap
+                    stockDirAndCompMap
                 )
                 FileSystems.writeFile(
                     File(

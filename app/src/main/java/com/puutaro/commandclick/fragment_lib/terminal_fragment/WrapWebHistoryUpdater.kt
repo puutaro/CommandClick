@@ -95,7 +95,7 @@ object WrapWebHistoryUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val readSharedPreferences = terminalFragment.readSharedPreferences
+        val readSharedPreferences = terminalFragment.readSharePreferenceMap
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharedPreferences,
             SharePrefferenceSetting.current_app_dir

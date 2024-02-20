@@ -6,6 +6,7 @@ import android.widget.Toast
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
+import com.puutaro.commandclick.util.QuoteTool
 import kotlinx.coroutines.*
 import java.io.File
 
@@ -544,7 +545,11 @@ class JsCsv(
         tabSepaFormura: String,
     ): Map<String, Map<String, String>> {
         return tabSepaFormura.split("\t").map {
-            val filterLineList = it.trim().split(",")
+            val filterLineList = QuoteTool.splitBySurroundedIgnore(
+                it.trim(),
+                ','
+            )
+//            it.trim().split(",")
             if(filterLineList.size != 3) return@map String() to mapOf()
             val schema = filterLineList.firstOrNull()?.trim()
                 ?: String()

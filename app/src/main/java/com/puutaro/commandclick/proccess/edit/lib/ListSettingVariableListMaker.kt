@@ -39,7 +39,6 @@ object ListSettingVariableListMaker {
                 it.startsWith(filePrefix)
             ) {
                 false -> QuoteTool.trimBothEdgeQuote(it)
-                    .replace(",", "\n")
                 else -> {
                     val listSettingVariablePath =
                         decideSettingVariableListPath(
@@ -50,9 +49,17 @@ object ListSettingVariableListMaker {
                             currentFannelName
                         )
                     SettingFile.read(
-                        listSettingVariablePath
-                    ).replace(",", "\n")
+                        listSettingVariablePath,
+                        File(currentAppDirPath, currentFannelName).absolutePath,
+                        setReplaceVariableMap
+                    )
                 }
+            }.let {
+                QuoteTool.replaceBySurroundedIgnore(
+                    it,
+                    ',',
+                    "\n"
+                )
             }
         }.let {
             removeMultipleNewLinesAndReplace(
@@ -60,6 +67,11 @@ object ListSettingVariableListMaker {
                 setReplaceVariableMap,
                 currentAppDirPath,
                 currentFannelName,
+            )
+        }.let {
+            DuplicatedKey.leaveAfterEl(
+                it,
+                settingVariableName
             )
         }
     }
@@ -70,7 +82,21 @@ object ListSettingVariableListMaker {
         currentAppDirPath: String,
         currentFannelName: String,
     ): List<String> {
-        return valueList.joinToString("\n").replace(
+        return execRemoveMultipleNewLinesAndReplace(
+            valueList.joinToString("\n"),
+            setReplaceVariableMap,
+            currentAppDirPath,
+            currentFannelName,
+        ).split("\n")
+    }
+
+    fun execRemoveMultipleNewLinesAndReplace(
+        valueListCon: String,
+        setReplaceVariableMap: Map<String, String>?,
+        currentAppDirPath: String,
+        currentFannelName: String,
+    ): String {
+        return valueListCon.replace(
             Regex("\n\n*"),
             "\n"
         ).split("\n")
@@ -83,7 +109,7 @@ object ListSettingVariableListMaker {
                     currentAppDirPath,
                     currentFannelName,
                 )
-            }.split("\n")
+            }
     }
 
     private fun decideSettingVariableListPath(
@@ -148,6 +174,54 @@ object ListSettingVariableListMaker {
             CommandClickScriptVariable.QR_DIALOG_CONFIG
             -> UsePath.qrDialogConfigPath
             else -> String()
+        }
+    }
+}
+
+private object DuplicatedKey {
+    fun leaveAfterEl(
+        valLineList: List<String>,
+        settingVariableName: String,
+    ): List<String> {
+        val reversedValList = valLineList.reversed()
+        val prefixList = mutableListOf<String>()
+        return reversedValList.map {
+                valueLine ->
+            if(
+                prefixList.any {
+                    duplicatedJudgeHandler(
+                        valueLine,
+                        it,
+                        settingVariableName,
+                    )
+                }
+            ) return@map String()
+            val prefix = valueLine.split("=").firstOrNull()
+                ?.let { "${it}=" }
+                ?: return@map String()
+            prefixList.add(prefix)
+            valueLine
+        }.filter {
+            it.isNotEmpty()
+        }.reversed()
+    }
+
+    private fun duplicatedJudgeHandler(
+        valueLine: String,
+        prefixEl: String,
+        settingVariableName: String,
+    ): Boolean {
+        return when(settingVariableName) {
+            CommandClickScriptVariable.SET_VARIABLE_TYPE -> {
+                val typeSeparator = ":"
+                val rawPrefixEl =
+                    prefixEl
+                        .split(typeSeparator)
+                        .firstOrNull()
+                        ?: return false
+                valueLine.startsWith("${rawPrefixEl}${typeSeparator}")
+            }
+            else -> valueLine.startsWith(prefixEl)
         }
     }
 }

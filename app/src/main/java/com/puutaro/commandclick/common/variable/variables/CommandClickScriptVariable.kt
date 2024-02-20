@@ -153,7 +153,7 @@ object CommandClickScriptVariable {
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name
     private val terminalOff = SettingVariableSelects.TerminalDoSelects.OFF.name
     private val editExecuteNo = SettingVariableSelects.EditExecuteSelects.NO.name
-    private val editExecuteOnce = SettingVariableSelects.EditExecuteSelects.ONCE.name
+//    private val editExecuteOnce = SettingVariableSelects.EditExecuteSelects.ONCE.name
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
     private val autoExecSelectsOn = SettingVariableSelects.AutoExecSelects.ON.name
     private val autoExecSelectsOff = SettingVariableSelects.AutoExecSelects.OFF.name
@@ -315,7 +315,7 @@ object CommandClickScriptVariable {
         "$UBUNTU_EXEC_MODE:CB=$ubuntuExecModeSelectsBackground!$ubuntuExecModeSelectsForeground",
         "$UBUNTU_OUTPUT_FILE:CB=${UsePath.cmdClickMonitorFileName_1}!${UsePath.cmdClickMonitorFileName_2}!${UsePath.cmdClickMonitorFileName_3}!${UsePath.cmdClickMonitorFileName_4}",
         "$TERMINAL_DO:CB=$terminalOn!$terminalTermux!$terminalOff",
-        "$EDIT_EXECUTE:CB=$editExecuteNo!$editExecuteOnce!$editExecuteAlways",
+        "$EDIT_EXECUTE:CB=$editExecuteNo!$editExecuteAlways",
 //        "$TERMINAL_SIZE_TYPE:CB=$terminalSizeTypeOff!$terminalSizeTypeShort!$terminalSizeTypeLong",
         "$TERMINAL_OUTPUT_MODE:CB=$terminalOutPutModeNormal!$terminalOutPutModeReflash!$terminalOutPutModeReflashAndFirstRow!$terminalOutPutModeDebug!$terminalOutPutModeNo",
         "$ON_UPDATE_LAST_MODIFY:CB=$onUpdateLastModifyOn!$onUpdateLastModifyOff",

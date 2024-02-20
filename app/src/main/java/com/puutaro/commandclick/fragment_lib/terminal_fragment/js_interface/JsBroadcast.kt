@@ -16,7 +16,7 @@ class JsBroadcast(
         action: String,
         broadCastMapStr: String
     ){
-        val kyeSepalator = "|"
+        val kyeSepalator = '|'
         val broadcastMap = mapOf(
             BroadCastSenderSchemaForCommon.action.name to action,
             BroadCastSenderSchemaForCommon.extras.name to broadCastMapStr

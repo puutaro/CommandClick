@@ -92,6 +92,13 @@ class JsFileSystem(
     }
 
     @JavascriptInterface
+    fun stdLog(
+        con: String
+    ){
+        LogSystems.stdSys(con)
+    }
+
+    @JavascriptInterface
     fun jsEcho(
         outPutOption: String,
         contents: String,

@@ -16,7 +16,7 @@ object CommandClickVariables {
         substituteVariableName: String,
     ): String? {
         if(substituteSettingVariableList == null) return null
-        val shellFileNameRowString = substituteSettingVariableList.firstOrNull {
+        val shellFileNameRowString = substituteSettingVariableList.lastOrNull {
             it.startsWith("${substituteVariableName}=")
         } ?: return null
         val equalIndex = shellFileNameRowString.indexOf("=")
@@ -43,14 +43,6 @@ object CommandClickVariables {
         val isFilePrefix =
             withFilePrefixSettingValue.startsWith(filePrefix)
                     && withFilePrefixSettingValue.trim() != filePrefix
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "awithFilePrefixSettingValue.txt").absolutePath,
-//            listOf(
-//                "withFilePrefixSettingValue: ${withFilePrefixSettingValue}",
-//                "isOnlyFilePrefix: ${isOnlyFilePrefix}",
-//                "isFilePrefix: ${isFilePrefix}"
-//            ).joinToString("\n")
-//        )
         return when {
             isOnlyFilePrefix -> pathInOnlyFilePrefix
             isFilePrefix -> withFilePrefixSettingValue
@@ -77,13 +69,20 @@ object CommandClickVariables {
         substituteSettingVariableList: List<String>?,
         substituteVariableName: String,
     ): List<String>? {
-        if(substituteSettingVariableList == null) return null
+        if(
+            substituteSettingVariableList == null
+        ) return null
         return substituteSettingVariableList.filter {
             it.startsWith("${substituteVariableName}=")
         }.map {
             val targetSettingValue =
                 it.removePrefix("${substituteVariableName}=")
-            targetSettingValue.replace(",", "\n")
+            QuoteTool.replaceBySurroundedIgnore(
+                targetSettingValue,
+                ',',
+                "\n"
+            )
+//            targetSettingValue.replace(",", "\n")
         }.joinToString("\n")
             .split("\n")
             .map {

@@ -38,10 +38,10 @@ import java.net.ServerSocket
 
 object IntentRequestMonitor {
 
-    private val fieldSeparator = ","
-    private const val elementSeparator = "|"
-    private const val keySeparator = "!"
-    private const val valueSeparator = "&"
+    private val fieldSeparator = ','
+    private const val elementSeparator = '|'
+    private const val keySeparator = '!'
+    private const val valueSeparator = '&'
     private val requireArgsErrMessage = "%s is required"
     private var responseString = String()
 
@@ -287,7 +287,7 @@ object IntentRequestMonitor {
     ): String {
         return broadcastMap.get(
             extraShema
-        )?.replace(keySeparator, "\t") ?: String()
+        )?.replace(keySeparator.toString(), "\t") ?: String()
     }
 
     private fun execToast(
@@ -611,7 +611,7 @@ object IntentRequestMonitor {
         val argsTabSepaStr =
             targetMap
                 .get(ButtonKey.args.name)
-                ?.replace(valueSeparator, "\t")
+                ?.replace(valueSeparator.toString(), "\t")
                 ?: String()
         val timeout = targetMap.get(ButtonKey.timeout.name) ?: "200"
         val backgroundAction = BroadCastIntentSchemeUbuntu.BACKGROUND_CMD_START.action
@@ -675,11 +675,11 @@ object IntentRequestMonitor {
     }
 
     private fun String.trimSeparatorGap(
-        separator: String,
+        separator: Char,
     ): String {
         return this.split(separator).map {
             it.trim()
-        }.joinToString(separator)
+        }.joinToString(separator.toString())
     }
 
     private fun decideImportance(

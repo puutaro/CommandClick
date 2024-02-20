@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
@@ -18,7 +19,7 @@ object ConfigMapTool {
         readSharePreffernceMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
-        val propertySeparator = ","
+        val propertySeparator = ','
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -36,13 +37,18 @@ object ConfigMapTool {
         return when (settingMenuSettingFilePathObj.isFile) {
             true -> {
                 SettingFile.read(
-                    settingMenuSettingFilePathObj.absolutePath
+                    settingMenuSettingFilePathObj.absolutePath,
+                    File(currentAppDirPath, currentScriptFileName).absolutePath,
+                    setReplaceVariableMap,
                 )
             }
 
             else -> {
                 SettingFile.formSettingContents(
-                    defaultConfigMapStr.split("\n")
+                    QuoteTool.splitBySurroundedIgnore(
+                        defaultConfigMapStr,
+                        '\n'
+                    )
                 )
             }
         }.let {
@@ -72,7 +78,7 @@ object ConfigMapTool {
         readSharePreffernceMap: Map<String, String>,
         setReplaceVariableMap:  Map<String, String>? = null,
     ): Map<String, String> {
-        val propertySeparator = ","
+        val propertySeparator = ','
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir
@@ -95,7 +101,9 @@ object ConfigMapTool {
                     setReplaceVariableMap,
                 )
                 SettingFile.read(
-                    settingButtonConfigPath
+                    settingButtonConfigPath,
+                    File(currentAppDirPath, currentScriptFileName).absolutePath,
+                    setReplaceVariableMap,
                 )
             }
             settingValCon.isNotEmpty() ->
@@ -116,7 +124,7 @@ object ConfigMapTool {
                 it,
                 propertySeparator
             )
-        }.toMap().filterKeys { it.isNotEmpty() }
+        }.reversed().toMap().filterKeys { it.isNotEmpty() }
     }
 
     private fun replaceByPreWordAndRepValMap(

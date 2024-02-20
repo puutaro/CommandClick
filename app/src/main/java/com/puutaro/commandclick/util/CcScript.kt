@@ -25,22 +25,10 @@ object CcScript {
         keyValueList: List<String>,
         separator: String,
     ): String {
-//        val keyValueListSize = keyValueList.size
         return keyValueList.filterIndexed{
             index, _ -> index >= 1
         }.joinToString(separator).let {
             QuoteTool.trimBothEdgeQuote(it)
         }
-//        if(
-//            keyValueListSize == 2
-//        ) return keyValueList
-//            .lastOrNull()?.let {
-//                QuoteTool.trimBothEdgeQuote(it)
-//            } ?: String()
-//        return keyValueList
-//            .slice(1 until keyValueListSize)
-//            .joinToString(separator).let {
-//                QuoteTool.trimBothEdgeQuote(it)
-//            }
     }
 }

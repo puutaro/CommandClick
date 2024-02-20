@@ -13,8 +13,8 @@ launchWebview(urlString);
 function launchWebview(launchUrlString){
     const menuMapStrListStr= makeMenuMapStr();
     const tsvCon = [
-        `buttonType\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
-        `clickKey\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT4}`,
+        `urlConSaveParentDirPath\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
+        `compSuffix\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT4}`,
     ].join("\n");
     jsFileSystem.writeLocalFile(
         `${saveWebConArgsTsvPath}`,

@@ -9,7 +9,7 @@ object BroadcastSender {
     fun send(
         context: Context?,
         broadcastMap: Map<String, String>,
-        keySeparator: String,
+        keySeparator: Char,
     ){
         val action = broadcastMap.get(
             BroadCastSenderSchemaForCommon.action.name
@@ -28,7 +28,7 @@ object BroadcastSender {
     fun createBroadcastIntent(
         action: String?,
         extraMapStr: String?,
-        keySeparator: String,
+        keySeparator: Char,
     ): Intent? {
         if(
             action.isNullOrEmpty()

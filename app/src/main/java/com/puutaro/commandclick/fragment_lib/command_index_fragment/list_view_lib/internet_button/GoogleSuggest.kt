@@ -113,35 +113,16 @@ class GoogleSuggest(
                 }
             }
             withContext(Dispatchers.IO){
-                val statusCode = connection.responseCode
-                if (statusCode != HttpURLConnection.HTTP_OK) {
-                    connection.disconnect()
+                try {
+                    getSuggestText(connection)
+                } catch (e: Exception){
+                    return@withContext
                 }
-                val contentEncoding: String = connection.contentEncoding
-                val inputStream = if (contentEncoding.contains("gzip")) {
-                    GZIPInputStream(connection.getInputStream())
-                } else {
-                    connection.inputStream
-                }
-                val bufferedReader =
-                    BufferedReader(InputStreamReader(inputStream))
-                val responseBody = bufferedReader.use { it.readText() }
-                bufferedReader.close()
-                connection.disconnect()
-                val rootObject = JSONObject(responseBody)
-                var results: JSONArray? = null
-                val `as`: JSONObject? = rootObject.optJSONObject("AS")
-                if (`as` != null) {
-                    results = `as`.optJSONArray("Results")
-                }
-                if (results != null) {
-                    expandJSONArray(
-                        results
-                            .optJSONObject(0)
-                            .optJSONArray("Suggests"))
-                } else String()
             }
             withContext(Dispatchers.Main){
+                if(
+                    mDispText.isEmpty()
+                ) return@withContext
                 cmdSearchEditText.threshold = 0
                 suggestEditTexter.setAdapter(
                     context,
@@ -152,6 +133,38 @@ class GoogleSuggest(
                 )
             }
         }
+    }
+
+    private fun getSuggestText(
+        connection: HttpURLConnection
+    ) {
+        val statusCode = connection.responseCode
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+            connection.disconnect()
+        }
+        val contentEncoding: String = connection.contentEncoding
+        val inputStream = if (contentEncoding.contains("gzip")) {
+            GZIPInputStream(connection.getInputStream())
+        } else {
+            connection.inputStream
+        }
+        val bufferedReader =
+            BufferedReader(InputStreamReader(inputStream))
+        val responseBody = bufferedReader.use { it.readText() }
+        bufferedReader.close()
+        connection.disconnect()
+        val rootObject = JSONObject(responseBody)
+        var results: JSONArray? = null
+        val `as`: JSONObject? = rootObject.optJSONObject("AS")
+        if (`as` != null) {
+            results = `as`.optJSONArray("Results")
+        }
+        if (results != null) {
+            expandJSONArray(
+                results
+                    .optJSONObject(0)
+                    .optJSONArray("Suggests"))
+        } else String()
     }
 
     private fun expandJSONArray(array: JSONArray?) {
@@ -174,7 +187,7 @@ class GoogleSuggest(
 
 
 private class SuggestEditTexter(
-    private val fragment: androidx.fragment.app.Fragment,
+    private val fragment: Fragment,
     private val cmdSearchEditText: AutoCompleteTextView
 ) {
 

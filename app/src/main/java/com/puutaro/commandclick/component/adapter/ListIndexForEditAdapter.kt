@@ -65,7 +65,7 @@ class ListIndexForEditAdapter(
         listIndexConfigMap?.get(
             ListIndexEditConfig.ListIndexConfigKey.CHECK_ITEM.key
         ),
-        "|"
+        '|'
     ).toMap()
     private var recentAppDirPath = String()
     private var filterDir = String()
@@ -375,7 +375,7 @@ class ListIndexForEditAdapter(
         listIndexPosition: Int,
     ){
         if(
-            listIndexPosition != listIndexList.size - 1
+            listIndexPosition != 0
         ) return
         setListProperty()
     }

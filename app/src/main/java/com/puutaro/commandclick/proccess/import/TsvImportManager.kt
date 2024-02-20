@@ -1,4 +1,4 @@
-import android.content.Context
+
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.LogSystems
@@ -8,10 +8,10 @@ import java.io.File
 
 object TsvImportManager {
 
-    private const val importPreWord = "tsvimport"
+    const val tsvImportPreWord = "tsvimport"
+    private val tsvImportRegex = "\n${tsvImportPreWord}[^\n]*".toRegex()
 
     fun concatRepValWithTsvImport(
-        context: Context?,
         scriptPath: String,
         jsList: List<String>,
         setReplaceVariableCompleteMap: Map<String, String>? = null
@@ -27,16 +27,22 @@ object TsvImportManager {
             recentAppDirPath,
             scriptFileName
         )
-        val tsvImportRegex = "\n${importPreWord}([^\n]*)".toRegex()
-        val result = tsvImportRegex.find(jsConForTsv)
-            ?: return setReplaceVariableCompleteMap
+        val tsvImportRegex = "\n${tsvImportPreWord}([^\n]*)".toRegex()
+        val result = tsvImportRegex.findAll(jsConForTsv)
 
-        val tsvKeyValueMap = makeTsvKeyValueMap(context, result)
-//        Toast.makeText(
-//            context,
-//            result.groups.map {it?.value}.joinToString("\n")+ tsvKeyValueMap.toString(),
-//            Toast.LENGTH_SHORT
-//        ).show()
+        val tsvKeyValueMap = makeTsvKeyValueMap(result)
+        return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
+            true -> tsvKeyValueMap
+            else ->  setReplaceVariableCompleteMap + tsvKeyValueMap
+        }
+    }
+
+    fun concatRepValMapWithTsvImportFromContents(
+        jsConForTsv: String,
+        setReplaceVariableCompleteMap: Map<String, String>? = null
+    ): Map<String, String> {
+        val result = tsvImportRegex.findAll(jsConForTsv)
+        val tsvKeyValueMap = makeTsvKeyValueMap(result)
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap
             else ->  setReplaceVariableCompleteMap + tsvKeyValueMap
@@ -44,16 +50,18 @@ object TsvImportManager {
     }
 
     private fun makeTsvKeyValueMap(
-        context: Context?,
-        result: MatchResult,
+        result: Sequence<MatchResult>,
     ): Map<String, String> {
-        val tsvKeyValueList =
-            result.groups.map {
+        val tsvKeyValueListSrc =
+            result.map {
+                val matchResult = it.value
                 if (
-                    it == null
+                    matchResult.isEmpty()
                 ) return@map String()
                 val tsvImportPath = QuoteTool.trimBothEdgeQuote(
-                    it.value.trim().trim(';')
+                    matchResult.trim().trim(';').removePrefix(
+                        tsvImportPreWord
+                    ).trim()
                 )
                 val tsvImportPathObj = File(tsvImportPath)
                 if(!tsvImportPathObj.isFile) {
@@ -65,7 +73,11 @@ object TsvImportManager {
                 ReadText(
                     tsvImportPathObj.absolutePath
                 ).readText()
-            }.distinct().joinToString("\n").split("\n")
+            }.distinct()
+        val tsvKeyValueList = tsvKeyValueListSrc
+            .distinct()
+            .joinToString("\n")
+            .split("\n")
         return tsvKeyValueList.map {
             CcScript.makeKeyValuePairFromSeparatedString(
                 it,
@@ -77,8 +89,9 @@ object TsvImportManager {
     fun removeTsvImport(
         jsList: List<String>,
     ):List<String> {
-        val tsvImportRegex = "\n${importPreWord}[^\n]*".toRegex()
-        return trimJsConForTsv(jsList)
+        val tsvImportRegex = "\n[ 　\t]*${tsvImportPreWord}[^\n]*".toRegex()
+        return jsList.joinToString("\n")
+//        trimJsConForTsv(jsList)
             .replace(
                 tsvImportRegex,
                 ""

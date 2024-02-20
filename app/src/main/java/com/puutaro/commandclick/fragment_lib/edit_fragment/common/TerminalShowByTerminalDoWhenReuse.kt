@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object TerminalShowByTerminalDoWhenReuse {
@@ -21,7 +21,7 @@ object TerminalShowByTerminalDoWhenReuse {
         ) ?: return
         if(
             editFragment.tag?.startsWith(
-                FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
+                FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
             ) != true
         ) return
         if(

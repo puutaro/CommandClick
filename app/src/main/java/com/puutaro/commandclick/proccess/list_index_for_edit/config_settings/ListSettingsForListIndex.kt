@@ -26,6 +26,11 @@ object ListSettingsForListIndex  {
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
         INIT_TSV_PATH("initTsvPath"),
+        ON_REVERSE_LAYOUT("onReverseLayout")
+    }
+
+    enum class stackFromBottomValue {
+        ON
     }
 
     enum class EditByDragKey(
@@ -47,7 +52,6 @@ object ListSettingsForListIndex  {
 
     }
 
-
     fun howDisableEditByDrag(
         editFragment: EditFragment,
         editByDragMap: Map<String, String>
@@ -57,6 +61,17 @@ object ListSettingsForListIndex  {
             editByDragMap,
             EditByDragKey.EDIT_BY_DRAG_DISABLE.key
         ) == DisableValue.ON.name
+    }
+
+    fun howReverseLayout(
+        editFragment: EditFragment,
+        indexListMap: Map<String, String>?,
+    ): Boolean {
+        return FilePrefixGetter.get(
+            editFragment,
+            indexListMap,
+            ListSettingKey.ON_REVERSE_LAYOUT.key
+        ) == stackFromBottomValue.ON.name
     }
 
     fun getSortType(
@@ -94,7 +109,7 @@ object ListSettingsForListIndex  {
         ).let{
             CmdClickMap.createMap(
                 it,
-                "!"
+                '!'
             )
         }.toMap()
     }

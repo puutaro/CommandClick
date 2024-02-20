@@ -56,7 +56,7 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.activity_lib.permission.CameraSetter
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
-import com.puutaro.commandclick.proccess.tool_bar_button.libs.EditLongPressType
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -86,6 +86,8 @@ class MainActivity:
     TerminalFragment.OnAdBlockListener,
     TerminalFragment.OnChangeEditFragmentListenerForTerm,
     TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm,
+    TerminalFragment.OnMonitorSizeChangeingForTerm,
+    TerminalFragment.OnPopStackImmediateListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -676,5 +678,18 @@ class MainActivity:
             readSharePreffernceMap,
             updateScriptContents,
         )
+    }
+
+    override fun onMonitorSizeChangeingForTerm(
+        readSharePreffernceMap: Map<String, String>,
+    ) {
+        ExecMonitorSizeChangeForTerm.change(
+            this,
+            readSharePreffernceMap,
+        )
+    }
+
+    override fun onPopStackImmediateForTerm() {
+        this.supportFragmentManager.popBackStackImmediate()
     }
  }

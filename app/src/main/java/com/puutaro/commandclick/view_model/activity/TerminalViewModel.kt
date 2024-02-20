@@ -10,7 +10,7 @@ class TerminalViewModel: ViewModel() {
     var currentMonitorFileName = UsePath.cmdClickMonitorFileName_1
     var onDisplayUpdate = true
     var onBottomScrollbyJs = true
-    var editExecuteOnceCurrentShellFileName: String? = null
+//    var editExecuteOnceCurrentShellFileName: String? = null
     var launchUrl: String? = null
     var onExecInternetButtonShell = false
     var onDialog = false

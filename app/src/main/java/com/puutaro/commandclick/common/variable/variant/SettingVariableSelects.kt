@@ -9,7 +9,7 @@ object SettingVariableSelects {
 
     enum class EditExecuteSelects {
         NO,
-        ONCE,
+//        ONCE,
         ALWAYS
     }
 

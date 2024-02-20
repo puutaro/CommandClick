@@ -18,6 +18,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -258,14 +259,26 @@ object ListContentsSelectSpinnerViewProducer {
 //                editParameters
 //            )
 //        }
-            ?.split('|')
-            ?.getOrNull(currentComponentIndex)
-            ?.split('!')?.map {
-                CcScript.makeKeyValuePairFromSeparatedString(
+            ?.let {
+                QuoteTool.splitBySurroundedIgnore(
                     it,
-                "="
+                    '|'
+                )
+            }
+//            ?.split('|')
+            ?.getOrNull(currentComponentIndex)
+            ?.let {
+                CmdClickMap.createMap(
+                    it,
+                    '!'
                 )
             }?.toMap()
+//            ?.split('|')?.map {
+//                CcScript.makeKeyValuePairFromSeparatedString(
+//                    it,
+//                "="
+//                )
+//            }?.toMap()
     }
 
     enum class ListContentsEditKey {

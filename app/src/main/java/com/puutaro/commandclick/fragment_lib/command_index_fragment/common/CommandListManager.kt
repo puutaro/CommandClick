@@ -22,26 +22,16 @@ object CommandListManager {
         cmdListView: RecyclerView,
     ){
         val fannelIndexListAdapter = cmdListView.adapter as FannelIndexListAdapter
-        fannelIndexListAdapter.fannelIndexList.clear()
         val updateList = makeListSource(currentAppDirPath)
+        if(
+            fannelIndexListAdapter.fannelIndexList == updateList
+        ) return
+        fannelIndexListAdapter.fannelIndexList.clear()
         fannelIndexListAdapter.fannelIndexList.addAll(updateList)
         fannelIndexListAdapter.notifyDataSetChanged()
         cmdListView.scrollToPosition(
             fannelIndexListAdapter.itemCount - 1
         )
-    }
-
-
-    fun execListUpdate(
-        currentAppDirPath: String,
-        cmdListAdapter: ArrayAdapter<String>,
-        cmdListView: ListView
-    ){
-        cmdListAdapter.clear()
-        val updateList = makeListSource(currentAppDirPath)
-        cmdListAdapter.addAll(updateList)
-        cmdListView.adapter = cmdListAdapter
-        cmdListAdapter.notifyDataSetChanged();
     }
 
     fun execListUpdateByEditText(
@@ -52,7 +42,7 @@ object CommandListManager {
         cmdListAdapter.clear()
         cmdListAdapter.addAll(cmdStrList)
         cmdListView.adapter = cmdListAdapter
-        cmdListAdapter.notifyDataSetChanged();
+        cmdListAdapter.notifyDataSetChanged()
     }
 
     fun execListUpdateByEditTextForCmdIndex(
@@ -62,7 +52,7 @@ object CommandListManager {
     ){
         fannelIndexListAdapter.fannelIndexList.clear()
         fannelIndexListAdapter.fannelIndexList.addAll(cmdStrList)
-        fannelIndexListAdapter.notifyDataSetChanged();
+        fannelIndexListAdapter.notifyDataSetChanged()
         cmdListView.scrollToPosition(
             fannelIndexListAdapter.itemCount - 1
         )

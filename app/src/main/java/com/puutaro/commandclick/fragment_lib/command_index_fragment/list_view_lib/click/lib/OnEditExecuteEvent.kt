@@ -7,6 +7,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object OnEditExecuteEvent {
@@ -34,7 +35,14 @@ object OnEditExecuteEvent {
             shortcutOnMark,
             fannelState,
         )
-        val cmdValEdit = EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+        val cmdValEditPrefix = FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
+        val cmdValEdit =
+            when(
+                editFragmentTag.startsWith(cmdValEditPrefix)
+            ) {
+                false -> EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT
+                else -> EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+            }
         when(fragment){
             is CommandIndexFragment -> {
                 val listener = fragment.context

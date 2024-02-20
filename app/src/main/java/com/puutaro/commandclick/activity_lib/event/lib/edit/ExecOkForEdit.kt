@@ -5,7 +5,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ExecOkForEdit{
@@ -28,7 +28,7 @@ object ExecOkForEdit{
         val context = activity.applicationContext
         if(
             callOwnerFragmentTag?.startsWith(
-                FragmentTagManager.Prefix.SETTING_EDIT_PREFIX.str
+                FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str
             ) != true
         ) {
             supportFragmentManager.popBackStackImmediate()

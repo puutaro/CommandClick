@@ -24,19 +24,11 @@ object QrDialogConfig {
         MODE("mode"),
     }
 
-    fun makeQrLogoClickMap(
+    fun makeClickConfigListStr(
         qrDialogConfigMap: Map<String, String>,
         clickKeyName: String,
-    ): Map<String, String> {
-        return qrDialogConfigMap.get(clickKeyName).let {
-            if(
-                it.isNullOrEmpty()
-            ) return@let emptyMap()
-            CmdClickMap.createMap(
-                it,
-                "|"
-            ).toMap()
-        }
+    ): String? {
+        return qrDialogConfigMap.get(clickKeyName)
     }
     fun makeLogoConfigMap(
         qrDialogConfigMap: Map<String, String>
@@ -47,7 +39,7 @@ object QrDialogConfig {
             ) return@let emptyMap()
             CmdClickMap.createMap(
                 it,
-                "|"
+                '|'
             ).toMap()
         }
     }

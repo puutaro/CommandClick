@@ -3,7 +3,9 @@ package com.puutaro.commandclick.proccess.qr
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.util.CcScript
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.UrlFileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 object QrMapper {
 
@@ -60,12 +62,26 @@ object QrMapper {
         val mailAdMap = mapOf(
             GmailKey.MAIL_AD.key to mailAd
         )
-        val subjectBodyMap = addAndExtraList.getOrNull(1)?.split("&")?.map {
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
-            )
-        }?.toMap()
+        val subjectBodyMap = addAndExtraList.getOrNull(1)
+            ?.let {
+                CmdClickMap.createMap(
+                    it,
+                    '&'
+                )
+            }?.toMap()
+//            ?.let {
+//                QuoteTool.splitBySurroundedIgnore(
+//                    it,
+//                    '&'
+//                )
+//            }
+////            ?.split("&")
+//            ?.map {
+//            CcScript.makeKeyValuePairFromSeparatedString(
+//                it,
+//                "="
+//            )
+//        }?.toMap()
         if (
             subjectBodyMap.isNullOrEmpty()
         ) return mailAdMap
@@ -81,12 +97,16 @@ object QrMapper {
                 .filterIndexed { index, _ ->
                     index > 0
                 }.joinToString(":")
-        return scanConMapSrcStr.split(";").map {
-            CcScript.makeKeyValuePairFromSeparatedString(
-                it,
-                "="
-            )
-        }.toMap()
+        return CmdClickMap.createMap(
+            scanConMapSrcStr,
+            ';'
+        ).toMap()
+//        scanConMapSrcStr.split(";").map {
+//            CcScript.makeKeyValuePairFromSeparatedString(
+//                it,
+//                "="
+//            )
+//        }.toMap()
     }
 
     fun makeMainUrl(

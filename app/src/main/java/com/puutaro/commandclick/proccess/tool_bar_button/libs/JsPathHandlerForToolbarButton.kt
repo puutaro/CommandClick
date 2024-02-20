@@ -5,57 +5,63 @@ import android.util.Size
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib.ScriptFileEdit
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingFrag
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirGetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.EnableNavForWebView
-import com.puutaro.commandclick.proccess.ExecSetTermSizeForCmdIndexFragment
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.proccess.menu_tool.MenuSettingTool
-import com.puutaro.commandclick.proccess.qr.QrScanner
+import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
+import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
-import com.puutaro.commandclick.proccess.tool_bar_button.common_settings.JsPathMacroForToolbarButton
-import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
+import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddFileForEdit
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrl
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ListSyncer
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.QrConGetterDialog
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.SettingButtonSubMenuDialog
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.UrlHistoryAddToTsv
 import com.puutaro.commandclick.service.GitCloneService
-import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.file.FDialogTempFile
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.FreeDialogReflector
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -65,115 +71,118 @@ object JsPathHandlerForToolbarButton {
 
     fun handle(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        menuName: String,
-        settingButtonConfigMapList: List<Map<String, String>?>? = null,
+        jsActionMap: Map<String, String>?
     ) {
-        val fragment = toolbarButtonArgsMaker.fragment
-        val context = fragment.context
-        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-        val menuNameKey = MenuSettingTool.MenuSettingKey.NAME.key
-        val jsPathKey = MenuSettingTool.MenuSettingKey.JS_PATH.key
-        val currentSettingMenuMap = when (settingButtonConfigMapList.isNullOrEmpty()) {
-            false -> (settingButtonMenuMapList + settingButtonConfigMapList).firstOrNull {
-                it?.get(menuNameKey) == menuName
-            }
-
-            else -> settingButtonMenuMapList.firstOrNull {
-                it?.get(menuNameKey) == menuName
-            }
-        }
-        if (
-            currentSettingMenuMap.isNullOrEmpty()
-        ) {
-            LogSystems.stdWarn("${jsPathKey} key not found in settingMenuMapList: ${settingButtonMenuMapList}")
-            return
-        }
-        val jsPath = currentSettingMenuMap.get(jsPathKey)
-        if (
-            jsPath.isNullOrEmpty()
-        ) {
-            LogSystems.stdWarn("${jsPathKey} not found in settingMenuMapList: ${settingButtonMenuMapList}")
-            return
-        }
-        val filterdJsPath = JsPathMacroForToolbarButton.values().filter {
-            it.name == jsPath
-        }.firstOrNull()
-        when (filterdJsPath != null) {
-            true -> jsPathMacroHandler(
+        if(
+            jsActionMap.isNullOrEmpty()
+        ) return
+        val actionType = jsActionMap.get(
+            JsActionDataMapKeyObj.JsActionDataMapKey.TYPE.key
+        ) ?: return
+        val jsActionType =
+            JsActionDataMapKeyObj.JsActionDataTypeKey.values()
+                .firstOrNull{
+                    it.key == actionType
+                } ?: return
+        when (jsActionType) {
+            JsActionDataMapKeyObj.JsActionDataTypeKey.MACRO
+            -> jsPathMacroHandler(
                 toolbarButtonArgsMaker,
-                filterdJsPath,
+                jsActionMap
             )
 
-            else -> execJs(
-                toolbarButtonArgsMaker,
-                jsPath,
-            )
+            JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON
+            -> execJs(
+                    toolbarButtonArgsMaker,
+                    jsActionMap
+                )
         }
     }
 
     private fun execJs(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        jsPath: String,
+        jsActionMap: Map<String, String>
     ){
         if(
-            jsPath.isEmpty()
-            || !File(jsPath).isFile
+            jsActionMap.isEmpty()
         ) return
-        val fragment = toolbarButtonArgsMaker.fragment
-        val context = fragment.context
+        val editFragment = toolbarButtonArgsMaker.editFragment
+        val jsConSrc = jsActionMap.get(
+            JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+        )
+        val jsCon = jsConSrc
+            ?.replace(Regex("\n[ \t]*//.*"), "")
+            ?.replace(Regex("^[ \t]*//.*"), "")
+        if(
+            jsCon.isNullOrEmpty()
+        ) return
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "js_execJs.txt").absolutePath,
+            listOf(
+                "jsConSrc: ${jsConSrc}",
+                "jsCon: ${jsCon}",
+            ).joinToString("\n\n\n")
+        )
         ExecJsLoad.jsUrlLaunchHandler(
-            fragment,
-            JavaScriptLoadUrl.make(
-                context,
-                jsPath,
-                setReplaceVariableMapSrc = toolbarButtonArgsMaker.setReplaceVariableMap
-            ) ?: String()
+            editFragment,
+            JavaScriptLoadUrl.makeLastJsCon(jsCon)
         )
     }
 
     private fun jsPathMacroHandler(
         toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-        jsPathMacroForToolbarButton: JsPathMacroForToolbarButton,
+        jsActionMap: Map<String, String>
     ) {
-        val fragment = toolbarButtonArgsMaker.fragment
+        val editFragment = toolbarButtonArgsMaker.editFragment
         val readSharePreffernceMap = toolbarButtonArgsMaker.readSharePreffernceMap
-        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentScriptFileName = toolbarButtonArgsMaker.currentScriptFileName
-        when (jsPathMacroForToolbarButton) {
-            JsPathMacroForToolbarButton.KILL ->
-                AppProcessManager.killDialog(
-                    fragment,
-                    currentAppDirPath,
-                    currentScriptFileName
-                )
+        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val currentAppDirPath =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+        val currentScriptFileName =
+            toolbarButtonArgsMaker.currentScriptFileName
+        if(
+            jsActionMap.isEmpty()
+        ) return
+        val macroStr =
+            jsActionMap.get(
+                JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+            )
+        val macro = MacroForToolbarButton.Macro.values().firstOrNull {
+            it.name == macroStr
+        } ?: return
+        when (macro) {
+            MacroForToolbarButton.Macro.KILL
+            -> AppProcessManager.killDialog(
+                editFragment,
+                currentAppDirPath,
+                currentScriptFileName
+            )
+            MacroForToolbarButton.Macro.USAGE
+            -> UsageDialog.launch(
+                editFragment,
+            )
+            MacroForToolbarButton.Macro.NO_SCROLL_SAVE_URL
+            -> NoScrollUrlSaver.save(
+                editFragment,
+                currentAppDirPath,
+                String()
+            )
+            MacroForToolbarButton.Macro.QR_SCAN
+            -> ExecJsLoad.jsConLaunchHandler(
+                editFragment,
+                "${
+                    ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                        JsQrScanner::class.java.simpleName
+                    )}.scan_S();",
+            )
 
-            JsPathMacroForToolbarButton.USAGE ->
-                UsageDialog.launch(
-                    fragment,
-                    currentAppDirPath,
-                )
-
-            JsPathMacroForToolbarButton.NO_SCROLL_SAVE_URL ->
-                NoScrollUrlSaver.save(
-                    fragment,
-                    currentAppDirPath,
-                    String()
-                )
-
-            JsPathMacroForToolbarButton.QR_SCAN ->
-                execQrScan(
-                    fragment,
-                    currentAppDirPath,
-                )
-
-            JsPathMacroForToolbarButton.SHORTCUT -> {
+            MacroForToolbarButton.Macro.SHORTCUT
+            -> {
                 val listener =
-                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    editFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                     EditFragmentArgs(
@@ -182,10 +191,10 @@ object JsPathHandlerForToolbarButton {
                     )
                 )
             }
-
-            JsPathMacroForToolbarButton.TERMUX_SETUP -> {
+            MacroForToolbarButton.Macro.TERMUX_SETUP
+            -> {
                 val listener =
-                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    editFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
                     EditFragmentArgs(
@@ -194,146 +203,136 @@ object JsPathHandlerForToolbarButton {
                     )
                 )
             }
+            MacroForToolbarButton.Macro.CONFIG
+            -> ConfigEdit.edit(editFragment)
 
-            JsPathMacroForToolbarButton.CONFIG ->
-                configEdit(fragment)
-
-            JsPathMacroForToolbarButton.REFRESH_MONITOR ->
-                TermRefresh.refresh(
+            MacroForToolbarButton.Macro.REFRESH_MONITOR
+            -> TermRefresh.refresh(
                     terminalViewModel.currentMonitorFileName
                 )
 
-            JsPathMacroForToolbarButton.SELECT_MONITOR ->
-                SelectTermDialog.launch(fragment)
+            MacroForToolbarButton.Macro.SELECT_MONITOR
+            -> SelectTermDialog.launch(editFragment)
 
-            JsPathMacroForToolbarButton.RESTART_UBUNTU ->
-                UbuntuServiceManager.launch(
-                    fragment.activity
-                )
-
-            JsPathMacroForToolbarButton.INSTALL_FANNEL ->
-                SystemFannelLauncher.launch(
-                    fragment,
-                    UsePath.cmdclickSystemAppDirPath,
-                    UsePath.fannelRepoFannelName
-                )
-
-            JsPathMacroForToolbarButton.EDIT_STARTUP ->
-                scriptFileEditForCmdIndex(
-                    fragment,
-                    currentAppDirPath,
-                )
-
-            JsPathMacroForToolbarButton.ADD -> AddFileForEdit.add(
-                fragment,
-                currentAppDirPath,
-                settingButtonMenuMapList,
+            MacroForToolbarButton.Macro.RESTART_UBUNTU
+            -> UbuntuServiceManager.launch(
+                editFragment.activity
             )
 
-            JsPathMacroForToolbarButton.ADD_APP_DIR ->
-                AppDirAdder.add(toolbarButtonArgsMaker)
+            MacroForToolbarButton.Macro.INSTALL_FANNEL
+            -> SystemFannelLauncher.launch(
+                editFragment,
+                UsePath.cmdclickSystemAppDirPath,
+                UsePath.fannelRepoFannelName
+            )
 
-            JsPathMacroForToolbarButton.JS_IMPORT -> SystemFannelLauncher.launch(
-                fragment,
+            MacroForToolbarButton.Macro.ADD
+                -> AddFileForEdit.add(
+                editFragment,
+                jsActionMap,
+            )
+
+            MacroForToolbarButton.Macro.ADD_APP_DIR
+            -> AppDirAdder.add(
+                editFragment
+            )
+
+            MacroForToolbarButton.Macro.JS_IMPORT
+            -> SystemFannelLauncher.launch(
+                editFragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.jsImportManagerFannelName
             )
 
-            JsPathMacroForToolbarButton.APP_DIR_MANAGER -> SystemFannelLauncher.launch(
-                fragment,
+            MacroForToolbarButton.Macro.APP_DIR_MANAGER
+            -> SystemFannelLauncher.launch(
+                editFragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.appDirManagerFannelName
             )
 
-            JsPathMacroForToolbarButton.SIZING -> monitorSizeChange(fragment)
-            JsPathMacroForToolbarButton.MENU ->
-                PopupSettingMenu.launchSettingMenu(toolbarButtonArgsMaker)
-
-            JsPathMacroForToolbarButton.SYNC -> ListSyncer.sync(
-                fragment,
-                settingButtonMenuMapList,
+            MacroForToolbarButton.Macro.SIZING
+            -> MonitorSizeManager.changeForEdit(
+                editFragment
+            )
+            MacroForToolbarButton.Macro.MENU
+            -> PopupSettingMenu.launchSettingMenu(
+                toolbarButtonArgsMaker,
+                jsActionMap
             )
 
-            JsPathMacroForToolbarButton.GET_FILE -> getFileOrDirHandler(
-                toolbarButtonArgsMaker,
+            MacroForToolbarButton.Macro.SYNC
+            -> ListSyncer.sync(editFragment)
+
+            MacroForToolbarButton.Macro.GET_FILE
+            -> getFileOrDirHandler(
+                editFragment,
             )
-            JsPathMacroForToolbarButton.GET_DIR -> getFileOrDirHandler(
-                toolbarButtonArgsMaker,
+            MacroForToolbarButton.Macro.GET_DIR
+            -> getFileOrDirHandler(
+                editFragment,
                 true
             )
-            JsPathMacroForToolbarButton.GET_QR_CON -> QrConGetterDialog.launch(
-                toolbarButtonArgsMaker
+            MacroForToolbarButton.Macro.GET_QR_CON
+            -> QrConGetterDialog.launch(
+                editFragment,
+                jsActionMap
             )
 
-            JsPathMacroForToolbarButton.FANNEL_REPO_SYNC ->
-                syncFannelRepo(fragment)
+            MacroForToolbarButton.Macro.FANNEL_REPO_SYNC
+            -> syncFannelRepo(editFragment)
 
-            JsPathMacroForToolbarButton.EDIT ->
-                changeSettingFragment(fragment)
+            MacroForToolbarButton.Macro.EDIT
+            -> changeSettingFragment(editFragment)
 
-            JsPathMacroForToolbarButton.WEB_SEARCH ->
-                EditToolbarSwitcher.switch(
-                    fragment,
-                    JsPathMacroForToolbarButton.WEB_SEARCH.name
+            MacroForToolbarButton.Macro.WEB_SEARCH,
+            MacroForToolbarButton.Macro.PAGE_SEARCH,
+            MacroForToolbarButton.Macro.NORMAL
+            -> {
+                val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+                    JsQrGetter::class.java.simpleName
                 )
-
-            JsPathMacroForToolbarButton.PAGE_SEARCH ->
-                EditToolbarSwitcher.switch(
-                    fragment,
-                    JsPathMacroForToolbarButton.PAGE_SEARCH.name
+                ExecJsLoad.jsConLaunchHandler(
+                    editFragment,
+                    """
+                        ${useClassName}.get_S(
+                            "${macro.name}"
+                        );
+                    """.trimIndent()
                 )
-
-            JsPathMacroForToolbarButton.NORMAL ->
-                EditToolbarSwitcher.switch(
-                    fragment,
-                    JsPathMacroForToolbarButton.NORMAL.name
-                )
-
-            JsPathMacroForToolbarButton.OK -> {
-                if (fragment !is EditFragment) return
-                OkHandler(
-                    fragment,
-                    toolbarButtonArgsMaker,
+            }
+            MacroForToolbarButton.Macro.OK
+            -> OkHandler(
+                    editFragment,
                 ).execForOk()
-            }
-            JsPathMacroForToolbarButton.ADD_URL_HISTORY -> {
-                UrlHistoryAddToTsv(toolbarButtonArgsMaker).invoke()
-            }
-            JsPathMacroForToolbarButton.ADD_URL_CON ->
-                AddUrlCon.add(
-                    toolbarButtonArgsMaker,
-                    settingButtonMenuMapList
-                )
-            JsPathMacroForToolbarButton.ADD_URL ->
-                AddUrl.add(
-                    toolbarButtonArgsMaker,
-                    settingButtonMenuMapList,
-                )
+            MacroForToolbarButton.Macro.ADD_URL_HISTORY
+            -> UrlHistoryAddToTsv(
+                editFragment,
+                jsActionMap,
+            ).invoke()
+            MacroForToolbarButton.Macro.ADD_URL_CON
+            -> AddUrlCon.add(
+                toolbarButtonArgsMaker,
+                jsActionMap,
+            )
+            MacroForToolbarButton.Macro.ADD_URL
+            -> AddUrl.add(
+                toolbarButtonArgsMaker,
+                jsActionMap,
+            )
         }
     }
 
     private fun getFileOrDirHandler(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
         onDirectoryPick: Boolean = false,
     ) {
-        val fragment = toolbarButtonArgsMaker.fragment
-        val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-        val parentDirPath = when (fragment) {
-            is EditFragment -> {
-                if (fragment.existIndexList) ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    fragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
-                )
-                else toolbarButtonArgsMaker.currentAppDirPath
-            }
-
-            else -> toolbarButtonArgsMaker.currentAppDirPath
-        }
-        toolbarButtonArgsMaker.fileOrDirGetterForSettingButton?.get(
-            settingButtonMenuMapList,
-            parentDirPath,
-            onDirectoryPick
+        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsFileOrDirGetter::class.java.simpleName
+        )
+        ExecJsLoad.jsConLaunchHandler(
+            editFragment,
+            "${useClassName}.get(${onDirectoryPick});",
         )
     }
 
@@ -341,35 +340,22 @@ object JsPathHandlerForToolbarButton {
 
         private var menuPopupWindow: PopupWindow? = null
         fun launchSettingMenu(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            jsActionMap: Map<String, String>
         ) {
-            val fragment = toolbarButtonArgsMaker.fragment
-            val context = fragment.context
+            val editFragment = toolbarButtonArgsMaker.editFragment
+            val context = editFragment.context
 
             if (
                 context == null
             ) return
-            val existEditExecuteTerminalFragment = when (fragment) {
-                is CommandIndexFragment ->
-                    ExistTerminalFragment
-                        .how(
-                            fragment,
-                            context.getString(
-                                R.string.index_terminal_fragment
-                            )
-                        )
-
-                is EditFragment ->
-                    ExistTerminalFragment
-                        .how(
-                            fragment,
-                            context.getString(
+            val existEditExecuteTerminalFragment =
+                ExistTerminalFragment.how(
+                    editFragment,
+                    context.getString(
                                 R.string.edit_terminal_fragment
                             )
-                        )
-
-                else -> null
-            }
+                )
             if (
                 existEditExecuteTerminalFragment == null
             ) {
@@ -381,23 +367,33 @@ object JsPathHandlerForToolbarButton {
                 return
             }
             createPopUpForSetting(
-                toolbarButtonArgsMaker
+                toolbarButtonArgsMaker,
+                jsActionMap,
             )
         }
 
         private fun createPopUpForSetting(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            jsActionMap: Map<String, String>
         ) {
             val settingButtonView = toolbarButtonArgsMaker.settingButtonView
             if (settingButtonView == null) return
             val context = settingButtonView.context
+            val menuPairList =
+                toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionMap)
             val menuListMap = MenuSettingTool.createListMenuListMap(
-                toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
+                menuPairList
             )
             if (menuListMap.size == 1) {
-                jsPathOrSubMenuHandler(
-                    menuListMap.first().first,
-                    toolbarButtonArgsMaker
+                val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+                    toolbarButtonArgsMaker.editFragment,
+                    MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
+                        menuPairList.first()
+                    )
+                )
+                handle(
+                    toolbarButtonArgsMaker,
+                    updateJsActionMap,
                 )
                 return
             }
@@ -425,12 +421,14 @@ object JsPathHandlerForToolbarButton {
                     )
                     menuListView.adapter = menuListAdapter
                     menuListViewSetOnItemClickListener(
-                        menuListView,
                         toolbarButtonArgsMaker,
+                        menuListView,
+                        jsActionMap,
                     )
                     footerSettingHandler(
-                        toolbarButtonArgsMaker,
-                        this
+                        toolbarButtonArgsMaker.editFragment,
+                        this,
+                        jsActionMap,
                     )
                     measure(
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
@@ -456,22 +454,20 @@ object JsPathHandlerForToolbarButton {
         }
 
         private fun howFooterVisible(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            jsActionMap: Map<String, String>
         ): Boolean {
-            val clickKey = toolbarButtonArgsMaker.decideClickKey()
-            return toolbarButtonArgsMaker.toolbarButtonConfigMap?.get(clickKey)
-                .let { clickJsPathMapStr ->
-                    if (
-                        clickJsPathMapStr.isNullOrEmpty()
-                    ) return@let true
-                    val clickConfigMapStr = CmdClickMap.createMap(clickJsPathMapStr, "|").toMap()
-                    !clickConfigMapStr.containsKey(ClickSettingsForToolbarButton.ClickConfigMapKey.ON_HIDE_FOOTER.str)
-                }
+            val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
+                jsActionMap
+            ) ?: emptyMap()
+            return !argsMap.containsKey(
+                MacroForToolbarButton.MenuMacroArgsKey.ON_HIDE_FOOTER.key
+            )
         }
 
         private fun menuListViewSetOnItemClickListener(
-            menuListView: NoScrollListView,
             toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            menuListView: NoScrollListView,
+            jsActionMap: Map<String, String>,
         ) {
             menuListView.setOnItemClickListener { parent, View, pos, id ->
                 menuPopupWindow?.dismiss()
@@ -479,45 +475,87 @@ object JsPathHandlerForToolbarButton {
                 val clickedMenuName = menuListAdapter.getItem(pos)
                     ?: return@setOnItemClickListener
                 jsPathOrSubMenuHandler(
-                    clickedMenuName,
                     toolbarButtonArgsMaker,
+                    jsActionMap,
+                    clickedMenuName,
                 )
             }
         }
 
         private fun jsPathOrSubMenuHandler(
+            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            jsActionMap: Map<String, String>?,
             clickedMenuName: String,
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker
 
-        ) {
-            val settingButtonMenuMapList = toolbarButtonArgsMaker.makeSettingButtonMenuMapList()
-            val parentMenuNameKey = MenuSettingTool.MenuSettingKey.PARENT_NAME.key
-            val onSubMenuLabel = !settingButtonMenuMapList.filter {
-                it?.get(parentMenuNameKey) == clickedMenuName
-            }.firstOrNull().isNullOrEmpty()
+            ) {
+            val settingButtonMenuPairList =
+                toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionMap)
+            val hitMenuItemPairList = MenuSettingTool.firstOrNullByParentMenuName(
+                settingButtonMenuPairList,
+                clickedMenuName,
+            )
+            val onSubMenuLabel = !hitMenuItemPairList.isNullOrEmpty()
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "jsHowHitMenu.txt").absolutePath,
+                listOf(
+                    "clickedMenuName: ${clickedMenuName}",
+                    "settingButtonMenuPairList: ${settingButtonMenuPairList}",
+                    "hitMenuItemPairList: ${hitMenuItemPairList}",
+                    "hitMenuitemPairLsitByMenuName: ${
+                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+                        settingButtonMenuPairList,
+                        clickedMenuName
+                    )}",
+                    "jsActionMapSrc: ${jsActionMap}",
+                ).joinToString("\n\n")
+            )
             when (onSubMenuLabel) {
                 true ->
                     SettingButtonSubMenuDialog.launch(
                         toolbarButtonArgsMaker,
-                        clickedMenuName,
-
-                        )
-
-                else ->
-                    handle(
-                        toolbarButtonArgsMaker,
+                        jsActionMap,
                         clickedMenuName,
                     )
+
+                else -> {
+                    val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+                        toolbarButtonArgsMaker.editFragment,
+                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+                            settingButtonMenuPairList,
+                            clickedMenuName
+                        )
+                    )
+                    FileSystems.writeFile(
+                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
+                        listOf(
+                            "clickedMenuName: ${clickedMenuName}",
+                            "settingButtonMenuPairList: ${settingButtonMenuPairList}",
+                            "hitMenuItemPairList: ${hitMenuItemPairList}",
+                            "hitMenuitemPairLsitByMenuName: ${
+                                MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+                                settingButtonMenuPairList,
+                                clickedMenuName
+                            )}",
+                            "jsActionMapSrc: ${jsActionMap}",
+                            "updateJsActionMap: ${updateJsActionMap}",
+                        ).joinToString("\n\n")
+                    )
+                    handle(
+                        toolbarButtonArgsMaker,
+                        updateJsActionMap
+                    )
+                }
 
             }
         }
 
         private fun footerSettingHandler(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-            settingButtonInnerView: View
+            editFragment: EditFragment,
+            settingButtonInnerView: View,
+            jsActionMap: Map<String, String>,
         ) {
             val isFooterVisible = howFooterVisible(
-                toolbarButtonArgsMaker,
+                jsActionMap,
             )
             when (isFooterVisible) {
                 false -> settingButtonInnerView.findViewById<LinearLayoutCompat>(
@@ -525,49 +563,47 @@ object JsPathHandlerForToolbarButton {
                 )?.isVisible = false
 
                 else -> setNaviBarForEdit(
-                    toolbarButtonArgsMaker,
+                    editFragment,
                     settingButtonInnerView
                 )
             }
         }
 
         private fun setNaviBarForEdit(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            editFragment: EditFragment,
             settingButtonInnerView: View
         ) {
-            val fragment = toolbarButtonArgsMaker.fragment
             execSetNavImageButtonForEdit(
-                toolbarButtonArgsMaker,
+                editFragment,
                 settingButtonInnerView,
                 R.id.setting_menu_nav_back_iamge_view,
                 ToolbarMenuCategoriesVariantForCmdIndex.BACK,
-                EnableNavForWebView.checkForGoBack(fragment)
+                EnableNavForWebView.checkForGoBack(editFragment)
             )
             execSetNavImageButtonForEdit(
-                toolbarButtonArgsMaker,
+                editFragment,
                 settingButtonInnerView,
                 R.id.setting_menu_nav_reload_iamge_view,
                 ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
-                EnableNavForWebView.checkForReload(fragment),
+                EnableNavForWebView.checkForReload(editFragment),
             )
             execSetNavImageButtonForEdit(
-                toolbarButtonArgsMaker,
+                editFragment,
                 settingButtonInnerView,
                 R.id.setting_menu_nav_forward_iamge_view,
                 ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
-                EnableNavForWebView.checkForGoForward(fragment)
+                EnableNavForWebView.checkForGoForward(editFragment)
             )
         }
 
         private fun execSetNavImageButtonForEdit(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+            editFragment: EditFragment,
             settingButtonInnerView: View,
             buttonId: Int,
             toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
             buttonEnable: Boolean
         ) {
-            val fragment = toolbarButtonArgsMaker.fragment
-            val context = fragment.context
+            val context = editFragment.context
                 ?: return
             val navImageButton =
                 settingButtonInnerView.findViewById<AppCompatImageButton>(
@@ -575,31 +611,14 @@ object JsPathHandlerForToolbarButton {
                 )
             navImageButton.setOnClickListener {
                 menuPopupWindow?.dismiss()
-                when (fragment) {
-                    is CommandIndexFragment -> {
-                        val listener =
-                            context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
-                        listener?.onToolbarMenuCategories(
-                            toolbarMenuCategoriesVariantForCmdIndex,
-                            EditFragmentArgs(
-                                fragment.readSharePreffernceMap,
-                                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                            )
-                        )
-                    }
-
-                    is EditFragment -> {
-                        val listener =
-                            context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                        listener?.onToolbarMenuCategoriesForEdit(
-                            toolbarMenuCategoriesVariantForCmdIndex,
-                            EditFragmentArgs(
-                                fragment.readSharePreferenceMap,
-                                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                            ),
-                        )
-                    }
-                }
+                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+                listener?.onToolbarMenuCategoriesForEdit(
+                    toolbarMenuCategoriesVariantForCmdIndex,
+                    EditFragmentArgs(
+                        editFragment.readSharePreferenceMap,
+                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+                    ),
+                )
             }
             navImageButton.isEnabled = buttonEnable
             val colorId = if (buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
@@ -607,123 +626,11 @@ object JsPathHandlerForToolbarButton {
         }
     }
 
-    private fun monitorSizeChange(
-        fragment: Fragment
-    ) {
-        when (fragment) {
-            is CommandIndexFragment ->
-                ExecSetTermSizeForCmdIndexFragment.execSetTermSizeForCmdIndexFragment(
-                    fragment,
-                )
 
-            is EditFragment ->
-                monitorSizeChangeForEdit(fragment)
-        }
-    }
-
-
-    private fun monitorSizeChangeForEdit(
+    private fun syncFannelRepo(
         editFragment: EditFragment
     ) {
-        if (
-            editFragment.terminalOn
-            == SettingVariableSelects.TerminalDoSelects.OFF.name
-        ) return
         val context = editFragment.context
-        val existEditExecuteTerminalFragment = ExistTerminalFragment
-            .how(
-                editFragment,
-                editFragment.context?.getString(
-                    R.string.edit_terminal_fragment
-                )
-            )
-        if (
-            existEditExecuteTerminalFragment?.isVisible != true
-        ) {
-            Toast.makeText(
-                context,
-                "no terminal",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
-        val linearLayoutParam =
-            editFragment.binding.editFragment.layoutParams as LinearLayout.LayoutParams
-        val isShow = linearLayoutParam.weight != ReadLines.LONGTH
-        EditLayoutViewHideShow.exec(
-            editFragment,
-            isShow
-        )
-        val listener =
-            context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-        listener?.onToolbarMenuCategoriesForEdit(
-            ToolbarMenuCategoriesVariantForCmdIndex.TERMMAX,
-            EditFragmentArgs(
-                editFragment.readSharePreferenceMap,
-                EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-            )
-        )
-    }
-
-    private fun execQrScan(
-        fragment: Fragment,
-        currentAppDirPath: String,
-    ) {
-        val activeCurrentDirPath = when (fragment) {
-            is EditFragment -> {
-                val filterDirInWithListIndex = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-                    fragment,
-                    ListIndexForEditAdapter.indexListMap,
-                    ListIndexForEditAdapter.listIndexTypeKey
-                )
-                if (
-                    fragment.existIndexList
-                    && filterDirInWithListIndex.isNotEmpty()
-                ) filterDirInWithListIndex
-                else currentAppDirPath
-            }
-
-            else -> currentAppDirPath
-        }
-        QrScanner(
-            fragment,
-            activeCurrentDirPath,
-        ).scanFromCamera()
-    }
-
-    private fun scriptFileEditForCmdIndex(
-        fragment: Fragment,
-        currentAppDirPath: String,
-    ) {
-        when (fragment) {
-            is EditFragment -> {}
-            is CommandIndexFragment
-            -> ScriptFileEdit.edit(
-                fragment,
-                currentAppDirPath,
-                UsePath.cmdclickStartupJsName,
-            )
-        }
-    }
-
-    private fun configEdit(
-        fragment: Fragment
-    ) {
-        val configDirPath = UsePath.cmdclickSystemAppDirPath
-        val configShellName = UsePath.cmdclickConfigFileName
-        CommandClickScriptVariable.makeConfigJsFile(
-            configDirPath,
-            configShellName
-        )
-        SystemFannelLauncher.launch(
-            fragment,
-            UsePath.cmdclickSystemAppDirPath,
-            UsePath.cmdclickConfigFileName,
-        )
-    }
-
-    private fun syncFannelRepo(fragment: Fragment) {
-        val context = fragment.context
             ?: return
         val intent = Intent(
             context,
@@ -733,25 +640,23 @@ object JsPathHandlerForToolbarButton {
     }
 
 
-    private fun changeSettingFragment(fragment: Fragment) {
-        if (fragment !is EditFragment) return
-        val listener = fragment.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-        listener?.onToolBarButtonClickForEditFragment(
-            fragment.tag,
-            ToolbarButtonBariantForEdit.EDIT,
-            fragment.readSharePreferenceMap,
-            fragment.enableCmdEdit
+    private fun changeSettingFragment(
+        editFragment: EditFragment
+    ) {
+        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsSettingFrag::class.java.simpleName
+        )
+        ExecJsLoad.jsConLaunchHandler(
+            editFragment,
+            "${useClassName}.change_S();",
         )
     }
 
 
     private class OkHandler(
         private val editFragment: EditFragment,
-        private val toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
     ) {
         private val context = editFragment.context
-        private val recordNumToMapNameValueInCommandHolder = toolbarButtonArgsMaker.recordNumToMapNameValueInCommandHolder
-        private val recordNumToMapNameValueInSettingHolder = toolbarButtonArgsMaker.recordNumToMapNameValueInSettingHolder
         private val readSharePreffernceMap = editFragment.readSharePreferenceMap
         private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
@@ -771,10 +676,7 @@ object JsPathHandlerForToolbarButton {
 
         fun execForOk() {
             val buttonTag = SaveTagForListContents.OK.tag
-            scriptFileSaver.save(
-                recordNumToMapNameValueInCommandHolder,
-                recordNumToMapNameValueInSettingHolder,
-            )
+            scriptFileSaver.save()
             val isCmdEditExecute = enableCmdEdit
                     && editFragment.enableEditExecute
                     && !onPassCmdVariableEdit
@@ -790,6 +692,19 @@ object JsPathHandlerForToolbarButton {
             val isOnlyCmdEditWithFdialog = enableCmdEdit
                     && !editFragment.enableEditExecute
                     && isFdialogFannel
+            FileSystems.writeFile(
+                File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
+                listOf(
+                    "isCmdEditExecute: ${isCmdEditExecute}",
+                    "isSettingEditByPass: ${isSettingEditByPass}",
+                    "isSettingEdit: ${isSettingEdit}",
+                    "isFdialogFannel: ${isFdialogFannel}",
+                    "isOnlyCmdEditNoFdialog: ${isOnlyCmdEditNoFdialog}",
+                    "isOnlyCmdEditWithFdialog: ${isOnlyCmdEditWithFdialog}",
+                    "tag: ${editFragment.tag}",
+                    "enableCmdEdit: ${enableCmdEdit}",
+                ).joinToString("\n\n")
+            )
             when (true) {
                 isCmdEditExecute -> {
                     Keyboard.hiddenKeyboardForFragment(
@@ -802,8 +717,6 @@ object JsPathHandlerForToolbarButton {
                     TerminalShowByTerminalDo.show(
                         editFragment,
                     )
-
-
                     ExecJsOrSellHandler.handle(
                         editFragment,
                         currentAppDirPath,
@@ -815,7 +728,8 @@ object JsPathHandlerForToolbarButton {
 
                 isSettingEditByPass,
                 isOnlyCmdEditNoFdialog,
-                isSettingEdit -> {
+                isSettingEdit,
+                -> {
                     val listener =
                         context as? EditFragment.onToolBarButtonClickListenerForEditFragment
                     listener?.onToolBarButtonClickForEditFragment(
@@ -825,7 +739,6 @@ object JsPathHandlerForToolbarButton {
                         false
                     )
                 }
-
                 else -> {}
             }
         }

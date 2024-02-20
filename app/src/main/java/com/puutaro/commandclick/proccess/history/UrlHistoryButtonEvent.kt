@@ -32,7 +32,7 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -214,7 +214,7 @@ class UrlHistoryButtonEvent(
                 return@setOnItemClickListener
             } else if (
                 fragmentTag?.startsWith(
-                    FragmentTagManager.Prefix.CMD_EDIT_PREFIX.str
+                    FragmentTagPrefix.Prefix.CMD_VAL_EDIT_PREFIX.str
                 ) == true
             ) {
                 val listener = context as? EditFragment.OnLaunchUrlByWebViewForEditListener
