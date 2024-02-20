@@ -29,6 +29,6 @@ object ExecFannelConListUpdate {
             currentFannelName,
             fannelState
         ) ?: return
-        editFragment.currentScriptContentsList = updateFannelConList
+        editFragment.currentFannelConList = updateFannelConList
     }
 }

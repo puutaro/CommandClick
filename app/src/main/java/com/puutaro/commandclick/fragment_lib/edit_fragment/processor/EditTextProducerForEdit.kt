@@ -21,7 +21,7 @@ class EditTextProducerForEdit(
 ) {
     private val binding = editFragment.binding
     private val context = editFragment.context
-    private val currentScriptContentsList = editFragment.currentScriptContentsList
+    private val currentScriptContentsList = editFragment.currentFannelConList
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     private val readSharePreffernceMap = editFragment.readSharePreferenceMap
@@ -227,7 +227,7 @@ class EditTextProducerForEdit(
         descriptionButton.setOnClickListener { innerButtonView ->
             ScriptFileDescription.show(
                 editFragment,
-                editFragment.currentScriptContentsList,
+                editFragment.currentFannelConList,
                 currentAppDirPath,
                 SharePreferenceMethod.getReadSharePreffernceMap(
                     readSharePreffernceMap,

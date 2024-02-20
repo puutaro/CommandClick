@@ -72,7 +72,9 @@ object ExecJsLoad {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val jsContents = if (jsContentsListSource.isNullOrEmpty()) {
+        val jsContents = if (
+            jsContentsListSource.isNullOrEmpty()
+        ) {
             ReadText(
                 File(
                     recentAppDirPath,

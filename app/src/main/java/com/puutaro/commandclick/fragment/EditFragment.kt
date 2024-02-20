@@ -37,11 +37,11 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowBy
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ListIndexSizingToKeyboard
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.PageSearchToolbarManagerForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidationSharePreferenceForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.WebSearchToolbarManagerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditInitType
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonToolForEdit
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.CurrentFannelConListMaker
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumToMapNameValueInHolderMaker
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.EditLongPressType
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
@@ -55,6 +55,8 @@ import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
+import com.puutaro.commandclick.util.state.SettingFannelConHandler
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -106,12 +108,13 @@ class EditFragment: Fragment() {
     var editTypeSettingKey =
         EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
     var setReplaceVariableMap: Map<String, String>? = null
+    var settingFannelPath: String = String()
     var setVariableTypeList: List<String>? = null
     var hideSettingVariableList: List<String> = emptyList()
     var enableCmdEdit = false
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
-    var currentScriptContentsList = emptyList<String>()
+    var currentFannelConList = emptyList<String>()
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var existIndexList: Boolean = false
@@ -190,14 +193,6 @@ class EditFragment: Fragment() {
                 readSharePreferenceMap,
                 SharePrefferenceSetting.current_fannel_state
             )
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "vfane_tag.txt").absolutePath,
-//            listOf(
-//                "tag: ${tag}",
-//                "currentFannelState: ${currentFannelState}",
-//                "readSharePreferenceMap: ${readSharePreferenceMap}"
-//            ).joinToString("\n\n")
-//        )
 
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
         enableCmdEdit =
@@ -252,21 +247,30 @@ class EditFragment: Fragment() {
         commandSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
         ) as String
-
-        currentScriptContentsList = ReadText(
+        val currentFannelPath =
             File(currentAppDirPath, currentFannelName).absolutePath
-        ).textToList()
+        val mainFannelConList =
+            ReadText(currentFannelPath).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-                currentScriptContentsList,
+                mainFannelConList,
                 currentAppDirPath,
                 currentFannelName,
             )
-
+        settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
+            readSharePreferenceMap,
+            setReplaceVariableMap
+        )
+        currentFannelConList = CurrentFannelConListMaker.make(
+            currentFannelPath,
+            mainFannelConList,
+            settingFannelPath,
+        )
         ConfigFromScriptFileSetter.set(
             this,
         )
-        buttonWeight = ToolbarButtonToolForEdit.culcButtonWeight(this)
+        buttonWeight =
+            ToolbarButtonToolForEdit.culcButtonWeight(this)
         if(
             UpdateLastModifyForEdit().judge(
                 this,
@@ -312,11 +316,31 @@ class EditFragment: Fragment() {
         recordNumToMapNameValueInSettingHolder =
                 RecordNumToMapNameValueInHolderMaker.makeForSetting(this)
         recordNumToMapNameValueInCommandHolder =
-            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(this)
+            RecordNumToMapNameValueInHolderMaker.makeForCmdHolder(
+                this,
+                mainFannelConList
+            )
         val editModeHandler = EditModeHandler(
             this,
             binding,
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
+//            listOf(
+//                "settingFilePath: ${FannelStateRooterManager.getSettingFannelPath(
+//                    readSharePreferenceMap,
+//                    setReplaceVariableMap
+//                )}",
+//                "settingval: ${FannelStateRooterManager.makeSettingVariableList(
+//                    readSharePreferenceMap,
+//                    setReplaceVariableMap,
+//                    settingSectionStart,
+//                    settingSectionEnd
+//                )}",
+//                "recordNumToMapNameValueInSettingHolder: ${recordNumToMapNameValueInSettingHolder}",
+//                "recordNumToMapNameValueInCommandHolder: ${recordNumToMapNameValueInCommandHolder}"
+//            ).joinToString("\n\n")
+//        )
         editModeHandler.execByHowFullEdit()
         val cmdIndexViewModel: CommandIndexViewModel by activityViewModels()
         cmdIndexViewModel.onFocusSearchText = false
@@ -383,20 +407,15 @@ class EditFragment: Fragment() {
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action,
             )
         )
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val settingFannelConList = SettingFannelConHandler.handle(
+            this
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
-        val shellScriptContentsList = ReadText(
-            File(currentAppDirPath, currentFannelName).absolutePath
-        ).textToList()
+//        val shellScriptContentsList = ReadText(
+//            File(currentAppDirPath, currentFannelName).absolutePath
+//        ).textToList()
         TerminalShowByTerminalDoWhenReuse.show(
             this,
-            shellScriptContentsList
+            settingFannelConList
         )
     }
 

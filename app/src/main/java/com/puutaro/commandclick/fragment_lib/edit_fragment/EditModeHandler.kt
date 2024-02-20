@@ -17,7 +17,7 @@ class EditModeHandler(
     binding: EditFragmentBinding,
 ) {
     private val context = editFragment.context
-    private val currentScriptContentsList = editFragment.currentScriptContentsList
+    private val currentScriptContentsList = editFragment.currentFannelConList
     private val enableCmdEdit = editFragment.enableCmdEdit
     private val readSharePreferenceMap = editFragment.readSharePreferenceMap
 

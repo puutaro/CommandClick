@@ -20,7 +20,7 @@ import java.io.File
 
 object AddConfirmDialogForSettingButton {
 
-    private var deleteConfirmDialog: Dialog? = null
+    private var addConfirmDialog: Dialog? = null
     fun invoke(
         cmdIndexFragment: CommandIndexFragment,
         currentAppDirPath: String,
@@ -36,19 +36,19 @@ object AddConfirmDialogForSettingButton {
                 .get(languageTypeSelects)
 
 
-        deleteConfirmDialog = Dialog(
+        addConfirmDialog = Dialog(
             context
         )
-        deleteConfirmDialog?.setContentView(
+        addConfirmDialog?.setContentView(
             com.puutaro.commandclick.R.layout.confirm_text_dialog
         )
         val confirmTitleTextView =
-            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+            addConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_title
             )
         confirmTitleTextView?.text = "Add bellow contents, ok?"
         val confirmContentTextView =
-            deleteConfirmDialog?.findViewById<AppCompatTextView>(
+            addConfirmDialog?.findViewById<AppCompatTextView>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_text_view
             )
         confirmContentTextView?.text = "\tpath: path: ${shellScriptPath}"
@@ -63,17 +63,17 @@ object AddConfirmDialogForSettingButton {
             currentAppDirPath,
             shellScriptName,
         )
-        deleteConfirmDialog?.setOnCancelListener {
-            deleteConfirmDialog?.dismiss()
+        addConfirmDialog?.setOnCancelListener {
+            addConfirmDialog?.dismiss()
         }
-        deleteConfirmDialog?.window?.setLayout(
+        addConfirmDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        deleteConfirmDialog?.window?.setGravity(
+        addConfirmDialog?.window?.setGravity(
             Gravity.BOTTOM
         )
-        deleteConfirmDialog?.show()
+        addConfirmDialog?.show()
     }
 
     private fun cancelButtonListener(
@@ -82,11 +82,11 @@ object AddConfirmDialogForSettingButton {
         shellScriptName: String
     ){
         val confirmCancelButton =
-            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_cancel
             )
         confirmCancelButton?.setOnClickListener {
-            deleteConfirmDialog?.dismiss()
+            addConfirmDialog?.dismiss()
             FileSystems.removeFiles(
                 File(
                     currentAppDirPath,
@@ -107,11 +107,11 @@ object AddConfirmDialogForSettingButton {
         shellScriptName: String,
     ){
         val confirmOkButton =
-            deleteConfirmDialog?.findViewById<AppCompatImageButton>(
+            addConfirmDialog?.findViewById<AppCompatImageButton>(
                 com.puutaro.commandclick.R.id.confirm_text_dialog_ok
             )
         confirmOkButton?.setOnClickListener {
-            deleteConfirmDialog?.dismiss()
+            addConfirmDialog?.dismiss()
             confirmOkExecutor(
                 binding,
                 languageTypeToSectionHolderMap,

@@ -15,7 +15,6 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.ExecJsScriptInEdit
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.GridDialogForButton
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SetVariableTypeValue
@@ -333,7 +332,7 @@ object ButtonViewProducer {
         ) return
         val substituteSettingVariableList =
             CommandClickVariables.substituteVariableListFromHolder(
-                editFragment.currentScriptContentsList,
+                editFragment.currentFannelConList,
                 editFragment.settingSectionStart,
                 editFragment.settingSectionEnd,
             )

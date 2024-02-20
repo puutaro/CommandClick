@@ -24,7 +24,9 @@ class JsSettingFrag(
     )
 
     @JavascriptInterface
-    fun change_S(){
+    fun change_S(
+        state: String
+    ){
         val listener =
             context as? TerminalFragment.OnChangeEditFragmentListenerForTerm
                 ?: return

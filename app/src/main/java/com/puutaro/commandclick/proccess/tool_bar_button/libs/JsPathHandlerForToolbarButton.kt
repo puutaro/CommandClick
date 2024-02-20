@@ -283,7 +283,10 @@ object JsPathHandlerForToolbarButton {
             -> syncFannelRepo(editFragment)
 
             MacroForToolbarButton.Macro.EDIT
-            -> changeSettingFragment(editFragment)
+            -> changeSettingFragment(
+                editFragment,
+                jsActionMap
+            )
 
             MacroForToolbarButton.Macro.WEB_SEARCH,
             MacroForToolbarButton.Macro.PAGE_SEARCH,
@@ -641,14 +644,19 @@ object JsPathHandlerForToolbarButton {
 
 
     private fun changeSettingFragment(
-        editFragment: EditFragment
+        editFragment: EditFragment,
+        jsActionMap: Map<String, String>?
     ) {
+        val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
+            jsActionMap,
+        ) ?: emptyMap()
+        val currentState = argsMap.values.firstOrNull() ?: String()
         val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
             JsSettingFrag::class.java.simpleName
         )
         ExecJsLoad.jsConLaunchHandler(
             editFragment,
-            "${useClassName}.change_S();",
+            "${useClassName}.change_S(\"${currentState}\");",
         )
     }
 
@@ -692,19 +700,6 @@ object JsPathHandlerForToolbarButton {
             val isOnlyCmdEditWithFdialog = enableCmdEdit
                     && !editFragment.enableEditExecute
                     && isFdialogFannel
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,
-                listOf(
-                    "isCmdEditExecute: ${isCmdEditExecute}",
-                    "isSettingEditByPass: ${isSettingEditByPass}",
-                    "isSettingEdit: ${isSettingEdit}",
-                    "isFdialogFannel: ${isFdialogFannel}",
-                    "isOnlyCmdEditNoFdialog: ${isOnlyCmdEditNoFdialog}",
-                    "isOnlyCmdEditWithFdialog: ${isOnlyCmdEditWithFdialog}",
-                    "tag: ${editFragment.tag}",
-                    "enableCmdEdit: ${enableCmdEdit}",
-                ).joinToString("\n\n")
-            )
             when (true) {
                 isCmdEditExecute -> {
                     Keyboard.hiddenKeyboardForFragment(

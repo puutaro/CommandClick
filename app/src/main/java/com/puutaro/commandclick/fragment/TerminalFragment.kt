@@ -22,16 +22,21 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.FileOrDirGetterForSettingButton
+import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -44,6 +49,25 @@ class   TerminalFragment: Fragment() {
     private var _binding: TerminalFragmentBinding? = null
     val binding get() = _binding!!
     val terminalViewhandler: Handler = Handler(Looper.getMainLooper())
+    var languageType = LanguageTypeSelects.JAVA_SCRIPT
+    var languageTypeToSectionHolderMap =
+        CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
+            languageType
+        )
+    var settingSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+    ) as String
+
+    var settingSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+    ) as String
+
+    var commandSectionStart = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_START
+    ) as String
+    var commandSectionEnd = languageTypeToSectionHolderMap?.get(
+        CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
+    ) as String
     var readSharePreferenceMap = mapOf<String, String>()
     var srcReadSharedPreferences: Map<String, String>? = null
     var editType =
@@ -51,6 +75,7 @@ class   TerminalFragment: Fragment() {
     var currentAppDirPath = String()
     var currentFannelName = String()
     var setReplaceVariableMap: Map<String, String>? = null
+    var settingFannelPath: String = String()
     var displayUpdateCoroutineJob: Job? = null
     var loadAssetCoroutineJob: Job? = null
     var onPageFinishedCoroutineJob: Job? = null
@@ -83,8 +108,6 @@ class   TerminalFragment: Fragment() {
     var dialogInstance: Dialog? = null
     var goBackFlag = false
     var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
-
-
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHandlerForTerm.handle(
@@ -122,6 +145,24 @@ class   TerminalFragment: Fragment() {
         currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
+        )
+        val currentValidFannelName =
+            ValidFannelNameGetterForTerm.get(
+                this
+            )
+        val fannelContentsList = CommandClickVariables.makeScriptContentsList(
+            currentAppDirPath,
+            currentValidFannelName
+        )
+        setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                fannelContentsList,
+                currentAppDirPath,
+                currentValidFannelName,
+            )
+        settingFannelPath = FannelStateRooterManager.getSettingFannelPath(
+            readSharePreferenceMap,
+            setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
         fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)

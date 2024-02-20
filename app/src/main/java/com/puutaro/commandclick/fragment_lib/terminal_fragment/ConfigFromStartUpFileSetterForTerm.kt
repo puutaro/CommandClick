@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -125,23 +126,14 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_FONT_COLOR_DEFAULT_VALUE
         )
 
-        val currentScriptFileNameSource = SharePreferenceMethod.getStringFromSharePreference(
-            sharePref,
-            SharePrefferenceSetting.current_fannel_name
-        )
-
         StartFileMaker.makeForStartupScript(
             terminalFragment,
             terminalFragment.currentAppDirPath
         )
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
-        val currentScriptFileName = if (
-            terminalFragment.tag ==
-            terminalFragment.context?.getString(
-                R.string.index_terminal_fragment
-            )
-        ) cmdclickStartupJsName
-        else currentScriptFileNameSource
+        val currentScriptFileName = ValidFannelNameGetterForTerm.get(
+            terminalFragment
+        )
 
         if(
             currentScriptFileName != cmdclickStartupJsName
@@ -206,12 +198,6 @@ object ConfigFromStartUpFileSetterForTerm {
             terminalFragment.currentAppDirPath,
             currentScriptFileName
         )
-        terminalFragment.setReplaceVariableMap =
-            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-                fannelContentsList,
-                terminalFragment.currentAppDirPath,
-                currentScriptFileName,
-            )
         val settingVariableList = makeSettingVariableListForTerm(
             terminalFragment,
             fannelContentsList,
@@ -224,10 +210,6 @@ object ConfigFromStartUpFileSetterForTerm {
             CommandClickScriptVariable.TERMINAL_DO,
             CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         )
-//            CommandClickVariables.substituteCmdClickVariable(
-//            settingVariableList,
-//            CommandClickScriptVariable.TERMINAL_DO
-//        ) ?: CommandClickScriptVariable.TERMINAL_DO_DEFAULT_VALUE
         terminalFragment.ignoreHistoryPathList = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.IGNORE_HISTORY_PATHS,
             terminalFragment.readSharePreferenceMap,
@@ -358,7 +340,6 @@ object ConfigFromStartUpFileSetterForTerm {
                 CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
             )
 
-
         val isImageLongPressMenuFilePathVal = SettingVariableReader.isExist(
             settingVariableList,
             CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
@@ -386,7 +367,6 @@ object ConfigFromStartUpFileSetterForTerm {
         ) terminalFragment.noScrollSaveUrls =
             noScrollSaveUrls
     }
-
 }
 
 private object LongPressPathDecider {
@@ -431,13 +411,10 @@ private object LongPressPathDecider {
         return when (variableName) {
             CommandClickScriptVariable.IMAGE_LONG_PRESS_MENU_FILE_PATH,
             -> UsePath.imageLongPressMenuFilePath
-
             CommandClickScriptVariable.SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH
             -> UsePath.srcAnchorLongPressMenuFilePath
-
             CommandClickScriptVariable.SRC_IMAGE_ANCHOR_LONG_PRESS_MENU_FILE_PATH
             -> UsePath.srcImageAnchorLongPressMenuFilePath
-
             else -> String()
         }
     }
@@ -450,10 +427,12 @@ private fun makeSettingVariableListForTerm(
     settingSectionStart: String,
     settingSectionEnd: String,
 ): List<String>? {
-    val isIndexTerminal = terminalFragment.tag == terminalFragment.context?.getString(
+    val isIndexTerminal =
+        terminalFragment.tag == terminalFragment.context?.getString(
         R.string.index_terminal_fragment
     )
-    val isStartupScript = currentScriptFileName == UsePath.cmdclickStartupJsName
+    val isStartupScript =
+        currentScriptFileName == UsePath.cmdclickStartupJsName
     if(
         isIndexTerminal
         || isStartupScript
@@ -463,10 +442,10 @@ private fun makeSettingVariableListForTerm(
         settingSectionEnd
     )
     return FannelStateRooterManager.makeSettingVariableList(
-        fannelContentsList,
         terminalFragment.readSharePreferenceMap,
         terminalFragment.setReplaceVariableMap,
         settingSectionStart,
         settingSectionEnd,
+        terminalFragment.settingFannelPath
     )
 }

@@ -4,15 +4,19 @@ import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHo
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.util.RecordNumToMapNameValueInHolder
+import com.puutaro.commandclick.util.state.SettingFannelConHandler
 
 object RecordNumToMapNameValueInHolderMaker {
 
     fun makeForSetting(
         editFragment: EditFragment,
     ): Map<Int, Map<String, String>?>? {
+        val settingFannelConList = SettingFannelConHandler.handle(
+            editFragment
+        )
         val recordNumToMapNameValueInSettingHolderSrc =
             RecordNumToMapNameValueInHolder.parse(
-                editFragment.currentScriptContentsList,
+                settingFannelConList,
                 editFragment.settingSectionStart,
                 editFragment.settingSectionEnd,
                 true,
@@ -36,10 +40,11 @@ object RecordNumToMapNameValueInHolderMaker {
 
     fun makeForCmdHolder(
         editFragment: EditFragment,
+        mainFannelSettingConList: List<String>,
     ):  Map<Int, Map<String, String>?>? {
         val recordNumToMapNameValueInCommandHolderSrc =
             RecordNumToMapNameValueInHolder.parse(
-                editFragment.currentScriptContentsList,
+                mainFannelSettingConList,
                 editFragment.commandSectionStart,
                 editFragment.commandSectionEnd
             )

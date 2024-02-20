@@ -33,7 +33,7 @@ object ListPathGetterForDragSort {
             listPathSrc.isNullOrEmpty()
         ) return String()
         val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentScriptContentsList = editFragment.currentScriptContentsList
+        val currentScriptContentsList = editFragment.currentFannelConList
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreffernceMap,
             SharePrefferenceSetting.current_app_dir

@@ -45,11 +45,11 @@ object ConfigFromScriptFileSetter {
             SharePrefferenceSetting.current_fannel_name
         )
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
-            editFragment.currentScriptContentsList,
             editFragment.readSharePreferenceMap,
             editFragment.setReplaceVariableMap,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
+            editFragment.settingFannelPath
         )
 
         editFragment.setVariableTypeList =
@@ -248,15 +248,15 @@ object ConfigFromScriptFileSetter {
         if(
             isSetting
         ) return false
-        val recordNumToMapNameValueInSettingHolder =
-            RecordNumToMapNameValueInHolder.parse(
-                editFragment.currentScriptContentsList,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd,
-                true,
-            )
+//        val recordNumToMapNameValueInSettingHolder =
+//            RecordNumToMapNameValueInHolder.parse(
+//                editFragment.currentScriptContentsList,
+//                editFragment.settingSectionStart,
+//                editFragment.settingSectionEnd,
+//                true,
+//            )
         val setVariableTypeList = SetVariableTyper.makeSetVariableTypeList(
-            recordNumToMapNameValueInSettingHolder,
+            editFragment.recordNumToMapNameValueInSettingHolder,
             currentAppDirPath,
             currentScriptFileName,
             editFragment.setReplaceVariableMap

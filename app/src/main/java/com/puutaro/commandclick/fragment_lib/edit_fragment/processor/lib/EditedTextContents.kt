@@ -12,6 +12,7 @@ import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableLis
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import java.io.File
 
 
@@ -63,9 +64,9 @@ class EditedTextContents(
         }
     }
 
-
     fun save(
         lastScriptContentsList: List<String>,
+        isSettingEdit: Boolean
     ){
         if(
             lastScriptContentsList.isEmpty()
@@ -75,19 +76,26 @@ class EditedTextContents(
             lastScriptContentsList,
             currentScriptFileName
         )
-
-        FileSystems.writeFile(
-            File(
+        val settingFannelPath = when(
+            isSettingEdit
+        ){
+            true -> FannelStateRooterManager.getSettingFannelPath(
+                editFragment.readSharePreferenceMap,
+                editFragment.setReplaceVariableMap
+            )
+            else -> File(
                 currentAppDirPath,
                 currentScriptFileName,
-            ).absolutePath,
+            ).absolutePath
+        }
+        FileSystems.writeFile(
+            settingFannelPath,
             submitScriptContentsList.joinToString("\n")
         )
         judgeAndUpdateWeekAgoLastModify(
             submitScriptContentsList
 
         )
-
     }
 
     private fun judgeAndUpdateWeekAgoLastModify(

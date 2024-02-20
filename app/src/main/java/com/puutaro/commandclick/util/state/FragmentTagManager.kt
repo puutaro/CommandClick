@@ -25,11 +25,13 @@ object FragmentTagManager {
     fun makeSettingValEditTag(
         parentAppDirPath: String,
         scriptFileName: String,
+        fannelState: String = String(),
     ): String {
         return makeTag(
             FragmentTagPrefix.Prefix.SETTING_VAL_EDIT_PREFIX.str,
             parentAppDirPath,
             scriptFileName,
+            fannelState,
         )
     }
 
