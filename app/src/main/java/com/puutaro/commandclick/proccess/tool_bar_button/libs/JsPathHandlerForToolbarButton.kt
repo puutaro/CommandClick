@@ -495,20 +495,20 @@ object JsPathHandlerForToolbarButton {
                 clickedMenuName,
             )
             val onSubMenuLabel = !hitMenuItemPairList.isNullOrEmpty()
-            FileSystems.writeFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "jsHowHitMenu.txt").absolutePath,
-                listOf(
-                    "clickedMenuName: ${clickedMenuName}",
-                    "settingButtonMenuPairList: ${settingButtonMenuPairList}",
-                    "hitMenuItemPairList: ${hitMenuItemPairList}",
-                    "hitMenuitemPairLsitByMenuName: ${
-                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-                        settingButtonMenuPairList,
-                        clickedMenuName
-                    )}",
-                    "jsActionMapSrc: ${jsActionMap}",
-                ).joinToString("\n\n")
-            )
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "jsHowHitMenu.txt").absolutePath,
+//                listOf(
+//                    "clickedMenuName: ${clickedMenuName}",
+//                    "settingButtonMenuPairList: ${settingButtonMenuPairList}",
+//                    "hitMenuItemPairList: ${hitMenuItemPairList}",
+//                    "hitMenuitemPairLsitByMenuName: ${
+//                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+//                        settingButtonMenuPairList,
+//                        clickedMenuName
+//                    )}",
+//                    "jsActionMapSrc: ${jsActionMap}",
+//                ).joinToString("\n\n")
+//            )
             when (onSubMenuLabel) {
                 true ->
                     SettingButtonSubMenuDialog.launch(
@@ -525,21 +525,21 @@ object JsPathHandlerForToolbarButton {
                             clickedMenuName
                         )
                     )
-                    FileSystems.writeFile(
-                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
-                        listOf(
-                            "clickedMenuName: ${clickedMenuName}",
-                            "settingButtonMenuPairList: ${settingButtonMenuPairList}",
-                            "hitMenuItemPairList: ${hitMenuItemPairList}",
-                            "hitMenuitemPairLsitByMenuName: ${
-                                MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-                                settingButtonMenuPairList,
-                                clickedMenuName
-                            )}",
-                            "jsActionMapSrc: ${jsActionMap}",
-                            "updateJsActionMap: ${updateJsActionMap}",
-                        ).joinToString("\n\n")
-                    )
+//                    FileSystems.writeFile(
+//                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
+//                        listOf(
+//                            "clickedMenuName: ${clickedMenuName}",
+//                            "settingButtonMenuPairList: ${settingButtonMenuPairList}",
+//                            "hitMenuItemPairList: ${hitMenuItemPairList}",
+//                            "hitMenuitemPairLsitByMenuName: ${
+//                                MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
+//                                settingButtonMenuPairList,
+//                                clickedMenuName
+//                            )}",
+//                            "jsActionMapSrc: ${jsActionMap}",
+//                            "updateJsActionMap: ${updateJsActionMap}",
+//                        ).joinToString("\n\n")
+//                    )
                     handle(
                         toolbarButtonArgsMaker,
                         updateJsActionMap

@@ -220,14 +220,14 @@ object JavaScriptLoadUrl {
                 jsConBeforeJsImportCompNewLine,
                 setReplaceVariableMap
             )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "jsJavaLoadUrl.txt").absolutePath,
-            listOf(
-                "jsConBeforeJsImport: ${jsConBeforeJsImport}",
-                "setReplaceVariableMapByConcat: ${setReplaceVariableMapByConcat}"
-            ).joinToString("\n")
-        )
-            val jsConBeforeReplace = TsvImportManager.removeTsvImport(
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsJavaLoadUrl.txt").absolutePath,
+//            listOf(
+//                "jsConBeforeJsImport: ${jsConBeforeJsImport}",
+//                "setReplaceVariableMapByConcat: ${setReplaceVariableMapByConcat}"
+//            ).joinToString("\n")
+//        )
+        val jsConBeforeReplace = TsvImportManager.removeTsvImport(
             jsConBeforeJsImportCompNewLine.split("\n")
         ).map {
             JsImportManager.import(
