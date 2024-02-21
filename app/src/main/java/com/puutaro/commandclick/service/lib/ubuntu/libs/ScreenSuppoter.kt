@@ -87,7 +87,7 @@ object ScreenMonitor {
     ): Long {
         val defaultDelaySleepTime = 20L
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            CommandClickVariables.makeScriptContentsList(
+            CommandClickVariables.makeMainFannelConList(
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
             ),

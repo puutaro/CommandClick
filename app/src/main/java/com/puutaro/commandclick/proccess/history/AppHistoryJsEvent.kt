@@ -14,20 +14,20 @@ object AppHistoryJsEvent {
 
     fun run(
         fragment: Fragment,
-        selectedScriptFileName: String,
+        selectedHistoryFile: String,
     ): Boolean {
 
         FileSystems.updateLastModified(
             File(
                 UsePath.cmdclickAppHistoryDirAdminPath,
-                selectedScriptFileName
+                selectedHistoryFile
             ).absolutePath
         )
         val selectedAppDirName = AppHistoryManager.getAppDirNameFromAppHistoryFileName(
-            selectedScriptFileName
+            selectedHistoryFile
         )
         val scriptFileName = AppHistoryManager.getScriptFileNameFromAppHistoryFileName(
-            selectedScriptFileName
+            selectedHistoryFile
         )
         val fannelDirName = CcPathTool.makeFannelDirName(scriptFileName)
         val selectedAppDirPath = "${UsePath.cmdclickAppDirPath}/${selectedAppDirName}"

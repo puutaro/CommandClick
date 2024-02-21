@@ -74,12 +74,12 @@ object FannelNameClickListenerSetter {
                 val currentFragmentTag =
                     cmdIndexFragment.tag ?: String()
 
-                val shellContentsList = ReadText(
+                val mainFannelContentsList = ReadText(
                     File(currentAppDirPath, selectedShellFileName).absolutePath
                 ).textToList()
                 val validateErrMessage = ValidateShell.correct(
                     cmdIndexFragment,
-                    shellContentsList,
+                    mainFannelContentsList,
                     selectedShellFileName
                 )
                 if (validateErrMessage.isNotEmpty()) {
@@ -92,24 +92,12 @@ object FannelNameClickListenerSetter {
                     )
                     return
                 }
-                val languageType =
-                    CommandClickVariables.judgeJsOrShellFromSuffix(selectedShellFileName)
 
-                val languageTypeToSectionHolderMap =
-                    CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-                val settingSectionStart = languageTypeToSectionHolderMap?.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-                ) as String
-                val settingSectionEnd = languageTypeToSectionHolderMap.get(
-                    CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-                ) as String
-
-                val settingSectionVariableList =
-                    CommandClickVariables.substituteVariableListFromHolder(
-                        shellContentsList,
-                        settingSectionStart,
-                        settingSectionEnd,
-                    )
+                val settingSectionVariableList = CommandClickVariables.extractMainFannelSettingList(
+                    currentAppDirPath,
+                    selectedShellFileName,
+                    mainFannelContentsList,
+                )
 
                 val editExecuteValue =
                     CommandClickVariables.substituteCmdClickVariable(
@@ -134,12 +122,13 @@ object FannelNameClickListenerSetter {
 //                        return
 //                    }
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name -> {
-                        val fannelState = FannelStateManager.getSate(
+                        val fannelState = FannelStateManager.getState(
                             currentAppDirPath,
                             selectedShellFileName,
+                            settingSectionVariableList
                         )
                         val editFragmentTag = DecideEditTag(
-                            shellContentsList,
+                            mainFannelContentsList,
                             currentAppDirPath,
                             selectedShellFileName,
                             fannelState

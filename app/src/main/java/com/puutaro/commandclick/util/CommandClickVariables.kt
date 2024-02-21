@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
@@ -173,11 +174,22 @@ object CommandClickVariables {
         ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
     }
 
-    fun makeScriptContentsList(
+    fun makeMainFannelConList(
         currentAppDirPath: String,
         scriptName: String,
+        setReplaceVariableMap: Map<String, String>? = null,
     ): List<String> {
-        return ReadText(
+        val isMainFannelDir = currentAppDirPath.removePrefix(
+            UsePath.cmdclickAppDirPath
+        ).removePrefix("/").let{
+            File(it).parent
+        }.isNullOrEmpty()
+        val isFileName = File(scriptName).parent.isNullOrEmpty()
+        if(
+            !isMainFannelDir
+            && isFileName
+        ) return emptyList()
+        val scriptConList = ReadText(
             File(
                 currentAppDirPath,
                 scriptName
@@ -189,6 +201,51 @@ object CommandClickVariables {
                 scriptName,
             )
         }.split("\n")
+        return when(
+            setReplaceVariableMap.isNullOrEmpty()
+        ){
+            true -> scriptConList
+            else -> SetReplaceVariabler.execReplaceByReplaceVariables(
+                scriptConList.joinToString("\n"),
+                setReplaceVariableMap,
+                currentAppDirPath,
+                scriptName
+            ).split("\n")
+        }
+    }
+
+    fun extractMainFannelSettingList(
+        currentAppDirPath: String,
+        currentFannelName: String,
+        mainFannelConListSrc: List<String>
+    ): List<String> {
+        val languageType =
+            judgeJsOrShellFromSuffix(currentFannelName)
+
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+        val setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                mainFannelConListSrc,
+                currentAppDirPath,
+                currentFannelName,
+            )
+        val mainFannelListSrc = makeMainFannelConList(
+            currentAppDirPath,
+            currentFannelName,
+            setReplaceVariableMap
+        )
+        return substituteVariableListFromHolder(
+            mainFannelListSrc,
+            settingSectionStart,
+            settingSectionEnd
+        ) ?: emptyList()
     }
 
     fun replaceVariableInHolder(

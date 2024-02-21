@@ -52,7 +52,7 @@ object ConfigFromStartUpFileSetterForTerm {
         )
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
-            CommandClickVariables.makeScriptContentsList(
+            CommandClickVariables.makeMainFannelConList(
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
             ),
@@ -139,7 +139,7 @@ object ConfigFromStartUpFileSetterForTerm {
             currentScriptFileName != cmdclickStartupJsName
         ){
             val settingVariableListFromStartup = CommandClickVariables.substituteVariableListFromHolder(
-                CommandClickVariables.makeScriptContentsList(
+                CommandClickVariables.makeMainFannelConList(
                     terminalFragment.currentAppDirPath,
                     cmdclickStartupJsName
                 ),
@@ -194,7 +194,7 @@ object ConfigFromStartUpFileSetterForTerm {
                 ),
             )
         }
-        val fannelContentsList = CommandClickVariables.makeScriptContentsList(
+        val fannelContentsList = CommandClickVariables.makeMainFannelConList(
             terminalFragment.currentAppDirPath,
             currentScriptFileName
         )

@@ -47,64 +47,6 @@ object FannelStateRooterManager {
                 settingSectionEnd,
             )
         }
-//        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-//            readSharePreferenceMap,
-//            SharePrefferenceSetting.on_shortcut
-//        ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-//        val currentFannelState =
-//            SharePreferenceMethod.getReadSharePreffernceMap(
-//                readSharePreferenceMap,
-//                SharePrefferenceSetting.current_fannel_state
-//            )
-//        if(
-//            !onShortcut
-//            && currentFannelState.isEmpty()
-//        ) return mainFannelSettingVariableList
-//        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
-//            UsePath.fannelStateRootTableFilePath,
-//            currentAppDirPath,
-//            currentFannelName
-//        )
-//
-//        if(
-//            !File(fannelStateRootTableFilePath).isFile
-//        ) return mainFannelSettingVariableList
-//        val fannelStateRooterMap = createFannelStateRooterMap(
-//            fannelStateRootTableFilePath,
-//            currentAppDirPath,
-//            currentFannelName,
-//            setReplaceVariableMap
-//        )
-//
-//        if(
-//            fannelStateRooterMap.isEmpty()
-//        ) return mainFannelSettingVariableList
-//        val defaultSettingValFilePath = fannelStateRooterMap.get(
-//            tsvDefaultKeyNameForFannelStateRooterMap
-//        ) ?: File(currentAppDirPath, currentFannelName).absolutePath
-//        val settingVariablePath =
-//            fannelStateRooterMap.get(
-//                currentFannelState
-//            )?: defaultSettingValFilePath
-//
-//        if(
-//            settingVariablePath.isEmpty()
-//            || !File(settingVariablePath).isFile
-//        ) return mainFannelSettingVariableList
-//        return getSettingVariableList(
-//            settingVariablePath,
-//            currentAppDirPath,
-//            currentFannelName,
-//            setReplaceVariableMap,
-//            settingSectionStart,
-//            settingSectionEnd,
-//        )
-
-//        return CommandClickVariables.substituteVariableListFromHolder(
-//            virtualFannelConList,
-//            settingSectionStart,
-//            settingSectionEnd,
-//        )
     }
 
     fun getSettingFannelPath(

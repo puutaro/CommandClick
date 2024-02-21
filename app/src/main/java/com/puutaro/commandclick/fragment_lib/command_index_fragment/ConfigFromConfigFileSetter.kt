@@ -26,7 +26,7 @@ object ConfigFromConfigFileSetter {
         val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
         val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
         val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-            CommandClickVariables.makeScriptContentsList(
+            CommandClickVariables.makeMainFannelConList(
                 cmdclickSystemAppDirPath,
                 cmdclickConfigFileName
             ),

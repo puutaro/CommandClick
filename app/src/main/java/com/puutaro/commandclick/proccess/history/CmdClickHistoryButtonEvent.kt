@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,7 +23,9 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -185,60 +188,106 @@ class CmdClickHistoryButtonEvent (
                     appDirName,
                     fannelName
                 )
-                val resultBool = AppHistoryAdminEvent.invoke(
-                    fragment,
-                    sharedPref,
-                    selectedHistoryFile,
-                )
-                if(
-                    !resultBool
-                ) return
-                val isJsExec = AppHistoryJsEvent.run(
-                    fragment,
+                val selectedAppDirPath =
+                    File(
+                        UsePath.cmdclickAppDirPath,
+                        appDirName
+                    ).absolutePath
+                val selectedHistoryFilePath = File(
+                    UsePath.cmdclickAppHistoryDirAdminPath,
                     selectedHistoryFile
-                )
-                val jsExecWaitTime =
-                    if(isJsExec) 200L
-                    else 0L
-                val fannelState = FannelStateManager.getSate(
-                    appDirName,
-                    fannelName,
-                )
-                val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
-                    appDirName,
-                    fannelName,
-                    EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
-                    fannelState
-                )
-                val cmdValEdit =
-                    EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                CoroutineScope(Dispatchers.Main).launch {
-                    delay(jsExecWaitTime)
-                    if(fragment is CommandIndexFragment) {
-                        FileSystems
-                        val listener = context
-                                as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
-                        listener?.onLongClickMenuItemsforCmdIndex(
-                            LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
-                            EditFragmentArgs(
-                                readSharePreferenceMap,
-                                cmdValEdit,
-                            ),
-                            String(),
-                            String()
-
-                        )
-                    } else {
-                        val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                        listener?.onToolbarMenuCategoriesForEdit(
-                            ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
-                            EditFragmentArgs(
-                                readSharePreferenceMap,
-                                cmdValEdit,
-                            )
-                        )
-                    }
+                ).absolutePath
+                if(
+                    !File(selectedAppDirPath).isDirectory
+                ) {
+                    Toast.makeText(
+                        fragment.context,
+                        "No exist: ${selectedAppDirPath}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    FileSystems.removeFiles(
+                        selectedHistoryFilePath
+                    )
+                    return
                 }
+                updateLastModifyForHistoryAndAppDir(
+                    selectedHistoryFilePath,
+                    appDirName
+                )
+                val mainFannelSettingConList = CommandClickVariables.extractMainFannelSettingList(
+                    selectedAppDirPath,
+                    fannelName,
+                    ReadText(
+                        File(selectedAppDirPath, fannelName).absolutePath
+                    ).textToList()
+                )
+                AppHistoryAdminEvent.register(
+                    sharedPref,
+                    selectedAppDirPath,
+                    fannelName,
+                    mainFannelSettingConList
+                )
+                launchHandler(
+                    selectedHistoryFile,
+                    selectedAppDirPath,
+                    fannelName,
+                    mainFannelSettingConList
+                )
+            }
+        }
+    }
+
+    private fun launchHandler(
+        selectedHistoryFile: String,
+        selectedAppDirPath: String,
+        fannelName: String,
+        mainFannelSettingConList: List<String>?
+    ){
+        val isJsExec = AppHistoryJsEvent.run(
+            fragment,
+            selectedHistoryFile,
+        )
+        val fannelState = FannelStateManager.getState(
+            selectedAppDirPath,
+            fannelName,
+            mainFannelSettingConList
+        )
+        val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
+            selectedAppDirPath,
+            fannelName,
+            EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key,
+            fannelState
+        )
+        val cmdValEdit =
+            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
+        val jsExecWaitTime =
+            if(isJsExec) 200L
+            else 0L
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(jsExecWaitTime)
+            if(fragment is CommandIndexFragment) {
+                FileSystems
+                val listener = context
+                        as? CommandIndexFragment.OnLongClickMenuItemsForCmdIndexListener
+                listener?.onLongClickMenuItemsforCmdIndex(
+                    LongClickMenuItemsforCmdIndex.EXEC_HISTORY,
+                    EditFragmentArgs(
+                        readSharePreferenceMap,
+                        cmdValEdit,
+                    ),
+                    String(),
+                    String()
+
+                )
+            } else {
+                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
+                listener?.onToolbarMenuCategoriesForEdit(
+                    ToolbarMenuCategoriesVariantForCmdIndex.HISTORY,
+                    EditFragmentArgs(
+                        readSharePreferenceMap,
+                        cmdValEdit,
+                    )
+                )
             }
         }
     }
@@ -310,6 +359,21 @@ class CmdClickHistoryButtonEvent (
         historyListAdapter.historyList.remove(selectedHistoryFile)
         historyListAdapter.notifyDataSetChanged()
     }
+
+    fun updateLastModifyForHistoryAndAppDir(
+        selectedHistoryFilePath: String,
+        selectedAppDirName: String,
+    ){
+        FileSystems.updateLastModified(
+            selectedHistoryFilePath
+        )
+        FileSystems.updateLastModified(
+            File(
+                UsePath.cmdclickAppDirAdminPath,
+                selectedAppDirName + UsePath.JS_FILE_SUFFIX
+            ).absolutePath
+        )
+    }
 }
 
 private val mainMenuGroupId = 30000
@@ -348,4 +412,3 @@ private fun deleteOverHistory(
         }
     }
 }
-

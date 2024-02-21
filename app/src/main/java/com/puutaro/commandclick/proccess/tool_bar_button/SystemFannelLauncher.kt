@@ -25,9 +25,12 @@ object SystemFannelLauncher {
                 fannelScriptName
             ).absolutePath
         ).textToList()
-        val fannelState = FannelStateManager.getSate(
+        val fannelState = FannelStateManager.getState(
             parentDirPath,
             fannelScriptName,
+            ReadText(
+                File(parentDirPath, fannelScriptName).absolutePath
+            ).textToList()
         )
         val editFragmentTag = DecideEditTag(
             shellContentsList,
@@ -52,9 +55,12 @@ object SystemFannelLauncher {
         fannelName: String,
     ){
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-        val fannelState = FannelStateManager.getSate(
+        val fannelState = FannelStateManager.getState(
             appDirPath,
-            fannelName
+            fannelName,
+            ReadText(
+                File(appDirPath, fannelName).absolutePath
+            ).textToList()
         )
         SharePreferenceMethod.putAllSharePreference(
             sharedPref,

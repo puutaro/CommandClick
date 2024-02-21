@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.FileSystems
@@ -11,7 +13,35 @@ object FannelStateManager {
 
     private val fannelStateKey = FannelStateTsvKey.FANNEL_STATE.key
 
-    fun getSate(
+    fun getState(
+        currentAppDirPath: String,
+        currentFannelName: String,
+        mainFannelSettingConList: List<String>?,
+    ): String {
+        val firstState = when(
+            mainFannelSettingConList.isNullOrEmpty()
+        ) {
+            true -> return execGetState(
+                currentAppDirPath,
+                currentFannelName,
+            )
+            else -> CommandClickVariables.substituteCmdClickVariable(
+                mainFannelSettingConList,
+                CommandClickScriptVariable.FIRST_STATE
+            )
+        }
+        return when(
+            firstState.isNullOrEmpty()
+        ) {
+            false -> firstState
+            else -> execGetState(
+                currentAppDirPath,
+                currentFannelName,
+            )
+        }
+    }
+
+    fun execGetState(
         currentAppDirPath: String,
         currentFannelName: String,
     ): String {
@@ -34,12 +64,12 @@ object FannelStateManager {
         ) return String()
         val fannelStateKey = FannelStateTsvKey.FANNEL_STATE.key
         return ReadText(
-                fannelStateFilePath
-            ).textToList().firstOrNull {
-                val trimLine = it.trim()
-                trimLine.startsWith("${fannelStateKey}\t")
-            }?.split("\t")?.lastOrNull()?.let {
-                QuoteTool.trimBothEdgeQuote(it)
+            fannelStateFilePath
+        ).textToList().firstOrNull {
+            val trimLine = it.trim()
+            trimLine.startsWith("${fannelStateKey}\t")
+        }?.split("\t")?.lastOrNull()?.let {
+            QuoteTool.trimBothEdgeQuote(it)
         } ?: String()
     }
 

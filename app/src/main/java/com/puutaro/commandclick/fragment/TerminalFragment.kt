@@ -150,7 +150,7 @@ class   TerminalFragment: Fragment() {
             ValidFannelNameGetterForTerm.get(
                 this
             )
-        val fannelContentsList = CommandClickVariables.makeScriptContentsList(
+        val fannelContentsList = CommandClickVariables.makeMainFannelConList(
             currentAppDirPath,
             currentValidFannelName
         )

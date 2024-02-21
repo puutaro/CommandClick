@@ -25,7 +25,7 @@ object ValidFannelNameGetterForTerm {
         terminalFragment: TerminalFragment,
         currentValidFannelName: String,
     ): List<String> {
-        return CommandClickVariables.makeScriptContentsList(
+        return CommandClickVariables.makeMainFannelConList(
             terminalFragment.currentAppDirPath,
             currentValidFannelName
         )

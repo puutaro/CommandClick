@@ -14,7 +14,7 @@ object SetConfigInfo {
     ){
         val cmdclickSystemAppDirPath = UsePath.cmdclickSystemAppDirPath
         val cmdclickConfigFileName = UsePath.cmdclickConfigFileName
-        val configConList = CommandClickVariables.makeScriptContentsList(
+        val configConList = CommandClickVariables.makeMainFannelConList(
             UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
         )
