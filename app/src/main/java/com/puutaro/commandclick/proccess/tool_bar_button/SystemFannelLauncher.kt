@@ -6,6 +6,9 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.lib.OnEditExecuteEvent
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.common.DecideEditTag
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
@@ -19,21 +22,43 @@ object SystemFannelLauncher {
         parentDirPath: String,
         fannelScriptName: String,
     ) {
-        val shellContentsList = ReadText(
+        val fannelConList = ReadText(
             File(
                 parentDirPath,
                 fannelScriptName
             ).absolutePath
         ).textToList()
+
+        val mainFannelConList = ReadText(
+            File(parentDirPath, fannelScriptName).absolutePath
+        ).textToList()
+        val setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                mainFannelConList,
+                parentDirPath,
+                fannelScriptName,
+            )
+
+        val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+            mainFannelConList,
+            fannelScriptName
+        ).let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it?.joinToString("\n") ?: String(),
+                setReplaceVariableMap,
+                parentDirPath,
+                fannelScriptName,
+            ).split("\n")
+        }
+
         val fannelState = FannelStateManager.getState(
             parentDirPath,
             fannelScriptName,
-            ReadText(
-                File(parentDirPath, fannelScriptName).absolutePath
-            ).textToList()
+            mainFannelSettingConList,
+            setReplaceVariableMap,
         )
         val editFragmentTag = DecideEditTag(
-            shellContentsList,
+            fannelConList,
             parentDirPath,
             fannelScriptName,
             fannelState
@@ -55,12 +80,34 @@ object SystemFannelLauncher {
         fannelName: String,
     ){
         val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+
+        val mainFannelConList = ReadText(
+            File(appDirPath, fannelName).absolutePath
+        ).textToList()
+        val setReplaceVariableMap =
+            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                mainFannelConList,
+                appDirPath,
+                fannelName,
+            )
+
+        val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+            mainFannelConList,
+            fannelName
+        ).let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it?.joinToString("\n") ?: String(),
+                setReplaceVariableMap,
+                appDirPath,
+                fannelName,
+            ).split("\n")
+        }
+
         val fannelState = FannelStateManager.getState(
             appDirPath,
             fannelName,
-            ReadText(
-                File(appDirPath, fannelName).absolutePath
-            ).textToList()
+            mainFannelSettingConList,
+            setReplaceVariableMap
         )
         SharePreferenceMethod.putAllSharePreference(
             sharedPref,

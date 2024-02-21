@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -17,6 +18,7 @@ object FannelStateManager {
         currentAppDirPath: String,
         currentFannelName: String,
         mainFannelSettingConList: List<String>?,
+        setReplaceVariableMap: Map<String, String>?
     ): String {
         val firstState = when(
             mainFannelSettingConList.isNullOrEmpty()
@@ -24,26 +26,92 @@ object FannelStateManager {
             true -> return execGetState(
                 currentAppDirPath,
                 currentFannelName,
+                setReplaceVariableMap,
             )
-            else -> CommandClickVariables.substituteCmdClickVariable(
+            else -> execGetFirstState(
+                currentAppDirPath,
+                currentFannelName,
                 mainFannelSettingConList,
-                CommandClickScriptVariable.FIRST_STATE
+                setReplaceVariableMap,
             )
         }
-        return when(
+        val state = when(
             firstState.isNullOrEmpty()
         ) {
             false -> firstState
             else -> execGetState(
                 currentAppDirPath,
                 currentFannelName,
+                setReplaceVariableMap,
             )
+        }
+        return state
+    }
+
+    private fun execGetFirstState(
+        currentAppDirPath: String,
+        currentFannelName: String,
+        mainFannelSettingConList: List<String>,
+        setReplaceVariableMap: Map<String, String>?,
+    ): String? {
+        val firstStateEntry = CommandClickVariables.substituteCmdClickVariable(
+            mainFannelSettingConList,
+            CommandClickScriptVariable.FIRST_STATE
+        )
+        return execGetValidState(
+            firstStateEntry,
+            currentAppDirPath,
+            currentFannelName,
+            setReplaceVariableMap,
+        )
+    }
+
+    private fun execGetValidState(
+        stateEntry: String?,
+        currentAppDirPath: String,
+        currentFannelName: String,
+        setReplaceVariableMap: Map<String, String>?,
+    ): String? {
+        if(
+            stateEntry.isNullOrEmpty()
+        ) return null
+        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelStateRootTableFilePath,
+            currentAppDirPath,
+            currentFannelName
+        )
+        if(
+            !File(fannelStateRootTableFilePath).isFile
+        ) return String()
+        val validFormatRootTable = ReadText(
+            fannelStateRootTableFilePath
+        ).readText().let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName
+            )
+        }.split("\n").map {
+            val stateNameAndSettingPathList = it.split("\t")
+            if(
+                stateNameAndSettingPathList.size == 2
+            ) return@map stateNameAndSettingPathList
+                .first().trim()
+            String()
+        }
+        val isValidState =
+            validFormatRootTable.contains(stateEntry)
+        return when(isValidState){
+            true -> stateEntry
+            else -> String()
         }
     }
 
     fun execGetState(
         currentAppDirPath: String,
         currentFannelName: String,
+        setReplaceVariableMap: Map<String, String>?
     ): String {
         val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateRootTableFilePath,
@@ -65,7 +133,14 @@ object FannelStateManager {
         val fannelStateKey = FannelStateTsvKey.FANNEL_STATE.key
         return ReadText(
             fannelStateFilePath
-        ).textToList().firstOrNull {
+        ).readText().let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName
+            )
+        }.split("\n").firstOrNull {
             val trimLine = it.trim()
             trimLine.startsWith("${fannelStateKey}\t")
         }?.split("\t")?.lastOrNull()?.let {
@@ -78,9 +153,6 @@ object FannelStateManager {
         currentFannelName: String,
         updateFannelState: String,
     ) {
-//        if(
-//            updateFannelState.trim().isEmpty()
-//        ) return
         val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
             UsePath.fannelStateRootTableFilePath,
             currentAppDirPath,

@@ -106,6 +106,27 @@ object CommandClickVariables {
         return  LanguageTypeSelects.JAVA_SCRIPT
     }
 
+    fun substituteVariableListByFannelName(
+        shellContentsList: List<String>?,
+        fannelName: String,
+    ): List<String>? {
+        val languageType =
+            judgeJsOrShellFromSuffix(fannelName)
+        val languageTypeToSectionHolderMap =
+            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
+        val settingSectionStart = languageTypeToSectionHolderMap?.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
+        ) as String
+        val settingSectionEnd = languageTypeToSectionHolderMap.get(
+            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
+        ) as String
+        return substituteVariableListFromHolder(
+            shellContentsList,
+            settingSectionStart,
+            settingSectionEnd,
+        )
+    }
+
     fun substituteVariableListFromHolder(
         shellContentsList: List<String>?,
         startHolderName: String?,
@@ -212,40 +233,6 @@ object CommandClickVariables {
                 scriptName
             ).split("\n")
         }
-    }
-
-    fun extractMainFannelSettingList(
-        currentAppDirPath: String,
-        currentFannelName: String,
-        mainFannelConListSrc: List<String>
-    ): List<String> {
-        val languageType =
-            judgeJsOrShellFromSuffix(currentFannelName)
-
-        val languageTypeToSectionHolderMap =
-            CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
-        val settingSectionStart = languageTypeToSectionHolderMap?.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
-        ) as String
-        val settingSectionEnd = languageTypeToSectionHolderMap.get(
-            CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
-        ) as String
-        val setReplaceVariableMap =
-            JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
-                mainFannelConListSrc,
-                currentAppDirPath,
-                currentFannelName,
-            )
-        val mainFannelListSrc = makeMainFannelConList(
-            currentAppDirPath,
-            currentFannelName,
-            setReplaceVariableMap
-        )
-        return substituteVariableListFromHolder(
-            mainFannelListSrc,
-            settingSectionStart,
-            settingSectionEnd
-        ) ?: emptyList()
     }
 
     fun replaceVariableInHolder(

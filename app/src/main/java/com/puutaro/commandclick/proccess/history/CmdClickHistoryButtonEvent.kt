@@ -22,8 +22,10 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -214,24 +216,40 @@ class CmdClickHistoryButtonEvent (
                     selectedHistoryFilePath,
                     appDirName
                 )
-                val mainFannelSettingConList = CommandClickVariables.extractMainFannelSettingList(
-                    selectedAppDirPath,
-                    fannelName,
-                    ReadText(
-                        File(selectedAppDirPath, fannelName).absolutePath
-                    ).textToList()
-                )
+                val mainFannelConList = ReadText(
+                    File(selectedAppDirPath, fannelName).absolutePath
+                ).textToList()
+                val setReplaceVariableMap =
+                    JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                        mainFannelConList,
+                        appDirName,
+                        fannelName,
+                    )
+
+                val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+                    mainFannelConList,
+                    fannelName
+                ).let {
+                    SetReplaceVariabler.execReplaceByReplaceVariables(
+                        it?.joinToString("\n") ?: String(),
+                        setReplaceVariableMap,
+                        appDirName,
+                        fannelName,
+                    ).split("\n")
+                }
                 AppHistoryAdminEvent.register(
                     sharedPref,
                     selectedAppDirPath,
                     fannelName,
-                    mainFannelSettingConList
+                    mainFannelSettingConList,
+                    setReplaceVariableMap,
                 )
                 launchHandler(
                     selectedHistoryFile,
                     selectedAppDirPath,
                     fannelName,
-                    mainFannelSettingConList
+                    mainFannelSettingConList,
+                    setReplaceVariableMap
                 )
             }
         }
@@ -241,7 +259,8 @@ class CmdClickHistoryButtonEvent (
         selectedHistoryFile: String,
         selectedAppDirPath: String,
         fannelName: String,
-        mainFannelSettingConList: List<String>?
+        mainFannelSettingConList: List<String>?,
+        setReplaceVariableMap: Map<String, String>?
     ){
         val isJsExec = AppHistoryJsEvent.run(
             fragment,
@@ -250,7 +269,8 @@ class CmdClickHistoryButtonEvent (
         val fannelState = FannelStateManager.getState(
             selectedAppDirPath,
             fannelName,
-            mainFannelSettingConList
+            mainFannelSettingConList,
+            setReplaceVariableMap
         )
         val readSharePreferenceMap = EditFragmentArgs.createReadSharePreferenceMap(
             selectedAppDirPath,

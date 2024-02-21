@@ -149,6 +149,7 @@ object CommandClickScriptVariable {
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         IMAGE_LONG_PRESS_MENU_FILE_PATH,
         DEFAULT_MONITOR_FILE,
+        FIRST_STATE,
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name

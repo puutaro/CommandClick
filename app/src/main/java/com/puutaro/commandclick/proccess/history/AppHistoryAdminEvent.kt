@@ -17,7 +17,8 @@ object AppHistoryAdminEvent {
         sharedPref: SharedPreferences?,
         selectedAppDirPath: String,
         selectedFannelName: String,
-        mainFannelSettingConList: List<String>
+        mainFannelSettingConList: List<String>,
+        setReplaceVariableMap: Map<String, String>?
     ) {
         val updateEditExecuteValue = CommandClickVariables.substituteCmdClickVariable(
             mainFannelSettingConList,
@@ -56,7 +57,8 @@ object AppHistoryAdminEvent {
         val fannelState = FannelStateManager.getState(
             selectedAppDirPath,
             selectedFannelName,
-            mainFannelSettingConList
+            mainFannelSettingConList,
+            setReplaceVariableMap,
         )
         SharePreferenceMethod.putAllSharePreference(
             sharedPref,
