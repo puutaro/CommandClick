@@ -9,6 +9,7 @@ object ButtonIconSettingsForToolbarButton {
         PLAY(CmdClickIcons.PLAY.str),
         EDIT(CmdClickIcons.EDIT.str),
         SETTING(CmdClickIcons.SETTING.str),
+        EXTRA(CmdClickIcons.SET_UP.str),
         OK(CmdClickIcons.OK.str),
     }
 }

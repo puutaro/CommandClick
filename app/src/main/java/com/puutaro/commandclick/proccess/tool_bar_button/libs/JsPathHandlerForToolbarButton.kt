@@ -60,9 +60,7 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.FreeDialogReflector
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
@@ -693,13 +691,13 @@ object JsPathHandlerForToolbarButton {
                     && onPassCmdVariableEdit
             val isSettingEdit = !enableCmdEdit
 
-            val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
+//            val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
             val isOnlyCmdEditNoFdialog = enableCmdEdit
                     && !editFragment.enableEditExecute
-                    && !isFdialogFannel
-            val isOnlyCmdEditWithFdialog = enableCmdEdit
-                    && !editFragment.enableEditExecute
-                    && isFdialogFannel
+//                    && !isFdialogFannel
+//            val isOnlyCmdEditWithFdialog = enableCmdEdit
+//                    && !editFragment.enableEditExecute
+//                    && isFdialogFannel
             when (true) {
                 isCmdEditExecute -> {
                     Keyboard.hiddenKeyboardForFragment(
@@ -718,8 +716,8 @@ object JsPathHandlerForToolbarButton {
                         currentScriptFileName,
                     )
                 }
-                isOnlyCmdEditWithFdialog ->
-                    fDialogOkButtonProcess()
+//                isOnlyCmdEditWithFdialog ->
+//                    fDialogOkButtonProcess()
 
                 isSettingEditByPass,
                 isOnlyCmdEditNoFdialog,
@@ -738,19 +736,19 @@ object JsPathHandlerForToolbarButton {
             }
         }
 
-        private fun fDialogOkButtonProcess() {
-            FreeDialogReflector.reflect(
-                editFragment.srcReadSharePreffernceMap,
-                editFragment.readSharePreferenceMap,
-            )
-            val listener =
-                this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-            listener?.onToolBarButtonClickForEditFragment(
-                String(),
-                ToolbarButtonBariantForEdit.CANCEL,
-                mapOf(),
-                false
-            )
-        }
+//        private fun fDialogOkButtonProcess() {
+//            FreeDialogReflector.reflect(
+//                editFragment.srcReadSharePreffernceMap,
+//                editFragment.readSharePreferenceMap,
+//            )
+//            val listener =
+//                this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
+//            listener?.onToolBarButtonClickForEditFragment(
+//                String(),
+//                ToolbarButtonBariantForEdit.CANCEL,
+//                mapOf(),
+//                false
+//            )
+//        }
     }
 }

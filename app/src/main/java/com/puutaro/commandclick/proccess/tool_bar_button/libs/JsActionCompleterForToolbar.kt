@@ -20,7 +20,7 @@ object JsActionCompleterForToolbar {
             true -> execMakeJsActionMap(
                 editFragment,
                 toolbarButtonConfigMap,
-                SettingButtonConfigMapKey.LONG_CLICK.str,
+                SettingButtonConfigMapKey.LONG_CLICK.key,
                 ToolbarButtonArgsMaker.defaultLongClickMacroMap.get(
                     toolbarButtonBariantForEdit
                 ) ?: String(),
@@ -28,7 +28,7 @@ object JsActionCompleterForToolbar {
             else -> execMakeJsActionMap(
                 editFragment,
                 toolbarButtonConfigMap,
-                SettingButtonConfigMapKey.CLICK.str,
+                SettingButtonConfigMapKey.CLICK.key,
                 ToolbarButtonArgsMaker.defaultClickMacroMap.get(
                     toolbarButtonBariantForEdit
                 ) ?: String(),

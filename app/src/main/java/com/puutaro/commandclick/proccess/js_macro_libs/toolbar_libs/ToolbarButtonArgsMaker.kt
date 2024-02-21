@@ -22,13 +22,10 @@ import java.io.File
 
 class ToolbarButtonArgsMaker(
     val editFragment: EditFragment,
-//    val recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-//    val recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     val settingButtonView: ImageButton?,
     private val isLongClick: Boolean,
 ) {
-//    val fileOrDirGetterForSettingButton = editFragment.fileOrDirGetterForSettingButton
     private val languageType = LanguageTypeSelects.JAVA_SCRIPT
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -81,11 +78,13 @@ class ToolbarButtonArgsMaker(
             ToolbarButtonBariantForEdit.SETTING to onScriptSaveOffInClick,
             ToolbarButtonBariantForEdit.EDIT to onScriptSaveOffInClick,
             ToolbarButtonBariantForEdit.OK to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.EXTRA to onScriptSaveOffInClick
         )
         val onSaveDefaultMapInLongClick = mapOf(
             ToolbarButtonBariantForEdit.SETTING to onScriptSaveOffInClick,
             ToolbarButtonBariantForEdit.EDIT to onScriptSaveOffInClick,
             ToolbarButtonBariantForEdit.OK to onScriptSaveOffInClick,
+            ToolbarButtonBariantForEdit.EXTRA to onScriptSaveOffInClick
         )
 
         val defaultClickMacroMap = mapOf(
@@ -98,6 +97,7 @@ class ToolbarButtonArgsMaker(
             ToolbarButtonBariantForEdit.SETTING to MacroForToolbarButton.Macro.MENU.name,
             ToolbarButtonBariantForEdit.EDIT to MacroForToolbarButton.Macro.NORMAL.name,
             ToolbarButtonBariantForEdit.OK to MacroForToolbarButton.Macro.NORMAL.name,
+            ToolbarButtonBariantForEdit.EXTRA to MacroForToolbarButton.Macro.NORMAL.name,
         )
 
 //        private val menuDefaultConForCmdIndex = makeSettingMenuDefaultConForCmdIndex()
@@ -106,8 +106,8 @@ class ToolbarButtonArgsMaker(
 
     fun decideClickKey(): String {
         return when(isLongClick){
-            true -> SettingButtonConfigMapKey.LONG_CLICK.str
-            else -> SettingButtonConfigMapKey.CLICK.str
+            true -> SettingButtonConfigMapKey.LONG_CLICK.key
+            else -> SettingButtonConfigMapKey.CLICK.key
         }
     }
 

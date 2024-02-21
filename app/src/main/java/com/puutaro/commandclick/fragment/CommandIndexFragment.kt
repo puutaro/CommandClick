@@ -143,9 +143,9 @@ class CommandIndexFragment: Fragment() {
         readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
-        FDialogTempFile.removeByCoroutine(
-            readSharePreffernceMap
-        )
+//        FDialogTempFile.removeByCoroutine(
+//            readSharePreffernceMap
+//        )
 
         val cmdListView = binding.cmdList
         cmdListView.setHasFixedSize(true)

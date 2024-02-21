@@ -169,6 +169,8 @@ object ListSettingVariableListMaker {
             -> UsePath.editButtonConfigPath
             CommandClickScriptVariable.PLAY_BUTTON_CONFIG
             -> UsePath.playButtonConfigPath
+            CommandClickScriptVariable.EXTRA_BUTTON_CONFIG
+            -> UsePath.extraButtonConfigPath
             CommandClickScriptVariable.LIST_INDEX_CONFIG
             -> UsePath.listIndexForEditConfigPath
             CommandClickScriptVariable.QR_DIALOG_CONFIG

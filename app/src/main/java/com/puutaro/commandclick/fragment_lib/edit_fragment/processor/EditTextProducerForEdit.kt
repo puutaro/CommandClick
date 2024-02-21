@@ -71,9 +71,9 @@ class EditTextProducerForEdit(
                 EditTextIdForEdit.COMMAND_VARIABLE.id
             )
         }
-        if (
-            FDialogTempFile.howFDialogFile(currentScriptFileName)
-        ) return
+//        if (
+//            FDialogTempFile.howFDialogFile(currentScriptFileName)
+//        ) return
         binding.editLinearLayout.addView(
             makeDescriptionButton(
                 editFragment,

@@ -67,7 +67,7 @@ private object ScriptSaver{
             true -> execOnScriptSave(
                 editFragment,
                 toolbarButtonArgsMaker,
-                SettingButtonConfigMapKey.LONG_CLICK.str,
+                SettingButtonConfigMapKey.LONG_CLICK.key,
                 ToolbarButtonArgsMaker.onSaveDefaultMapInLongClick.get(
                     toolbarButtonArgsMaker.toolbarButtonBariantForEdit
                 ) ?: String(),
@@ -75,7 +75,7 @@ private object ScriptSaver{
             else -> execOnScriptSave(
                 editFragment,
                 toolbarButtonArgsMaker,
-                SettingButtonConfigMapKey.CLICK.str,
+                SettingButtonConfigMapKey.CLICK.key,
                 ToolbarButtonArgsMaker.onSaveDefaultMapInClick.get(
                     toolbarButtonArgsMaker.toolbarButtonBariantForEdit
                 ) ?: String(),
@@ -130,12 +130,12 @@ private object MonitorSizing{
             true -> execMonitorSizing(
                 editFragment,
                 toolbarButtonArgsMaker,
-                SettingButtonConfigMapKey.LONG_CLICK.str
+                SettingButtonConfigMapKey.LONG_CLICK.key
             )
             else -> execMonitorSizing(
                 editFragment,
                 toolbarButtonArgsMaker,
-                SettingButtonConfigMapKey.CLICK.str
+                SettingButtonConfigMapKey.CLICK.key
             )
         }
     }
@@ -171,10 +171,11 @@ private object MonitorSizing{
 }
 
 enum class SettingButtonConfigMapKey(
-    val str: String,
+    val key: String,
 ) {
     LONG_CLICK("longClick"),
     CLICK("click"),
     ICON("icon"),
     VISIBLE("visible"),
+    ON_FOCUS("onFocus")
 }

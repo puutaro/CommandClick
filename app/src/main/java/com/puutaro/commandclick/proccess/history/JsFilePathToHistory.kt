@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.history
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
@@ -21,11 +20,11 @@ object JsFilePathToHistory {
         if(
             !jsFullPathObj.isFile
         ) return
-        val isFDialogFannelUri =
-            FDialogTempFile.howFDialogFile(
-                jsFullPathObj.name
-            )
-        if(isFDialogFannelUri) return
+//        val isFDialogFannelUri =
+//            FDialogTempFile.howFDialogFile(
+//                jsFullPathObj.name
+//            )
+//        if(isFDialogFannelUri) return
         val cmdclickUrlHistoryFilePath = File(
             appUrlSystemPath,
             cmdclickUrlHistoryFileName

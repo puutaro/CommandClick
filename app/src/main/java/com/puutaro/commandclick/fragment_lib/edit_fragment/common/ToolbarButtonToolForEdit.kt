@@ -11,6 +11,7 @@ object ToolbarButtonToolForEdit {
         ToolbarButtonBariantForEdit.OK to false,
         ToolbarButtonBariantForEdit.EDIT to false,
         ToolbarButtonBariantForEdit.SETTING to false,
+        ToolbarButtonBariantForEdit.EXTRA to false
     )
 
     fun createInitButtonIconMap() = mutableMapOf(
@@ -18,6 +19,7 @@ object ToolbarButtonToolForEdit {
         ToolbarButtonBariantForEdit.OK to R.drawable.icons8_check_ok,
         ToolbarButtonBariantForEdit.EDIT to R.drawable.icons8_edit,
         ToolbarButtonBariantForEdit.SETTING to R.drawable.icons8_setting,
+        ToolbarButtonBariantForEdit.EXTRA to R.drawable.icons8_setup,
     )
 
     fun culcButtonWeight(
@@ -38,4 +40,5 @@ enum class ToolbarButtonBariantForEdit(
     OK("ok"),
     EDIT("edit"),
     SETTING("setting"),
+    EXTRA("extra"),
 }

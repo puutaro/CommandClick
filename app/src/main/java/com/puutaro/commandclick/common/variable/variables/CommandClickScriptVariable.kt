@@ -91,6 +91,7 @@ object CommandClickScriptVariable {
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"
+    val EXTRA_BUTTON_CONFIG = "extraButtonConfig"
     val LIST_INDEX_CONFIG = "listIndexConfig"
     val QR_DIALOG_CONFIG = "qrDialogConfig"
     val HIDE_SETTING_VARIABLES = "hideSettingVariables"
@@ -141,6 +142,7 @@ object CommandClickScriptVariable {
         HOME_SCRIPT_URLS_PATH,
         PLAY_BUTTON_CONFIG,
         EDIT_BUTTON_CONFIG,
+        EXTRA_BUTTON_CONFIG,
         SETTING_BUTTON_CONFIG,
         LIST_INDEX_CONFIG,
         QR_DIALOG_CONFIG,

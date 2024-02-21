@@ -20,7 +20,6 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
@@ -109,13 +108,13 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE,
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
-        editFragment.listIndexConfigMap = makeSettingConfigMap(
+        editFragment.listIndexConfigMap = makeToolbarButtonConfigMap(
             editFragment,
             settingVariableList,
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
             String(),
         )
-        editFragment.qrDialogConfig = makeSettingConfigMap(
+        editFragment.qrDialogConfig = makeToolbarButtonConfigMap(
             editFragment,
             settingVariableList,
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
@@ -280,11 +279,6 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         onShortcut: Boolean
     ){
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
         editFragment.enableEditExecute =
             (editFragment.editExecuteValue ==
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name
@@ -314,7 +308,7 @@ object ConfigFromScriptFileSetter {
                     val settingButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.SETTING)
                     settingButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.VISIBLE.str
+                        SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
                         if(
                             it.isNullOrEmpty()
@@ -328,13 +322,13 @@ object ConfigFromScriptFileSetter {
             ToolbarButtonBariantForEdit.EDIT,
             when (true) {
                 isSettingEdit -> false
-                isOnlyCmdEdit ->
-                    !FDialogTempFile.howFDialogFile(currentFannelName)
+                isOnlyCmdEdit -> true
+//                    !FDialogTempFile.howFDialogFile(currentFannelName)
                 else -> {
                     val editButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
                     editButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.VISIBLE.str
+                        SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
                         if(
                             it.isNullOrEmpty()
@@ -354,11 +348,30 @@ object ConfigFromScriptFileSetter {
                     val okButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
                     okButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.VISIBLE.str
+                        SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
                         if(
                             it.isNullOrEmpty()
                         ) return@let true
+                        it == buttonVisibleOn
+                    }
+                }
+            }
+        )
+        editFragment.toolBarButtonVisibleMap.put(
+            ToolbarButtonBariantForEdit.EXTRA,
+            when(true) {
+                isSettingEdit,
+                isOnlyCmdEdit -> false
+                else -> {
+                    val settingButtonConfigMap =
+                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EXTRA)
+                    settingButtonConfigMap?.get(
+                        SettingButtonConfigMapKey.VISIBLE.key
+                    ).let {
+                        if(
+                            it.isNullOrEmpty()
+                        ) return@let false
                         it == buttonVisibleOn
                     }
                 }
@@ -372,13 +385,19 @@ object ConfigFromScriptFileSetter {
     ){
         editFragment.toolbarButtonConfigMap =
             mapOf(
-                ToolbarButtonBariantForEdit.SETTING to makeSettingConfigMap(
+                ToolbarButtonBariantForEdit.SETTING to makeToolbarButtonConfigMap(
                     editFragment,
                     settingVariableList,
                     CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
                     String(),
                 ),
-                ToolbarButtonBariantForEdit.EDIT to makeSettingConfigMap(
+                ToolbarButtonBariantForEdit.EXTRA to makeToolbarButtonConfigMap(
+                    editFragment,
+                    settingVariableList,
+                    CommandClickScriptVariable.EXTRA_BUTTON_CONFIG,
+                    String(),
+                ),
+                ToolbarButtonBariantForEdit.EDIT to makeToolbarButtonConfigMap(
                     editFragment,
                     settingVariableList,
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
@@ -420,13 +439,31 @@ object ConfigFromScriptFileSetter {
                     val settingButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.SETTING)
                     val selectedIconName = settingButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.ICON.str
+                        SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.SETTING.str
                     iconNameIdPairList.find {
                         it.str == selectedIconName
                     }?.id ?: defaultSettingButtonIconId
                 }
             }
+        )
+        editFragment.toolBarButtonIconMap.put(
+            ToolbarButtonBariantForEdit.EXTRA,
+//            when(true) {
+//                isSettingEdit,
+//                isOnlyCmdEdit ->
+//                    defaultSettingButtonIconId
+//                else -> {
+            let {
+                    val settingButtonConfigMap =
+                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EXTRA)
+                    val selectedIconName = settingButtonConfigMap?.get(
+                        SettingButtonConfigMapKey.ICON.key
+                    ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EXTRA.str
+                    iconNameIdPairList.find {
+                        it.str == selectedIconName
+                    }?.id ?: defaultSettingButtonIconId
+                }
         )
         val defaultOkButtonIconId =
             R.drawable.icons8_check_ok
@@ -441,7 +478,7 @@ object ConfigFromScriptFileSetter {
                     val okButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.OK)
                     val selectedIconName = okButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.ICON.str
+                        SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.PLAY.str
                     val defaultIconId = R.drawable.icons_play
                     iconNameIdPairList.find {
@@ -463,7 +500,7 @@ object ConfigFromScriptFileSetter {
                     val editButtonConfigMap =
                         editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
                     val selectedIconName = editButtonConfigMap?.get(
-                        SettingButtonConfigMapKey.ICON.str
+                        SettingButtonConfigMapKey.ICON.key
                     ) ?: ButtonIconSettingsForToolbarButton.ButtonIcons.EDIT.str
                     val defaultIconId = R.drawable.icons8_check_ok
                     iconNameIdPairList.find {
@@ -483,13 +520,13 @@ object ConfigFromScriptFileSetter {
                 CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
         return when(isSettingEdit) {
             true -> mapOf(
-                SettingButtonConfigMapKey.CLICK.str to
+                SettingButtonConfigMapKey.CLICK.key to
                         listOf(
                             JsActionKeyManager.JsActionsKey.JS_PATH.key,
                             MacroForToolbarButton.Macro.OK.name
                         ).joinToString("=")
             )
-            else -> makeSettingConfigMap(
+            else -> makeToolbarButtonConfigMap(
                 editFragment,
                 settingVariableList,
                 CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
@@ -498,13 +535,14 @@ object ConfigFromScriptFileSetter {
         }
     }
 
-    private fun makeSettingConfigMap(
+    private fun makeToolbarButtonConfigMap(
         editFragment: EditFragment,
         settingVariableList: List<String>?,
         targetSettingConfigValName: String,
         defaultButtonConfigCon: String,
     ): Map<String, String> {
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val readSharePreferenceMap =
+            editFragment.readSharePreferenceMap
         val settingButtonConfigMapStr =
             ListSettingVariableListMaker.makeFromSettingVariableList(
                 targetSettingConfigValName,

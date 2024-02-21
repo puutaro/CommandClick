@@ -14,7 +14,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.FdialogToolForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib.queryUrlToText
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.file.ReadText
@@ -134,11 +133,11 @@ object WrapWebHistoryUpdater {
 
         val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(webViewUrl)
         if(!urlCheckResult) return
-        val isFDialogFannelUri =
-            FDialogTempFile.howFDialogFile(
-                File(webViewUrl ?: String()).name
-            )
-        if(isFDialogFannelUri) return
+//        val isFDialogFannelUri =
+//            FDialogTempFile.howFDialogFile(
+//                File(webViewUrl ?: String()).name
+//            )
+//        if(isFDialogFannelUri) return
         val searchViewTextSource = if(
             webViewUrl?.startsWith(WebUrlVariables.queryUrl) == true
         ) {

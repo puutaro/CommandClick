@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.history.CLICLTYPE
 import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
 import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonHandler
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonFocusSettingsForToolbarButton
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class ToolbarButtonProducerForEdit(
@@ -49,8 +50,6 @@ class ToolbarButtonProducerForEdit(
 
     fun make(
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-//        recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>?,
-//        recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>?
     ) {
         if(
             !howSetButton(toolbarButtonBariantForEdit)
@@ -60,10 +59,18 @@ class ToolbarButtonProducerForEdit(
         makeButtonView.imageTintList =
             context?.getColorStateList(R.color.terminal_color)
         makeButtonView.setImageResource(
-            editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit] ?: R.drawable.icons8_ok
+            editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
+                ?: R.drawable.icons8_ok
         )
         makeButtonView.backgroundTintList =
             context?.getColorStateList(R.color.white)
+//        it.getColorStateList(R.color.terminal_color)
+
+        ButtonFocusSettingsForToolbarButton.set(
+            editFragment,
+            toolbarButtonBariantForEdit,
+            makeButtonView
+        )
         makeButtonView.layoutParams = insertImageButtonParam
         makeButtonView.tag = toolbarButtonBariantForEdit.str
         makeButtonView.setOnLongClickListener {
@@ -110,13 +117,12 @@ class ToolbarButtonProducerForEdit(
                 }
                 ToolbarButtonBariantForEdit.SETTING,
                 ToolbarButtonBariantForEdit.OK,
-                ToolbarButtonBariantForEdit.EDIT -> {
+                ToolbarButtonBariantForEdit.EDIT ,
+                ToolbarButtonBariantForEdit.EXTRA, -> {
                     settingButtonHandler.handle(
                         false,
                         toolbarButtonBariantForEdit,
                         makeButtonView,
-//                        recordNumToMapNameValueInCommandHolder,
-//                        recordNumToMapNameValueInSettingHolder,
                     )
                 }
                 ToolbarButtonBariantForEdit.CANCEL -> {}
@@ -138,8 +144,6 @@ class ToolbarButtonProducerForEdit(
         buttonInnerView: View,
         settingButtonView: ImageButton,
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-//        recordNumToMapNameValueInCommandHolder:  Map<Int, Map<String, String>?>?,
-//        recordNumToMapNameValueInSettingHolder:  Map<Int, Map<String, String>?>?,
     ){
         when (toolbarButtonBariantForEdit) {
             ToolbarButtonBariantForEdit.HISTORY -> {
@@ -156,13 +160,12 @@ class ToolbarButtonProducerForEdit(
             }
             ToolbarButtonBariantForEdit.SETTING,
             ToolbarButtonBariantForEdit.OK,
-            ToolbarButtonBariantForEdit.EDIT -> {
+            ToolbarButtonBariantForEdit.EDIT,
+            ToolbarButtonBariantForEdit.EXTRA -> {
                 settingButtonHandler.handle(
                     true,
                     toolbarButtonBariantForEdit,
                     settingButtonView,
-//                    recordNumToMapNameValueInCommandHolder,
-//                    recordNumToMapNameValueInSettingHolder,
                 )
             }
             ToolbarButtonBariantForEdit.CANCEL -> {}

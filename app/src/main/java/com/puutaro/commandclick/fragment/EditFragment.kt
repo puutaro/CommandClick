@@ -171,7 +171,7 @@ class EditFragment: Fragment() {
             EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharePreffernceMap =
             EditFragmentArgs.getSrcReadSharePreference(arguments)
-        FDialogTempFile.remove(readSharePreferenceMap)
+//        FDialogTempFile.remove(readSharePreferenceMap)
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreferenceMap,

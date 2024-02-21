@@ -73,6 +73,9 @@ class EditModeHandler(
         buttonCreate(
             ToolbarButtonBariantForEdit.SETTING,
         )
+        buttonCreate(
+            ToolbarButtonBariantForEdit.EXTRA,
+        )
     }
 
     private fun editSettingVariable(
