@@ -108,30 +108,6 @@ object ListIndexEditConfig {
         } ?: TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
     }
 
-//    private fun execMakeJsPathMacro(
-//        clickConfigMap: Map<String, String>,
-//        defaultButtonMacroStr: String,
-//    ): String {
-//        if(
-//            clickConfigMap.isEmpty()
-//        ) return String()
-//        val clickJsMacroStr =
-//            clickConfigMap.get(
-//                ClickSettingsForListIndex.ClickSettingKey.JS_PATH.key
-//            )
-//        return MacroForToolbarButton.Macro.values().firstOrNull {
-//            it.name == clickJsMacroStr
-//        }?.name.let name@ {
-//            if(
-//                it != null
-//            ) return@name it
-//            if(
-//                clickJsMacroStr.isNullOrEmpty()
-//            ) return@name defaultButtonMacroStr
-//            clickJsMacroStr
-//        }
-//    }
-
     fun setCheckToMaterialCardView(
         materialCardView: MaterialCardView,
         checkItemConfigMap: Map<String, String>,
