@@ -9,7 +9,7 @@ class JsAddUrlCon(
     private val terminalFragment: TerminalFragment
 ) {
     @JavascriptInterface
-    fun add(
+    fun add_S(
         urlString: String,
         onSearchBtn: String,
         urlConSaveParentDirPath: String,

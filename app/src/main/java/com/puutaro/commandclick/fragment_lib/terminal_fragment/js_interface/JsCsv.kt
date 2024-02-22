@@ -49,7 +49,7 @@ class JsCsv(
     }
 
     @JavascriptInterface
-    fun read(
+    fun read_S(
         tag: String,
         filePath: String,
         withNoHeader: String,
@@ -371,7 +371,7 @@ class JsCsv(
     }
 
     @JavascriptInterface
-    fun selectColumn(
+    fun selectColumn_S(
         srcTag: String,
         destTag: String,
         comaSepaColumns: String
@@ -460,7 +460,7 @@ class JsCsv(
         }
     }
     @JavascriptInterface
-    fun filter(
+    fun filter_S(
         srcTag: String,
         destTag: String,
         tabSepaFormura: String

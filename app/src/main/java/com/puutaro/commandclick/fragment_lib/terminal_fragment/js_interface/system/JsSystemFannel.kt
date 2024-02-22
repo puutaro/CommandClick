@@ -8,7 +8,7 @@ class JsSystemFannel(
     private val terminalFragment: TerminalFragment
 ) {
     @JavascriptInterface
-    fun launch(
+    fun launch_S(
         appDirPath: String,
         fannelName: String,
     ){

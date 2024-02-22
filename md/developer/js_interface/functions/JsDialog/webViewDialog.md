@@ -23,7 +23,7 @@ So, this is one of the most used dialog in `CommandClick`.
 
 ```js.js
 
-jsDialog.webView(
+jsDialog.webView_S(
     urlStr: String,
     currentFannelPath: String,
     menuMapStrListStr: String,
@@ -101,7 +101,7 @@ Use `!` as sepalator
 ex1)
 ```
 
-jsDialog.webView(
+jsDialog.webView_S(
     launchUrlString,
     "${0}",
     "clickMenuFilePath=${01}/${001}/clickMenu.txt!longPressMenuFilePath=${01}/${001}/longPressMenu.txt!dismissType=both!dismissDelayMiliTime=300!iconName=wheel",
@@ -111,7 +111,7 @@ jsDialog.webView(
 ex2) 
 ```
 
-jsDialog.webView(
+jsDialog.webView_S(
     launchUrlString,
     "${0}",
     "dismissType=both!iconName=cancel",
@@ -124,7 +124,7 @@ ex2)
 
 ```
 
-jsDialog.webView(
+jsDialog.webView_S(
     launchUrlString,
     "${0}",
     "dismissType=longpress!iconName=back",
@@ -147,7 +147,7 @@ Use `|` as partition
 ex1)
 
 ```
-jsDialog.webView(
+jsDialog.webView_S(
     launchUrlString,
     "${0}",
     "clickMenuFilePath=${01}/${001}/clickMenu1.txt!dismissType=longpress!iconName=back|clickMenuFilePath=${01}/${001}/clickMenu.txt!longPressMenuFilePath=${01}/${001}/longPressMenu.txt!dismissType=both!|dismissDelayMiliTime=300!iconName=wheel|dismissDelayMiliTime=300!iconName=wheel|clickMenuFilePath=${01}/${001}/clickMenu3.txt!iconName=cancel!dismissType=both",
@@ -182,7 +182,7 @@ Use `!` as sepalator
 ex)
 
 ```
-jsDialog.webView(
+jsDialog.webView_S(
     launchUrlString,
     "${0}",
     "`clickMenuFilePath=${leftMenuListPath}!longPressMenuFilePath=${leftLongPressMenuListPath}!dismissType=longpress!iconName=back`|`clickMenuFilePath=${centerMenuListPath}!longPressMenuFilePath=${centerLongPressMenuListPath}!iconName=search`|`clickMenuFilePath=${rightMenuListPath}!iconName=wheel`",

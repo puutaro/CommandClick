@@ -19,7 +19,7 @@ function launchWebview(launchUrlString){
         `srcImageAnchorMenuFilePath=${srcImageAnchorMenuListFilePath}`,
         `srcAnchorMenuFilePath=${srcAnchorMenuListFilePath}`,
     ].join("!");
-    jsDialog.webView(
+    jsDialog.webView_S(
         launchUrlString,
         "${0}",
         menuMapStrListStr,

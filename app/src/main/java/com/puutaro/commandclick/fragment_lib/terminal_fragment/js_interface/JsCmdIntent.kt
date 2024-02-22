@@ -7,7 +7,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
-class CmdIntent(
+class JsCmdIntent(
     private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
@@ -15,7 +15,7 @@ class CmdIntent(
 
 
     @JavascriptInterface
-    fun run(
+    fun run_S(
         execCmdSource: String
     ){
         val outputPath = "${UsePath.cmdclickMonitorDirPath}/${terminalViewModel.currentMonitorFileName}"

@@ -659,13 +659,15 @@ class MainActivity:
     override fun onChangeEditFragment(
         editFragmentArgs: EditFragmentArgs,
         cmdEditFragmentTag: String,
-        editTerminalFragmentTag: String
+        editTerminalFragmentTag: String,
+        disableAddToBackStack: Boolean,
     ) {
         ExecCommandEdit.execCommandEdit(
             this,
             cmdEditFragmentTag,
             editFragmentArgs,
             editTerminalFragmentTag,
+            disableAddToBackStack,
         )
     }
 

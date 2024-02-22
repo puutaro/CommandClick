@@ -7,7 +7,7 @@ const importedJsCon = jsFileSystem.readLocalFile(
 if(
 	!importedJsCon.trim()
 ) exitZero();
-jsDialog.textDialog(
+jsDialog.textDialog_S(
     `${ITEM_NAME}`,
     importedJsCon,
     false,

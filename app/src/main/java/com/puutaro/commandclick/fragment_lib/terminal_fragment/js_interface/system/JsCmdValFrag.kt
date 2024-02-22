@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
-class JsSettingFrag(
+class JsCmdValFrag(
     terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
@@ -24,26 +24,29 @@ class JsSettingFrag(
     )
 
     @JavascriptInterface
-    fun change_S(
-        state: String
+    fun stateChange_S(
+        state: String,
+        disableAddToBackStack: Boolean,
     ){
         val listener =
             context as? TerminalFragment.OnChangeEditFragmentListenerForTerm
                 ?: return
         val editFragArg = EditFragmentArgs(
             readSharePreferenceMap,
-            EditFragmentArgs.Companion.EditTypeSettingsKey.SETTING_VAL_EDIT,
+            EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
         )
-        val settingFragTag = FragmentTagManager.makeSettingValEditTag(
+        val cmdValEditFragTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,
-            currentFannelName
+            currentFannelName,
+            state
         )
         listener.onChangeEditFragment(
             editFragArg,
-            settingFragTag,
+            cmdValEditFragTag,
             activity?.getString(
                 R.string.edit_terminal_fragment
-            ) ?: String()
+            ) ?: String(),
+            disableAddToBackStack
         )
     }
 }

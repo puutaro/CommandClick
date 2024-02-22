@@ -182,7 +182,7 @@ function execCopy() {
     /\<br\>\<br\>*/g,
     "\<br\>",
   );
-  jsDialog.copyDialog(
+  jsDialog.copyDialog_S(
         "Select text",
         scriptLogCon,
         true

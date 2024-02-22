@@ -28,7 +28,7 @@ class JsFileOrDirGetter(
     private val fileOrDirGetterForSettingButton = terminalFragment.fileOrDirGetterForSettingButton
 
     @JavascriptInterface
-    fun get(
+    fun get_S(
         onDirectoryPick: Boolean
     ){
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(

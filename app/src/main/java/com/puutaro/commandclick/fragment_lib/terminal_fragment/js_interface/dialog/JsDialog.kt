@@ -114,7 +114,7 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun textDialog(
+    fun textDialog_S(
         title: String,
         contents: String,
         scrollBottom: Boolean
@@ -279,7 +279,7 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun webView(
+    fun webView_S(
         urlStr: String,
         currentFannelPath: String,
         menuMapStrListStr: String,
@@ -294,7 +294,7 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun copyDialog(
+    fun copyDialog_S(
         title: String,
         contents: String,
         scrollBottom: Boolean
@@ -308,7 +308,7 @@ class JsDialog(
     }
 
     @JavascriptInterface
-    fun qrScan(
+    fun qrScan_S(
         title: String,
         currentScriptPath: String,
         callBackJsPath: String,

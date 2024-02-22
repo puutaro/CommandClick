@@ -24,7 +24,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowBy
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingFrag
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
@@ -333,7 +333,7 @@ object JsPathHandlerForToolbarButton {
         )
         ExecJsLoad.jsConLaunchHandler(
             editFragment,
-            "${useClassName}.get(${onDirectoryPick});",
+            "${useClassName}.get_S(${onDirectoryPick});",
         )
     }
 
@@ -650,7 +650,7 @@ object JsPathHandlerForToolbarButton {
         ) ?: emptyMap()
         val currentState = argsMap.values.firstOrNull() ?: String()
         val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-            JsSettingFrag::class.java.simpleName
+            JsSettingValFrag::class.java.simpleName
         )
         ExecJsLoad.jsConLaunchHandler(
             editFragment,

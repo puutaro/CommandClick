@@ -34,6 +34,7 @@ class JsCurl(
         }
     }
 
+    @JavascriptInterface
     fun getAndSave (
         path: String,
         mainUrl: String,

@@ -20,7 +20,7 @@ function launchWebview(launchUrlString){
         `${saveWebConArgsTsvPath}`,
         tsvCon,
     );
-    jsDialog.webView(
+    jsDialog.webView_S(
         launchUrlString,
         "${0}",
         menuMapStrListStr,

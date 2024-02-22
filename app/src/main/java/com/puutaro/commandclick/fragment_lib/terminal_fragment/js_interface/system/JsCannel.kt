@@ -9,7 +9,7 @@ class JsCancel(
     val context = terminalFragment.context
 
     @JavascriptInterface
-    fun cancel(){
+    fun cancel_S(){
         val listener =
             context as? TerminalFragment.onBackstackWhenTermLongInRestartListener
                 ?: return

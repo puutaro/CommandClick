@@ -10,7 +10,7 @@ class JsEditor(
 ) {
     val context = terminalFragment.context
     @JavascriptInterface
-    fun open(
+    fun open_S(
         filePath: String,
     ){
         val filePathObj = File(filePath)

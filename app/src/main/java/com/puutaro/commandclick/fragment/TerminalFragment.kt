@@ -397,7 +397,8 @@ class   TerminalFragment: Fragment() {
         fun onChangeEditFragment(
             editFragmentArgs: EditFragmentArgs,
             cmdEditFragmentTag: String,
-            editTerminalFragmentTag: String
+            editTerminalFragmentTag: String,
+            disableAddToBackStack: Boolean = false,
         )
     }
     interface OnEditFannelContentsListUpdateListenerForTerm {

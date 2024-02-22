@@ -126,7 +126,7 @@ object HtmlLauncher{
             val menuMapStrListStr= listOf(
                     "${dismissType}=click!${iconName}=cancel"
             ).joinToString("!")
-            JsDialog(terminalFragment).webView(
+            JsDialog(terminalFragment).webView_S(
                 htmlFilePath,
                 String(),
                 menuMapStrListStr,

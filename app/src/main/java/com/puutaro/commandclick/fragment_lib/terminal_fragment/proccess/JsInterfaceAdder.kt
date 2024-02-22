@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import android.webkit.WebView
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.CmdIntent
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCmdIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsArgs
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsBroadcast
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCsv
@@ -48,6 +48,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDeleteItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDesc
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsEditorItem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsListTsvUpdater
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsRenameItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsShowItemCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsExecQr
@@ -55,9 +56,10 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.J
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrLogoEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAppDirAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCancel
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCmdValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorSizing
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSelectTerm
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingFrag
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSystemFannel
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsConfigEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
@@ -97,7 +99,7 @@ object JsInterfaceAdder {
         )
         ExecJsInterfaceAdder.add(
             webView,
-            CmdIntent(terminalFragment),
+            JsCmdIntent(terminalFragment),
         )
         ExecJsInterfaceAdder.add(
             webView,
@@ -310,7 +312,7 @@ object JsInterfaceAdder {
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsSettingFrag(terminalFragment)
+            JsSettingValFrag(terminalFragment)
         )
         ExecJsInterfaceAdder.add(
             webView,
@@ -335,6 +337,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsCancel(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsCmdValFrag(terminalFragment),
         )
     }
 
@@ -415,6 +421,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsEditorItem(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsListTsvUpdater(terminalFragment)
         )
     }
 

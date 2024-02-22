@@ -27,7 +27,7 @@ class JsUrlAdder(
     )
 
     @JavascriptInterface
-    fun add(
+    fun add_S(
         urlString: String,
         onSearchBtn: String,
     ){
