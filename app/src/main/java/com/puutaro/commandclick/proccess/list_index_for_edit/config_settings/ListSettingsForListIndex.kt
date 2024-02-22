@@ -472,52 +472,40 @@ private object CompPathManager {
         parentDirPath: String,
         fileList: List<String>
     ): List<String> {
-        val initTsvPath = FilePrefixGetter.get(
+        val initFilePath = FilePrefixGetter.get(
             editFragment,
             indexListMap,
             ListSettingsForListIndex.ListSettingKey.COMP_PATH.key
         )
         if(
-            initTsvPath.isNullOrEmpty()
+            initFilePath.isNullOrEmpty()
         ) return fileList
-        val initTsvPathObj = File(initTsvPath)
-        val initTsvConList = when(true){
-            initTsvPathObj.isFile ->
+        val initFilePathObj = File(initFilePath)
+        val initConList = when(true){
+            initFilePathObj.isFile ->
                 makeInitConFromFile(
                     editFragment,
-                    initTsvPathObj,
+                    initFilePathObj,
                 )
-            initTsvPathObj.isDirectory -> {
-                val initTsvConSrcDir = initTsvPathObj.absolutePath
+            initFilePathObj.isDirectory -> {
+                val initFileConSrcDir = initFilePathObj.absolutePath
                 FileSystems.sortedFiles(
-                    initTsvConSrcDir,
+                    initFileConSrcDir,
                     "on"
                 )
             }
             else -> return fileList
         }.let {
-            filterByColumnNum(it, 1)
-        }
-        if(
-            initTsvConList.isEmpty()
-        ) return fileList
-        val insertInitTsvConList = initTsvConList.filter {
-            !fileList.contains(it)
-        }
-        if(
-            insertInitTsvConList.isEmpty()
-        ) return fileList
-        insertInitTsvConList.forEach {
-            val insertFilePath = File(
-                parentDirPath,
-                it
-            ).absolutePath
-            FileSystems.writeFile(
-                insertFilePath,
-                String()
+            filterByColumnNum(
+                it,
+                1
             )
         }
-        return fileList + insertInitTsvConList
+        return concatInitConAndConList(
+            fileList,
+            initConList,
+            parentDirPath,
+        )
     }
     fun concatByCompConWhenTsvEdit(
         editFragment: EditFragment,
@@ -557,16 +545,10 @@ private object CompPathManager {
                 2
             )
         }
-        if(
-            initTsvConList.isEmpty()
-        ) return tsvConList
-        val insertInitTsvConList = initTsvConList.filter {
-            !tsvConList.contains(it)
-        }
-        if(
-            insertInitTsvConList.isEmpty()
-        ) return tsvConList
-        return tsvConList + insertInitTsvConList
+        return concatInitConAndConList(
+            tsvConList,
+            initTsvConList,
+        )
     }
 
     private fun makeInitConFromFile(
@@ -592,6 +574,47 @@ private object CompPathManager {
                 currentFannelName,
             ).split("\n")
         }
+    }
+
+    private fun concatInitConAndConList(
+        conList: List<String>,
+        initConList: List<String>,
+        parentDirPath: String,
+    ): List<String> {
+        val concatConList = concatInitConAndConList(
+            conList,
+            initConList,
+        )
+        val insertInitConList = concatConList.filter {
+            !conList.contains(it)
+        }
+        insertInitConList.forEach {
+            val insertFilePath = File(
+                parentDirPath,
+                it
+            ).absolutePath
+            FileSystems.writeFile(
+                insertFilePath,
+                String()
+            )
+        }
+        return concatConList
+    }
+
+    private fun concatInitConAndConList(
+        conList: List<String>,
+        initConList: List<String>,
+    ): List<String> {
+        if(
+            initConList.isEmpty()
+        ) return conList
+        val insertInitTsvConList = initConList.filter {
+            !conList.contains(it)
+        }
+        if(
+            insertInitTsvConList.isEmpty()
+        ) return conList
+        return conList + insertInitTsvConList
     }
 }
 
