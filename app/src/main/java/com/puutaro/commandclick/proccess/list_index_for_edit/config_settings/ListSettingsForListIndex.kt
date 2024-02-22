@@ -498,9 +498,15 @@ private object CompPathManager {
         }.let {
             filterByColumnNum(it, 1)
         }
+        if(
+            initTsvConList.isEmpty()
+        ) return fileList
         val insertInitTsvConList = initTsvConList.filter {
             !fileList.contains(it)
         }
+        if(
+            insertInitTsvConList.isEmpty()
+        ) return fileList
         insertInitTsvConList.forEach {
             val insertFilePath = File(
                 parentDirPath,
@@ -551,9 +557,15 @@ private object CompPathManager {
                 2
             )
         }
+        if(
+            initTsvConList.isEmpty()
+        ) return tsvConList
         val insertInitTsvConList = initTsvConList.filter {
             !tsvConList.contains(it)
         }
+        if(
+            insertInitTsvConList.isEmpty()
+        ) return tsvConList
         return tsvConList + insertInitTsvConList
     }
 
