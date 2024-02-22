@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
@@ -39,8 +40,8 @@ class JsFileAdder(
 
     @JavascriptInterface
     fun add(
-        compPrefix: String,
-        compSuffix: String,
+        compFileNameMapCon: String,
+        separator: String,
     ){
 
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
@@ -52,15 +53,15 @@ class JsFileAdder(
 
         execAddItemForEdit(
             editFragment,
-            compPrefix,
-            compSuffix,
+            compFileNameMapCon,
+            separator,
         )
     }
 
     private fun execAddItemForEdit(
         editFragment: EditFragment,
-        compPrefix: String,
-        compSuffix: String
+        compFileNameMapCon: String,
+        separator: String,
     ){
         val context = editFragment.context
             ?: return
@@ -89,12 +90,12 @@ class JsFileAdder(
         if(
             fileName.isEmpty()
         ) return
-        val compFileNameMap = mapOf(
-            EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key to compPrefix,
-            EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key to compSuffix
-        )
+        val compFileNameMap = CmdClickMap.createMap(
+            compFileNameMapCon,
+            separator.firstOrNull() ?: '|',
+        ).toMap()
         val compFileName = EditSettingExtraArgsTool.makeCompFileName(
-            editFragment.busyboxExecutor,
+            editFragment,
             fileName,
             compFileNameMap ,
         )

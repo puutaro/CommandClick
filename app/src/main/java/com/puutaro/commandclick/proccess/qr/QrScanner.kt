@@ -337,7 +337,7 @@ class QrScanner(
                     currentAppDirPath,
                 )
                 val compFileName = EditSettingExtraArgsTool.makeCompFileName(
-                    fragment.busyboxExecutor,
+                    fragment,
                     fileName,
                     stockDirAndCompMap
                 )

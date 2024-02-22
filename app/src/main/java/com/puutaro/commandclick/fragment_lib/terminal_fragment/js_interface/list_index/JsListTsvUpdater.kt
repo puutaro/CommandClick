@@ -18,7 +18,7 @@ class JsListTsvUpdater(
     ){
         val updateListIndexMap = CmdClickMap.createMap(
             updateListIndexMapCon,
-            separator.getOrNull(0) ?: '|'
+            separator.firstOrNull() ?: '|'
         ).toMap()
         val updateListIndexTsv = updateListIndexMap.map {
             listOf(

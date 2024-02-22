@@ -299,14 +299,17 @@ object ConfigFromScriptFileSetter {
         )
         val buttonVisibleOn =
             ButtonVisibleSettingForToolbarButton.ButtonVisibleValue.ON.name
+        val settingButtonVariant = ToolbarButtonBariantForEdit.SETTING
         editFragment.toolBarButtonVisibleMap.put(
-            ToolbarButtonBariantForEdit.SETTING,
+            settingButtonVariant,
             when(true) {
                 isSettingEdit,
                 isOnlyCmdEdit -> false
                 else -> {
                     val settingButtonConfigMap =
-                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.SETTING)
+                        editFragment.toolbarButtonConfigMap?.get(
+                            settingButtonVariant
+                        )
                     settingButtonConfigMap?.get(
                         SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
@@ -318,15 +321,18 @@ object ConfigFromScriptFileSetter {
                 }
             }
         )
+        val editButtonVariant = ToolbarButtonBariantForEdit.EDIT
         editFragment.toolBarButtonVisibleMap.put(
-            ToolbarButtonBariantForEdit.EDIT,
+            editButtonVariant,
             when (true) {
                 isSettingEdit -> false
                 isOnlyCmdEdit -> true
 //                    !FDialogTempFile.howFDialogFile(currentFannelName)
                 else -> {
                     val editButtonConfigMap =
-                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
+                        editFragment.toolbarButtonConfigMap?.get(
+                            editButtonVariant
+                        )
                     editButtonConfigMap?.get(
                         SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
@@ -338,15 +344,17 @@ object ConfigFromScriptFileSetter {
                 }
             }
         )
-
+        val okButtonVariant = ToolbarButtonBariantForEdit.OK
         editFragment.toolBarButtonVisibleMap.put(
-            ToolbarButtonBariantForEdit.OK,
+            okButtonVariant,
             when(true) {
                 isSettingEdit -> true
                 isOnlyCmdEdit -> true
                 else -> {
                     val okButtonConfigMap =
-                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EDIT)
+                        editFragment.toolbarButtonConfigMap?.get(
+                            okButtonVariant
+                        )
                     okButtonConfigMap?.get(
                         SettingButtonConfigMapKey.VISIBLE.key
                     ).let {
@@ -358,14 +366,17 @@ object ConfigFromScriptFileSetter {
                 }
             }
         )
+        val extraButtonVariant = ToolbarButtonBariantForEdit.EXTRA
         editFragment.toolBarButtonVisibleMap.put(
-            ToolbarButtonBariantForEdit.EXTRA,
+            extraButtonVariant,
             when(true) {
                 isSettingEdit,
                 isOnlyCmdEdit -> false
                 else -> {
                     val settingButtonConfigMap =
-                        editFragment.toolbarButtonConfigMap?.get(ToolbarButtonBariantForEdit.EXTRA)
+                        editFragment.toolbarButtonConfigMap?.get(
+                            extraButtonVariant
+                        )
                     settingButtonConfigMap?.get(
                         SettingButtonConfigMapKey.VISIBLE.key
                     ).let {

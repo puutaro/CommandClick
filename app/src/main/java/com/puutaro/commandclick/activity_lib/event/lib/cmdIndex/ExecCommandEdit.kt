@@ -10,13 +10,15 @@ object ExecCommandEdit {
         activity: MainActivity,
         editFragmentTag: String,
         editFragmentArgs: EditFragmentArgs,
-        terminalFragmentTag: String
+        terminalFragmentTag: String,
+        disableAddToBackStack: Boolean = false
     ){
         WrapFragmentManager.changeFragmentEdit(
             activity.supportFragmentManager,
             editFragmentTag,
             terminalFragmentTag,
             editFragmentArgs,
+            disableAddToBackStack
         )
     }
 }

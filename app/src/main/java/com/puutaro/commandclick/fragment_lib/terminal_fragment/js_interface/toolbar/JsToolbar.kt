@@ -61,7 +61,7 @@ class JsToolbar(
     }
 
     @JavascriptInterface
-    fun addUrlCon(
+    fun addUrlCon_S(
         title: String,
         con: String,
         urlConSaveParentDirPathSrc: String,
@@ -99,7 +99,7 @@ class JsToolbar(
             )
         }
         val compFileName = EditSettingExtraArgsTool.makeCompFileName(
-            editFragment.busyboxExecutor,
+            editFragment,
             fileName,
             extraMap
         )
@@ -110,16 +110,20 @@ class JsToolbar(
             ).absolutePath,
             con,
         )
-        addAndSort(
-            listIndexType,
-            listIndexPath,
-            urlConSaveParentDirPath,
-            compFileName,
-        )
+        CoroutineScope(Dispatchers.Main).launch {
+            withContext(Dispatchers.Main) {
+                addAndSort(
+                    listIndexType,
+                    listIndexPath,
+                    urlConSaveParentDirPath,
+                    compFileName,
+                )
+            }
+        }
     }
 
     @JavascriptInterface
-    fun addUrl(
+    fun addUrl_S(
         urlString: String,
     ){
         CoroutineScope(Dispatchers.Main).launch {

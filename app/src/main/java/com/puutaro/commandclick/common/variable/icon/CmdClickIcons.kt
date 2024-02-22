@@ -21,6 +21,8 @@ enum class CmdClickIcons(
     INFO("info", R.drawable.icons8_info),
     INTERNET("internet", R.drawable.internet),
     LAUNCH("launch", R.drawable.icons8_launch),
+    LIST("list", R.drawable.icons8_list),
+    MENU("menu", R.drawable.icons8_menu),
     OK("ok", R.drawable.icons8_check_ok),
     OVERFLOW("oeverflow", androidx.appcompat.R.drawable.abc_ic_menu_overflow_material),
     PLAY("play", R.drawable.icons_play),

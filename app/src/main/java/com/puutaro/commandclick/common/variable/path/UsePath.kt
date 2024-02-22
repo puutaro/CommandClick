@@ -244,8 +244,9 @@ object UsePath {
     ): String {
         if(
             path.startsWith(prefix)
+            || prefix.isEmpty()
         ) return path
-        return prefix + path
+        return prefix + path.replaceFirstChar { it.uppercase() }
     }
 
     fun decideMonitorName(

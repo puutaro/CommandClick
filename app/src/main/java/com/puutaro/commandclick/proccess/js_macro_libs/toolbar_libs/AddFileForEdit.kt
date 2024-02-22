@@ -22,8 +22,13 @@ object AddFileForEdit {
             argsMap.get(
                 EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key
             ) ?: String()
+        val shellPath =
+            argsMap.get(
+                EditSettingExtraArgsTool.ExtraKey.SHELL_PATH.key
+            ) ?: String()
         execAddItemForEdit(
             editFragment,
+            shellPath,
             compPrefix,
             compSuffix,
         )
@@ -31,13 +36,19 @@ object AddFileForEdit {
 
     private fun execAddItemForEdit(
         editFragment: EditFragment,
+        shellPath: String,
         compPrefix: String,
         compSuffix: String
     ){
+        val args = listOf(
+            "${EditSettingExtraArgsTool.ExtraKey.SHELL_PATH.key}=${shellPath}",
+            "${EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key}=${compPrefix}",
+            "${EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key}=${compSuffix}",
+        ).joinToString("|")
         val jsCon = """
             jsFileAdder.add(
-                "${compPrefix}",
-                "${compSuffix}",
+                "${args}",
+                "|",
             );
         """.trimIndent()
         ExecJsLoad.jsConLaunchHandler(

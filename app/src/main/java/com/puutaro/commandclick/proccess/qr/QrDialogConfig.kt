@@ -10,6 +10,7 @@ import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrL
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
@@ -98,6 +99,13 @@ object QrDialogConfig {
             oneSideLength,
             oneSideLength
         )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "oneSide.txt").absolutePath,
+//            listOf(
+//                "qrLogoConfigMap: ${qrLogoConfigMap}",
+//                "oneSideLength: ${oneSideLength}",
+//            ).joinToString("\n\n")
+//        )
         linearLayoutParam.setMargins(10, 10, 0, 10)
         linearLayoutParam.gravity = Gravity.CENTER
         fileContentsQrLogoLinearLayout?.layoutParams = linearLayoutParam

@@ -1,11 +1,11 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
-import android.content.Intent
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object EditSettingExtraArgsTool {
 
@@ -17,43 +17,6 @@ object EditSettingExtraArgsTool {
         COMP_PREFIX("compPrefix"),
         COMP_SUFFIX("compSuffix"),
         SHELL_PATH("shellPath"),
-        BROADCAST_ACTION("broadcastAction"),
-        BROADCAST_SCHEMAS("broadcastSchemas"),
-    }
-
-    fun createExtraMapFromMenuMapList(
-        menuMapList: List<Map<String, String>?>,
-        filterValue: String,
-        targetKey: String,
-        separator: Char,
-    ): Map<String, String>? {
-        val currentSettingMenuMap = menuMapList.firstOrNull {
-            it?.get(targetKey) == filterValue
-        }
-        if(
-            currentSettingMenuMap.isNullOrEmpty()
-        ) return null
-        return CmdClickMap.createMap(
-                currentSettingMenuMap.get(extraSettingKeyName),
-                separator,
-            ).toMap().filterKeys {
-            it.isNotEmpty()
-        }
-    }
-
-    fun createExtraMapFromMap(
-        srcMap: Map<String, String>?,
-        separator: Char,
-    ): Map<String, String> {
-        if(
-            srcMap.isNullOrEmpty()
-        ) return emptyMap()
-        return CmdClickMap.createMap(
-            srcMap.get(extraSettingKeyName),
-            separator,
-        ).toMap().filterKeys {
-            it.isNotEmpty()
-        }
     }
 
     fun getParentDirPath(
@@ -69,22 +32,52 @@ object EditSettingExtraArgsTool {
     }
 
     fun makeCompFileName(
-        busyboxExecutor: BusyboxExecutor?,
+        editFragment: EditFragment,
         srcFileName: String,
         extraMap: Map<String, String>?,
     ): String {
         if(
             extraMap.isNullOrEmpty()
         ) return srcFileName
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val busyboxExecutor = editFragment.busyboxExecutor
+        val setReplaceVariablesMap = editFragment.setReplaceVariableMap
         val compPrefix = extraMap.get(ExtraKey.COMP_PREFIX.key)
         val compSuffix = extraMap.get(ExtraKey.COMP_SUFFIX.key)
-        val shellCon = makeShellCon(extraMap)
+        val shellCon = makeShellCon(extraMap).let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariablesMap,
+                currentAppDirPath,
+                currentFannelName
+            )
+        }
+        val compFileNameByShell = shellCon.let {
+            if(
+                it.isEmpty()
+            ) return@let srcFileName
+            busyboxExecutor?.getCmdOutput(
+                shellCon.replace(
+                    "\${FILE_NAME}",
+                    srcFileName
+                ),
+                HashMap(extraMap),
+            ) ?:srcFileName
+        }
         val compPrefixFileName = compPrefix.let {
             if(
                 it.isNullOrEmpty()
-            ) return@let srcFileName
+            ) return@let compFileNameByShell
             UsePath.compPrefix(
-                srcFileName,
+                compFileNameByShell,
                 it
             )
         }
@@ -97,33 +90,7 @@ object EditSettingExtraArgsTool {
                 it
             )
         }
-        return shellCon.let {
-            if(
-                it.isEmpty()
-            ) return@let compSuffixFileName
-            busyboxExecutor?.getCmdOutput(
-                shellCon,
-                HashMap(extraMap),
-            ) ?:compSuffixFileName
-        }
-    }
-
-    fun makeBroadcastIntent(
-        extraMap: Map<String, String>?,
-        separator: Char,
-    ): Intent? {
-        if (
-            extraMap.isNullOrEmpty()
-        ) return null
-        val action = extraMap.get(ExtraKey.BROADCAST_ACTION.key)
-            ?: return null
-        val schemaMapStr =
-            extraMap.get(ExtraKey.BROADCAST_SCHEMAS.key)
-        return BroadcastSender.createBroadcastIntent(
-            action,
-            schemaMapStr,
-            separator,
-        )
+        return compSuffixFileName
     }
 
     fun makeShellCon(

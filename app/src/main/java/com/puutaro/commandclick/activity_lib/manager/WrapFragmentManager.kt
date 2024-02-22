@@ -17,7 +17,9 @@ object WrapFragmentManager {
         terminalFragmentTag: String,
         commandIndexFragmentTag: String,
     ){
-        if( savedInstanceState != null) return
+        if(
+            savedInstanceState != null
+        ) return
         val fragmentManagerForActivity = FragmentManagerForActivity(
             supportFragmentManager
         )
@@ -97,7 +99,7 @@ object WrapFragmentManager {
         editFragmentTag: String,
         terminalFragmentTag: String,
         editFragmentArgs: EditFragmentArgs,
-        onInit: Boolean = false
+        disableAddToBackStack: Boolean = false
     ){
         val fragmentManagerForActivity = FragmentManagerForActivity(
             supportFragmentManager
@@ -130,7 +132,7 @@ object WrapFragmentManager {
                 )
             }
         }
-        if(!onInit) fragmentManagerForActivity.addToBackStack()
+        if(!disableAddToBackStack) fragmentManagerForActivity.addToBackStack()
         fragmentManagerForActivity.commit()
     }
 }

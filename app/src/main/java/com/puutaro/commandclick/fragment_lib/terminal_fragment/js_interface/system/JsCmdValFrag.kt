@@ -31,8 +31,18 @@ class JsCmdValFrag(
         val listener =
             context as? TerminalFragment.OnChangeEditFragmentListenerForTerm
                 ?: return
+        val fannelStateKeyName =
+            SharePrefferenceSetting.current_fannel_state.name
+        val updatedReadSharePreferenceMap =
+            readSharePreferenceMap.map {
+                val keyName = it.key
+                when(keyName){
+                    fannelStateKeyName -> keyName to state
+                    else -> keyName to it.value
+                }
+            }.toMap()
         val editFragArg = EditFragmentArgs(
-            readSharePreferenceMap,
+            updatedReadSharePreferenceMap,
             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT,
         )
         val cmdValEditFragTag = FragmentTagManager.makeCmdValEditTag(

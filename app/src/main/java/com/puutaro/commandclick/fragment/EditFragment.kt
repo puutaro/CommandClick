@@ -134,6 +134,7 @@ class EditFragment: Fragment() {
     val listConSelectBoxMapList: MutableList<Map<String, String>?> = mutableListOf()
     var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
     var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
+    var firstUpdate = false
 
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
@@ -417,6 +418,10 @@ class EditFragment: Fragment() {
         if(
             !existIndexList
         ) return
+        if(!firstUpdate){
+            firstUpdate = true
+            return
+        }
         CoroutineScope(Dispatchers.Main).launch {
             delay(100)
             ListViewToolForListIndexAdapter.listIndexListUpdateFileList(

@@ -25,7 +25,7 @@ object ListSettingsForListIndex  {
         FILTER_SHELL_PATH("filterShellPath"),
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
-        INIT_TSV_PATH("initTsvPath"),
+        COMP_PATH("compPath"),
         ON_REVERSE_LAYOUT("onReverseLayout")
     }
 
@@ -128,6 +128,15 @@ object ListSettingsForListIndex  {
             listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey
         ): MutableList<String> {
             val busyboxExecutor = editFragment.busyboxExecutor
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "list.txt").absolutePath,
+//                listOf(
+//                    "tag: ${editFragment.tag}",
+//                    "listIndexConfigMap: ${editFragment.listIndexConfigMap}",
+//                    "indexListMap: ${indexListMap}",
+//                    "listIndexTypeKey: ${listIndexTypeKey.key}",
+//                ).joinToString("\n\n")
+//            )
             return when(listIndexTypeKey) {
                 TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
                 -> makeFannelListForListView().toMutableList()
@@ -203,11 +212,19 @@ object ListSettingsForListIndex  {
                 editFragment,
                 indexListMap,
             )
-            val fileListSource = makeFileListElement(
-                FileSystems.sortedFiles(
+            val currentFileList = FileSystems.sortedFiles(
+                filterDir,
+                "on"
+            ).let {
+                CompPathManager.concatByCompConWhenNormal(
+                    editFragment,
+                    indexListMap,
                     filterDir,
-                    "on"
-                ),
+                    it
+                )
+            }
+            val fileListSource = makeFileListElement(
+                currentFileList,
                 busyboxExecutor,
                 filterDir,
                 filterPrefix,
@@ -270,7 +287,10 @@ object ListSettingsForListIndex  {
             val tsvConListSrc = ReadText(
                 tsvFilePath
             ).textToList().let {
-                filter2ColumnLine(it)
+                filterByColumnNum(
+                    it,
+                    2
+                )
             }.map {
                 val titleAndConList = it.split("\t")
                 val con = titleAndConList.last()
@@ -283,7 +303,7 @@ object ListSettingsForListIndex  {
                 }
                 "${title}\t${con}"
             }
-            val tsvConList = concatByInitTsvCon(
+            val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
                 editFragment,
                 indexListMap,
                 tsvConListSrc
@@ -302,44 +322,6 @@ object ListSettingsForListIndex  {
                 sortedTsvConList,
             )
             return sortedTsvConList
-        }
-
-        private fun concatByInitTsvCon(
-            editFragment: EditFragment,
-            indexListMap: Map<String, String>,
-            tsvConList: List<String>
-        ): List<String> {
-            if(
-                tsvConList.isNotEmpty()
-            ) return tsvConList
-            val initTsvPath = FilePrefixGetter.get(
-                editFragment,
-                indexListMap,
-                ListSettingKey.INIT_TSV_PATH.key
-            )
-            if(
-                initTsvPath.isNullOrEmpty()
-            ) return tsvConList
-            val initTsvPathObj = File(initTsvPath)
-            val initTsvCon = when(true){
-                initTsvPathObj.isFile ->
-                   ReadText(
-                       initTsvPathObj.absolutePath
-                   ).textToList().let {
-                       filter2ColumnLine(it)
-                   }
-                initTsvPathObj.isDirectory -> {
-                    val initTsvConSrcDir = initTsvPathObj.absolutePath
-                    FileSystems.sortedFiles(
-                        initTsvConSrcDir
-                    ).map {
-                        "${it}\t${File(initTsvConSrcDir, it).absolutePath}"
-                    }
-                }
-                else -> return tsvConList
-            }
-            return tsvConList + initTsvCon
-
         }
 
         fun sortList(
@@ -479,9 +461,134 @@ object ListSettingsForListIndex  {
         }
     }
 
-    private fun filter2ColumnLine(srcList: List<String>): List<String>{
-        return srcList.filter {
-            it.split("\t").size == 2
+
+}
+
+private object CompPathManager {
+
+    fun concatByCompConWhenNormal(
+        editFragment: EditFragment,
+        indexListMap: Map<String, String>,
+        parentDirPath: String,
+        fileList: List<String>
+    ): List<String> {
+        val initTsvPath = FilePrefixGetter.get(
+            editFragment,
+            indexListMap,
+            ListSettingsForListIndex.ListSettingKey.COMP_PATH.key
+        )
+        if(
+            initTsvPath.isNullOrEmpty()
+        ) return fileList
+        val initTsvPathObj = File(initTsvPath)
+        val initTsvConList = when(true){
+            initTsvPathObj.isFile ->
+                makeInitConFromFile(
+                    editFragment,
+                    initTsvPathObj,
+                )
+            initTsvPathObj.isDirectory -> {
+                val initTsvConSrcDir = initTsvPathObj.absolutePath
+                FileSystems.sortedFiles(
+                    initTsvConSrcDir,
+                    "on"
+                )
+            }
+            else -> return fileList
+        }.let {
+            filterByColumnNum(it, 1)
         }
+        val insertInitTsvConList = initTsvConList.filter {
+            !fileList.contains(it)
+        }
+        insertInitTsvConList.forEach {
+            val insertFilePath = File(
+                parentDirPath,
+                it
+            ).absolutePath
+            FileSystems.writeFile(
+                insertFilePath,
+                String()
+            )
+        }
+        return fileList + insertInitTsvConList
+    }
+    fun concatByCompConWhenTsvEdit(
+        editFragment: EditFragment,
+        indexListMap: Map<String, String>,
+        tsvConList: List<String>
+    ): List<String> {
+        if(
+            tsvConList.isNotEmpty()
+        ) return tsvConList
+        val initTsvPath = FilePrefixGetter.get(
+            editFragment,
+            indexListMap,
+            ListSettingsForListIndex.ListSettingKey.COMP_PATH.key
+        )
+        if(
+            initTsvPath.isNullOrEmpty()
+        ) return tsvConList
+        val initTsvPathObj = File(initTsvPath)
+        val initTsvConList = when(true){
+            initTsvPathObj.isFile ->
+                makeInitConFromFile(
+                    editFragment,
+                    initTsvPathObj,
+                )
+            initTsvPathObj.isDirectory -> {
+                val initTsvConSrcDir = initTsvPathObj.absolutePath
+                FileSystems.sortedFiles(
+                    initTsvConSrcDir
+                ).map {
+                    "${it}\t${File(initTsvConSrcDir, it).absolutePath}"
+                }
+            }
+            else -> return tsvConList
+        }.let {
+            filterByColumnNum(
+                it,
+                2
+            )
+        }
+        val insertInitTsvConList = initTsvConList.filter {
+            !tsvConList.contains(it)
+        }
+        return tsvConList + insertInitTsvConList
+    }
+
+    private fun makeInitConFromFile(
+        editFragment: EditFragment,
+        initTsvPathObj: File,
+    ): List<String> {
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        return ReadText(
+            initTsvPathObj.absolutePath
+        ).readText().let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                editFragment.setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName,
+            ).split("\n")
+        }
+    }
+}
+
+
+private fun filterByColumnNum(
+    srcList: List<String>,
+    columnNum: Int,
+): List<String>{
+    return srcList.filter {
+        it.split("\t").size == columnNum
     }
 }
