@@ -19,7 +19,7 @@ object ButtonFocusSettingsForToolbarButton {
         val isFocus = editFragment.toolbarButtonConfigMap?.get(
             toolbarButtonBariantForEdit
         )?.get(
-            SettingButtonConfigMapKey.ON_FOCUS.key
+            SettingButtonConfigMapKey.STATUS.key
         ) == ButtonFocusValue.ON.name
         if(!isFocus) return
         editFragment.context?.let {
