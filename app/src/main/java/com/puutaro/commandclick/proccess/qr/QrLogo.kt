@@ -19,12 +19,11 @@ import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoPadd
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorLogoShape
 import com.github.alexzhirkevich.customqrgenerator.vector.style.QrVectorPixelShape
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.icon.FannelIcons
+import com.puutaro.commandclick.common.variable.res.FannelIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems

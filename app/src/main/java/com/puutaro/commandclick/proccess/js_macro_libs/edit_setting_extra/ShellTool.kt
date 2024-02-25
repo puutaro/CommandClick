@@ -25,7 +25,7 @@ object ShellTool {
             ) return@let it
             busyboxExecutor.getCmdOutput(
                 shellCon.replace(shellConReplaceMark, it),
-                HashMap(extraArgsMap)
+                extraArgsMap
             )
         }.let {
             loopReplace(

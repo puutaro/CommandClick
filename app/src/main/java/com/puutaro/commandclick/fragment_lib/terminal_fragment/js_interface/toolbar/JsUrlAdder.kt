@@ -7,6 +7,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 class JsUrlAdder(
     terminalFragment: TerminalFragment
@@ -28,9 +29,13 @@ class JsUrlAdder(
 
     @JavascriptInterface
     fun add_S(
-        urlString: String,
+        urlStringOrMacro: String,
         onSearchBtn: String,
     ){
+        val urlString = HistoryUrlContents.extract(
+            currentAppDirPath,
+            urlStringOrMacro
+        ) ?: String()
         val targetFragmentInstance = TargetFragmentInstance()
         val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
             activity,

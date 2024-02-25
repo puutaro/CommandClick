@@ -69,7 +69,7 @@ object EditSettingExtraArgsTool {
                     "\${FILE_NAME}",
                     srcFileName
                 ),
-                HashMap(extraMap),
+                extraMap,
             ) ?:srcFileName
         }
         val compPrefixFileName = compPrefix.let {

@@ -2,26 +2,28 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import android.app.Dialog
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 
-object SettingButtonSubMenuDialog {
+object ToolbarButtonSubMenuDialog {
 
     private var settingButtonSubMenuDialog: Dialog? = null
 
     fun launch(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
+        settingButtonView: View?,
         jsActionsMap: Map<String, String>?,
         parentMenuName: String,
     ){
-        val fragment = toolbarButtonArgsMaker.editFragment
-        val context = fragment.context
+        val context = editFragment.context
             ?: return
         settingButtonSubMenuDialog = Dialog(
             context
@@ -30,7 +32,8 @@ object SettingButtonSubMenuDialog {
             R.layout.submenu_dialog
         )
         setListView(
-            toolbarButtonArgsMaker,
+            editFragment,
+            settingButtonView,
             jsActionsMap,
             parentMenuName,
         )
@@ -61,19 +64,22 @@ object SettingButtonSubMenuDialog {
     }
 
     private fun setListView(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
+        settingButtonView: View?,
         jsActionsMap: Map<String, String>?,
         parentMenuName: String,
     ) {
-        val fragment = toolbarButtonArgsMaker.editFragment
-        val context = fragment.context
+        val context = editFragment.context
             ?: return
         val subMenuListView =
             settingButtonSubMenuDialog?.findViewById<ListView>(
                 R.id.sub_menu_list_view
             )
         val subMenuPairList = MenuSettingTool.createSubMenuListMap(
-            toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionsMap),
+            ToolbarButtonArgsMaker.makeSettingButtonMenuPairList(
+                editFragment,
+                jsActionsMap
+            ),
             parentMenuName,
         )
         val subMenuAdapter = SubMenuAdapter(
@@ -82,14 +88,16 @@ object SettingButtonSubMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            toolbarButtonArgsMaker,
+            editFragment,
+            settingButtonView,
             subMenuListView,
             jsActionsMap,
         )
     }
 
     private fun subMenuItemClickListener(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
+        settingButtonView: View?,
         subMenuListView: ListView?,
         jsActionsMap: Map<String, String>?
     ){
@@ -100,14 +108,18 @@ object SettingButtonSubMenuDialog {
             val clickedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
-                toolbarButtonArgsMaker.editFragment,
+                editFragment,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-                    toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionsMap),
+                    ToolbarButtonArgsMaker.makeSettingButtonMenuPairList(
+                        editFragment,
+                        jsActionsMap
+                    ),
                     clickedSubMenu
                 )
             )
             JsPathHandlerForToolbarButton.handle(
-                toolbarButtonArgsMaker,
+                editFragment,
+                settingButtonView,
                 updateJsActionMap
             )
         }

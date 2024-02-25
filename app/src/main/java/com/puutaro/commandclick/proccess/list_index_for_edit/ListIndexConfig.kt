@@ -5,7 +5,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter

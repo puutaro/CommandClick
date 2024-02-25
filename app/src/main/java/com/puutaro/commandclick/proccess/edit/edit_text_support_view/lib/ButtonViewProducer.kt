@@ -24,6 +24,7 @@ import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
@@ -42,11 +43,6 @@ import java.io.File
 
 object ButtonViewProducer {
     private const val setVariableSetSeparator = '|'
-    private const val jsFrag = "jsf"
-    private const val settingFrag = "setf"
-    private const val basht = "basht"
-    private const val bashf = "bashf"
-    private const val bashb = "bashb"
     private const val blankString = "cmdclickBlank"
     private const val buttoLabelThis = "this"
     private var consecutiveJob: Job? = null
@@ -202,8 +198,13 @@ object ButtonViewProducer {
         if(!isExecCmd) return
         val cmdPrefix = getCmdPrefix(
             buttonMap
-        )
-            .split("!")
+        ).let{
+            QuoteTool.splitBySurroundedIgnore(
+                it,
+                '!'
+            )
+        }
+//            .split("!")
             .firstOrNull()
             ?: String()
         if(
@@ -248,41 +249,69 @@ object ButtonViewProducer {
         val firstCmdStr = QuoteTool.trimBothEdgeQuote(
             execCmdReplaceBlankList.firstOrNull()
         )
-        when(firstCmdStr){
-            jsFrag
+        val buttonCmdType = ButtonCmdType.values().firstOrNull {
+            it.prefix == firstCmdStr
+        } ?: ButtonCmdType.jsCode
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsButton.txt").absolutePath,
+//            listOf(
+//                "execCmdAfterTrimButtonEditExecVariant: ${execCmdAfterTrimButtonEditExecVariant}",
+//                "execCmdReplaceBlankList: ${execCmdReplaceBlankList}",
+//                "buttonMap: ${buttonMap}",
+//                "buttonCmdType: ${buttonCmdType.prefix}",
+//            ).joinToString("\n\n")
+//        )
+        when(buttonCmdType){
+            ButtonCmdType.jsActionFrag
+            -> execJsActionForButton(
+                editFragment,
+                execCmdReplaceBlankList,
+                buttonMap,
+            )
+            ButtonCmdType.jsActionConFrag
+            -> execJsActionConForButton(
+                editFragment,
+                execCmdReplaceBlankList,
+                buttonMap
+            )
+            ButtonCmdType.jsFrag
             -> execJsFileForButton(
                 editFragment,
                 terminalViewModel,
                 execCmdReplaceBlankList,
                 buttonMap
             )
-            settingFrag
+            ButtonCmdType.settingFrag
             -> execSettingCmd(
                 buttonEventArgs,
                 execCmdReplaceBlankList,
             )
-            basht
+            ButtonCmdType.basht
             -> execShellScriptByTermux(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
                 innerExecCmd,
             )
-            bashb
+            ButtonCmdType.bashb
             -> execShellScriptByBackground(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
             )
-            bashf
+            ButtonCmdType.bashf
             -> execShellScriptByForeground(
                 editFragment,
                 execCmdAfterTrimButtonEditExecVariant,
             )
-            else
-            -> execShellHandler(
-                editFragment,
-                execCmdAfterTrimButtonEditExecVariant,
+            ButtonCmdType.jsCode
+            -> jsConExecutor(
+                buttonEventArgs,
                 innerExecCmd,
             )
+//                execShellHandler(
+//                editFragment,
+//                execCmdAfterTrimButtonEditExecVariant,
+//                innerExecCmd,
+//            )
         }
     }
 
@@ -303,7 +332,7 @@ object ButtonViewProducer {
         ExecBashScriptIntent.ToTermux(
             context,
             execCmd.replace(
-                Regex("^${basht}"),
+                Regex("^${ButtonCmdType.basht}"),
                 "bash"
             ),
             true
@@ -463,8 +492,8 @@ object ButtonViewProducer {
                 cmdclickTempButtonExecShellName
             ).absolutePath,
             execCmd
-                .replace(Regex("^${bashb}"), "bash")
-                .replace(Regex("^${bashf}"), "bash")
+                .replace(Regex("^${ButtonCmdType.bashb}"), "bash")
+                .replace(Regex("^${ButtonCmdType.bashf}"), "bash")
         )
         return "${tempBtnShellDirPath}/$cmdclickTempButtonExecShellName"
     }
@@ -772,6 +801,62 @@ object ButtonViewProducer {
                 )
             }
     }
+
+    private fun execJsActionForButton(
+        editFragment: EditFragment,
+        execCmdReplaceBlankList: List<String>,
+        buttonMap: Map<String, String>?
+    ){
+        val jsFilePathIndex = 1
+        val jsActionFilePath = QuoteTool.trimBothEdgeQuote(
+            execCmdReplaceBlankList.get(
+                jsFilePathIndex
+            ).replace(blankString, " ")
+        )
+//        val isJsMacro = JsPathForEditButton.JsPathMacroForEditButton.values().map{
+//            it.name
+//        }.contains(jsFilePath)
+        if(
+            !File(jsActionFilePath).isFile
+        ) return
+        keyboardHide(
+            editFragment,
+            buttonMap
+        )
+//        terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
+
+        JsActionHandler.handle(
+            editFragment,
+            ReadText(jsActionFilePath).readText()
+        )
+    }
+
+    private fun execJsActionConForButton(
+        editFragment: EditFragment,
+        execCmdReplaceBlankList: List<String>,
+        buttonMap: Map<String, String>?
+    ){
+        val jsFilePathIndex = 1
+        val jsActionCon = QuoteTool.trimBothEdgeQuote(
+            execCmdReplaceBlankList.get(
+                jsFilePathIndex
+            ).replace(blankString, " ")
+        )
+//        val isJsMacro = JsPathForEditButton.JsPathMacroForEditButton.values().map{
+//            it.name
+//        }.contains(jsFilePath)
+        keyboardHide(
+            editFragment,
+            buttonMap
+        )
+//        terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
+
+        JsActionHandler.handle(
+            editFragment,
+            jsActionCon
+        )
+    }
+
     private fun execJsFileForButton(
         editFragment: EditFragment,
         terminalViewModel: TerminalViewModel,
@@ -829,13 +914,11 @@ object ButtonViewProducer {
     private fun simpleJsExecutor(
         buttonEventArgs: ButtonEventArgs,
     ){
-        val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
-        val editFragment = buttonEventArgs.editParameters.currentFragment
-        if(editFragment !is EditFragment) return
-        val currentVariableName = buttonEventArgs.currentVariableName
-        val currentEditTextCon = currentVariableName?.let {
-            EditVariableName.getText(editFragment, it)
-        } ?: String()
+        val editFragment =
+            buttonEventArgs.editParameters.currentFragment
+        if(
+            editFragment !is EditFragment
+        ) return
         val buttonMap = buttonEventArgs.buttonMap
         val oneLineJsCon = buttonMap?.get(
             ButtonEditKey.oneLineJs.name
@@ -847,9 +930,27 @@ object ButtonViewProducer {
             editFragment,
             buttonMap
         )
+        jsConExecutor(
+            buttonEventArgs,
+            oneLineJsCon,
+        )
+    }
+
+    private fun jsConExecutor(
+        buttonEventArgs: ButtonEventArgs,
+        jsConSrc: String,
+    ){
+        val currentEditTextConMark = "\${CURRENT_VAL_VALUE}"
+        val editFragment =
+            buttonEventArgs.editParameters.currentFragment
+        if(editFragment !is EditFragment) return
+        val currentVariableName = buttonEventArgs.currentVariableName
+        val currentEditTextCon = currentVariableName?.let {
+            EditVariableName.getText(editFragment, it)
+        } ?: String()
         ExecJsScriptInEdit.execJsConForEdit(
             editFragment,
-            oneLineJsCon.replace(
+            jsConSrc.replace(
                 currentEditTextConMark,
                 currentEditTextCon
             )
@@ -988,11 +1089,7 @@ object ButtonViewProducer {
             ) return@let QuoteTool.splitBySurroundedIgnore(
                 it,
                 setVariableSetSeparator
-            )
-//            it.split(
-//                setVariableSetSeparator
-//            )
-                .getOrNull(targetIndex).let {
+            ).getOrNull(targetIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
             QuoteTool.trimBothEdgeQuote(it)
@@ -1034,4 +1131,17 @@ object ButtonViewProducer {
         val buttonMap: Map<String, String>?,
         val currentSetVariableValue: String?
         )
+
+    private enum class ButtonCmdType(
+        val prefix: String,
+    ){
+        jsFrag("jsf"),
+        jsActionFrag("jsa"),
+        jsActionConFrag("jsac"),
+        jsCode("jsCode"),
+        settingFrag("setf"),
+        basht("basht"),
+        bashf("bashf"),
+        bashb("bashb"),
+    }
 }

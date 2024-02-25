@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.menu_tool
 
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.util.QuoteTool
@@ -13,7 +13,6 @@ object MenuSettingTool {
         NAME("name"),
         ICON("icon"),
         PARENT_NAME("parentName"),
-        EXTRA(EditSettingExtraArgsTool.extraSettingKeyName),
     }
 
     fun makeMenuPairListForMenuList(

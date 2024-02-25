@@ -32,8 +32,12 @@ object ButtonSetter {
         buttonMap?.get(
             ButtonViewProducer.ButtonEditKey.textSize.name
         )?.let {
-            if(it.isEmpty()) return@let
-            val textSize = try{it.toFloat()} catch(e: Exception){
+            if(
+                it.isEmpty()
+            ) return@let
+            val textSize = try{
+                it.toFloat()
+            } catch(e: Exception){
                 return@let
             }
             insertButtonView.textSize = textSize

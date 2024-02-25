@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.common.variable.icon
+package com.puutaro.commandclick.common.variable.res
 
 import com.puutaro.commandclick.R
 

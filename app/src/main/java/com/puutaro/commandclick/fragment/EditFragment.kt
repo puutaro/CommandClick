@@ -344,7 +344,6 @@ class EditFragment: Fragment() {
                 UbuntuFiles(it)
             )
         }
-//        val terminalViewModel: TerminalViewModel by activityViewModels()
         val listener = context as? OnKeyboardVisibleListenerForEditFragment
         KeyboardVisibilityEvent.setEventListener(activity) {
                 isOpen ->

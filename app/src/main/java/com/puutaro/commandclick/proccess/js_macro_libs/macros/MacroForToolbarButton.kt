@@ -20,6 +20,7 @@ object MacroForToolbarButton{
         JS_IMPORT,
         KILL,
         MENU,
+        D_MENU,
         NORMAL,
         NO_SCROLL_SAVE_URL,
         OK,
@@ -41,6 +42,7 @@ object MacroForToolbarButton{
     ){
         MENU_PATH("menuPath"),
         ON_HIDE_FOOTER("onHideFooter"),
+        TITLE("title"),
     }
 
 }

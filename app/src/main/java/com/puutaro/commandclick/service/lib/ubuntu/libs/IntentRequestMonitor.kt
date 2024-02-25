@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort

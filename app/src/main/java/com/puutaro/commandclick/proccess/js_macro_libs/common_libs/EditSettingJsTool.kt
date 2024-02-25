@@ -23,6 +23,8 @@ import java.io.File
 object EditSettingJsTool {
 
     private val jsKeyName = JsActionKeyManager.JsActionsKey.JS.key
+    private val jsReplaceKeyName = JsActionKeyManager.JsActionsKey.JS_REPLACE.key
+    private val jsOverrideKeyName = JsActionKeyManager.JsActionsKey.JS_OVERRIDE.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
     private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
@@ -32,13 +34,44 @@ object EditSettingJsTool {
         fragment: Fragment,
         keyToSubKeyCon: String?,
     ): Map<String, String>? {
-        val mainAndAfterPairList = createJsPairList(
+//        val mainAndAfterPairList
+        val keyToSubConTypeMap = createKeyToSubConTypeMap(
             fragment,
             keyToSubKeyCon,
         ) ?: return null
-        val keyToSubKeyConListWithoutAfterSubKey = mainAndAfterPairList.first
-            ?: return null
-        val keyToSubKeyConListWithAfterSubKey = mainAndAfterPairList.second
+//        val keyToSubKeyConListSrcWithoutAfterSubKey = keyToSubConTypeMap.get(
+//            KeyToSubConType.WITH_OTHER
+//        )
+//            mainAndAfterPairList.first
+//            ?: return null
+        val jsRepValMap = keyToSubConTypeMap.get(
+            KeyToSubConType.WITH_REPLACE
+        )?.let {
+                extractJsRepValMap(
+                    it
+                )
+            }
+
+
+        val overrideMapList =
+            makeOverrideMapList(
+                keyToSubConTypeMap.get(
+                    KeyToSubConType.WITH_OVERRIDE
+                )
+            )
+//            keyToSubKeyConListSrcWithoutAfterSubKey.filter {
+//                !keyToSubKeyConListWithOverrideKey.contains(it)
+//            }
+        val keyToSubKeyConListWithAfterSubKey = keyToSubConTypeMap.get(
+            KeyToSubConType.WITH_AFTER
+        )
+
+        val keyToSubKeyConListWithoutAfterSubKey =
+            keyToSubConTypeMap.get(
+                KeyToSubConType.WITH_OTHER
+            ) ?: emptyList()
+
+//            mainAndAfterPairList.second
         val macroDataMap =
             extractMacroDataMap(keyToSubKeyConListWithoutAfterSubKey)
 //        FileSystems.writeFile(
@@ -47,9 +80,10 @@ object EditSettingJsTool {
 //                "js_makeJsActionMap.txt").absolutePath,
 //            listOf(
 //                "keyToSubKeyCon: ${keyToSubKeyCon}",
-//                "mainAndAfterPairList: ${mainAndAfterPairList}",
-//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "jsRepValMap: ${jsRepValMap}",
+//                "overrideMapList: ${overrideMapList}",
 //                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
+//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
 //                "macroDataMap: ${macroDataMap}",
 //                "onExtract: ${!macroDataMap.isNullOrEmpty()}",
 //                "extractJsDataMap: ${
@@ -57,6 +91,8 @@ object EditSettingJsTool {
 //                    fragment,
 //                    keyToSubKeyConListWithoutAfterSubKey,
 //                    keyToSubKeyConListWithAfterSubKey,
+//                        overrideMapList,
+//                        jsRepValMap,
 //                )
 //                }",
 //            ).joinToString("\n\n")
@@ -68,6 +104,8 @@ object EditSettingJsTool {
             fragment,
             keyToSubKeyConListWithoutAfterSubKey,
             keyToSubKeyConListWithAfterSubKey,
+            overrideMapList,
+            jsRepValMap,
         )
     }
 
@@ -75,12 +113,20 @@ object EditSettingJsTool {
         fragment: Fragment,
         keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>?,
         keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>?,
+        overrideMapList: List<Map<String, String>>,
+        jsRepValMap: Map<String, String>?,
     ): Map<String, String>? {
         val jsCon = convertJsCon(
             fragment,
             keyToSubKeyConListWithoutAfterSubKey,
-            keyToSubKeyConListWithAfterSubKey
-        )
+            keyToSubKeyConListWithAfterSubKey,
+            overrideMapList,
+        )?.let {
+            CmdClickMap.replaceHolder(
+                it,
+                jsRepValMap,
+            )
+        }
         if(
             jsCon.isNullOrEmpty()
         ) return null
@@ -175,10 +221,10 @@ object EditSettingJsTool {
         )
     }
 
-    private fun createJsPairList(
+    private fun createKeyToSubConTypeMap(
         fragment: Fragment,
         keyToSubKeyCon: String?,
-    ): Pair<List<Pair<String, String>>?, List<Pair<String, String>>?>? {
+    ): Map<KeyToSubConType, List<Pair<String, String>>?>? {
         val keyToSubKeyConList = KeyToSubKeyConListMaker.make(
             fragment,
             keyToSubKeyCon,
@@ -186,16 +232,49 @@ object EditSettingJsTool {
         if (
             keyToSubKeyConList.isEmpty()
         ) return null
+        val keyToSubKeyConListWithReplaceKey = filterByReplaceKey(
+            keyToSubKeyConList
+        )
+//        val repValMap = extractReplaceValMapByReplaceKey(
+//            keyToSubKeyConListWithReplaceKey
+//        )
+        val keyToSubKeyConListWithoutReplaceKey =  keyToSubKeyConList.filter {
+            !keyToSubKeyConListWithReplaceKey.contains(it)
+        }
         val keyToSubKeyConListWithAfterSubKey =
-            filterByAfterJsSubKey(keyToSubKeyConList)
-        val keyToSubKeyConListWithoutAfterSubKeySrc =
-            keyToSubKeyConList.filter {
-                !keyToSubKeyConListWithAfterSubKey.contains(it)
-            }
+            filterByAfterJsSubKey(keyToSubKeyConListWithoutReplaceKey)
+
+
+//        val keyToSubKeyConListWithoutAfterSubKeySrcWithOverride =
+//            keyToSubKeyConList.filter {
+//                !keyToSubKeyConListWithAfterSubKey.contains(it)
+//            }
+//
+//        val keyToSubKeyConListWithOverrideKey =
+//            filterByOverrideJsSubKey(
+//                keyToSubKeyConListWithoutAfterSubKeySrcWithOverride
+//            )
+//        val keyToSubKeyConListWithoutAfterSubKeySrc =
+//            keyToSubKeyConListWithoutAfterSubKeySrcWithOverride.filter {
+//                !keyToSubKeyConListWithOverrideKey.contains(it)
+//            }
+//
+//
+//
+//
+//        val keyToSubKeyConListWithoutAfterSubKey =
+//            JsPathAndConToFunc.convertJaPathToFunc(
+//                keyToSubKeyConListWithoutAfterSubKeySrc,
+//            )
+
+        val overrideToOther = devideOverrideAndOther(
+            keyToSubKeyConListWithoutReplaceKey,
+            keyToSubKeyConListWithAfterSubKey
+        )
+        val keyToSubKeyConListWithOverrideKey =
+            overrideToOther.first
         val keyToSubKeyConListWithoutAfterSubKey =
-            JsPathAndConToFunc.convertJaPathToFunc(
-                keyToSubKeyConListWithoutAfterSubKeySrc,
-            )
+            overrideToOther.second
         val keyToSubKeyConListForMacro =
             makeKeyToSubKeyConListForMacro(
                 keyToSubKeyConListWithoutAfterSubKey
@@ -205,8 +284,9 @@ object EditSettingJsTool {
 //            listOf(
 //                "keyToSubKeyConList: ${keyToSubKeyConList}",
 //                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
-//                "keyToSubKeyConListWithoutAfterSubKeySrc: ${keyToSubKeyConListWithoutAfterSubKeySrc}",
+//                "keyToSubKeyConListWithOverrideKey: ${keyToSubKeyConListWithOverrideKey}",
 //                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "keyToSubKeyConListForMacro: ${keyToSubKeyConListForMacro}",
 //                "keyToSubKeyConListUntilFirstUnPipAble: ${
 //                    makeKeyToSubKeyConListUntilFirstUnPipAble(
 //                    keyToSubKeyConListWithoutAfterSubKey
@@ -216,16 +296,63 @@ object EditSettingJsTool {
 //        )
         if(
             keyToSubKeyConListForMacro != null
-        ) return listOf(keyToSubKeyConListForMacro) to null
-        return makeKeyToSubKeyConListUntilFirstUnPipAble(
-            keyToSubKeyConListWithoutAfterSubKey
-        ) to keyToSubKeyConListWithAfterSubKey
+        ) return mapOf(
+            KeyToSubConType.WITH_REPLACE
+                    to null,
+            KeyToSubConType.WITH_AFTER
+                    to null,
+            KeyToSubConType.WITH_OVERRIDE
+                    to null,
+            KeyToSubConType.WITH_OTHER
+                    to listOf(keyToSubKeyConListForMacro),
+        )
+//        listOf(keyToSubKeyConListForMacro) to null
+        return mapOf(
+            KeyToSubConType.WITH_REPLACE
+                    to keyToSubKeyConListWithReplaceKey,
+            KeyToSubConType.WITH_AFTER
+                    to keyToSubKeyConListWithAfterSubKey,
+            KeyToSubConType.WITH_OVERRIDE
+                    to keyToSubKeyConListWithOverrideKey,
+            KeyToSubConType.WITH_OTHER
+                    to makeKeyToSubKeyConListUntilFirstUnPipAble(
+                keyToSubKeyConListWithoutAfterSubKey
+            ),
+        )
+    }
+
+    private fun devideOverrideAndOther(
+        keyToSubKeyConList: List<Pair<String, String>>,
+        keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>
+    ): Pair<List<Pair<String, String>>?, List<Pair<String, String>>?> {
+        val keyToSubKeyConListWithoutAfterSubKeySrcWithOverride =
+            keyToSubKeyConList.filter {
+                !keyToSubKeyConListWithAfterSubKey.contains(it)
+            }
+
+        val keyToSubKeyConListWithOverrideKey =
+            filterByOverrideJsSubKey(
+                keyToSubKeyConListWithoutAfterSubKeySrcWithOverride
+            )
+        val keyToSubKeyConListWithoutAfterSubKeySrc =
+            keyToSubKeyConListWithoutAfterSubKeySrcWithOverride.filter {
+                !keyToSubKeyConListWithOverrideKey.contains(it)
+            }
+        val keyToSubKeyConListWithoutAfterSubKey =
+            JsPathAndConToFunc.convertJaPathToFunc(
+                keyToSubKeyConListWithoutAfterSubKeySrc,
+            )
+        return keyToSubKeyConListWithOverrideKey to
+                keyToSubKeyConListWithoutAfterSubKey
     }
 
 
     private fun makeKeyToSubKeyConListForMacro(
-        keyToSubKeyConList: List<Pair<String, String>>
+        keyToSubKeyConList: List<Pair<String, String>>?
     ): Pair<String, String>? {
+        if(
+            keyToSubKeyConList.isNullOrEmpty()
+        ) return null
         return keyToSubKeyConList.firstOrNull {
                 mainKeyNameToSubKeyCon ->
             howFuncMacroComponent(
@@ -235,9 +362,11 @@ object EditSettingJsTool {
     }
 
     private fun makeKeyToSubKeyConListUntilFirstUnPipAble(
-        keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>
+        keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>?
     ): List<Pair<String, String>> {
-
+        if(
+            keyToSubKeyConListWithoutAfterSubKey.isNullOrEmpty()
+        ) return emptyList()
         val sizeByUnPipAble =
             keyToSubKeyConListWithoutAfterSubKey.indexOfFirst {
                 howPipUnableComponent(it)
@@ -249,6 +378,42 @@ object EditSettingJsTool {
                 }
             }
         return keyToSubKeyConListWithoutAfterSubKey.take(sizeByUnPipAble)
+    }
+
+    private fun filterByOverrideJsSubKey(
+        keyToSubKeyConList: List<Pair<String, String>>
+    ): List<Pair<String, String>> {
+        return keyToSubKeyConList.filter {
+            val mainKeyName = it.first
+            mainKeyName == jsOverrideKeyName
+        }
+    }
+
+    private fun filterByReplaceKey(
+        keyToSubKeyConList: List<Pair<String, String>>
+    ): List<Pair<String, String>> {
+        return keyToSubKeyConList.filter {
+            val mainKeyName = it.first
+            return@filter mainKeyName == jsReplaceKeyName
+        }
+    }
+
+
+    private fun extractJsRepValMap(
+        keyToSubKeyConList: List<Pair<String, String>>
+    ): Map<String, String> {
+       return keyToSubKeyConList.map {
+            val mainKeyName = it.first
+            if(
+                mainKeyName != jsReplaceKeyName
+            ) return@map emptyList()
+            val jsKeySeparator = '!'
+            val subKeyMapCon = it.second
+            CmdClickMap.createMap(
+                subKeyMapCon,
+                jsKeySeparator
+            )
+        }.flatten().toMap()
     }
 
     private fun filterByAfterJsSubKey(
@@ -317,6 +482,7 @@ object EditSettingJsTool {
         fragment: Fragment,
         keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>?,
         keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>?,
+        overrideMapList: List<Map<String, String>>,
     ): String? {
         if(
             keyToSubKeyConListWithoutAfterSubKey.isNullOrEmpty()
@@ -332,11 +498,25 @@ object EditSettingJsTool {
             keyToSubKeyConListWithoutAfterSubKey
         )
         val jsMapListWithoutAfterSubKey = makeJsMapList(
-            keyToSubKeyConListWithoutAfterSubKey
+            keyToSubKeyConListWithoutAfterSubKey,
+            overrideMapList,
         )
         val jsMapListWithAfterSubKey = makeJsMapList(
-            keyToSubKeyConListWithAfterSubKey
+            keyToSubKeyConListWithAfterSubKey,
+            overrideMapList,
         )
+//        FileSystems.writeFile(
+//            File(
+//                UsePath.cmdclickDefaultAppDirPath,
+//                "js_makeJsActionMap_convert.txt").absolutePath,
+//            listOf(
+//                "overrideMapList: ${overrideMapList}",
+//                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
+//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
+//                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
+//            ).joinToString("\n\n")
+//        )
 
         val jsFuncCon = JsConPutter.make(
             jsMapListWithoutAfterSubKey,
@@ -354,12 +534,13 @@ object EditSettingJsTool {
     }
 
     private fun makeJsMapList(
-        keyToSubConMapList: List<Pair<String, String>>?
+        keyToSubConMapList: List<Pair<String, String>>?,
+        overrideMapList: List<Map<String, String>>,
     ): List<Map<String, String>> {
         if(
             keyToSubConMapList.isNullOrEmpty()
         ) return emptyList()
-        return keyToSubConMapList.map {
+        val jsMapSrc = keyToSubConMapList.map {
             val mainKeyName = it.first
             if(
                 mainKeyName != jsKeyName
@@ -371,6 +552,45 @@ object EditSettingJsTool {
                 jsKeySeparator
             ).toMap()
         }.filter { it.isNotEmpty() }
+        val overrideKeyName =
+            JsActionKeyManager.JsSubKey.ID.key
+        return jsMapSrc.map {
+            val id = it.get(
+                overrideKeyName
+            ) ?: return@map it
+            val overrideMapSrc = JsActionKeyManager.OverrideManager.makeOverrideMap(
+                overrideMapList,
+                id,
+            )
+            it.plus(overrideMapSrc)
+        }
+    }
+
+    private fun makeOverrideMapList(
+        keyToSubKeyConListWithOverrideKey: List<Pair<String, String>>?,
+    ): List<Map<String, String>> {
+        if(
+            keyToSubKeyConListWithOverrideKey.isNullOrEmpty()
+        ) return emptyList()
+        return keyToSubKeyConListWithOverrideKey.map {
+            val mainKeyName = it.first
+            if(
+                mainKeyName != jsOverrideKeyName
+            ) return@map emptyMap()
+            val jsOverrideMapCon = it.second
+            val jsKeySeparator = '!'
+            CmdClickMap.createMap(
+                jsOverrideMapCon,
+                jsKeySeparator
+            ).toMap()
+        }.filter { it.isNotEmpty() }
+    }
+
+    private enum class KeyToSubConType {
+        WITH_REPLACE,
+        WITH_OVERRIDE,
+        WITH_AFTER,
+        WITH_OTHER,
     }
 
 }
@@ -876,7 +1096,7 @@ private object JsConPutter {
         jsMap: Map<String, String>,
         jsMapListOnlyAfter: List<Map<String, String>>
     ): String {
-        val id = jsMap.get(JsActionKeyManager.JsSubKey.ID.key)
+        val afterId = jsMap.get(JsActionKeyManager.JsSubKey.ID.key)
         val afterKeyName = JsActionKeyManager.JsSubKey.AFTER.key
         val afterJsMap = jsMapListOnlyAfter.firstOrNull {
             val afterValueList =
@@ -886,7 +1106,7 @@ private object JsConPutter {
             if(
                 afterValueList.isNullOrEmpty()
             ) return@firstOrNull false
-            afterValueList.contains(id)
+            afterValueList.contains(afterId)
         }
         return execMake(
             afterJsMap,

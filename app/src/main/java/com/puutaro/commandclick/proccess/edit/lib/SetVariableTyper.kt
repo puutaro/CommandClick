@@ -177,9 +177,6 @@ object SetVariableTyper {
                 it,
                 setVariableSetSeparator
             )
-//            it.split(
-//                setVariableSetSeparator
-//            )
                 .getOrNull(currentComponentIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
             }
@@ -190,18 +187,5 @@ object SetVariableTyper {
                 '!'
             )
         }?.toMap()
-//            ?.let {
-//            QuoteTool.splitBySurroundedIgnore(
-//                QuoteTool.trimBothEdgeQuote(it),
-//                '!'
-//            )
-//        }
-//            ?.split('!')
-//            ?.map {
-//                CcScript.makeKeyValuePairFromSeparatedString(
-//                    it,
-//                    "="
-//                )
-//            }?.toMap()
     }
 }

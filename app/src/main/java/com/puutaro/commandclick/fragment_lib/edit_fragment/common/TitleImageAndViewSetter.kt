@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.qr.QrLogo
@@ -68,9 +69,9 @@ object TitleImageAndViewSetter {
     }
 
     fun makeBackstackCount(
-        editFragment: EditFragment
+        fragment: Fragment
     ): Int {
-        return editFragment
+        return fragment
             .activity
             ?.supportFragmentManager
             ?.backStackEntryCount

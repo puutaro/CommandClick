@@ -52,12 +52,41 @@ class BusyboxExecutor(
 
     fun getCmdOutput(
         command: String,
-        env: HashMap<String, String>? = null,
+        envMapSrc: Map<String, String>? = null,
     ): String {
+        val envMap = makeRepValHashMap(
+            envMapSrc,
+        )
         return execCommandForOutput(
             listOf("sh", "-c", command),
-            env
+            envMap
         )
+    }
+
+    private fun makeRepValHashMap(
+        extraArgsMap: Map<String, String>?,
+    ): HashMap<String, String> {
+        if(
+            extraArgsMap.isNullOrEmpty()
+        ) return hashMapOf()
+        val envMapSrc = extraArgsMap.map {
+            val keyName = it.key
+            val value = it.value
+            val subCmd =
+                value.removePrefix("$(").removeSuffix(")")
+            val isSubCmdBlock =
+                subCmd != value
+            when(isSubCmdBlock){
+                true -> {
+                        keyName to getCmdOutput(
+                            subCmd
+                        )
+
+                }
+                else -> keyName to value
+            }
+        }.toMap()
+        return HashMap(envMapSrc)
     }
 
     private fun execCommandForOutput(

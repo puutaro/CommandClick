@@ -72,4 +72,16 @@ object SearchBoxSettingsForListIndex {
             else -> replaceBackstackCurrentVariableValue
         }
     }
+
+    fun backStackMarkReplace(
+        fragment: Fragment,
+        currentVariableValue: String,
+    ): String {
+        val backstackNum =
+            TitleImageAndViewSetter.makeBackstackCount(fragment)
+        return currentVariableValue.replace(
+            backstackCountMarkForInsertEditText,
+            backstackNum.toString(),
+        )
+    }
 }

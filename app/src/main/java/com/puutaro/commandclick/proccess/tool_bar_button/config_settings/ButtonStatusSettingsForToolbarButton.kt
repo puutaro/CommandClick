@@ -2,13 +2,16 @@ package com.puutaro.commandclick.proccess.tool_bar_button.config_settings
 
 import android.widget.ImageButton
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
-object ButtonFocusSettingsForToolbarButton {
-    enum class ButtonFocusValue {
-        ON,
+object ButtonStatusSettingsForToolbarButton {
+    enum class ButtonDisableValue {
+        ON
     }
 
     fun set(
@@ -16,15 +19,12 @@ object ButtonFocusSettingsForToolbarButton {
         toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
         toolbarButton: ImageButton?
     ){
-        val isFocus = editFragment.toolbarButtonConfigMap?.get(
+        val disable = editFragment.toolbarButtonConfigMap?.get(
             toolbarButtonBariantForEdit
         )?.get(
-            SettingButtonConfigMapKey.STATUS.key
-        ) == ButtonFocusValue.ON.name
-        if(!isFocus) return
-        editFragment.context?.let {
-            toolbarButton?.imageTintList =
-                it.getColorStateList(R.color.web_icon_color)
-        }
+            SettingButtonConfigMapKey.DISABLE.key
+        ) == ButtonDisableValue.ON.name
+        if(!disable) return
+        toolbarButton?.isEnabled = false
     }
 }

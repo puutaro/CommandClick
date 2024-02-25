@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
-import android.widget.ImageButton
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -23,7 +22,6 @@ import java.io.File
 class ToolbarButtonArgsMaker(
     val editFragment: EditFragment,
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
-    val settingButtonView: ImageButton?,
     private val isLongClick: Boolean,
 ) {
     private val languageType = LanguageTypeSelects.JAVA_SCRIPT
@@ -102,6 +100,57 @@ class ToolbarButtonArgsMaker(
 
 //        private val menuDefaultConForCmdIndex = makeSettingMenuDefaultConForCmdIndex()
         private val menuDefaultConForEdit = makeSettingMenuDefaultConForEdit()
+
+        fun makeSettingButtonMenuPairList(
+            editFragment: EditFragment,
+            jsActionMap: Map<String, String>?
+        ): List<List<Pair<String, String>>> {
+            val readSharePreferenceMap = editFragment.readSharePreferenceMap
+            val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreferenceMap,
+                SharePrefferenceSetting.current_app_dir
+            )
+            val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreferenceMap,
+                SharePrefferenceSetting.current_fannel_name
+            )
+            val setReplaceVariableMap = editFragment.setReplaceVariableMap
+            val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
+                jsActionMap
+            ) ?: emptyMap()
+            val settingMenuSettingFilePath = argsMap.get(
+                MacroForToolbarButton.MenuMacroArgsKey.MENU_PATH.key
+            ) ?: String()
+            val settingMenuSettingFilePathObj =
+                File(settingMenuSettingFilePath)
+            val isSettingMenuSettingFilePath =
+                when(
+                    settingMenuSettingFilePath.isNotEmpty()
+                ){
+                    true -> settingMenuSettingFilePathObj.isFile
+                    else -> false
+                }
+            val settingMenuMapCon = when(isSettingMenuSettingFilePath){
+                true -> SettingFile.read(
+                    settingMenuSettingFilePathObj.absolutePath,
+                    File(currentAppDirPath, currentFannelName).absolutePath,
+                    setReplaceVariableMap,
+                )
+                else -> SettingFile.formSettingContents(
+                    makeToolbarbuttonMenuConHandler().split("\n")
+                )
+            }
+            return MenuSettingTool.makeMenuPairListForMenuList(
+                settingMenuMapCon,
+                currentAppDirPath,
+                currentFannelName,
+                setReplaceVariableMap
+            )
+        }
+
+        private fun makeToolbarbuttonMenuConHandler(): String {
+            return menuDefaultConForEdit
+        }
     }
 
     fun decideClickKey(): String {
@@ -109,46 +158,6 @@ class ToolbarButtonArgsMaker(
             true -> SettingButtonConfigMapKey.LONG_CLICK.key
             else -> SettingButtonConfigMapKey.CLICK.key
         }
-    }
-
-    fun makeSettingButtonMenuPairList(
-        jsActionMap: Map<String, String>?
-    ): List<List<Pair<String, String>>> {
-        val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
-            jsActionMap
-        ) ?: emptyMap()
-        val settingMenuSettingFilePath = argsMap.get(
-            MacroForToolbarButton.MenuMacroArgsKey.MENU_PATH.key
-        ) ?: String()
-        val settingMenuSettingFilePathObj =
-            File(settingMenuSettingFilePath)
-        val isSettingMenuSettingFilePath =
-            when(
-                settingMenuSettingFilePath.isNotEmpty()
-            ){
-                true -> settingMenuSettingFilePathObj.isFile
-                else -> false
-            }
-        val settingMenuMapCon = when(isSettingMenuSettingFilePath){
-            true -> SettingFile.read(
-                settingMenuSettingFilePathObj.absolutePath,
-                File(currentAppDirPath, currentScriptFileName).absolutePath,
-                setReplaceVariableMap,
-            )
-            else -> SettingFile.formSettingContents(
-                makeToolbarbuttonMenuConHandler().split("\n")
-            )
-        }
-        return MenuSettingTool.makeMenuPairListForMenuList(
-            settingMenuMapCon,
-            currentAppDirPath,
-            currentScriptFileName,
-            setReplaceVariableMap
-        )
-    }
-
-    private fun makeToolbarbuttonMenuConHandler(): String {
-        return menuDefaultConForEdit
     }
 }
 //

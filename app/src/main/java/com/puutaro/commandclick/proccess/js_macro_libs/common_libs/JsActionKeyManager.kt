@@ -14,6 +14,8 @@ object JsActionKeyManager {
         JS_IMPORT("jsImport"),
         JS_TSV_IMPORT("jsTsvImport"),
         JS_ACTIONS_IMPORT("jsActionsImport"),
+        JS_OVERRIDE("jsOverride"),
+        JS_REPLACE("jsReplace")
     }
 
     enum class JsSubKey(
@@ -21,6 +23,7 @@ object JsActionKeyManager {
     ) {
         FUNC("func"),
         METHOD("method"),
+        OVERRIDE("override"),
         ID("id"),
         ARGS("args"),
         LOOP_ARG_NAMES("loopArgNames"),
@@ -34,6 +37,40 @@ object JsActionKeyManager {
         START_TOAST("startToast"),
         END_TOAST("endToast"),
         ON_LOG("onLog")
+    }
+
+    object OverrideManager {
+        enum class NoOverrideJsSubKey(val key: String){
+            ID(JsSubKey.ID.key),
+            AFTER(JsSubKey.AFTER.key),
+            OVERRIDE(JsSubKey.OVERRIDE.key),
+        }
+
+        fun makeOverrideMap(
+            overrideMapList: List<Map<String, String>>,
+            id: String,
+        ): Map<String, String> {
+            val idKeyName =
+                JsSubKey.OVERRIDE.key
+            val overrideMapSrc = overrideMapList.lastOrNull { map ->
+                val overrideIdList = map.get(
+                    idKeyName
+                )?.split("&") ?: return@lastOrNull false
+                overrideIdList.contains(id)
+            } ?: return emptyMap()
+            return overrideMapSrc.map {
+                val keyName = it.key
+                val disableOverride =
+                    JsActionKeyManager.OverrideManager.NoOverrideJsSubKey.values()
+                        .firstOrNull {
+                            it.key == keyName
+                        } != null
+                if(
+                    disableOverride
+                ) return@map String() to String()
+                keyName to it.value
+            }.toMap().filterKeys { it.isNotEmpty() }
+        }
     }
 
     object ArgsManager {

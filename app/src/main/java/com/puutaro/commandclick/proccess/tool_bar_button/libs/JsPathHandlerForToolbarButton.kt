@@ -1,22 +1,12 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
-import android.util.Size
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.PopupWindow
-import android.widget.Toast
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.LinearLayoutCompat
-import androidx.core.view.isVisible
+import android.widget.ImageButton
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.custom_view.NoScrollListView
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
@@ -29,18 +19,14 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.AppProcessManager
-import com.puutaro.commandclick.proccess.EnableNavForWebView
-import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
@@ -50,9 +36,9 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ListSyncer
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.PopupSettingMenu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.QrConGetterDialog
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.SettingButtonSubMenuDialog
-import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarMenuDialog
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.UrlHistoryAddToTsv
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
@@ -68,7 +54,8 @@ import java.io.File
 object JsPathHandlerForToolbarButton {
 
     fun handle(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
+        settingButtonView: View?,
         jsActionMap: Map<String, String>?
     ) {
         if(
@@ -85,26 +72,26 @@ object JsPathHandlerForToolbarButton {
         when (jsActionType) {
             JsActionDataMapKeyObj.JsActionDataTypeKey.MACRO
             -> jsPathMacroHandler(
-                toolbarButtonArgsMaker,
+                editFragment,
+                settingButtonView,
                 jsActionMap
             )
 
             JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON
             -> execJs(
-                    toolbarButtonArgsMaker,
+                    editFragment,
                     jsActionMap
                 )
         }
     }
 
     private fun execJs(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
         jsActionMap: Map<String, String>
     ){
         if(
             jsActionMap.isEmpty()
         ) return
-        val editFragment = toolbarButtonArgsMaker.editFragment
         val jsConSrc = jsActionMap.get(
             JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
         )
@@ -128,19 +115,22 @@ object JsPathHandlerForToolbarButton {
     }
 
     private fun jsPathMacroHandler(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
+        settingButtonView: View?,
         jsActionMap: Map<String, String>
     ) {
-        val editFragment = toolbarButtonArgsMaker.editFragment
-        val readSharePreffernceMap = toolbarButtonArgsMaker.readSharePreffernceMap
+        val readSharePreffernceMap = editFragment.readSharePreferenceMap
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
         val currentAppDirPath =
             SharePreferenceMethod.getReadSharePreffernceMap(
                 readSharePreffernceMap,
                 SharePrefferenceSetting.current_app_dir
             )
-        val currentScriptFileName =
-            toolbarButtonArgsMaker.currentScriptFileName
+        val currentFannelName =
+            SharePreferenceMethod.getReadSharePreffernceMap(
+                readSharePreffernceMap,
+                SharePrefferenceSetting.current_fannel_name
+            )
         if(
             jsActionMap.isEmpty()
         ) return
@@ -156,7 +146,7 @@ object JsPathHandlerForToolbarButton {
             -> AppProcessManager.killDialog(
                 editFragment,
                 currentAppDirPath,
-                currentScriptFileName
+                currentFannelName
             )
             MacroForToolbarButton.Macro.USAGE
             -> UsageDialog.launch(
@@ -255,8 +245,15 @@ object JsPathHandlerForToolbarButton {
             )
             MacroForToolbarButton.Macro.MENU
             -> PopupSettingMenu.launchSettingMenu(
-                toolbarButtonArgsMaker,
+                editFragment,
+                settingButtonView,
                 jsActionMap
+            )
+            MacroForToolbarButton.Macro.D_MENU
+            -> ToolbarMenuDialog.launch(
+                editFragment,
+                settingButtonView,
+                jsActionMap,
             )
 
             MacroForToolbarButton.Macro.SYNC
@@ -313,12 +310,12 @@ object JsPathHandlerForToolbarButton {
             ).invoke()
             MacroForToolbarButton.Macro.ADD_URL_CON
             -> AddUrlCon.add(
-                toolbarButtonArgsMaker,
+                editFragment,
                 jsActionMap,
             )
             MacroForToolbarButton.Macro.ADD_URL
             -> AddUrl.add(
-                toolbarButtonArgsMaker,
+                editFragment,
                 jsActionMap,
             )
         }
@@ -336,297 +333,6 @@ object JsPathHandlerForToolbarButton {
             "${useClassName}.get_S(${onDirectoryPick});",
         )
     }
-
-    private object PopupSettingMenu {
-
-        private var menuPopupWindow: PopupWindow? = null
-        fun launchSettingMenu(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-            jsActionMap: Map<String, String>
-        ) {
-            val editFragment = toolbarButtonArgsMaker.editFragment
-            val context = editFragment.context
-
-            if (
-                context == null
-            ) return
-            val existEditExecuteTerminalFragment =
-                ExistTerminalFragment.how(
-                    editFragment,
-                    context.getString(
-                                R.string.edit_terminal_fragment
-                            )
-                )
-            if (
-                existEditExecuteTerminalFragment == null
-            ) {
-                Toast.makeText(
-                    context,
-                    "no working",
-                    Toast.LENGTH_SHORT
-                ).show()
-                return
-            }
-            createPopUpForSetting(
-                toolbarButtonArgsMaker,
-                jsActionMap,
-            )
-        }
-
-        private fun createPopUpForSetting(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-            jsActionMap: Map<String, String>
-        ) {
-            val settingButtonView = toolbarButtonArgsMaker.settingButtonView
-            if (settingButtonView == null) return
-            val context = settingButtonView.context
-            val menuPairList =
-                toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionMap)
-            val menuListMap = MenuSettingTool.createListMenuListMap(
-                menuPairList
-            )
-            if (menuListMap.size == 1) {
-                val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
-                    toolbarButtonArgsMaker.editFragment,
-                    MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
-                        menuPairList.first()
-                    )
-                )
-                handle(
-                    toolbarButtonArgsMaker,
-                    updateJsActionMap,
-                )
-                return
-            }
-            menuPopupWindow = PopupWindow(
-                context,
-            ).apply {
-                elevation = 5f
-                isFocusable = true
-                isOutsideTouchable = true
-                setBackgroundDrawable(null)
-                animationStyle = R.style.popup_window_animation_phone
-                val inflater = LayoutInflater.from(context)
-                contentView = inflater.inflate(
-                    R.layout.setting_popup_for_index,
-                    LinearLayoutCompat(context),
-                    false
-                ).apply {
-                    val menuListView =
-                        this.findViewById<NoScrollListView>(
-                            R.id.setting_menu_list_view
-                        )
-                    val menuListAdapter = SubMenuAdapter(
-                        context,
-                        menuListMap.toMutableList()
-                    )
-                    menuListView.adapter = menuListAdapter
-                    menuListViewSetOnItemClickListener(
-                        toolbarButtonArgsMaker,
-                        menuListView,
-                        jsActionMap,
-                    )
-                    footerSettingHandler(
-                        toolbarButtonArgsMaker.editFragment,
-                        this,
-                        jsActionMap,
-                    )
-                    measure(
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                    )
-                }
-            }.also { popupWindow ->
-                // Absolute location of the anchor view
-                val location = IntArray(2).apply {
-                    settingButtonView.getLocationOnScreen(this)
-                }
-                val size = Size(
-                    popupWindow.contentView.measuredWidth,
-                    popupWindow.contentView.measuredHeight
-                )
-                popupWindow.showAtLocation(
-                    settingButtonView,
-                    Gravity.TOP or Gravity.START,
-                    location[0] - (size.width - settingButtonView.width) / 2,
-                    location[1] - size.height
-                )
-            }
-        }
-
-        private fun howFooterVisible(
-            jsActionMap: Map<String, String>
-        ): Boolean {
-            val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
-                jsActionMap
-            ) ?: emptyMap()
-            return !argsMap.containsKey(
-                MacroForToolbarButton.MenuMacroArgsKey.ON_HIDE_FOOTER.key
-            )
-        }
-
-        private fun menuListViewSetOnItemClickListener(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-            menuListView: NoScrollListView,
-            jsActionMap: Map<String, String>,
-        ) {
-            menuListView.setOnItemClickListener { parent, View, pos, id ->
-                menuPopupWindow?.dismiss()
-                val menuListAdapter = menuListView.adapter as SubMenuAdapter
-                val clickedMenuName = menuListAdapter.getItem(pos)
-                    ?: return@setOnItemClickListener
-                jsPathOrSubMenuHandler(
-                    toolbarButtonArgsMaker,
-                    jsActionMap,
-                    clickedMenuName,
-                )
-            }
-        }
-
-        private fun jsPathOrSubMenuHandler(
-            toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
-            jsActionMap: Map<String, String>?,
-            clickedMenuName: String,
-
-            ) {
-            val settingButtonMenuPairList =
-                toolbarButtonArgsMaker.makeSettingButtonMenuPairList(jsActionMap)
-            val hitMenuItemPairList = MenuSettingTool.firstOrNullByParentMenuName(
-                settingButtonMenuPairList,
-                clickedMenuName,
-            )
-            val onSubMenuLabel = !hitMenuItemPairList.isNullOrEmpty()
-//            FileSystems.writeFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "jsHowHitMenu.txt").absolutePath,
-//                listOf(
-//                    "clickedMenuName: ${clickedMenuName}",
-//                    "settingButtonMenuPairList: ${settingButtonMenuPairList}",
-//                    "hitMenuItemPairList: ${hitMenuItemPairList}",
-//                    "hitMenuitemPairLsitByMenuName: ${
-//                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-//                        settingButtonMenuPairList,
-//                        clickedMenuName
-//                    )}",
-//                    "jsActionMapSrc: ${jsActionMap}",
-//                ).joinToString("\n\n")
-//            )
-            when (onSubMenuLabel) {
-                true ->
-                    SettingButtonSubMenuDialog.launch(
-                        toolbarButtonArgsMaker,
-                        jsActionMap,
-                        clickedMenuName,
-                    )
-
-                else -> {
-                    val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
-                        toolbarButtonArgsMaker.editFragment,
-                        MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-                            settingButtonMenuPairList,
-                            clickedMenuName
-                        )
-                    )
-//                    FileSystems.writeFile(
-//                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
-//                        listOf(
-//                            "clickedMenuName: ${clickedMenuName}",
-//                            "settingButtonMenuPairList: ${settingButtonMenuPairList}",
-//                            "hitMenuItemPairList: ${hitMenuItemPairList}",
-//                            "hitMenuitemPairLsitByMenuName: ${
-//                                MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
-//                                settingButtonMenuPairList,
-//                                clickedMenuName
-//                            )}",
-//                            "jsActionMapSrc: ${jsActionMap}",
-//                            "updateJsActionMap: ${updateJsActionMap}",
-//                        ).joinToString("\n\n")
-//                    )
-                    handle(
-                        toolbarButtonArgsMaker,
-                        updateJsActionMap
-                    )
-                }
-
-            }
-        }
-
-        private fun footerSettingHandler(
-            editFragment: EditFragment,
-            settingButtonInnerView: View,
-            jsActionMap: Map<String, String>,
-        ) {
-            val isFooterVisible = howFooterVisible(
-                jsActionMap,
-            )
-            when (isFooterVisible) {
-                false -> settingButtonInnerView.findViewById<LinearLayoutCompat>(
-                    R.id.setting_menu_nav_footer
-                )?.isVisible = false
-
-                else -> setNaviBarForEdit(
-                    editFragment,
-                    settingButtonInnerView
-                )
-            }
-        }
-
-        private fun setNaviBarForEdit(
-            editFragment: EditFragment,
-            settingButtonInnerView: View
-        ) {
-            execSetNavImageButtonForEdit(
-                editFragment,
-                settingButtonInnerView,
-                R.id.setting_menu_nav_back_iamge_view,
-                ToolbarMenuCategoriesVariantForCmdIndex.BACK,
-                EnableNavForWebView.checkForGoBack(editFragment)
-            )
-            execSetNavImageButtonForEdit(
-                editFragment,
-                settingButtonInnerView,
-                R.id.setting_menu_nav_reload_iamge_view,
-                ToolbarMenuCategoriesVariantForCmdIndex.RELOAD,
-                EnableNavForWebView.checkForReload(editFragment),
-            )
-            execSetNavImageButtonForEdit(
-                editFragment,
-                settingButtonInnerView,
-                R.id.setting_menu_nav_forward_iamge_view,
-                ToolbarMenuCategoriesVariantForCmdIndex.FORWARD,
-                EnableNavForWebView.checkForGoForward(editFragment)
-            )
-        }
-
-        private fun execSetNavImageButtonForEdit(
-            editFragment: EditFragment,
-            settingButtonInnerView: View,
-            buttonId: Int,
-            toolbarMenuCategoriesVariantForCmdIndex: ToolbarMenuCategoriesVariantForCmdIndex,
-            buttonEnable: Boolean
-        ) {
-            val context = editFragment.context
-                ?: return
-            val navImageButton =
-                settingButtonInnerView.findViewById<AppCompatImageButton>(
-                    buttonId
-                )
-            navImageButton.setOnClickListener {
-                menuPopupWindow?.dismiss()
-                val listener = context as? EditFragment.OnToolbarMenuCategoriesListenerForEdit
-                listener?.onToolbarMenuCategoriesForEdit(
-                    toolbarMenuCategoriesVariantForCmdIndex,
-                    EditFragmentArgs(
-                        editFragment.readSharePreferenceMap,
-                        EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
-                    ),
-                )
-            }
-            navImageButton.isEnabled = buttonEnable
-            val colorId = if (buttonEnable) R.color.cmdclick_text_black else R.color.gray_out
-            navImageButton.imageTintList = context.getColorStateList(colorId)
-        }
-    }
-
 
     private fun syncFannelRepo(
         editFragment: EditFragment

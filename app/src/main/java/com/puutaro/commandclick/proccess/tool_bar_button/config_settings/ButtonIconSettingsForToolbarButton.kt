@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.config_settings
 
-import com.puutaro.commandclick.common.variable.icon.CmdClickIcons
+import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 
 object ButtonIconSettingsForToolbarButton {
     enum class ButtonIcons(

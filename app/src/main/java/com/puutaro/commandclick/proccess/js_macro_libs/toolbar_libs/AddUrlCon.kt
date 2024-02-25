@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
@@ -16,10 +17,9 @@ object AddUrlCon {
 
 
     fun add(
-        toolbarButtonArgsMaker: ToolbarButtonArgsMaker,
+        editFragment: EditFragment,
         jsActionMap: Map<String, String>,
     ){
-        val editFragment = toolbarButtonArgsMaker.editFragment
 
         val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
             jsActionMap

@@ -33,6 +33,8 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.Terminal
 import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.FileOrDirGetterForSettingButton
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -68,6 +70,7 @@ class   TerminalFragment: Fragment() {
     var commandSectionEnd = languageTypeToSectionHolderMap?.get(
         CommandClickScriptVariable.HolderTypeName.CMD_SEC_END
     ) as String
+    var busyboxExecutor: BusyboxExecutor? = null
     var readSharePreferenceMap = mapOf<String, String>()
     var srcReadSharedPreferences: Map<String, String>? = null
     var editType =
@@ -135,6 +138,12 @@ class   TerminalFragment: Fragment() {
 
         if(savedInstanceState != null) {
             binding.terminalWebView.restoreState(savedInstanceState)
+        }
+        context?.let {
+            busyboxExecutor = BusyboxExecutor(
+                it,
+                UbuntuFiles(it)
+            )
         }
         readSharePreferenceMap = EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharedPreferences = EditFragmentArgs.getSrcReadSharePreference(arguments)

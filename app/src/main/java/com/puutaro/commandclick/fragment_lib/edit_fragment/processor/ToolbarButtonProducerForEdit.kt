@@ -12,8 +12,9 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.proccess.history.CLICLTYPE
 import com.puutaro.commandclick.proccess.history.HistoryBottunSwitcher
 import com.puutaro.commandclick.proccess.history.UrlHistoryButtonEvent
-import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonHandler
-import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonFocusSettingsForToolbarButton
+import com.puutaro.commandclick.proccess.tool_bar_button.ToolbarButtonHandler
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonColorSettingForToolbarButton
+import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonStatusSettingsForToolbarButton
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class ToolbarButtonProducerForEdit(
@@ -26,7 +27,7 @@ class ToolbarButtonProducerForEdit(
         0,
         LinearLayout.LayoutParams.MATCH_PARENT,
     )
-    private val settingButtonHandler = SettingButtonHandler(
+    private val toolbarButtonHandler = ToolbarButtonHandler(
         editFragment,
     )
     private val urlHistoryButtonEvent = UrlHistoryButtonEvent(
@@ -56,8 +57,13 @@ class ToolbarButtonProducerForEdit(
         ) return
         insertImageButtonParam.weight = editFragment.buttonWeight
         val makeButtonView = ImageButton(context)
-        makeButtonView.imageTintList =
-            context?.getColorStateList(R.color.terminal_color)
+        ButtonColorSettingForToolbarButton.set(
+            editFragment,
+            toolbarButtonBariantForEdit,
+            makeButtonView
+        )
+//        makeButtonView.imageTintList =
+//            context?.getColorStateList(R.color.terminal_color)
         makeButtonView.setImageResource(
             editFragment.toolBarButtonIconMap[toolbarButtonBariantForEdit]
                 ?: R.drawable.icons8_ok
@@ -66,7 +72,7 @@ class ToolbarButtonProducerForEdit(
             context?.getColorStateList(R.color.white)
 //        it.getColorStateList(R.color.terminal_color)
 
-        ButtonFocusSettingsForToolbarButton.set(
+        ButtonStatusSettingsForToolbarButton.set(
             editFragment,
             toolbarButtonBariantForEdit,
             makeButtonView
@@ -119,7 +125,7 @@ class ToolbarButtonProducerForEdit(
                 ToolbarButtonBariantForEdit.OK,
                 ToolbarButtonBariantForEdit.EDIT ,
                 ToolbarButtonBariantForEdit.EXTRA, -> {
-                    settingButtonHandler.handle(
+                    toolbarButtonHandler.handle(
                         false,
                         toolbarButtonBariantForEdit,
                         makeButtonView,
@@ -162,7 +168,7 @@ class ToolbarButtonProducerForEdit(
             ToolbarButtonBariantForEdit.OK,
             ToolbarButtonBariantForEdit.EDIT,
             ToolbarButtonBariantForEdit.EXTRA -> {
-                settingButtonHandler.handle(
+                toolbarButtonHandler.handle(
                     true,
                     toolbarButtonBariantForEdit,
                     settingButtonView,

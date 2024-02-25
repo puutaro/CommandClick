@@ -54,7 +54,9 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsExecQr
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrLogoEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAction
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAppDirAdder
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsBackstack
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCancel
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsCmdValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorSizing
@@ -341,6 +343,14 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsCmdValFrag(terminalFragment),
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsBackstack(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsAction(terminalFragment)
         )
     }
 

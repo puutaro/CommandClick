@@ -11,7 +11,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForTo
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.util.map.CmdClickMap
 
-class SettingButtonHandler(
+class ToolbarButtonHandler(
     private val editFragment: EditFragment,
 ) {
 
@@ -27,7 +27,6 @@ class SettingButtonHandler(
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             editFragment,
             toolbarButtonBariantForEdit,
-            settingButtonView,
             isLongClick,
         )
 
@@ -49,7 +48,8 @@ class SettingButtonHandler(
                 isLongClick,
             )
         JsPathHandlerForToolbarButton.handle(
-            toolbarButtonArgsMaker,
+            editFragment,
+            settingButtonView,
             jsActionMap
         )
     }
@@ -177,5 +177,6 @@ enum class SettingButtonConfigMapKey(
     CLICK("click"),
     ICON("icon"),
     VISIBLE("visible"),
-    ON_FOCUS("onFocus")
+    DISABLE("disable"),
+    COLOR("color")
 }
