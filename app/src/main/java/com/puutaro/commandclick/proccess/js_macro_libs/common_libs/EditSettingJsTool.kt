@@ -235,37 +235,11 @@ object EditSettingJsTool {
         val keyToSubKeyConListWithReplaceKey = filterByReplaceKey(
             keyToSubKeyConList
         )
-//        val repValMap = extractReplaceValMapByReplaceKey(
-//            keyToSubKeyConListWithReplaceKey
-//        )
         val keyToSubKeyConListWithoutReplaceKey =  keyToSubKeyConList.filter {
             !keyToSubKeyConListWithReplaceKey.contains(it)
         }
         val keyToSubKeyConListWithAfterSubKey =
             filterByAfterJsSubKey(keyToSubKeyConListWithoutReplaceKey)
-
-
-//        val keyToSubKeyConListWithoutAfterSubKeySrcWithOverride =
-//            keyToSubKeyConList.filter {
-//                !keyToSubKeyConListWithAfterSubKey.contains(it)
-//            }
-//
-//        val keyToSubKeyConListWithOverrideKey =
-//            filterByOverrideJsSubKey(
-//                keyToSubKeyConListWithoutAfterSubKeySrcWithOverride
-//            )
-//        val keyToSubKeyConListWithoutAfterSubKeySrc =
-//            keyToSubKeyConListWithoutAfterSubKeySrcWithOverride.filter {
-//                !keyToSubKeyConListWithOverrideKey.contains(it)
-//            }
-//
-//
-//
-//
-//        val keyToSubKeyConListWithoutAfterSubKey =
-//            JsPathAndConToFunc.convertJaPathToFunc(
-//                keyToSubKeyConListWithoutAfterSubKeySrc,
-//            )
 
         val overrideToOther = devideOverrideAndOther(
             keyToSubKeyConListWithoutReplaceKey,
@@ -306,7 +280,6 @@ object EditSettingJsTool {
             KeyToSubConType.WITH_OTHER
                     to listOf(keyToSubKeyConListForMacro),
         )
-//        listOf(keyToSubKeyConListForMacro) to null
         return mapOf(
             KeyToSubConType.WITH_REPLACE
                     to keyToSubKeyConListWithReplaceKey,
