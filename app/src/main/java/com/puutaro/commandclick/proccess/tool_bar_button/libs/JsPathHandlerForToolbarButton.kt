@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import android.view.View
-import android.widget.ImageButton
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -27,6 +26,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
@@ -108,7 +108,7 @@ object JsPathHandlerForToolbarButton {
                 "jsCon: ${jsCon}",
             ).joinToString("\n\n\n")
         )
-        ExecJsLoad.jsUrlLaunchHandler(
+        JavascriptExecuter.jsUrlLaunchHandler(
             editFragment,
             JavaScriptLoadUrl.makeLastJsCon(jsCon)
         )

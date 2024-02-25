@@ -9,12 +9,20 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
+import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
+import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
 
 class LongPressForImage(
@@ -22,7 +30,20 @@ class LongPressForImage(
     private val context: Context?,
     private val imageMenuFilePath: String,
 )  {
-    private val currentAppDirPath = terminalFragment.currentAppDirPath
+    val activity = terminalFragment.activity
+    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
+    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_app_dir
+    )
+    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_fannel_name
+    )
+    private val currentState = SharePreferenceMethod.getReadSharePreffernceMap(
+        readSharePreferenceMap,
+        SharePrefferenceSetting.current_fannel_state
+    )
     private val imageLongPressMenuFilePathObj = File(imageMenuFilePath)
     private val imageLongPressMenuDirPath = imageLongPressMenuFilePathObj.parent
     private val imageLongPressMenuFileName = imageLongPressMenuFilePathObj.name
@@ -174,26 +195,17 @@ class LongPressForImage(
             currentAppDirPath,
             selectedScriptNameOrPathObj,
         )
-        val jsContentsListSource = LongPressMenuTool.makeJsConSrc(
-            execJsPath
+        val imageLongPressRepValMap = mapOf(
+            CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL
+                to longPressImageUrl,
+            CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL
+                to currentUrl
         )
-            .replace(
-                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_IMAGE_URL,
-                longPressImageUrl
-            )
-            .replace(
-                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
-                currentUrl
-            )
-            .split("\n")
-        val loadLongPressJsCon = JavaScriptLoadUrl.make(
-            context,
-            execJsPath,
-            jsContentsListSource
-        ) ?: return
-        ExecJsLoad.jsUrlLaunchHandler(
+        JavascriptExecuter.jsOrActionHandler(
             terminalFragment,
-            loadLongPressJsCon
+            execJsPath,
+            ReadText(execJsPath).textToList(),
+            imageLongPressRepValMap
         )
     }
 

@@ -3,7 +3,9 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
 import TsvImportManager
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -16,12 +18,15 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
-object EditSettingJsTool {
+object JsActionTool {
 
+    private val jsActionShiban =
+        CommandClickScriptVariable.jsActionShiban
     private val jsKeyName = JsActionKeyManager.JsActionsKey.JS.key
     private val jsReplaceKeyName = JsActionKeyManager.JsActionsKey.JS_REPLACE.key
     private val jsOverrideKeyName = JsActionKeyManager.JsActionsKey.JS_OVERRIDE.key
@@ -30,22 +35,55 @@ object EditSettingJsTool {
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
 
 
+    fun judgeJsAction(
+        fragment: Fragment,
+        jsList: List<String>
+    ): Boolean {
+        val firstLine = jsList
+            .firstOrNull()
+            ?: return false
+        val isEditFragment =
+            fragment is EditFragment
+        val isExistJsAcShiban = firstLine
+            .trim()
+            .removePrefix("//")
+            .trim() == jsActionShiban
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jaActionsJudage.txt").absolutePath,
+//            listOf(
+//                "fragment: ${fragment}",
+//                "isEditFragment: ${isEditFragment}",
+//                "firstLine: AAA${firstLine
+//                    .trim()
+//                    .removePrefix("//")
+//                    .trim()}BB",
+//                "jsActionShiban: ${jsActionShiban}",
+//                "isExistJsAcShiban: ${isExistJsAcShiban}",
+//            ).joinToString("\n\n")
+//        )
+        return isEditFragment && isExistJsAcShiban
+    }
+
     fun makeJsActionMap(
         fragment: Fragment,
         keyToSubKeyCon: String?,
+        extraRepValMap: Map<String, String>? = null,
     ): Map<String, String>? {
         val keyToSubConTypeMap = createKeyToSubConTypeMap(
             fragment,
             keyToSubKeyCon,
         ) ?: return null
-        val jsRepValMap = keyToSubConTypeMap.get(
+        val jsRepValMapBeforeConcat = keyToSubConTypeMap.get(
             KeyToSubConType.WITH_REPLACE
         )?.let {
                 extractJsRepValMap(
                     it
                 )
             }
-
+        val jsRepValMap = concatRepValMap(
+            jsRepValMapBeforeConcat,
+            extraRepValMap
+        )
 
         val overrideMapList =
             makeOverrideMapList(
@@ -97,6 +135,27 @@ object EditSettingJsTool {
             overrideMapList,
             jsRepValMap,
         )
+    }
+
+    private fun concatRepValMap(
+        jsRepValMapBeforeConcat: Map<String, String>?,
+        extraRepValMap: Map<String, String>?,
+    ): Map<String, String>? {
+        return when(true){
+            (jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && extraRepValMap.isNullOrEmpty())
+            -> null
+            (!jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && extraRepValMap.isNullOrEmpty())
+            -> jsRepValMapBeforeConcat
+            (jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && !extraRepValMap.isNullOrEmpty())
+            -> extraRepValMap
+            (!jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && !extraRepValMap.isNullOrEmpty())
+            -> jsRepValMapBeforeConcat + extraRepValMap
+            else -> null
+        }
     }
 
     private fun extractJsDataMap(
@@ -837,6 +896,27 @@ private object KeyToSubKeyConListMaker {
     private fun makeKeyToSubConPairList(
         keyToSubKeyCon: String?,
     ): List<Pair<String, String>> {
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsMakePaier.txt").absolutePath,
+//            listOf(
+//                "keyToSubKeyCon: ${keyToSubKeyCon}",
+//                "map: ${CmdClickMap.createMap(
+//                    keyToSubKeyCon,
+//                    keySeparator
+//                )}",
+//                "filterMap: ${CmdClickMap.createMap(
+//                    keyToSubKeyCon,
+//                    keySeparator
+//                ).filter {
+//                    val mainKey = it.first
+//                    jsActionsKeyPlusList.contains(mainKey)
+//                }.map {
+//                    val mainKey = it.first
+//                    val subKeyAfterStr = it.second
+//                    mainKey to subKeyAfterStr
+//                }}"
+//            ).joinToString("\n\n")
+//        )
         return CmdClickMap.createMap(
             keyToSubKeyCon,
             keySeparator

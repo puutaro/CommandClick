@@ -128,22 +128,6 @@ object FannelNameClickListenerSetter {
                         CommandClickScriptVariable.EDIT_EXECUTE,
                     ) ?: SettingVariableSelects.EditExecuteSelects.NO.name
                 when (editExecuteValue) {
-//                    SettingVariableSelects.EditExecuteSelects.ONCE.name -> {
-//                        val editFragmentTag = DecideEditTag(
-//                            shellContentsList,
-//                            currentAppDirPath,
-//                            selectedShellFileName,
-//                            SharePrefferenceSetting.current_fannel_state.defalutStr,
-//                        ).decide()
-//                            ?: return
-//                        OnOnceEditExecuteEvent.invoke(
-//                            cmdIndexFragment,
-//                            sharedPref,
-//                            selectedShellFileName,
-//                            editFragmentTag,
-//                        )
-//                        return
-//                    }
                     SettingVariableSelects.EditExecuteSelects.ALWAYS.name -> {
                         val fannelState = FannelStateManager.getState(
                             currentAppDirPath,
@@ -171,6 +155,7 @@ object FannelNameClickListenerSetter {
                     cmdIndexFragment,
                     currentAppDirPath,
                     selectedShellFileName,
+                    mainFannelContentsList,
                 )
                 CommandListManager.execListUpdateForCmdIndex(
                     currentAppDirPath,

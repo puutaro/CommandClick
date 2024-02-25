@@ -7,6 +7,7 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,9 +54,12 @@ class JsPermission(
                 }
             }
             withContext(Dispatchers.IO) {
+                val jsConList =
+                    ReadText(loadJsPath).textToList()
                 val jsCon = JavaScriptLoadUrl.make(
                     context,
-                    loadJsPath
+                    loadJsPath,
+                    jsConList,
                 ) ?: return@withContext
                 if (jsCon.isEmpty()) return@withContext
                 JsUrl(terminalFragment).loadUrl(jsCon)

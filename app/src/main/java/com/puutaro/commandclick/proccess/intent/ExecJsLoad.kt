@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.intent
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -10,7 +9,6 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.history.JsFilePathToHistory
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
@@ -18,7 +16,6 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import kotlinx.coroutines.*
 import java.io.File
 
 
@@ -42,7 +39,6 @@ object ExecJsLoad {
                 selectedJsFileName
             ).isFile
         ) return
-        val context = currentFragment.context
         when (currentFragment) {
             is CommandIndexFragment -> {
                 val listener = currentFragment.context as? CommandIndexFragment.OnKeyboardVisibleListener
@@ -144,26 +140,11 @@ object ExecJsLoad {
         }?.let {
             emptyList()
         } ?: jsContentsList
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath,
-//                "args_jsLoad.txt").absolutePath,
-//            listOf(
-//                "execJsPath: ${execJsPath}",
-//                "loadJsContentsList: ${loadJsContentsList}",
-//                "updateScriptArgsMapList: ${updateScriptArgsMapList}"
-//            ).joinToString("\n\n")
-//        )
-        val launchUrlString = JavaScriptLoadUrl.make(
-            context,
+        terminalViewModel.jsArguments = jsArgs
+        JavascriptExecuter.jsOrActionHandler(
+            currentFragment,
             execJsPath,
             loadJsContentsList
-        ).toString()
-
-        terminalViewModel.jsArguments = jsArgs
-
-        jsUrlLaunchHandler(
-            currentFragment,
-            launchUrlString,
         )
 
         JavascriptExecuter.cleanUpAfterJsExc(
@@ -222,25 +203,27 @@ object ExecJsLoad {
         }.toMap()
         val jsContentsListSource = ReadText(
             execJsPathObj.absolutePath
-        ).readText().let {
-            srcJsCon ->
-            var replacedJsCon = srcJsCon
-            replaceMarkMap.forEach {
-                val repMark = "\${${it.key}}"
-                val repValue = it.value
-                replacedJsCon = replacedJsCon.replace(
-                    repMark,
-                    repValue,
-                )
-            }
-            replacedJsCon
-        }.split("\n")
+        ).textToList()
+//            .let {
+//            srcJsCon ->
+//            var replacedJsCon = srcJsCon
+//            replaceMarkMap.forEach {
+//                val repMark = "\${${it.key}}"
+//                val repValue = it.value
+//                replacedJsCon = replacedJsCon.replace(
+//                    repMark,
+//                    repValue,
+//                )
+//            }
+//            replacedJsCon
+//        }.split("\n")
         val externalJsCon = JavaScriptLoadUrl.make(
             context,
             execJsPathObj.absolutePath,
-            jsContentsListSource
+            jsContentsListSource,
+            extraRepValMap = replaceMarkMap
         ) ?: return
-        jsUrlLaunchHandler(
+        JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             externalJsCon
         )
@@ -285,56 +268,10 @@ object ExecJsLoad {
         val jsCon = JavaScriptLoadUrl.makeFromContents(
             jsConSrc.split("\n")
         ) ?: return
-        jsUrlLaunchHandler(
+        JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             jsCon
         )
-    }
-
-    fun jsUrlLaunchHandler(
-        currentFragment: Fragment,
-        launchUrlString: String,
-    ){
-        when (currentFragment) {
-            is CommandIndexFragment -> {
-                currentFragment.jsExecuteJob?.cancel()
-                currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-                    val onLaunchUrl = EnableTerminalWebView.check(
-                        currentFragment,
-                        currentFragment.context?.getString(
-                            R.string.index_terminal_fragment
-                        )
-                    )
-                    launchUrlByWebView(
-                        currentFragment,
-                        onLaunchUrl,
-                        launchUrlString
-                    )
-                }
-            }
-            is EditFragment -> {
-                currentFragment.jsExecuteJob?.cancel()
-                currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
-                    val onLaunchUrl = EnableTerminalWebView.check(
-                        currentFragment,
-                        currentFragment.context?.getString(
-                            R.string.edit_terminal_fragment
-                        )
-                    )
-                    launchUrlByWebView(
-                        currentFragment,
-                        onLaunchUrl,
-                        launchUrlString
-                    )
-                }
-            }
-            is TerminalFragment -> {
-                BroadCastIntent.sendUrlCon(
-                    currentFragment,
-                    launchUrlString
-                )
-            }
-        }
     }
 
 
@@ -367,32 +304,6 @@ object ExecJsLoad {
             ) return currentScriptPath
             exeJsPath
         } ?: currentScriptPath
-    }
-
-    private suspend fun launchUrlByWebView(
-        currentFragment: Fragment,
-        onLaunchUrl: Boolean,
-        launchUrlString: String
-    ){
-        if(!onLaunchUrl) return
-        withContext(Dispatchers.Main) {
-            when(currentFragment) {
-                is CommandIndexFragment -> {
-                    val listener =
-                        currentFragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
-                    listener?.onLaunchUrlByWebView(
-                        launchUrlString,
-                    )
-                }
-                is EditFragment -> {
-                    val listener = currentFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-                    listener?.onLaunchUrlByWebViewForEdit(
-                        launchUrlString
-                    )
-                }
-                else -> {}
-            }
-        }
     }
 }
 

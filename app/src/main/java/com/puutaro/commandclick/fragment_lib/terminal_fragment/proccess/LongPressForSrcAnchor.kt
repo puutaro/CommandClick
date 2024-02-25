@@ -14,7 +14,9 @@ import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 class LongPressForSrcAnchor(
@@ -172,26 +174,17 @@ class LongPressForSrcAnchor(
             currentAppDirPath,
             selectedScriptNameOrPathObj,
         )
-        val jsContentsListSource = LongPressMenuTool.makeJsConSrc(
-            execJsPath
+        val srcAnchorLongPressRepValMap = mapOf(
+            CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL
+                    to longPressLinkUrl,
+            CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL
+                    to currentUrl
         )
-            .replace(
-                CommandClickScriptVariable.CMDCLICK_LONG_PRESS_LINK_URL,
-                longPressLinkUrl
-            )
-            .replace(
-                CommandClickScriptVariable.CMDCLICK_CURRENT_PAGE_URL,
-                currentUrl
-            )
-            .split("\n")
-        val loadLongPressJsCon = JavaScriptLoadUrl.make(
-            context,
-            execJsPath,
-            jsContentsListSource
-        ) ?: return
-        ExecJsLoad.jsUrlLaunchHandler(
+        JavascriptExecuter.jsOrActionHandler(
             terminalFragment,
-            loadLongPressJsCon
+            execJsPath,
+            ReadText(execJsPath).textToList(),
+            srcAnchorLongPressRepValMap
         )
     }
 }

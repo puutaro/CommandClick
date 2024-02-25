@@ -2,9 +2,11 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -28,13 +30,10 @@ object ExecJsScriptInEdit {
             LogSystems.stdWarn("js blank: ${jsFilePath}")
             return
         }
-        val context = editFragment.context
-        execJsUrlForEdit(
+        JavascriptExecuter.jsOrActionHandler(
             editFragment,
-            JavaScriptLoadUrl.make(
-                context,
-                jsFilePath,
-            ).toString()
+            jsFilePath,
+            ReadText(jsFilePath).textToList(),
         )
     }
 

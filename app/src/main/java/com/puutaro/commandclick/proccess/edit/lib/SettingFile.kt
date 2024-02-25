@@ -27,6 +27,22 @@ object SettingFile {
         }
     }
 
+    fun readFromList(
+        settingConList: List<String>,
+        fannelPath: String,
+        setReplaceVariableCompleteMap: Map<String, String>?
+    ): String {
+        return settingConList.map {
+            importSetting(
+                it,
+                fannelPath,
+                setReplaceVariableCompleteMap
+            )
+        }.let {
+            formSettingContents(it)
+        }
+    }
+
     fun formSettingContents(
         settingCon: List<String>
     ): String {

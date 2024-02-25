@@ -27,7 +27,7 @@ object ExecJsOrSellHandler {
             }
             else -> {
                 ExecJsLoad.execJsLoad(
-                        currentFragment,
+                    currentFragment,
                     recentAppDirPath,
                     selectedScriptFileName,
                     scriptContentsListSource,

@@ -12,7 +12,7 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
@@ -41,7 +41,7 @@ object ListIndexEditConfig {
             editFragment,
             isLongClick,
         )
-        val jsActionMap = EditSettingJsTool.makeJsActionMap(
+        val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
             clickConfigListCon
         )

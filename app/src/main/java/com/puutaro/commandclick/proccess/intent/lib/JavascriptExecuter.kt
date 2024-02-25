@@ -1,18 +1,33 @@
 package com.puutaro.commandclick.proccess.intent.lib
 
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
+import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
+import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
+import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
 object JavascriptExecuter {
@@ -22,7 +37,6 @@ object JavascriptExecuter {
         substituteSettingVariableList: List<String>?,
         onUrlLaunchMacro: String,
     ) {
-        val context = fragment.context
         if(
             onUrlLaunchMacro
             != SettingVariableSelects.OnUrlLaunchMacroSelects.OFF.name
@@ -42,12 +56,10 @@ object JavascriptExecuter {
                 UsePath.JSX_FILE_SUFFIX
             )
         ) {
-            ExecJsLoad.jsUrlLaunchHandler(
+            jsOrActionHandler(
                 fragment,
-                JavaScriptLoadUrl.make(
-                    context,
-                    execJsOrHtmlPath,
-                ) ?: String()
+                execJsOrHtmlPath,
+                ReadText(execJsOrHtmlPath).textToList()
             )
             return
         }
@@ -72,7 +84,7 @@ object JavascriptExecuter {
         enableJsLoadInWebView(
             terminalViewModel
         )
-        ExecJsLoad.jsUrlLaunchHandler(
+        jsUrlLaunchHandler(
             fragment,
             "${currentAppDir}/${jsOrHtmlFileObj.name}"
         )
@@ -83,6 +95,95 @@ object JavascriptExecuter {
 //        terminalViewModel.launchUrl = "${currentAppDir}/${jsOrHtmlFileObj.name}"
     }
 
+    fun jsOrActionHandler(
+        fragment: Fragment,
+        execJsPath: String,
+        execJsConList: List<String>,
+        extraMapCon: Map<String, String>? = null,
+        webView: WebView? = null
+    ){
+        val validateFragment = validateFragment(
+            fragment,
+        )
+        val context = validateFragment.context
+        val isJsAction = JsActionTool.judgeJsAction(
+            validateFragment,
+            execJsConList
+        )
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
+            listOf(
+                "execJsPath: ${execJsPath}",
+                "jsContentsListSource: ${execJsConList}",
+                "extraMapCon: ${extraMapCon}",
+                "isJsAction: ${isJsAction}"
+            ).joinToString("\n\n")
+        )
+        when(isJsAction){
+            true -> {
+                if(
+                    validateFragment !is EditFragment
+                ) return
+                val jsKeyToSubKeyListCon = SettingFile.readFromList(
+                    execJsConList,
+                    execJsPath,
+                    validateFragment.setReplaceVariableMap
+                )
+                JsActionHandler.handle(
+                    validateFragment,
+                    jsKeyToSubKeyListCon,
+                    extraMapCon
+                )
+            }
+            else -> {
+                jsUrlLaunchHandler(
+                    fragment,
+                    JavaScriptLoadUrl.make(
+                        context,
+                        execJsPath,
+                        execJsConList,
+                        extraRepValMap = extraMapCon
+                    ) ?: String(),
+                    webView
+                )
+            }
+        }
+    }
+
+    private fun validateFragment(
+        fragment: Fragment,
+    ): Fragment {
+        val readSharePreferenceMap = when(fragment){
+            is TerminalFragment -> fragment.readSharePreferenceMap
+            is EditFragment -> fragment.readSharePreferenceMap
+            else -> return fragment
+        }
+        val activity = fragment.activity
+        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val currentState = SharePreferenceMethod.getReadSharePreffernceMap(
+            readSharePreferenceMap,
+            SharePrefferenceSetting.current_fannel_state
+        )
+
+        return when(
+            fragment is EditFragment
+        ) {
+            true -> fragment
+            else -> TargetFragmentInstance().getCurrentEditFragmentFromFragment(
+                activity,
+                currentAppDirPath,
+                currentFannelName,
+                currentState
+            ) ?: fragment
+        }
+    }
     fun enableJsLoadInWebView(
         terminalViewModel: TerminalViewModel
     ){
@@ -96,6 +197,83 @@ object JavascriptExecuter {
         CoroutineScope(Dispatchers.IO).launch {
             delay(1000)
             terminalViewModel.onDisplayUpdate = tempOnDisplayUpdate
+        }
+    }
+
+    fun jsUrlLaunchHandler(
+        currentFragment: Fragment,
+        launchUrlString: String,
+        webView: WebView? = null
+    ){
+        when (currentFragment) {
+            is CommandIndexFragment -> {
+                currentFragment.jsExecuteJob?.cancel()
+                currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
+                    val onLaunchUrl = EnableTerminalWebView.check(
+                        currentFragment,
+                        currentFragment.context?.getString(
+                            R.string.index_terminal_fragment
+                        )
+                    )
+                    launchUrlByWebView(
+                        currentFragment,
+                        onLaunchUrl,
+                        launchUrlString
+                    )
+                }
+            }
+            is EditFragment -> {
+                currentFragment.jsExecuteJob?.cancel()
+                currentFragment.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
+                    val onLaunchUrl = EnableTerminalWebView.check(
+                        currentFragment,
+                        currentFragment.context?.getString(
+                            R.string.edit_terminal_fragment
+                        )
+                    )
+                    launchUrlByWebView(
+                        currentFragment,
+                        onLaunchUrl,
+                        launchUrlString
+                    )
+                }
+            }
+            is TerminalFragment -> {
+                if(webView != null){
+                    webView.loadUrl(launchUrlString)
+                    return
+                }
+                BroadCastIntent.sendUrlCon(
+                    currentFragment,
+                    launchUrlString
+                )
+            }
+        }
+    }
+
+    private suspend fun launchUrlByWebView(
+        currentFragment: Fragment,
+        onLaunchUrl: Boolean,
+        launchUrlString: String
+    ){
+        if(!onLaunchUrl) return
+        withContext(Dispatchers.Main) {
+            when(currentFragment) {
+                is CommandIndexFragment -> {
+                    val listener =
+                        currentFragment.context as? CommandIndexFragment.OnLaunchUrlByWebViewListener
+                    listener?.onLaunchUrlByWebView(
+                        launchUrlString,
+                    )
+                }
+                is EditFragment -> {
+                    val listener = currentFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
+                    listener?.onLaunchUrlByWebViewForEdit(
+                        launchUrlString
+                    )
+                }
+                else -> {}
+            }
         }
     }
 }

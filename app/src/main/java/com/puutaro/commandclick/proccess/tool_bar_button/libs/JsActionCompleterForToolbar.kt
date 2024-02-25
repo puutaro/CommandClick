@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 
@@ -43,7 +43,7 @@ object JsActionCompleterForToolbar {
         defaultButtonMacroStr: String,
     ): Map<String, String> {
 
-        val jsActionMapSrc = EditSettingJsTool.makeJsActionMap(
+        val jsActionMapSrc = JsActionTool.makeJsActionMap(
             editFragment,
             toolbarButtonConfigMap.get(buttonClickMapKey),
         )
@@ -59,7 +59,7 @@ object JsActionCompleterForToolbar {
 //                )}",
 //            ).joinToString("\n\n")
 //        )
-        return EditSettingJsTool.compJsActionMacro(
+        return JsActionTool.compJsActionMacro(
             jsActionMapSrc,
             defaultButtonMacroStr,
         )

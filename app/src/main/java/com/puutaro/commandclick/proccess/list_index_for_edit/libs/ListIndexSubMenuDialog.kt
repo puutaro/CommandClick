@@ -11,7 +11,7 @@ import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 
@@ -128,7 +128,7 @@ object ListIndexSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
-            val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+            val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ListIndexArgsMaker.makeListIndexClickMenuPairList(

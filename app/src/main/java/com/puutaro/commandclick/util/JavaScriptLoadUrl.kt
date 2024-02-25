@@ -42,25 +42,26 @@ object JavaScriptLoadUrl {
     fun make (
         context: Context?,
         execJsPath: String,
-        jsListSource: List<String>? = null,
+        jsListSource: List<String>,
         setReplaceVariableMapSrc: Map<String, String>? = null,
+        extraRepValMap: Map<String, String>? = null,
     ):String? {
         val jsFileObj = File(execJsPath)
         if(!jsFileObj.isFile) return null
         val recentAppDirPath = jsFileObj.parent
-        if(recentAppDirPath.isNullOrEmpty()) return null
+        if(
+            recentAppDirPath.isNullOrEmpty()
+        ) return null
 
         val scriptFileName = jsFileObj.name
-        val jsListBeforeRemoveTsv = if(
-            jsListSource.isNullOrEmpty()
-        ) {
+        val jsListBeforeRemoveTsv = jsListSource.ifEmpty {
             ReadText(
                 File(
                     recentAppDirPath,
                     scriptFileName
                 ).absolutePath
             ).textToList()
-        } else jsListSource
+        }
         if(
             jsListBeforeRemoveTsv.isEmpty()
         ) return null
@@ -73,16 +74,21 @@ object JavaScriptLoadUrl {
             scriptFileName,
             setReplaceVariableMapSrc,
         )
-        val setReplaceVariableMapBeforeConcatCmdVal = TsvImportManager.concatRepValWithTsvImport(
+        val setReplaceVariableMapBeforeConcatExtraMap = TsvImportManager.concatRepValWithTsvImport(
             execJsPath,
             jsListBeforeRemoveTsv,
             setReplaceVariableMapBeforeConcatTsvMap
+        )
+        val setReplaceVariableMapBeforeConcatCmdVal = concatWithExtraMap(
+            setReplaceVariableMapBeforeConcatExtraMap,
+            extraRepValMap
         )
         val setReplaceVariableMap = CmdVariableReplacer.replace(
             context,
             execJsPath,
             setReplaceVariableMapBeforeConcatCmdVal
         )
+
         val jsList = TsvImportManager.removeTsvImport(jsListBeforeRemoveTsv)
 
         CoroutineScope(Dispatchers.IO).launch {
@@ -162,13 +168,14 @@ object JavaScriptLoadUrl {
             ).joinToString(";") + ";"
             sliceTrimJsRowList
         }.joinToString(" ")
+//            .let {
+//                ScriptPreWordReplacer.replace(
+//                    it,
+//                    recentAppDirPath,
+//                    scriptFileName
+//                )
+//            }
             .let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    recentAppDirPath,
-                    scriptFileName
-                )
-            }.let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,
                     setReplaceVariableMap,
@@ -348,6 +355,27 @@ object JavaScriptLoadUrl {
             || loadJsUrl.isBlank()
         ) return null
         return makeLastJsCon(loadJsUrl)
+    }
+
+    private fun concatWithExtraMap(
+        setReplaceVariableMap: Map<String, String>?,
+        extraRepValMap: Map<String, String>?
+    ): Map<String, String>? {
+        return when(true){
+            (extraRepValMap.isNullOrEmpty()
+                    && setReplaceVariableMap.isNullOrEmpty())
+            -> null
+            (!extraRepValMap.isNullOrEmpty()
+                    && setReplaceVariableMap.isNullOrEmpty())
+            -> extraRepValMap
+            (extraRepValMap.isNullOrEmpty()
+                    && !setReplaceVariableMap.isNullOrEmpty())
+            -> setReplaceVariableMap
+            (!extraRepValMap.isNullOrEmpty()
+                    && !setReplaceVariableMap.isNullOrEmpty())
+            -> extraRepValMap + setReplaceVariableMap
+            else -> null
+        }
     }
 
     fun makeLastJsCon(

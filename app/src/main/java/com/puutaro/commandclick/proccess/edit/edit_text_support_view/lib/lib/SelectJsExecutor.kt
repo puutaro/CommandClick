@@ -3,9 +3,8 @@ package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.EnableTerminalWebView
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -25,8 +24,8 @@ object SelectJsExecutor {
         if (
             !jsFilePathObj.isFile
         ) return
-        val terminalViewModel: TerminalViewModel by currentFragment.activityViewModels()
-        val context = currentFragment.context
+        val terminalViewModel:
+                TerminalViewModel by currentFragment.activityViewModels()
         terminalViewModel.jsExecuteJob?.cancel()
         terminalViewModel.jsExecuteJob = CoroutineScope(Dispatchers.IO).launch {
             val onLaunchUrl = EnableTerminalWebView.check(
@@ -39,29 +38,47 @@ object SelectJsExecutor {
             val currentAppDir = jsFilePathObj.parent
                 ?: return@launch
             val scriptName = jsFilePathObj.name
-            val jsFileContents = makeSelectJsContents(
-                currentAppDir,
-                scriptName,
-                selectedItem
-            )
+            val jsFileContents = withContext(Dispatchers.IO) {
+                makeSelectJsContents(
+                    currentAppDir,
+                    scriptName,
+                )
+            }
             withContext(Dispatchers.Main) {
-                val listenerForWebLaunch =
-                    currentFragment.context as? EditFragment.OnLaunchUrlByWebViewForEditListener
-                listenerForWebLaunch?.onLaunchUrlByWebViewForEdit(
-                    JavaScriptLoadUrl.make(
-                        context,
-                        jsFilePath,
-                        jsFileContents,
-                    ).toString()
+                jsHandler(
+                    currentFragment,
+                    jsFilePath,
+                    jsFileContents,
+                    selectedItem,
                 )
             }
         }
+    }
+
+    private fun jsHandler(
+        currentFragment: Fragment,
+        jsFilePath: String,
+        jsFileContents: List<String>,
+        selectedItem: String,
+    ){
+        val extraRepValMap = mapOf(
+            "SELECT_ITEM"
+                    to selectedItem
+                .replace("\"", "\\\"")
+                .replace("'", "\\\'")
+                .replace("`", "\\`")
+        )
+        JavascriptExecuter.jsOrActionHandler(
+            currentFragment,
+            jsFilePath,
+            jsFileContents,
+            extraRepValMap
+        )
     }
 }
 private fun makeSelectJsContents(
     currentAppDir: String,
     scriptName: String,
-    selectedItem: String,
 ): List<String> {
     return ReadText(
         File(
@@ -74,11 +91,5 @@ private fun makeSelectJsContents(
             currentAppDir,
             scriptName
         )
-    }.replace(
-        "CMDCLICL_SELECT_ITEM",
-        selectedItem
-            .replace("\"", "\\\"")
-            .replace("'", "\\\'")
-            .replace("`", "\\`")
-    ).split("\n")
+    }.split("\n")
 }

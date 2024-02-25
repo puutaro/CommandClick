@@ -7,6 +7,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -21,9 +22,12 @@ class JsUrl(
     fun makeJsUrl(
         jsPath: String
     ): String {
+        val jsConList =
+            ReadText(jsPath).textToList()
         return JavaScriptLoadUrl.make(
             terminalFragment.context,
-            jsPath
+            jsPath,
+            jsConList,
         ) ?: String()
     }
 
@@ -46,19 +50,28 @@ class JsUrl(
             replaceMapCon,
             '|'
         ).toMap()
-        val jsCon = JavaScriptLoadUrl.make(
-            terminalFragment.context,
-            jsPath
-        )?.let {
-            CmdClickMap.replace(
-                it,
-                replaceMap
-            )
-        } ?: String()
-        BroadCastIntent.sendUrlCon(
+        val jsConList =
+            ReadText(jsPath).textToList()
+        JavascriptExecuter.jsOrActionHandler(
             terminalFragment,
-            jsCon
+            jsPath,
+            jsConList,
+            extraMapCon = replaceMap
         )
+//        val jsCon = JavaScriptLoadUrl.make(
+//            terminalFragment.context,
+//            jsPath,
+//            jsConList
+//        )?.let {
+//            CmdClickMap.replace(
+//                it,
+//                replaceMap
+//            )
+//        } ?: String()
+//        BroadCastIntent.sendUrlCon(
+//            terminalFragment,
+//            jsCon
+//        )
     }
     @JavascriptInterface
     fun makeJsUrlFromCon(

@@ -5,6 +5,7 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
+import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.MacroHandlerForQrAndListIndex
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -88,7 +89,7 @@ object JsPathHandlerForQrAndListIndex {
                 "jsCon: ${jsCon}",
             ).joinToString("\n\n\n")
         )
-        ExecJsLoad.jsUrlLaunchHandler(
+        JavascriptExecuter.jsUrlLaunchHandler(
             editFragment,
             JavaScriptLoadUrl.makeLastJsCon(jsCon)
         )

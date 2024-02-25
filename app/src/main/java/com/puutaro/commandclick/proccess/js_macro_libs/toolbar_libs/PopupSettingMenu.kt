@@ -16,7 +16,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.EnableNavForWebView
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.EditSettingJsTool
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
@@ -77,7 +77,7 @@ object PopupSettingMenu {
             menuPairList
         )
         if (menuListMap.size == 1) {
-            val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+            val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
                 MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
                     menuPairList.first()
@@ -219,7 +219,7 @@ object PopupSettingMenu {
                 )
 
             else -> {
-                val updateJsActionMap = EditSettingJsTool.makeJsActionMap(
+                val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,

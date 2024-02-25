@@ -13,8 +13,8 @@ launchWebview(urlString);
 function launchWebview(launchUrlString){
     const menuMapStrListStr= makeMenuMapStr();
     const tsvCon = [
-        `urlConSaveParentDirPath\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT3}`,
-        `compSuffix\t${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT4}`,
+        `urlConSaveParentDirPath\t${EXTERNAL_EXEC_REPLACE_TXT3}`,
+        `compSuffix\t${EXTERNAL_EXEC_REPLACE_TXT4}`,
     ].join("\n");
     jsFileSystem.writeLocalFile(
         `${saveWebConArgsTsvPath}`,
@@ -30,9 +30,9 @@ function launchWebview(launchUrlString){
 
 
 function makeUrl(){
-    const externalExecLink = "${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT1}";
-    const cmdclickExternalExecReplaceTextStr = "${CMDDLICK_ENCRPT_EXTERNAL_EXEC_REPLACE_TXT1}".replace(
-        "_ENCRPT",
+    const externalExecLink = "${EXTERNAL_EXEC_REPLACE_TXT1}";
+    const cmdclickExternalExecReplaceTextStr = "${ENCRPT_EXTERNAL_EXEC_REPLACE_TXT1}".replace(
+        "ENCRPT_",
         ""
     );
     if(
@@ -43,7 +43,7 @@ function makeUrl(){
 };
 
 function makeMenuMapStr(){
-    const onSearchBtn = `${CMDDLICK_EXTERNAL_EXEC_REPLACE_TXT2}`;
+    const onSearchBtn = `${EXTERNAL_EXEC_REPLACE_TXT2}`;
     switch(true){
         case onSearchBtn === "OFF":
             return [
