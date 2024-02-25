@@ -34,16 +34,10 @@ object EditSettingJsTool {
         fragment: Fragment,
         keyToSubKeyCon: String?,
     ): Map<String, String>? {
-//        val mainAndAfterPairList
         val keyToSubConTypeMap = createKeyToSubConTypeMap(
             fragment,
             keyToSubKeyCon,
         ) ?: return null
-//        val keyToSubKeyConListSrcWithoutAfterSubKey = keyToSubConTypeMap.get(
-//            KeyToSubConType.WITH_OTHER
-//        )
-//            mainAndAfterPairList.first
-//            ?: return null
         val jsRepValMap = keyToSubConTypeMap.get(
             KeyToSubConType.WITH_REPLACE
         )?.let {
@@ -59,9 +53,6 @@ object EditSettingJsTool {
                     KeyToSubConType.WITH_OVERRIDE
                 )
             )
-//            keyToSubKeyConListSrcWithoutAfterSubKey.filter {
-//                !keyToSubKeyConListWithOverrideKey.contains(it)
-//            }
         val keyToSubKeyConListWithAfterSubKey = keyToSubConTypeMap.get(
             KeyToSubConType.WITH_AFTER
         )
@@ -71,7 +62,6 @@ object EditSettingJsTool {
                 KeyToSubConType.WITH_OTHER
             ) ?: emptyList()
 
-//            mainAndAfterPairList.second
         val macroDataMap =
             extractMacroDataMap(keyToSubKeyConListWithoutAfterSubKey)
 //        FileSystems.writeFile(
