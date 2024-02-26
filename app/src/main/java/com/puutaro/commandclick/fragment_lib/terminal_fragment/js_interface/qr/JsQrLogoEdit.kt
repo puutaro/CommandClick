@@ -2,11 +2,10 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ActionToolForQr
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrLogoEditDialogLauncher
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,17 +19,14 @@ class JsQrLogoEdit(
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap =
         terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
-    private val currentFannelPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_name
+    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        readSharePreferenceMap
     )
-    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_state
+    private val currentFannelState = FannelPrefGetter.getCurrentStateName(
+        readSharePreferenceMap
     )
 
     @JavascriptInterface
@@ -40,7 +36,7 @@ class JsQrLogoEdit(
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,
-            currentFannelPath,
+            currentFannelName,
             currentFannelState
         ) ?: return
         val parentDirPath = ActionToolForQr.getParentDirPath(

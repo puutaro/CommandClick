@@ -8,8 +8,6 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
-import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
-import com.puutaro.commandclick.util.*
 
 
 object MultiSelectSpinnerViewProducer {

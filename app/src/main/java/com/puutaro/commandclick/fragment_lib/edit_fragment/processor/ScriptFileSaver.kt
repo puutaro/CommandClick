@@ -1,25 +1,22 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.lib.EditedTextContents
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SettingFannelConHandler
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
 import java.io.File
 
 class ScriptFileSaver(
     private val editFragment: EditFragment,
 ) {
     private val readSharePreferenceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
-    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_name
+    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        readSharePreferenceMap
     )
     fun save(){
         val editedTextContents = EditedTextContents(
@@ -30,7 +27,7 @@ class ScriptFileSaver(
             isSettingEdit
         ) {
             true -> {
-                val settingFannelConList = SettingFannelConHandler.handle(
+                val settingFannelConList = SettingFannelConHandlerForEdit.handle(
                     editFragment
                 )
                 editedTextContents.updateBySettingVariables(

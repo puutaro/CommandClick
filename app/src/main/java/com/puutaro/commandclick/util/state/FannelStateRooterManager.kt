@@ -21,13 +21,11 @@ object FannelStateRooterManager {
         settingSectionEnd: String,
         settingFannelPath: String,
     ): List<String>? {
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
 
         return getSettingVariableList(
@@ -53,14 +51,11 @@ object FannelStateRooterManager {
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         val defaultSettingFilePath =
             File(
@@ -68,14 +63,12 @@ object FannelStateRooterManager {
                 currentFannelName
             ).absolutePath
 
-        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.on_shortcut
+        val onShortcut = FannelPrefGetter.getOnShortcut(
+            readSharePreferenceMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val currentFannelState =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_state
+            FannelPrefGetter.getCurrentStateName(
+                readSharePreferenceMap
             )
         if(
             !onShortcut

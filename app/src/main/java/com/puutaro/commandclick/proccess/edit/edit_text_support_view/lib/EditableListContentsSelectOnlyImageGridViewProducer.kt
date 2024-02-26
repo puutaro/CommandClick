@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
@@ -19,7 +18,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import java.io.File
 
 object EditableListContentsSelectOnlyImageGridViewProducer {
@@ -135,13 +134,11 @@ object EditableListContentsSelectOnlyImageGridViewProducer {
         elcbMap: Map<String, String>?,
     ){
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val scriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val scriptName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
         val listContentsFilePath = elcbMap?.get(
             ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name

@@ -7,7 +7,6 @@ import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
@@ -30,7 +29,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -188,9 +187,6 @@ object ButtonViewProducer {
 
         buttonEventArgs.scriptFileSaver.save()
         saveListContents(editFragment, currentButtonTag)
-        simpleJsExecutor(
-            buttonEventArgs
-        )
         val execCmdEditable = buttonEventArgs.insertEditText.text
         val isExecCmd = !buttonMap?.get(
             ButtonEditKey.cmd.name
@@ -466,13 +462,11 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
         val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentScriptName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
         val fannelDirName = CcPathTool.makeFannelDirName(
             currentScriptName
@@ -629,13 +623,12 @@ object ButtonViewProducer {
         val saveFilterShellPathObj = File(saveFilterShellPath)
         val shellParentDirPath = saveFilterShellPathObj.parent
             ?: return null
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentAppFannelPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name,
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         val saveValue = EditVariableName.getText(
             editFragment,
@@ -654,7 +647,7 @@ object ButtonViewProducer {
                 it,
                 editFragment.setReplaceVariableMap,
                 currentAppDirPath,
-                currentAppFannelPath
+                currentFannelName
             )
         }
         return editFragment.busyboxExecutor?.getCmdOutput(shellCon)
@@ -683,9 +676,8 @@ object ButtonViewProducer {
             SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
         ).isNullOrEmpty()
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            editFragment.readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentScriptName = FannelPrefGetter.getCurrentFannelName(
+            editFragment.readSharePreferenceMap
         )
         val listCon = FileSystems.sortedFiles(
             addSourceDirPath,
@@ -915,31 +907,6 @@ object ButtonViewProducer {
         ) Keyboard.hiddenKeyboardForFragment(editFragment)
     }
 
-    private fun simpleJsExecutor(
-        buttonEventArgs: ButtonEventArgs,
-    ){
-        val editFragment =
-            buttonEventArgs.editParameters.currentFragment
-        if(
-            editFragment !is EditFragment
-        ) return
-        val buttonMap = buttonEventArgs.buttonMap
-        val oneLineJsCon = buttonMap?.get(
-            ButtonEditKey.oneLineJs.name
-        )
-        if(
-            oneLineJsCon.isNullOrEmpty()
-        ) return
-        keyboardHide(
-            editFragment,
-            buttonMap
-        )
-        jsConExecutor(
-            buttonEventArgs,
-            oneLineJsCon,
-        )
-    }
-
     private fun jsConExecutor(
         buttonEventArgs: ButtonEventArgs,
         jsConSrc: String,
@@ -1027,13 +994,11 @@ object ButtonViewProducer {
         currentComponentIndex: Int
     ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         return currentSetVariableValue?.let {
             if(
@@ -1109,7 +1074,6 @@ object ButtonViewProducer {
         onBorder,
         disableKeyboardHidden,
         tag,
-        oneLineJs,
     }
 
     enum class OnBoarderKeyForButton {

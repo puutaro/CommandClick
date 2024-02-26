@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
@@ -19,17 +20,14 @@ object FindListenerSetter {
                 activeMatchOrdinal, numberOfMatches, isDoneCounting ->
             if(!isDoneCounting) return@setFindListener
             val readSharedPreferences = terminalFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharedPreferences,
-                SharePrefferenceSetting.current_app_dir
+            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                readSharedPreferences
             )
-            val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharedPreferences,
-                SharePrefferenceSetting.current_fannel_name
+            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                readSharedPreferences
             )
-            val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharedPreferences,
-                SharePrefferenceSetting.current_fannel_state
+            val fannelState = FannelPrefGetter.getCurrentStateName(
+                readSharedPreferences
             )
             val cmdEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
                 currentAppDirPath,

@@ -1,14 +1,12 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.libs
 
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 
@@ -18,13 +16,11 @@ class ListIndexArgsMaker(
 ) {
     val setReplaceVariableMap = editFragment.setReplaceVariableMap
     val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
-    val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        readSharePreffernceMap
     )
 
     companion object {

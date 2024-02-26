@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -19,7 +18,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataM
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -125,9 +124,8 @@ class UrlHistoryAddToTsv (
         }
         val takeLines = 5
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
 
         val urlHistoryParentDirPath = File(
@@ -191,9 +189,8 @@ class UrlHistoryAddToTsv (
             val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
                     UsePath.JS_FILE_SUFFIX
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_app_dir
+            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                readSharePreferenceMap
             )
             ExecJsLoad.execExternalJs(
                 editFragment,

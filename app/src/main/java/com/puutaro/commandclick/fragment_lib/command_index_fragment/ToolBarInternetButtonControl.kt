@@ -5,13 +5,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.CmdIndexToolbarSwitcher
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 
 class ToolBarInternetButtonControl(
@@ -23,9 +22,8 @@ class ToolBarInternetButtonControl(
     private val binding = cmdIndexFragment.binding
     private val cmdclickToolBar = cmdIndexFragment.binding.cmdclickToolBar
     private val cmdindexInternet = binding.cmdindexInternetButton
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
 
     fun interneButtontSetOnClickListener () {
@@ -68,7 +66,7 @@ class ToolBarInternetButtonControl(
 
             if(cmdIndexFragment.WebSearchSwitch){
                 cmdindexInternet.imageTintList = terminalStateList
-                cmdindexInternet.backgroundTintList = whiteStateList;
+                cmdindexInternet.backgroundTintList = whiteStateList
                 cmdIndexFragment.WebSearchSwitch = !cmdIndexFragment.WebSearchSwitch
                 return@setOnClickListener
             }

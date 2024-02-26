@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.command_index_fragment
 import android.content.Context
 import com.omadahealth.github.swipyrefreshlayout.library.SwipyRefreshLayout
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.databinding.CommandIndexFragmentBinding
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -15,7 +14,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 
 
 class MakeListView(
@@ -23,9 +22,8 @@ class MakeListView(
     private val cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
     private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)
     private val cmdListView = binding.cmdList

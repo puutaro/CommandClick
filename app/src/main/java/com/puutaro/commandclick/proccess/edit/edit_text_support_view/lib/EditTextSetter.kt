@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -17,7 +16,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Sea
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 object EditTextSetter {
@@ -176,13 +175,11 @@ private object EditTextMaker {
             is TerminalFragment -> fragment.readSharePreferenceMap
             else -> emptyMap()
         }
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         val shellConSrc = editTextPropertyMap.get(
             EditTextSetter.EditTextPropertySettingKey.SHELL_CON.key

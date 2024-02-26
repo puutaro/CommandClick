@@ -18,7 +18,6 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.component.adapter.UrlHistoryAdapter
@@ -32,8 +31,8 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -41,9 +40,8 @@ class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
     private val readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
     private val fragmentTag = fragment.tag
     private val context = fragment.context
@@ -65,9 +63,8 @@ class UrlHistoryButtonEvent(
                 if(
                     !isCmdValEdit
                 ) return
-                val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-                    fragment.readSharePreferenceMap,
-                    SharePrefferenceSetting.on_shortcut
+                val onShortcut = FannelPrefGetter.getOnShortcut(
+                    fragment.readSharePreferenceMap
                 ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                 if(!onShortcut) return
             }
@@ -346,9 +343,8 @@ class UrlHistoryButtonEvent(
     private fun makeBottomScriptUrlList(
     ): List<String> {
         val fannelName = when(fragment) {
-            is EditFragment -> SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_fannel_name
+            is EditFragment -> FannelPrefGetter.getCurrentFannelName(
+                readSharePreffernceMap
             )
             else -> String()
         }

@@ -2,7 +2,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -14,7 +13,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.io.File
 
@@ -25,17 +24,14 @@ class JsFileAdder(
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap =
         terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
-    private val currentFannelPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_name
+    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        readSharePreferenceMap
     )
-    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_state
+    private val currentFannelState = FannelPrefGetter.getCurrentStateName(
+        readSharePreferenceMap
     )
 
     @JavascriptInterface
@@ -47,7 +43,7 @@ class JsFileAdder(
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
             activity,
             currentAppDirPath,
-            currentFannelPath,
+            currentFannelName,
             currentFannelState
         ) ?: return
 

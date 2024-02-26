@@ -2,15 +2,14 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_
 
 import android.webkit.WebView
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.EnableUrlPrefix
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import java.net.URLDecoder
 
@@ -25,18 +24,15 @@ object SearchViewAndAutoCompUpdater {
         val activity = terminalFragment.activity
         val context = terminalFragment.context
         val cmdIndexFragmentTag = context?.getString(R.string.command_index_fragment)
-        val readSharedPreferences = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_app_dir
+        val readSharedPreferenceMap = terminalFragment.readSharePreferenceMap
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharedPreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharedPreferenceMap
         )
-        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_fannel_state
+        val fannelState = FannelPrefGetter.getCurrentStateName(
+            readSharedPreferenceMap
         )
         val cmdVariableEditFragmentTag = FragmentTagManager.makeCmdValEditTag(
             currentAppDirPath,

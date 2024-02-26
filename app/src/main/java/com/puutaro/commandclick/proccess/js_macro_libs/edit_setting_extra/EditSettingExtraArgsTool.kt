@@ -1,11 +1,10 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 
 object EditSettingExtraArgsTool {
 
@@ -40,13 +39,12 @@ object EditSettingExtraArgsTool {
             extraMap.isNullOrEmpty()
         ) return srcFileName
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         val busyboxExecutor = editFragment.busyboxExecutor
         val setReplaceVariablesMap = editFragment.setReplaceVariableMap

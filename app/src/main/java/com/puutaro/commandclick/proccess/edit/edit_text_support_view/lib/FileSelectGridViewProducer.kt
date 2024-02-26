@@ -11,7 +11,6 @@ import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.ImageAdapter
@@ -24,7 +23,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import java.io.File
 
 object FileSelectGridViewProducer {
@@ -160,9 +159,8 @@ object FileSelectGridViewProducer {
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            editParameters.readSharePreffernceMap
         )
         val filterDir = getSelectDirPath(
             fcbMap,
@@ -310,9 +308,8 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
@@ -356,7 +353,6 @@ object FileSelectGridViewProducer {
         dirPath,
         prefix,
         suffix,
-        type,
         selectJs
     }
 

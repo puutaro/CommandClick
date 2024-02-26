@@ -126,21 +126,17 @@ class EditFragmentArgs(
         val fragArgsBundle = Bundle()
 
         srcReadSharePreferenceMap?.let {
-            val srcCurrentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+            val srcCurrentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
                 it,
-                SharePrefferenceSetting.current_app_dir
             )
-            val srcCurrentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+            val srcCurrentFannelName =FannelPrefGetter.getCurrentFannelName(
                 it,
-                SharePrefferenceSetting.current_fannel_name
             )
-            val srcOnShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
+            val srcOnShortcut = FannelPrefGetter.getOnShortcut(
                 it,
-                SharePrefferenceSetting.on_shortcut
             )
-            val srcCurrentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+            val srcCurrentFannelState = FannelPrefGetter.getCurrentStateName(
                 it,
-                SharePrefferenceSetting.current_fannel_state
             )
             fragArgsBundle.putString(
                 FragmentArgsKey.SRC_CURRENT_APP_DIR_PATH.key,
@@ -159,22 +155,17 @@ class EditFragmentArgs(
                 srcCurrentFannelState,
             )
         }
-
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
-        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.on_shortcut
+        val onShortcut = FannelPrefGetter.getOnShortcut(
+            readSharePreferenceMap
         )
-        val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_state
+        val currentFannelState = FannelPrefGetter.getCurrentStateName(
+            readSharePreferenceMap
         )
         fragArgsBundle.putString(
             FragmentArgsKey.CURRENT_APP_DIR_PATH.key,

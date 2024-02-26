@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.EditFragment
@@ -16,7 +15,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSe
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import java.io.File
 
 class ToolbarButtonArgsMaker(
@@ -39,12 +38,10 @@ class ToolbarButtonArgsMaker(
 
     val readSharePreffernceMap = editFragment.readSharePreferenceMap
 
-    val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
-
-    val currentScriptFileName = CcPathTool.getCurrentScriptFileName(
+    val currentScriptFileName = FannelPrefGetter.getCurrentFannelName(
         readSharePreffernceMap
     )
     val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
@@ -106,13 +103,11 @@ class ToolbarButtonArgsMaker(
             jsActionMap: Map<String, String>?
         ): List<List<Pair<String, String>>> {
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_app_dir
+            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                readSharePreferenceMap
             )
-            val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_name
+            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                readSharePreferenceMap
             )
             val setReplaceVariableMap = editFragment.setReplaceVariableMap
             val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(

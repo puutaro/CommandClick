@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
@@ -11,7 +10,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -440,13 +439,11 @@ object ListSettingsForListIndex  {
                 filterShellPath.isEmpty()
             ) return String()
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_app_dir
+            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                readSharePreferenceMap
             )
-            val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_name
+            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                readSharePreferenceMap
             )
             return ReadText(
                 filterShellPath
@@ -556,13 +553,11 @@ private object CompPathManager {
         initTsvPathObj: File,
     ): List<String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
         )
         return ReadText(
             initTsvPathObj.absolutePath

@@ -9,7 +9,6 @@ import android.widget.PopupWindow
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
@@ -25,7 +24,7 @@ import com.puutaro.commandclick.proccess.qr.QrScanner
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 
 
 class ToolBarSettingButtonControl(
@@ -33,11 +32,9 @@ class ToolBarSettingButtonControl(
 ){
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
-    private val cmdSearchEditText = binding.cmdSearchEditText
     private val readSharePreffernceMap = cmdIndexFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
 
     private val settingButtonView = binding.cmdindexSettingButton

@@ -13,6 +13,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Sel
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -27,13 +28,11 @@ object EditableListContentsSelectSpinnerViewProducer {
     ): Spinner {
         val currentFragment = editParameters.currentFragment
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val scriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val scriptName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
         val defaultListLimit = 100
         val context = editParameters.context

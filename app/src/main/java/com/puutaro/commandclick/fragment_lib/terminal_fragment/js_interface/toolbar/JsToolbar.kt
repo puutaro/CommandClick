@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -13,7 +12,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.util.url.SiteUrl
 import kotlinx.coroutines.CoroutineScope
@@ -27,18 +26,15 @@ class JsToolbar(
 ) {
 
     private val activity = terminalFragment.activity
-    private val readSharedPreferences = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharedPreferences,
-        SharePrefferenceSetting.current_app_dir
+    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
-    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharedPreferences,
-        SharePrefferenceSetting.current_fannel_name
+    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        readSharePreferenceMap
     )
-    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharedPreferences,
-        SharePrefferenceSetting.current_fannel_state
+    private val currentFannelState = FannelPrefGetter.getCurrentStateName(
+        readSharePreferenceMap
     )
     private val targetFragmentInstance = TargetFragmentInstance()
     private val editFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(

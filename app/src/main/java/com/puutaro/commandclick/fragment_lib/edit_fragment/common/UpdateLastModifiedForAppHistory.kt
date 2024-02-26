@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -14,9 +15,8 @@ object UpdateLastModifiedForAppHistory {
         editExecuteValue: String,
         readSharePreffernceMap: Map<String, String>
     ){
-        val onShortCut = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.on_shortcut
+        val onShortCut = FannelPrefGetter.getOnShortcut(
+            readSharePreffernceMap
         )
         if(
             onShortCut ==
@@ -26,21 +26,18 @@ object UpdateLastModifiedForAppHistory {
             editExecuteValue !=
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val fannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val fannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
         if(
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
             && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
 //        val isFDialogFannel = FDialogTempFile.howFDialogFile(currentFannelName)
 //        if(

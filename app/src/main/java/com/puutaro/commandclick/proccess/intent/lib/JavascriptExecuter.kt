@@ -6,7 +6,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
@@ -18,12 +17,9 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -164,40 +160,6 @@ object JavascriptExecuter {
         }
     }
 
-    private fun validateFragment(
-        fragment: Fragment,
-    ): Fragment {
-        val readSharePreferenceMap = when(fragment){
-            is TerminalFragment -> fragment.readSharePreferenceMap
-            is EditFragment -> fragment.readSharePreferenceMap
-            else -> return fragment
-        }
-        val activity = fragment.activity
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_name
-        )
-        val currentState = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_fannel_state
-        )
-
-        return when(
-            fragment is EditFragment
-        ) {
-            true -> fragment
-            else -> TargetFragmentInstance().getCurrentEditFragmentFromFragment(
-                activity,
-                currentAppDirPath,
-                currentFannelName,
-                currentState
-            ) ?: fragment
-        }
-    }
     fun enableJsLoadInWebView(
         terminalViewModel: TerminalViewModel
     ){

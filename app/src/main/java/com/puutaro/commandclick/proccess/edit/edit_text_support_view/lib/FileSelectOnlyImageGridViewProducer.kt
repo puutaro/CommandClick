@@ -22,6 +22,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
@@ -149,9 +150,8 @@ object FileSelectOnlyImageGridViewProducer {
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            editParameters.readSharePreffernceMap
         )
         val filterDir = getSelectDirPath(
             fcbMap,
@@ -261,9 +261,8 @@ object FileSelectOnlyImageGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            editParameters.readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(
             FileSelectEditKey.dirPath.name
@@ -307,7 +306,6 @@ object FileSelectOnlyImageGridViewProducer {
         dirPath,
         prefix,
         suffix,
-        type,
         selectJs
     }
 

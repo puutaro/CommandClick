@@ -23,8 +23,6 @@ import com.puutaro.commandclick.activity_lib.manager.AdBlocker
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
@@ -37,8 +35,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ScrollPo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
-import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
@@ -46,8 +42,7 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,17 +59,8 @@ class WebViewJsDialog(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_app_dir
-    )
-    private val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_name
-    )
-    private val currentState = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_state
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private val longpressMenuGroupId = 110000

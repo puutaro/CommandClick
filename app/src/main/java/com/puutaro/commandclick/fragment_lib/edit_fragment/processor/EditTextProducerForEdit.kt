@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.edit_fragment.processor
 import android.R
 import android.widget.*
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.*
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
@@ -11,8 +10,7 @@ import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.file.FDialogTempFile
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 
@@ -25,13 +23,8 @@ class EditTextProducerForEdit(
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_app_dir
-    )
-    private val currentScriptFileName = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreffernceMap,
-        SharePrefferenceSetting.current_fannel_name
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreffernceMap
     )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
@@ -229,9 +222,8 @@ class EditTextProducerForEdit(
                 editFragment,
                 editFragment.currentFannelConList,
                 currentAppDirPath,
-                SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreffernceMap,
-                    SharePrefferenceSetting.current_fannel_name
+                FannelPrefGetter.getCurrentFannelName(
+                    readSharePreffernceMap
                 )
             )
         }

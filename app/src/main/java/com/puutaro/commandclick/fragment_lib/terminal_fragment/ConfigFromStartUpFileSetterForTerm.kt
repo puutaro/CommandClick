@@ -4,7 +4,6 @@ import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -13,16 +12,14 @@ import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 object ConfigFromStartUpFileSetterForTerm {
 
     fun set(
         terminalFragment: TerminalFragment,
     ){
-        val activity = terminalFragment.activity
-        val sharePref = activity?.getPreferences(Context.MODE_PRIVATE)
         CommandClickScriptVariable.makeConfigJsFile(
             UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
@@ -42,13 +39,11 @@ object ConfigFromStartUpFileSetterForTerm {
         ) as String
 
         val readSharedPreferences = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharedPreferences
         )
-        val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_fannel_name
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharedPreferences
         )
 
         val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(

@@ -20,7 +20,6 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
@@ -50,12 +49,12 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SettingFannelConHandler
+import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -172,27 +171,19 @@ class EditFragment: Fragment() {
             EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharePreffernceMap =
             EditFragmentArgs.getSrcReadSharePreference(arguments)
-//        FDialogTempFile.remove(readSharePreferenceMap)
-        val currentAppDirPath =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_app_dir
-            )
-        val currentFannelName =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_name
-            )
-        val onShortcutValue =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.on_shortcut
-            )
-        val currentFannelState =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreferenceMap,
-                SharePrefferenceSetting.current_fannel_state
-            )
+
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreferenceMap
+        )
+        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreferenceMap
+        )
+        val onShortcutValue = FannelPrefGetter.getOnShortcut(
+            readSharePreferenceMap
+        )
+        val currentFannelState = FannelPrefGetter.getCurrentStateName(
+            readSharePreferenceMap
+        )
 
         editTypeSettingKey = EditFragmentArgs.getEditType(arguments)
         enableCmdEdit =
@@ -202,21 +193,6 @@ class EditFragment: Fragment() {
             this
         )
         SetConfigInfo.set(this)
-//        val validationSharePreferenceForEdit = ValidationSharePreferenceForEdit(
-//            this,
-//        )
-//        val checkOkForAppDirPath =
-//            validationSharePreferenceForEdit
-//                .checkCurrentAppDirPreference()
-//        if(!checkOkForAppDirPath) return
-//        val checkOkForShellName =
-//            validationSharePreferenceForEdit
-//                .checkCurrentShellNamePreference()
-//        if(!checkOkForShellName) return
-//        val checkOkIndexList =
-//            validationSharePreferenceForEdit
-//                .checkIndexList()
-//        if(!checkOkIndexList) return
         SharePreferenceMethod.putAllSharePreference(
             sharePref,
             currentAppDirPath,
@@ -400,7 +376,7 @@ class EditFragment: Fragment() {
                 BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action,
             )
         )
-        val settingFannelConList = SettingFannelConHandler.handle(
+        val settingFannelConList = SettingFannelConHandlerForEdit.handle(
             this
         )
 //        val shellScriptContentsList = ReadText(

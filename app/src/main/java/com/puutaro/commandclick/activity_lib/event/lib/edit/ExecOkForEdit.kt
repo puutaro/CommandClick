@@ -5,6 +5,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
@@ -14,13 +15,12 @@ object ExecOkForEdit{
         callOwnerFragmentTag : String?,
         readSharePreffernceMap: Map<String, String>,
     ) {
-
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
+        )
         val supportFragmentManager = activity.supportFragmentManager
         if(
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
-            ) == UsePath.cmdclickAppDirAdminPath
+            currentAppDirPath == UsePath.cmdclickAppDirAdminPath
         ) {
             supportFragmentManager.popBackStackImmediate()
             return

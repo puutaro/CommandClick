@@ -2,21 +2,20 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 
 class JsCcUsage(
     private val terminalFragment: TerminalFragment
 ) {
-    val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_app_dir
+    private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
+    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        readSharePreferenceMap
     )
+
 
 
     @JavascriptInterface

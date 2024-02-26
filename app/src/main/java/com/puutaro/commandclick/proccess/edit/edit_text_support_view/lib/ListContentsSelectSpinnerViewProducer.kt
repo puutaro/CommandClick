@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.View
 import android.widget.*
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.settings.EditSettings
@@ -12,14 +11,13 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
-import com.puutaro.commandclick.proccess.edit.lib.ReplaceVariableMapReflecter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import java.io.File
 
 object ListContentsSelectSpinnerViewProducer {
@@ -34,13 +32,11 @@ object ListContentsSelectSpinnerViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val scriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val scriptName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
         val linearParamsForSpinner = LinearLayout.LayoutParams(
             0,
@@ -170,13 +166,12 @@ object ListContentsSelectSpinnerViewProducer {
             true -> {
                 val readSharePreferenceMap = editParameters.readSharePreffernceMap
                 val setReplaceVariableMap = editParameters.setReplaceVariableMap
-                val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreferenceMap,
-                    SharePrefferenceSetting.current_app_dir
+                val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                    readSharePreferenceMap
                 )
-                val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-                    readSharePreferenceMap,
-                    SharePrefferenceSetting.current_fannel_name                )
+                val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                    readSharePreferenceMap
+                )
                 val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))
                 ReadText(
                     compListFilePathObj.absolutePath
@@ -236,36 +231,15 @@ object ListContentsSelectSpinnerViewProducer {
         currentComponentIndex: Int,
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
-//        val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-//            editParameters.readSharePreffernceMap,
-//            SharePrefferenceSetting.current_app_dir
-//        )
-//        val currentScriptName = SharePreferenceMethod.getReadSharePreffernceMap(
-//            editParameters.readSharePreffernceMap,
-//            SharePrefferenceSetting.current_fannel_name
-//        )
         return currentSetVariableMap?.get(
             SetVariableTypeColumn.VARIABLE_TYPE_VALUE.name
         )
-//            ?.let {
-//            ScriptPreWordReplacer.replace(
-//                it,
-//                currentAppDirPath,
-//                currentScriptName
-//            )
-//        }.let {
-//            ReplaceVariableMapReflecter.reflect(
-//                QuoteTool.trimBothEdgeQuote(it),
-//                editParameters
-//            )
-//        }
             ?.let {
                 QuoteTool.splitBySurroundedIgnore(
                     it,
                     '|'
                 )
             }
-//            ?.split('|')
             ?.getOrNull(currentComponentIndex)
             ?.let {
                 CmdClickMap.createMap(
@@ -273,12 +247,6 @@ object ListContentsSelectSpinnerViewProducer {
                     '!'
                 )
             }?.toMap()
-//            ?.split('|')?.map {
-//                CcScript.makeKeyValuePairFromSeparatedString(
-//                    it,
-//                "="
-//                )
-//            }?.toMap()
     }
 
     enum class ListContentsEditKey {

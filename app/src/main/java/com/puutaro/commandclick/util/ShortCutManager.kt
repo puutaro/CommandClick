@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 
@@ -61,13 +62,11 @@ class ShortCutManager(
         val readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
-        val curentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_app_dir
+        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            readSharePreffernceMap
         )
-        val currentShellFileName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreffernceMap,
-            SharePrefferenceSetting.current_fannel_name
+        val currentShellFileName = FannelPrefGetter.getCurrentFannelName(
+            readSharePreffernceMap
         )
 
         val execIntent = Intent(activity, activity::class.java)
@@ -77,7 +76,7 @@ class ShortCutManager(
 
         execIntent.putExtra(
             SharePrefferenceSetting.current_app_dir.name,
-            curentAppDirPath
+            currentAppDirPath
         )
         execIntent.putExtra(
             SharePrefferenceSetting.current_fannel_name.name,

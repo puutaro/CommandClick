@@ -12,15 +12,6 @@ import java.io.File
 
 object ActionToolForQr {
 
-    fun getCurrentAppDirPath(
-        readSharePreferenceMap: Map<String, String>
-    ): String {
-        return SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharePreferenceMap,
-            SharePrefferenceSetting.current_app_dir
-        )
-    }
-
     fun getParentDirPath(
         editFragment: EditFragment
     ): String {

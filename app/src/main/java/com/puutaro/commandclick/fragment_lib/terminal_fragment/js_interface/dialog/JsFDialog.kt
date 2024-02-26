@@ -47,22 +47,22 @@ class JsFDialog(
         cmdValConSrc: String,
         destiOnShortcut: String = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key,
     ){
-        val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_app_dir
-        )
-        val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_fannel_name
-        )
-        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.on_shortcut
-        )
-        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
-            SharePrefferenceSetting.current_fannel_state
-        )
+//        val srcAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
+//            readSharedPreferences,
+//            SharePrefferenceSetting.current_app_dir
+//        )
+//        val srcFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
+//            readSharedPreferences,
+//            SharePrefferenceSetting.current_fannel_name
+//        )
+//        val onShortcut = SharePreferenceMethod.getReadSharePreffernceMap(
+//            readSharedPreferences,
+//            SharePrefferenceSetting.on_shortcut
+//        )
+//        val fannelState = SharePreferenceMethod.getReadSharePreffernceMap(
+//            readSharedPreferences,
+//            SharePrefferenceSetting.current_fannel_state
+//        )
 //        val destiFDialogFannelName =
 //            "${CommandClickScriptVariable.makeCopyPrefix()}_${UsePath.fDialogTempFannelName}"
 //        val fannelCon = JsScript(terminalFragment).makeFannelCon(
