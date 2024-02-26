@@ -175,10 +175,12 @@ object ListIndexMenuLauncher {
             else -> {
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
+                    editFragment.readSharePreferenceMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName
-                    )
+                    ),
+                    editFragment.setReplaceVariableMap
                 )
                 JsPathHandlerForQrAndListIndex.handle(
                     editFragment,

@@ -8,7 +8,7 @@ import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class JsFannelExecer(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
 
     val activity = terminalFragment.activity
@@ -21,21 +21,11 @@ class JsFannelExecer(
         readSharePreferenceMap,
         SharePrefferenceSetting.current_fannel_name
     )
-    private val currentFannelState = SharePreferenceMethod.getReadSharePreffernceMap(
-        readSharePreferenceMap,
-        SharePrefferenceSetting.current_fannel_state
-    )
 
     @JavascriptInterface
     fun exec_S(){
-        val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(
-            activity,
-            currentAppDirPath,
-            currentFannelName,
-            currentFannelState
-        ) ?: return
         ExecJsOrSellHandler.handle(
-            editFragment,
+            terminalFragment,
             currentAppDirPath,
             currentFannelName,
         )

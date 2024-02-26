@@ -109,16 +109,19 @@ object ToolbarButtonSubMenuDialog {
                 ?: return@setOnItemClickListener
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
+                editFragment.readSharePreferenceMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ToolbarButtonArgsMaker.makeSettingButtonMenuPairList(
                         editFragment,
                         jsActionsMap
                     ),
                     clickedSubMenu
-                )
+                ),
+                editFragment.setReplaceVariableMap,
             )
             JsPathHandlerForToolbarButton.handle(
                 editFragment,
+                String(),
                 settingButtonView,
                 updateJsActionMap
             )

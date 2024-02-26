@@ -49,6 +49,7 @@ class ToolbarButtonHandler(
             )
         JsPathHandlerForToolbarButton.handle(
             editFragment,
+            String(),
             settingButtonView,
             jsActionMap
         )

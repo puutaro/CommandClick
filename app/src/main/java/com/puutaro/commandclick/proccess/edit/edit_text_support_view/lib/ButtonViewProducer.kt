@@ -827,6 +827,8 @@ object ButtonViewProducer {
 
         JsActionHandler.handle(
             editFragment,
+            editFragment.readSharePreferenceMap,
+            String(),
             ReadText(jsActionFilePath).readText()
         )
     }
@@ -853,6 +855,8 @@ object ButtonViewProducer {
 
         JsActionHandler.handle(
             editFragment,
+            editFragment.readSharePreferenceMap,
+            String(),
             jsActionCon
         )
     }

@@ -43,7 +43,9 @@ object ListIndexEditConfig {
         )
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
-            clickConfigListCon
+            editFragment.readSharePreferenceMap,
+            clickConfigListCon,
+            editFragment.setReplaceVariableMap,
         )
         val clickConfigPairList = CmdClickMap.createMap(
             clickConfigListCon,
@@ -51,7 +53,6 @@ object ListIndexEditConfig {
         )
         val listIndexArgsMaker = ListIndexArgsMaker(
             editFragment,
-            isLongClick,
             clickConfigPairList,
         )
         ExecClickUpdate.update(

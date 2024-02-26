@@ -28,7 +28,6 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.*
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
@@ -48,7 +47,7 @@ class CommandIndexFragment: Fragment() {
     var onTermVisibleWhenKeyboard =
         CommandClickScriptVariable.ON_TERM_VISIBLE_WHEN_KEYBOARD_DEFAULT_VALUE
     var urlHistoryOrButtonExec = CommandClickScriptVariable.CMDCLICK_URL_HISTOTY_OR_BUTTON_EXEC_DEFAULT_VALUE
-    var readSharePreffernceMap: Map<String, String> = mapOf()
+    var readSharePreferenceMap: Map<String, String> = mapOf()
     var terminalColor = CommandClickScriptVariable.TERMINAL_COLOR_DEFAULT_VALUE
     var jsExecuteJob: Job? = null
     var suggestJob: Job? = null
@@ -140,7 +139,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        readSharePreffernceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
+        readSharePreferenceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
             startUpPref
         )
 //        FDialogTempFile.removeByCoroutine(
@@ -153,7 +152,7 @@ class CommandIndexFragment: Fragment() {
         val makeListView = MakeListView(
             binding,
             this,
-            readSharePreffernceMap
+            readSharePreferenceMap
         )
         val fannelIndexListAdapter = makeListView.makeList(
             requireContext()
@@ -250,7 +249,7 @@ class CommandIndexFragment: Fragment() {
 
         val toolBarInternetButtonControl = ToolBarInternetButtonControl(
             this,
-            readSharePreffernceMap
+            readSharePreferenceMap
         )
         toolBarInternetButtonControl.interneButtontSetOnClickListener()
     }

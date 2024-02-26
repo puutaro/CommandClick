@@ -12,7 +12,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 class ToolBarHistoryButtonControl(
     private val cmdIndexFragment: CommandIndexFragment,
 ){
-    private val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = cmdIndexFragment.readSharePreferenceMap
     private val binding = cmdIndexFragment.binding
     val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
     private val historyButtonView = binding.cmdindexHistoryButton

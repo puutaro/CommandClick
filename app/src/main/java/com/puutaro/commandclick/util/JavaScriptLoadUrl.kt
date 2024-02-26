@@ -47,7 +47,9 @@ object JavaScriptLoadUrl {
         extraRepValMap: Map<String, String>? = null,
     ):String? {
         val jsFileObj = File(execJsPath)
-        if(!jsFileObj.isFile) return null
+        if(
+            !jsFileObj.isFile
+        ) return null
         val recentAppDirPath = jsFileObj.parent
         if(
             recentAppDirPath.isNullOrEmpty()
@@ -55,12 +57,7 @@ object JavaScriptLoadUrl {
 
         val scriptFileName = jsFileObj.name
         val jsListBeforeRemoveTsv = jsListSource.ifEmpty {
-            ReadText(
-                File(
-                    recentAppDirPath,
-                    scriptFileName
-                ).absolutePath
-            ).textToList()
+            ReadText(execJsPath).textToList()
         }
         if(
             jsListBeforeRemoveTsv.isEmpty()
@@ -194,33 +191,35 @@ object JavaScriptLoadUrl {
 
     fun makeRawJsConFromContents(
         fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
         jsConBeforeJsImport: String,
+        setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val readSharedPreferences = when(fragment){
-            is EditFragment -> fragment.readSharePreferenceMap
-            is CommandIndexFragment -> fragment.readSharePreffernceMap
-            is TerminalFragment -> fragment.readSharePreferenceMap
-            else -> emptyMap()
-        }
+//        val readSharedPreferences = when(fragment){
+//            is EditFragment -> fragment.readSharePreferenceMap
+//            is CommandIndexFragment -> fragment.readSharePreferenceMap
+//            is TerminalFragment -> fragment.readSharePreferenceMap
+//            else -> emptyMap()
+//        }
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
         )
         val currentFannelName = SharePreferenceMethod.getReadSharePreffernceMap(
-            readSharedPreferences,
+            readSharePreferenceMap,
             SharePrefferenceSetting.current_fannel_name
         )
         val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath
-        val setReplaceVariableMap = when(fragment){
-            is EditFragment -> fragment.setReplaceVariableMap
-            is CommandIndexFragment -> {
-                SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
-                    currentFannelPath
-                )
-            }
-            is TerminalFragment -> fragment.setReplaceVariableMap
-            else -> emptyMap()
-        }
+//        val setReplaceVariableMap = setReplaceVariableMapSrc.null when(fragment){
+//            is EditFragment -> fragment.setReplaceVariableMap
+//            is CommandIndexFragment -> {
+//                SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+//                    currentFannelPath
+//                )
+//            }
+//            is TerminalFragment -> fragment.setReplaceVariableMap
+//            else -> emptyMap()
+//        }
         val jsConBeforeJsImportCompNewLine = "\n${jsConBeforeJsImport}"
         val setReplaceVariableMapByConcat =
             TsvImportManager.concatRepValMapWithTsvImportFromContents(

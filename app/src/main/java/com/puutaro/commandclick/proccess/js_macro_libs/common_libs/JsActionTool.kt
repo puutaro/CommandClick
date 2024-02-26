@@ -6,9 +6,6 @@ import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.fragment.CommandIndexFragment
-import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.import.JsImportManager
@@ -36,14 +33,11 @@ object JsActionTool {
 
 
     fun judgeJsAction(
-        fragment: Fragment,
         jsList: List<String>
     ): Boolean {
         val firstLine = jsList
             .firstOrNull()
             ?: return false
-        val isEditFragment =
-            fragment is EditFragment
         val isExistJsAcShiban = firstLine
             .trim()
             .removePrefix("//")
@@ -51,8 +45,8 @@ object JsActionTool {
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jaActionsJudage.txt").absolutePath,
 //            listOf(
-//                "fragment: ${fragment}",
-//                "isEditFragment: ${isEditFragment}",
+////                "fragment: ${fragment}",
+////                "isEditFragment: ${isEditFragment}",
 //                "firstLine: AAA${firstLine
 //                    .trim()
 //                    .removePrefix("//")
@@ -61,17 +55,20 @@ object JsActionTool {
 //                "isExistJsAcShiban: ${isExistJsAcShiban}",
 //            ).joinToString("\n\n")
 //        )
-        return isEditFragment && isExistJsAcShiban
+        return isExistJsAcShiban
     }
 
     fun makeJsActionMap(
         fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
         keyToSubKeyCon: String?,
+        setReplaceVariableMap: Map<String, String>?,
         extraRepValMap: Map<String, String>? = null,
     ): Map<String, String>? {
         val keyToSubConTypeMap = createKeyToSubConTypeMap(
-            fragment,
+            readSharePreferenceMap,
             keyToSubKeyCon,
+            setReplaceVariableMap,
         ) ?: return null
         val jsRepValMapBeforeConcat = keyToSubConTypeMap.get(
             KeyToSubConType.WITH_REPLACE
@@ -117,6 +114,8 @@ object JsActionTool {
 //                "extractJsDataMap: ${
 //                    extractJsDataMap(
 //                    fragment,
+//                        readSharePreferenceMap,
+//                        setReplaceVariableMap,
 //                    keyToSubKeyConListWithoutAfterSubKey,
 //                    keyToSubKeyConListWithAfterSubKey,
 //                        overrideMapList,
@@ -130,6 +129,8 @@ object JsActionTool {
         ) return macroDataMap
         return extractJsDataMap(
             fragment,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             keyToSubKeyConListWithoutAfterSubKey,
             keyToSubKeyConListWithAfterSubKey,
             overrideMapList,
@@ -160,6 +161,8 @@ object JsActionTool {
 
     private fun extractJsDataMap(
         fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>?,
         keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>?,
         overrideMapList: List<Map<String, String>>,
@@ -167,6 +170,8 @@ object JsActionTool {
     ): Map<String, String>? {
         val jsCon = convertJsCon(
             fragment,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             keyToSubKeyConListWithoutAfterSubKey,
             keyToSubKeyConListWithAfterSubKey,
             overrideMapList,
@@ -271,12 +276,14 @@ object JsActionTool {
     }
 
     private fun createKeyToSubConTypeMap(
-        fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
         keyToSubKeyCon: String?,
+        setReplaceVariableMap: Map<String, String>?,
     ): Map<KeyToSubConType, List<Pair<String, String>>?>? {
         val keyToSubKeyConList = KeyToSubKeyConListMaker.make(
-            fragment,
             keyToSubKeyCon,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
         )
         if (
             keyToSubKeyConList.isEmpty()
@@ -502,6 +509,8 @@ object JsActionTool {
 
     private fun convertJsCon(
         fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>?,
         keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>?,
         overrideMapList: List<Map<String, String>>,
@@ -527,18 +536,6 @@ object JsActionTool {
             keyToSubKeyConListWithAfterSubKey,
             overrideMapList,
         )
-//        FileSystems.writeFile(
-//            File(
-//                UsePath.cmdclickDefaultAppDirPath,
-//                "js_makeJsActionMap_convert.txt").absolutePath,
-//            listOf(
-//                "overrideMapList: ${overrideMapList}",
-//                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
-//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
-//                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
-//                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
-//            ).joinToString("\n\n")
-//        )
 
         val jsFuncCon = JsConPutter.make(
             jsMapListWithoutAfterSubKey,
@@ -549,9 +546,31 @@ object JsActionTool {
             jsImportCon,
             jsFuncCon,
         ).joinToString("\n")
+//        FileSystems.writeFile(
+//            File(
+//                UsePath.cmdclickDefaultAppDirPath,
+//                "js_makeJsActionMap_convert.txt").absolutePath,
+//            listOf(
+//                "overrideMapList: ${overrideMapList}",
+//                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
+//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
+//                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
+//                "jsFuncCon: ${jsFuncCon}",
+//                "jsConBeforeJsImport: ${jsConBeforeJsImport}",
+//                "resultJsCon ${ JavaScriptLoadUrl.makeRawJsConFromContents(
+//                    fragment,
+//                    readSharePreferenceMap,
+//                    jsConBeforeJsImport,
+//                    setReplaceVariableMap,
+//                )}"
+//            ).joinToString("\n\n")
+//        )
         return JavaScriptLoadUrl.makeRawJsConFromContents(
             fragment,
+            readSharePreferenceMap,
             jsConBeforeJsImport,
+            setReplaceVariableMap,
         )
     }
 
@@ -787,21 +806,23 @@ private object KeyToSubKeyConListMaker {
                 }
 
     fun make(
-        fragment: Fragment,
         keyToSubKeyCon: String?,
+        readSharePreferenceMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
     ): List<Pair<String, String>> {
-        val readSharePreferenceMap = when(fragment){
-            is EditFragment -> fragment.readSharePreferenceMap
-            is CommandIndexFragment -> emptyMap()
-            is TerminalFragment -> fragment.readSharePreferenceMap
-            else -> emptyMap()
-        }
-        val setReplaceVariableMap = when(fragment){
-            is EditFragment -> fragment.setReplaceVariableMap
-            is CommandIndexFragment -> emptyMap()
-            is TerminalFragment -> fragment.setReplaceVariableMap
-            else -> emptyMap()
-        }
+//        val readSharePreferenceMap = when(fragment){
+//            is EditFragment -> fragment.readSharePreferenceMap
+//            is CommandIndexFragment -> emptyMap()
+//            is TerminalFragment -> fragment.readSharePreferenceMap
+//            else -> emptyMap()
+//        }
+//        val setReplaceVariableMap = setReplaceVariableMap
+//            .) when(fragment){
+//            is EditFragment -> fragment.setReplaceVariableMap
+//            is CommandIndexFragment -> emptyMap()
+//            is TerminalFragment -> fragment.setReplaceVariableMap
+//            else -> emptyMap()
+//        }
         val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
             readSharePreferenceMap,
             SharePrefferenceSetting.current_app_dir
@@ -987,11 +1008,9 @@ private object JsConPutter {
         jsMapListWithoutAfterSubKey: List<Map<String, String>>,
         jsMapListWithAfterSubKey: List<Map<String, String>>,
     ): String {
-//        val afterSubKeyName = JsActionKeyManager.JsSubKey.AFTER.key
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "JsConPutter.make.txt").absolutePath,
 //            listOf(
-//                "afterSubKeyName: ${afterSubKeyName}",
 //                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
 //                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
 //            ).joinToString("\n\n")

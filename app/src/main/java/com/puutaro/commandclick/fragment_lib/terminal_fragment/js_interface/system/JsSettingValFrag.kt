@@ -25,7 +25,7 @@ class JsSettingValFrag(
 
     @JavascriptInterface
     fun change_S(
-        state: String
+        fannelState: String
     ){
         val listener =
             context as? TerminalFragment.OnChangeEditFragmentListenerForTerm
@@ -36,7 +36,8 @@ class JsSettingValFrag(
         )
         val settingFragTag = FragmentTagManager.makeSettingValEditTag(
             currentAppDirPath,
-            currentFannelName
+            currentFannelName,
+            fannelState
         )
         listener.onChangeEditFragment(
             editFragArg,

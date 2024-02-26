@@ -57,6 +57,12 @@ object CcPathTool {
             "${cmdclickAppDirPath}/",
             ""
         ).split("/")
+        if(
+            pathListStartAppDirName.size == 1
+        ) return File(
+            cmdclickAppDirPath,
+            pathListStartAppDirName.first()
+        ).absolutePath
         if (
             pathListStartAppDirName.size < fannelDirListLength
         ) {
@@ -118,6 +124,12 @@ object CcPathTool {
             "${cmdclickAppDirPath}/",
             ""
         ).split("/")
+        if(
+            pathListStartAppDirName.size == 1
+        ) return File(
+            cmdclickAppDirPath,
+            makeFannelDirName(pathListStartAppDirName.first())
+        ).absolutePath
         if (
             pathListStartAppDirName.size < fannelDirListLength
         ) {

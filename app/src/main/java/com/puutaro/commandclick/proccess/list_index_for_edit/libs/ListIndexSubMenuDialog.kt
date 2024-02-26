@@ -130,13 +130,15 @@ object ListIndexSubMenuDialog {
                 ?: return@setOnItemClickListener
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
+                editFragment.readSharePreferenceMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ListIndexArgsMaker.makeListIndexClickMenuPairList(
                         editFragment,
                         jsActionMap
                     ),
                     clickedSubMenuName
-                )
+                ),
+                editFragment.setReplaceVariableMap,
             )
             JsPathHandlerForQrAndListIndex.handle(
                 editFragment,

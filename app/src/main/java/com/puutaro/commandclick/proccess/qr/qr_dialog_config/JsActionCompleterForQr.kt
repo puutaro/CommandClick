@@ -13,7 +13,9 @@ object JsActionCompleterForQr {
     ): Map<String, String> {
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
-            clickConfigListCon
+            editFragment.readSharePreferenceMap,
+            clickConfigListCon,
+            editFragment.setReplaceVariableMap,
         )
         val defaultMacroStr = when(isLongClick){
             true -> JsMacroForQr.EDIT_LOGO.name

@@ -104,7 +104,7 @@ object SettingSubMenuDialog {
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                         EditFragmentArgs(
-                            cmdIndexFragment.readSharePreffernceMap,
+                            cmdIndexFragment.readSharePreferenceMap,
                             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                         )
                     )
@@ -119,7 +119,7 @@ object SettingSubMenuDialog {
                     listener?.onToolbarMenuCategories(
                         ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
                         EditFragmentArgs(
-                            cmdIndexFragment.readSharePreffernceMap,
+                            cmdIndexFragment.readSharePreferenceMap,
                             EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                         )
                     )

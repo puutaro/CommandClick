@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import android.view.View
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -48,13 +49,15 @@ import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
 object JsPathHandlerForToolbarButton {
 
     fun handle(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String = String(),
         settingButtonView: View?,
         jsActionMap: Map<String, String>?
     ) {
@@ -72,21 +75,22 @@ object JsPathHandlerForToolbarButton {
         when (jsActionType) {
             JsActionDataMapKeyObj.JsActionDataTypeKey.MACRO
             -> jsPathMacroHandler(
-                editFragment,
+                fragment,
+                mainOrSubFannelPath,
                 settingButtonView,
                 jsActionMap
             )
 
             JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON
             -> execJs(
-                    editFragment,
+                    fragment,
                     jsActionMap
                 )
         }
     }
 
     private fun execJs(
-        editFragment: EditFragment,
+        fragment: Fragment,
         jsActionMap: Map<String, String>
     ){
         if(
@@ -109,27 +113,30 @@ object JsPathHandlerForToolbarButton {
             ).joinToString("\n\n\n")
         )
         JavascriptExecuter.jsUrlLaunchHandler(
-            editFragment,
+            fragment,
             JavaScriptLoadUrl.makeLastJsCon(jsCon)
         )
     }
 
     private fun jsPathMacroHandler(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String,
         settingButtonView: View?,
         jsActionMap: Map<String, String>
     ) {
-        val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
+        val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
+        val readSharePreffernceMap =
+            FannelPrefGetter.getReadSharePreferenceMap(
+                fragment,
+                mainOrSubFannelPath,
+            )
         val currentAppDirPath =
-            SharePreferenceMethod.getReadSharePreffernceMap(
-                readSharePreffernceMap,
-                SharePrefferenceSetting.current_app_dir
+            FannelPrefGetter.getCurrentAppDirPath(
+                readSharePreffernceMap
             )
         val currentFannelName =
-            SharePreferenceMethod.getReadSharePreffernceMap(
+            FannelPrefGetter.getCurrentFannelName(
                 readSharePreffernceMap,
-                SharePrefferenceSetting.current_fannel_name
             )
         if(
             jsActionMap.isEmpty()
@@ -144,23 +151,23 @@ object JsPathHandlerForToolbarButton {
         when (macro) {
             MacroForToolbarButton.Macro.KILL
             -> AppProcessManager.killDialog(
-                editFragment,
+                fragment,
                 currentAppDirPath,
                 currentFannelName
             )
             MacroForToolbarButton.Macro.USAGE
             -> UsageDialog.launch(
-                editFragment,
+                fragment,
             )
             MacroForToolbarButton.Macro.NO_SCROLL_SAVE_URL
             -> NoScrollUrlSaver.save(
-                editFragment,
+                fragment,
                 currentAppDirPath,
                 String()
             )
             MacroForToolbarButton.Macro.QR_SCAN
             -> ExecJsLoad.jsConLaunchHandler(
-                editFragment,
+                fragment,
                 "${
                     ExecJsInterfaceAdder.convertUseJsInterfaceName(
                         JsQrScanner::class.java.simpleName
@@ -170,7 +177,7 @@ object JsPathHandlerForToolbarButton {
             MacroForToolbarButton.Macro.SHORTCUT
             -> {
                 val listener =
-                    editFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.SHORTCUT,
                     EditFragmentArgs(
@@ -182,7 +189,7 @@ object JsPathHandlerForToolbarButton {
             MacroForToolbarButton.Macro.TERMUX_SETUP
             -> {
                 val listener =
-                    editFragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
+                    fragment.context as? CommandIndexFragment.OnToolbarMenuCategoriesListener
                 listener?.onToolbarMenuCategories(
                     ToolbarMenuCategoriesVariantForCmdIndex.TERMUX_SETUP,
                     EditFragmentArgs(
@@ -192,7 +199,7 @@ object JsPathHandlerForToolbarButton {
                 )
             }
             MacroForToolbarButton.Macro.CONFIG
-            -> ConfigEdit.edit(editFragment)
+            -> ConfigEdit.edit(fragment)
 
             MacroForToolbarButton.Macro.REFRESH_MONITOR
             -> TermRefresh.refresh(
@@ -200,86 +207,131 @@ object JsPathHandlerForToolbarButton {
                 )
 
             MacroForToolbarButton.Macro.SELECT_MONITOR
-            -> SelectTermDialog.launch(editFragment)
+            -> SelectTermDialog.launch(fragment)
 
             MacroForToolbarButton.Macro.RESTART_UBUNTU
             -> UbuntuServiceManager.launch(
-                editFragment.activity
+                fragment.activity
             )
 
             MacroForToolbarButton.Macro.INSTALL_FANNEL
             -> SystemFannelLauncher.launch(
-                editFragment,
+                fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.fannelRepoFannelName
             )
 
             MacroForToolbarButton.Macro.ADD
-                -> AddFileForEdit.add(
-                editFragment,
-                jsActionMap,
-            )
-
+                -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                AddFileForEdit.add(
+                    fragment,
+                    jsActionMap,
+                )
+            }
             MacroForToolbarButton.Macro.ADD_APP_DIR
-            -> AppDirAdder.add(
-                editFragment
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                AppDirAdder.add(
+                    fragment
+                )
+            }
 
             MacroForToolbarButton.Macro.JS_IMPORT
             -> SystemFannelLauncher.launch(
-                editFragment,
+                fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.jsImportManagerFannelName
             )
 
             MacroForToolbarButton.Macro.APP_DIR_MANAGER
             -> SystemFannelLauncher.launch(
-                editFragment,
+                fragment,
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.appDirManagerFannelName
             )
 
             MacroForToolbarButton.Macro.SIZING
-            -> MonitorSizeManager.changeForEdit(
-                editFragment
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                MonitorSizeManager.changeForEdit(
+                    fragment
+                )
+            }
             MacroForToolbarButton.Macro.MENU
-            -> PopupSettingMenu.launchSettingMenu(
-                editFragment,
-                settingButtonView,
-                jsActionMap
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                PopupSettingMenu.launchSettingMenu(
+                    fragment,
+                    settingButtonView,
+                    jsActionMap
+                )
+            }
             MacroForToolbarButton.Macro.D_MENU
             -> ToolbarMenuDialog.launch(
-                editFragment,
+                fragment,
+                mainOrSubFannelPath,
                 settingButtonView,
                 jsActionMap,
             )
 
             MacroForToolbarButton.Macro.SYNC
-            -> ListSyncer.sync(editFragment)
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                ListSyncer.sync(fragment)
+            }
 
             MacroForToolbarButton.Macro.GET_FILE
-            -> getFileOrDirHandler(
-                editFragment,
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                getFileOrDirHandler(
+                    fragment,
+                )
+            }
             MacroForToolbarButton.Macro.GET_DIR
-            -> getFileOrDirHandler(
-                editFragment,
-                true
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                getFileOrDirHandler(
+                    fragment,
+                    true
+                )
+            }
             MacroForToolbarButton.Macro.GET_QR_CON
-            -> QrConGetterDialog.launch(
-                editFragment,
-                jsActionMap
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                QrConGetterDialog.launch(
+                    fragment,
+                    jsActionMap
+                )
+            }
 
             MacroForToolbarButton.Macro.FANNEL_REPO_SYNC
-            -> syncFannelRepo(editFragment)
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                syncFannelRepo(fragment)
+            }
 
             MacroForToolbarButton.Macro.EDIT
             -> changeSettingFragment(
-                editFragment,
+                fragment,
                 jsActionMap
             )
 
@@ -291,7 +343,7 @@ object JsPathHandlerForToolbarButton {
                     JsQrGetter::class.java.simpleName
                 )
                 ExecJsLoad.jsConLaunchHandler(
-                    editFragment,
+                    fragment,
                     """
                         ${useClassName}.get_S(
                             "${macro.name}"
@@ -300,24 +352,44 @@ object JsPathHandlerForToolbarButton {
                 )
             }
             MacroForToolbarButton.Macro.OK
-            -> OkHandler(
-                    editFragment,
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                OkHandler(
+                    fragment,
                 ).execForOk()
+            }
             MacroForToolbarButton.Macro.ADD_URL_HISTORY
-            -> UrlHistoryAddToTsv(
-                editFragment,
-                jsActionMap,
-            ).invoke()
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                UrlHistoryAddToTsv(
+                    fragment,
+                    jsActionMap,
+                ).invoke()
+            }
             MacroForToolbarButton.Macro.ADD_URL_CON
-            -> AddUrlCon.add(
-                editFragment,
-                jsActionMap,
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                AddUrlCon.add(
+                    fragment,
+                    jsActionMap,
+                )
+            }
             MacroForToolbarButton.Macro.ADD_URL
-            -> AddUrl.add(
-                editFragment,
-                jsActionMap,
-            )
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                AddUrl.add(
+                    fragment,
+                    jsActionMap,
+                )
+            }
         }
     }
 
@@ -348,7 +420,7 @@ object JsPathHandlerForToolbarButton {
 
 
     private fun changeSettingFragment(
-        editFragment: EditFragment,
+        fragment: Fragment,
         jsActionMap: Map<String, String>?
     ) {
         val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
@@ -359,7 +431,7 @@ object JsPathHandlerForToolbarButton {
             JsSettingValFrag::class.java.simpleName
         )
         ExecJsLoad.jsConLaunchHandler(
-            editFragment,
+            fragment,
             "${useClassName}.change_S(\"${currentState}\");",
         )
     }

@@ -45,7 +45,9 @@ object JsActionCompleterForToolbar {
 
         val jsActionMapSrc = JsActionTool.makeJsActionMap(
             editFragment,
+            editFragment.readSharePreferenceMap,
             toolbarButtonConfigMap.get(buttonClickMapKey),
+            editFragment.setReplaceVariableMap,
         )
 //        FileSystems.writeFile(
 //            File(

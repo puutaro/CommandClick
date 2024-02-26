@@ -18,8 +18,10 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -98,17 +100,25 @@ object JavascriptExecuter {
     fun jsOrActionHandler(
         fragment: Fragment,
         execJsPath: String,
-        execJsConList: List<String>,
+        execJsConListSrc: List<String>,
         extraMapCon: Map<String, String>? = null,
         webView: WebView? = null
     ){
-        val validateFragment = validateFragment(
-            fragment,
-        )
-        val context = validateFragment.context
+//        val validateFragment = validateFragment(
+//            fragment,
+//        )
+        val context = fragment.context
+        val execJsConList = execJsConListSrc.ifEmpty {
+            ReadText(
+                execJsPath
+            ).textToList()
+        }
         val isJsAction = JsActionTool.judgeJsAction(
-            validateFragment,
             execJsConList
+        )
+        val readSharePreferenceMap = FannelPrefGetter.getReadSharePreferenceMap(
+            fragment,
+            execJsPath
         )
         FileSystems.writeFile(
             File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
@@ -121,16 +131,20 @@ object JavascriptExecuter {
         )
         when(isJsAction){
             true -> {
-                if(
-                    validateFragment !is EditFragment
-                ) return
+                val setReplaceVariableMap =
+                    FannelPrefGetter.getReplaceVariableMap(
+                        fragment,
+                        null
+                    )
                 val jsKeyToSubKeyListCon = SettingFile.readFromList(
                     execJsConList,
                     execJsPath,
-                    validateFragment.setReplaceVariableMap
+                    setReplaceVariableMap
                 )
                 JsActionHandler.handle(
-                    validateFragment,
+                    fragment,
+                    readSharePreferenceMap,
+                    execJsPath,
                     jsKeyToSubKeyListCon,
                     extraMapCon
                 )

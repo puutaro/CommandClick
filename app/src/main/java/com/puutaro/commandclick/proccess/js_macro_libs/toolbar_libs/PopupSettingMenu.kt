@@ -79,12 +79,15 @@ object PopupSettingMenu {
         if (menuListMap.size == 1) {
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
+                editFragment.readSharePreferenceMap,
                 MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
                     menuPairList.first()
-                )
+                ),
+                editFragment.setReplaceVariableMap,
             )
             JsPathHandlerForToolbarButton.handle(
                 editFragment,
+                String(),
                 settingButtonView,
                 updateJsActionMap,
             )
@@ -221,10 +224,12 @@ object PopupSettingMenu {
             else -> {
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
+                    editFragment.readSharePreferenceMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName
-                    )
+                    ),
+                    editFragment.setReplaceVariableMap,
                 )
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
@@ -243,6 +248,7 @@ object PopupSettingMenu {
 //                    )
                 JsPathHandlerForToolbarButton.handle(
                     editFragment,
+                    String(),
                     settingButtonView,
                     updateJsActionMap
                 )

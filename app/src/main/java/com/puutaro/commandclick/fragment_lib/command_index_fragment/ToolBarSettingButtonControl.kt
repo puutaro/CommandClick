@@ -34,7 +34,7 @@ class ToolBarSettingButtonControl(
     private val context = cmdIndexFragment.context
     private val binding = cmdIndexFragment.binding
     private val cmdSearchEditText = binding.cmdSearchEditText
-    private val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
+    private val readSharePreffernceMap = cmdIndexFragment.readSharePreferenceMap
     private val currentAppDirPath = SharePreferenceMethod.getReadSharePreffernceMap(
         readSharePreffernceMap,
         SharePrefferenceSetting.current_app_dir
@@ -147,7 +147,7 @@ class ToolBarSettingButtonControl(
             listener?.onToolbarMenuCategories(
                 toolbarMenuCategoriesVariantForCmdIndex,
                 EditFragmentArgs(
-                    cmdIndexFragment.readSharePreffernceMap,
+                    cmdIndexFragment.readSharePreferenceMap,
                     EditFragmentArgs.Companion.EditTypeSettingsKey.CMD_VAL_EDIT
                 )
             )

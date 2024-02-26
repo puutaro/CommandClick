@@ -1,7 +1,11 @@
 package com.puutaro.commandclick.util.state
 
 import android.content.SharedPreferences
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment.TerminalFragment
 
 object SharePreferenceMethod {
 

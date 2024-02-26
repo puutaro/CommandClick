@@ -10,15 +10,17 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
+import com.puutaro.commandclick.util.map.FilePrefixGetter
+import com.puutaro.commandclick.util.state.FannelPrefGetter
 
 
 object ToolbarMenuDialog {
@@ -26,14 +28,15 @@ object ToolbarMenuDialog {
     private var listIndexMenuDialog: Dialog? = null
     
     fun launch(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String,
         anchorView: View?,
         jsActionMap: Map<String, String>?,
     ) {
         if(
             jsActionMap.isNullOrEmpty()
         ) return
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         listIndexMenuDialog = Dialog(
             context
@@ -50,7 +53,8 @@ object ToolbarMenuDialog {
             )
 
         setListView(
-            editFragment,
+            fragment,
+            mainOrSubFannelPath,
             anchorView,
             jsActionMap,
             title,
@@ -84,12 +88,13 @@ object ToolbarMenuDialog {
     }
 
     private fun setListView(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String,
         anchorView: View?,
         jsActionMap: Map<String, String>,
         title: String?,
     ) {
-        val context = editFragment.context
+        val context = fragment.context
             ?: return
         val subMenuListView =
             listIndexMenuDialog?.findViewById<ListView>(
@@ -97,7 +102,7 @@ object ToolbarMenuDialog {
             )
         val menuPairList = MenuSettingTool.createListMenuListMap(
             ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                editFragment,
+                fragment,
                 jsActionMap
             ),
         )
@@ -107,7 +112,8 @@ object ToolbarMenuDialog {
         )
         subMenuListView?.adapter = subMenuAdapter
         subMenuItemClickListener(
-            editFragment,
+            fragment,
+            mainOrSubFannelPath,
             anchorView,
             jsActionMap,
             subMenuListView,
@@ -130,7 +136,8 @@ object ToolbarMenuDialog {
     }
 
     private fun subMenuItemClickListener(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String,
         anchorView: View?,
         jsActionMap: Map<String, String>,
         subMenuListView: ListView?,
@@ -143,7 +150,8 @@ object ToolbarMenuDialog {
             val clickedMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             jsPathOrSubMenuHandlerForToolbar(
-                editFragment,
+                fragment,
+                mainOrSubFannelPath,
                 anchorView,
                 clickedMenuName,
                 jsActionMap,
@@ -154,7 +162,8 @@ object ToolbarMenuDialog {
 
 
     private fun jsPathOrSubMenuHandlerForToolbar(
-        editFragment: EditFragment,
+        fragment: Fragment,
+        mainOrSubFannelPath: String,
         anchorView: View?,
         clickedMenuName: String,
         jsActionMap: Map<String, String>,
@@ -162,7 +171,7 @@ object ToolbarMenuDialog {
     ) {
         val settingButtonMenuPairList =
             ListIndexArgsMaker.makeListIndexClickMenuPairList(
-                editFragment,
+                fragment,
                 jsActionMap,
             )
         val hitMenuItemPairList = !MenuSettingTool.firstOrNullByParentMenuName(
@@ -172,7 +181,8 @@ object ToolbarMenuDialog {
         when (hitMenuItemPairList) {
             true ->
                 ToolbarSubMenuDialog.launch(
-                    editFragment,
+                    fragment,
+                    mainOrSubFannelPath,
                     anchorView,
                     jsActionMap,
                     selectedItem,
@@ -180,15 +190,26 @@ object ToolbarMenuDialog {
                 )
 
             else -> {
+                val readSharePreferenceMap = FannelPrefGetter.getReadSharePreferenceMap(
+                    fragment,
+                    mainOrSubFannelPath,
+                )
+                val setReplaceVariableMap = FannelPrefGetter.getReplaceVariableMap(
+                    fragment,
+                    mainOrSubFannelPath,
+                )
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
-                    editFragment,
+                    fragment,
+                    readSharePreferenceMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName
-                    )
+                    ),
+                    setReplaceVariableMap
                 )
                 JsPathHandlerForToolbarButton.handle(
-                    editFragment,
+                    fragment,
+                    mainOrSubFannelPath,
                     anchorView,
                     updateJsActionMap,
                 )

@@ -140,6 +140,16 @@ object ExecJsLoad {
         }?.let {
             emptyList()
         } ?: jsContentsList
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "jsActin_jsload.txt").absolutePath,
+            listOf(
+                "jsArgs: ${jsArgs}",
+                "jsContentsListSource: ${jsContentsListSource}",
+                "jsContentsList: ${jsContentsList}",
+                "loadJsContentsList: ${loadJsContentsList}",
+                "loadJsContentsList: ${loadJsContentsList}",
+            ).joinToString("\n\n")
+        )
         terminalViewModel.jsArguments = jsArgs
         JavascriptExecuter.jsOrActionHandler(
             currentFragment,

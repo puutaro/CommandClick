@@ -10,7 +10,7 @@ object ListViewUpdaterOnStart {
         cmdIndexFragment: CommandIndexFragment
     ){
         val binding = cmdIndexFragment.binding
-        val readSharePreffernceMap = cmdIndexFragment.readSharePreffernceMap
+        val readSharePreffernceMap = cmdIndexFragment.readSharePreferenceMap
         val cmdList = binding.cmdList
         CommandListManager.execListUpdateForCmdIndex(
             SharePreferenceMethod.getReadSharePreffernceMap(
