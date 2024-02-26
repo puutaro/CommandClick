@@ -6,7 +6,7 @@ import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object OnOnceEditExecuteEvent {
     fun invoke(
@@ -16,14 +16,14 @@ object OnOnceEditExecuteEvent {
         editFragmentTag: String,
     ) {
         val context = cmdIndexFragment.context ?: return
-        SharePreferenceMethod.putSharePreference(
+        SharePrefTool.putSharePref(
             sharedPref,
             mapOf(
                 SharePrefferenceSetting.current_fannel_name.name
                         to selectedShellFileName,
             )
         )
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
             sharedPref,
             SharePrefferenceSetting.current_app_dir
         )

@@ -14,7 +14,7 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object JsActionTool {
@@ -820,10 +820,10 @@ private object KeyToSubKeyConListMaker {
 //            is TerminalFragment -> fragment.setReplaceVariableMap
 //            else -> emptyMap()
 //        }
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val keyToSubKeyConListSrc = makeKeyToSubConPairList(

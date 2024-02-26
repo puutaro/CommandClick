@@ -11,7 +11,7 @@ import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -197,10 +197,10 @@ object JavaScriptLoadUrl {
 //            is TerminalFragment -> fragment.readSharePreferenceMap
 //            else -> emptyMap()
 //        }
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val currentFannelPath = File(currentAppDirPath, currentFannelName).absolutePath

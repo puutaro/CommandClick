@@ -19,7 +19,6 @@ import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
@@ -38,9 +37,8 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
@@ -148,10 +146,10 @@ class   TerminalFragment: Fragment() {
         }
         readSharePreferenceMap = EditFragmentArgs.getReadSharePreference(arguments)
         srcReadSharedPreferences = EditFragmentArgs.getSrcReadSharePreference(arguments)
-        currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val currentValidFannelName =

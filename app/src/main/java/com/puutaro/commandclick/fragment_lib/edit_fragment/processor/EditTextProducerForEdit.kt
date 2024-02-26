@@ -10,7 +10,7 @@ import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 
@@ -23,7 +23,7 @@ class EditTextProducerForEdit(
     private val editViewModel: EditViewModel by editFragment.activityViewModels()
 
     private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
 
@@ -222,7 +222,7 @@ class EditTextProducerForEdit(
                 editFragment,
                 editFragment.currentFannelConList,
                 currentAppDirPath,
-                FannelPrefGetter.getCurrentFannelName(
+                SharePrefTool.getCurrentFannelName(
                     readSharePreffernceMap
                 )
             )

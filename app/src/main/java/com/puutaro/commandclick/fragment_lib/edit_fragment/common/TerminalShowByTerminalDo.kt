@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object TerminalShowByTerminalDo {
@@ -13,10 +13,10 @@ object TerminalShowByTerminalDo {
         editFragment: EditFragment,
     ){
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val currentFannelConList = ReadText(

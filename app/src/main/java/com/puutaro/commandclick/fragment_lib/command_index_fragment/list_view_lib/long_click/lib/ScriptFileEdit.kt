@@ -10,7 +10,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShe
 import com.puutaro.commandclick.proccess.lib.VariationErrDialog
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object ScriptFileEdit {
@@ -21,7 +21,7 @@ object ScriptFileEdit {
     ){
         val sharedPref =
             cmdIndexFragment.activity?.getPreferences(Context.MODE_PRIVATE)
-        SharePreferenceMethod.putAllSharePreference(
+        SharePrefTool.putAllSharePref(
             sharedPref,
             currentAppDirPath,
             fannelName,

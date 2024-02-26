@@ -2,12 +2,10 @@ package com.puutaro.commandclick.proccess.js_macro_libs.exec_handler
 
 import android.content.Context
 import android.widget.Toast
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import java.io.File
 
 object ActionToolForQr {

@@ -7,7 +7,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -22,13 +22,13 @@ class FileOrDirGetterForSettingButton(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
-    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+    private val currentFannelName = SharePrefTool.getCurrentFannelName(
         readSharePreferenceMap
     )
-    private val currentFannelState = FannelPrefGetter.getCurrentStateName(
+    private val currentFannelState = SharePrefTool.getCurrentStateName(
         readSharePreferenceMap
     )
     private var onDirectoryPick = false

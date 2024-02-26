@@ -7,7 +7,7 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object TxtHtmlDescriber {
@@ -25,7 +25,7 @@ object TxtHtmlDescriber {
         val contents = ReadText(
             filePath
         ).readText()
-        val fannelRawName = SharePreferenceMethod.getStringFromSharePreference(
+        val fannelRawName = SharePrefTool.getStringFromSharePref(
                 sharePref,
                 SharePrefferenceSetting.current_fannel_name
             ).replace(

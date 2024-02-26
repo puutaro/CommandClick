@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.ExistTerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 
@@ -110,7 +110,7 @@ private fun urlHistoryButtonHandler(
         return
     }
 
-    val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
     val currentShellFileName = UsePath.cmdclickButtonExecShellFileName

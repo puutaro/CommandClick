@@ -31,8 +31,8 @@ import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.UrlTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -40,7 +40,7 @@ class UrlHistoryButtonEvent(
     private val fragment: androidx.fragment.app.Fragment,
     private val readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
     private val fragmentTag = fragment.tag
@@ -63,7 +63,7 @@ class UrlHistoryButtonEvent(
                 if(
                     !isCmdValEdit
                 ) return
-                val onShortcut = FannelPrefGetter.getOnShortcut(
+                val onShortcut = SharePrefTool.getOnShortcut(
                     fragment.readSharePreferenceMap
                 ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
                 if(!onShortcut) return
@@ -343,7 +343,7 @@ class UrlHistoryButtonEvent(
     private fun makeBottomScriptUrlList(
     ): List<String> {
         val fannelName = when(fragment) {
-            is EditFragment -> FannelPrefGetter.getCurrentFannelName(
+            is EditFragment -> SharePrefTool.getCurrentFannelName(
                 readSharePreffernceMap
             )
             else -> String()

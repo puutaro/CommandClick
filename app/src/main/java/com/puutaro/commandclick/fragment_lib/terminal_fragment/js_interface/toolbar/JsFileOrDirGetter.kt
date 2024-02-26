@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 class JsFileOrDirGetter(
@@ -12,13 +12,13 @@ class JsFileOrDirGetter(
 ) {
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
-    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+    private val currentFannelName = SharePrefTool.getCurrentFannelName(
         readSharePreferenceMap
     )
-    private val currentFannelState = FannelPrefGetter.getCurrentStateName(
+    private val currentFannelState = SharePrefTool.getCurrentStateName(
         readSharePreferenceMap
     )
     private val fileOrDirGetterForSettingButton = terminalFragment.fileOrDirGetterForSettingButton

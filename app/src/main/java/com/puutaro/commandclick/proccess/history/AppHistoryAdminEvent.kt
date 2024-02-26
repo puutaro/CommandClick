@@ -9,7 +9,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object AppHistoryAdminEvent {
@@ -27,7 +27,7 @@ object AppHistoryAdminEvent {
         val onEditExecute = updateEditExecuteValue ==
                 SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         if (!onEditExecute) {
-            SharePreferenceMethod.putAllSharePreference(
+            SharePrefTool.putAllSharePref(
                 sharedPref,
                 selectedAppDirPath,
                 SharePrefferenceSetting.current_fannel_name.defalutStr,
@@ -60,7 +60,7 @@ object AppHistoryAdminEvent {
             mainFannelSettingConList,
             setReplaceVariableMap,
         )
-        SharePreferenceMethod.putAllSharePreference(
+        SharePrefTool.putAllSharePref(
             sharedPref,
             selectedAppDirPath,
             selectedFannelName,

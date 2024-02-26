@@ -29,7 +29,7 @@ import com.puutaro.commandclick.util.Intent.ExecBashScriptIntent
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -462,10 +462,10 @@ object ButtonViewProducer {
         execCmdAfterTrimButtonEditExecVariant: String,
     ): String {
         val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val currentScriptName = FannelPrefGetter.getCurrentFannelName(
+        val currentScriptName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         val fannelDirName = CcPathTool.makeFannelDirName(
@@ -624,10 +624,10 @@ object ButtonViewProducer {
         val shellParentDirPath = saveFilterShellPathObj.parent
             ?: return null
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val saveValue = EditVariableName.getText(
@@ -676,7 +676,7 @@ object ButtonViewProducer {
             SET_F_OPTION_MAP_KEY.ListAdd.howFull.name
         ).isNullOrEmpty()
         val terminalViewModel: TerminalViewModel by editFragment.activityViewModels()
-        val currentScriptName = FannelPrefGetter.getCurrentFannelName(
+        val currentScriptName = SharePrefTool.getCurrentFannelName(
             editFragment.readSharePreferenceMap
         )
         val listCon = FileSystems.sortedFiles(
@@ -994,10 +994,10 @@ object ButtonViewProducer {
         currentComponentIndex: Int
     ): Map<String, String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         return currentSetVariableValue?.let {

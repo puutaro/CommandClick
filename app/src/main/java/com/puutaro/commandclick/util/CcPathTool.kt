@@ -4,7 +4,7 @@ import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object CcPathTool {
@@ -236,7 +236,7 @@ object CcPathTool {
     fun getCurrentScriptFileName(
         readSharePreffernceMap: Map<String, String>
     ): String {
-        val currentScriptFileName = FannelPrefGetter.getCurrentFannelName(
+        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         if(

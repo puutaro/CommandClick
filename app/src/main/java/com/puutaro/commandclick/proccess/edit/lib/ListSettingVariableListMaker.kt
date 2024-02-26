@@ -5,7 +5,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.SettingVariableReader
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object ListSettingVariableListMaker {
@@ -18,10 +18,10 @@ object ListSettingVariableListMaker {
         setReplaceVariableMap: Map<String, String>?,
         settingVariablesList: List<String>?,
     ): List<String> {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val listSettingVariableListSource =

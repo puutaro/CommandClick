@@ -10,7 +10,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -439,10 +439,10 @@ object ListSettingsForListIndex  {
                 filterShellPath.isEmpty()
             ) return String()
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                 readSharePreferenceMap
             )
-            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            val currentFannelName = SharePrefTool.getCurrentFannelName(
                 readSharePreferenceMap
             )
             return ReadText(
@@ -553,10 +553,10 @@ private object CompPathManager {
         initTsvPathObj: File,
     ): List<String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         return ReadText(

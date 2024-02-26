@@ -19,8 +19,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
-import com.puutaro.commandclick.util.map.FilePrefixGetter
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 
 object ToolbarMenuDialog {
@@ -190,11 +189,11 @@ object ToolbarMenuDialog {
                 )
 
             else -> {
-                val readSharePreferenceMap = FannelPrefGetter.getReadSharePreferenceMap(
+                val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
                     fragment,
                     mainOrSubFannelPath,
                 )
-                val setReplaceVariableMap = FannelPrefGetter.getReplaceVariableMap(
+                val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
                     fragment,
                     mainOrSubFannelPath,
                 )

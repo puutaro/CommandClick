@@ -21,9 +21,9 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonV
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ConfigFromScriptFileSetter {
 
@@ -32,13 +32,13 @@ object ConfigFromScriptFileSetter {
         mainFannelConList: List<String>
     ){
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val onShortcut = FannelPrefGetter.getOnShortcut(
+        val onShortcut = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentScriptFileName = FannelPrefGetter.getCurrentFannelName(
+        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
@@ -606,10 +606,10 @@ object ConfigFromScriptFileSetter {
         defaultPath: String,
     ): List<String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val bottomScriptUrlPath =  SettingVariableReader.getStrValue(

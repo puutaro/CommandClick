@@ -51,11 +51,10 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateManager
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.SettingFannelConHandlerForEdit
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -172,16 +171,16 @@ class EditFragment: Fragment() {
         srcReadSharePreffernceMap =
             EditFragmentArgs.getSrcReadSharePreference(arguments)
 
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
-        val onShortcutValue = FannelPrefGetter.getOnShortcut(
+        val onShortcutValue = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         )
-        val currentFannelState = FannelPrefGetter.getCurrentStateName(
+        val currentFannelState = SharePrefTool.getCurrentStateName(
             readSharePreferenceMap
         )
 
@@ -193,7 +192,7 @@ class EditFragment: Fragment() {
             this
         )
         SetConfigInfo.set(this)
-        SharePreferenceMethod.putAllSharePreference(
+        SharePrefTool.putAllSharePref(
             sharePref,
             currentAppDirPath,
             currentFannelName,

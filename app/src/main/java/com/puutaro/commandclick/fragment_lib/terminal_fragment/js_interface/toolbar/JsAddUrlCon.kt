@@ -4,7 +4,7 @@ import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.url.HistoryUrlContents
 
 class JsAddUrlCon(
@@ -13,7 +13,7 @@ class JsAddUrlCon(
 
     private val readSharePreferenceMap =
         terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
 

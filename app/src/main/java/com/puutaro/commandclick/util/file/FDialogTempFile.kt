@@ -1,24 +1,5 @@
 package com.puutaro.commandclick.util.file
 
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ValidateShell
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-
 object FDialogTempFile {
 
 //    private val languageType = LanguageTypeSelects.JAVA_SCRIPT

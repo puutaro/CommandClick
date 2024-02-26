@@ -16,7 +16,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Sea
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 object EditTextSetter {
@@ -175,10 +175,10 @@ private object EditTextMaker {
             is TerminalFragment -> fragment.readSharePreferenceMap
             else -> emptyMap()
         }
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val shellConSrc = editTextPropertyMap.get(

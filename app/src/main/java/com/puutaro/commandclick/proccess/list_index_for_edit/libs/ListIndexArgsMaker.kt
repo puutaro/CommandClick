@@ -6,7 +6,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 
@@ -16,10 +16,10 @@ class ListIndexArgsMaker(
 ) {
     val setReplaceVariableMap = editFragment.setReplaceVariableMap
     val readSharePreffernceMap = editFragment.readSharePreferenceMap
-    val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
-    val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+    val currentFannelName = SharePrefTool.getCurrentFannelName(
         readSharePreffernceMap
     )
 
@@ -28,17 +28,17 @@ class ListIndexArgsMaker(
             fragment: Fragment,
             jsActionMap: Map<String, String>
         ): List<List<Pair<String, String>>> {
-            val readSharePreferenceMap = FannelPrefGetter.getReadSharePreferenceMap(
+            val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
                 fragment,
                 null
             )
-            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                 readSharePreferenceMap
             )
-            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            val currentFannelName = SharePrefTool.getCurrentFannelName(
                 readSharePreferenceMap,
             )
-            val setReplaceVariableMap = FannelPrefGetter.getReplaceVariableMap(
+            val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
                 fragment,
                 null
             )

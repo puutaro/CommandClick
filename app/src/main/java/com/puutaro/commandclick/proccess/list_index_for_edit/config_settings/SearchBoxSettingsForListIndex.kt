@@ -3,7 +3,7 @@ package com.puutaro.commandclick.proccess.list_index_for_edit.config_settings
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object SearchBoxSettingsForListIndex {
 
@@ -32,10 +32,10 @@ object SearchBoxSettingsForListIndex {
             fragment !is EditFragment
         ) return currentVariableValue
         val readSharePreffernceMap = fragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         val replaceBackstackCurrentVariableValue =

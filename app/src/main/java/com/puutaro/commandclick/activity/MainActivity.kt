@@ -61,7 +61,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.Job
 import java.util.*
 import kotlin.collections.ArrayList
@@ -236,15 +236,15 @@ class MainActivity:
         val startUpPref = getPreferences(Context.MODE_PRIVATE)
         val cmdEditFragmentTag =
             FragmentTagManager.makeCmdValEditTag(
-                SharePreferenceMethod.getStringFromSharePreference(
+                SharePrefTool.getStringFromSharePref(
                     startUpPref,
                     SharePrefferenceSetting.current_app_dir
                 ),
-                SharePreferenceMethod.getStringFromSharePreference(
+                SharePrefTool.getStringFromSharePref(
                     startUpPref,
                     SharePrefferenceSetting.current_fannel_name
                 ),
-                SharePreferenceMethod.getStringFromSharePreference(
+                SharePrefTool.getStringFromSharePref(
                     startUpPref,
                     SharePrefferenceSetting.current_fannel_state
                 )

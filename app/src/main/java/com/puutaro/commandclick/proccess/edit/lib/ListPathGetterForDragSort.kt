@@ -4,7 +4,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.DragSortListViewProducer
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ListPathGetterForDragSort {
 
@@ -33,10 +33,10 @@ object ListPathGetterForDragSort {
         ) return String()
         val readSharePreffernceMap = editFragment.readSharePreferenceMap
         val currentScriptContentsList = editFragment.currentFannelConList
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         val isMacroStrForGetFromVar =

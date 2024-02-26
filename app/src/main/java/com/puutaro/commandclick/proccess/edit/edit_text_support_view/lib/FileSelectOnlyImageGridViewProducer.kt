@@ -8,7 +8,6 @@ import android.widget.EditText
 import android.widget.GridView
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
@@ -22,8 +21,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object FileSelectOnlyImageGridViewProducer {
@@ -150,7 +148,7 @@ object FileSelectOnlyImageGridViewProducer {
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         val filterDir = getSelectDirPath(
@@ -261,7 +259,7 @@ object FileSelectOnlyImageGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(

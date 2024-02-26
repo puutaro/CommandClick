@@ -223,15 +223,15 @@ class TargetFragmentInstance {
             activity == null
         ) return String()
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_name
         )
-        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+        val fannelState = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_state
         )

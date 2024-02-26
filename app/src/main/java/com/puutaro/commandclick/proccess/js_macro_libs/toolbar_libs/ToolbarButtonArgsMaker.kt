@@ -15,7 +15,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSe
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 class ToolbarButtonArgsMaker(
@@ -38,10 +38,10 @@ class ToolbarButtonArgsMaker(
 
     val readSharePreffernceMap = editFragment.readSharePreferenceMap
 
-    val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
-    val currentScriptFileName = FannelPrefGetter.getCurrentFannelName(
+    val currentScriptFileName = SharePrefTool.getCurrentFannelName(
         readSharePreffernceMap
     )
     val fannelDirName = CcPathTool.makeFannelDirName(currentScriptFileName)
@@ -103,10 +103,10 @@ class ToolbarButtonArgsMaker(
             jsActionMap: Map<String, String>?
         ): List<List<Pair<String, String>>> {
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                 readSharePreferenceMap
             )
-            val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+            val currentFannelName = SharePrefTool.getCurrentFannelName(
                 readSharePreferenceMap
             )
             val setReplaceVariableMap = editFragment.setReplaceVariableMap

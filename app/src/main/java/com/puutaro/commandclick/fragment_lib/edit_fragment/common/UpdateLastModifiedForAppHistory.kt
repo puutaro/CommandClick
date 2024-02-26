@@ -6,8 +6,7 @@ import com.puutaro.commandclick.common.variable.fannel.SystemFannel
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object UpdateLastModifiedForAppHistory {
@@ -15,7 +14,7 @@ object UpdateLastModifiedForAppHistory {
         editExecuteValue: String,
         readSharePreffernceMap: Map<String, String>
     ){
-        val onShortCut = FannelPrefGetter.getOnShortcut(
+        val onShortCut = SharePrefTool.getOnShortcut(
             readSharePreffernceMap
         )
         if(
@@ -26,17 +25,17 @@ object UpdateLastModifiedForAppHistory {
             editExecuteValue !=
             SettingVariableSelects.EditExecuteSelects.ALWAYS.name
         ) return
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val fannelName = FannelPrefGetter.getCurrentFannelName(
+        val fannelName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         if(
             currentAppDirPath == UsePath.cmdclickSystemAppDirPath
             && !SystemFannel.allowIntentSystemFannelList.contains(fannelName)
         ) return
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
 //        val isFDialogFannel = FDialogTempFile.howFDialogFile(currentFannelName)

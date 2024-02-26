@@ -10,9 +10,8 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOkForEdit
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 
 object ExecToolBarButtonClickForEdit {
@@ -37,11 +36,11 @@ object ExecToolBarButtonClickForEdit {
                 )
             ToolbarButtonBariantForEdit.EDIT -> {
                 val onShortcutOff = EditFragmentArgs.Companion.OnShortcutSettingKey.OFF.key
-                val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                     readSharePreferenceMap
                 )
 
-                val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                val currentFannelName = SharePrefTool.getCurrentFannelName(
                     readSharePreferenceMap
                 )
 

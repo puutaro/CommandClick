@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 class LongPressForImage(
@@ -25,7 +25,7 @@ class LongPressForImage(
 )  {
     val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
     private val imageLongPressMenuFilePathObj = File(imageMenuFilePath)

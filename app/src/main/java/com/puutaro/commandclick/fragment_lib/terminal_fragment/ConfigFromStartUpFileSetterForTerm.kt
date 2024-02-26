@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment
 
-import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -12,8 +11,8 @@ import com.puutaro.commandclick.proccess.filer.StartFileMaker
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ConfigFromStartUpFileSetterForTerm {
 
@@ -39,10 +38,10 @@ object ConfigFromStartUpFileSetterForTerm {
         ) as String
 
         val readSharedPreferences = terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharedPreferences
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharedPreferences
         )
 

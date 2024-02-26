@@ -18,7 +18,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataM
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.file.UrlFileSystems
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.tsv.TsvTool
 import java.io.File
 
@@ -124,7 +124,7 @@ class UrlHistoryAddToTsv (
         }
         val takeLines = 5
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
 
@@ -189,7 +189,7 @@ class UrlHistoryAddToTsv (
             val webSearcherName = UrlFileSystems.Companion.FirstCreateFannels.WebSearcher.str +
                     UsePath.JS_FILE_SUFFIX
             val readSharePreferenceMap = editFragment.readSharePreferenceMap
-            val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                 readSharePreferenceMap
             )
             ExecJsLoad.execExternalJs(

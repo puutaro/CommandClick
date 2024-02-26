@@ -17,7 +17,7 @@ import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object ListContentsSelectSpinnerViewProducer {
@@ -32,10 +32,10 @@ object ListContentsSelectSpinnerViewProducer {
         val context = editParameters.context
         val currentId = editParameters.currentId
         val readSharePreffernceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val scriptName = FannelPrefGetter.getCurrentFannelName(
+        val scriptName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         val linearParamsForSpinner = LinearLayout.LayoutParams(
@@ -166,10 +166,10 @@ object ListContentsSelectSpinnerViewProducer {
             true -> {
                 val readSharePreferenceMap = editParameters.readSharePreffernceMap
                 val setReplaceVariableMap = editParameters.setReplaceVariableMap
-                val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+                val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                     readSharePreferenceMap
                 )
-                val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+                val currentFannelName = SharePrefTool.getCurrentFannelName(
                     readSharePreferenceMap
                 )
                 val compListFilePathObj = File(compListOneLineCon.removePrefix(filePrefix))

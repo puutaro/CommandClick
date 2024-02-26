@@ -13,7 +13,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SpinnerInstance
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 
@@ -31,7 +31,7 @@ object FileSelectSpinnerViewProducer {
         val currentFragment = editParameters.currentFragment
         val context = editParameters.context
         val currentId = editParameters.currentId
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
 
@@ -196,7 +196,7 @@ object FileSelectSpinnerViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(
@@ -256,10 +256,10 @@ object FileSelectSpinnerViewProducer {
     ): Map<String, String>? {
         val currentSetVariableMap = editParameters.setVariableMap
         val readSharePreferenceMap = editParameters.readSharePreffernceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentScriptName = FannelPrefGetter.getCurrentFannelName(
+        val currentScriptName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         return currentSetVariableMap?.get(

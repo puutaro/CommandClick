@@ -126,16 +126,16 @@ class EditFragmentArgs(
         val fragArgsBundle = Bundle()
 
         srcReadSharePreferenceMap?.let {
-            val srcCurrentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+            val srcCurrentAppDirPath = SharePrefTool.getCurrentAppDirPath(
                 it,
             )
-            val srcCurrentFannelName =FannelPrefGetter.getCurrentFannelName(
+            val srcCurrentFannelName =SharePrefTool.getCurrentFannelName(
                 it,
             )
-            val srcOnShortcut = FannelPrefGetter.getOnShortcut(
+            val srcOnShortcut = SharePrefTool.getOnShortcut(
                 it,
             )
-            val srcCurrentFannelState = FannelPrefGetter.getCurrentStateName(
+            val srcCurrentFannelState = SharePrefTool.getCurrentStateName(
                 it,
             )
             fragArgsBundle.putString(
@@ -155,16 +155,16 @@ class EditFragmentArgs(
                 srcCurrentFannelState,
             )
         }
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
-        val onShortcut = FannelPrefGetter.getOnShortcut(
+        val onShortcut = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         )
-        val currentFannelState = FannelPrefGetter.getCurrentStateName(
+        val currentFannelState = SharePrefTool.getCurrentStateName(
             readSharePreferenceMap
         )
         fragArgsBundle.putString(

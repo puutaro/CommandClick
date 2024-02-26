@@ -1,12 +1,10 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess
 
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -44,7 +42,7 @@ object TerminalOnHandlerForEdit {
                 }
             if(isSettingValEdit) return@launch
             val disableShortcut = withContext(Dispatchers.IO) {
-                FannelPrefGetter.getOnShortcut(
+                SharePrefTool.getOnShortcut(
                     terminalFragment.readSharePreferenceMap
                 ) != EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
             }

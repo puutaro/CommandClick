@@ -3,11 +3,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.edit
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ExecOkForEdit{
     fun execOkForEdit(
@@ -15,7 +13,7 @@ object ExecOkForEdit{
         callOwnerFragmentTag : String?,
         readSharePreffernceMap: Map<String, String>,
     ) {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
         val supportFragmentManager = activity.supportFragmentManager

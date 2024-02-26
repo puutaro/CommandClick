@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.LongClickMenuItemsforCmdIndex
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object OnEditExecuteEvent {
     fun invoke(
@@ -22,7 +22,7 @@ object OnEditExecuteEvent {
             ?: return
         val sharedPref =  fragment.activity?.getPreferences(Context.MODE_PRIVATE)
         val shortcutOnMark = EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        SharePreferenceMethod.putAllSharePreference(
+        SharePrefTool.putAllSharePref(
             sharedPref,
             currentAppDirPath,
             selectedShellFileName,

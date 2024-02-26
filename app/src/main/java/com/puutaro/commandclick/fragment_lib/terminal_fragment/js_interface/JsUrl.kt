@@ -13,7 +13,7 @@ import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 class JsUrl(
     private val terminalFragment: TerminalFragment
@@ -36,11 +36,11 @@ class JsUrl(
     fun makeJsRawCon(
         jsPath: String
     ): String {
-        val readSharePreferenceMap = FannelPrefGetter.getReadSharePreferenceMap(
+        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
             terminalFragment,
             jsPath
         )
-        val setReplaceVariableMap = FannelPrefGetter.getReplaceVariableMap(
+        val setReplaceVariableMap = SharePrefTool.getReplaceVariableMap(
             terminalFragment,
             jsPath,
         )

@@ -14,7 +14,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.SearchSwichImage
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ExecUrlLoadFragmentProccess {
     fun execUrlLoadCmdIndexFragment (
@@ -57,15 +57,15 @@ object ExecUrlLoadFragmentProccess {
         activity: MainActivity,
     ){
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_name
         )
-        val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelState = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_state
         )

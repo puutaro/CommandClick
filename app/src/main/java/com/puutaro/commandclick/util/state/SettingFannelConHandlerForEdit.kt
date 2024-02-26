@@ -72,10 +72,10 @@ object SettingFannelConHandlerForEdit {
 //            is TerminalFragment -> editFragment.readSharePreferenceMap
 //            else -> return String()
 //        }
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         return File(currentAppDirPath, currentFannelName).absolutePath

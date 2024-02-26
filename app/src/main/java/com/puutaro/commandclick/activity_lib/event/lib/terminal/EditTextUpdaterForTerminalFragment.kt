@@ -5,7 +5,7 @@ import android.util.Log
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,15 +19,15 @@ object EditTextUpdaterForTerminalFragment {
     ) {
         if(editTextId == null) return
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_name
         )
-        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+        val fannelState = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_state
         )

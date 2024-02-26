@@ -23,7 +23,7 @@ import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object FileSelectGridViewProducer {
@@ -159,7 +159,7 @@ object FileSelectGridViewProducer {
         Keyboard.hiddenKeyboardForFragment(
             editFragment
         )
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         val filterDir = getSelectDirPath(
@@ -308,7 +308,7 @@ object FileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(

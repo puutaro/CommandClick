@@ -20,7 +20,7 @@ import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object MultiFileSelectGridViewProducer {
@@ -236,7 +236,7 @@ object MultiFileSelectGridViewProducer {
         fcbMap: Map<String, String>?,
         editParameters: EditParameters,
     ): String {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editParameters.readSharePreffernceMap
         )
         return fcbMap?.get(

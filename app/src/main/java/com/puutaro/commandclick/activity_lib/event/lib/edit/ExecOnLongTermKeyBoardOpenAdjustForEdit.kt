@@ -7,7 +7,7 @@ import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object ExecOnLongTermKeyBoardOpenAdjustForEdit {
     fun adjust(
@@ -15,15 +15,15 @@ object ExecOnLongTermKeyBoardOpenAdjustForEdit {
         weight: Float
     ){
         val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-        val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_app_dir
         )
-        val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_name
         )
-        val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+        val currentFannelState = SharePrefTool.getStringFromSharePref(
             sharePref,
             SharePrefferenceSetting.current_fannel_state
         )

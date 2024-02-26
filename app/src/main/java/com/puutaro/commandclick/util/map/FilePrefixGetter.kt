@@ -5,7 +5,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 object FilePrefixGetter {
 
@@ -16,10 +16,10 @@ object FilePrefixGetter {
     ): String? {
         val filePrefix = EditSettings.filePrefix
         val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
@@ -51,10 +51,10 @@ object FilePrefixGetter {
         keyName: String,
     ): String? {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val listDirFilePath = replaceListDirValue.removePrefix(ConfigMapTool.filePrefix)

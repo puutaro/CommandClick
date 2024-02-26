@@ -5,8 +5,8 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
 import com.puutaro.commandclick.util.state.FragmentTagManager
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 class JsCmdValFrag(
     terminalFragment: TerminalFragment
@@ -14,10 +14,10 @@ class JsCmdValFrag(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
-    private val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+    private val currentFannelName = SharePrefTool.getCurrentFannelName(
         readSharePreferenceMap
     )
 

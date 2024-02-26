@@ -3,14 +3,12 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edi
 import android.webkit.JavascriptInterface
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import com.puutaro.commandclick.util.state.FannelPrefGetter
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 import java.io.File
@@ -66,14 +64,14 @@ class JsEdit(
     ): String {
         val readSharedPreferences =
             terminalFragment.readSharePreferenceMap
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharedPreferences
         )
 
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharedPreferences
         )
-        val fannelState = FannelPrefGetter.getCurrentStateName(
+        val fannelState = SharePrefTool.getCurrentStateName(
             readSharedPreferences
         )
         val editFragment = TargetFragmentInstance().getCurrentEditFragmentFromFragment(

@@ -14,7 +14,7 @@ import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_li
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnQrLongClickDo
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 
 class MakeListView(
@@ -22,7 +22,7 @@ class MakeListView(
     private val cmdIndexFragment: CommandIndexFragment,
     readSharePreffernceMap: Map<String, String>,
 ) {
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreffernceMap
     )
     private val currentAppDirPathTermux = UsePath.makeTermuxPathByReplace(currentAppDirPath)

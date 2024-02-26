@@ -3,20 +3,13 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lo
 import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
-import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 object LongPressMenuTool {
@@ -128,7 +121,7 @@ object LongPressMenuTool {
         ){
             true -> {
                 val sharePref = activity.getPreferences(Context.MODE_PRIVATE)
-                SharePreferenceMethod.getStringFromSharePreference(
+                SharePrefTool.getStringFromSharePref(
                     sharePref,
                     SharePrefferenceSetting.current_fannel_name
                 )

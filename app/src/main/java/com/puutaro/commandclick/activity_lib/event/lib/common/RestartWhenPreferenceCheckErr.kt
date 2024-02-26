@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 
 class RestartWhenPreferenceCheckErr {
     companion object {
@@ -13,7 +13,7 @@ class RestartWhenPreferenceCheckErr {
         ){
             val sharePref =  activity?.getPreferences(Context.MODE_PRIVATE)
             if(sharePref == null) return
-            SharePreferenceMethod.putAllSharePreference(
+            SharePrefTool.putAllSharePref(
                 sharePref,
                 SharePrefferenceSetting.current_app_dir.defalutStr,
                 SharePrefferenceSetting.current_fannel_name.defalutStr,

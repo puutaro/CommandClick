@@ -21,10 +21,10 @@ object FannelStateRooterManager {
         settingSectionEnd: String,
         settingFannelPath: String,
     ): List<String>? {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
 
@@ -51,10 +51,10 @@ object FannelStateRooterManager {
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String {
-        val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
-        val currentFannelName = FannelPrefGetter.getCurrentFannelName(
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
         val defaultSettingFilePath =
@@ -63,11 +63,11 @@ object FannelStateRooterManager {
                 currentFannelName
             ).absolutePath
 
-        val onShortcut = FannelPrefGetter.getOnShortcut(
+        val onShortcut = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val currentFannelState =
-            FannelPrefGetter.getCurrentStateName(
+            SharePrefTool.getCurrentStateName(
                 readSharePreferenceMap
             )
         if(

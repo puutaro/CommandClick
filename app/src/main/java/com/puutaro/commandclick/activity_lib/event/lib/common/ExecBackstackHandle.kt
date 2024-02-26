@@ -12,7 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.EditLayoutViewHideShow
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 object ExecBackstackHandle {
@@ -146,15 +146,15 @@ private fun removeEditAndTermFragment(
     supportFragmentManager: FragmentManager,
 ){
     val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val currentAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+    val currentAppDirPath = SharePrefTool.getStringFromSharePref(
         sharedPref,
         SharePrefferenceSetting.current_app_dir
     )
-    val currentFannelName = SharePreferenceMethod.getStringFromSharePreference(
+    val currentFannelName = SharePrefTool.getStringFromSharePref(
         sharedPref,
         SharePrefferenceSetting.current_fannel_name
     )
-    val currentFannelState = SharePreferenceMethod.getStringFromSharePreference(
+    val currentFannelState = SharePrefTool.getStringFromSharePref(
         sharedPref,
         SharePrefferenceSetting.current_fannel_state
     )

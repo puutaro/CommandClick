@@ -29,7 +29,7 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.proccess.history.AppHistoryManager
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.CommandIndexViewModel
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.*
@@ -139,7 +139,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        readSharePreferenceMap = SharePreferenceMethod.makeReadSharePreferenceMap(
+        readSharePreferenceMap = SharePrefTool.makeReadSharePreferenceMap(
             startUpPref
         )
 //        FDialogTempFile.removeByCoroutine(

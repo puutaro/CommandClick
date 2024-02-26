@@ -18,7 +18,7 @@ import com.puutaro.commandclick.proccess.IntentAction
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.LoadUrlPrefixSuffix
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 
 
@@ -51,19 +51,19 @@ class InitFragmentManager(
     fun startFragment(
         savedInstanceState: Bundle?,
     ) {
-        val startUpAppDirPath = SharePreferenceMethod.getStringFromSharePreference(
+        val startUpAppDirPath = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.current_app_dir
         )
-        val startUpScriptFileName = SharePreferenceMethod.getStringFromSharePreference(
+        val startUpScriptFileName = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.current_fannel_name
         )
-        val onShortcut = SharePreferenceMethod.getStringFromSharePreference(
+        val onShortcut = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.on_shortcut
         )
-        val fannelState = SharePreferenceMethod.getStringFromSharePreference(
+        val fannelState = SharePrefTool.getStringFromSharePref(
             startUpPref,
             SharePrefferenceSetting.current_fannel_state
         )
@@ -123,7 +123,7 @@ class InitFragmentManager(
         setDataString(intent)?.let {
             execIntent.data = it
         }
-        SharePreferenceMethod.putSharePreference(
+        SharePrefTool.putSharePref(
             startUpPref,
             mapOf(
                 SharePrefferenceSetting.current_fannel_name.name
@@ -154,7 +154,7 @@ class InitFragmentManager(
         val currentShellFileName = intent.getStringExtra(
             SharePrefferenceSetting.current_fannel_name.name
         ) ?: SharePrefferenceSetting.current_fannel_name.defalutStr
-        SharePreferenceMethod.putAllSharePreference(
+        SharePrefTool.putAllSharePref(
             startUpPref,
             recieveAppDirPath,
             currentShellFileName,

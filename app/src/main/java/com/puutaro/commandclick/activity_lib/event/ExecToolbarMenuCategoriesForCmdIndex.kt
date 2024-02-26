@@ -11,16 +11,11 @@ import com.puutaro.commandclick.activity_lib.event.lib.common.ExecTerminalLongOr
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoBack
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecGoForword
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.ExecReload
-import com.puutaro.commandclick.activity_lib.manager.WrapFragmentManager
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
-import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 import com.puutaro.commandclick.util.ShortCutManager
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelStateManager
 
 object ExecToolbarMenuCategoriesForCmdIndex {
     fun <T: Fragment> execToolbarMenuCategories(

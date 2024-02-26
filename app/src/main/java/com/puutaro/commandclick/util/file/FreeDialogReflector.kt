@@ -1,16 +1,5 @@
 package com.puutaro.commandclick.util.file
 
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
-import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
 //
 //object FreeDialogReflector {
 //

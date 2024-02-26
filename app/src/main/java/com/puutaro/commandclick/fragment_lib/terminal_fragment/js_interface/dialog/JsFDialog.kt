@@ -1,17 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog
 
 import android.webkit.JavascriptInterface
-import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsScript
-import com.puutaro.commandclick.util.file.FDialogTempFile
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelStateManager
-import com.puutaro.commandclick.util.state.FragmentTagManager
-import com.puutaro.commandclick.util.state.SharePreferenceMethod
 
 class JsFDialog(
     private val terminalFragment: TerminalFragment

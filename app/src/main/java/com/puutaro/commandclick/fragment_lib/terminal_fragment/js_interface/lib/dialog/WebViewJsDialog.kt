@@ -42,7 +42,7 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -59,7 +59,7 @@ class WebViewJsDialog(
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
-    private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+    private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
         readSharePreferenceMap
     )
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()

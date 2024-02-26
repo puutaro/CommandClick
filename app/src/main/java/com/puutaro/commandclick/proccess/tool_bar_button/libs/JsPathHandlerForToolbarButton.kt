@@ -47,7 +47,7 @@ import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.dialog.UsageDialog
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
-import com.puutaro.commandclick.util.state.FannelPrefGetter
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -124,16 +124,16 @@ object JsPathHandlerForToolbarButton {
     ) {
         val terminalViewModel: TerminalViewModel by fragment.activityViewModels()
         val readSharePreffernceMap =
-            FannelPrefGetter.getReadSharePreferenceMap(
+            SharePrefTool.getReadSharePrefMap(
                 fragment,
                 mainOrSubFannelPath,
             )
         val currentAppDirPath =
-            FannelPrefGetter.getCurrentAppDirPath(
+            SharePrefTool.getCurrentAppDirPath(
                 readSharePreffernceMap
             )
         val currentFannelName =
-            FannelPrefGetter.getCurrentFannelName(
+            SharePrefTool.getCurrentFannelName(
                 readSharePreffernceMap,
             )
         if(
@@ -440,10 +440,10 @@ object JsPathHandlerForToolbarButton {
     ) {
         private val context = editFragment.context
         private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        private val currentAppDirPath = FannelPrefGetter.getCurrentAppDirPath(
+        private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreffernceMap
         )
-        private val currentScriptFileName = FannelPrefGetter.getCurrentFannelName(
+        private val currentScriptFileName = SharePrefTool.getCurrentFannelName(
             readSharePreffernceMap
         )
         private val enableCmdEdit = editFragment.enableCmdEdit
