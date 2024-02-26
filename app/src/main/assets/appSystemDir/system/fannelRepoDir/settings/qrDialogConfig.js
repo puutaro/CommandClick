@@ -4,5 +4,5 @@ click=
 longClick=
     jsPath=DESC,
 logo=
-    oneSideLength=170
+    oneSideLength=110
     |mode=fannelRepo,

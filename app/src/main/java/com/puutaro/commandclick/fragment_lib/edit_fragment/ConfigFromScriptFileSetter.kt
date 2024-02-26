@@ -48,6 +48,7 @@ object ConfigFromScriptFileSetter {
             editFragment.settingSectionEnd,
             editFragment.settingFannelPath
         )
+        editFragment.settingFannelConList = settingVariableList
 
         editFragment.setVariableTypeList =
             SetVariableTypesSetterForEdit.set(

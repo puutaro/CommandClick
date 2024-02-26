@@ -8,7 +8,6 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.util.*
 import kotlinx.coroutines.*
 
 
@@ -17,14 +16,8 @@ class EditModeHandler(
     binding: EditFragmentBinding,
 ) {
     private val context = editFragment.context
-    private val currentScriptContentsList = editFragment.currentFannelConList
-    private val enableCmdEdit = editFragment.enableCmdEdit
     private val readSharePreferenceMap = editFragment.readSharePreferenceMap
-
-    private val editExecuteValue = CommandClickVariables.returnEditExecuteValueStr(
-        currentScriptContentsList,
-        editFragment.languageType
-    )
+    private val editExecuteValue = editFragment.editExecuteValue
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,

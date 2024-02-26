@@ -10,6 +10,7 @@ import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrL
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
@@ -91,10 +92,14 @@ object QrDialogConfig {
     }
 
     fun setOneSideLength(
+        fragment: Fragment,
         fileContentsQrLogoLinearLayout: LinearLayoutCompat?,
         qrLogoConfigMap: Map<String, String>
     ){
-        val oneSideLength = decideOneSideLength(qrLogoConfigMap)
+        val oneSideLength = decideOneSideLength(
+            fragment,
+            qrLogoConfigMap
+        )
         val linearLayoutParam = LinearLayoutCompat.LayoutParams(
             oneSideLength,
             oneSideLength
@@ -212,16 +217,31 @@ object QrDialogConfig {
     }
 
     private fun decideOneSideLength(
+        fragment: Fragment,
         qrLogoSettingKey: Map<String, String>,
     ): Int {
-        val defaultOneSideLength = 150
+        val defaultOnsideLengthSrc = 100
+        val defaultOneSideLength = ScreenSizeCalculator.toDp(
+            fragment.context,
+            defaultOnsideLengthSrc
+        )
         val oneSideLengthKeyName = QrLogoSettingsForQrDialog.QrLogoSettingKey.ONE_SIDE_LENGTH.key
         if(
             qrLogoSettingKey.isEmpty()
         ) return defaultOneSideLength
         return qrLogoSettingKey.get(oneSideLengthKeyName).let {
-            if(it.isNullOrEmpty()) return@let defaultOneSideLength
-            try { it.toInt() } catch (e: Exception){ defaultOneSideLength }
+            if(
+                it.isNullOrEmpty()
+            ) return@let defaultOneSideLength
+            try {
+                ScreenSizeCalculator.toDp(
+                    fragment.context,
+                    it.toFloat()
+                )
+//                it.toInt()
+            } catch (e: Exception){
+                defaultOneSideLength
+            }
         }
     }
 }

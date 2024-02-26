@@ -1,8 +1,13 @@
 package com.puutaro.commandclick.util
 
+import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
+import kotlin.math.roundToInt
 
 object ScreenSizeCalculator {
     fun dpHeight(
@@ -85,5 +90,16 @@ object ScreenSizeCalculator {
             display?.getMetrics(outMetrics)
             outMetrics.heightPixels
         }
+    }
+
+    fun <T: Number>toDp(
+        context: Context?,
+        dps: T,
+    ): Int{
+        if(
+            context == null
+        ) return 0
+        val density = context.resources.displayMetrics.density
+        return (dps.toFloat() * density).roundToInt()
     }
 }

@@ -73,7 +73,7 @@ object ListViewToolForListIndexAdapter {
         }
     }
 
-    fun execScroll(
+    private fun execScroll(
         layoutManager: PreLoadLayoutManager?,
         scrollToPosi: Int,
     ){

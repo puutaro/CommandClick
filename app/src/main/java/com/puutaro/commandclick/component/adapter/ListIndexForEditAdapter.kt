@@ -217,6 +217,7 @@ class ListIndexForEditAdapter(
             }
             withContext(Dispatchers.Main) {
                 QrDialogConfig.setOneSideLength(
+                    editFragment,
                     holder.fileContentsQrLogoLinearLayout,
                     qrLogoConfigMap
                 )

@@ -356,11 +356,12 @@ object ButtonViewProducer {
             innerExecCmd.isEmpty()
         ) return
         val substituteSettingVariableList =
-            CommandClickVariables.substituteVariableListFromHolder(
-                editFragment.currentFannelConList,
-                editFragment.settingSectionStart,
-                editFragment.settingSectionEnd,
-            )
+            editFragment.settingFannelConList
+//            CommandClickVariables.substituteVariableListFromHolder(
+//                editFragment.currentFannelConList,
+//                editFragment.settingSectionStart,
+//                editFragment.settingSectionEnd,
+//            )
         val shellExecEnv = CommandClickVariables.substituteCmdClickVariable(
             substituteSettingVariableList,
             CommandClickScriptVariable.SHELL_EXEC_ENV

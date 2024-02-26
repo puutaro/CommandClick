@@ -52,17 +52,18 @@ class ToolbarButtonArgsMaker(
             currentScriptFileName
         ).absolutePath
     ).textToList()
-    val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
-        currentScriptContentsList,
-        settingSectionStart,
-        settingSectionEnd
-    )
-    val setReplaceVariableMap =
-            SetReplaceVariabler.makeSetReplaceVariableMap(
-                settingVariableList,
-                currentAppDirPath,
-                currentScriptFileName,
-            )
+    val setReplaceVariableMap = let {
+        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+            currentScriptContentsList,
+            settingSectionStart,
+            settingSectionEnd
+        )
+        SetReplaceVariabler.makeSetReplaceVariableMap(
+            settingVariableList,
+            currentAppDirPath,
+            currentScriptFileName,
+        )
+    }
 
     val toolbarButtonConfigMap =
         editFragment.toolbarButtonConfigMap?.get(toolbarButtonBariantForEdit)

@@ -112,6 +112,7 @@ class EditFragment: Fragment() {
     var editExecuteValue = CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
     var enableEditExecute = false
     var currentFannelConList = emptyList<String>()
+    var settingFannelConList: List<String>? = null
     var homeFannelHistoryNameList: List<String>? = null
     var bottomScriptUrlList = emptyList<String>()
     var existIndexList: Boolean = false
@@ -119,7 +120,6 @@ class EditFragment: Fragment() {
     var toolbarButtonConfigMap: Map<ToolbarButtonBariantForEdit, Map<String, String>?>? = null
     var listIndexConfigMap: Map<String, String>? = null
     var qrDialogConfig: Map<String, String>? = null
-//    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()

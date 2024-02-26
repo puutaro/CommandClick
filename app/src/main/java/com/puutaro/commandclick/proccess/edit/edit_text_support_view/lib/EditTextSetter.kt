@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib
 
 import android.text.InputType
-import android.view.ViewGroup
+import android.util.TypedValue
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSe
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
@@ -54,8 +55,18 @@ object EditTextSetter {
         editTextPropertyMap?.get(
             EditTextPropertySettingKey.SIZE.key
         )?.let {
-            val textSize = try{it.toFloat()}catch (e: Exception){return@let }
-            insertEditText.textSize = textSize
+            val textSize = try{
+                ScreenSizeCalculator.toDp(
+                    context,
+                    it.toFloat()
+                ).toFloat()
+            }catch (e: Exception){
+                return@let
+            }
+            insertEditText.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                textSize
+            )
         }
         editTextPropertyMap?.get(
             EditTextPropertySettingKey.ON_UNDER_LINE.key
@@ -63,25 +74,25 @@ object EditTextSetter {
             if(it != UnderLineValue.OFF.name) return@let
             insertEditText.setBackgroundResource(android.R.color.transparent)
         }
-//        editTextPropertyMap?.get(
-//            EditTextPropertySettingKey.ELLIP_SIZE.key
-//        )?.let {
-//                ellipKey ->
-//            val trancate = EllipSizeSettingKey.values().firstOrNull {
-//                it.key == ellipKey
-//            }?.trancate
-//            insertEditText.ellipsize = trancate
-//        }
         insertEditText.setSelectAllOnFocus(true)
-//        insertEditText.setTextColor(Color.parseColor("#FFFFFF"))
         val layoutHeight = editTextPropertyMap?.get(
             EditTextPropertySettingKey.HEIGHT.key
         ).let {
-            val defaultHeight = ViewGroup.LayoutParams.WRAP_CONTENT
+            val defaultHeight = ScreenSizeCalculator.toDp(
+                context,
+                50
+            )
             if(
                 it.isNullOrEmpty()
             ) return@let defaultHeight
-            try {it.toInt()}catch (e: Exception){
+            try {
+                ScreenSizeCalculator.toDp(
+                    context,
+                    it.toInt()
+                )
+//                it.toInt()
+
+            }catch (e: Exception){
                 defaultHeight
             }
         }
@@ -91,10 +102,6 @@ object EditTextSetter {
         )
         linearParamsForEditTextTest.weight = editTextWeight
         insertEditText.layoutParams = linearParamsForEditTextTest
-//        addTextChangeListenerForEditText(
-//            insertEditText,
-//            currentId
-//        )
         return insertEditText
     }
 
@@ -107,25 +114,11 @@ object EditTextSetter {
         SHELL_PATH("shellPath"),
         SHELL_CON("shellCon"),
         ARGS("args"),
-//        ELLIP_SIZE("ellipSize"),
-//        .setEllipsize(TextUtils.TruncateAt.END);
     }
 
     enum class UnderLineValue {
         OFF
     }
-
-//    enum class EllipSizeSettingKey(
-//        val key: String,
-//        val trancate: TextUtils.TruncateAt?,
-//    ){
-////        end, marquee, middle, none, start
-//        END("end", TextUtils.TruncateAt.END),
-//        MARQUEE("marquee", TextUtils.TruncateAt.MARQUEE),
-//        MIDDLE("middle", TextUtils.TruncateAt.MIDDLE),
-//        START("start", TextUtils.TruncateAt.START),
-//        NONE("none", null),
-//    }
 }
 
 private object EditTextMaker {
@@ -140,13 +133,6 @@ private object EditTextMaker {
             editTextPropertyMap,
             currentVariableValue,
         )
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "editTexxt.txt").absolutePath,
-//            listOf(
-//                "editTextPropertyMap: ${editTextPropertyMap}",
-//                "shellConText: ${shellConText}",
-//            ).joinToString("\n\n")
-//        )
         return when(shellConText.isNullOrEmpty()) {
             false -> shellConText
             else -> SearchBoxSettingsForListIndex.makeCurrentVariableValueInEditText(
