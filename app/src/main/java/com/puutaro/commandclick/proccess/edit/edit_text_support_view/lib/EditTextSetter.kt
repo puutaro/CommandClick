@@ -173,15 +173,9 @@ private object EditTextMaker {
         val shellCon = when (
             shellConSrc.isNullOrEmpty()
         ) {
-            true -> {
-                editTextPropertyMap.get(
-                    EditTextSetter.EditTextPropertySettingKey.SHELL_PATH.key
-                )?.let {
-                    EditSettingExtraArgsTool
-                        .makeShellCon(editTextPropertyMap)
+            true ->
+                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
 
-                }
-            }
             else -> shellConSrc
         }?.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(

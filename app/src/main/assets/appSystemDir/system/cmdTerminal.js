@@ -194,7 +194,7 @@ function termInput(){
   const inputStr = jsDialog.prompt(
     "",
     "",
-    "variableName=termInput|concatFilePathList=${cmdTerminalCmdListFilePath}",
+    "suggest=variableName=termInput|concatFilePathList=${cmdTerminalCmdListFilePath}",
   );
   if(!inputStr) exitZero();
   jsSendKey.send(inputStr);

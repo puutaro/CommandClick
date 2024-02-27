@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.tool_bar_button
 
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
@@ -16,6 +17,7 @@ object JsActionHandler {
         mainOrSubFannelPath: String,
         jsActionPairListCon: String,
         extraRepValMap: Map<String, String>? = null,
+        webView: WebView? = null
     ){
         val jsAcKeyToSubKeyCon = QuoteTool.replaceBySurroundedIgnore(
             jsActionPairListCon,
@@ -50,6 +52,7 @@ object JsActionHandler {
             mainOrSubFannelPath,
             null,
             jsActionMap,
+            webView
         )
     }
 }

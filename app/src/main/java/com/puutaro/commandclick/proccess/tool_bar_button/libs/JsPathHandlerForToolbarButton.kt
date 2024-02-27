@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
 import android.content.Intent
 import android.view.View
+import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -31,6 +32,7 @@ import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddFileForEdit
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddGmailCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrl
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
@@ -57,7 +59,8 @@ object JsPathHandlerForToolbarButton {
         fragment: Fragment,
         mainOrSubFannelPath: String = String(),
         settingButtonView: View?,
-        jsActionMap: Map<String, String>?
+        jsActionMap: Map<String, String>?,
+        webView: WebView? = null
     ) {
         if(
             jsActionMap.isNullOrEmpty()
@@ -82,14 +85,16 @@ object JsPathHandlerForToolbarButton {
             JsActionDataMapKeyObj.JsActionDataTypeKey.JS_CON
             -> execJs(
                     fragment,
-                    jsActionMap
+                    jsActionMap,
+                    webView
                 )
         }
     }
 
     private fun execJs(
         fragment: Fragment,
-        jsActionMap: Map<String, String>
+        jsActionMap: Map<String, String>,
+        webView: WebView?
     ){
         if(
             jsActionMap.isEmpty()
@@ -112,7 +117,8 @@ object JsPathHandlerForToolbarButton {
         )
         JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
-            JavaScriptLoadUrl.makeLastJsCon(jsCon)
+            JavaScriptLoadUrl.makeLastJsCon(jsCon),
+            webView
         )
     }
 
@@ -374,6 +380,16 @@ object JsPathHandlerForToolbarButton {
                     fragment !is EditFragment
                 ) return
                 AddUrlCon.add(
+                    fragment,
+                    jsActionMap,
+                )
+            }
+            MacroForToolbarButton.Macro.ADD_GMAIL_CON
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                AddGmailCon.add(
                     fragment,
                     jsActionMap,
                 )

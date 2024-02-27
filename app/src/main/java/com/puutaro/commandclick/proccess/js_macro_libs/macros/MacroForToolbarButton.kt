@@ -8,6 +8,7 @@ object MacroForToolbarButton{
         ADD_APP_DIR,
         ADD_URL,
         ADD_URL_CON,
+        ADD_GMAIL_CON,
         ADD_URL_HISTORY,
         APP_DIR_MANAGER,
         CONFIG,

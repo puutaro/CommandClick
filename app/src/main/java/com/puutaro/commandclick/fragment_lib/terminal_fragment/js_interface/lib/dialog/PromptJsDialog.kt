@@ -17,11 +17,16 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.AutoCompleteAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -31,7 +36,7 @@ import java.io.File
 
 
 class PromptJsDialog(
-    terminalFragment: TerminalFragment
+    private val terminalFragment: TerminalFragment
 ) {
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
@@ -47,18 +52,34 @@ class PromptJsDialog(
     )
     private val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
     private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
+    private val mapSeparator = ','
     private val firstSeparator = '|'
     private val secondSeparator = '!'
 
     fun create(
         title: String,
         message: String,
-        suggestVars: String,
+        suggestOrDefoTxtVars: String,
     ): String {
-        val suggestMap = makeSuggestMap(suggestVars)
+        val promptMap = CmdClickMap.createMap(
+            suggestOrDefoTxtVars,
+            mapSeparator,
+        ).toMap()
+        val suggestMap = CmdClickMap.createMap(
+            promptMap.get(PromptMapKey.suggest.name),
+            firstSeparator
+        ).toMap()
+
+//            makeSuggestAndDefoTxtMap(suggestOrDefoTxtVars)
         val variableName = suggestMap.get(SuggestVars.variableName.name)
-        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
-        val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+//        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
+        val suggestTxtName = makeSuggestTextFileName(
+            variableName,
+        )
+//            "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+        val mainSuggestList = ReadText(
+            File(suggestDirPath, suggestTxtName).absolutePath
+        ).textToList()
         val suggestSrcListEntry = makeExtraSuggestList(
             suggestMap.get(SuggestVars.concatFilePathList.name)?.let {
                 QuoteTool.splitBySurroundedIgnore(
@@ -67,12 +88,7 @@ class PromptJsDialog(
                 )
             }
 //            .split(secondSeparator)
-        ) + ReadText(
-            File(
-                suggestDirPath,
-                suggestTxtName
-            ).absolutePath
-        ).textToList()
+        ) + mainSuggestList
         val suggestSrcList = suggestSrcListEntry.distinct()
         terminalViewModel.onDialog = true
         returnValue = String()
@@ -82,6 +98,7 @@ class PromptJsDialog(
                     execCreate(
                         title,
                         message,
+                        promptMap,
                         variableName,
                         suggestSrcList,
                     )
@@ -105,6 +122,7 @@ class PromptJsDialog(
     private fun execCreate(
         title: String,
         message: String,
+        promptMap: Map<String, String>,
         variableName: String?,
         suggestSrcList: List<String>,
     ) {
@@ -136,11 +154,25 @@ class PromptJsDialog(
             message.isNotEmpty()
         ) promptMessageTextView?.text = message
         else promptMessageTextView?.isVisible = false
-        val promptEditText =
-            promptDialogObj?.findViewById<AutoCompleteTextView>(
-                R.id.prompt_dialog_input
-            )
-        promptEditText?.requestFocus()
+
+        val editTextMap = CmdClickMap.createMap(
+            promptMap.get(PromptMapKey.editText.name),
+            firstSeparator
+        ).toMap()
+        val promptEditText = EditTextMakerForPrompt.make(
+            terminalFragment,
+            promptDialogObj,
+            editTextMap,
+        )
+//        val promptEditText =
+//            promptDialogObj?.findViewById<AutoCompleteTextView>(
+//                R.id.prompt_dialog_input
+//            )
+//
+//        promptMap.get(
+//            EditTextKey.default.name
+//        )
+//        promptEditText?.requestFocus()
         setSuggestEditText(
             promptEditText,
             suggestSrcList,
@@ -191,6 +223,7 @@ class PromptJsDialog(
         )
         promptDialogObj?.show()
     }
+
 
     private fun setSuggestEditText(
         promptEditText: AutoCompleteTextView?,
@@ -289,9 +322,14 @@ class PromptJsDialog(
     ){
         val trimedReturnValue =
             returnValue.trim()
-        if(variableName.isNullOrEmpty()) return
-        val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
-        val suggestTxtName = "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+        if(
+            variableName.isNullOrEmpty()
+        ) return
+//        val prefixUpperVariableName = variableName.replaceFirstChar { it.uppercase() }
+        val suggestTxtName = makeSuggestTextFileName(
+            variableName,
+        )
+//            "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
         FileSystems.createDirs(
             suggestDirPath
         )
@@ -312,25 +350,14 @@ class PromptJsDialog(
         )
     }
 
-    private fun makeSuggestMap(
-        suggestVars: String,
-    ): Map<String, String> {
-        return CmdClickMap.createMap(
-            suggestVars,
-            firstSeparator
-        ).toMap()
-//        QuoteTool.splitBySurroundedIgnore(
+//    private fun makeSuggestAndDefoTxtMap(
+//        suggestVars: String,
+//    ): Map<String, String> {
+//        return CmdClickMap.createMap(
 //            suggestVars,
 //            firstSeparator
-//        )
-////        suggestVars.split(firstSeparator)
-//            .map {
-//            CcScript.makeKeyValuePairFromSeparatedString(
-//                it,
-//                "="
-//            )
-//        }.toMap()
-    }
+//        ).toMap()
+//    }
 
     private fun makeNoEmptyList(
         trimedReturnValue: String,
@@ -347,8 +374,116 @@ class PromptJsDialog(
         ) return listOf(trimedReturnValue) + curSuggestList
         return curSuggestList
     }
+
+    private fun makeSuggestTextFileName(
+        variableName: String?,
+    ): String {
+        val prefixUpperVariableName = variableName?.replaceFirstChar { it.uppercase() }
+        return "${suggestPrefix}${prefixUpperVariableName}${suggestTxtSuffix}"
+    }
 }
 
+private object EditTextMakerForPrompt {
+    fun make(
+        terminalFragment: TerminalFragment,
+        promptDialogObj: Dialog?,
+        editTextMap: Map<String, String>,
+    ): AutoCompleteTextView? {
+        val promptEditText =
+            promptDialogObj?.findViewById<AutoCompleteTextView>(
+                R.id.prompt_dialog_input
+            ) ?: return null
+        val setTextSrc = editTextMap.get(
+            EditTextKey.default.name
+        )
+        val setText = when(setTextSrc.isNullOrEmpty()){
+            true -> makeTextByShell(
+                terminalFragment,
+                editTextMap
+            )
+            else -> setTextSrc
+        }
+        if(
+            !setText.isNullOrEmpty()
+        ){
+            promptEditText.setText(setText)
+        }
+        promptEditText.requestFocus()
+        return promptEditText
+    }
+
+    fun makeTextByShell(
+        terminalFragment: TerminalFragment,
+        editTextMap: Map<String, String>,
+    ): String? {
+        val context = terminalFragment.context
+            ?: return null
+        val mainOrSubFannelPath = editTextMap.get(
+            EditTextKey.fannelPath.name
+        )
+        val setReplaceVariableMap = when(
+            mainOrSubFannelPath.isNullOrEmpty()
+        ){
+            true -> emptyMap()
+            else -> SetReplaceVariabler
+                .makeSetReplaceVariableMapFromSubFannel(
+                    mainOrSubFannelPath
+                )
+        }
+        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(
+            terminalFragment,
+            mainOrSubFannelPath
+        )
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
+            readSharePreferenceMap
+        )
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
+            readSharePreferenceMap
+        )
+
+        val shellCon = editTextMap.get(
+            EditTextKey.shellPath.name
+        )?.let {
+            EditSettingExtraArgsTool.makeShellCon(editTextMap)
+        }?.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableMap,
+                currentAppDirPath,
+                currentFannelName
+            )
+        } ?: return null
+        val busyboxExecutor = BusyboxExecutor(
+            context,
+            UbuntuFiles(context),
+        )
+        val repValMap = editTextMap.get(
+            EditTextKey.repValCon.name
+        ).let {
+            CmdClickMap.createMap(
+                it,
+                '&'
+            )
+        }.toMap()
+        return busyboxExecutor.getCmdOutput(
+            shellCon,
+            repValMap
+        )
+    }
+}
+
+
+private enum class PromptMapKey {
+    suggest,
+    editText,
+}
+
+private enum class EditTextKey {
+    default,
+    shellPath,
+    fannelPath,
+    repValCon,
+}
 private enum class SuggestVars {
     variableName,
     concatFilePathList

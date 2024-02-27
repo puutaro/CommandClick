@@ -722,6 +722,7 @@ class WebViewJsDialog(
             terminalFragment,
             execJsPath,
             ReadText(execJsPath).textToList(),
+            webView = webView
         )
     }
 

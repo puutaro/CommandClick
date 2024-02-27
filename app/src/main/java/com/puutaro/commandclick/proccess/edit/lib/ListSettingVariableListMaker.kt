@@ -11,12 +11,15 @@ import java.io.File
 object ListSettingVariableListMaker {
 
     private val filePrefix = EditSettings.filePrefix
+    private val setReplaceVariableValName =
+        CommandClickScriptVariable.SET_REPLACE_VARIABLE
 
     fun makeFromSettingVariableList(
         settingVariableName: String,
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         settingVariablesList: List<String>?,
+        onImport: Boolean = true
     ): List<String> {
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
@@ -48,7 +51,8 @@ object ListSettingVariableListMaker {
                     SettingFile.read(
                         listSettingVariablePath,
                         File(currentAppDirPath, currentFannelName).absolutePath,
-                        setReplaceVariableMap
+                        setReplaceVariableMap,
+                        onImport
                     )
                 }
             }.let {
@@ -140,7 +144,7 @@ object ListSettingVariableListMaker {
         variableName: String,
     ): String {
         return when(variableName){
-            CommandClickScriptVariable.SET_REPLACE_VARIABLE,
+            setReplaceVariableValName,
                 -> File(
                 UsePath.fannelSettingVariablsDirPath,
                 UsePath.setReplaceVariablesConfig

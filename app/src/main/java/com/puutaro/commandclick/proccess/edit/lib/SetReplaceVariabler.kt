@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.edit.lib
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
@@ -14,6 +15,8 @@ import java.io.File
 
 object SetReplaceVariabler {
 
+    private val importPreWord = SettingFileVariables.importPreWord
+
     fun makeSetReplaceVariableMap(
         settingVariableList: List<String>?,
         currentAppDirPath: String,
@@ -22,15 +25,46 @@ object SetReplaceVariabler {
         if(
             settingVariableList.isNullOrEmpty()
         ) return null
+
         val readSharePrefMap = mapOf(
             SharePrefferenceSetting.current_app_dir.name to currentAppDirPath,
             SharePrefferenceSetting.current_fannel_name.name to currentScriptFileName,
         )
+        val noImportRepValMap = execMakeSetReplaceVariableMap(
+            settingVariableList,
+            readSharePrefMap,
+            null,
+            false
+        )
+        if(
+            noImportRepValMap.isNullOrEmpty()
+        ) return null
+        if(
+            !noImportRepValMap.containsKey(importPreWord)
+        ) return noImportRepValMap
+        return execMakeSetReplaceVariableMap(
+            settingVariableList,
+            readSharePrefMap,
+            noImportRepValMap,
+            true
+        )
+    }
+
+    private fun execMakeSetReplaceVariableMap(
+        settingVariableList: List<String>?,
+        readSharePrefMap: Map<String, String>,
+        noImportRepValMap: Map<String, String>?,
+        onImport: Boolean
+    ): Map<String, String>? {
+        if(
+            settingVariableList.isNullOrEmpty()
+        ) return null
         val setReplaceVariableMapBeforeRecursiveReplace = ListSettingVariableListMaker.makeFromSettingVariableList(
             CommandClickScriptVariable.SET_REPLACE_VARIABLE,
             readSharePrefMap,
-            null,
+            noImportRepValMap,
             settingVariableList,
+            onImport
         ).joinToString(",")
             .let {
                 convertReplaceVariableConToMap(

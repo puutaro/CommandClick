@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.ReadText
@@ -7,16 +8,23 @@ import java.io.File
 
 object SettingFile {
 
-    val importPreWord = "settingimport"
+    private val importPreWord = SettingFileVariables.importPreWord
 
     fun read(
         settingFilePath: String,
         fannelPath: String,
-        setReplaceVariableCompleteMap: Map<String, String>?
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        onImport: Boolean = true
     ): String {
-        return ReadText(
+        val firstSettingCon = ReadText(
             settingFilePath
-        ).textToList().map {
+        ).textToList()
+        return settingConFormatter(
+            firstSettingCon
+        ).map {
+            if(
+                !onImport
+            ) return@map it
             importSetting(
                 it,
                 fannelPath,
@@ -40,6 +48,24 @@ object SettingFile {
             )
         }.let {
             formSettingContents(it)
+        }
+    }
+
+    private fun settingConFormatter(
+        settingConList: List<String>,
+    ): List<String> {
+        return settingConList.map {
+            it.trim()
+        }.filter {
+            it.isNotEmpty()
+                && !it.startsWith("#")
+                && !it.startsWith("//")
+        }.joinToString("").let {
+            QuoteTool.replaceBySurroundedIgnore(
+                it,
+                ',',
+                ",\n"
+            ).split("\n")
         }
     }
 

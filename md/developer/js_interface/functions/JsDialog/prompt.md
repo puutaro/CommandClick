@@ -7,10 +7,15 @@ Table
 * [Argument](#argument)
   * [title](#title)
   * [message](#message)
-  * [suggestVars](#suggestVars)
+  * [promptMapCon](#promptmapcon)
     * [Key](#key)
     * [Format](#format)
-
+  * [editText](#edittext)
+    * [Key](#edit_text_key)
+    * [Format](#edit_text_format)  
+  * [suggest](#suggest)
+    * [Key](#suggest_key)
+    * [Format](#suggest_format)
 
 ## Result
 
@@ -21,10 +26,10 @@ Show prompt dialog with suggest
 ```js.js
 
 jsDialog.prompt(
-	title: String,
-        message: String,
-        suggestVars: String,
-  )
+  title: String,
+  message: String,
+  promptMapCon: String,
+)
 	- launch prompt dialog
 ```
 
@@ -45,11 +50,44 @@ dialog message
 current fannel(script) path  
 - [About fannel](https://github.com/puutaro/commandclick-repository#commandclick-repository)
 
-### suggestVars
+### promptMapCon
 
 You can add as many menu buttons as you like  
 
+
 #### Key
+
+| key | val type | description |  
+| ------- | ------- | ------- |  
+| `editText` | string | edit text setting |  
+| `suggest` | string | suggest setting |  
+
+#### Format
+
+Use `,` as sepalator
+
+
+### editText
+
+
+#### Key <a id="edit_text_key"></a>
+
+| key | val type | description |  
+| ------- | ------- | ------- |  
+| `default` | string | defualt string |  
+| `shellPath` | string | shell path for set text |  
+| `fannelPath` | string | fannel path in using shell |  
+| `repValCon` | string | replace variable con in using shell |  
+
+
+#### Format <a id="edit_text_format"></a>
+
+Use `!` as sepalator
+
+
+### suggest
+
+#### Key <a id="suggest_key"></a>
 
 | key | val type | description |  
 | ------- | ------- | ------- |  
@@ -67,7 +105,8 @@ extra suggest 3
 .
 .
 ```
-#### Format
+
+#### Format <a id="suggest_format"></a>
 
 Use `!` as sepalator
 
@@ -87,6 +126,7 @@ ex2) suggest
 jsDialog.prompt(
     "",
     "",
-    "variableName=suggestCmdVariable!concatFilePathList=${01}/${001}/extraSuggust.txt",
+    "suggest=variableName=suggestCmdVariable|
+    concatFilePathList=${01}/${001}/extraSuggust.txt",
 );
 ```
