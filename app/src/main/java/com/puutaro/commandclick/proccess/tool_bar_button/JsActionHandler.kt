@@ -8,7 +8,6 @@ import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForTo
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
-import java.io.File
 
 object JsActionHandler {
     fun handle(
