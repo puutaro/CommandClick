@@ -12,10 +12,10 @@ object JsActionKeyManager {
         JS_CON("jsCon"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
-        JS_TSV_IMPORT("jsTsvImport"),
-        JS_ACTIONS_IMPORT("jsActionsImport"),
-        JS_OVERRIDE("jsOverride"),
-        JS_REPLACE("jsReplace")
+        TSV_IMPORT("tsvImport"),
+        ACTION_IMPORT("actionImport"),
+        OVERRIDE("override"),
+        REPLACE("replace")
     }
 
     enum class JsSubKey(
@@ -55,7 +55,8 @@ object JsActionKeyManager {
             val overrideMapSrc = overrideMapList.lastOrNull { map ->
                 val overrideIdList = map.get(
                     idKeyName
-                )?.split("&") ?: return@lastOrNull false
+                )?.split("&")
+                    ?: return@lastOrNull false
                 overrideIdList.contains(id)
             } ?: return emptyMap()
             return overrideMapSrc.map {

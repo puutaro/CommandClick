@@ -22,8 +22,8 @@ object JsActionTool {
     private val jsActionShiban =
         CommandClickScriptVariable.jsActionShiban
     private val jsKeyName = JsActionKeyManager.JsActionsKey.JS.key
-    private val jsReplaceKeyName = JsActionKeyManager.JsActionsKey.JS_REPLACE.key
-    private val jsOverrideKeyName = JsActionKeyManager.JsActionsKey.JS_OVERRIDE.key
+    private val jsReplaceKeyName = JsActionKeyManager.JsActionsKey.REPLACE.key
+    private val jsOverrideKeyName = JsActionKeyManager.JsActionsKey.OVERRIDE.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
     private val jsConKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
@@ -516,7 +516,7 @@ object JsActionTool {
             keyToSubKeyConListWithoutAfterSubKey.isNullOrEmpty()
         ) return null
         val tsvImportCon = ImportConMaker.make(
-            JsActionKeyManager.JsActionsKey.JS_TSV_IMPORT.key
+            JsActionKeyManager.JsActionsKey.TSV_IMPORT.key
                     to TsvImportManager.tsvImportPreWord,
             keyToSubKeyConListWithoutAfterSubKey
         )
@@ -831,7 +831,7 @@ private object KeyToSubKeyConListMaker {
         )
         val importRoopLimit = 5
         var containImport = false
-        val jsActionsKeyName = JsActionKeyManager.JsActionsKey.JS_ACTIONS_IMPORT.key
+        val jsActionsKeyName = JsActionKeyManager.JsActionsKey.ACTION_IMPORT.key
         val jsActionImportSignal = "${jsActionsKeyName}="
         var keyToSubKeyConList = keyToSubKeyConListSrc
         for( i in 1..importRoopLimit) {
