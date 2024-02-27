@@ -3,6 +3,8 @@ package com.puutaro.commandclick.util
 import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -374,12 +376,22 @@ object JavaScriptLoadUrl {
     fun makeLastJsCon(
         loadJsUrl: String
     ): String {
+        val jsDebugActionName = BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action
+        val jsDebugExtraMapCon =
+            listOf(
+                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme,
+                BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level,
+            ).joinToString("=")
+
+        "${BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action}\", \"${BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme}=${BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level}"
         return "javascript:(function() { " +
                     "try{${loadJsUrl}} catch(error){" +
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
-                        "jsFileSystem.errLog(errMessage)" +
+                        "jsFileSystem.revUpdateFile(\"${UsePath.execDebugJsPath}\", `\\n[ERROR]\\n${'$'}{errMessage}\\n\\n#########\\n\\n`);" +
+                        "jsBroadcast.send(\"${jsDebugActionName}\", \"${jsDebugExtraMapCon}\");" +
+                        "jsFileSystem.errLog(errMessage);" +
                     "};" +
                 "})();"
     }

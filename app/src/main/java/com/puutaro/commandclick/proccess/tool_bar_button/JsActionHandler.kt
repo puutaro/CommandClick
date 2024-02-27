@@ -35,15 +35,20 @@ object JsActionHandler {
             setReplaceVariableMap,
             extraRepValMap
         )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "jsAC.txt").absolutePath,
-            listOf(
-                "jsAcKeyToSubKeyCon: ${jsAcKeyToSubKeyCon}",
-                "mainOrSubFannelPath: ${mainOrSubFannelPath}",
-                "jsActionPairListCon: ${jsActionPairListCon}",
-                "jsActionMap: ${jsActionMap}"
-            ).joinToString("\n\n")
+        jsActionLog(
+            jsAcKeyToSubKeyCon,
+            jsActionMap
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsAC.txt").absolutePath,
+//            listOf(
+//                "jsAcKeyToSubKeyCon: ${jsAcKeyToSubKeyCon}",
+//                "mainOrSubFannelPath: ${mainOrSubFannelPath}",
+//                "jsActionPairListCon: ${jsActionPairListCon}",
+//                "jsActionMap: ${jsActionMap}",
+//                "UsePath.execDebugJsPath,: ${UsePath.execDebugJsPath}",
+//            ).joinToString("\n\n")
+//        )
         if(
             jsActionMap.isNullOrEmpty()
         ) return
@@ -53,6 +58,30 @@ object JsActionHandler {
             null,
             jsActionMap,
             webView
+        )
+    }
+
+    private fun jsActionLog(
+        jsAcKeyToSubKeyCon: String,
+        jsActionMap: Map<String, String>?
+    ){
+        val separator = "----------"
+        val jsActionMapLogCon = jsActionMap?.filterKeys {
+            it.isNotEmpty()
+        }?.map {
+            listOf(
+                "${it.key}: ${it.value}",
+                separator
+            ).joinToString("\n")
+        }?.joinToString("\n\n")
+        FileSystems.writeFile(
+            UsePath.execDebugJsPath,
+            listOf(
+                "jsAction",
+                jsActionMapLogCon,
+                separator,
+                "src: ${jsAcKeyToSubKeyCon}",
+            ).joinToString("\n\n") + "\n\n#########\n\n"
         )
     }
 }

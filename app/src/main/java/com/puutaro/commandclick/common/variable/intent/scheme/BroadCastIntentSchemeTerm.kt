@@ -27,5 +27,17 @@ enum class BroadCastIntentSchemeTerm(
     MONITOR_TOAST(
         "com.puutaro.commandclick.monitorToast.launch",
         "message"
+    ),
+    JS_DEBUG_NOTI(
+    "com.puutaro.commandclick.js_debug.noti",
+    "noti"
+    ),
+    JS_DEBUG_WATCH(
+        "com.puutaro.commandclick.js_debug.watch",
+        "watch"
+    ),
+    JS_DEBUG_CLOSE(
+    "com.puutaro.commandclick.js_debug.close",
+    "close"
     )
 }

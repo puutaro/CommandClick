@@ -108,13 +108,13 @@ object JsPathHandlerForToolbarButton {
         if(
             jsCon.isNullOrEmpty()
         ) return
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "js_execJs.txt").absolutePath,
-            listOf(
-                "jsConSrc: ${jsConSrc}",
-                "jsCon: ${jsCon}",
-            ).joinToString("\n\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "js_execJs.txt").absolutePath,
+//            listOf(
+//                "jsConSrc: ${jsConSrc}",
+//                "jsCon: ${jsCon}",
+//            ).joinToString("\n\n\n")
+//        )
         JavascriptExecuter.jsUrlLaunchHandler(
             fragment,
             JavaScriptLoadUrl.makeLastJsCon(jsCon),

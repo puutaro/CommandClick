@@ -282,6 +282,9 @@ class   TerminalFragment: Fragment() {
                 BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,
                 BroadCastIntentSchemeTerm.MONITOR_MANAGER.action,
                 BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
+                BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action,
+                BroadCastIntentSchemeTerm.JS_DEBUG_WATCH.action,
+                BroadCastIntentSchemeTerm.JS_DEBUG_CLOSE.action,
             )
         )
         previousTerminalTag = tag

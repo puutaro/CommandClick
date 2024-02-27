@@ -26,6 +26,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.ExecDownLoadManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.WebChromeClientSetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.html.TxtHtmlDescriber
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog_js_interface.JsWebViewDialogManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.JsInterfaceAdder
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.LongPressForImage
@@ -79,7 +80,7 @@ class WebViewJsDialog(
             || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
             || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
-            || urlStrSrc.startsWith(UriPrefix.TEXT_CON.prefix)
+            || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
         ) urlStrSrc
         else "${WebUrlVariables.queryUrl}${urlStrSrc}"
         CoroutineScope(Dispatchers.Main).launch{
@@ -739,24 +740,27 @@ class WebViewJsDialog(
         webView: WebView,
         urlCon: String,
     ){
-        val textConUriPrefix = UriPrefix.TEXT_CON.prefix
-        val mdConUriPrefix = UriPrefix.MD_CON.prefix
+        val textConWevViewDialogUriPrefix = WevViewDialogUriPrefix.TEXT_CON.prefix
+        val mdConWevViewDialogUriPrefix = WevViewDialogUriPrefix.MD_CON.prefix
         val trimUrlCon = urlCon.trim()
         when(true){
-            trimUrlCon.startsWith(textConUriPrefix) -> {
-                val textUrl = UriPrefix.TEXT_CON.url
-                val removePrefixCon = trimUrlCon.removePrefix(textConUriPrefix)
+            trimUrlCon.startsWith(textConWevViewDialogUriPrefix) -> {
+                val textUrl = WevViewDialogUriPrefix.TEXT_CON.url
+                val removePrefixCon = trimUrlCon.removePrefix(textConWevViewDialogUriPrefix)
                 webView.loadDataWithBaseURL(
                     textUrl,
-                    removePrefixCon,
+                    TxtHtmlDescriber.make(
+                        removePrefixCon,
+                        terminalFragment
+                    ),
                     "text/html",
                     "utf-8",
                     textUrl
                 )
             }
-            trimUrlCon.startsWith(mdConUriPrefix) -> {
-                val mdUrl = UriPrefix.MD_CON.url
-                val removePrefixCon = trimUrlCon.removePrefix(mdConUriPrefix)
+            trimUrlCon.startsWith(mdConWevViewDialogUriPrefix) -> {
+                val mdUrl = WevViewDialogUriPrefix.MD_CON.url
+                val removePrefixCon = trimUrlCon.removePrefix(mdConWevViewDialogUriPrefix)
                 webView.loadDataWithBaseURL(
                     mdUrl,
                     removePrefixCon,
@@ -809,7 +813,7 @@ enum class JsMacroType(val str: String,) {
     HIGHLIGHT_COPY_JS("HIGHLIGHT_COPY.js")
 }
 
-private enum class UriPrefix(
+enum class WevViewDialogUriPrefix(
     val prefix: String,
     val url: String,
 ) {

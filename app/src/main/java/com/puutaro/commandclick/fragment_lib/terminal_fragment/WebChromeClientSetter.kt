@@ -18,12 +18,14 @@ import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -124,6 +126,24 @@ object WebChromeClientSetter {
                             listOf(
                                 BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
                                         to output
+                            )
+                        )
+                    }
+                    withContext(Dispatchers.IO) {
+                        val execDebugJsPath = UsePath.execDebugJsPath
+                        val jsDebugCon = ReadText(
+                            execDebugJsPath
+                        ).readText()
+                        FileSystems.writeFile(
+                            execDebugJsPath,
+                            "\n[ERROR]\n${output}\n\n#########\n\n${jsDebugCon}"
+                        )
+                        BroadcastSender.normalSend(
+                            context,
+                            BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action,
+                            listOf(
+                                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme
+                                        to BroadCastIntentExtraForJsDebug.DebugLevelType.LOW.level,
                             )
                         )
                     }

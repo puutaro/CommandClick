@@ -52,6 +52,11 @@ object UsePath {
     private const val cmdclickTmpTextToSpeechDirName = "textToSpeech"
     private const val cmdclickTempTextToSpeechRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpTextToSpeechDirName"
     val cmdclickTempTextToSpeechDirPath = "$rootPath/$cmdclickTempTextToSpeechRelativeDirPath"
+    private const val cmdclickTmpDebugDirName = "debug"
+    private const val cmdclickTempDebugRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpDebugDirName"
+    private const val execDebugJsName = "debugJs.txt"
+    private const val execDebugRelativeJsPath = "${cmdclickTempDebugRelativeDirPath}/${execDebugJsName}"
+    val execDebugJsPath = "${rootPath}/${execDebugRelativeJsPath}"
     private const val cmdclickTmpTextHtmlDirName = "txtHtml"
     private const val cmdclickTextHtmlRelativeDirPath = "$cmdclickTempRelativePath/$cmdclickTmpTextHtmlDirName"
     val cmdclickTextHtmlDirPath = "$rootPath/$cmdclickTextHtmlRelativeDirPath"
@@ -207,9 +212,6 @@ object UsePath {
     val qrPngRelativePath = "$qrDirName/$qrPngName"
     val qrDesignFileName = "qrDesign.txt"
     val qrDesignRelativePath = "$qrDirName/$qrDesignFileName"
-    val fDialogTempFannelName = "fDialogTempFannel${JS_FILE_SUFFIX}"
-    val fDialogSrcSharePrefTsv =
-        "fDialogSrcSharePrefTsv.tsv"
 
     fun makeOmitPath(
         path: String

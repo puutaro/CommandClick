@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.BroadcastHtmlReceiveHandler
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.HtmlLauncher
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorBroadcastManager
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorTextLauncher
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.MonitorToast
@@ -38,6 +39,21 @@ object BroadcastHandlerForTerm {
             )
             BroadCastIntentSchemeTerm.MONITOR_TOAST.action
             -> MonitorToast.launch(
+                terminalFragment,
+                intent
+            )
+            BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action
+            -> JsDebugger.launchNoti(
+                terminalFragment,
+                intent,
+            )
+            BroadCastIntentSchemeTerm.JS_DEBUG_WATCH.action
+            -> JsDebugger.watch(
+                terminalFragment,
+                intent,
+            )
+            BroadCastIntentSchemeTerm.JS_DEBUG_CLOSE.action
+            -> JsDebugger.close(
                 terminalFragment,
                 intent
             )

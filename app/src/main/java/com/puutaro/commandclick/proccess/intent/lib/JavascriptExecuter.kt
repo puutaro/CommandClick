@@ -116,15 +116,15 @@ object JavascriptExecuter {
             fragment,
             execJsPath
         )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
-            listOf(
-                "execJsPath: ${execJsPath}",
-                "jsContentsListSource: ${execJsConList}",
-                "extraMapCon: ${extraMapCon}",
-                "isJsAction: ${isJsAction}"
-            ).joinToString("\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
+//            listOf(
+//                "execJsPath: ${execJsPath}",
+//                "jsContentsListSource: ${execJsConList}",
+//                "extraMapCon: ${extraMapCon}",
+//                "isJsAction: ${isJsAction}"
+//            ).joinToString("\n\n")
+//        )
         when(isJsAction){
             true -> {
                 val setReplaceVariableMap =
@@ -147,14 +147,24 @@ object JavascriptExecuter {
                 )
             }
             else -> {
+                val execJsCon = JavaScriptLoadUrl.make(
+                    context,
+                    execJsPath,
+                    execJsConList,
+                    extraRepValMap = extraMapCon
+                ) ?: String()
+                val separator = "----------"
+                FileSystems.writeFile(
+                    UsePath.execDebugJsPath,
+                    listOf(
+                        "Normal js",
+                        separator,
+                        execJsCon,
+                    ).joinToString("\n") + "\n#########\n"
+                )
                 jsUrlLaunchHandler(
                     fragment,
-                    JavaScriptLoadUrl.make(
-                        context,
-                        execJsPath,
-                        execJsConList,
-                        extraRepValMap = extraMapCon
-                    ) ?: String(),
+                    execJsCon,
                     webView
                 )
             }
