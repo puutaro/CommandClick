@@ -64,6 +64,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSystemFannel
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsConfigEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsExit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
@@ -76,6 +77,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tool
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsProcessKiller
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsUrlAdder
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.tsv.JsTsv
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 
 object JsInterfaceAdder {
@@ -217,6 +219,10 @@ object JsInterfaceAdder {
             terminalFragment,
             webView
         )
+        tsvAdder(
+            terminalFragment,
+            webView
+        )
     }
 
     private fun dialogAdder(
@@ -353,6 +359,10 @@ object JsInterfaceAdder {
             webView,
             JsAction(terminalFragment)
         )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsExit(terminalFragment)
+        )
     }
 
     private fun toolbarAdder(
@@ -455,5 +465,16 @@ object JsInterfaceAdder {
             webView,
             JsQrLogoEdit(terminalFragment)
         )
+    }
+
+    private fun tsvAdder(
+        terminalFragment: TerminalFragment,
+        webView: WebView
+    ){
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsTsv(terminalFragment)
+        )
+
     }
 }

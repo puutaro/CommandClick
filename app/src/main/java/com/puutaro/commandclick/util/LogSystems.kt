@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.util
 
 import android.content.Context
-import com.puutaro.commandclick.common.variable.LogVal
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -18,7 +18,7 @@ object LogSystems {
 
     private val cmdclickMonitorDirPath = UsePath.cmdclickMonitorDirPath
     private val sysLogFileName = UsePath.cmdClickMonitorFileName_2
-    val logPrefix = LogVal.logPrefix
+    val logPrefix = LogTool.logPrefix
 
 
     fun stdSys(
@@ -46,7 +46,7 @@ object LogSystems {
         notiLevel: String = BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level
     ){
         val st = Thread.currentThread().stackTrace[3]
-        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${LogVal.errMark}\n${errContents}"
+        val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${LogTool.errMark}\n${errContents}"
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(

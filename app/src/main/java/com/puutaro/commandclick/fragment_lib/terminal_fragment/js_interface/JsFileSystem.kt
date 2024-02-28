@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
-import com.puutaro.commandclick.common.variable.LogVal
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -191,8 +191,8 @@ class JsFileSystem(
         path: String,
         con: String,
     ){
-        val errEvidence = LogVal.preTagHolder.format(
-            LogVal.errRedCode,
+        val errEvidence = LogTool.preTagHolder.format(
+            LogTool.errRedCode,
             con
         )
         val saveCon = errEvidence + ReadText(

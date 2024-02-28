@@ -5,7 +5,7 @@ import android.app.NotificationChannel
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.puutaro.commandclick.common.variable.LogVal
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -177,9 +177,9 @@ object JsDebugger {
         val logPrefixRegex = Regex(
             "^${LogSystems.logPrefix}"
         )
-        val preTagHolder = LogVal.preTagHolder
-        val spanTagHolder = LogVal.spanTagHolder
-        val errMark = LogVal.errMark
+        val preTagHolder = LogTool.preTagHolder
+        val spanTagHolder = LogTool.spanTagHolder
+        val errMark = LogTool.errMark
         var times = 0
         val sysLogCon = ReadText(
             File(
@@ -204,8 +204,8 @@ object JsDebugger {
                 index, s -> index > 0
             }.joinToString("\n")
             val leadColorStr =
-                LogVal.makeLeadColorCode(times)
-            val colorStr = LogVal.makeColorCode(
+                LogTool.makeLeadColorCode(times)
+            val colorStr = LogTool.makeColorCode(
                 times
             )
             times++
@@ -222,7 +222,7 @@ object JsDebugger {
         }.joinToString("\n").replace(
             errMark,
             spanTagHolder.format(
-                LogVal.errRedCode,
+                LogTool.errRedCode,
                 errMark
             )
         ).replace(

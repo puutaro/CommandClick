@@ -3,9 +3,7 @@ package com.puutaro.commandclick.util
 import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
-import com.puutaro.commandclick.common.variable.LogVal
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -384,7 +382,7 @@ object JavaScriptLoadUrl {
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
-                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[${LogVal.errMark}]\\n${'$'}{errMessage}\\n\\n`);" +
+                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[${LogTool.errMark}]\\n${'$'}{errMessage}\\n\\n`);" +
                         "jsFileSystem.errJsLog(errMessage);" +
                     "};" +
                 "})();"

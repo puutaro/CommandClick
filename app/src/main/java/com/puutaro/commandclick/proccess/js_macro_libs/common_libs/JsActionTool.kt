@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
 import TsvImportManager
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -123,8 +124,14 @@ object JsActionTool {
 //        )
         if(
             !macroDataMap.isNullOrEmpty()
-        ) return macroDataMap
-        return extractJsDataMap(
+        ) {
+            LogTool.jsActionLog(
+                keyToSubKeyCon,
+                macroDataMap
+            )
+            return macroDataMap
+        }
+        val jsActionMap = extractJsDataMap(
             fragment,
             readSharePreferenceMap,
             setReplaceVariableMap,
@@ -133,6 +140,11 @@ object JsActionTool {
             overrideMapList,
             jsRepValMap,
         )
+        LogTool.jsActionLog(
+            keyToSubKeyCon,
+            jsActionMap
+        )
+        return jsActionMap
     }
 
     private fun concatRepValMap(

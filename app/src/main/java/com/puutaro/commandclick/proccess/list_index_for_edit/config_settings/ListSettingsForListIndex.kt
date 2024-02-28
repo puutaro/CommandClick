@@ -286,7 +286,7 @@ object ListSettingsForListIndex  {
             val tsvConListSrc = ReadText(
                 tsvFilePath
             ).textToList().let {
-                filterByColumnNum(
+                TsvTool.filterByColumnNum(
                     it,
                     2
                 )
@@ -493,7 +493,7 @@ private object CompPathManager {
             }
             else -> return fileList
         }.let {
-            filterByColumnNum(
+            TsvTool.filterByColumnNum(
                 it,
                 1
             )
@@ -537,7 +537,7 @@ private object CompPathManager {
             }
             else -> return tsvConList
         }.let {
-            filterByColumnNum(
+            TsvTool.filterByColumnNum(
                 it,
                 2
             )
@@ -610,15 +610,5 @@ private object CompPathManager {
             insertInitTsvConList.isEmpty()
         ) return conList
         return conList + insertInitTsvConList
-    }
-}
-
-
-private fun filterByColumnNum(
-    srcList: List<String>,
-    columnNum: Int,
-): List<String>{
-    return srcList.filter {
-        it.split("\t").size == columnNum
     }
 }

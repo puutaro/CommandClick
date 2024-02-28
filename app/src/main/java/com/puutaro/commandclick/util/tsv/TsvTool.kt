@@ -5,6 +5,8 @@ import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
 object TsvTool {
+
+    private val twoColumnNum = 2
     fun updateTsv(
         tsvPath: String?,
         listIndexList: List<String>,
@@ -110,5 +112,45 @@ object TsvTool {
                 it.startsWith(title)
             } == index
         }
+    }
+
+    fun filterByColumnNum(
+        srcList: List<String>,
+        columnNum: Int,
+    ): List<String>{
+        return srcList.filter {
+            it.split("\t").size == columnNum
+        }
+    }
+
+    fun getFirstValue(
+        path: String,
+    ): String {
+        return getFirstLine(path)
+            .split("\t")
+            .getOrNull(1)
+            ?: String()
+    }
+
+    fun getFirstKey(
+        path: String,
+    ): String {
+        return getFirstLine(path)
+            .split("\t")
+            .getOrNull(0)
+            ?: String()
+    }
+
+    fun getFirstLine(
+        path: String,
+    ): String {
+        return ReadText(
+            path
+        ) .textToList().let {
+            filterByColumnNum(
+                it,
+                twoColumnNum
+            )
+        }.firstOrNull() ?: String()
     }
 }
