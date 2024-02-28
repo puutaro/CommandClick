@@ -57,7 +57,10 @@ class ImageJsDialog(
                         imageSrcFilePath
                     )
                 } catch (e: Exception){
-                    LogSystems.stdErr(e.toString())
+                    LogSystems.stdErr(
+                        context,
+                        e.toString()
+                    )
                 }
             }
             withContext(Dispatchers.IO) {
@@ -151,6 +154,7 @@ class ImageJsDialog(
             }
             IntentVariant.sharePngImage(
                 file,
+                context,
                 activity
             )
         }

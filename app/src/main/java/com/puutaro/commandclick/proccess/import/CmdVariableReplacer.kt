@@ -22,7 +22,6 @@ object CmdVariableReplacer {
 
 
     fun replace(
-        context: Context?,
         scriptPath: String,
         setReplaceVariableCompleteMap: Map<String, String>? = null
     ): Map<String, String>? {

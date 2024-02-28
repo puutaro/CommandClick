@@ -55,7 +55,9 @@ object ProcessManager {
     fun finishProcessForSleep(
         ubuntuService: UbuntuService
     ){
-        LinuxCmd.killProcess(ubuntuService.packageName)
+        LinuxCmd.killProcess(
+            ubuntuService.applicationContext
+        )
         PcPulseSetServerForUbuntu.exit()
         killAllCoroutineJob(ubuntuService)
         PcPulseSetServer.exit()

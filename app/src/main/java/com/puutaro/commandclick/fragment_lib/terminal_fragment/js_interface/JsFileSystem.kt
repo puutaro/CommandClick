@@ -2,10 +2,12 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
+import com.puutaro.commandclick.common.variable.LogVal
+import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -89,7 +91,28 @@ class JsFileSystem(
     fun errLog(
         con: String
     ){
-        LogSystems.stdErr(con)
+        val jsDebugActionName = BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action
+        val jsDebugExtraMapCon =
+            listOf(
+                BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme,
+                BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level,
+            ).joinToString("=")
+
+        LogSystems.stdErr(
+            context,
+            con
+        )
+    }
+
+    @JavascriptInterface
+    fun errJsLog(
+        con: String
+    ){
+        LogSystems.stdErr(
+            context,
+            con,
+            debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type
+        )
     }
 
     @JavascriptInterface
@@ -168,7 +191,11 @@ class JsFileSystem(
         path: String,
         con: String,
     ){
-        val saveCon = con + ReadText(
+        val errEvidence = LogVal.preTagHolder.format(
+            LogVal.errRedCode,
+            con
+        )
+        val saveCon = errEvidence + ReadText(
             path
         ).readText()
         FileSystems.writeFile(

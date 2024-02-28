@@ -102,6 +102,7 @@ class GitCloneService: Service() {
             withContext(Dispatchers.IO) {
                 isProgressCancel = false
                 kGitClone(
+                    context,
                     repoFileObj,
                     notificationBuilder,
                     notificationManager
@@ -124,7 +125,7 @@ class GitCloneService: Service() {
                         UsePath.cmdclickFannelListDirPath,
                         UsePath.fannelListMemoryName
                     ).absolutePath,
-                    FannelListVariable.makeFannelListMemoryContents()
+                    FannelListVariable.makeFannelListMemoryContents(applicationContext)
                         .joinToString(cmdclickFannelListSeparator)
                 )
                 isProgressCancel = true
@@ -175,6 +176,7 @@ class GitCloneService: Service() {
     }
 
     private fun kGitClone(
+        context: Context?,
         repoFileObj: File,
         notificationBuilder: NotificationCompat.Builder,
         notificationManager: NotificationManagerCompat?,
@@ -191,6 +193,7 @@ class GitCloneService: Service() {
             )
         } catch (e: Exception) {
             LogSystems.stdErr(
+                context,
                 "close git"
             )
             return

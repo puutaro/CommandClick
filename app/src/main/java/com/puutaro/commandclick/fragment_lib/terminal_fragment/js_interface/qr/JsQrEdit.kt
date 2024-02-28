@@ -116,7 +116,9 @@ class JsQrEdit(
         qrConWithNewLine: String,
         qrMap: Map<String, String>
     ) {
-        val fannelDirPath = CcPathTool.getMainFannelDirPath(qrConFilePath)
+        val fannelDirPath = CcPathTool.getMainFannelDirPath(
+            qrConFilePath
+        )
         val listSaveDirPath = "${fannelDirPath}/cmdclickQrList"
         val resultKeyValueConSrc = makeResultKeyValueConSrc(
             qrConFilePath,

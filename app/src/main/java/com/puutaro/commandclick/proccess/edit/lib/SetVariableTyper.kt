@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
 import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
@@ -18,6 +19,7 @@ object SetVariableTyper {
     private val setVariableTypesConfigPathSrc = "${UsePath.fannelSettingVariablsDirPath}/${UsePath.setVariableTypesConfig}"
 
     fun makeRecordNumToSetVariableMaps(
+        context: Context?,
         setVariableTypeList: List<String>?,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?
     ): Map<Int, Map<String, String>>? {
@@ -35,6 +37,7 @@ object SetVariableTyper {
             val equalIndex = currentFetchSetVariableType.indexOf('=')
             if(equalIndex == -1) {
                 LogSystems.stdErr(
+                    context,
                     "not found '=': " +
                             currentFetchSetVariableType
                 )
@@ -47,6 +50,7 @@ object SetVariableTyper {
             val colonIndex = variableNameAddType.indexOf(':')
             if(colonIndex == -1) {
                 LogSystems.stdErr(
+                    context,
                     "not found ':': " +
                             currentFetchSetVariableType
                 )

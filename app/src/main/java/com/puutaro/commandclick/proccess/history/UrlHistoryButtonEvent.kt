@@ -349,6 +349,7 @@ class UrlHistoryButtonEvent(
             else -> String()
         }
         val replaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             "${currentAppDirPath}/${fannelName}",
         )
         val bottomScriptUrlList =

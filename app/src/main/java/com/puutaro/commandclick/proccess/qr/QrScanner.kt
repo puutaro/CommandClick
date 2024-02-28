@@ -85,7 +85,10 @@ class QrScanner(
             return reader.decode(bitmap).text
         } catch (e: Exception){
             val errOutput = e.toString()
-            LogSystems.stdErr(errOutput)
+            LogSystems.stdErr(
+                fragContext,
+                errOutput
+            )
             return errOutput
         }
     }
@@ -390,6 +393,7 @@ class QrScanner(
         decodeText: String,
     ){
         val title = QrDecodedTitle.makeTitle(
+            fragContext,
             decodeText
         )
         QrConfirmDialog(

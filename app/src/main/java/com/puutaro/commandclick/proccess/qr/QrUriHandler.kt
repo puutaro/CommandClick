@@ -192,7 +192,10 @@ object QrUriHandler {
                 ContextCompat.startForegroundService(context, intent)
             }
         }catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 
@@ -242,7 +245,7 @@ object QrUriHandler {
             "USER_NAME=${userName}",
             "PASSWORD=${password}",
         ).joinToString(",")
-        val isUbuntuProc = LinuxCmd.isBasicProcess()
+        val isUbuntuProc = LinuxCmd.isBasicProcess(context)
         when(isUbuntuProc){
             true
             ->
@@ -290,7 +293,10 @@ object QrUriHandler {
                     ContextCompat.startForegroundService(context, intent)
                 }
             }catch (e: Exception){
-                LogSystems.stdErr(e.toString())
+                LogSystems.stdErr(
+                    context,
+                    e.toString()
+                )
             }
         }
     }
@@ -348,7 +354,10 @@ object QrUriHandler {
                 ContextCompat.startForegroundService(context, intent)
             }
         }catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 
@@ -365,7 +374,10 @@ object QrUriHandler {
             )
             context.startActivity(intent)
         }catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 
@@ -472,7 +484,10 @@ object QrUriHandler {
         try {
             context.startActivity(intent)
         } catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 
@@ -511,7 +526,10 @@ object QrUriHandler {
         try {
             context.startActivity(intent)
         }catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 

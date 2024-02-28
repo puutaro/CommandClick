@@ -155,7 +155,7 @@ object JavascriptExecuter {
                 ) ?: String()
                 val separator = "----------"
                 FileSystems.writeFile(
-                    UsePath.execDebugJsPath,
+                    UsePath.jsDebugReportPath,
                     listOf(
                         "Normal js",
                         separator,

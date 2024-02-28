@@ -25,7 +25,7 @@ class OnlyImageGridJsDialog(
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
-    private var alertDialog: AlertDialog? = null
+    private var onlyImageGridDialog: AlertDialog? = null
 
     fun create(
         title: String,
@@ -109,7 +109,7 @@ class OnlyImageGridJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.alertDialogInstance = if(
+        onlyImageGridDialog = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -127,14 +127,13 @@ class OnlyImageGridJsDialog(
                 .setView(linearLayoutForGridView)
                 .create()
         }
-        alertDialog = terminalFragment.alertDialogInstance
-        alertDialog?.window?.setLayout(
+        onlyImageGridDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT
         )
-        alertDialog?.window?.setGravity(Gravity.BOTTOM)
-        alertDialog?.show()
-        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        onlyImageGridDialog?.window?.setGravity(Gravity.BOTTOM)
+        onlyImageGridDialog?.show()
+        onlyImageGridDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
             }
@@ -149,7 +148,7 @@ class OnlyImageGridJsDialog(
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog?.dismiss()
+            onlyImageGridDialog?.dismiss()
             val selectedElement = listCon.split("\n")
                 .get(pos)
                 .split("\n")

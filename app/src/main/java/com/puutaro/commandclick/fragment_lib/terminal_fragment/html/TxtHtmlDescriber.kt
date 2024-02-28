@@ -55,11 +55,28 @@ object TxtHtmlDescriber {
         <meta name="color-scheme" content="light dark">
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         </head>
+        <style type="text/css">
+        #monitorText {
+            width: 99%;
+            margin-right: auto;
+            margin-left: auto;
+            #background-color: yellow;
+        }
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            overflow: auto;
+            #border: 1px solid;
+            #background-color: red;
+        }
+        </style>
         <body>
+        <div id="monitorText">
         <p>---</p>
-        <pre style="word-wrap: break-word; white-space: pre-wrap;">
+        <pre>
         ${insertContents}
         </pre>
+        </div>
         </body>
         <script>
         var positionY;

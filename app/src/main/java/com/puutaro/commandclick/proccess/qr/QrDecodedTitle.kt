@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.qr
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.QrSeparator
 import com.puutaro.commandclick.util.Intent.CurlManager
@@ -13,12 +14,16 @@ object QrDecodedTitle {
     private val displayTitleTextLimit = 50
     private val jsDescSeparator = QrSeparator.sepalator.str
 
-    suspend fun makeTitle(scanConWithNewline: String): String{
+    suspend fun makeTitle(
+        context: Context?,
+        scanConWithNewline: String
+    ): String{
         val scanCon = scanConWithNewline.replace("\n", "")
         return when(true){
             scanCon.startsWith(QrLaunchType.Http.prefix),
             scanCon.startsWith(QrLaunchType.Https.prefix)
             -> makeDocFromUrl(
+                context,
                 scanCon
             )
             scanCon.startsWith(QrLaunchType.Javascript.prefix) -> {
@@ -143,9 +148,13 @@ object QrDecodedTitle {
     }
 
     private suspend fun makeDocFromUrl(
+        context: Context?,
         targetUrl: String
     ): String {
-        val titleSrc = SiteUrl.getTitle(targetUrl)
+        val titleSrc = SiteUrl.getTitle(
+            context,
+            targetUrl
+        )
         if(
             titleSrc.isEmpty()
         ) return "Url: ${targetUrl}"

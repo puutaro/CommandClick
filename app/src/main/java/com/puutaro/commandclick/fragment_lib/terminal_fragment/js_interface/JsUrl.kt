@@ -89,6 +89,7 @@ class JsUrl(
         execCode: String,
     ): String {
         return JavaScriptLoadUrl.makeFromContents(
+            context,
             execCode.split("\n")
         ) ?: String()
     }

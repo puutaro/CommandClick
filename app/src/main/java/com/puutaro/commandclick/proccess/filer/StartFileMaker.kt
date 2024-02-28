@@ -41,15 +41,19 @@ object StartFileMaker {
         fragment: Fragment,
         currentAppDirPath: String
     ){
+        val context = fragment.context
         val cmdclickStartupJsName = UsePath.cmdclickStartupJsName
         CoroutineScope(Dispatchers.IO).launch {
             val urlFileSystems = UrlFileSystems()
             withContext(Dispatchers.IO) {
-                urlFileSystems.getFannelList()
+                urlFileSystems.getFannelList(
+                    context
+                )
             }
             val startupFannelRawName =
                 UsePath.cmdclickStartupJsName.removeSuffix(UsePath.JS_FILE_SUFFIX)
             urlFileSystems.createFile(
+                context,
                 currentAppDirPath,
                 startupFannelRawName
             )

@@ -104,12 +104,16 @@ class JsPath(
 
     @JavascriptInterface
     fun getFannelPath(path: String): String {
-        return CcPathTool.getMainFannelFilePath(path)
+        return CcPathTool.getMainFannelFilePath(
+            path
+        )
     }
 
     @JavascriptInterface
     fun getFannelDirPath(path: String): String {
-        return CcPathTool.getMainFannelDirPath(path)
+        return CcPathTool.getMainFannelDirPath(
+            path
+        )
     }
 
     @JavascriptInterface

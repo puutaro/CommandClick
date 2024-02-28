@@ -228,6 +228,7 @@ class EditFragment: Fragment() {
             ReadText(currentFannelPath).textToList()
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                context,
                 mainFannelConList,
                 currentAppDirPath,
                 currentFannelName,

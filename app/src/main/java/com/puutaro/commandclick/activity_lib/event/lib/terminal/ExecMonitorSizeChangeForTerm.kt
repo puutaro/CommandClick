@@ -31,7 +31,10 @@ object ExecMonitorSizeChangeForTerm {
                 "${e}",
                 Toast.LENGTH_SHORT
             ).show()
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                activity,
+                e.toString()
+            )
         }
     }
     private fun execChange(

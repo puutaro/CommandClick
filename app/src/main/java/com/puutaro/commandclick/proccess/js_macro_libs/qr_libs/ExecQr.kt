@@ -19,6 +19,7 @@ object ExecQr {
         editFragment: EditFragment,
         clickFileName: String
     ){
+        val context = editFragment.context
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             editFragment.readSharePreferenceMap
         )
@@ -59,7 +60,10 @@ object ExecQr {
                     null,
                     null,
                     useAppDirPath,
-                    QrDecodedTitle.makeTitle(contents),
+                    QrDecodedTitle.makeTitle(
+                        context,
+                        contents
+                    ),
                     contents
                 ).launch()
             }

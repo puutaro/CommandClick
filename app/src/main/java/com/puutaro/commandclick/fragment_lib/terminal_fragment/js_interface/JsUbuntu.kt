@@ -62,6 +62,7 @@ class JsUbuntu(
             return String()
         }
         return Shell2Http.runCmd(
+            context,
             executeShellPath,
             tabSepaArgs,
             timeMilisec,
@@ -90,6 +91,7 @@ class JsUbuntu(
         }
         val monitorFileName = UsePath.decideMonitorName(monitorNum)
         return SshManager.execScript(
+            context,
             executeShellPath,
             tabSepaArgs,
             monitorFileName,
@@ -139,6 +141,7 @@ class JsUbuntu(
         ) return
         val jsUrl = JsUrl(terminalFragment)
         val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+            context,
             execCode.split("\n")
         ) ?: return
         val ubuntuFiles = UbuntuFiles(context)
@@ -156,7 +159,7 @@ class JsUbuntu(
             withContext(Dispatchers.IO) {
                 for (i in 0..bootFailureTimes) {
                     if (
-                        LinuxCmd.isBasicProcess()
+                        LinuxCmd.isBasicProcess(context)
                     ) {
                         retryTimesProcess = i
                         break
@@ -194,6 +197,7 @@ class JsUbuntu(
                 for(i in 0..10) {
                     val isActive = try {
                         CurlManager.get(
+                            context,
                             cmdTerminalUrl,
                             String(),
                             String(),
@@ -242,7 +246,7 @@ class JsUbuntu(
             return
         }
         if(
-            LinuxCmd.isBasicProcess()
+            LinuxCmd.isBasicProcess(context)
         ){
             return
         }
@@ -259,7 +263,7 @@ class JsUbuntu(
                         ).show()
                     }
                     if (
-                        LinuxCmd.isBasicProcess()
+                        LinuxCmd.isBasicProcess(context)
                     ) {
                         isBootSuccess = true
                         break
@@ -287,6 +291,9 @@ class JsUbuntu(
     fun isProc(
         processName: String
     ): Boolean {
-        return LinuxCmd.isProcessCheck(processName)
+        return LinuxCmd.isProcessCheck(
+            context,
+            processName
+        )
     }
 }

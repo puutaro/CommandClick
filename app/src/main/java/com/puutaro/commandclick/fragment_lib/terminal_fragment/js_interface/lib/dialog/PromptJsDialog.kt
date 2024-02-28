@@ -427,6 +427,7 @@ private object EditTextMakerForPrompt {
             true -> emptyMap()
             else -> SetReplaceVariabler
                 .makeSetReplaceVariableMapFromSubFannel(
+                    context,
                     mainOrSubFannelPath
                 )
         }

@@ -25,6 +25,7 @@ object ByFannelListDownloader {
     fun download(
         gitDownloadService: GitDownloadService,
     ): Job {
+        val context = gitDownloadService.applicationContext
         val prefix = gitDownloadService.prefix
         val fannelListPath = gitDownloadService.fannelListPath
 
@@ -37,6 +38,7 @@ object ByFannelListDownloader {
                 withContext(Dispatchers.IO) {
                     for (i in 1..3) {
                         val fileListConSrcByteArray = CurlManager.get(
+                            context,
                             fannelListUrl,
                             String(),
                             String(),
@@ -89,6 +91,7 @@ object ByFannelListDownloader {
         gitDownloadService: GitDownloadService,
         fileListCon: String,
     ){
+        val context = gitDownloadService.applicationContext
         val cpFileList = makeCpFileListCon(
             gitDownloadService,
             fileListCon,
@@ -134,6 +137,7 @@ object ByFannelListDownloader {
                     var conSrc = byteArrayOf()
                     for (i in 1..3) {
                         conSrc = CurlManager.get(
+                            context,
                             getUrl,
                             String(),
                             String(),
@@ -195,6 +199,7 @@ object ByFannelListDownloader {
                 if(it < cpFileListIndexSize) return@launch
                 withContext(Dispatchers.IO){
                     CurlManager.post(
+                        context,
                         prefix,
                         "Content-type\ttext/plain",
                         ReceivePathMacroType.CLOSE_COPY_SERVER.name,

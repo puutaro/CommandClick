@@ -39,7 +39,10 @@ class JsValEdit(
                 "$e",
                 Toast.LENGTH_SHORT
             ).show()
-            LogSystems.stdErr("$e")
+            LogSystems.stdErr(
+                context,
+                "$e"
+            )
             cancelReturnCode
         }
     }

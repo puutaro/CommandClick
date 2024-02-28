@@ -21,7 +21,10 @@ object ExecJsScriptInEdit {
         if(
             !File(jsFilePath).isFile
         ) {
-            LogSystems.stdErr("js not found: ${jsFilePath}")
+            LogSystems.stdErr(
+                editFragment.context,
+                "js not found: ${jsFilePath}"
+            )
             return
         }
         if(
@@ -42,6 +45,7 @@ object ExecJsScriptInEdit {
         jsConSrc: String,
     ){
         val jsCon = JavaScriptLoadUrl.makeFromContents(
+            editFragment.context,
             jsConSrc.split("\n")
         )
         execJsUrlForEdit(

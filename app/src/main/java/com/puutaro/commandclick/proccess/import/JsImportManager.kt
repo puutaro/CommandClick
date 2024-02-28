@@ -63,6 +63,7 @@ object JsImportManager {
             )
         ) {
             return execCurl(
+                context,
                 trimImportPathSource
             )
         }
@@ -129,6 +130,7 @@ object JsImportManager {
     }
 
     private fun execCurl(
+        context: Context?,
         trimImportPathSource: String
     ): String {
         var downloadOk = false
@@ -137,6 +139,7 @@ object JsImportManager {
             try {
                 downloadString = withContext(Dispatchers.IO) {
                     CurlManager.get(
+                        context,
                         trimImportPathSource,
                         String(),
                         String(),

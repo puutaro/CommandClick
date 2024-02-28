@@ -28,6 +28,7 @@ object FannelNameClickListenerSetter {
         currentAppDirPath: String,
         fannelIndexListAdapter: FannelIndexListAdapter
     ){
+        val context = cmdIndexFragment.context
         val activity = cmdIndexFragment.activity
         val binding = cmdIndexFragment.binding
         val cmdSearchEditText = binding.cmdSearchEditText
@@ -95,6 +96,7 @@ object FannelNameClickListenerSetter {
                 }
                 val setReplaceVariableMap =
                     JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                        context,
                         mainFannelContentsList,
                         currentAppDirPath,
                         selectedShellFileName,

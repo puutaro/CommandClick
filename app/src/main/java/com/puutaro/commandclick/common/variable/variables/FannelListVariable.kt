@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.common.variable.variables
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.proccess.ScriptFileDescription
@@ -40,7 +41,9 @@ object FannelListVariable {
             ?: String()
     }
 
-    fun makeFannelListMemoryContents(): List<String> {
+    fun makeFannelListMemoryContents(
+        context: Context?
+    ): List<String> {
         val cmdclickFannelItselfDirPath = UsePath.cmdclickFannelItselfDirPath
         if(
             !File(cmdclickFannelItselfDirPath).isDirectory
@@ -68,6 +71,7 @@ object FannelListVariable {
                 -> descConSrc
                 else
                 -> CurlManager.get(
+                    context,
                     makeReadmeRawUrl(readmeUrl),
                     String(),
                     String(),

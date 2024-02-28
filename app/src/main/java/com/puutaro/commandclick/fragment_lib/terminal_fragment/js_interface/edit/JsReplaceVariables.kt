@@ -7,11 +7,13 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 class JsReplaceVariables(
     terminalFragment: TerminalFragment
 ) {
+    private val context = terminalFragment.context
     @JavascriptInterface
     fun getTsv(
         currentPath: String,
     ): String {
         return SetReplaceVariabler.getReplaceVariablesTsv(
+            context,
             currentPath
         )
     }

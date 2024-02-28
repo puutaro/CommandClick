@@ -30,8 +30,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.time.LocalDateTime
 
 
 object WebChromeClientSetter {
@@ -130,7 +128,7 @@ object WebChromeClientSetter {
                         )
                     }
                     withContext(Dispatchers.IO) {
-                        val execDebugJsPath = UsePath.execDebugJsPath
+                        val execDebugJsPath = UsePath.jsDebugReportPath
                         val jsDebugCon = ReadText(
                             execDebugJsPath
                         ).readText()
@@ -138,17 +136,14 @@ object WebChromeClientSetter {
                             execDebugJsPath,
                             "\n[ERROR]\n${output}\n\n#########\n\n${jsDebugCon}"
                         )
-                        BroadcastSender.normalSend(
-                            context,
-                            BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action,
-                            listOf(
-                                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme
-                                        to BroadCastIntentExtraForJsDebug.DebugLevelType.LOW.level,
-                            )
-                        )
                     }
                     withContext(Dispatchers.IO) {
-                        LogSystems.stdErr(output)
+                        LogSystems.stdErr(
+                            context,
+                            output,
+                            debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type,
+                            notiLevel = BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
+                        )
                         Log.e(
                             packageName,
                             cm.message() + " -- From line " + cm.lineNumber()

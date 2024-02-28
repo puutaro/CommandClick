@@ -66,6 +66,7 @@ object ByCloneDownloader {
     private fun execGitClone(
         gitDownloadService: GitDownloadService
     ){
+        val context = gitDownloadService.applicationContext
         FileSystems.removeAndCreateDir(cmdclickTempDownloadDirPath)
         val prefix = gitDownloadService.prefix
         val cmdclickTempDownloadDirPathObj = File(cmdclickTempDownloadDirPath)
@@ -85,7 +86,10 @@ object ByCloneDownloader {
                 })
             }
         } catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 

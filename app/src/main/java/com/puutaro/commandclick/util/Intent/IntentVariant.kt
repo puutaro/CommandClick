@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.Intent
 
+import android.content.Context
 import android.content.Intent
 import androidx.core.content.FileProvider
 import androidx.fragment.app.FragmentActivity
@@ -11,6 +12,7 @@ import java.lang.Exception
 object IntentVariant {
     fun sharePngImage(
         file: File,
+        context: Context?,
         activity: FragmentActivity?
     ){
         if(
@@ -30,7 +32,10 @@ object IntentVariant {
                 Intent.createChooser(shareIntent, "Share image using")
             )
         } catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 }

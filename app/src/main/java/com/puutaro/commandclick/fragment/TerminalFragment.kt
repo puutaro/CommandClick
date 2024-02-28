@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
+import android.webkit.WebView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -107,7 +108,7 @@ class   TerminalFragment: Fragment() {
     var rowsMap: MutableMap<String, List<List<String>>> = mutableMapOf()
     var headerMap: MutableMap<String, List<String>> = mutableMapOf()
     var alertDialogInstance: AlertDialog? = null
-    var dialogInstance: Dialog? = null
+    var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
     var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
@@ -162,6 +163,7 @@ class   TerminalFragment: Fragment() {
         )
         setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                context,
                 fannelContentsList,
                 currentAppDirPath,
                 currentValidFannelName,
@@ -225,7 +227,9 @@ class   TerminalFragment: Fragment() {
         val terminalViewModel: TerminalViewModel by activityViewModels()
         terminalViewModel.isStop = true
         alertDialogInstance?.dismiss()
-        dialogInstance?.dismiss()
+        webViewDialogInstance?.findViewById<WebView>(
+            R.id.webview_dialog_webview
+        )?.onPause()
         terminalViewModel.onDialog = false
         val terminalWebView = binding.terminalWebView
         terminalWebView.stopLoading()
@@ -263,7 +267,9 @@ class   TerminalFragment: Fragment() {
         InitCurrentMonitorFile.trim(this)
         terminalViewModel.isStop = false
         alertDialogInstance?.dismiss()
-        dialogInstance?.dismiss()
+        webViewDialogInstance?.findViewById<WebView>(
+            R.id.webview_dialog_webview
+        )?.onResume()
         terminalViewModel.onDialog = false
         binding.terminalWebView.onResume()
         activity?.setVolumeControlStream(AudioManager.STREAM_MUSIC)
@@ -282,9 +288,10 @@ class   TerminalFragment: Fragment() {
                 BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,
                 BroadCastIntentSchemeTerm.MONITOR_MANAGER.action,
                 BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-                BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action,
-                BroadCastIntentSchemeTerm.JS_DEBUG_WATCH.action,
-                BroadCastIntentSchemeTerm.JS_DEBUG_CLOSE.action,
+                BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
+                BroadCastIntentSchemeTerm.DEBUGGER_JS_WATCH.action,
+                BroadCastIntentSchemeTerm.DEBUGGER_SYS_WATCH.action,
+                BroadCastIntentSchemeTerm.DEBUGGER_CLOSE.action,
             )
         )
         previousTerminalTag = tag

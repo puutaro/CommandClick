@@ -221,6 +221,7 @@ class CmdClickHistoryButtonEvent (
                 ).textToList()
                 val setReplaceVariableMap =
                     JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                        context,
                         mainFannelConList,
                         appDirName,
                         fannelName,

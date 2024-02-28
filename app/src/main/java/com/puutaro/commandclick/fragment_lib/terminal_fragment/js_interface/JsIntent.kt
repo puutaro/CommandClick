@@ -4,16 +4,12 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.JavascriptInterface
 import android.widget.Toast
-import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForFzHtml
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.EditSiteBroadCast
 import com.puutaro.commandclick.util.Intent.IntentLauncher
 import com.puutaro.commandclick.util.Intent.IntentVariant
-import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
 
@@ -22,7 +18,6 @@ class JsIntent(
 ) {
     private val context = terminalFragment.context
     private val activity = terminalFragment.activity
-    private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private val editSiteBroadCast = EditSiteBroadCast(terminalFragment)
 
 
@@ -39,38 +34,38 @@ class JsIntent(
         )
     }
 
-    @JavascriptInterface
-    fun launchFzSite(
-        editPath: String,
-        promptMessage: String,
-        itemClickJs: String,
-        itemLongClickJs: String,
-        realTimeListSetJs: String
-    ) {
-        val jsIntent = Intent()
-        jsIntent.action = BroadCastIntentSchemeTerm.FZHTML_LAUNCH.action
-        jsIntent.putExtra(
-            BroadCastIntentSchemeTerm.FZHTML_LAUNCH.scheme,
-            editPath
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForFzHtml.TEMPLATE_PROMPT_MESSAGE.scheme,
-            promptMessage
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForFzHtml.ITEM_CLICK_JAVASCRIPT.scheme,
-            itemClickJs
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForFzHtml.ITEM_LONG_CLICK_JAVASCRIPT.scheme,
-            itemLongClickJs
-        )
-        jsIntent.putExtra(
-            BroadCastIntentExtraForFzHtml.REAL_TIME_LIST_SET_JAVASCRIPT.scheme,
-            realTimeListSetJs
-        )
-        terminalFragment.activity?.sendBroadcast(jsIntent)
-    }
+//    @JavascriptInterface
+//    fun launchFzSite(
+//        editPath: String,
+//        promptMessage: String,
+//        itemClickJs: String,
+//        itemLongClickJs: String,
+//        realTimeListSetJs: String
+//    ) {
+//        val jsIntent = Intent()
+//        jsIntent.action = BroadCastIntentSchemeTerm.FZHTML_LAUNCH.action
+//        jsIntent.putExtra(
+//            BroadCastIntentSchemeTerm.FZHTML_LAUNCH.scheme,
+//            editPath
+//        )
+//        jsIntent.putExtra(
+//            BroadCastIntentExtraForFzHtml.TEMPLATE_PROMPT_MESSAGE.scheme,
+//            promptMessage
+//        )
+//        jsIntent.putExtra(
+//            BroadCastIntentExtraForFzHtml.ITEM_CLICK_JAVASCRIPT.scheme,
+//            itemClickJs
+//        )
+//        jsIntent.putExtra(
+//            BroadCastIntentExtraForFzHtml.ITEM_LONG_CLICK_JAVASCRIPT.scheme,
+//            itemLongClickJs
+//        )
+//        jsIntent.putExtra(
+//            BroadCastIntentExtraForFzHtml.REAL_TIME_LIST_SET_JAVASCRIPT.scheme,
+//            realTimeListSetJs
+//        )
+//        terminalFragment.activity?.sendBroadcast(jsIntent)
+//    }
 
 
 
@@ -142,6 +137,7 @@ class JsIntent(
         }
         IntentVariant.sharePngImage(
             imageFilePathObj,
+            context,
             activity
         )
     }

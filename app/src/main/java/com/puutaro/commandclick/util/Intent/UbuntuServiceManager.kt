@@ -56,7 +56,7 @@ object UbuntuServiceManager {
                 val isBasicProcess = if(
                     !onBasicProcessMonitor
                 ) true
-                else LinuxCmd.isBasicProcess()
+                else LinuxCmd.isBasicProcess(activity)
 
                 if(
                     cmdclickTmpUbuntuServiceActiveFile.isFile
@@ -93,6 +93,6 @@ object UbuntuServiceManager {
         activity: Activity?
     ){
         if(activity == null) return
-        LinuxCmd.killProcess(activity.packageName)
+        LinuxCmd.killProcess(activity)
     }
 }

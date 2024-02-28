@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
+import android.content.Context
 import com.jcraft.jsch.ChannelExec
 import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
@@ -17,6 +18,7 @@ object SshManager {
     private val ubuntuUser = UbuntuInfo.user
 
     fun execScript(
+        context: Context?,
         scriptPath: String,
         tabSepaStr: String,
         monitorFileName: String,
@@ -26,6 +28,7 @@ object SshManager {
             "\"${it}\""
         }.joinToString("\t")
         return execCommand(
+            context,
             "bash --login \"${scriptPath}\" $tabSepaStrWithQuote 2>&1",
             monitorFileName,
             isOutput
@@ -33,6 +36,7 @@ object SshManager {
     }
 
     fun execScriptAfterKill(
+        context: Context?,
         scriptPath: String,
         tabSepaStr: String,
         monitorFileName: String,
@@ -44,6 +48,7 @@ object SshManager {
         val cmdCon = "bash '/support/killProcTree.sh' '${scriptPath}';" +
                 "bash '${scriptPath}' $tabSepaStrWithQuote 2>&1"
         return execCommand(
+            context,
             "bash --login -c \"${cmdCon}\"",
             monitorFileName,
             isOutput
@@ -51,6 +56,7 @@ object SshManager {
     }
 
     private fun execCommand(
+        context: Context?,
         command: String,
         monitorFileName: String = sysMonitorFileName,
         isOutput: Boolean
@@ -94,7 +100,11 @@ object SshManager {
         } catch (e: java.lang.Exception) {
             channel?.disconnect()
             session?.disconnect()
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+
+            )
             return String()
         }
     }

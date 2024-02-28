@@ -29,7 +29,7 @@ class GridJsDialog(
     private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var returnValue = String()
-    private var alertDialog: AlertDialog? = null
+    private var webViewDialog: AlertDialog? = null
 
     fun create(
         title: String,
@@ -121,7 +121,7 @@ class GridJsDialog(
         ){
             title
         } else "Select bellow list"
-        terminalFragment.alertDialogInstance = if(
+        webViewDialog = if(
             message.isNotEmpty()
         ) {
             AlertDialog.Builder(
@@ -139,10 +139,9 @@ class GridJsDialog(
                 .setView(linearLayoutForGridView)
                 .create()
         }
-        alertDialog = terminalFragment.alertDialogInstance
-        alertDialog?.window?.setGravity(Gravity.BOTTOM)
-        alertDialog?.show()
-        alertDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
+        webViewDialog?.window?.setGravity(Gravity.BOTTOM)
+        webViewDialog?.show()
+        webViewDialog?.setOnCancelListener(object : DialogInterface.OnCancelListener {
             override fun onCancel(dialog: DialogInterface?) {
                 terminalViewModel.onDialog = false
             }
@@ -197,7 +196,7 @@ class GridJsDialog(
         gridView.setOnItemClickListener {
                 parent, View, pos, id
             ->
-            alertDialog?.dismiss()
+            webViewDialog?.dismiss()
             val selectedElement = listCon.split("\n").filter {
                 Regex(
                     searchText.text.toString()

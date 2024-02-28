@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.Intent
 
+import android.content.Context
 import com.puutaro.commandclick.util.LogSystems
 import java.io.ByteArrayOutputStream
 import java.net.HttpURLConnection
@@ -26,6 +27,7 @@ object CurlManager {
         return String(resByteArray)
     }
     fun get(
+        context: Context?,
         mainUrl: String,
         queryParameter: String = String(),
         header: String = String(),
@@ -42,6 +44,7 @@ object CurlManager {
 
         val connection =
             setConnectionForGet(
+                context,
                 urlString,
                 header,
                 timeout
@@ -54,7 +57,10 @@ object CurlManager {
                 connection,
             )
         } catch (e: Exception) {
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErrByLowLevelSysNoti(
+                context,
+                e.toString()
+            )
         } finally {
             connection.disconnect()
         }
@@ -64,6 +70,7 @@ object CurlManager {
 
 
     fun post(
+        context: Context?,
         mainUrl: String,
         header: String = String(),
         bodyStr: String,
@@ -73,6 +80,7 @@ object CurlManager {
 
         // HttpURLConnectionの作成
         val connection = setConnectionForPost(
+            context,
             mainUrl,
             header,
             bodyData,
@@ -90,7 +98,10 @@ object CurlManager {
                 connection,
             )
         } catch (e: Exception) {
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErrByLowLevelSysNoti(
+                context,
+                e.toString()
+            )
         } finally {
             connection.disconnect()
         }
@@ -98,6 +109,7 @@ object CurlManager {
     }
 
     private fun setConnectionForGet(
+        context: Context?,
         urlString: String,
         header: String = String(),
         timeout: Int
@@ -126,12 +138,16 @@ object CurlManager {
             )
             return connection
         } catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErrByLowLevelSysNoti(
+                context,
+                e.toString()
+            )
             return null
         }
     }
 
     private fun setConnectionForPost(
+        context: Context?,
         mainUrl: String,
         header: String = String(),
         bodyData: ByteArray,
@@ -165,7 +181,10 @@ object CurlManager {
             }
             return connection
         } catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErrByLowLevelSysNoti(
+                context,
+                e.toString()
+            )
             return null
         }
     }
@@ -181,7 +200,7 @@ object CurlManager {
             )
             else -> {
                 connection.disconnect()
-                LogSystems.stdErr(statusCode.toString())
+                LogSystems.stdErrByNoBroad(statusCode.toString())
                 invalidResponse.toByteArray()
             }
         }

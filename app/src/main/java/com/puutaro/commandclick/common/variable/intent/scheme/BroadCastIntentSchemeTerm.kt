@@ -20,24 +20,28 @@ enum class BroadCastIntentSchemeTerm(
     "com.puutaro.commandclick.html.launch",
     "edit_path",
     ),
-    FZHTML_LAUNCH(
-        "com.puutaro.commandclick.fzhtml.launch",
-        "edit_path",
-    ),
+//    FZHTML_LAUNCH(
+//        "com.puutaro.commandclick.fzhtml.launch",
+//        "edit_path",
+//    ),
     MONITOR_TOAST(
         "com.puutaro.commandclick.monitorToast.launch",
         "message"
     ),
-    JS_DEBUG_NOTI(
+    DEBUGGER_NOTI(
     "com.puutaro.commandclick.js_debug.noti",
-    "noti"
+    "debugger_noti"
     ),
-    JS_DEBUG_WATCH(
+    DEBUGGER_JS_WATCH(
         "com.puutaro.commandclick.js_debug.watch",
-        "watch"
+        "js_debug_watch"
     ),
-    JS_DEBUG_CLOSE(
+    DEBUGGER_SYS_WATCH(
+        "com.puutaro.commandclick.sys_debug.watch",
+        "sys_debug_watch"
+    ),
+    DEBUGGER_CLOSE(
     "com.puutaro.commandclick.js_debug.close",
-    "close"
+    "debugger_close"
     )
 }

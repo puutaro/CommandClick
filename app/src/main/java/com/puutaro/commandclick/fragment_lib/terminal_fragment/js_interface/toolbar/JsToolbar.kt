@@ -24,7 +24,7 @@ import java.io.File
 class JsToolbar(
     terminalFragment: TerminalFragment
 ) {
-
+    private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
     private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
@@ -124,7 +124,10 @@ class JsToolbar(
     ){
         CoroutineScope(Dispatchers.Main).launch {
             val siteTitle = withContext(Dispatchers.IO) {
-                val siteTitleSrc = SiteUrl.getTitle(urlString)
+                val siteTitleSrc = SiteUrl.getTitle(
+                    context,
+                    urlString
+                )
                 if(
                     siteTitleSrc.isNotEmpty()
                 ) return@withContext siteTitleSrc
@@ -145,7 +148,10 @@ class JsToolbar(
                         insertLine
                     )
                 } catch(e: Exception){
-                    LogSystems.stdErr("$e")
+                    LogSystems.stdErr(
+                        context,
+                        "$e"
+                    )
                 }
             }
         }

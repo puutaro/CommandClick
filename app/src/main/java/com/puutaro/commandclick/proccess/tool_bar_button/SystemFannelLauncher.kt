@@ -22,6 +22,7 @@ object SystemFannelLauncher {
         parentDirPath: String,
         fannelScriptName: String,
     ) {
+        val context = fragment.context
         val fannelConList = ReadText(
             File(
                 parentDirPath,
@@ -34,6 +35,7 @@ object SystemFannelLauncher {
         ).textToList()
         val setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                context,
                 mainFannelConList,
                 parentDirPath,
                 fannelScriptName,
@@ -86,6 +88,7 @@ object SystemFannelLauncher {
         ).textToList()
         val setReplaceVariableMap =
             JavaScriptLoadUrl.createMakeReplaceVariableMapHandler(
+                activity,
                 mainFannelConList,
                 appDirPath,
                 fannelName,

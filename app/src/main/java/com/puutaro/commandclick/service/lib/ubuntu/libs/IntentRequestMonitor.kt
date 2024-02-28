@@ -93,7 +93,10 @@ object IntentRequestMonitor {
                     )
                     ubuntuService.intentMonitorServerSocket?.accept()
                 } catch (e:Exception){
-                    LogSystems.stdErr("${e}")
+                    LogSystems.stdErr(
+                        context,
+                        "${e}"
+                    )
                     isTerminated = true
                     null
                 }
@@ -132,6 +135,7 @@ object IntentRequestMonitor {
                     writer.flush()
                 }catch (e: Exception){
                     LogSystems.stdErr(
+                        context,
                         "inuptstream err ${e}"
                     )
                 } finally {
@@ -991,7 +995,7 @@ private fun toInt(numStr: String?): Int? {
     return try {
         numStr?.toInt()
     } catch (e: Exception){
-        LogSystems.stdErr(
+        LogSystems.stdErrByNoBroad(
             "${e}"
         )
         null

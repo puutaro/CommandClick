@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.LogVal
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
@@ -64,23 +65,30 @@ object JsActionHandler {
         jsAcKeyToSubKeyCon: String,
         jsActionMap: Map<String, String>?
     ){
-        val separator = "----------"
+        var times = 0
+        val preTagHolder = LogVal.preTagHolder
         val jsActionMapLogCon = jsActionMap?.filterKeys {
             it.isNotEmpty()
         }?.map {
-            listOf(
+            val colorStr =
+                LogVal.makeColorCode(times)
+            times++
+            preTagHolder.format(
+                colorStr,
                 "${it.key}: ${it.value}",
-                separator
-            ).joinToString("\n")
-        }?.joinToString("\n\n")
+            )
+        }?.joinToString("\n")
+        val srcPreTag = preTagHolder.format(
+            LogVal.makeColorCode(times),
+            "src: ${jsAcKeyToSubKeyCon}"
+        )
         FileSystems.writeFile(
-            UsePath.execDebugJsPath,
+            UsePath.jsDebugReportPath,
             listOf(
                 "jsAction",
                 jsActionMapLogCon,
-                separator,
-                "src: ${jsAcKeyToSubKeyCon}",
-            ).joinToString("\n\n") + "\n\n#########\n\n"
+                srcPreTag,
+            ).joinToString("\n")
         )
     }
 }

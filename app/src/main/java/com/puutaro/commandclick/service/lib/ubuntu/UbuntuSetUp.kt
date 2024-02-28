@@ -139,6 +139,7 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO) {
             val err4 = LinuxCmd.chmod(
+                context,
                 ubuntuFiles.supportDir.absolutePath
             )
         }
@@ -203,6 +204,7 @@ object UbuntuSetUp {
         }
         withContext(Dispatchers.IO) {
             LinuxCmd.chmod(
+                context,
                 ubuntuFiles.filesOneRootfsUsrLocalBin.absolutePath
             )
         }

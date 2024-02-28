@@ -16,6 +16,7 @@ import kotlinx.coroutines.withContext
 class JsCurl(
     private val terminalFragment: TerminalFragment
 ) {
+    val context = terminalFragment.context
 
     @JavascriptInterface
     fun get(
@@ -25,6 +26,7 @@ class JsCurl(
         timeout: Int
     ): String {
         return CurlManager.get(
+            context,
             mainUrl,
             queryParameter,
             header,
@@ -43,6 +45,7 @@ class JsCurl(
         timeout: Int
     ) {
         CurlManager.get(
+            context,
             mainUrl,
             queryParameter,
             header,
@@ -66,6 +69,7 @@ class JsCurl(
         timeout: Int
     ): String {
         return CurlManager.post(
+            context,
             mainUrl,
             header,
             bodyStr,
@@ -84,6 +88,7 @@ class JsCurl(
         timeout: Int
     ) {
         return CurlManager.post(
+            context,
             mainUrl,
             header,
             bodyStr,

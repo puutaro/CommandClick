@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.service.lib.file_upload
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.CpFileKey
@@ -53,6 +54,7 @@ object CopyFannelServer {
     private suspend fun execCopy (
         fileUploadService: FileUploadService
     ){
+        val context = fileUploadService.applicationContext
         withContext(Dispatchers.IO) {
             fileUploadService.copyFannelSocket?.close()
         }
@@ -78,7 +80,10 @@ object CopyFannelServer {
                     )
                     fileUploadService.copyFannelSocket?.accept()
                 } catch (e:Exception){
-                    LogSystems.stdErr("${e}")
+                    LogSystems.stdErr(
+                        context,
+                        "${e}"
+                    )
                     isTerminated = true
                     null
                 }
@@ -124,6 +129,7 @@ object CopyFannelServer {
                     writer.flush()
                 }catch (e: Exception){
                     LogSystems.stdErr(
+                        context,
                         "input stream err ${e}"
                     )
                 } finally {
@@ -141,6 +147,7 @@ object CopyFannelServer {
         currentAppDirPath: String,
         cpFileMapStr: String,
     ): ByteArray {
+        val context = fileUploadService.applicationContext
         val cpFileMap = CmdClickMap.createMap(
             cpFileMapStr,
             '\t'
@@ -164,6 +171,7 @@ object CopyFannelServer {
                 fileUploadService
             )
             else -> catFileCon(
+                context,
                 currentAppDirPath,
                 cpFileMap
             )
@@ -209,6 +217,7 @@ object CopyFannelServer {
     }
 
     private fun catFileCon(
+        context: Context?,
         currentAppDirPathSrc: String,
         cpFileMap: Map<String, String>
     ): ByteArray {
@@ -229,7 +238,10 @@ object CopyFannelServer {
         )
         val catFilePathObj = File(catFilePath)
         if(!catFilePathObj.isFile)  {
-            LogSystems.stdErr("not found $catFilePath")
+            LogSystems.stdErr(
+                context,
+                "not found $catFilePath"
+            )
             return CurlManager.invalidResponse.toByteArray()
         }
         val fis = FileInputStream(catFilePathObj)

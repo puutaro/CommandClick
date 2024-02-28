@@ -39,7 +39,7 @@ import java.util.Random
 class QrLogo(
     private val fragment: Fragment,
 ) {
-
+    private val context = fragment.context
     private val logoList = FannelIcons.values().map { it.id }
     private val logListSize = logoList.size
     private val qrPngRelativePath = UsePath.qrPngRelativePath
@@ -170,7 +170,10 @@ class QrLogo(
             }
             return QrCodeDrawable(data, options)
         } catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
         return null
     }
@@ -256,7 +259,10 @@ class QrLogo(
             }
             return QrCodeDrawable(data, options)
         } catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
         return null
     }
@@ -295,7 +301,10 @@ class QrLogo(
             }
             return qrDrawable
         } catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
         return null
     }

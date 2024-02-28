@@ -26,7 +26,9 @@ object SharePrefTool {
                 else -> mapOf()
             }
         }
-        val currentAppDirPath = CcPathTool.getMainAppDirPath(mainOrSubFannelPath)
+        val currentAppDirPath = CcPathTool.getMainAppDirPath(
+            mainOrSubFannelPath
+        )
         val currentFannelName = File(
             CcPathTool.getMainFannelFilePath(mainOrSubFannelPath)
         ).name
@@ -88,6 +90,7 @@ object SharePrefTool {
         fragment: Fragment,
         subFannelPath: String?
     ): Map<String, String>? {
+        val context = fragment.context
         if(
             subFannelPath.isNullOrEmpty()
         ) return when(fragment){
@@ -96,10 +99,9 @@ object SharePrefTool {
             else -> mapOf()
         }
         return SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             subFannelPath
         )
-
-
     }
 
     fun getStringFromSharePref(

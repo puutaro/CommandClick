@@ -104,7 +104,7 @@ object IndexInitHandler {
         val urlFileSystems = UrlFileSystems()
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO){
-                urlFileSystems.getFannelList()
+                urlFileSystems.getFannelList(context)
             }
             StartFileMaker.makeForConfig(
                 cmdIndexFragment
@@ -121,6 +121,7 @@ object IndexInitHandler {
             UrlFileSystems.Companion.FirstCreateFannels.values().forEach {
                 CoroutineScope(Dispatchers.IO).launch {
                     urlFileSystems.createFile(
+                        context,
                         currentAppDirPath,
                         it.str
                     )

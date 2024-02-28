@@ -143,6 +143,7 @@ class AsciiArtJsDialog(
             }
             IntentVariant.sharePngImage(
                 file,
+                context,
                 activity
             )
         }

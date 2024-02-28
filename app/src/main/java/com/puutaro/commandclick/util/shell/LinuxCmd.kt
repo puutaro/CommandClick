@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.shell
 
+import android.content.Context
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.util.LogSystems
@@ -10,8 +11,9 @@ import java.nio.charset.Charset
 
 object LinuxCmd {
 
-    fun isBasicProcess(): Boolean {
+    fun isBasicProcess(context: Context?): Boolean {
         val psResult = execCommand(
+            context,
             listOf(
                 "sh",
                 "-c",
@@ -40,12 +42,14 @@ object LinuxCmd {
     }
 
     fun isProcessCheck(
+        context: Context?,
         processName: String
     ): Boolean {
         if(
             processName.isEmpty()
         ) return false
         val psResult = execCommand(
+            context,
             listOf(
                 "sh",
                 "-c",
@@ -57,9 +61,11 @@ object LinuxCmd {
     }
 
     fun chmod(
+        context: Context?,
         dirPath: String
     ) {
         val result = execCommand(
+            context,
             listOf(
                 "chmod",
                 "-R",
@@ -73,18 +79,26 @@ object LinuxCmd {
     }
 
     fun killFrontProcess(
-        packageName: String,
+        context: Context?,
     ){
+        val packageName = context?.packageName
+            ?: return
         execKillProcess(
+            context,
             frontSystemPList(packageName)
         )
     }
 
     fun killSubFrontProcess(
-        packageName: String,
+        context: Context?,
     ){
+        val packageName = context?.packageName
+            ?: return
         execKillProcess(
-            subFrontSystemPList(packageName)
+            context,
+            subFrontSystemPList(
+                packageName
+            )
         )
     }
     fun killAllProcess(){
@@ -95,17 +109,22 @@ object LinuxCmd {
     }
 
     fun killProcess(
-        packageName: String,
+        context: Context?,
     ){
+        val packageName =  context?.packageName
+            ?: return
         execKillProcess(
+            context,
             pListOutputExcludeApp(packageName)
         )
     }
 
     private fun execKillProcess(
+        context: Context?,
         pListOutputCmd: String,
     ){
         val psOutput = execCommand(
+            context,
             listOf("sh" , "-c", pListOutputCmd).joinToString("\t")
         )
         LogSystems.stdSys(
@@ -122,6 +141,7 @@ object LinuxCmd {
             "killCmd ${killCmd}"
         )
         val killOutput = execCommand(
+            context,
             listOf(
                 "sh",
                 "-c",
@@ -178,14 +198,18 @@ object LinuxCmd {
     }
 
     fun execCommandTrimNewLIne(
+        context: Context?,
         cmdList: String
     ): String {
-        return execCommand(cmdList)
-            .removePrefix("\n")
+        return execCommand(
+            context,
+            cmdList
+        ).removePrefix("\n")
             .removeSuffix("\n")
     }
 
     fun execCommand(
+        context: Context?,
         cmdList: String
     ): String {
         try {
@@ -222,6 +246,7 @@ object LinuxCmd {
             return outputContents + "\n" + errContents
         } catch (e: Exception){
             LogSystems.stdErr(
+                context,
                 "### ${this::class.java.name} ${e}"
             )
             return e.toString()

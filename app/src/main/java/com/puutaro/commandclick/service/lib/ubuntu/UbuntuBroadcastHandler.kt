@@ -255,7 +255,9 @@ object UbuntuBroadcastHandler {
         ubuntuService: UbuntuService
     ){
 //        ProcessManager.killAllProot(ubuntuService)
-        LinuxCmd.killProcess(ubuntuService.packageName)
+        LinuxCmd.killProcess(
+            ubuntuService.applicationContext,
+        )
         ProcessManager.finishProcess(ubuntuService)
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
@@ -427,7 +429,7 @@ object UbuntuBroadcastHandler {
     ){
         val context = ubuntuService.applicationContext
         if(
-            !LinuxCmd.isBasicProcess()
+            !LinuxCmd.isBasicProcess(context)
         ){
             withContext(Dispatchers.Main){
                 Toast.makeText(
@@ -438,7 +440,9 @@ object UbuntuBroadcastHandler {
             }
             val processRestartDelayTime = 3000L
             withContext(Dispatchers.IO){
-                LinuxCmd.killProcess(context.packageName)
+                LinuxCmd.killProcess(
+                    context,
+                )
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeUbuntu.START_UBUNTU_SERVICE.action
@@ -448,15 +452,20 @@ object UbuntuBroadcastHandler {
         }
         withContext(Dispatchers.IO) {
             when (
-                LinuxCmd.isProcessCheck(backgroundMonitorFileName)
+                LinuxCmd.isProcessCheck(
+                    context,
+                    backgroundMonitorFileName
+                )
             ) {
                 true -> SshManager.execScriptAfterKill(
+                    context,
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,
                     false,
                 )
                 else -> SshManager.execScript(
+                    context,
                     backgroundShellPath,
                     backgroundArgsTabSepaStr,
                     backgroundMonitorFileName,
@@ -500,6 +509,7 @@ object UbuntuBroadcastHandler {
         }
         CoroutineScope(Dispatchers.IO).launch {
             Shell2Http.runCmd(
+                context,
                 foregroundShellPath,
                 args,
                 timeout

@@ -79,7 +79,7 @@ object UbuntuController {
             return
         }
         if(
-            LinuxCmd.isBasicProcess()
+            LinuxCmd.isBasicProcess(context)
         ){
             return
         }
@@ -95,7 +95,7 @@ object UbuntuController {
                     ).show()
                 }
                 if (
-                    LinuxCmd.isBasicProcess()
+                    LinuxCmd.isBasicProcess(context)
                 ) {
                     isBootSuccess = true
                     break

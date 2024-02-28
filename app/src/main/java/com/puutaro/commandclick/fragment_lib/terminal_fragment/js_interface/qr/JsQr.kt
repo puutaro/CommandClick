@@ -115,7 +115,10 @@ class JsQr(
                 null,
                 null,
                 terminalFragment.currentAppDirPath,
-                QrDecodedTitle.makeTitle(decodedText),
+                QrDecodedTitle.makeTitle(
+                    context,
+                    decodedText
+                ),
                 decodedText
             ).launch()
         }
@@ -202,7 +205,10 @@ class JsQr(
                 qrBitMap
             )
         }catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
     }
 
@@ -413,7 +419,10 @@ class JsQr(
                 qrBitMap
             )
         }catch(e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
         }
 
     }

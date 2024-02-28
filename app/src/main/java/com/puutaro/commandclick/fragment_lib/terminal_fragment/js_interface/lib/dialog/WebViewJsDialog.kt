@@ -84,14 +84,14 @@ class WebViewJsDialog(
         ) urlStrSrc
         else "${WebUrlVariables.queryUrl}${urlStrSrc}"
         CoroutineScope(Dispatchers.Main).launch{
-            terminalFragment.dialogInstance?.dismiss()
-            terminalFragment.dialogInstance = Dialog(
+            terminalFragment.webViewDialogInstance?.dismiss()
+            terminalFragment.webViewDialogInstance = Dialog(
                 context as Context
             )
-            terminalFragment.dialogInstance?.setContentView(
+            terminalFragment.webViewDialogInstance?.setContentView(
                 R.layout.dialog_webview_layout
             )
-            val webView = terminalFragment.dialogInstance?.findViewById<WebView>(
+            val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
                 R.id.webview_dialog_webview
             ) ?: return@launch
             webViewSetting(webView)
@@ -103,17 +103,17 @@ class WebViewJsDialog(
                 webView,
                 urlStr,
             )
-            val progressBar = terminalFragment.dialogInstance?.findViewById<ProgressBar>(
+            val progressBar = terminalFragment.webViewDialogInstance?.findViewById<ProgressBar>(
                 R.id.dialog_webview_progressBar
             )
-            terminalFragment.dialogInstance?.window?.setLayout(
+            terminalFragment.webViewDialogInstance?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
-            terminalFragment.dialogInstance?.show()
+            terminalFragment.webViewDialogInstance?.show()
 
-            terminalFragment.dialogInstance?.setOnCancelListener {
-                terminalFragment.dialogInstance?.dismiss()
+            terminalFragment.webViewDialogInstance?.setOnCancelListener {
+                terminalFragment.webViewDialogInstance?.dismiss()
             }
             val menuMapStrList = QuoteTool.splitBySurroundedIgnore(
                 menuMapStrListStr,
@@ -121,7 +121,7 @@ class WebViewJsDialog(
             )
 //                menuMapStrListStr.split("|")
             val btnWeight = culcBtnWeight(menuMapStrList)
-            val firstBottomLinearLayout = terminalFragment.dialogInstance?.findViewById<LinearLayout>(
+            val firstBottomLinearLayout = terminalFragment.webViewDialogInstance?.findViewById<LinearLayout>(
                 R.id.first_bottom_linearlayout
             ) ?: return@launch
             menuMapStrList.forEach {
@@ -253,7 +253,10 @@ class WebViewJsDialog(
             context,
             AssetsFileManager.assetsHighlightSchForDialogWebViewPath
         ).split("\n")
-        val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(jsContents)
+        val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+            context,
+            jsContents
+        )
             ?: return
         webView.loadUrl(jsScriptUrl)
     }
@@ -263,7 +266,7 @@ class WebViewJsDialog(
     ){
         val currentUrl = webView.url
             ?: return
-        terminalFragment.dialogInstance?.dismiss()
+        terminalFragment.webViewDialogInstance?.dismiss()
         ScrollPosition.save(
             terminalFragment,
             currentUrl,
@@ -581,7 +584,7 @@ class WebViewJsDialog(
                     delay(delayMiliTime)
                 }
                 withContext(Dispatchers.Main) {
-                    terminalFragment.dialogInstance?.dismiss()
+                    terminalFragment.webViewDialogInstance?.dismiss()
                 }
             }
         }
@@ -707,9 +710,12 @@ class WebViewJsDialog(
         webView: WebView,
     ){
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             currentScriptPath,
         )
-        val fannelPath = CcPathTool.getMainFannelFilePath(currentScriptPath)
+        val fannelPath = CcPathTool.getMainFannelFilePath(
+            currentScriptPath
+        )
         val fannelPathObj = File(fannelPath)
         if(!fannelPathObj.isFile) return
         val fannelName = fannelPathObj.name
@@ -780,7 +786,10 @@ class WebViewJsDialog(
             context,
             AssetsFileManager.assetsHighlightCopy
         ).split("\n")
-        val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(jsContents)
+        val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+            context,
+            jsContents
+        )
             ?: return
         webView.loadUrl(jsScriptUrl)
     }

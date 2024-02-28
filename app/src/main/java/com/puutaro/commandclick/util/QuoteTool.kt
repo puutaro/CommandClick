@@ -98,7 +98,7 @@ object QuoteTool {
         if(
             isCountStr1 && isCountStr
         ){
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 listOf(
                     "comp quote err",
                     errMessage,

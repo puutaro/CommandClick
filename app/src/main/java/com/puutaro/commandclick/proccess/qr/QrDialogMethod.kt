@@ -207,6 +207,7 @@ object QrDialogMethod {
         fragment: Fragment,
         myBitmap: Bitmap
     ){
+        val context = fragment.context
         val activity = fragment.activity
             ?: return
         FileSystems.removeDir(
@@ -228,6 +229,7 @@ object QrDialogMethod {
         CoroutineScope(Dispatchers.Main).launch {
             IntentVariant.sharePngImage(
                 file,
+                context,
                 activity
             )
         }

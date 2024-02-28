@@ -115,6 +115,7 @@ class FormJsDialog(
             )
 
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
+            context,
             CommandClickVariables.substituteVariableListFromHolder(
                 virtualJsContentsList,
                 settingSectionStart,
@@ -139,11 +140,10 @@ class FormJsDialog(
         }?.split("\n")
 
         val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
+            context,
             setVariableTypeList,
             recordNumToMapNameValueInCommandHolder
         )
-
-
 
         formDialog = Dialog(
             context

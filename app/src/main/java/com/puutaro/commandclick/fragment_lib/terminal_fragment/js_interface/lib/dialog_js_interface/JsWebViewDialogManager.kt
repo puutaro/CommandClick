@@ -10,6 +10,6 @@ class JsWebViewDialogManager(
 
     @JavascriptInterface
     fun dismiss(){
-        terminalFragment.dialogInstance?.dismiss()
+        terminalFragment.webViewDialogInstance?.dismiss()
     }
 }

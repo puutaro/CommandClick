@@ -80,6 +80,7 @@ class EditTextProducerForEdit(
     ){
         val recordNumToSetVariableMaps =
             SetVariableTyper.makeRecordNumToSetVariableMaps(
+                context,
                 editFragment.setVariableTypeList,
                 recordNumToMapNameValueInCommandOrSettingHolder
             )

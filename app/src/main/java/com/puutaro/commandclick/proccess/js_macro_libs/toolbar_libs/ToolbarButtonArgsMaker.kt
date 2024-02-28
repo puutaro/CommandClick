@@ -23,6 +23,7 @@ class ToolbarButtonArgsMaker(
     val toolbarButtonBariantForEdit: ToolbarButtonBariantForEdit,
     private val isLongClick: Boolean,
 ) {
+    private val context = editFragment.context
     private val languageType = LanguageTypeSelects.JAVA_SCRIPT
     private val languageTypeToSectionHolderMap =
         CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
@@ -59,6 +60,7 @@ class ToolbarButtonArgsMaker(
             settingSectionEnd
         )
         SetReplaceVariabler.makeSetReplaceVariableMap(
+            context,
             settingVariableList,
             currentAppDirPath,
             currentScriptFileName,

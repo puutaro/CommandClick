@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.file.FileSystems
@@ -10,6 +11,7 @@ import java.io.File
 object Shell2Http {
 
     fun runCmd(
+        context: Context?,
         executeShellPath:String,
         tabSepaArgs: String = String(),
         timeoutMiliSec: Int,
@@ -29,6 +31,7 @@ object Shell2Http {
                 shellCon
             )
             val shellOutput = CurlManager.get(
+                context,
                 cmdUrl,
                 String(),
                 String(),
@@ -38,7 +41,10 @@ object Shell2Http {
             }
             return shellOutput
         } catch (e: Exception) {
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErr(
+                context,
+                e.toString()
+            )
             return String()
         }
     }

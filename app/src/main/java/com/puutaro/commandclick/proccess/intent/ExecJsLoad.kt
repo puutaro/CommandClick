@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.intent
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -126,6 +127,7 @@ object ExecJsLoad {
             terminalViewModel
         )
         val updateScriptArgsMapList = updateScriptArgsMapList(
+            currentFragment.context,
             recentAppDirPath,
             selectedJsFileName,
         )
@@ -240,6 +242,7 @@ object ExecJsLoad {
     }
 
     private fun updateScriptArgsMapList(
+        context: Context?,
         scriptDirPath: String,
         scriptName: String,
     ): List<Map<String, String>> {
@@ -265,6 +268,7 @@ object ExecJsLoad {
         )
 
         return ScriptArgsMapList.updateScriptArgsMapList(
+            context,
             scriptDirPath,
             scriptName,
             settingSectionVariableList,
@@ -276,6 +280,7 @@ object ExecJsLoad {
         jsConSrc: String,
     ){
         val jsCon = JavaScriptLoadUrl.makeFromContents(
+            fragment.context,
             jsConSrc.split("\n")
         ) ?: return
         JavascriptExecuter.jsUrlLaunchHandler(

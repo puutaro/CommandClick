@@ -16,43 +16,52 @@ object BroadcastHandlerForTerm {
         intent: Intent,
     ){
         val action = intent.action
-        when(action){
-            BroadCastIntentSchemeTerm.HTML_LAUNCH.action
+        val termBroadcastType = BroadCastIntentSchemeTerm.values().firstOrNull {
+            it.action == action
+        } ?: return
+        when(termBroadcastType){
+            BroadCastIntentSchemeTerm.HTML_LAUNCH
             ->  HtmlLauncher.launch(
                 intent,
                 terminalFragment,
             )
-            BroadCastIntentSchemeTerm.ULR_LAUNCH.action
+            BroadCastIntentSchemeTerm.ULR_LAUNCH
             -> BroadcastHtmlReceiveHandler.handle(
                 terminalFragment,
                 intent,
             )
-            BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action
+            BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH
             -> MonitorTextLauncher.handle(
                 terminalFragment,
                 intent,
             )
-            BroadCastIntentSchemeTerm.MONITOR_MANAGER.action
+            BroadCastIntentSchemeTerm.MONITOR_MANAGER
             -> MonitorBroadcastManager.handle(
                 terminalFragment,
                 intent
             )
-            BroadCastIntentSchemeTerm.MONITOR_TOAST.action
+            BroadCastIntentSchemeTerm.MONITOR_TOAST
             -> MonitorToast.launch(
                 terminalFragment,
                 intent
             )
-            BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action
+            BroadCastIntentSchemeTerm.DEBUGGER_NOTI
             -> JsDebugger.launchNoti(
                 terminalFragment,
                 intent,
             )
-            BroadCastIntentSchemeTerm.JS_DEBUG_WATCH.action
-            -> JsDebugger.watch(
+            BroadCastIntentSchemeTerm.DEBUGGER_JS_WATCH
+            -> JsDebugger.jsErrWatch(
                 terminalFragment,
                 intent,
             )
-            BroadCastIntentSchemeTerm.JS_DEBUG_CLOSE.action
+            BroadCastIntentSchemeTerm.DEBUGGER_SYS_WATCH -> {
+                JsDebugger.sysErrWatch(
+                    terminalFragment,
+                    intent,
+                )
+            }
+            BroadCastIntentSchemeTerm.DEBUGGER_CLOSE
             -> JsDebugger.close(
                 terminalFragment,
                 intent

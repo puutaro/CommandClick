@@ -65,7 +65,9 @@ object CcPathTool {
         if (
             pathListStartAppDirName.size < fannelDirListLength
         ) {
-            LogSystems.stdErr("fannel dir not found: ${currentSubFannelPath}")
+            LogSystems.stdWarn(
+                "fannel dir not found: ${currentSubFannelPath}"
+            )
             return String()
         }
         val currentAppDirName =
@@ -96,7 +98,9 @@ object CcPathTool {
         if (
             pathListAfterAppDirName.size < fannelDirListLength
         ) {
-            LogSystems.stdErr("fannel dir not found: ${currentSubFannelPath}")
+            LogSystems.stdWarn(
+                "fannel dir not found: ${currentSubFannelPath}"
+            )
             return String()
         }
         val js_suffix = UsePath.JS_FILE_SUFFIX
@@ -132,7 +136,9 @@ object CcPathTool {
         if (
             pathListStartAppDirName.size < fannelDirListLength
         ) {
-            LogSystems.stdErr("fannel dir not found: ${currentSubFannelPath}")
+            LogSystems.stdWarn(
+                "fannel dir not found: ${currentSubFannelPath}"
+            )
             return String()
         }
         val currentAppDirName =

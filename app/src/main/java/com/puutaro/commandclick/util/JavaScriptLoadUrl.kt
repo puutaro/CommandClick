@@ -64,6 +64,7 @@ object JavaScriptLoadUrl {
             jsListBeforeRemoveTsv.joinToString().replace("\n", "").trim().isEmpty()
         ) return null
         val setReplaceVariableMapBeforeConcatTsvMap = createMakeReplaceVariableMapHandler(
+            context,
             jsListBeforeRemoveTsv,
             recentAppDirPath,
             scriptFileName,
@@ -79,7 +80,6 @@ object JavaScriptLoadUrl {
             extraRepValMap
         )
         val setReplaceVariableMap = CmdVariableReplacer.replace(
-            context,
             execJsPath,
             setReplaceVariableMapBeforeConcatCmdVal
         )
@@ -93,9 +93,9 @@ object JavaScriptLoadUrl {
             )
             val mainFannelName = File(
                     CcPathTool.getMainFannelFilePath(
-                    currentJsPath
-                )
-            ).name
+                        currentJsPath
+                    )
+                ).name
             makeReplaceVariableTableTsv(
                 setReplaceVariableMap,
                 mainCurrentAppDirPath,
@@ -248,6 +248,7 @@ object JavaScriptLoadUrl {
     }
 
     fun makeFromContents (
+        context: Context?,
         jsList: List<String>
     ):String? {
         val languageTypeToSectionHolderMap =
@@ -272,6 +273,7 @@ object JavaScriptLoadUrl {
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
+                context,
                 settingVariableList,
                 String(),
                 String()
@@ -376,22 +378,22 @@ object JavaScriptLoadUrl {
     fun makeLastJsCon(
         loadJsUrl: String
     ): String {
-        val jsDebugActionName = BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action
-        val jsDebugExtraMapCon =
-            listOf(
-                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme,
-                BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level,
-            ).joinToString("=")
+//        val jsDebugActionName = BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action
+//        val jsDebugExtraMapCon =
+//            listOf(
+//                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme,
+//                BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level,
+//            ).joinToString("=")
 
-        "${BroadCastIntentSchemeTerm.JS_DEBUG_NOTI.action}\", \"${BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme}=${BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level}"
+        "${BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action}\", \"${BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme}=${BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level}"
         return "javascript:(function() { " +
                     "try{${loadJsUrl}} catch(error){" +
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
-                        "jsFileSystem.revUpdateFile(\"${UsePath.execDebugJsPath}\", `\\n[ERROR]\\n${'$'}{errMessage}\\n\\n#########\\n\\n`);" +
-                        "jsBroadcast.send(\"${jsDebugActionName}\", \"${jsDebugExtraMapCon}\");" +
-                        "jsFileSystem.errLog(errMessage);" +
+                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[ERROR]\\n${'$'}{errMessage}\\n\\n`);" +
+//                        "jsBroadcast.send(\"${jsDebugActionName}\", \"${jsDebugExtraMapCon}\");" +
+                        "jsFileSystem.errJsLog(errMessage);" +
                     "};" +
                 "})();"
     }
@@ -429,6 +431,7 @@ object JavaScriptLoadUrl {
     }
 
     fun createMakeReplaceVariableMapHandler(
+        context: Context?,
         jsList: List<String>,
         recentAppDirPath: String,
         scriptFileName:  String,
@@ -444,6 +447,7 @@ object JavaScriptLoadUrl {
         )
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMap(
+                context,
                 settingVariableList,
                 recentAppDirPath,
                 scriptFileName
@@ -452,6 +456,7 @@ object JavaScriptLoadUrl {
             !setReplaceVariableMap.isNullOrEmpty()
         ) return setReplaceVariableMap
         return SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             "${recentAppDirPath}/${scriptFileName}",
         )
     }

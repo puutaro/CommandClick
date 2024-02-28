@@ -114,7 +114,10 @@ class BusyboxExecutor(
             )
             process.waitFor()
         } catch (err: Exception) {
-            LogSystems.stdErr("$err")
+            LogSystems.stdErr(
+                context,
+                "$err"
+            )
         }
         return output.removePrefix("\n")
     }
@@ -195,6 +198,7 @@ class BusyboxExecutor(
             }
             withContext(Dispatchers.IO) {
                 LinuxCmd.execCommand(
+                    context,
                     listOf(
                         "chmod",
                         "-R",

@@ -22,6 +22,7 @@ class JsLinux(
             Toast.LENGTH_SHORT
         ).show()
         return LinuxCmd.execCommand(
+            context,
             listOf("sh", "-c", cmdStr).joinToString("\t")
         )
     }

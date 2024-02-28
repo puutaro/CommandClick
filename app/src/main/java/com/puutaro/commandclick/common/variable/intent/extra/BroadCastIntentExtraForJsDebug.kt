@@ -5,14 +5,26 @@ object BroadCastIntentExtraForJsDebug {
     enum class BroadcastSchema(
         val scheme: String
     ) {
-        DEBUG_LEVEL("debug_level"),
+        NOTI_LEVEL("debug_level"),
+        DEBUG_GENRE("debug_type"),
+        DATETIME("datetime"),
     }
 
-    enum class DebugLevelType(
+    enum class NotiLevelType(
         val level: String
     ){
         LOW("low"),
         HIGH("high"),
+    }
+
+    enum class DebugGenre(
+        val type: String,
+        val label: String,
+        val buttonName: String,
+    ){
+        JS_ERR("js","JS ERR", "jsLog"),
+        SYS_ERR("sys","SYS ERR", "sysLog"),
+        ERR("err","ERR", "click bellow button"),
     }
 }
 

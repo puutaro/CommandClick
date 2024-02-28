@@ -18,7 +18,7 @@ function makeTitle(
 ){
     return replaceSimble(
         titleEntry
-    ).replaceAll(/[\\"#$%&'()~^|{}\[\];:`<>*\t]/g, "");
+    ).replaceAll(/[\\"#$%&'()~^|{}\\[\\];:`<>*\t]/g, "");
 }
 
 function makeMailCon(

@@ -88,12 +88,16 @@ object LongPressMenuTool {
         longPressMenuDirPath: String,
         longPressMenuName: String,
     ): List<String> {
+        val context = terminalFragment.context
         val longPressMenuFilePath =  File(longPressMenuDirPath, longPressMenuName).absolutePath
-        val mainFannelPath = CcPathTool.getMainFannelFilePath(longPressMenuFilePath)
+        val mainFannelPath = CcPathTool.getMainFannelFilePath(
+            longPressMenuFilePath
+        )
         val mainFannelPathObj = File(mainFannelPath)
         val currentAppDirPath = mainFannelPathObj.parent ?: String()
         val currentFannelName = mainFannelPathObj.name
         val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             longPressMenuFilePath
         )
         val srcLongPressListConSrc = ReadText(longPressMenuFilePath).readText()

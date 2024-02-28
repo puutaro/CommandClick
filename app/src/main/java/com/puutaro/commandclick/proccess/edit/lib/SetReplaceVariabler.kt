@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
@@ -18,6 +19,7 @@ object SetReplaceVariabler {
     private val importPreWord = SettingFileVariables.importPreWord
 
     fun makeSetReplaceVariableMap(
+        context: Context?,
         settingVariableList: List<String>?,
         currentAppDirPath: String,
         currentScriptFileName: String,
@@ -31,6 +33,7 @@ object SetReplaceVariabler {
             SharePrefferenceSetting.current_fannel_name.name to currentScriptFileName,
         )
         val noImportRepValMap = execMakeSetReplaceVariableMap(
+            context,
             settingVariableList,
             readSharePrefMap,
             null,
@@ -43,6 +46,7 @@ object SetReplaceVariabler {
             !noImportRepValMap.containsKey(importPreWord)
         ) return noImportRepValMap
         return execMakeSetReplaceVariableMap(
+            context,
             settingVariableList,
             readSharePrefMap,
             noImportRepValMap,
@@ -51,6 +55,7 @@ object SetReplaceVariabler {
     }
 
     private fun execMakeSetReplaceVariableMap(
+        context: Context?,
         settingVariableList: List<String>?,
         readSharePrefMap: Map<String, String>,
         noImportRepValMap: Map<String, String>?,
@@ -72,11 +77,13 @@ object SetReplaceVariabler {
                 )
             }
         return recursiveReplaceForReplaceVariableMap(
+            context,
             setReplaceVariableMapBeforeRecursiveReplace
         )
     }
 
     private fun recursiveReplaceForReplaceVariableMap(
+        context: Context?,
         setReplaceVariableMapBeforeRecursiveReplace : Map<String, String>?
     ): Map<String, String>? {
         val firstSetVariableMapStringList = setReplaceVariableMapBeforeRecursiveReplace
@@ -88,6 +95,7 @@ object SetReplaceVariabler {
             val valRepList = lastSetVariableMapStringList.get(it).split("\t")
             if(valRepList.size != 2) {
                 LogSystems.stdErr(
+                    context,
                     "not found '=': " +
                             lastSetVariableMapStringList.joinToString("\t")
                 )
@@ -107,6 +115,7 @@ object SetReplaceVariabler {
             val valRepList = it.split("\t")
             if(valRepList.size != 2) {
                 LogSystems.stdErr(
+                    context,
                     "not found pair: " +
                             lastSetVariableMapStringList.joinToString("\t")
                 )
@@ -176,6 +185,7 @@ object SetReplaceVariabler {
 
 
     fun makeSetReplaceVariableMapFromSubFannel(
+        context: Context?,
         currentSubFannelPath: String
     ): Map<String, String>? {
         val mainFannlePath = CcPathTool.getMainFannelFilePath(
@@ -221,6 +231,7 @@ object SetReplaceVariabler {
         )
 
         return makeSetReplaceVariableMap(
+            context,
             settingVariableList,
             currentAppDirPath,
             mainFannelName,
@@ -228,6 +239,7 @@ object SetReplaceVariabler {
     }
 
     fun getReplaceVariablesTsv(
+        context: Context?,
         currentPath: String,
     ): String {
         val cmdclickAppDirPath = UsePath.cmdclickAppDirPath
@@ -239,7 +251,10 @@ object SetReplaceVariabler {
         if(
             pathListStartAppDirName.size < fannelDirListLength
         ) {
-            LogSystems.stdErr("fannel dir not found: ${currentPath}")
+            LogSystems.stdErr(
+                context,
+                "fannel dir not found: ${currentPath}"
+            )
             return String()
         }
         val fannelDirRelativePath =
@@ -256,6 +271,7 @@ object SetReplaceVariabler {
             !replaceVariablesTsvPathObj.isFile
         ) {
             LogSystems.stdErr(
+                context,
                 "replace variable tsv not found: ${replaceVariablesTsvPath}"
             )
             return String()

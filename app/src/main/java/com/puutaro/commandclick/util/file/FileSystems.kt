@@ -27,7 +27,7 @@ object FileSystems {
             }
             return dirPathObj.mkdirs()
         } catch(e: Exception) {
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
             return false
@@ -46,7 +46,7 @@ object FileSystems {
         try {
             filePathObj.createNewFile()
         } catch (e: java.lang.Exception){
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
@@ -72,7 +72,7 @@ object FileSystems {
         try {
             filePathObj.writeText(contents)
         } catch (e: java.lang.Exception){
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
@@ -90,7 +90,7 @@ object FileSystems {
         try {
             filePathObj.delete()
         } catch (e: java.lang.Exception){
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
@@ -104,7 +104,7 @@ object FileSystems {
         try {
             filePath.deleteRecursively()
         } catch (e: java.lang.Exception){
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
         }
@@ -312,7 +312,7 @@ object FileSystems {
                 StandardCopyOption.REPLACE_EXISTING
             )
         } catch (e: Exception) {
-            LogSystems.stdErr(
+            LogSystems.stdErrByNoBroad(
                 "${e.cause}, ${e.message}, ${e.stackTrace}"
             )
             return
@@ -374,7 +374,7 @@ object FileSystems {
             outputStream.close()
         } catch (e: java.lang.Exception) {
             e.printStackTrace()
-            LogSystems.stdErr(e.stackTrace.toString())
+            LogSystems.stdErrByNoBroad(e.stackTrace.toString())
         }
     }
 
@@ -400,7 +400,7 @@ object FileSystems {
                 input.messageDigest.digest().joinToString("") { "%02x".format(it) }
             }
         } catch (e: Exception){
-            LogSystems.stdErr(e.toString())
+            LogSystems.stdErrByNoBroad(e.toString())
             return filePath
         }
     }

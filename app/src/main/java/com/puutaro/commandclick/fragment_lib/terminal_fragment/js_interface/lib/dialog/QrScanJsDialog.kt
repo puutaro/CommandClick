@@ -331,9 +331,12 @@ class QrScanJsDialog(
 //        replaceMapStr: String = String(),
     ){
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
             currentScriptPath,
         )
-        val fannelPath = CcPathTool.getMainFannelFilePath(currentScriptPath)
+        val fannelPath = CcPathTool.getMainFannelFilePath(
+            currentScriptPath
+        )
         val fannelPathObj = File(fannelPath)
         if(!fannelPathObj.isFile) return
         val currentAppDirPath = fannelPathObj.parent

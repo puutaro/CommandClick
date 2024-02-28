@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.file
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.Intent.CurlManager
 import kotlinx.coroutines.Dispatchers
@@ -53,7 +54,9 @@ class UrlFileSystems {
             ?: String()
     }
 
-    suspend fun getFannelList(){
+    suspend fun getFannelList(
+        context: Context?
+    ){
         if(
             fannelListCon.isNotEmpty()
         ) return
@@ -61,6 +64,7 @@ class UrlFileSystems {
             "$gitUserContentManagePrefix/fannels/list/fannels.txt"
         fannelListCon = withContext(Dispatchers.IO) {
             CurlManager.get(
+                context,
                 fannelListUrl,
                 String(),
                 String(),
@@ -75,12 +79,13 @@ class UrlFileSystems {
     }
 
     suspend fun createFile(
+        context: Context?,
         destiDirPath: String,
         fannelRawName: String = String(),
     ){
 
         withContext(Dispatchers.IO) {
-            getFannelList()
+            getFannelList(context)
         }
         fannelListCon.split("\n").filter {
             it.startsWith(fannelRawName)
@@ -91,6 +96,7 @@ class UrlFileSystems {
             ) return@forEach
             val downloadUrl = "$gitUserContentFannelPrefix/$it"
             val conByteArray = CurlManager.get(
+                context,
                 downloadUrl,
                 String(),
                 String(),

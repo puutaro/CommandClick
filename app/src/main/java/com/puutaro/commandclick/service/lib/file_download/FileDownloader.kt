@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.service.lib.file_download
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.qr.CpFileKey
 import com.puutaro.commandclick.service.lib.file_upload.ReceivePathMacroType
@@ -78,6 +78,7 @@ object FileDownloader {
     private suspend fun getFileListCon(
         fileDownloadService: FileDownloadService
     ){
+        val context = fileDownloadService.applicationContext
         val mainUrl = fileDownloadService.mainUrl
         val getPathOrFannelRawName = fileDownloadService.fullPathPrFannelRawName
         val parendDirPathForUploader =
@@ -103,6 +104,7 @@ object FileDownloader {
 //        )
         for (i in 1..3) {
             val fileListConSrcByteArray = CurlManager.post(
+                context,
                 mainUrl,
                 String(),
                 cpFileMapStr,
@@ -168,6 +170,7 @@ object FileDownloader {
         fileDownloadService: FileDownloadService,
         fileListCon: String,
     ){
+        val context = fileDownloadService.applicationContext
         val currentAppDirPath = fileDownloadService.currentAppDirPath
         val mainUrl = fileDownloadService.mainUrl
         val getPathOrFannelRawName = fileDownloadService.fullPathPrFannelRawName
@@ -225,6 +228,7 @@ object FileDownloader {
 //            )
             val con = withContext(Dispatchers.IO) {
                 getFileCon(
+                    context,
                     mainUrl,
                     parendDirPathForUploader,
                     cpUploaderFilePath,
@@ -271,6 +275,7 @@ object FileDownloader {
                 if(it < cpFileListIndexSize) return@launch
                 withContext(Dispatchers.IO){
                     CurlManager.post(
+                        context,
                         mainUrl,
                         "Content-type\ttext/plain",
                         cpFileMapStr,
@@ -298,6 +303,7 @@ object FileDownloader {
     }
 
     private suspend fun getFileCon(
+        context: Context?,
         mainUrl: String,
         parendDirPathForUploader: String,
         cpUploaderFilePath: String,
@@ -310,6 +316,7 @@ object FileDownloader {
         ).joinToString("\t")
         for (i in 1..3) {
             conSrc = CurlManager.post(
+                context,
                 mainUrl,
                 "Content-type\ttext/plain",
                 cpFileMapStr,
