@@ -139,9 +139,10 @@ object JsActionKeyManager {
             if(
                 firstFuncName.isNullOrEmpty()
             ) return false
-            return PipUnableFuncSuffix.values().any {
-                !firstFuncName.endsWith(it.suffix)
-            }
+            return true
+//            PipUnableFuncSuffix.values().any {
+//                !firstFuncName.endsWith(it.suffix)
+//            }
         }
 
 

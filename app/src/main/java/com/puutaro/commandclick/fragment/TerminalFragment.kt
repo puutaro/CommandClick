@@ -19,19 +19,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.abdeveloper.library.MultiSelectModel
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.databinding.TerminalFragmentBinding
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.*
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.register.BroadcastRegisterForTerm
 import com.puutaro.commandclick.proccess.broadcast.BroadcastRegister
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.InitCurrentMonitorFile
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.ValidFannelNameGetterForTerm
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.TerminalOnHandlerForEdit
 import com.puutaro.commandclick.proccess.IntentAction
-import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.FileOrDirGetterForSettingButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -205,20 +205,14 @@ class   TerminalFragment: Fragment() {
         WebViewSettings.set(this)
         TermOnLongClickListener.set(this)
         MonitorFileManager.trim(terminalViewModel)
+        BroadcastRegisterForTerm.register(this)
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
         TerminalOnHandlerForEdit.handle(this)
-        BroadcastSender.normalSend(
-            context,
-            BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-            listOf(
-                BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
-                        to "start"
-            )
-        )
+        JsDebugger.stockLogSender(this)
     }
 
 
@@ -235,10 +229,6 @@ class   TerminalFragment: Fragment() {
         terminalWebView.stopLoading()
         terminalWebView.removeAllViews()
         activity?.intent?.action = String()
-        BroadcastRegister.unregisterBroadcastReceiverForTerm(
-            this,
-            broadcastReceiverForTerm
-        )
         binding.terminalWebView.onPause()
         loadAssetCoroutineJob?.cancel()
         onPageFinishedCoroutineJob?.cancel()
@@ -278,21 +268,6 @@ class   TerminalFragment: Fragment() {
         displayUpdateCoroutineJob = DisplaySwitch.update(
             this,
             terminalViewModel,
-        )
-        BroadcastRegister.registerBroadcastReceiverMultiActions(
-            this,
-            broadcastReceiverForTerm,
-            listOf(
-                BroadCastIntentSchemeTerm.HTML_LAUNCH.action,
-                BroadCastIntentSchemeTerm.ULR_LAUNCH.action,
-                BroadCastIntentSchemeTerm.MONITOR_TEXT_PATH.action,
-                BroadCastIntentSchemeTerm.MONITOR_MANAGER.action,
-                BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
-                BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
-                BroadCastIntentSchemeTerm.DEBUGGER_JS_WATCH.action,
-                BroadCastIntentSchemeTerm.DEBUGGER_SYS_WATCH.action,
-                BroadCastIntentSchemeTerm.DEBUGGER_CLOSE.action,
-            )
         )
         previousTerminalTag = tag
     }
@@ -379,6 +354,10 @@ class   TerminalFragment: Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        BroadcastRegister.unregisterBroadcastReceiverForTerm(
+            this,
+            broadcastReceiverForTerm
+        )
         this.onPageFinishedCoroutineJob?.cancel()
         this.registerUrlHistoryTitleCoroutineJob?.cancel()
         this.displayUpdateCoroutineJob?.cancel()

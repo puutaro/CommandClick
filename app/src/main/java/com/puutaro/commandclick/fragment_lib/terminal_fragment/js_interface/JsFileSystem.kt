@@ -33,6 +33,12 @@ class JsFileSystem(
     }
 
     @JavascriptInterface
+    fun read(path: String): String {
+        return readLocalFile(
+            path
+        )
+    }
+    @JavascriptInterface
     fun writeLocalFile(
         filePath: String,
         contents: String
@@ -40,6 +46,17 @@ class JsFileSystem(
         FileSystems.writeFile(
             filePath,
             contents
+        )
+    }
+
+    @JavascriptInterface
+    fun write(
+        filePath: String,
+        contents: String
+    ) {
+        writeLocalFile(
+            filePath,
+            contents,
         )
     }
 
@@ -91,13 +108,6 @@ class JsFileSystem(
     fun errLog(
         con: String
     ){
-        val jsDebugActionName = BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action
-        val jsDebugExtraMapCon =
-            listOf(
-                BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme,
-                BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level,
-            ).joinToString("=")
-
         LogSystems.stdErr(
             context,
             con

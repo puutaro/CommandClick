@@ -11,6 +11,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WevViewDialogUriPrefix
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
@@ -18,12 +19,72 @@ import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.time.LocalDateTime
 
 object JsDebugger {
 
     private val chanelId = ServiceChannelNum.jsDebugger
+
+    enum class StockLogMapKey(
+        val key: String,
+    ) {
+        DATETIME(BroadCastIntentExtraForJsDebug.BroadcastSchema.DATETIME.scheme),
+        NOTI_LEVEL(BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme),
+        DEBUG_LEVEL(BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme)
+    }
+
+    fun putStockLogMap(
+        notiDatetime: String,
+        notiLevelStr: String,
+        debugNotiJanreStr: String,
+    ) {
+        FileSystems.writeFile(
+            UsePath.jsDebuggerMapTxtPath,
+            listOf(
+                "${StockLogMapKey.DATETIME.key}\t${notiDatetime}",
+                "${StockLogMapKey.NOTI_LEVEL.key}\t${notiLevelStr}",
+                "${StockLogMapKey.DEBUG_LEVEL.key}\t${debugNotiJanreStr}",
+            ).joinToString("\n")
+        )
+    }
+
+    fun stockLogSender(
+        terminalFragment: TerminalFragment
+    ){
+        val context = terminalFragment.context
+        val jsDebuggerMapTxtPath = UsePath.jsDebuggerMapTxtPath
+        if(
+            !File(jsDebuggerMapTxtPath).isFile
+        ) return
+        val jsDebugExtraPairList = ReadText(
+            jsDebuggerMapTxtPath
+        ).readText().replace("\t", "=").let {
+            CmdClickMap.createMap(
+                it,
+                '\n'
+            )
+        }
+        if(
+            jsDebugExtraPairList.isEmpty()
+        ) return
+        CoroutineScope(Dispatchers.IO).launch {
+            delay(1000)
+            withContext(Dispatchers.IO) {
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,
+                    jsDebugExtraPairList
+                )
+            }
+        }
+    }
 
     fun close(
         terminalFragment: TerminalFragment,
@@ -48,11 +109,11 @@ object JsDebugger {
         val debugLevelStr = intent.getStringExtra(
             BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme
         )
-        val debugLabelSrc = intent.getStringExtra(
+        val debugGenreStr = intent.getStringExtra(
             BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme
         )
-        val debugJanre = BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
-            it.type == debugLabelSrc
+        val debugGenre = BroadCastIntentExtraForJsDebug.DebugGenre.values().firstOrNull {
+            it.type == debugGenreStr
         } ?: BroadCastIntentExtraForJsDebug.DebugGenre.ERR
         val debugLevel =
             BroadCastIntentExtraForJsDebug.NotiLevelType.values().firstOrNull {
@@ -93,27 +154,28 @@ object JsDebugger {
         )
             .setSmallIcon(com.puutaro.commandclick.R.drawable.icons8_file)
             .setAutoCancel(true)
-            .setContentTitle("[${debugJanre.label}] ${notiDatetime} ")
-            .setContentText("Click ${debugJanre.buttonName}")
+            .setContentTitle("[${debugGenre.label}] ${notiDatetime} ")
+            .setContentText("Click ${debugGenre.buttonName}")
             .setDeleteIntent(
                 cancelPendingIntent
-            )
-            .addAction(
+            ).addAction(
                 R.drawable.ic_menu_close_clear_cancel,
                 BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.buttonName,
                 jsErrwatchPendingIntent
-            )
-            .addAction(
+            ).addAction(
                 R.drawable.ic_menu_close_clear_cancel,
                 BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.buttonName,
                 editErrWatchPendingIntent
             )
-            val notificationInstance = notificationBuilder.build()
-                notificationManager.notify(
-                chanelId,
-                notificationInstance
-            )
-        }
+        val notificationInstance = notificationBuilder.build()
+            notificationManager.notify(
+            chanelId,
+            notificationInstance
+        )
+        FileSystems.removeFiles(
+            UsePath.jsDebuggerMapTxtPath
+        )
+    }
 
     fun jsErrWatch(
         terminalFragment: TerminalFragment,
@@ -177,7 +239,6 @@ object JsDebugger {
         val logPrefixRegex = Regex(
             "^${LogSystems.logPrefix}"
         )
-        val preTagHolder = LogTool.preTagHolder
         val spanTagHolder = LogTool.spanTagHolder
         val errMark = LogTool.errMark
         var times = 0

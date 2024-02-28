@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.common.variable
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 
 object LogTool {
@@ -49,16 +50,19 @@ object LogTool {
             it.isNotEmpty()
         }?.map {
             val colorStr =
-                LogTool.makeColorCode(times)
+                makeColorCode(times)
             times++
             preTagHolder.format(
                 colorStr,
                 "${it.key}: ${it.value}",
             )
         }?.joinToString("\n")
+        val displayJsAcSrc = makeDisplayJsAcSrc(
+            jsAcKeyToSubKeyCon
+        )
         val srcPreTag = preTagHolder.format(
-            LogTool.makeColorCode(times),
-            "src: ${jsAcKeyToSubKeyCon}"
+            makeColorCode(times),
+            "src: ${displayJsAcSrc}"
         )
         FileSystems.writeFile(
             UsePath.jsDebugReportPath,
@@ -68,5 +72,27 @@ object LogTool {
                 srcPreTag,
             ).joinToString("\n")
         )
+    }
+
+    private fun makeDisplayJsAcSrc(
+        jsActionMapLogCon: String?
+    ): String {
+        return QuoteTool.replaceBySurroundedIgnore(
+            jsActionMapLogCon ?: String(),
+            '|',
+            "\n\n>|"
+        ).let {
+            QuoteTool.replaceBySurroundedIgnore(
+                it,
+                '!',
+                "\n !"
+            )
+        }.let {
+            QuoteTool.replaceBySurroundedIgnore(
+                it,
+                '&',
+                "\n  &"
+            )
+        }
     }
 }

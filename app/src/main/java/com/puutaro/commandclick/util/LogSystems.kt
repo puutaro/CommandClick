@@ -5,6 +5,7 @@ import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.broadcast.receiver.JsDebugger
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.util.file.FileSystems
 import kotlinx.coroutines.CoroutineScope
@@ -137,6 +138,11 @@ object LogSystems {
                 BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_GENRE.scheme
                         to debugNotiJanre.type,
             )
+        JsDebugger.putStockLogMap(
+            notiDatetime,
+            notiLevel.level,
+            debugNotiJanre.type
+        )
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action,

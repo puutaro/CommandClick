@@ -32,8 +32,26 @@ class JsTsv(
     fun getFirstLine(
         path: String,
     ): String {
-        return getFirstLine(
+        return TsvTool.getFirstLine(
             path,
+        )
+    }
+
+    @JavascriptInterface
+    fun getSecondRow(
+        con: String,
+    ): String {
+        return TsvTool.getSecondRow(
+            con
+        )
+    }
+
+    @JavascriptInterface
+    fun getFirstRow(
+        con: String,
+    ): String {
+        return TsvTool.getFirstRow(
+            con
         )
     }
 }

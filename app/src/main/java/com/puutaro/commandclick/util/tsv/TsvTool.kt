@@ -153,4 +153,32 @@ object TsvTool {
             )
         }.firstOrNull() ?: String()
     }
+
+    fun getSecondRow(
+        con: String,
+    ): String {
+        return filterByColumnNum(
+            con.split("\n"),
+            twoColumnNum
+        ).map {
+            it.split("\t").lastOrNull()
+                ?: String()
+        }.filter {
+            it.isNotEmpty()
+        }.joinToString("\n")
+    }
+
+    fun getFirstRow(
+        con: String,
+    ): String {
+        return filterByColumnNum(
+            con.split("\n"),
+            twoColumnNum
+        ).map {
+            it.split("\t").firstOrNull()
+                ?: String()
+        }.filter {
+            it.isNotEmpty()
+        }.joinToString("\n")
+    }
 }

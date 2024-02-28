@@ -4,6 +4,7 @@ package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 import TsvImportManager
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.LogTool
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
@@ -14,6 +15,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
@@ -40,19 +42,6 @@ object JsActionTool {
             .trim()
             .removePrefix("//")
             .trim() == jsActionShiban
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jaActionsJudage.txt").absolutePath,
-//            listOf(
-////                "fragment: ${fragment}",
-////                "isEditFragment: ${isEditFragment}",
-//                "firstLine: AAA${firstLine
-//                    .trim()
-//                    .removePrefix("//")
-//                    .trim()}BB",
-//                "jsActionShiban: ${jsActionShiban}",
-//                "isExistJsAcShiban: ${isExistJsAcShiban}",
-//            ).joinToString("\n\n")
-//        )
         return isExistJsAcShiban
     }
 
@@ -608,7 +597,7 @@ object JsActionTool {
             val id = it.get(
                 overrideKeyName
             ) ?: return@map it
-            val overrideMapSrc = JsActionKeyManager.OverrideManager.makeOverrideMap(
+                val overrideMapSrc = JsActionKeyManager.OverrideManager.makeOverrideMap(
                 overrideMapList,
                 id,
             )
@@ -819,19 +808,6 @@ private object KeyToSubKeyConListMaker {
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
     ): List<Pair<String, String>> {
-//        val readSharePreferenceMap = when(fragment){
-//            is EditFragment -> fragment.readSharePreferenceMap
-//            is CommandIndexFragment -> emptyMap()
-//            is TerminalFragment -> fragment.readSharePreferenceMap
-//            else -> emptyMap()
-//        }
-//        val setReplaceVariableMap = setReplaceVariableMap
-//            .) when(fragment){
-//            is EditFragment -> fragment.setReplaceVariableMap
-//            is CommandIndexFragment -> emptyMap()
-//            is TerminalFragment -> fragment.setReplaceVariableMap
-//            else -> emptyMap()
-//        }
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )
