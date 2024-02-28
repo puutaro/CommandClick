@@ -3,6 +3,7 @@ package com.puutaro.commandclick.util
 import TsvImportManager
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.common.variable.LogVal
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -378,21 +379,12 @@ object JavaScriptLoadUrl {
     fun makeLastJsCon(
         loadJsUrl: String
     ): String {
-//        val jsDebugActionName = BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action
-//        val jsDebugExtraMapCon =
-//            listOf(
-//                BroadCastIntentExtraForJsDebug.BroadcastSchema.DEBUG_LEVEL.scheme,
-//                BroadCastIntentExtraForJsDebug.DebugLevelType.HIGH.level,
-//            ).joinToString("=")
-
-        "${BroadCastIntentSchemeTerm.DEBUGGER_NOTI.action}\", \"${BroadCastIntentExtraForJsDebug.BroadcastSchema.NOTI_LEVEL.scheme}=${BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level}"
         return "javascript:(function() { " +
                     "try{${loadJsUrl}} catch(error){" +
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
                         "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
-                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[ERROR]\\n${'$'}{errMessage}\\n\\n`);" +
-//                        "jsBroadcast.send(\"${jsDebugActionName}\", \"${jsDebugExtraMapCon}\");" +
+                        "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[${LogVal.errMark}]\\n${'$'}{errMessage}\\n\\n`);" +
                         "jsFileSystem.errJsLog(errMessage);" +
                     "};" +
                 "})();"

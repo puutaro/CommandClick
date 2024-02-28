@@ -18,6 +18,7 @@ import android.widget.AutoCompleteTextView
 import android.widget.ProgressBar
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
+import com.puutaro.commandclick.common.variable.LogVal
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -132,9 +133,13 @@ object WebChromeClientSetter {
                         val jsDebugCon = ReadText(
                             execDebugJsPath
                         ).readText()
+                        val errEvidence = LogVal.preTagHolder.format(
+                        LogVal.errRedCode,
+                        "[${LogVal.errMark}]\n${output}"
+                    )
                         FileSystems.writeFile(
                             execDebugJsPath,
-                            "\n[ERROR]\n${output}\n\n#########\n\n${jsDebugCon}"
+                            "\n${errEvidence}\n\n${jsDebugCon}"
                         )
                     }
                     withContext(Dispatchers.IO) {

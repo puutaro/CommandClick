@@ -181,7 +181,7 @@ object JsDebugger {
         val spanTagHolder = LogVal.spanTagHolder
         val errMark = LogVal.errMark
         var times = 0
-        return ReadText(
+        val sysLogCon = ReadText(
             File(
                 UsePath.cmdclickMonitorDirPath,
                 UsePath.cmdClickMonitorFileName_2,
@@ -197,21 +197,39 @@ object JsDebugger {
             if(
                 el.trim().isEmpty()
             ) return@map el
+            val leadAndBodyList = el.split("\n")
+            val lead = leadAndBodyList.firstOrNull()
+                ?: return@map el
+            val body = leadAndBodyList.filterIndexed {
+                index, s -> index > 0
+            }.joinToString("\n")
+            val leadColorStr =
+                LogVal.makeLeadColorCode(times)
             val colorStr = LogVal.makeColorCode(
                 times
             )
             times++
-            preTagHolder.format(
-                colorStr,
-                el
-            )
+            listOf(
+                spanTagHolder.format(
+                    leadColorStr,
+                    lead
+                ),
+                spanTagHolder.format(
+                    colorStr,
+                    body.trim().trim('\n')
+                )
+            ).joinToString("\n") + "\n\n"
         }.joinToString("\n").replace(
             errMark,
             spanTagHolder.format(
                 LogVal.errRedCode,
                 errMark
             )
+        ).replace(
+            "\n{4,}".toRegex(),
+            "\n\n\n"
         )
+        return "\n${sysLogCon}"
     }
 }
 

@@ -85,7 +85,7 @@ object JsActionHandler {
         FileSystems.writeFile(
             UsePath.jsDebugReportPath,
             listOf(
-                "jsAction",
+                "[JsAction]\n",
                 jsActionMapLogCon,
                 srcPreTag,
             ).joinToString("\n")

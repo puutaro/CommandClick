@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.intent.lib
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.LogVal
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -157,10 +158,10 @@ object JavascriptExecuter {
                 FileSystems.writeFile(
                     UsePath.jsDebugReportPath,
                     listOf(
-                        "Normal js",
+                        "[Normal JS]\n",
                         separator,
                         execJsCon,
-                    ).joinToString("\n") + "\n#########\n"
+                    ).joinToString("\n")
                 )
                 jsUrlLaunchHandler(
                     fragment,
