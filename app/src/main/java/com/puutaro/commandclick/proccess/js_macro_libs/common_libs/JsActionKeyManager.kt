@@ -18,6 +18,12 @@ object JsActionKeyManager {
         REPLACE("replace")
     }
 
+    enum class CommonPathKey(
+        val key: String
+    ) {
+        PATH("path"),
+    }
+
     enum class JsSubKey(
         val key: String
     ) {
@@ -43,7 +49,7 @@ object JsActionKeyManager {
         enum class NoOverrideJsSubKey(val key: String){
             ID(JsSubKey.ID.key),
             AFTER(JsSubKey.AFTER.key),
-            OVERRIDE(JsSubKey.OVERRIDE.key),
+//            OVERRIDE(JsSubKey.OVERRIDE.key),
         }
 
         fun makeOverrideMap(
