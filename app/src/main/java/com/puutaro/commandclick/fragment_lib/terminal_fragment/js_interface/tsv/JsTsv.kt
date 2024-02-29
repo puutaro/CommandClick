@@ -54,4 +54,15 @@ class JsTsv(
             con
         )
     }
+
+    @JavascriptInterface
+    fun getKeyValue(
+        path: String,
+        key: String,
+    ): String {
+        return TsvTool.getKeyValue(
+            path,
+            key,
+        )
+    }
 }

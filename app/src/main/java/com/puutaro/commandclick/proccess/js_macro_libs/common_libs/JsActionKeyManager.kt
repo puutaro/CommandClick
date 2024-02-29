@@ -36,6 +36,7 @@ object JsActionKeyManager {
         ON_RETURN("onReturn"),
         IF("if"),
         VAR("var"),
+        AFTER_JS_CON("afterJsCon"),
         AFTER("after"),
         DESC("desc"),
         EXIT_JUDGE("exitJudge"),

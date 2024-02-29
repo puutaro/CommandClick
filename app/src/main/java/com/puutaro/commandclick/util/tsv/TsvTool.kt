@@ -181,4 +181,18 @@ object TsvTool {
             it.isNotEmpty()
         }.joinToString("\n")
     }
+
+    fun getKeyValue(
+        path: String,
+        key: String,
+    ): String {
+        return filterByColumnNum(
+            ReadText(path).textToList(),
+            twoColumnNum
+        ).firstOrNull {
+            it.startsWith("${key}\t")
+        }?.split("\t")
+            ?.lastOrNull()
+            ?: String()
+    }
 }

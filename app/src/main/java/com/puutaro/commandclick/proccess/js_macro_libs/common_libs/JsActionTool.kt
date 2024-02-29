@@ -15,7 +15,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
@@ -1279,13 +1278,18 @@ private object JsConPutter {
             jsMap,
             loopMethodTemplate,
         )
+        val afterJsCon = makeAfterJsCon(jsMap)
+            .replace("\n", "\n\t")
         val afterFuncCon = putAfterFunc(
             jsMap,
             jsMapListOnlyAfter
         )
         val compLoopMethodTemplateWithVar =
             loopMethodTemplateWithVar.format(
-                afterFuncCon
+                listOf(
+                    afterJsCon,
+                    afterFuncCon
+                ).joinToString("\n")
             )
         val exitJudgeCon = makeFuncConWithVarExitJudge(
             jsMap,
@@ -1316,6 +1320,7 @@ private object JsConPutter {
             jsMap,
             funcCon,
         )
+        val afterJsCon = makeAfterJsCon(jsMap)
         val exitJudgeCon = makeFuncConWithVarExitJudge(
             jsMap,
         )
@@ -1337,6 +1342,7 @@ private object JsConPutter {
         return listOf(
             makeStartToast(jsMap),
             funcConWithVar,
+            afterJsCon,
             exitJudgeCon,
             afterFuncCon,
             makeEndToast(jsMap),
@@ -1406,6 +1412,61 @@ private object JsConPutter {
             true -> funcCon
             else -> "var ${varName} = ${funcCon}"
         }
+    }
+
+    private fun makeAfterJsCon(
+        jsMap: Map<String, String>,
+    ): String {
+        val afterJsConList =
+            jsMap.get(
+                JsActionKeyManager.JsSubKey.AFTER_JS_CON.key
+            ).let {
+                CmdClickMap.createMap(
+                    it,
+                    '&'
+                ).map {
+                    execMakeAfterJsCon(it)
+                }
+            }
+        return afterJsConList.joinToString("\n")
+    }
+
+    private fun execMakeAfterJsCon(
+        varNameToJsCon: Pair<String, String>
+    ): String {
+        val varName = varNameToJsCon.first.trim()
+        val jsLine = varNameToJsCon.second.trim()
+        val disableVar = varName
+            .contains(" ")
+                || varName.contains("\"")
+                || varName.contains("\'")
+                || varName.contains("`")
+        val logVarName = QuoteTool.trimBothEdgeQuote(
+            varName
+        )
+        val logJsCon = listOf(
+            "//_/_/_/ ${logVarName} start",
+            "jsFileSystem.stdLog(\"${logVarName}\");",
+        ).joinToString("\n")
+        val varNameCon = when(disableVar) {
+            true -> String()
+            else -> listOf(
+                "var",
+                varName,
+                "="
+            ).joinToString(" ")
+        }
+        val afterJsCon = listOf(
+            varNameCon,
+            UsePath.compExtend(
+                jsLine,
+                ";"
+            ),
+        ).joinToString(" ").trim()
+        return listOf(
+            logJsCon,
+            afterJsCon
+        ).joinToString("\n")
     }
 
     private fun makeToastMessage(
