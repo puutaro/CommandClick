@@ -6,13 +6,13 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.EditParameters
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
@@ -20,8 +20,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
-import com.puutaro.commandclick.util.file.FileSystems
-import java.io.File
 
 
 class WithIndexListView(
@@ -202,7 +200,9 @@ class WithIndexListView(
                     editFragment,
                     it
                 )
-                else -> editFragment.editBoxTitle
+                else -> TitleImageAndViewSetter.makeDefaultTitle(
+                    editFragment,
+                )
             }
         }
         searchText.addTextChangedListener(object : TextWatcher {

@@ -176,6 +176,8 @@ object ListSettingVariableListMaker {
             -> UsePath.listIndexForEditConfigPath
             CommandClickScriptVariable.QR_DIALOG_CONFIG
             -> UsePath.qrDialogConfigPath
+            CommandClickScriptVariable.EDIT_BOX_TITLE
+            -> UsePath.editTitleConfigPath
             else -> String()
         }
     }

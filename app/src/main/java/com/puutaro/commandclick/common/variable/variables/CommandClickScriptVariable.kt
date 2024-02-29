@@ -87,6 +87,7 @@ object CommandClickScriptVariable {
     val CMDCLICK_RUN_SHELL_DEFAULT_VALUE = "bash"
     val CMDCLICK_HOME_FANNELS_PATH = "homeFannelsPath"
     val PASS_CMDVARIABLE_EDIT = "passCmdVariableEdit"
+    val EDIT_TITLE_CONFIG = "editTitleConfig"
     val SETTING_BUTTON_CONFIG = "settingButtonConfig"
     val EDIT_BUTTON_CONFIG = "editButtonConfig"
     val PLAY_BUTTON_CONFIG = "playButtonConfig"

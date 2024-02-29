@@ -156,7 +156,6 @@ object UsePath {
     val fannelReadmePath = "\${01}/\${001}/${fannelReadmeName}"
 
 
-    const val clickBackupDirNameInAppDir = "backup"
     private const val cmdclickSystemDirName = "system"
     private const val cmdclickJsSystemDirName = "js"
     const val cmdclickJsSystemDirRelativePath = "$cmdclickSystemDirName/$cmdclickJsSystemDirName"
@@ -199,6 +198,8 @@ object UsePath {
     val extraButtonConfigPath =  "$fannelSettingsDirPath/${extraButtonConfigName}"
     private val editButtonConfigName = "editButtonConfig.js"
     val editButtonConfigPath =  "$fannelSettingsDirPath/${editButtonConfigName}"
+    private val editTitleConfig = "editTitleConfig.js"
+    val editTitleConfigPath =  "$fannelSettingsDirPath/${editTitleConfig}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"

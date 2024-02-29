@@ -177,7 +177,7 @@ private object EditTextMaker {
                 EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
 
             else -> shellConSrc
-        }?.let {
+        }.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
                 it,
                 setReplaceVariableMap,

@@ -123,7 +123,7 @@ class EditFragment: Fragment() {
     var directoryAndCopyGetter: DirectoryAndCopyGetter? = null
     val toolBarButtonVisibleMap = ToolbarButtonToolForEdit.createInitButtonDisableMap()
     val toolBarButtonIconMap = ToolbarButtonToolForEdit.createInitButtonIconMap()
-    var editBoxTitle = String()
+    var editBoxTitleConfig: Map<String, String> = emptyMap()
     var filterDir = String()
     var buttonWeight = 0.25f
     var onNoUrlSaveMenu = false
@@ -279,11 +279,11 @@ class EditFragment: Fragment() {
             webSearchToolbarManagerForEdit.setCancelListener()
             webSearchToolbarManagerForEdit.setGoogleSuggest()
         }
-        TitleImageAndViewSetter.set(
-            this,
-            currentAppDirPath,
-            currentFannelName
-        )
+//        TitleImageAndViewSetter.set(
+//            this,
+//            currentAppDirPath,
+//            currentFannelName
+//        )
 
         val window = activity?.window
         window?.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)

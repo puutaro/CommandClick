@@ -75,25 +75,29 @@ object ConfigFromScriptFileSetter {
                 editFragment,
             )
 
-        val defaultEditBoxTitle = TitleImageAndViewSetter.makeTitle(
+        editFragment.editBoxTitleConfig = makeConfigMapFromSettingValList(
             editFragment,
-            currentAppDirPath,
-            currentScriptFileName
-        )
-        editFragment.editBoxTitle = SettingVariableReader.getStrValue(
             settingVariableList,
-            CommandClickScriptVariable.EDIT_BOX_TITLE,
+            CommandClickScriptVariable.EDIT_TITLE_CONFIG,
             String(),
-        ).let {
-            if(
-                it.isNotEmpty()
-            ) return@let TitleImageAndViewSetter.makeTitleForEditTitle(
-                    editFragment,
-                    it
-                )
-            defaultEditBoxTitle
-        }
-        makeToolbarButtonConfigMap(
+        )
+        TitleImageAndViewSetter.set(
+            editFragment
+        )
+//            SettingVariableReader.getStrValue(
+//            settingVariableList,
+//            CommandClickScriptVariable.EDIT_BOX_TITLE,
+//            String(),
+//        ).let {
+//            if(
+//                it.isNotEmpty()
+//            ) return@let TitleImageAndViewSetter.makeTitleForEditTitle(
+//                    editFragment,
+//                    it
+//                )
+//            defaultEditBoxTitle
+//        }
+        makeConfigMapFromSettingValList(
             editFragment,
             settingVariableList,
             onShortcut,
@@ -104,13 +108,13 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE,
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
-        editFragment.listIndexConfigMap = makeToolbarButtonConfigMap(
+        editFragment.listIndexConfigMap = makeConfigMapFromSettingValList(
             editFragment,
             settingVariableList,
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
             String(),
         )
-        editFragment.qrDialogConfig = makeToolbarButtonConfigMap(
+        editFragment.qrDialogConfig = makeConfigMapFromSettingValList(
             editFragment,
             settingVariableList,
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
@@ -393,7 +397,7 @@ object ConfigFromScriptFileSetter {
         )
     }
 
-    private fun makeToolbarButtonConfigMap(
+    private fun makeConfigMapFromSettingValList(
         editFragment: EditFragment,
         settingVariableList: List<String>?,
         onShortcut: Boolean,
@@ -535,7 +539,7 @@ object ConfigFromScriptFileSetter {
         if(
             !onShortcut
         ) return mapOf()
-        return makeToolbarButtonConfigMap(
+        return makeConfigMapFromSettingValList(
             editFragment,
             settingVariableList,
             targetSettingConfigValName,
@@ -562,7 +566,7 @@ object ConfigFromScriptFileSetter {
                             MacroForToolbarButton.Macro.OK.name
                         ).joinToString("=")
             )
-            else -> makeToolbarButtonConfigMap(
+            else -> makeConfigMapFromSettingValList(
                 editFragment,
                 settingVariableList,
                 CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
@@ -571,7 +575,7 @@ object ConfigFromScriptFileSetter {
         }
     }
 
-    private fun makeToolbarButtonConfigMap(
+    private fun makeConfigMapFromSettingValList(
         editFragment: EditFragment,
         settingVariableList: List<String>?,
         targetSettingConfigValName: String,
