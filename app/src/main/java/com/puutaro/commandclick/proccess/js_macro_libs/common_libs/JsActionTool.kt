@@ -425,15 +425,6 @@ object JsActionTool {
         return keyToSubKeyConListWithoutAfterSubKey.take(sizeByUnPipAble)
     }
 
-    private fun filterByOverrideJsSubKey(
-        keyToSubKeyConList: List<Pair<String, String>>
-    ): List<Pair<String, String>> {
-        return keyToSubKeyConList.filter {
-            val mainKeyName = it.first
-            mainKeyName == overrideMainKeyName
-        }
-    }
-
     private fun filterByMainKey(
         keyToSubKeyMapList: List<Pair<String, Map<String, String>>>,
         filterMainKeyName: String,
@@ -442,24 +433,6 @@ object JsActionTool {
             val mainKeyName = it.first
             return@filter mainKeyName == filterMainKeyName
         }
-    }
-
-
-    private fun extractJsRepValMap(
-        keyToSubKeyConList: List<Pair<String, String>>
-    ): Map<String, String> {
-       return keyToSubKeyConList.map {
-            val mainKeyName = it.first
-            if(
-                mainKeyName != replaceMainKeyName
-            ) return@map emptyList()
-            val jsSubKeySeparator = '!'
-            val subKeyMapCon = it.second
-            CmdClickMap.createMap(
-                subKeyMapCon,
-                jsSubKeySeparator
-            )
-        }.flatten().toMap()
     }
 
     private fun filterByAfterJsSubKey(
@@ -479,7 +452,6 @@ object JsActionTool {
     private fun howPipUnableComponent(
         mainKeyNameToSubKeyCon: Pair<String, Map<String, String>>
     ): Boolean {
-        val jsSubKeySeparator = '!'
         val mainKeyName = mainKeyNameToSubKeyCon.first
         if(
             mainKeyName == jsPathKeyName
