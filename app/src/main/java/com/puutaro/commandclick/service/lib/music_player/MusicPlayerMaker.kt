@@ -216,22 +216,4 @@ object MusicPlayerMaker {
             )
         }
     }
-//
-//    private fun convertMilliToDisplayTime(
-//        currentPosi: Int?
-//    ): String {
-//        if(
-//            currentPosi == null
-//        ) return String()
-//        var millis = currentPosi.toLong()
-//        val hours = TimeUnit.MILLISECONDS.toHours(millis)
-//        millis -= TimeUnit.HOURS.toMillis(hours)
-//        val minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
-//        millis -= TimeUnit.MINUTES.toMillis(minutes)
-//        val seconds = TimeUnit.MILLISECONDS.toSeconds(millis)
-//        return "${hours}:${minutes}:${seconds}"
-////        val secs = (currentPosi % 60000) / 1000
-//    }
-
-
 }
