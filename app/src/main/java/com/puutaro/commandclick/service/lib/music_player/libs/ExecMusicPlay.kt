@@ -31,9 +31,7 @@ object ExecMusicPlay {
                 Toast.LENGTH_SHORT
             ).show()
         }
-        musicPlayerService.notiSetter?.setOnStop(
-            musicPlayerService.mediaPlayer
-        )
+        musicPlayerService.notiSetter?.setOnStop()
         val isYtUrl = judgeYtUri(
             playList,
             playIndex
@@ -132,7 +130,6 @@ object ExecMusicPlay {
                     execPlay(
                         musicPlayerService,
                         it,
-                        uriTitle
                     )
                 }
             }
@@ -157,19 +154,11 @@ object ExecMusicPlay {
                     playIndex
                 )
             } ?: return@launch
-            val uriTitle =
-                withContext(Dispatchers.IO) {
-                    when (uri.startsWith("/")) {
-                        true -> File(uri).name
-                        else -> uri
-                    }
-                }
             withContext(Dispatchers.IO) {
                 try {
                     execPlay(
                         musicPlayerService,
                         uri,
-                        uriTitle,
                     )
                 } catch (e: Exception) {
                     println("pass")
@@ -181,7 +170,6 @@ object ExecMusicPlay {
     private suspend fun execPlay(
         musicPlayerService: MusicPlayerService,
         uri: String,
-        uriTitle: String,
     ){
         if(
             musicPlayerService.mediaPlayer == null
@@ -198,26 +186,19 @@ object ExecMusicPlay {
 //                ).joinToString("\n")
 //            )
             withContext(Dispatchers.IO) {
-                if (musicPlayerService.mediaPlayer?.isPlaying == true) {
-                    musicPlayerService.mediaPlayer?.stop()
-                }
-                musicPlayerService.mediaPlayer?.reset()
-                musicPlayerService.mediaPlayer?.setDataSource(uri)
+                MusicPlayerMaker.stop(musicPlayerService)
+                MusicPlayerMaker.setDatasource(
+                    musicPlayerService,
+                    uri
+                )
             }
         } catch (e: IOException) {
             LogSystems.stdWarn("$e")
             e.printStackTrace()
         }
-        withContext(Dispatchers.IO){
-            if(
-                musicPlayerService.mediaPlayer?.isPlaying != true
-            ) return@withContext
-            musicPlayerService.mediaPlayer?.stop()
-        }
         withContext(Dispatchers.IO) {
             try {
-                MusicPlayerMaker.setIsCompFalse()
-                musicPlayerService.mediaPlayer?.prepareAsync() // might take long! (for buffering, etc)
+                MusicPlayerMaker.prepare(musicPlayerService)
             } catch (e: IOException) {
                 e.printStackTrace()
             }

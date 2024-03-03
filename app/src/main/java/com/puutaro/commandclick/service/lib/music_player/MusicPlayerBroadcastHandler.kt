@@ -1,18 +1,11 @@
 package com.puutaro.commandclick.service.lib.music_player
 
 import android.content.Intent
-import android.widget.Toast
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayNotiLauncher
-import com.puutaro.commandclick.util.file.FileSystems
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.io.File
 
 object MusicPlayerBroadcastHandler {
 
@@ -35,7 +28,7 @@ object MusicPlayerBroadcastHandler {
                     restartJudge(musicPlayerService)
                 ) {
                     musicPlayerService.notiSetter?.setOnStart(
-                        musicPlayerService.mediaPlayer
+//                        musicPlayerService.mediaPlayer
                     )
                     return
                 }
@@ -62,7 +55,7 @@ object MusicPlayerBroadcastHandler {
                     restartJudge(musicPlayerService)
                 ) {
                     musicPlayerService.notiSetter?.setOnStart(
-                        musicPlayerService.mediaPlayer
+//                        musicPlayerService.mediaPlayer
                     )
                     return
                 }
@@ -142,7 +135,7 @@ object MusicPlayerBroadcastHandler {
                     musicPlayerService.mediaPlayer?.isPlaying == true
                 ) {
                     musicPlayerService.notiSetter?.setOnPause(
-                        musicPlayerService.mediaPlayer
+//                        musicPlayerService.mediaPlayer
                     )
                 }
                 else {
@@ -152,15 +145,6 @@ object MusicPlayerBroadcastHandler {
             }
             BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER
             ->{
-                CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(
-                        musicPlayerService.applicationContext,
-                        "seek\n${intent.getStringExtra(
-                            BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.scheme,
-                        )}----\n---",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
                 val seekPosiSrc = intent.getStringExtra(
                     BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.scheme,
                 )?: return
@@ -170,7 +154,7 @@ object MusicPlayerBroadcastHandler {
             }
             BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER
             -> {
-                val index0 = musicPlayerService.currentTrackIndex
+//                val index0 = musicPlayerService.currentTrackIndex
                 musicPlayerService.currentTrackIndex = intent.getStringExtra(
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme,
                 )?.let { toInt(it) }

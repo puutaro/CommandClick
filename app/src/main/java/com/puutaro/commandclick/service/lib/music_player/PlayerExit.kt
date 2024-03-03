@@ -8,8 +8,7 @@ object PlayerExit {
     ){
         val mediaPlayer = musicPlayerService.mediaPlayer
             ?: return
-        mediaPlayer.stop()
-        mediaPlayer.reset()
+        MusicPlayerMaker.stop(musicPlayerService)
         mediaPlayer.release()
         musicPlayerService.mediaPlayer = null
         musicPlayerService.madiaPlayerPosiUpdateJob?.cancel()

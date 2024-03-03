@@ -104,11 +104,10 @@ class MusicPlayerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        mediaPlayer?.stop()
+        MusicPlayerMaker.stop(this)
         mediaPlayer?.release()
         mediaPlayer = null
         currentTrackIndex = 0
-        MusicPlayerMaker.setIsCompFalse()
         val onLoop = intent?.getStringExtra(
             MusicPlayerIntentExtra.ON_LOOP.scheme
         )

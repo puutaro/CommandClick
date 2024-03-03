@@ -16,14 +16,41 @@ import kotlinx.coroutines.withContext
 
 object MusicPlayerMaker {
 
-    private var isComp = false
+    private enum class MusicPlayerState{
+        INIT_DOING,
+        INIT_DONE,
+        SET_DATASET_DOING,
+        SET_DATASET_DONE,
+        PREPARE_DOING,
+        PREPARE_DONE,
+    }
+    private var musicPlayerState = MusicPlayerState.INIT_DOING
 
-    fun setIsCompFalse(){
-        isComp = false
+    private fun howPrepareState(): MusicPlayerState {
+        return musicPlayerState
     }
 
-    private fun setIsCompTrue(){
-        isComp = true
+    private fun setStateSetInitDoing(){
+        musicPlayerState = MusicPlayerState.INIT_DOING
+    }
+    private fun setStateSetInitDone(){
+        musicPlayerState = MusicPlayerState.INIT_DONE
+    }
+
+    private fun setStateSetDatasetDoing(){
+        musicPlayerState = MusicPlayerState.SET_DATASET_DOING
+    }
+
+    private fun setStateSetDatasetDone(){
+        musicPlayerState = MusicPlayerState.SET_DATASET_DONE
+    }
+
+    private fun setPrepareDoing(){
+        musicPlayerState = MusicPlayerState.PREPARE_DOING
+    }
+
+    private fun setPrepareDone(){
+        musicPlayerState = MusicPlayerState.PREPARE_DONE
     }
 
     fun make(
@@ -41,22 +68,19 @@ object MusicPlayerMaker {
                     .build()
             )
         mediaPlayer.setOnCompletionListener {
-            if(!isComp){
-                return@setOnCompletionListener
-            }
+            if(
+                howPrepareState() != MusicPlayerState.PREPARE_DONE
+            ) return@setOnCompletionListener
             if(
                 musicPlayerService.currentTrackIndex >= playList.lastIndex
             ) {
-                musicPlayerService.notiSetter?.setOnStop(
-                    musicPlayerService.mediaPlayer
-                )
+                musicPlayerService.notiSetter?.setOnStop()
                 return@setOnCompletionListener
             }
             BroadcastSender.normalSend(
                 context,
                 BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
             )
-            setIsCompFalse()
         }
         mediaPlayer.setOnSeekCompleteListener {
             val uriTitle = getUriTitleFromNoti(
@@ -72,8 +96,8 @@ object MusicPlayerMaker {
             )
         }
         mediaPlayer.setOnPreparedListener {
-            musicPlayerService.notiSetter?.setOnStart(it)
-            setIsCompTrue()
+            setPrepareDone()
+            musicPlayerService.notiSetter?.setOnStart()
             musicPlayerService.currentTrackLength =
                 musicPlayerService.mediaPlayer?.duration ?: 0
             val uriTitle = getUriTitleFromNoti(
@@ -91,18 +115,49 @@ object MusicPlayerMaker {
                 musicPlayerService,
                 uriTitle,
             )
-            }
-
-//        mediaPlayer.setOnPreparedListener(object : OnPreparedListener {
-//            override fun onPrepared(mp: MediaPlayer?) {
-//                mp?.start()
-//            }
-//
-//            fun onCompletion(mp: MediaPlayer) {
-//                mp.start()
-//            }
-//        };)
+        }
         return mediaPlayer
+    }
+
+
+    fun start(
+        musicPlayerService: MusicPlayerService
+    ) {
+        val prepareState = howPrepareState()
+        if(
+            prepareState != MusicPlayerState.PREPARE_DONE
+        ) return
+        musicPlayerService.mediaPlayer?.start()
+    }
+    fun prepare(
+        musicPlayerService: MusicPlayerService
+    ){
+        if(
+            musicPlayerState != MusicPlayerState.SET_DATASET_DONE
+        ) return
+        setPrepareDoing()
+        musicPlayerService.mediaPlayer?.prepareAsync()
+    }
+
+    fun setDatasource(
+        musicPlayerService: MusicPlayerService,
+        uri: String
+    ){
+        if(
+            musicPlayerState != MusicPlayerState.INIT_DONE
+        ) return
+        setStateSetDatasetDoing()
+        musicPlayerService.mediaPlayer?.setDataSource(uri)
+        setStateSetDatasetDone()
+    }
+
+    fun stop(
+        musicPlayerService: MusicPlayerService
+    ){
+        setStateSetInitDoing()
+        musicPlayerService.mediaPlayer?.stop()
+        musicPlayerService.mediaPlayer?.reset()
+        setStateSetInitDone()
     }
 
     private fun posiUpdate(
@@ -177,4 +232,6 @@ object MusicPlayerMaker {
 //        return "${hours}:${minutes}:${seconds}"
 ////        val secs = (currentPosi % 60000) / 1000
 //    }
+
+
 }

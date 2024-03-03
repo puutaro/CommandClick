@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.service.lib.music_player
 
 import android.R
-import android.media.MediaPlayer
 import androidx.core.app.NotificationCompat
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
 import com.puutaro.commandclick.service.MusicPlayerService
@@ -79,24 +78,18 @@ class NotiSetter(
             )
     }
 
-    fun setOnStop(
-        mediaPlayer: MediaPlayer?
-    ){
-        mediaPlayer?.stop()
+    fun setOnStop(){
+        MusicPlayerMaker.stop(musicPlayerService)
         readySet()
     }
 
-    fun setOnStart(
-        mediaPlayer: MediaPlayer?
-    ){
-        mediaPlayer?.start()
+    fun setOnStart(){
+        MusicPlayerMaker.start(musicPlayerService)
         readySet()
     }
 
-    fun setOnPause(
-        mediaPlayer: MediaPlayer?
-    ){
-        mediaPlayer?.pause()
+    fun setOnPause(){
+        musicPlayerService.mediaPlayer?.pause()
         readySet()
     }
 
