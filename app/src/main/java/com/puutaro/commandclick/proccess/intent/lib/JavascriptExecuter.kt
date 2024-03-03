@@ -159,7 +159,7 @@ object JavascriptExecuter {
                     listOf(
                         "[Normal JS]\n",
                         separator,
-                        execJsCon,
+                        execJsCon.replace(";", ";\n"),
                     ).joinToString("\n")
                 )
                 jsUrlLaunchHandler(

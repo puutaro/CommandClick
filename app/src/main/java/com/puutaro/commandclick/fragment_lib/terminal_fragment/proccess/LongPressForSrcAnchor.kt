@@ -13,9 +13,7 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.long_press.LongPressMenuTool
-import com.puutaro.commandclick.proccess.intent.ExecJsLoad
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
-import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 

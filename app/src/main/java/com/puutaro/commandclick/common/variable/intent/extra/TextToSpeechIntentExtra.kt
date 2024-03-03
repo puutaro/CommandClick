@@ -14,4 +14,5 @@ enum class TextToSpeechIntentExtra(
     pitch("pitch"),
     currentAppDirName("current_app_dir_name"),
     scriptRawName("script_raw_name"),
+    shellPath("shell_path")
 }

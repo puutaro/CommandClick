@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.puutaro.commandclick.BuildConfig
+import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
@@ -19,7 +20,9 @@ import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.intent.TextToSpeechIntentSender
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.intent.MediaPlayerIntentSender
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
+import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.service.UbuntuService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
@@ -189,6 +192,11 @@ object IntentRequestMonitor {
                 ubuntuService,
                 broadcastMap,
             )
+            ReceiveIntentType.musicPlayer.name
+            -> execMediaPlayer(
+                ubuntuService,
+                broadcastMap
+            )
         }
     }
 
@@ -219,6 +227,33 @@ object IntentRequestMonitor {
         }
     }
 
+    private fun execMediaPlayer(
+        ubuntuService: UbuntuService,
+        broadcastMap: Map<String, String>,
+    ){
+        val helpOption = broadcastMap.get(HelpKey.help.name)
+        if(
+            !helpOption.isNullOrEmpty()
+        ) return Unit.also {
+            responseString += "\n${makeHelpConForMusicPlayer()}"
+        }
+        val launchType = broadcastMap.get(MusicPlayerCliSchema.launchType.name)
+            ?: return
+        when(launchType){
+            MusicPlayerLaunchType.launch.name
+            -> mediaPlayerLauncher(
+                ubuntuService,
+                broadcastMap,
+            )
+            MusicPlayerLaunchType.exit.name
+            -> ubuntuService.applicationContext.let {
+                it.stopService(
+                    Intent(it, MusicPlayerService::class.java)
+                )
+            }
+        }
+    }
+
     private fun textToSpeechLauncher(
         ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>,
@@ -232,6 +267,27 @@ object IntentRequestMonitor {
         val extraSettingMapStr = broadcastMap.get(TextToSpeechCliSchema.extraSettingMapStr.name)
             ?: String()
         TextToSpeechIntentSender.send(
+            ubuntuService.applicationContext,
+            currentAppDirName,
+            fannelRawName,
+            listFilePath,
+            extraSettingMapStr,
+        )
+    }
+
+    private fun mediaPlayerLauncher(
+        ubuntuService: UbuntuService,
+        broadcastMap: Map<String, String>,
+    ){
+        val listFilePath = broadcastMap.get(MusicPlayerCliSchema.listFilePath.name)
+            ?: return
+        val currentAppDirName = broadcastMap.get(MusicPlayerCliSchema.currentAppDirName.name)
+            ?: String()
+        val fannelRawName = broadcastMap.get(MusicPlayerCliSchema.fannelRawName.name)
+            ?: String()
+        val extraSettingMapStr = broadcastMap.get(MusicPlayerCliSchema.extraSettingMapStr.name)
+            ?: String()
+        MediaPlayerIntentSender.send(
             ubuntuService.applicationContext,
             currentAppDirName,
             fannelRawName,
@@ -831,6 +887,57 @@ object IntentRequestMonitor {
     """.trimIndent()
     }
 
+    private fun makeHelpConForMusicPlayer(): String {
+        val verticalBarSepalator = "|"
+        val playModeSchema = MusicPlayerIntentExtra.PLAY_MODE.scheme
+        val onRoopSchema = MusicPlayerIntentExtra.ON_LOOP.scheme
+        val playNumberSchema = MusicPlayerIntentExtra.PLAY_NUMBER.scheme
+        val onTrackSchema = MusicPlayerIntentExtra.ON_TRACK.scheme
+        val importance = MusicPlayerIntentExtra.IMPORTANCE.scheme
+        return """
+        
+        ### MusicPlayer management command
+        
+        ${MusicPlayerCliSchema.launchType.name.camelToShellArgsName()}
+        -t
+         : ${MusicPlayerLaunchType.launch.name}/${MusicPlayerLaunchType.exit.name}
+        
+        ${MusicPlayerCliSchema.listFilePath.name.camelToShellArgsName()}
+        -l
+        : play list path
+        
+        ${MusicPlayerCliSchema.extraSettingMapStr.name.camelToShellArgsName()}
+        -e
+        : extra map str
+        option
+            format: ${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}${'$'}{key1}=${'$'}{valueFloatStr2}${verticalBarSepalator}..
+        
+        optional key
+            ${importance}: Notification importance, high/low
+            ${playModeSchema}: Play mode switch: ordinaly(default), shuffle, reverse, number
+            ${onRoopSchema}: Some string: roop, "": no roop
+            ${playNumberSchema}:  Play list order number string
+            ${onTrackSchema}: Save track switch: "", on
+        
+        ${TextToSpeechCliSchema.currentAppDirName.name.camelToShellArgsName()}
+        -d
+        : current app direcotry(fannel parent directory)
+        
+        ${TextToSpeechCliSchema.fannelRawName.name.camelToShellArgsName()}
+        -f
+        : fannle name without extend
+        
+        ex)
+            mplay \
+                -t "${TextToSpeechLaunchType.launch.name} \
+                -l "{play list path}" \
+                -e "${playModeSchema}=shuffle" \
+                -e "${onRoopSchema}=on" \
+                -e "${onTrackSchema}=on" \
+            
+    """.trimIndent()
+    }
+
     private fun makeHelpConForNotification(): String {
         val deleteOption = BroadcastMonitorScheme.delete.name.camelToShellArgsName()
         val notificationStyleOption = BroadcastMonitorScheme.notificationStyle.name.camelToShellArgsName()
@@ -1003,6 +1110,13 @@ private fun toInt(numStr: String?): Int? {
 
 }
 
+private enum class MusicPlayerCliSchema {
+    launchType,
+    currentAppDirName,
+    fannelRawName,
+    listFilePath,
+    extraSettingMapStr,
+}
 
 private enum class TextToSpeechCliSchema {
     launchType,
@@ -1013,6 +1127,11 @@ private enum class TextToSpeechCliSchema {
 }
 
 private enum class TextToSpeechLaunchType {
+    launch,
+    exit,
+}
+
+private enum class MusicPlayerLaunchType {
     launch,
     exit,
 }
@@ -1042,6 +1161,7 @@ private enum class ReceiveIntentType {
     notification,
     intent,
     textToSpeech,
+    musicPlayer,
     toast
 }
 

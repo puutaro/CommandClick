@@ -120,6 +120,7 @@ dependencies {
     implementation ("com.github.alexzhirkevich:custom-qr-generator:2.0.0-alpha01")
 
     implementation("io.coil-kt:coil:2.4.0")
+    implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
 
 //    implementation("androidx.camera:camera-camera2:1.2.2")
 //    implementation("androidx.camera:camera-lifecycle:1.2.2")

@@ -18,9 +18,12 @@ import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentE
 import com.puutaro.commandclick.common.variable.variant.Translate
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.service.lib.NotificationIdToImportance
 import com.puutaro.commandclick.service.lib.BroadcastManagerForService
 import com.puutaro.commandclick.service.lib.PendingIntentCreator
+import com.puutaro.commandclick.service.lib.textToSpeech.ExecShellForTts
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
@@ -52,6 +55,7 @@ class TextToSpeechService:
     private val languageLocaleMap = Translate.languageLocaleMap
     private val noTransMark = "-"
     private var isInitComp = false
+    private var busyBoxExecutor: BusyboxExecutor? = null
 
     private var broadcastReceiverForTextToSpeechPrevious: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
@@ -205,7 +209,10 @@ class TextToSpeechService:
         textToSpeechJob?.cancel()
         execTextToSpeechJob?.cancel()
         done = true
-
+        busyBoxExecutor = BusyboxExecutor(
+            applicationContext,
+            UbuntuFiles(applicationContext)
+        )
         val cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action,
@@ -322,6 +329,9 @@ class TextToSpeechService:
             TextToSpeechIntentExtra.scriptRawName.scheme
         )
         val currentTrackFileName = "${currentAppDirName}${fannelRawName}.txt"
+        val shellPath = intent.getStringExtra(
+            TextToSpeechIntentExtra.shellPath.scheme
+        )?: String()
         instantiateTextToSpeech(
             intent
         )
@@ -451,6 +461,7 @@ class TextToSpeechService:
                             playMode,
                             fileList,
                             notificationBuilder,
+                            shellPath,
                             displayRoopTimes,
                             cancelPendingIntent,
                             currentTrackFileName
@@ -592,6 +603,7 @@ class TextToSpeechService:
         playMode: String?,
         fileList: List<String>,
         notificationBuilder: NotificationCompat.Builder,
+        shelllPath: String,
         displayRoopTimes: String,
         cancelPendingIntent: PendingIntent,
         currentTrackFileName: String,
@@ -647,6 +659,15 @@ class TextToSpeechService:
                         |${PlayTrackFileKey.order.name}=${currentOrder}
                         |${PlayTrackFileKey.blockNum.name}=${currentBlockNum}
                     """.trimMargin()
+                    ExecShellForTts.exec(
+                        applicationContext,
+                        shelllPath,
+                        playPath,
+                        currentOrder,
+                        displayRoopTimes,
+                        currentBlockNum,
+                        totalTimes,
+                    )
                     FileSystems.writeFile(
                         File(
                             UsePath.cmdclickTempTextToSpeechDirPath,
