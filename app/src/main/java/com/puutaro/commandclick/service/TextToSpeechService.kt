@@ -603,7 +603,7 @@ class TextToSpeechService:
         playMode: String?,
         fileList: List<String>,
         notificationBuilder: NotificationCompat.Builder,
-        shelllPath: String,
+        shellPath: String,
         displayRoopTimes: String,
         cancelPendingIntent: PendingIntent,
         currentTrackFileName: String,
@@ -661,7 +661,7 @@ class TextToSpeechService:
                     """.trimMargin()
                     ExecShellForTts.exec(
                         applicationContext,
-                        shelllPath,
+                        shellPath,
                         playPath,
                         currentOrder,
                         displayRoopTimes,

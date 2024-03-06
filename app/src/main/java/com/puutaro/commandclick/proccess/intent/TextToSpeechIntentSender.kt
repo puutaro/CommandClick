@@ -108,6 +108,12 @@ object TextToSpeechIntentSender {
                 floatPitch
             )
         }
+        extraSettingMap.get(TextToSpeechIntentExtra.shellPath.name)?.let {
+            textToSpeechIntent.putExtra(
+                TextToSpeechIntentExtra.shellPath.scheme,
+                it
+            )
+        }
         textToSpeechIntent.putExtra(
             TextToSpeechIntentExtra.currentAppDirName.scheme,
             currentAppDirName
