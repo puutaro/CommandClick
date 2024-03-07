@@ -357,8 +357,14 @@ class TextToSpeechService:
             )
             notificationBuilder.setContentText(
                 noExistFile
+            ).clearActions().addAction(
+                R.drawable.ic_menu_close_clear_cancel,
+                "cancel",
+                cancelPendingIntent
+            ).setStyle(null)
+            notificationManager?.notify(
+                channelNum, notificationBuilder.build()
             )
-            notificationManager?.notify(channelNum, notificationBuilder.build())
             return Service.START_NOT_STICKY
         }
         val fileList = makePlayList(
