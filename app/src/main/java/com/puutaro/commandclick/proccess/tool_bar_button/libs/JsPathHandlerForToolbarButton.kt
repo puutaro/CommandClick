@@ -6,13 +6,10 @@ import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirGetter
@@ -22,11 +19,8 @@ import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.NoScrollUrlSaver
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
-import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
-import com.puutaro.commandclick.proccess.edit.lib.SaveTagForListContents
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
-import com.puutaro.commandclick.proccess.intent.ExecJsOrSellHandler
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
@@ -38,6 +32,7 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ListSyncer
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.OkButtonHandler
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.PopupSettingMenu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.QrConGetterDialog
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarMenuDialog
@@ -45,13 +40,10 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.UrlHistoryAd
 import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.dialog.UsageDialog
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
-import java.io.File
 
 object JsPathHandlerForToolbarButton {
 
@@ -73,6 +65,7 @@ object JsPathHandlerForToolbarButton {
                 .firstOrNull{
                     it.key == actionType
                 } ?: return
+        terminalShowHandle(fragment)
         when (jsActionType) {
             JsActionDataMapKeyObj.JsActionDataTypeKey.MACRO
             -> jsPathMacroHandler(
@@ -360,9 +353,9 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                OkHandler(
+                OkButtonHandler.handle(
                     fragment,
-                ).execForOk()
+                )
             }
             MacroForToolbarButton.Macro.ADD_URL_HISTORY
             -> {
@@ -407,6 +400,17 @@ object JsPathHandlerForToolbarButton {
         }
     }
 
+    private fun terminalShowHandle(
+        fragment: Fragment
+    ){
+        if(
+            fragment !is EditFragment
+        ) return
+        TerminalShowByTerminalDo.show(
+            fragment,
+        )
+    }
+
     private fun getFileOrDirHandler(
         editFragment: EditFragment,
         onDirectoryPick: Boolean = false,
@@ -448,97 +452,5 @@ object JsPathHandlerForToolbarButton {
             fragment,
             "${useClassName}.change_S(\"${currentState}\");",
         )
-    }
-
-
-    private class OkHandler(
-        private val editFragment: EditFragment,
-    ) {
-        private val context = editFragment.context
-        private val readSharePreffernceMap = editFragment.readSharePreferenceMap
-        private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreffernceMap
-        )
-        private val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreffernceMap
-        )
-        private val enableCmdEdit = editFragment.enableCmdEdit
-        private val onPassCmdVariableEdit =
-            editFragment.passCmdVariableEdit ==
-                    CommandClickScriptVariable.PASS_CMDVARIABLE_EDIT_ON_VALUE
-        private val scriptFileSaver = ScriptFileSaver(
-            editFragment,
-        )
-
-        fun execForOk() {
-            val buttonTag = SaveTagForListContents.OK.tag
-            scriptFileSaver.save()
-            val isCmdEditExecute = enableCmdEdit
-                    && editFragment.enableEditExecute
-                    && !onPassCmdVariableEdit
-            val isSettingEditByPass = enableCmdEdit
-                    && editFragment.enableEditExecute
-                    && onPassCmdVariableEdit
-            val isSettingEdit = !enableCmdEdit
-
-//            val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
-            val isOnlyCmdEditNoFdialog = enableCmdEdit
-                    && !editFragment.enableEditExecute
-//                    && !isFdialogFannel
-//            val isOnlyCmdEditWithFdialog = enableCmdEdit
-//                    && !editFragment.enableEditExecute
-//                    && isFdialogFannel
-            when (true) {
-                isCmdEditExecute -> {
-                    Keyboard.hiddenKeyboardForFragment(
-                        editFragment
-                    )
-                    ListContentsSelectBoxTool.saveListContents(
-                        editFragment,
-                        buttonTag
-                    )
-                    TerminalShowByTerminalDo.show(
-                        editFragment,
-                    )
-                    ExecJsOrSellHandler.handle(
-                        editFragment,
-                        currentAppDirPath,
-                        currentScriptFileName,
-                    )
-                }
-//                isOnlyCmdEditWithFdialog ->
-//                    fDialogOkButtonProcess()
-
-                isSettingEditByPass,
-                isOnlyCmdEditNoFdialog,
-                isSettingEdit,
-                -> {
-                    val listener =
-                        context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-                    listener?.onToolBarButtonClickForEditFragment(
-                        String(),
-                        ToolbarButtonBariantForEdit.CANCEL,
-                        mapOf(),
-                        false
-                    )
-                }
-                else -> {}
-            }
-        }
-
-//        private fun fDialogOkButtonProcess() {
-//            FreeDialogReflector.reflect(
-//                editFragment.srcReadSharePreffernceMap,
-//                editFragment.readSharePreferenceMap,
-//            )
-//            val listener =
-//                this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-//            listener?.onToolBarButtonClickForEditFragment(
-//                String(),
-//                ToolbarButtonBariantForEdit.CANCEL,
-//                mapOf(),
-//                false
-//            )
-//        }
     }
 }
