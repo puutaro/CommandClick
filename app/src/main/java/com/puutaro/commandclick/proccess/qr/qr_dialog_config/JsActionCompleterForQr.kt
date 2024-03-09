@@ -11,9 +11,11 @@ object JsActionCompleterForQr {
         clickConfigListCon: String?,
         isLongClick: Boolean,
     ): Map<String, String> {
+        val readSharePreferenceMap =
+            editFragment.readSharePreferenceMap
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
-            editFragment.readSharePreferenceMap,
+            readSharePreferenceMap,
             clickConfigListCon,
             editFragment.setReplaceVariableMap,
         )

@@ -128,9 +128,11 @@ object ListIndexSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenuName = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
+            val readSharePreferenceMap =
+                editFragment.readSharePreferenceMap
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
-                editFragment.readSharePreferenceMap,
+                readSharePreferenceMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ListIndexArgsMaker.makeListIndexClickMenuPairList(
                         editFragment,

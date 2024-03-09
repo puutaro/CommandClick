@@ -12,6 +12,7 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
+import com.puutaro.commandclick.util.state.VirtualSubFannel
 
 object ToolbarButtonSubMenuDialog {
 
@@ -107,9 +108,11 @@ object ToolbarButtonSubMenuDialog {
             val menuListAdapter = subMenuListView.adapter as SubMenuAdapter
             val clickedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
+            val readSharePreferenceMap =
+                editFragment.readSharePreferenceMap
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
-                editFragment.readSharePreferenceMap,
+                readSharePreferenceMap,
                 MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                     ToolbarButtonArgsMaker.makeSettingButtonMenuPairList(
                         editFragment,

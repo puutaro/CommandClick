@@ -11,7 +11,6 @@ import android.speech.tts.UtteranceProgressListener
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.anggrayudi.storage.file.isEmpty
 import androidx.media.app.NotificationCompat as MediaNotificationCompat
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTextToSpeech
 import com.puutaro.commandclick.common.variable.intent.extra.TextToSpeechIntentExtra
@@ -332,47 +331,40 @@ class TextToSpeechService:
         val shellPath = intent.getStringExtra(
             TextToSpeechIntentExtra.shellPath.scheme
         )?: String()
+        val shellArgs = intent.getStringExtra(
+            TextToSpeechIntentExtra.shellArgs.scheme
+        ) ?: String()
+        val extraContent = intent.getStringExtra(
+            TextToSpeechIntentExtra.extraContent.scheme
+        ) ?: String()
         instantiateTextToSpeech(
             intent
         )
-        val factListSource = ReadText(
-            listFilePath
-        ).textToList()
-        val factListSize = factListSource.size
-
-        val noExistFile = factListSource.filter {
-            val onFile = it.startsWith(WebUrlVariables.filePrefix)
-                    || it.startsWith("/")
-            val fileObj = File(it)
-            val isEmptyOrNoExist = !fileObj.isFile
-                || fileObj.isEmpty
-            onFile && isEmptyOrNoExist
-        }.firstOrNull()
-            ?.split("/")
-            ?.lastOrNull()
-            ?: String()
-        if(noExistFile.isNotEmpty()) {
-            notificationBuilder.setContentTitle(
-                "remove bellow from list (no exist or blank"
-            )
-            notificationBuilder.setContentText(
-                noExistFile
-            ).clearActions().addAction(
-                R.drawable.ic_menu_close_clear_cancel,
-                "cancel",
-                cancelPendingIntent
-            ).setStyle(null)
-            notificationManager?.notify(
-                channelNum, notificationBuilder.build()
-            )
-            return Service.START_NOT_STICKY
-        }
         val fileList = makePlayList(
             listFilePath,
             playMode,
             onRoop,
             playNumber,
-        ) ?: return START_NOT_STICKY
+        )
+        if(
+            fileList.isNullOrEmpty()
+        ) {
+            notificationBuilder.setContentTitle(
+                "File list no exist"
+            )
+            notificationBuilder
+                .setContentText("File list no exist")
+                .clearActions()
+                .addAction(
+                    R.drawable.ic_menu_close_clear_cancel,
+                    "cancel",
+                    cancelPendingIntent
+                ).setStyle(null)
+            notificationManager?.notify(
+                channelNum, notificationBuilder.build()
+            )
+            return Service.START_NOT_STICKY
+        }
 
 //        FileSystems.removeDir(debugTemp)
 //        FileSystems.createDirs(debugTemp)
@@ -384,7 +376,8 @@ class TextToSpeechService:
         FileSystems.createDirs(
             UsePath.cmdclickTempTextToSpeechDirPath
         )
-        val fileListSize = fileList.size - 1
+        val factListSize = fileList.size
+        val fileListLastIndex = fileList.lastIndex
         val pastTrackKeyValueList = ReadText(
             File(
                 UsePath.cmdclickTempTextToSpeechDirPath,
@@ -431,13 +424,13 @@ class TextToSpeechService:
                     delay(100)
                 }
             }
-            for (roopNum in 0 .. fileListSize + roopNumExtend) {
+            for (roopNum in 0 .. fileListLastIndex + roopNumExtend) {
                 nextRoop = false
                 if(
                     currentOrder < 0
                 ) currentOrder = 0
                 if(
-                    currentOrder > fileListSize
+                    currentOrder > fileListLastIndex
                 ) {
                     textToSpeech?.stop()
                     notificationManager?.notify(
@@ -449,15 +442,15 @@ class TextToSpeechService:
                 }
 
                 val playFile = fileList[currentOrder]
-                if(factListSize == 0) {
-                    notificationBuilder.setContentTitle(
-                        "play list size must be more zero"
-                    )
-                    notificationManager?.notify(
-                        channelNum, notificationBuilder.build()
-                    )
-                    return@launch
-                }
+//                if(factListSize == 0) {
+//                    notificationBuilder.setContentTitle(
+//                        "play list size must be more zero"
+//                    )
+//                    notificationManager?.notify(
+//                        channelNum, notificationBuilder.build()
+//                    )
+//                    return@launch
+//                }
                 val displayRoopTimes = "${currentOrder % factListSize + 1}"
 //                  (${fileListSize}
                 withContext(Dispatchers.IO) {
@@ -468,6 +461,8 @@ class TextToSpeechService:
                             fileList,
                             notificationBuilder,
                             shellPath,
+                            shellArgs,
+                            extraContent,
                             displayRoopTimes,
                             cancelPendingIntent,
                             currentTrackFileName
@@ -545,8 +540,6 @@ class TextToSpeechService:
     }
 
     private fun makePlayList(
-//        listFilePathParentDir: String,
-//        listFileName: String,
         listFilePath: String,
         playMode: String?,
         onRoop: String?,
@@ -554,7 +547,9 @@ class TextToSpeechService:
     ): List<String>? {
         val fileListBeforePlayMode = ReadText(
             listFilePath
-        ).textToList()
+        ).textToList().filter {
+            File(it).isFile
+        }
         val repeatTimes = 100
         return when(
             playMode
@@ -610,6 +605,8 @@ class TextToSpeechService:
         fileList: List<String>,
         notificationBuilder: NotificationCompat.Builder,
         shellPath: String,
+        shellArgs: String,
+        extraContent: String,
         displayRoopTimes: String,
         cancelPendingIntent: PendingIntent,
         currentTrackFileName: String,
@@ -668,6 +665,7 @@ class TextToSpeechService:
                     ExecShellForTts.exec(
                         applicationContext,
                         shellPath,
+                        shellArgs,
                         playPath,
                         currentOrder,
                         displayRoopTimes,
@@ -720,10 +718,14 @@ class TextToSpeechService:
                         if(totalTimes != 0) {
                             "${currentBlockNum + 1}/${totalTimes} (${displayRoopTimes}"
                         } else "${currentBlockNum + 1} (${displayRoopTimes}"
+                    val displayTimesAndExtra = listOf(
+                        displayTimes,
+                        extraContent,
+                    ).joinToString(" ")
                     makeProgressNotification(
                         notificationBuilder,
                         displayTitle,
-                        displayTimes,
+                        displayTimesAndExtra,
                     )
                     withContext(Dispatchers.IO) {
                         while (true) {
@@ -809,11 +811,11 @@ class TextToSpeechService:
     private fun makeProgressNotification(
         notificationBuilder: NotificationCompat.Builder,
         displayTitle: String,
-        displayTimes: String,
+        displayTimesAntExtra: String,
     ){
         val notificationInstance = notificationBuilder
             .setContentTitle(displayTitle)
-            .setContentText(displayTimes)
+            .setContentText(displayTimesAntExtra)
             .setOngoing(false)
             .build()
         notificationManager?.notify(

@@ -1,10 +1,9 @@
-package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
+package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file
 
 import android.webkit.JavascriptInterface
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForJsDebug
-import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -38,6 +37,7 @@ class JsFileSystem(
             path
         )
     }
+
     @JavascriptInterface
     fun writeLocalFile(
         filePath: String,

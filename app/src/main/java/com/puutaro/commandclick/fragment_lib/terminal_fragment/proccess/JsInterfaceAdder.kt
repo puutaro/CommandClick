@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsFDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFannelInstaller
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFileSelect
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFileSystem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsFileSystem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHtml
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsIconSelectBox
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
@@ -44,6 +44,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsYo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsF
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsCcUsage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsCopyItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDeleteItem
@@ -87,10 +88,6 @@ object JsInterfaceAdder {
         terminalFragment: TerminalFragment,
         webView: WebView
     ){
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsFileSystem(terminalFragment),
-        )
         ExecJsInterfaceAdder.add(
             webView,
             JsIntent(terminalFragment),
@@ -204,6 +201,10 @@ object JsInterfaceAdder {
             terminalFragment,
             webView
         )
+        fileAdder(
+            terminalFragment,
+            webView,
+        )
         qrAdder(
             terminalFragment,
             webView
@@ -241,6 +242,20 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsFDialog(terminalFragment),
+        )
+    }
+
+    private fun fileAdder(
+        terminalFragment: TerminalFragment,
+        webView: WebView,
+    ){
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsFileSystem(terminalFragment),
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsF(terminalFragment)
         )
     }
 

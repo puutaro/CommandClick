@@ -108,6 +108,18 @@ object TextToSpeechIntentSender {
                 it
             )
         }
+        extraSettingMap.get(TextToSpeechIntentExtra.shellArgs.name)?.let {
+            textToSpeechIntent.putExtra(
+                TextToSpeechIntentExtra.shellArgs.scheme,
+                it
+            )
+        }
+        extraSettingMap.get(TextToSpeechIntentExtra.extraContent.name)?.let {
+            textToSpeechIntent.putExtra(
+                TextToSpeechIntentExtra.extraContent.scheme,
+                it
+            )
+        }
         textToSpeechIntent.putExtra(
             TextToSpeechIntentExtra.currentAppDirName.scheme,
             currentAppDirName

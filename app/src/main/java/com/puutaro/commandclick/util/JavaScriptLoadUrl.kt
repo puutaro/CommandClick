@@ -162,13 +162,6 @@ object JavaScriptLoadUrl {
             ).joinToString(";") + ";"
             sliceTrimJsRowList
         }.joinToString(" ")
-//            .let {
-//                ScriptPreWordReplacer.replace(
-//                    it,
-//                    recentAppDirPath,
-//                    scriptFileName
-//                )
-//            }
             .let {
                 SetReplaceVariabler.execReplaceByReplaceVariables(
                     it,

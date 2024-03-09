@@ -76,10 +76,12 @@ object PopupSettingMenu {
         val menuListMap = MenuSettingTool.createListMenuListMap(
             menuPairList
         )
+        val readSharePreferenceMap =
+            editFragment.readSharePreferenceMap
         if (menuListMap.size == 1) {
             val updateJsActionMap = JsActionTool.makeJsActionMap(
                 editFragment,
-                editFragment.readSharePreferenceMap,
+                readSharePreferenceMap,
                 MenuSettingTool.convertMenuPairListToJsKeyToSubCon(
                     menuPairList.first()
                 ),
@@ -222,9 +224,11 @@ object PopupSettingMenu {
                 )
 
             else -> {
+                val readSharePreferenceMap =
+                    editFragment.readSharePreferenceMap
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
-                    editFragment.readSharePreferenceMap,
+                    readSharePreferenceMap,
                     MenuSettingTool.extractJsKeyToSubConByMenuNameFromMenuPairListList(
                         settingButtonMenuPairList,
                         clickedMenuName

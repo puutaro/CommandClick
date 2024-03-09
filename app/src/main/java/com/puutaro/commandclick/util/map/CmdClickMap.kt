@@ -76,6 +76,27 @@ object CmdClickMap {
         return repCon
     }
 
+    fun concatRepValMap(
+        jsRepValMapBeforeConcat: Map<String, String>?,
+        extraRepValMap: Map<String, String>?,
+    ): Map<String, String>? {
+        return when(true){
+            (jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && extraRepValMap.isNullOrEmpty())
+            -> null
+            (!jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && extraRepValMap.isNullOrEmpty())
+            -> jsRepValMapBeforeConcat
+            (jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && !extraRepValMap.isNullOrEmpty())
+            -> extraRepValMap
+            (!jsRepValMapBeforeConcat.isNullOrEmpty()
+                    && !extraRepValMap.isNullOrEmpty())
+            -> jsRepValMapBeforeConcat + extraRepValMap
+            else -> null
+        }
+    }
+
     private fun updateRepValMapByHolderRegex(
         targetCon: String,
         repMap: Map<String, String>?

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 
 private enum class RepValKeyForTts(
     val key: String
@@ -21,19 +22,24 @@ object ExecShellForTts {
     fun exec(
         context: Context,
         shellPath: String,
+        shellArgs: String,
         playPath: String,
         currentOrder: Int,
         loopTimes: String,
         currentBlockNum: Int,
         totalTimes: Int,
     ) {
+        val shellRepValMap = CmdClickMap.createMap(
+            shellArgs,
+            '!'
+        ).toMap()
         val repValMapForTts = mapOf(
             RepValKeyForTts.PLAY_PATH.key to playPath,
             RepValKeyForTts.CURRENT_POSI.key to currentOrder.toString(),
             RepValKeyForTts.TOTAL_POSI.key to loopTimes,
             RepValKeyForTts.CURRENT_BLOCK_NUM.key to currentBlockNum.toString(),
             RepValKeyForTts.TOTAL_BLOCK_NUM.key to totalTimes.toString(),
-        )
+        ) + shellRepValMap
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
                 context,

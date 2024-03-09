@@ -198,7 +198,6 @@ object SharePrefTool {
             SharePrefferenceSetting.current_fannel_state.name
                     to currentFannelState,
         )
-
     }
 
     private fun getValFromReadSharePrefMap(

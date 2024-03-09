@@ -8,6 +8,7 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
+import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
@@ -15,8 +16,10 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
+import com.puutaro.commandclick.util.state.VirtualSubFannel
 import java.io.File
 
 object JsActionTool {
@@ -45,25 +48,66 @@ object JsActionTool {
         return isExistJsAcShiban
     }
 
+    private fun makeSetRepValMap(
+        fragment: Fragment,
+        readSharePreferenceMap: Map<String, String>,
+        extraRepValMap: Map<String, String>?
+    ): Map<String, String>? {
+        val virtualSubFannelPath = VirtualSubFannel.makePath(
+            readSharePreferenceMap
+        )
+        val setReplaceVariableMapSrc = SharePrefTool.getReplaceVariableMap(
+            fragment,
+            virtualSubFannelPath
+        )
+        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
+            virtualSubFannelPath,
+            setReplaceVariableMapSrc
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "repVal.txt").absolutePath,
+//            listOf(
+//                "virtualSubFannelPath: ${virtualSubFannelPath}",
+//                "jsRepValMapBeforeConcat: ${jsRepValMapBeforeConcat}",
+//                "jsRepValMap: ${CmdClickMap.concatRepValMap(
+//                    jsRepValMapBeforeConcat,
+//                    extraRepValMap
+//                )}",
+//            ).joinToString("\n")
+//        )
+        return CmdClickMap.concatRepValMap(
+            jsRepValMapBeforeConcat,
+            extraRepValMap
+        )
+    }
+
     fun makeJsActionMap(
         fragment: Fragment,
         readSharePreferenceMap: Map<String, String>,
         keyToSubKeyCon: String?,
-        setReplaceVariableMap: Map<String, String>?,
-        extraRepValMap: Map<String, String>? = null,
+        setReplaceVariableMapSrc: Map<String, String>?,
     ): Map<String, String>? {
+        val setReplaceVariableMap = makeSetRepValMap(
+            fragment,
+            readSharePreferenceMap,
+            setReplaceVariableMapSrc
+        )
         val keyToSubMapTypeMap = createKeyToSubMapTypeMap(
             readSharePreferenceMap,
             keyToSubKeyCon,
             setReplaceVariableMap,
         ) ?: return null
-        val jsRepValMapBeforeConcat = makeRepValMap(
+        val jsRepValHolderMap = makeRepValHolderMap(
             keyToSubMapTypeMap
         )
-        val jsRepValMap = concatRepValMap(
-            jsRepValMapBeforeConcat,
-            extraRepValMap
-        )
+//        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
+//            mainOrSubFannelPath,
+//            jsRepValMapBeforeCmdValRepValConcat
+//        )
+//        val jsRepValMap = concatRepValMap(
+//            jsRepValHolderMap,
+//            extraRepValMap
+//        )
 
         val keyToSubKeyMapListWithAfterSubKey = keyToSubMapTypeMap.get(
             KeyToSubConType.WITH_AFTER
@@ -116,7 +160,7 @@ object JsActionTool {
             setReplaceVariableMap,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
-            jsRepValMap,
+            jsRepValHolderMap,
         )
         LogTool.jsActionLog(
             keyToSubKeyCon,
@@ -125,7 +169,7 @@ object JsActionTool {
         return jsActionMap
     }
 
-    private fun makeRepValMap(
+    private fun makeRepValHolderMap(
         keyToSubConTypeMap:  Map<KeyToSubConType, List<Pair<String, Map<String, String>>>?>
     ): Map<String, String>? {
         return keyToSubConTypeMap.get(
@@ -138,47 +182,22 @@ object JsActionTool {
         }?.flatten()?.toMap()
     }
 
-    private fun concatRepValMap(
-        jsRepValMapBeforeConcat: Map<String, String>?,
-        extraRepValMap: Map<String, String>?,
-    ): Map<String, String>? {
-        return when(true){
-            (jsRepValMapBeforeConcat.isNullOrEmpty()
-                    && extraRepValMap.isNullOrEmpty())
-            -> null
-            (!jsRepValMapBeforeConcat.isNullOrEmpty()
-                    && extraRepValMap.isNullOrEmpty())
-            -> jsRepValMapBeforeConcat
-            (jsRepValMapBeforeConcat.isNullOrEmpty()
-                    && !extraRepValMap.isNullOrEmpty())
-            -> extraRepValMap
-            (!jsRepValMapBeforeConcat.isNullOrEmpty()
-                    && !extraRepValMap.isNullOrEmpty())
-            -> jsRepValMapBeforeConcat + extraRepValMap
-            else -> null
-        }
-    }
-
     private fun extractJsDataMap(
         fragment: Fragment,
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
-        jsRepValMap: Map<String, String>?,
+        jsRepValHolderMap: Map<String, String>?,
     ): Map<String, String>? {
         val jsCon = convertJsCon(
             fragment,
             readSharePreferenceMap,
             setReplaceVariableMap,
+            jsRepValHolderMap,
             keyToSubKeyMapListWithoutAfterSubKey,
             keyToSubKeyMapListWithAfterSubKey,
-        )?.let {
-            CmdClickMap.replaceHolder(
-                it,
-                jsRepValMap,
-            )
-        }
+        )
         if(
             jsCon.isNullOrEmpty()
         ) return null
@@ -486,6 +505,7 @@ object JsActionTool {
         fragment: Fragment,
         readSharePreferenceMap: Map<String, String>,
         setReplaceVariableMap: Map<String, String>?,
+        jsRepValHolderMap: Map<String, String>?,
         keyToSubKeyMapListWithoutAfterSubKey: List<Pair<String, Map<String, String>>>?,
         keyToSubKeyMapListWithAfterSubKey: List<Pair<String, Map<String, String>>>?,
     ): String? {
@@ -513,11 +533,17 @@ object JsActionTool {
             jsMapListWithoutAfterSubKey,
             jsMapListWithAfterSubKey
         )
+
         val jsConBeforeJsImport = listOf(
             tsvImportCon,
             jsImportCon,
             jsFuncCon,
-        ).joinToString("\n")
+        ).joinToString("\n").let {
+            CmdClickMap.replaceHolder(
+                it,
+                jsRepValHolderMap,
+            )
+        }
 //        FileSystems.writeFile(
 //            File(
 //                UsePath.cmdclickDefaultAppDirPath,
@@ -836,7 +862,7 @@ private object PairToMapInList {
         }
         val argsCon = listOf(
             "path=${jsPathCon}",
-            argsSrc
+            "${repMapPrefix}=${argsSrc}"
         ).joinToString("&")
         val jsKeyCon = mapOf(
             funcSubKeyName to "jsUrl.loadJsPath",

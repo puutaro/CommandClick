@@ -18,9 +18,11 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
@@ -41,9 +43,31 @@ object ListIndexEditConfig {
             editFragment,
             isLongClick,
         )
+        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+            editFragment,
+            ListIndexForEditAdapter.indexListMap,
+            ListIndexForEditAdapter.listIndexTypeKey
+        )
+        val readSharePreferenceMap =
+            editFragment.readSharePreferenceMap
+//        val extraRepValMap = mapOf(
+//            "ITEM_NAME" to selectedItem,
+//            "INDEX_LIST_DIR_PATH" to filterDir,
+//            "POSITION" to holder.bindingAdapterPosition.toString()
+//        )
+//        val setReplaceVariableMap = CmdClickMap.concatRepValMap(
+//            editFragment.setReplaceVariableMap,
+//            extraRepValMap
+//        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "list.txt").absolutePath,
+//            listOf(
+//                "setReplaceVariableMap: ${editFragment.setReplaceVariableMap}"
+//            ).joinToString("\n\n")
+//        )
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
-            editFragment.readSharePreferenceMap,
+            readSharePreferenceMap,
             clickConfigListCon,
             editFragment.setReplaceVariableMap,
         )

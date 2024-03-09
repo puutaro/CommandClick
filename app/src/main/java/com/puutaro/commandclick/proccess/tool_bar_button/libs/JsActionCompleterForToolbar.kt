@@ -42,10 +42,11 @@ object JsActionCompleterForToolbar {
         buttonClickMapKey: String,
         defaultButtonMacroStr: String,
     ): Map<String, String> {
-
+        val readSharePreferenceMap =
+            editFragment.readSharePreferenceMap
         val jsActionMapSrc = JsActionTool.makeJsActionMap(
             editFragment,
-            editFragment.readSharePreferenceMap,
+            readSharePreferenceMap,
             toolbarButtonConfigMap.get(buttonClickMapKey),
             editFragment.setReplaceVariableMap,
         )
