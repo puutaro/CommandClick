@@ -180,7 +180,7 @@ class FormDialogForListIndexOrButton(
             )
         }
 
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             scriptContentsList,
             settingSectionStart,
             settingSectionEnd

@@ -41,7 +41,7 @@ object SystemFannelLauncher {
                 fannelScriptName,
             )
 
-        val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+        val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
             mainFannelConList,
             fannelScriptName
         ).let {
@@ -94,7 +94,7 @@ object SystemFannelLauncher {
                 fannelName,
             )
 
-        val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+        val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
             mainFannelConList,
             fannelName
         ).let {

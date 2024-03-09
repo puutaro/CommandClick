@@ -224,7 +224,7 @@ object SetReplaceVariabler {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             mainFannelConList,
             settingSectionStart,
             settingSectionEnd

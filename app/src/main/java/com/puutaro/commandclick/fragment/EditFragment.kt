@@ -199,11 +199,6 @@ class EditFragment: Fragment() {
             onShortcutValue,
             currentFannelState
         )
-        FannelStateManager.updateState(
-            currentAppDirPath,
-            currentFannelName,
-            currentFannelState
-        )
 
         languageType =
             CommandClickVariables.judgeJsOrShellFromSuffix(currentFannelName)
@@ -241,6 +236,11 @@ class EditFragment: Fragment() {
             currentFannelPath,
             mainFannelConList,
             settingFannelPath,
+        )
+        FannelStateManager.updateState(
+            currentFannelState,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
         )
         ConfigFromScriptFileSetter.set(
             this,

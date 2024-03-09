@@ -202,6 +202,8 @@ object UsePath {
     val extraButtonConfigPath =  "$fannelSettingsDirPath/${extraButtonConfigName}"
     private val editButtonConfigName = "editButtonConfig.js"
     val editButtonConfigPath =  "$fannelSettingsDirPath/${editButtonConfigName}"
+    private val fannelStateConfigName = "fannelStateConfig.js"
+    val fannelStateConfigPath =  "$fannelSettingsDirPath/${fannelStateConfigName}"
     private val editTitleConfig = "editTitleConfig.js"
     val editTitleConfigPath =  "$fannelSettingsDirPath/${editTitleConfig}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"

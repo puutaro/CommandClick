@@ -58,7 +58,7 @@ class ShortCutManager(
     private fun createExecIntent(
     ): Intent {
         val startUpPref =  activity.getPreferences(Context.MODE_PRIVATE)
-        val readSharePreffernceMap = SharePrefTool.makeReadSharePreferenceMap(
+        val readSharePreffernceMap = SharePrefTool.makeReadSharePrefMapByShare(
             startUpPref
         )
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(

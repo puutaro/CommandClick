@@ -95,7 +95,7 @@ object AutoExecFireManager {
     ): List<String>? {
         return when(isCmdIndexTerminalFrag) {
             true ->
-                CommandClickVariables.substituteVariableListFromHolder(
+                CommandClickVariables.extractValListFromHolder(
                     jsContentsList,
                     terminalFragment.settingSectionStart,
                     terminalFragment.settingSectionEnd,

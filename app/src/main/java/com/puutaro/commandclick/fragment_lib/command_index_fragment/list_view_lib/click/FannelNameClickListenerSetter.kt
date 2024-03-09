@@ -111,7 +111,7 @@ object FannelNameClickListenerSetter {
                 val settingSectionEnd = languageTypeToSectionHolderMap.get(
                     CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
                 ) as String
-                val settingSectionVariableList = CommandClickVariables.substituteVariableListFromHolder(
+                val settingSectionVariableList = CommandClickVariables.extractValListFromHolder(
                     mainFannelContentsList,
                     settingSectionStart,
                     settingSectionEnd

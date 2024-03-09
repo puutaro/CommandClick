@@ -68,7 +68,7 @@ object CommandClickScriptVariable {
     val CMDCLICK_ON_AUTO_EXEC = "onAutoExec"
     val AUTO_EXEC_PATH = "autoExecPath"
     val NO_ARG_JS_PATH = "noArgJsPath"
-    val FIRST_STATE = "firstState"
+    val FANNEL_STATE_CONFIG = "fannelStateConfig"
     val ON_TERM_BACKEND_WHEN_START = "onTermBackendWhenStart"
     val ON_TERM_VISIBLE_WHEN_KEYBOARD = "onTermVisibleWhenKeyboard"
     val ON_TERM_SHORT_WHEN_LOAD = "onTermShortWhenLoad"
@@ -152,7 +152,7 @@ object CommandClickScriptVariable {
         SRC_ANCHOR_LONG_PRESS_MENU_FILE_PATH,
         IMAGE_LONG_PRESS_MENU_FILE_PATH,
         DEFAULT_MONITOR_FILE,
-        FIRST_STATE,
+        FANNEL_STATE_CONFIG,
     )
     private val terminalOn = SettingVariableSelects.TerminalDoSelects.ON.name
     private val terminalTermux = SettingVariableSelects.TerminalDoSelects.TERMUX.name

@@ -19,7 +19,6 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.map.ConfigMapTool
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
@@ -35,12 +34,6 @@ object ConfigFromScriptFileSetter {
         val onShortcut = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
-        )
-        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
-        )
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
             editFragment.readSharePreferenceMap,
             editFragment.setReplaceVariableMap,
@@ -75,29 +68,17 @@ object ConfigFromScriptFileSetter {
                 editFragment,
             )
 
-        editFragment.editBoxTitleConfig = makeConfigMapFromSettingValList(
-            editFragment,
-            settingVariableList,
+        editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.EDIT_TITLE_CONFIG,
+            settingVariableList,
+            editFragment.readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             String(),
         )
         TitleImageAndViewSetter.set(
             editFragment
         )
-//            SettingVariableReader.getStrValue(
-//            settingVariableList,
-//            CommandClickScriptVariable.EDIT_BOX_TITLE,
-//            String(),
-//        ).let {
-//            if(
-//                it.isNotEmpty()
-//            ) return@let TitleImageAndViewSetter.makeTitleForEditTitle(
-//                    editFragment,
-//                    it
-//                )
-//            defaultEditBoxTitle
-//        }
-        makeConfigMapFromSettingValList(
+        setToolbarButtonConfigMapFromSettingValList(
             editFragment,
             settingVariableList,
             onShortcut,
@@ -108,16 +89,18 @@ object ConfigFromScriptFileSetter {
             CommandClickScriptVariable.EDIT_EXECUTE,
             CommandClickScriptVariable.EDIT_EXECUTE_DEFAULT_VALUE
         )
-        editFragment.listIndexConfigMap = makeConfigMapFromSettingValList(
-            editFragment,
-            settingVariableList,
+        editFragment.listIndexConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
+            settingVariableList,
+            editFragment.readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             String(),
         )
-        editFragment.qrDialogConfig = makeConfigMapFromSettingValList(
-            editFragment,
-            settingVariableList,
+        editFragment.qrDialogConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
+            settingVariableList,
+            editFragment.readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             String(),
         )
 
@@ -397,7 +380,7 @@ object ConfigFromScriptFileSetter {
         )
     }
 
-    private fun makeConfigMapFromSettingValList(
+    private fun setToolbarButtonConfigMapFromSettingValList(
         editFragment: EditFragment,
         settingVariableList: List<String>?,
         onShortcut: Boolean,
@@ -539,10 +522,11 @@ object ConfigFromScriptFileSetter {
         if(
             !onShortcut
         ) return mapOf()
-        return makeConfigMapFromSettingValList(
-            editFragment,
-            settingVariableList,
+        return ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             targetSettingConfigValName,
+            settingVariableList,
+            editFragment.readSharePreferenceMap,
+            editFragment.setReplaceVariableMap,
             defaultButtonConfigCon,
         )
     }
@@ -566,42 +550,14 @@ object ConfigFromScriptFileSetter {
                             MacroForToolbarButton.Macro.OK.name
                         ).joinToString("=")
             )
-            else -> makeConfigMapFromSettingValList(
-                editFragment,
-                settingVariableList,
+            else -> ListSettingVariableListMaker.makeConfigMapFromSettingValList(
                 CommandClickScriptVariable.PLAY_BUTTON_CONFIG,
+                settingVariableList,
+                editFragment.readSharePreferenceMap,
+                editFragment.setReplaceVariableMap,
                 String(),
             )
         }
-    }
-
-    private fun makeConfigMapFromSettingValList(
-        editFragment: EditFragment,
-        settingVariableList: List<String>?,
-        targetSettingConfigValName: String,
-        defaultButtonConfigCon: String,
-    ): Map<String, String> {
-        val readSharePreferenceMap =
-            editFragment.readSharePreferenceMap
-        val settingButtonConfigMapStr =
-            ListSettingVariableListMaker.makeFromSettingVariableList(
-                targetSettingConfigValName,
-                readSharePreferenceMap,
-                editFragment.setReplaceVariableMap,
-                settingVariableList
-            ).joinToString(",")
-                .let {
-                    if(
-                        it.isNotEmpty()
-                    ) return@let it
-                    defaultButtonConfigCon
-                }
-        return ConfigMapTool.createFromSettingVal(
-            settingButtonConfigMapStr,
-            String(),
-            editFragment.readSharePreferenceMap,
-            editFragment.setReplaceVariableMap
-        )
     }
 
     private fun makeListFromSettingPath(

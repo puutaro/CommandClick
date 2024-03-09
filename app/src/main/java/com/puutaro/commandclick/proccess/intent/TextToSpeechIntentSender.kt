@@ -64,12 +64,6 @@ object TextToSpeechIntentSender {
                 it
             )
         }
-        extraSettingMap.get(TextToSpeechIntentExtra.playMode.name).let {
-            textToSpeechIntent.putExtra(
-                TextToSpeechIntentExtra.playMode.scheme,
-                it
-            )
-        }
         extraSettingMap.get(TextToSpeechIntentExtra.onRoop.name).let {
             textToSpeechIntent.putExtra(
                 TextToSpeechIntentExtra.onRoop.scheme,

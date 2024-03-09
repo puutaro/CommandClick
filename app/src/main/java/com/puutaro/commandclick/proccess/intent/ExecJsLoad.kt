@@ -86,7 +86,7 @@ object ExecJsLoad {
                 selectedJsFileName,
             ).split("\n")
         val substituteSettingVariableList =
-            CommandClickVariables.substituteVariableListFromHolder(
+            CommandClickVariables.extractValListFromHolder(
                 jsContentsList,
                 settingSectionStart,
                 settingSectionEnd,
@@ -261,7 +261,7 @@ object ExecJsLoad {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val settingSectionVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingSectionVariableList = CommandClickVariables.extractValListFromHolder(
             currentScriptConList,
             settingSectionStart,
             settingSectionEnd,

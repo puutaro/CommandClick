@@ -45,7 +45,7 @@ object ConfigFromStartUpFileSetterForTerm {
             readSharedPreferences
         )
 
-        val settingVariableListFromConfig = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableListFromConfig = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
                 UsePath.cmdclickSystemAppDirPath,
                 UsePath.cmdclickConfigFileName
@@ -132,7 +132,7 @@ object ConfigFromStartUpFileSetterForTerm {
         if(
             currentScriptFileName != cmdclickStartupJsName
         ){
-            val settingVariableListFromStartup = CommandClickVariables.substituteVariableListFromHolder(
+            val settingVariableListFromStartup = CommandClickVariables.extractValListFromHolder(
                 CommandClickVariables.makeMainFannelConList(
                     terminalFragment.currentAppDirPath,
                     cmdclickStartupJsName
@@ -430,7 +430,7 @@ private fun makeSettingVariableListForTerm(
     if(
         isIndexTerminal
         || isStartupScript
-    ) return CommandClickVariables.substituteVariableListFromHolder(
+    ) return CommandClickVariables.extractValListFromHolder(
         fannelContentsList,
         settingSectionStart,
         settingSectionEnd

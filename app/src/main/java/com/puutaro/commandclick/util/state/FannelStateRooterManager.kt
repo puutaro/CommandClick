@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -216,7 +215,7 @@ object FannelStateRooterManager {
     ): List<String>? {
         val currentScriptContentsList =
             ReadText(currentFannelPath).textToList()
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
                 currentScriptContentsList,
                 settingSectionStart,
                 settingSectionEnd

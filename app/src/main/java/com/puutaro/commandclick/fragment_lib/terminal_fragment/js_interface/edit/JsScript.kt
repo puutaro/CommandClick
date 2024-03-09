@@ -48,7 +48,7 @@ class JsScript(
             labelingStartHolder.isNullOrEmpty()
             || labelingEndHolder.isNullOrEmpty()
         ) return String()
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             labelingStartHolder,
             labelingEndHolder
@@ -69,7 +69,7 @@ class JsScript(
             settingStartHolder.isNullOrEmpty()
             || settingEndHolder.isNullOrEmpty()
         ) return String()
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             settingStartHolder,
             settingEndHolder
@@ -90,7 +90,7 @@ class JsScript(
             commandStartHolder.isNullOrEmpty()
             || commandEndHolder.isNullOrEmpty()
         ) return String()
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
             jsContents.split("\n"),
             commandStartHolder,
             commandEndHolder

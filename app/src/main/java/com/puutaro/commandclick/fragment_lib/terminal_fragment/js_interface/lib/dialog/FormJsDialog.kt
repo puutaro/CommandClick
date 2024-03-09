@@ -116,7 +116,7 @@ class FormJsDialog(
 
         val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMap(
             context,
-            CommandClickVariables.substituteVariableListFromHolder(
+            CommandClickVariables.extractValListFromHolder(
                 virtualJsContentsList,
                 settingSectionStart,
                 settingSectionEnd
@@ -215,7 +215,7 @@ class FormJsDialog(
                     exitTextStartId
                 )
             }
-            val dialogReturnStringListSource = CommandClickVariables.substituteVariableListFromHolder(
+            val dialogReturnStringListSource = CommandClickVariables.extractValListFromHolder(
                 updateVirtualJsContentsList,
                 commandSectionStart,
                 commandSectionEnd

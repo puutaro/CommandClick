@@ -2,6 +2,7 @@ package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.QuoteTool
@@ -48,16 +49,76 @@ object FannelStateManager {
         return state
     }
 
+    fun updateState(
+        updateFannelState: String,
+        readSharePrefMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+    ) {
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
+            readSharePrefMap
+        )
+        val currentFannelName = SharePrefTool.getCurrentFannelName(
+            readSharePrefMap
+        )
+        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelStateRootTableFilePath,
+            currentAppDirPath,
+            currentFannelName
+        )
+        if(
+            !File(fannelStateRootTableFilePath).isFile
+        ) return
+        val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
+            ReadText(File(currentAppDirPath, currentFannelName).absolutePath).textToList(),
+            currentFannelName,
+        )
+
+        val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
+            mainFannelSettingConList,
+            readSharePrefMap,
+            setReplaceVariableMap,
+            String()
+        )
+        val noRegisterFannelStateList = QuoteTool.trimBothEdgeQuote(
+            fannelStateConfigMap.get(
+                FannelStateSettingKey.REGISTER_STATES.key
+            )
+        ).split(",")
+        if(
+            noRegisterFannelStateList.contains(updateFannelState)
+        ) return
+        val fannelStateFilePath = ScriptPreWordReplacer.replace(
+            UsePath.fannelStateStockFilePath,
+            currentAppDirPath,
+            currentFannelName
+        )
+        FileSystems.writeFile(
+            fannelStateFilePath,
+            "${fannelStateKey}\t${updateFannelState}"
+        )
+    }
+
     private fun execGetFirstState(
         currentAppDirPath: String,
         currentFannelName: String,
         mainFannelSettingConList: List<String>,
         setReplaceVariableMap: Map<String, String>?,
     ): String? {
-        val firstStateEntry = CommandClickVariables.substituteCmdClickVariable(
-            mainFannelSettingConList,
-            CommandClickScriptVariable.FIRST_STATE
+        val readSharePreferenceMap = SharePrefTool.makeReadSharePrefMapByString(
+            currentAppDirPath,
+            currentFannelName
         )
+        val fannelStateConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
+            CommandClickScriptVariable.FANNEL_STATE_CONFIG,
+            mainFannelSettingConList,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
+            String()
+        )
+        val firstStateEntry = fannelStateConfigMap.get(
+            FannelStateSettingKey.FIRST_STATE.key
+        ) ?: return String()
         return execGetValidState(
             firstStateEntry,
             currentAppDirPath,
@@ -108,7 +169,7 @@ object FannelStateManager {
         }
     }
 
-    fun execGetState(
+    private fun execGetState(
         currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?
@@ -148,33 +209,16 @@ object FannelStateManager {
         } ?: String()
     }
 
-    fun updateState(
-        currentAppDirPath: String,
-        currentFannelName: String,
-        updateFannelState: String,
-    ) {
-        val fannelStateRootTableFilePath = ScriptPreWordReplacer.replace(
-            UsePath.fannelStateRootTableFilePath,
-            currentAppDirPath,
-            currentFannelName
-        )
-        if(
-            !File(fannelStateRootTableFilePath).isFile
-        ) return
-        val fannelStateFilePath = ScriptPreWordReplacer.replace(
-            UsePath.fannelStateStockFilePath,
-            currentAppDirPath,
-            currentFannelName
-        )
-        FileSystems.writeFile(
-            fannelStateFilePath,
-            "${fannelStateKey}\t${updateFannelState}"
-        )
-    }
-
     enum class FannelStateTsvKey(
         val key: String
     ) {
         FANNEL_STATE("fanenlState"),
+    }
+
+    enum class FannelStateSettingKey(
+        val key: String
+    ){
+        FIRST_STATE("firstState"),
+        REGISTER_STATES("registerStates"),
     }
 }

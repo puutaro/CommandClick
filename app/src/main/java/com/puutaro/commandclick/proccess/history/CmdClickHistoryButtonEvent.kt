@@ -227,7 +227,7 @@ class CmdClickHistoryButtonEvent (
                         fannelName,
                     )
 
-                val mainFannelSettingConList = CommandClickVariables.substituteVariableListByFannelName(
+                val mainFannelSettingConList = CommandClickVariables.extractSettingValListByFannelName(
                     mainFannelConList,
                     fannelName
                 ).let {

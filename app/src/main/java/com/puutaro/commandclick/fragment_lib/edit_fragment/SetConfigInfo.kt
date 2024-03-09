@@ -18,7 +18,7 @@ object SetConfigInfo {
             UsePath.cmdclickSystemAppDirPath,
             UsePath.cmdclickConfigFileName
         )
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             configConList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd

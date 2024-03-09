@@ -1,12 +1,9 @@
 package com.puutaro.commandclick.util.state
 
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
-import java.io.File
 
 object SettingVariableImportManager {
     fun import(
@@ -27,7 +24,7 @@ object SettingVariableImportManager {
                 settingImportConList.isNullOrEmpty()
             ) {
                 false -> settingImportConList.map {
-                    CommandClickVariables.substituteVariableListFromHolder(
+                    CommandClickVariables.extractValListFromHolder(
                         ReadText(it).textToList(),
                         settingSectionStart,
                         settingSectionEnd

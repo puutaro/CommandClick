@@ -28,7 +28,7 @@ object ConfigFromStartUpFileSetter {
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
 
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             CommandClickVariables.makeMainFannelConList(
                 currentAppDirPath,
                 cmdclickStartupJsName

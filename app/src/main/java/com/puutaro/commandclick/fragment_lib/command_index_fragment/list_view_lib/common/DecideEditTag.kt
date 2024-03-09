@@ -85,7 +85,7 @@ class DecideEditTag(
         endHolderName: String,
     ): Boolean {
         val cmdclickVariableRegex = Regex("^[a-zA-Z0-9_-]*=")
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
             shellContentsList,
             startHolderName,
             endHolderName

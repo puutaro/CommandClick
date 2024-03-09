@@ -88,6 +88,7 @@ class MainActivity:
     TerminalFragment.OnEditFannelContentsListUpdateListenerForTerm,
     TerminalFragment.OnMonitorSizeChangeingForTerm,
     TerminalFragment.OnPopStackImmediateListenerForTerm,
+    TerminalFragment.OnCmdValSaveAndBackListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -693,5 +694,9 @@ class MainActivity:
 
     override fun onPopStackImmediateForTerm() {
         this.supportFragmentManager.popBackStackImmediate()
+    }
+
+    override fun onSettingOkButtonForTerm() {
+        ExecSettingOkButton.handle(this)
     }
  }

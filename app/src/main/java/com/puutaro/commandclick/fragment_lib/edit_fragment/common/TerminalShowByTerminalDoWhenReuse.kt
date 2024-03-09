@@ -27,7 +27,7 @@ object TerminalShowByTerminalDoWhenReuse {
         if(
             shellContentsList.isNullOrEmpty()
         ) return
-        val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
+        val variablesSettingHolderList = CommandClickVariables.extractValListFromHolder(
             shellContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd

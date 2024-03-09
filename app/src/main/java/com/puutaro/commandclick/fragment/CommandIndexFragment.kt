@@ -139,7 +139,7 @@ class CommandIndexFragment: Fragment() {
             }
         }
 
-        readSharePreferenceMap = SharePrefTool.makeReadSharePreferenceMap(
+        readSharePreferenceMap = SharePrefTool.makeReadSharePrefMapByShare(
             startUpPref
         )
 //        FDialogTempFile.removeByCoroutine(

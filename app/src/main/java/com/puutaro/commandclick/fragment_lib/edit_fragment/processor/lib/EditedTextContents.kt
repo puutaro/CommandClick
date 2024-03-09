@@ -8,7 +8,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextIdFo
 import com.puutaro.commandclick.proccess.CommentOutLabelingSection
 import com.puutaro.commandclick.proccess.edit.lib.ScriptContentsLister
 import com.puutaro.commandclick.util.CommandClickVariables.substituteCmdClickVariable
-import com.puutaro.commandclick.util.CommandClickVariables.substituteVariableListFromHolder
+import com.puutaro.commandclick.util.CommandClickVariables.extractValListFromHolder
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.edit_tool.CcEditComponent
@@ -117,7 +117,7 @@ class EditedTextContents(
     private fun howUpdateLastModify(
         submitScriptContentsList: List<String>
     ): Boolean {
-        val settingVariableList = substituteVariableListFromHolder(
+        val settingVariableList = extractValListFromHolder(
             submitScriptContentsList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd

@@ -157,7 +157,7 @@ object SharePrefTool {
         }
     }
 
-    fun makeReadSharePreferenceMap(
+    fun makeReadSharePrefMapByShare(
         startUpPref: SharedPreferences?
     ): Map<String, String> {
         val sharedCurrentAppPath = getStringFromSharePref(
@@ -183,6 +183,22 @@ object SharePrefTool {
             SharePrefferenceSetting.on_shortcut.name
                     to sharedOnShortcut,
         )
+    }
+
+    fun makeReadSharePrefMapByString(
+        currentAppDirPath: String = String(),
+        currentFannelName: String = String(),
+        currentFannelState: String = String()
+    ): Map<String, String> {
+        return mapOf(
+            SharePrefferenceSetting.current_app_dir.name
+                    to currentAppDirPath,
+            SharePrefferenceSetting.current_fannel_name.name
+                    to currentFannelName,
+            SharePrefferenceSetting.current_fannel_state.name
+                    to currentFannelState,
+        )
+
     }
 
     private fun getValFromReadSharePrefMap(

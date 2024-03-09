@@ -412,4 +412,8 @@ class   TerminalFragment: Fragment() {
     interface OnPopStackImmediateListenerForTerm {
         fun onPopStackImmediateForTerm()
     }
+
+    interface OnCmdValSaveAndBackListenerForTerm {
+        fun onSettingOkButtonForTerm()
+    }
 }

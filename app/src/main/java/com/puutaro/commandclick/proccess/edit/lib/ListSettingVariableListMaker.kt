@@ -4,7 +4,9 @@ import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVari
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.SettingVariableReader
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
@@ -14,6 +16,33 @@ object ListSettingVariableListMaker {
     private val setReplaceVariableValName =
         CommandClickScriptVariable.SET_REPLACE_VARIABLE
 
+    fun makeConfigMapFromSettingValList(
+        targetSettingConfigValName: String,
+        settingVariableList: List<String>?,
+        readSharePreferenceMap: Map<String, String>,
+        setReplaceVariableMap: Map<String, String>?,
+        defaultButtonConfigCon: String,
+    ): Map<String, String> {
+        val settingButtonConfigMapStr =
+            makeFromSettingVariableList(
+                targetSettingConfigValName,
+                readSharePreferenceMap,
+                setReplaceVariableMap,
+                settingVariableList
+            ).joinToString(",")
+                .let {
+                    if(
+                        it.isNotEmpty()
+                    ) return@let it
+                    defaultButtonConfigCon
+                }
+        return createFromSettingVal(
+            settingButtonConfigMapStr,
+            String(),
+            readSharePreferenceMap,
+            setReplaceVariableMap
+        )
+    }
     fun makeFromSettingVariableList(
         settingVariableName: String,
         readSharePreferenceMap: Map<String, String>,
@@ -77,6 +106,48 @@ object ListSettingVariableListMaker {
         }
     }
 
+    private fun createFromSettingVal(
+        settingValConSrc: String,
+        defaultConfigMapStr: String,
+        readSharePreferenceMap: Map<String, String>,
+        setReplaceVariableMap:  Map<String, String>? = null,
+    ): Map<String, String> {
+        val propertySeparator = ','
+        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
+            readSharePreferenceMap
+        )
+        val currentScriptFileName = SharePrefTool.getCurrentFannelName(
+            readSharePreferenceMap
+        )
+        val settingValCon = ScriptPreWordReplacer.replace(
+            settingValConSrc,
+            currentAppDirPath,
+            currentScriptFileName,
+        )
+        val configMapPairList = when (true) {
+            settingValCon.isNotEmpty() ->
+                SettingFile.formSettingContents(settingValCon.split("\n"))
+            else ->
+                SettingFile.formSettingContents(
+                    defaultConfigMapStr.split("\n")
+                )
+        }.let {
+            replaceByPreWordAndRepValMap(
+                it,
+                currentAppDirPath,
+                currentScriptFileName,
+                setReplaceVariableMap,
+            )
+        }.let {
+            CmdClickMap.createMap(
+                it,
+                propertySeparator
+            )
+        }.reversed()
+        val configMap = configMapPairList.toMap().filterKeys { it.isNotEmpty() }
+        return configMap
+    }
+
     private fun removeMultipleNewLinesAndReplace(
         valueList: List<String>,
         setReplaceVariableMap: Map<String, String>?,
@@ -113,6 +184,28 @@ object ListSettingVariableListMaker {
             }
     }
 
+    private fun replaceByPreWordAndRepValMap(
+        targetStr: String,
+        currentAppDirPath: String,
+        currentScriptFileName: String,
+        setReplaceVariableMap: Map<String, String>?,
+    ): String {
+        return targetStr.let {
+            ScriptPreWordReplacer.replace(
+                it,
+                currentAppDirPath,
+                currentScriptFileName
+            )
+        }.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableMap,
+                currentAppDirPath,
+                currentScriptFileName
+            )
+        }
+    }
+
     private fun decideSettingVariableListPath(
         variableName: String,
         lineWithFilePrefix: String,
@@ -120,8 +213,6 @@ object ListSettingVariableListMaker {
         currentAppDirPath: String,
         currentFannelName: String,
     ): String {
-//        val isOnlyFilePrefix =
-//            lineWithFilePrefix.trim() == filePrefix
         val isFilePrefix =
             lineWithFilePrefix.startsWith(filePrefix)
                     && lineWithFilePrefix.trim() != filePrefix
@@ -174,6 +265,8 @@ object ListSettingVariableListMaker {
             -> UsePath.extraButtonConfigPath
             CommandClickScriptVariable.LIST_INDEX_CONFIG
             -> UsePath.listIndexForEditConfigPath
+            CommandClickScriptVariable.FANNEL_STATE_CONFIG
+            -> UsePath.fannelStateConfigPath
             CommandClickScriptVariable.QR_DIALOG_CONFIG
             -> UsePath.qrDialogConfigPath
             CommandClickScriptVariable.EDIT_BOX_TITLE

@@ -151,7 +151,7 @@ object ScriptFileDescription {
         val labelingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.LABELING_SEC_END
         ) as String
-        return CommandClickVariables.substituteVariableListFromHolder(
+        return CommandClickVariables.extractValListFromHolder(
             currentScriptContentsList,
             labelingSectionStart,
             labelingSectionEnd,

@@ -106,7 +106,7 @@ object CommandClickVariables {
         return  LanguageTypeSelects.JAVA_SCRIPT
     }
 
-    fun substituteVariableListByFannelName(
+    fun extractSettingValListByFannelName(
         shellContentsList: List<String>?,
         fannelName: String,
     ): List<String>? {
@@ -120,14 +120,14 @@ object CommandClickVariables {
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
-        return substituteVariableListFromHolder(
+        return extractValListFromHolder(
             shellContentsList,
             settingSectionStart,
             settingSectionEnd,
         )
     }
 
-    fun substituteVariableListFromHolder(
+    fun extractValListFromHolder(
         shellContentsList: List<String>?,
         startHolderName: String?,
         endHolderName: String?,
@@ -160,7 +160,7 @@ object CommandClickVariables {
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(
                 languageTypeSelects
             )
-        return substituteVariableListFromHolder(
+        return extractValListFromHolder(
                 shellContentsList,
                 languageTypeHolderMap?.get(
                     CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START
@@ -179,7 +179,7 @@ object CommandClickVariables {
                 languageTypeSelects
             )
         val variablesSettingHolderList =
-            substituteVariableListFromHolder(
+            extractValListFromHolder(
                 shellContentsList,
                 languageTypeHolderMap?.get(
                     CommandClickScriptVariable.HolderTypeName.SETTING_SEC_START

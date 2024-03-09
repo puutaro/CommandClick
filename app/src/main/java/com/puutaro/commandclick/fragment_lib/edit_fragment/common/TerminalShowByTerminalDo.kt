@@ -28,7 +28,7 @@ object TerminalShowByTerminalDo {
         if(
             currentFannelConList.isEmpty()
         ) return
-        val variablesSettingHolderList = CommandClickVariables.substituteVariableListFromHolder(
+        val variablesSettingHolderList = CommandClickVariables.extractValListFromHolder(
             currentFannelConList,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd

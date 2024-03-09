@@ -58,7 +58,7 @@ object ExecShellScript {
             ).textToList()
         } else shellContentsListSource
         val substituteSettingVariableList =
-            CommandClickVariables.substituteVariableListFromHolder(
+            CommandClickVariables.extractValListFromHolder(
                 shellContentsList,
                 settingSectionStart,
                 settingSectionEnd,

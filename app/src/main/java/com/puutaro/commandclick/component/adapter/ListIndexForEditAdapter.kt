@@ -326,7 +326,7 @@ class ListIndexForEditAdapter(
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             fileConList,
             settingSectionStart,
             settingSectionEnd

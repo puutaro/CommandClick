@@ -54,7 +54,7 @@ class ToolbarButtonArgsMaker(
         ).absolutePath
     ).textToList()
     val setReplaceVariableMap = let {
-        val settingVariableList = CommandClickVariables.substituteVariableListFromHolder(
+        val settingVariableList = CommandClickVariables.extractValListFromHolder(
             currentScriptContentsList,
             settingSectionStart,
             settingSectionEnd

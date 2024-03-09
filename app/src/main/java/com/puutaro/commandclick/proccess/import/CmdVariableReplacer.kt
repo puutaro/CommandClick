@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.import
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.util.CcPathTool
@@ -39,7 +38,7 @@ object CmdVariableReplacer {
         val jsList = ReadText(
             mainFannelPath
         ).textToList()
-       val cmdValMap = CommandClickVariables.substituteVariableListFromHolder(
+       val cmdValMap = CommandClickVariables.extractValListFromHolder(
             jsList,
             cmdValSectionStart,
             cmdValSectionEnd
