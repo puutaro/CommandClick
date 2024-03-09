@@ -82,7 +82,7 @@ object FannelStateManager {
         )
         val noRegisterFannelStateList = QuoteTool.trimBothEdgeQuote(
             fannelStateConfigMap.get(
-                FannelStateSettingKey.REGISTER_STATES.key
+                FannelStateSettingKey.NO_REGISTER_STATES.key
             )
         ).split(",")
         if(
@@ -219,6 +219,6 @@ object FannelStateManager {
         val key: String
     ){
         FIRST_STATE("firstState"),
-        REGISTER_STATES("registerStates"),
+        NO_REGISTER_STATES("noRegisterStates"),
     }
 }
