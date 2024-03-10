@@ -12,6 +12,7 @@ import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
+import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object SetReplaceVariabler {
@@ -39,6 +40,20 @@ object SetReplaceVariabler {
             null,
             false
         )
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsRepval.txt").absolutePath,
+//            listOf(
+//                "noImportRepValMap: ${noImportRepValMap}",
+//                "isImportPreWord: ${noImportRepValMap?.containsKey(importPreWord)}",
+//                "execMakeSetReplaceVariableMap: ${execMakeSetReplaceVariableMap(
+//                    context,
+//                    settingVariableList,
+//                    readSharePrefMap,
+//                    noImportRepValMap,
+//                    true
+//                )}"
+//            ).joinToString("\n\n\n")
+//        )
         if(
             noImportRepValMap.isNullOrEmpty()
         ) return null

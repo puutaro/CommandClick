@@ -2,7 +2,6 @@ package com.puutaro.commandclick.proccess.edit.lib
 
 import com.puutaro.commandclick.common.variable.variables.SettingFileVariables
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.ReadText
 import java.io.File
 
@@ -16,6 +15,11 @@ object SettingFile {
         setReplaceVariableCompleteMap: Map<String, String>?,
         onImport: Boolean = true
     ): String {
+        val fannelPathObj = File(fannelPath)
+        if (!fannelPathObj.isFile) return String()
+        val recentAppDirPath = fannelPathObj.parent
+            ?: String()
+        val scriptFileName = fannelPathObj.name
         val firstSettingCon = ReadText(
             settingFilePath
         ).textToList()
@@ -27,11 +31,19 @@ object SettingFile {
             ) return@map it
             importSetting(
                 it,
-                fannelPath,
+                recentAppDirPath,
+                scriptFileName,
                 setReplaceVariableCompleteMap
             )
         }.let {
             formSettingContents(it)
+        }.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableCompleteMap,
+                recentAppDirPath,
+                scriptFileName
+            )
         }
     }
 
@@ -40,14 +52,27 @@ object SettingFile {
         fannelPath: String,
         setReplaceVariableCompleteMap: Map<String, String>?
     ): String {
+        val fannelPathObj = File(fannelPath)
+        if (!fannelPathObj.isFile) return String()
+        val recentAppDirPath = fannelPathObj.parent
+            ?: String()
+        val scriptFileName = fannelPathObj.name
         return settingConList.map {
             importSetting(
                 it,
-                fannelPath,
+                recentAppDirPath,
+                scriptFileName,
                 setReplaceVariableCompleteMap
             )
         }.let {
             formSettingContents(it)
+        }.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                setReplaceVariableCompleteMap,
+                recentAppDirPath,
+                scriptFileName
+            )
         }
     }
 
@@ -83,14 +108,15 @@ object SettingFile {
 
     private fun importSetting(
         row: String,
-        fannelPath: String,
+        recentAppDirPath: String,
+        scriptFileName: String,
         setReplaceVariableCompleteMap: Map<String, String>?
     ): String {
-        val fannelPathObj = File(fannelPath)
-        if (!fannelPathObj.isFile) return String()
-        val recentAppDirPath = fannelPathObj.parent
-            ?: return row
-        val scriptFileName = fannelPathObj.name
+//        val fannelPathObj = File(fannelPath)
+//        if (!fannelPathObj.isFile) return String()
+//        val recentAppDirPath = fannelPathObj.parent
+//            ?: return row
+//        val scriptFileName = fannelPathObj.name
         val trimRow = row
             .trim()
             .trim(';')
@@ -109,13 +135,13 @@ object SettingFile {
                     scriptFileName
                 )
             }
-            .let {
-                ScriptPreWordReplacer.replace(
-                    it,
-                    recentAppDirPath,
-                    scriptFileName
-                )
-            }
+//            .let {
+//                ScriptPreWordReplacer.replace(
+//                    it,
+//                    recentAppDirPath,
+//                    scriptFileName
+//                )
+//            }
             .let {
                 QuoteTool.trimBothEdgeQuote(it)
             }.let {

@@ -10,6 +10,7 @@ import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
@@ -128,19 +129,42 @@ object JavascriptExecuter {
         when(isJsAction){
             true -> {
                 val setReplaceVariableMap =
-                    SharePrefTool.getReplaceVariableMap(
-                        fragment,
-                        null
+                    SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                        context,
+                        execJsPath
                     )
+//                    SharePrefTool.getReplaceVariableMap(
+//                        fragment,
+//                        null
+//                    )
                 val jsKeyToSubKeyListCon = SettingFile.readFromList(
                     execJsConList,
                     execJsPath,
                     setReplaceVariableMap
                 )
+//                FileSystems.writeFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
+//                    listOf(
+//                        "execJsPath: ${execJsPath}",
+//                        "jsContentsListSource: ${execJsConList}",
+//                        "extraMapCon: ${extraMapCon}",
+//                        "isJsAction: ${isJsAction}",
+//                        "setReplaceVariableMap: ${setReplaceVariableMap}",
+//                        "jsKeyToSubKeyListCon: ${jsKeyToSubKeyListCon}",
+//                        "jsKeyToSubKeyListCon: ${SetReplaceVariabler.execReplaceByReplaceVariables(
+//                            jsKeyToSubKeyListCon,
+//                            setReplaceVariableMap,
+//                            String(),
+//                            String()
+//                        )}",
+//                    ).joinToString("\n\n")
+//                )
+
                 JsActionHandler.handle(
                     fragment,
                     readSharePreferenceMap,
                     execJsPath,
+                    setReplaceVariableMap,
                     jsKeyToSubKeyListCon,
                     extraMapCon,
                     webView

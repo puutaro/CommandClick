@@ -2,6 +2,7 @@ package com.puutaro.commandclick.proccess.tool_bar_button
 
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.import.CmdVariableReplacer
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
@@ -15,6 +16,7 @@ object JsActionHandler {
         fragment: Fragment,
         readSharePreferenceMap: Map<String, String>,
         mainOrSubFannelPath: String,
+        setReplaceVariableMapSrc: Map<String, String>?,
         jsActionPairListCon: String,
         extraRepValMap: Map<String, String>? = null,
         webView: WebView? = null
@@ -24,37 +26,23 @@ object JsActionHandler {
             ',',
             "\n"
         )
-        val setReplaceVariableMapSrc = SharePrefTool.getReplaceVariableMap(
-            fragment,
-            mainOrSubFannelPath
-        )
-        //        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
-//            mainOrSubFannelPath,
-//            jsRepValMapBeforeCmdValRepValConcat
+//        val setReplaceVariableMapSrc = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+//            fragment.context,
+//            mainOrSubFannelPath
+//        )
+//            SharePrefTool.getReplaceVariableMap(
+//            fragment,
+//            mainOrSubFannelPath
 //        )
         val setReplaceVariableMap = CmdClickMap.concatRepValMap(
             setReplaceVariableMapSrc,
             extraRepValMap,
         )
-//        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
-//            mainOrSubFannelPath,
-//            setReplaceVariableMapSrc
-//        )
-//        val setReplaceVariableMap = JsActionTool.makeSetRepValMap(
-//            fragment,
-//            readSharePreferenceMap,
-//            extraRepValMap,
-//        )
-//        val jsRepValMap = concatRepValMap(
-//            jsRepValHolderMap,
-//            extraRepValMap
-//        )
         val jsActionMap = JsActionTool.makeJsActionMap(
             fragment,
             readSharePreferenceMap,
             jsAcKeyToSubKeyCon,
             setReplaceVariableMap,
-//            extraRepValMap
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsAC.txt").absolutePath,

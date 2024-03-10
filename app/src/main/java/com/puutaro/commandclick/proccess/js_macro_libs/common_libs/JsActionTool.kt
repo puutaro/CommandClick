@@ -117,22 +117,22 @@ object JsActionTool {
 //                "js_makeJsActionMap.txt").absolutePath,
 //            listOf(
 //                "keyToSubKeyCon: ${keyToSubKeyCon}",
-//                "jsRepValMap: ${jsRepValMap}",
-//                "overrideMapList: ${overrideMapList}",
-//                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
-//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "setReplaceVariableMap: ${setReplaceVariableMap}",
+//                "keyToSubMapTypeMap: ${keyToSubMapTypeMap}",
+//                "jsRepValHolderMap: ${jsRepValHolderMap}",
+//                "keyToSubKeyMapListWithAfterSubKey: ${keyToSubKeyMapListWithAfterSubKey}",
+//                "keyToSubKeyMapListWithoutAfterSubKey: ${keyToSubKeyMapListWithoutAfterSubKey}",
 //                "macroDataMap: ${macroDataMap}",
 //                "onExtract: ${!macroDataMap.isNullOrEmpty()}",
 //                "extractJsDataMap: ${
 //                    extractJsDataMap(
-//                    fragment,
+//                        fragment,
 //                        readSharePreferenceMap,
 //                        setReplaceVariableMap,
-//                    keyToSubKeyConListWithoutAfterSubKey,
-//                    keyToSubKeyConListWithAfterSubKey,
-//                        overrideMapList,
-//                        jsRepValMap,
-//                )
+//                        keyToSubKeyMapListWithoutAfterSubKey,
+//                        keyToSubKeyMapListWithAfterSubKey,
+//                        jsRepValHolderMap,
+//                    )
 //                }",
 //            ).joinToString("\n\n")
 //        )
@@ -540,9 +540,11 @@ object JsActionTool {
 //                UsePath.cmdclickDefaultAppDirPath,
 //                "js_makeJsActionMap_convert.txt").absolutePath,
 //            listOf(
-//                "overrideMapList: ${overrideMapList}",
-//                "keyToSubKeyConListWithAfterSubKey: ${keyToSubKeyConListWithAfterSubKey}",
-//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "tsvImportCon: ${tsvImportCon}",
+//                "jsImportCon: ${jsImportCon}",
+//                "keyToSubKeyMapListWithoutAfterSubKey: ${keyToSubKeyMapListWithoutAfterSubKey}",
+//                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
+//                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
 //                "jsMapListWithoutAfterSubKey: ${jsMapListWithoutAfterSubKey}",
 //                "jsMapListWithAfterSubKey: ${jsMapListWithAfterSubKey}",
 //                "jsFuncCon: ${jsFuncCon}",
@@ -553,7 +555,7 @@ object JsActionTool {
 //                    jsConBeforeJsImport,
 //                    setReplaceVariableMap,
 //                )}"
-//            ).joinToString("\n\n")
+//            ).joinToString("\n\n\n")
 //        )
         return JavaScriptLoadUrl.makeRawJsConFromContents(
             fragment,

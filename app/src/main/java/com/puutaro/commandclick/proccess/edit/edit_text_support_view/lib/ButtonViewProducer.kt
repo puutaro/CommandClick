@@ -817,11 +817,16 @@ object ButtonViewProducer {
             buttonMap
         )
 //        terminalViewModel.jsArguments = makeArgs(execCmdReplaceBlankList)
-
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                editFragment.context,
+                jsActionFilePath
+            )
         JsActionHandler.handle(
             editFragment,
             editFragment.readSharePreferenceMap,
             String(),
+            setReplaceVariableMap,
             ReadText(jsActionFilePath).readText()
         )
     }
@@ -850,6 +855,7 @@ object ButtonViewProducer {
             editFragment,
             editFragment.readSharePreferenceMap,
             String(),
+            editFragment.setReplaceVariableMap,
             jsActionCon
         )
     }

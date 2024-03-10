@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -9,6 +10,7 @@ import com.puutaro.commandclick.util.state.SharePrefTool
 class JsAction(
     private val terminalFragment: TerminalFragment,
 ) {
+    private val context = terminalFragment.context
 
     @JavascriptInterface
     fun execByPath_S(
@@ -35,10 +37,16 @@ class JsAction(
             terminalFragment,
             mainOrSubFannelPath
         )
+        val setReplaceVariableMap =
+            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                context,
+                mainOrSubFannelPath
+            )
         JsActionHandler.handle(
             terminalFragment,
             readSharePreferenceMap,
             mainOrSubFannelPath,
+            setReplaceVariableMap,
             jsActionPairListCon
         )
     }
