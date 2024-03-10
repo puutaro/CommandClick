@@ -16,7 +16,6 @@ import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarBut
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -100,14 +99,6 @@ object JsActionTool {
         val jsRepValHolderMap = makeRepValHolderMap(
             keyToSubMapTypeMap
         )
-//        val jsRepValMapBeforeConcat = CmdVariableReplacer.replace(
-//            mainOrSubFannelPath,
-//            jsRepValMapBeforeCmdValRepValConcat
-//        )
-//        val jsRepValMap = concatRepValMap(
-//            jsRepValHolderMap,
-//            extraRepValMap
-//        )
 
         val keyToSubKeyMapListWithAfterSubKey = keyToSubMapTypeMap.get(
             KeyToSubConType.WITH_AFTER
@@ -1414,6 +1405,10 @@ private fun makeJsCon(
 private object AfterJsConMaker {
 
     private val ifSentence = "if"
+    private val ifAfterSentence = "ifAfter"
+    private val afterValSeprator = ":"
+    private val ifAfterPrefix = "${ifAfterSentence}${afterValSeprator}"
+
     fun make(
         jsMap: Map<String, String>,
     ): String {
@@ -1426,32 +1421,90 @@ private object AfterJsConMaker {
             )
             val afterJsConList = varNameJsConPairList.mapIndexed {
                     index, jsConSrc ->
-                val preIndexPair =
-                    varNameJsConPairList.getOrNull(index - 1)
+                val last2IndexPairList =
+                    takeLast2IndexInThis(
+                        varNameJsConPairList,
+                        index,
+                    )
                 execMakeAfterJsCon(
                     jsConSrc,
-                    preIndexPair,
+                    last2IndexPairList,
                 )
             }
         return afterJsConList.joinToString("\n")
     }
 
+    private fun takeLast2IndexInThis(
+        varNameJsConPairList: List<Pair<String, String>>,
+        index: Int,
+    ): List<Pair<String, String>> {
+        return varNameJsConPairList.filterIndexed {
+                innerIndex, el ->
+            if(
+                innerIndex >= index
+            ) return@filterIndexed false
+            !QuoteTool.trimBothEdgeQuote(
+                el.first
+            ).startsWith(ifAfterPrefix)
+        }.takeLast(2)
+    }
+
     private fun execMakeAfterJsCon(
         varNameToJsCon: Pair<String, String>,
-        preIndexPair: Pair<String, String>?,
+        last2IndexPairList: List<Pair<String, String>?>
     ): String {
         val varName = varNameToJsCon.first.trim()
         val jsCon = varNameToJsCon.second.trim()
         val isIfSentence =
             varName == ifSentence
-        return when(isIfSentence){
-            true -> String()
+        val afterAndValCon = QuoteTool.trimBothEdgeQuote(varName)
+        val isIfAfter =
+            afterAndValCon.startsWith(
+                ifAfterPrefix
+            )
+        return when(true){
+            isIfSentence -> String()
+            isIfAfter -> execMakeIfAfterJsCon(
+                afterAndValCon,
+                jsCon,
+                last2IndexPairList,
+            )
             else -> execMakeAfterJsCon(
                 varName,
                 jsCon,
-                preIndexPair,
+                last2IndexPairList.lastOrNull(),
             )
         }
+    }
+
+    private fun execMakeIfAfterJsCon(
+        afterAndValCon: String,
+        jsCon: String,
+        last2IndexPairList: List<Pair<String, String>?>
+    ): String {
+        val varName =
+            afterAndValCon.removePrefix(ifAfterPrefix)
+        val beforePreIfPair =
+            last2IndexPairList.firstOrNull()
+        val isBeforeIf =
+            beforePreIfPair?.first == ifSentence
+                    && last2IndexPairList.getOrNull(1)?.first != ifSentence
+        if(
+            !isBeforeIf
+        ) return String()
+        val funcTemplate = makeFuncTemplaceForAfterJsCon(
+            beforePreIfPair
+        )
+        val logJsCon = makeLogConForAfterJsCon(varName)
+        val ifAfterJsCon = makeAfterJsCon(
+            varName,
+            jsCon,
+        )
+        return makeIfCon(
+            funcTemplate,
+            logJsCon,
+            ifAfterJsCon,
+        )
     }
 
     private fun execMakeAfterJsCon(
@@ -1467,6 +1520,18 @@ private object AfterJsConMaker {
         val funcTemplate = makeFuncTemplaceForAfterJsCon(
             preIndexPair
         )
+        return makeIfCon(
+            funcTemplate,
+            logJsCon,
+            afterJsCon,
+        )
+    }
+
+    fun makeIfCon(
+        funcTemplate: String,
+        logJsCon: String,
+        afterJsCon: String,
+    ): String {
         val isIf = funcTemplate.contains(ifSentence)
         val afterJsConWithLog = listOf(
             logJsCon,
@@ -1491,6 +1556,7 @@ private object AfterJsConMaker {
                 || varName.contains("\"")
                 || varName.contains("\'")
                 || varName.contains("`")
+                || varName.isEmpty()
         val varNameCon = when(disableVar) {
             true -> String()
             else -> listOf(
