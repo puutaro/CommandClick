@@ -23,6 +23,8 @@ object AssetsFileManager {
     const val iconSelectBox = "$assetsEditDirPath/iconSelectBox.js"
     const val urlHistoryToTsv = "$assetsEditDirPath/urlHistoryToTsv.js"
     const val fannelShellDirPath = "$assetsFannelsDirName/shell"
+    const val savePreviousPlayListPath =
+        "${fannelShellDirPath}/savePreviousPlayList.sh"
     const val ubuntuSetupDirPath = "ubuntu_setup"
     const val ubunutSupportDirPath = "$ubuntuSetupDirPath/support"
     const val ubunutSupportCmdDirPath = "$ubunutSupportDirPath/cmd"

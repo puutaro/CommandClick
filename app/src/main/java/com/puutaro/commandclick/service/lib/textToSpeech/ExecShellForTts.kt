@@ -2,6 +2,7 @@ package com.puutaro.commandclick.service.lib.textToSpeech
 
 import android.content.Context
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
@@ -45,31 +46,42 @@ object ExecShellForTts {
                 context,
                 shellPath
             )
-        val currentAppDirPath = CcPathTool.getMainAppDirPath(
-            shellPath
-        )
-
-        val currentFannelName = CcPathTool.getMainFannelFilePath(
-            currentAppDirPath
-        )
-
-        val shellCon = ReadText(
-            shellPath
-        ).readText().let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentFannelName
-            )
-        }
         val busyboxExecutor = BusyboxExecutor(
             context,
             UbuntuFiles(context),
         )
-        busyboxExecutor.getCmdOutput(
-            shellCon,
+        ShellMacroHandler.handle(
+            context,
+            busyboxExecutor,
+            shellPath,
+            setReplaceVariableMap,
             repValMapForTts
         )
+//        val currentAppDirPath = CcPathTool.getMainAppDirPath(
+//            shellPath
+//        )
+//
+//        val currentFannelName = CcPathTool.getMainFannelFilePath(
+//            currentAppDirPath
+//        )
+//
+//        val shellCon = ReadText(
+//            shellPath
+//        ).readText().let {
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                setReplaceVariableMap,
+//                currentAppDirPath,
+//                currentFannelName
+//            )
+//        }
+//        val busyboxExecutor = BusyboxExecutor(
+//            context,
+//            UbuntuFiles(context),
+//        )
+//        busyboxExecutor.getCmdOutput(
+//            shellCon,
+//            repValMapForTts
+//        )
     }
 }
