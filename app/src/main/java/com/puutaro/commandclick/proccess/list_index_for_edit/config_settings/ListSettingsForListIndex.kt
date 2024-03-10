@@ -25,7 +25,8 @@ object ListSettingsForListIndex  {
         EDIT_BY_DRAG("editByDrag"),
         SORT_TYPE("sortType"),
         COMP_PATH("compPath"),
-        ON_REVERSE_LAYOUT("onReverseLayout")
+        ON_REVERSE_LAYOUT("onReverseLayout"),
+        ON_ONLY_EXIST_PATH("onOnlyExistPath"),
     }
 
     enum class stackFromBottomValue {
@@ -42,15 +43,40 @@ object ListSettingsForListIndex  {
         ON
     }
 
+    enum class OnOnlyExistPath {
+        ON
+    }
+
     enum class SortByKey(
         val key: String
     ) {
         LAST_UPDATE("lastUpdate"),
         SORT("sort"),
         REVERSE("reverse"),
-
     }
 
+    fun howExistPathForTsv(
+        editFragment: EditFragment,
+        indexListMap: Map<String, String>,
+        tsvConList: List<String>
+    ): List<String> {
+        val isOnlyExistPath = FilePrefixGetter.get(
+            editFragment,
+            indexListMap,
+            ListSettingKey.ON_ONLY_EXIST_PATH.key
+        ) == OnOnlyExistPath.ON.name
+        if(
+            !isOnlyExistPath
+        ) return tsvConList
+        return tsvConList.filter {
+            val titleAndPathList = it.split("\t")
+            val path = titleAndPathList.lastOrNull()
+                ?: return@filter false
+            val pathObj = File(path)
+            pathObj.isFile
+                    || pathObj.isDirectory
+        }
+    }
     fun howDisableEditByDrag(
         editFragment: EditFragment,
         editByDragMap: Map<String, String>
@@ -301,6 +327,12 @@ object ListSettingsForListIndex  {
                     )
                 }
                 "${title}\t${con}"
+            }.let {
+                howExistPathForTsv(
+                    editFragment,
+                    indexListMap,
+                    it,
+                )
             }
             val tsvConList = CompPathManager.concatByCompConWhenTsvEdit(
                 editFragment,
