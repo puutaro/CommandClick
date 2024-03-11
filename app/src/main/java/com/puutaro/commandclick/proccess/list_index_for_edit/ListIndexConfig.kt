@@ -9,8 +9,10 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
+import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
@@ -43,11 +45,11 @@ object ListIndexEditConfig {
             editFragment,
             isLongClick,
         )
-        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-            editFragment,
-            ListIndexForEditAdapter.indexListMap,
-            ListIndexForEditAdapter.listIndexTypeKey
-        )
+//        val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+//            editFragment,
+//            ListIndexForEditAdapter.indexListMap,
+//            ListIndexForEditAdapter.listIndexTypeKey
+//        )
         val readSharePreferenceMap =
             editFragment.readSharePreferenceMap
 //        val extraRepValMap = mapOf(
@@ -78,6 +80,11 @@ object ListIndexEditConfig {
         val listIndexArgsMaker = ListIndexArgsMaker(
             editFragment,
             clickConfigPairList,
+        )
+
+        ClickScriptSaver.save(
+            editFragment,
+            listIndexArgsMaker
         )
         ExecClickUpdate.update(
             editFragment,

@@ -21,7 +21,10 @@ object ExecClickUpdate {
         listIndexListViewHolder: ListIndexForEditAdapter.ListIndexListViewHolder,
     ){
         val clickConfigMap = listIndexArgsMaker.clickConfigPairList
-        val enableClickUpdate = ClickSettingsForListIndex.howEnableClickUpdate(clickConfigMap)
+        val enableClickUpdate =
+            ClickSettingsForListIndex.howEnableClickUpdate(
+                clickConfigMap
+            )
         if(!enableClickUpdate) return
         when(ListIndexForEditAdapter.listIndexTypeKey) {
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL

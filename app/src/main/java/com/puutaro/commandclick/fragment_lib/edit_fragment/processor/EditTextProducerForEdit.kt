@@ -28,6 +28,7 @@ class EditTextProducerForEdit(
     )
 
     private val setReplaceVariableMap = editFragment.setReplaceVariableMap
+    private val descriptionHidValName = "description"
 
 
     private val editParameters = EditParameters(
@@ -64,9 +65,10 @@ class EditTextProducerForEdit(
                 EditTextIdForEdit.COMMAND_VARIABLE.id
             )
         }
-//        if (
-//            FDialogTempFile.howFDialogFile(currentScriptFileName)
-//        ) return
+        val disableDesc =
+            editFragment.hideSettingVariableList
+                .contains(descriptionHidValName)
+        if(disableDesc) return
         binding.editLinearLayout.addView(
             makeDescriptionButton(
                 editFragment,

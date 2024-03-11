@@ -19,7 +19,6 @@ object ClickSettingsForListIndex {
 
     enum class OnScriptSave {
         ON,
-        OFF
     }
 
     enum class OnDisableUpdateValue {
@@ -36,6 +35,18 @@ object ClickSettingsForListIndex {
             QuoteTool.trimBothEdgeQuote(it)
         }
         return enableUpdateValue == OnDisableUpdateValue.ON.name
+    }
+
+    fun howEnableClickSave(
+        clickConfigPairList: List<Pair<String, String>>?
+    ): Boolean {
+        val onScriptSaveValue = clickConfigPairList?.firstOrNull {
+            val mainKey = it.first
+            mainKey == ClickSettingKey.ON_SCRIPT_SAVE.key
+        }?.second.let {
+            QuoteTool.trimBothEdgeQuote(it)
+        }
+        return onScriptSaveValue == OnScriptSave.ON.name
     }
 
 }
