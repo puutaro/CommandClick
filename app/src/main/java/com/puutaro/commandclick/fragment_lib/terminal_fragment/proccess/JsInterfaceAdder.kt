@@ -40,7 +40,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsTo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUbuntu
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsYoutube
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMusic
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
@@ -191,7 +191,7 @@ object JsInterfaceAdder {
         )
         ExecJsInterfaceAdder.add(
             webView,
-            JsYoutube(terminalFragment)
+            JsMusic(terminalFragment)
         )
         dialogAdder(
             terminalFragment,
