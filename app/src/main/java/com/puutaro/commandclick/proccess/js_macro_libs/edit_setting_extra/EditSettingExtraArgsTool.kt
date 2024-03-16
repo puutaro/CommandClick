@@ -8,13 +8,14 @@ import com.puutaro.commandclick.util.state.SharePrefTool
 
 object EditSettingExtraArgsTool {
 
-    const val extraSettingKeyName = "extra"
     enum class ExtraKey(
         val key: String
     ) {
         PARENT_DIR_PATH("parentDirPath"),
         COMP_PREFIX("compPrefix"),
         COMP_SUFFIX("compSuffix"),
+        PREFIX("prefix"),
+        SUFFIX("suffix"),
         SHELL_PATH("shellPath"),
     }
 

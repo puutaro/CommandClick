@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.tool_bar_button.libs
 
-import android.content.Intent
 import android.view.View
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
@@ -11,8 +10,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr.JsQrGetter
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSettingValFrag
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirGetter
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsQrScanner
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.AppProcessManager
@@ -30,14 +27,17 @@ import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddGmailCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrl
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AddUrlCon
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.AppDirAdder
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ChangeSettingFannel
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ConfigEdit
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.GeneralFileGetter
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.GeneralFileListGetter
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ListSyncer
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.OkButtonHandler
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.PopupSettingMenu
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.QrConGetterDialog
+import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.SyncFannelRepo
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarMenuDialog
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.UrlHistoryAddToTsv
-import com.puutaro.commandclick.service.GitCloneService
 import com.puutaro.commandclick.util.Intent.UbuntuServiceManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.dialog.UsageDialog
@@ -293,8 +293,8 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                getFileOrDirHandler(
-                    fragment,
+                GeneralFileGetter.get(
+                    fragment
                 )
             }
             MacroForToolbarButton.Macro.GET_DIR
@@ -302,9 +302,30 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                getFileOrDirHandler(
+                GeneralFileGetter.get(
                     fragment,
                     true
+                )
+            }
+            MacroForToolbarButton.Macro.GET_FILES
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                GeneralFileListGetter.get(
+                    fragment,
+                    jsActionMap,
+                )
+            }
+            MacroForToolbarButton.Macro.GET_DIRS
+            -> {
+                if(
+                    fragment !is EditFragment
+                ) return
+                GeneralFileListGetter.get(
+                    fragment,
+                    jsActionMap,
+                    true,
                 )
             }
             MacroForToolbarButton.Macro.GET_QR_CON
@@ -323,11 +344,11 @@ object JsPathHandlerForToolbarButton {
                 if(
                     fragment !is EditFragment
                 ) return
-                syncFannelRepo(fragment)
+                SyncFannelRepo.sync(fragment)
             }
 
             MacroForToolbarButton.Macro.EDIT
-            -> changeSettingFragment(
+            -> ChangeSettingFannel.change(
                 fragment,
                 jsActionMap
             )
@@ -408,49 +429,6 @@ object JsPathHandlerForToolbarButton {
         ) return
         TerminalShowByTerminalDo.show(
             fragment,
-        )
-    }
-
-    private fun getFileOrDirHandler(
-        editFragment: EditFragment,
-        onDirectoryPick: Boolean = false,
-    ) {
-        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-            JsFileOrDirGetter::class.java.simpleName
-        )
-        ExecJsLoad.jsConLaunchHandler(
-            editFragment,
-            "${useClassName}.get_S(${onDirectoryPick});",
-        )
-    }
-
-    private fun syncFannelRepo(
-        editFragment: EditFragment
-    ) {
-        val context = editFragment.context
-            ?: return
-        val intent = Intent(
-            context,
-            GitCloneService::class.java
-        )
-        context.startForegroundService(intent)
-    }
-
-
-    private fun changeSettingFragment(
-        fragment: Fragment,
-        jsActionMap: Map<String, String>?
-    ) {
-        val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(
-            jsActionMap,
-        ) ?: emptyMap()
-        val currentState = argsMap.values.firstOrNull() ?: String()
-        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
-            JsSettingValFrag::class.java.simpleName
-        )
-        ExecJsLoad.jsConLaunchHandler(
-            fragment,
-            "${useClassName}.change_S(\"${currentState}\");",
         )
     }
 }

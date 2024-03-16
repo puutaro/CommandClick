@@ -4,14 +4,17 @@ import android.R
 import android.widget.*
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.edit.*
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
 import com.puutaro.commandclick.util.LogSystems
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
+import java.io.File
 
 
 class EditTextProducerForEdit(
@@ -84,8 +87,16 @@ class EditTextProducerForEdit(
             SetVariableTyper.makeRecordNumToSetVariableMaps(
                 context,
                 editFragment.setVariableTypeList,
-                recordNumToMapNameValueInCommandOrSettingHolder
+                recordNumToMapNameValueInCommandOrSettingHolder,
+                editFragment.setReplaceVariableMap,
             )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap.txt").absolutePath,
+//            listOf(
+//                "setVariableTypeList: ${editFragment.setVariableTypeList}",
+//                "recordNumToSetVariableMaps: ${recordNumToSetVariableMaps}",
+//            ).joinToString("\n\n\n")
+//        )
         execAdd(
             recordNumToMapNameValueInCommandOrSettingHolder,
             recordNumToSetVariableMaps,

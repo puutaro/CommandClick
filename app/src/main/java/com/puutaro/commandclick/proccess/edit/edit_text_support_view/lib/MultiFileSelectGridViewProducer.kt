@@ -14,6 +14,7 @@ import com.puutaro.commandclick.component.adapter.MultiSelectImageAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -51,10 +52,10 @@ object MultiFileSelectGridViewProducer {
             fcbMap,
             editParameters,
         )
-        val filterPrefix = getFilterPrefix(
+        val filterPrefixListCon = getFilterPrefix(
             fcbMap,
         )
-        val filterSuffix = getFilterSuffix(
+        val filterSuffixListCon = getFilterSuffix(
             fcbMap,
         )
         val filterType = FileSelectSpinnerViewProducer.getFilterType(
@@ -76,8 +77,8 @@ object MultiFileSelectGridViewProducer {
             val buttonContext = buttonView.context
             val currentGridList = makeGridList(
                 filterDir,
-                filterPrefix,
-                filterSuffix,
+                filterPrefixListCon,
+                filterSuffixListCon,
                 filterType
             )
 
@@ -203,8 +204,8 @@ object MultiFileSelectGridViewProducer {
 
     private fun makeGridList(
         filterDir: String,
-        filterPrefix: String,
-        filterSuffix: String,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
         filterType: String,
     ): List<String> {
         val sortedList = FileSystems.sortedFiles(
@@ -215,17 +216,31 @@ object MultiFileSelectGridViewProducer {
         return when(isFile){
             true -> {
                 sortedList.filter {
-                    it.startsWith(filterPrefix)
-                            && judgeBySuffix(it, filterSuffix)
-                            && File("$filterDir/$it").isFile
+                    FilterPathTool.isFilterByFile(
+                        it,
+                        filterDir,
+                        filterPrefixListCon,
+                        filterSuffixListCon,
+                        "&"
+                    )
+//                    it.startsWith(filterPrefixListCon)
+//                            && judgeBySuffix(it, filterSuffixListCon)
+//                            && File("$filterDir/$it").isFile
                 }.map {
                     "$filterDir/$it"
                 }
             }
             false -> sortedList.filter {
-                it.startsWith(filterPrefix)
-                        && judgeBySuffix(it, filterSuffix)
-                        && File("$filterDir/$it").isDirectory
+                FilterPathTool.isFilterByDir(
+                    it,
+                    filterDir,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    "&"
+                )
+//                it.startsWith(filterPrefixListCon)
+//                        && judgeBySuffix(it, filterSuffixListCon)
+//                        && File("$filterDir/$it").isDirectory
             }.map {
                 "$filterDir/$it"
             }

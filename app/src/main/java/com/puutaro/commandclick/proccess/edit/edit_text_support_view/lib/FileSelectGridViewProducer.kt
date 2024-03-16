@@ -20,6 +20,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSel
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.FileSelectSpinnerViewProducer.getFilterType
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.SelectJsExecutor
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.Keyboard
@@ -166,10 +167,10 @@ object FileSelectGridViewProducer {
             fcbMap,
             editParameters,
         )
-        val filterPrefix = getFilterPrefix(
+        val filterPrefixListCon = getFilterPrefix(
             fcbMap,
         )
-        val filterSuffix = getFilterSuffix(
+        val filterSuffixListCon = getFilterSuffix(
             fcbMap,
         )
         val filterType = getFilterType(
@@ -184,8 +185,8 @@ object FileSelectGridViewProducer {
             gridDialogObj?.dismiss()
             val currentGridList = makeGridList(
                 filterDir,
-                filterPrefix,
-                filterSuffix,
+                filterPrefixListCon,
+                filterSuffixListCon,
                 filterType
             )
             val selectedItem = currentGridList.filter {
@@ -228,27 +229,27 @@ object FileSelectGridViewProducer {
         }
     }
 
-    private fun judgeBySuffix(
-        targetStr: String,
-        filterSuffix: String,
-    ): Boolean{
-        if(filterSuffix != noExtend) {
-            return QuoteTool.splitBySurroundedIgnore(
-                filterSuffix,
-                '&'
-            )
-//            filterSuffix.split("&")
-                .any {
-                targetStr.endsWith(it)
-            }
-        }
-        return !Regex("\\..*$").containsMatchIn(targetStr)
-    }
+//    private fun judgeBySuffix(
+//        targetStr: String,
+//        filterSuffix: String,
+//    ): Boolean{
+//        if(filterSuffix != noExtend) {
+//            return QuoteTool.splitBySurroundedIgnore(
+//                filterSuffix,
+//                '&'
+//            )
+////            filterSuffix.split("&")
+//                .any {
+//                targetStr.endsWith(it)
+//            }
+//        }
+//        return !Regex("\\..*$").containsMatchIn(targetStr)
+//    }
 
     private fun makeGridList(
         filterDir: String,
-        filterPrefix: String,
-        filterSuffix: String,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
         filterType: String,
     ): List<String> {
         val sortedList = FileSystems.sortedFiles(
@@ -259,17 +260,33 @@ object FileSelectGridViewProducer {
         return when(isFile){
             true -> {
                 sortedList.filter {
-                    it.startsWith(filterPrefix)
-                            && judgeBySuffix(it, filterSuffix)
-                            && File("$filterDir/$it").isFile
+                    FilterPathTool.isFilterByFile(
+                        it,
+                        filterDir,
+                        filterPrefixListCon,
+                        filterSuffixListCon,
+                        "&"
+                    )
+//                    val okSuffix = FilterPathTool.judgeBySuffix(it, filterSuffixListCon, "&")
+//                    val isFile = File("$filterDir/$it").isFile
+//                    it.startsWith(filterPrefixListCon)
+//                            && okSuffix
+//                            && isFile
                 }.map {
                     "$filterDir/$it"
                 }
             }
             false -> sortedList.filter {
-                it.startsWith(filterPrefix)
-                        && judgeBySuffix(it, filterSuffix)
-                        && File("$filterDir/$it").isDirectory
+                FilterPathTool.isFilterByDir(
+                    it,
+                    filterDir,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    "&"
+                )
+//                it.startsWith(filterPrefixListCon)
+//                        && FilterPathTool.judgeBySuffix(it, filterSuffixListCon, "&")
+//                        && File("$filterDir/$it").isDirectory
             }.map {
                 "$filterDir/$it"
             }

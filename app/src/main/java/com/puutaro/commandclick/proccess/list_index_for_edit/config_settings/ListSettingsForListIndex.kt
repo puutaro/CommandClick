@@ -4,6 +4,8 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.ShellTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.file.FileSystems
@@ -142,8 +144,6 @@ object ListSettingsForListIndex  {
     object ListIndexListMaker {
 
         private const val throughMark = "-"
-        private const val noExtend = "NoExtend"
-        private const val subMenuSeparator = "&"
         private const val blankListMark = "Let's press sync button at right bellow"
         private const val itemNameMark = "\${ITEM_NAME}"
 
@@ -180,18 +180,6 @@ object ListSettingsForListIndex  {
             }
         }
 
-        private fun judgeBySuffixForIndex(
-            targetStr: String,
-            filterSuffix: String,
-        ): Boolean {
-            if(filterSuffix != noExtend) {
-                return filterSuffix.split(subMenuSeparator).any {
-                    targetStr.endsWith(it)
-                }
-            }
-            return !Regex("\\..*$").containsMatchIn(targetStr)
-        }
-
         fun getFilterDir(
             editFragment: EditFragment,
             indexListMap: Map<String, String>?,
@@ -223,12 +211,12 @@ object ListSettingsForListIndex  {
                 listIndexTypeKey
             )
             FileSystems.createDirs(filterDir)
-            val filterPrefix = FilePrefixGetter.get(
+            val filterPrefixListCon = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.PREFIX.key
             ) ?: String()
-            val filterSuffix = FilePrefixGetter.get(
+            val filterSuffixListCon = FilePrefixGetter.get(
                 editFragment,
                 indexListMap,
                 ListSettingKey.SUFFIX.key
@@ -252,8 +240,8 @@ object ListSettingsForListIndex  {
                 currentFileList,
                 busyboxExecutor,
                 filterDir,
-                filterPrefix,
-                filterSuffix,
+                filterPrefixListCon,
+                filterSuffixListCon,
                 filterShellCon,
             )
             if(
@@ -273,16 +261,18 @@ object ListSettingsForListIndex  {
             fileList: List<String>,
             busyboxExecutor: BusyboxExecutor?,
             filterDir: String,
-            filterPrefix: String,
-            filterSuffix: String,
+            filterPrefixListCon: String,
+            filterSuffixListCon: String,
             filterShellCon: String,
         ): List<String> {
             return fileList.filter {
-                it.startsWith(filterPrefix)
-                        && judgeBySuffixForIndex(
+                FilterPathTool.isFilterByFile(
                     it,
-                    filterSuffix
-                ) && File("${filterDir}/$it").isFile
+                    filterDir,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    "&"
+                )
             }.map {
                 makeFilterShellCon(
                     it,
@@ -416,16 +406,25 @@ object ListSettingsForListIndex  {
             busyboxExecutor: BusyboxExecutor?,
             filterShellCon: String,
         ): String {
-            if(
-                filterShellCon.isEmpty()
-                || busyboxExecutor == null
-            ) return srcCon
-            return busyboxExecutor.getCmdOutput(
-                filterShellCon.replace(
-                    itemNameMark,
-                    srcCon,
-                )
+//            if(
+//                filterShellCon.isEmpty()
+//                || busyboxExecutor == null
+//            ) return srcCon
+            val extraArgsMap = mapOf(
+                itemNameMark to srcCon
             )
+            return ShellTool.filter(
+                srcCon,
+                busyboxExecutor,
+                filterShellCon,
+                extraArgsMap
+            )
+//            busyboxExecutor.getCmdOutput(
+//                filterShellCon.replace(
+//                    itemNameMark,
+//                    srcCon,
+//                )
+//            )
         }
 
         private fun makeFannelListForListView(): List<String> {

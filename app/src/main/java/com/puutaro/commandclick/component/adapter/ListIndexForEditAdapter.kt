@@ -11,6 +11,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -390,6 +391,13 @@ class ListIndexForEditAdapter(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.LIST.key
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getfile_index_list.txt").absolutePath,
+//            listOf(
+//                "listIndexConfigMap: ${listIndexConfigMap}",
+//                "indexListMap: ${indexListMap}",
+//            ).joinToString("\n\n\n")
+//        )
         deleteConfigMap = ListIndexEditConfig.getConfigKeyMap(
             listIndexConfigMap,
             ListIndexEditConfig.ListIndexConfigKey.DELETE.key

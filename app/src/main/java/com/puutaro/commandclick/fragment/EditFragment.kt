@@ -504,4 +504,11 @@ class EditFragment: Fragment() {
             permissionStr: String
         )
     }
+
+    interface OnGetFileListenerForEdit {
+        fun onGetFileforEdit(
+            parentDirPathSrc: String,
+            onDirectoryPickSrc: Boolean = false
+        )
+    }
 }

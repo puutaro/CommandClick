@@ -45,7 +45,7 @@ import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import kotlinx.coroutines.Job
 
 
-class   TerminalFragment: Fragment() {
+class TerminalFragment: Fragment() {
 
 
     private var _binding: TerminalFragmentBinding? = null
@@ -110,7 +110,7 @@ class   TerminalFragment: Fragment() {
     var alertDialogInstance: AlertDialog? = null
     var webViewDialogInstance: Dialog? = null
     var goBackFlag = false
-    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
+//    var fileOrDirGetterForSettingButton: FileOrDirGetterForSettingButton? = null
     var broadcastReceiverForTerm: BroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             BroadcastHandlerForTerm.handle(
@@ -173,7 +173,7 @@ class   TerminalFragment: Fragment() {
             setReplaceVariableMap
         )
         editType = EditFragmentArgs.getEditType(arguments)
-        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
+//        fileOrDirGetterForSettingButton = FileOrDirGetterForSettingButton(this)
 
         ExecDownLoadManager.set(
             this,
@@ -415,5 +415,22 @@ class   TerminalFragment: Fragment() {
 
     interface OnCmdValSaveAndBackListenerForTerm {
         fun onSettingOkButtonForTerm()
+    }
+
+    interface OnGetFileListenerForTerm {
+        fun onGetFileForTerm(
+            parentDirPathSrc: String,
+            onDirectoryPickSrc: Boolean = false
+        )
+    }
+
+    interface OnGetFileListListenerForTerm {
+        fun onGetFileListForTerm(
+            parentDirPathSrc: String,
+            onDirectoryPickSrc: Boolean = false,
+            filterPrefixListCon: String,
+            filterSuffixListCon: String,
+            filterShellPathCon: String,
+        )
     }
 }

@@ -174,6 +174,10 @@ object SharePrefTool {
             startUpPref,
             SharePrefferenceSetting.on_shortcut
         )
+        val currentFannelState = getStringFromSharePref(
+            startUpPref,
+            SharePrefferenceSetting.current_fannel_state
+        )
 
         return mapOf(
             SharePrefferenceSetting.current_app_dir.name
@@ -182,6 +186,8 @@ object SharePrefTool {
                     to sharedCurrentShellFileName,
             SharePrefferenceSetting.on_shortcut.name
                     to sharedOnShortcut,
+            SharePrefferenceSetting.current_fannel_state.name
+                    to currentFannelState
         )
     }
 

@@ -1,8 +1,11 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import android.widget.Toast
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
@@ -35,8 +38,6 @@ object ExecAddForListIndexAdapter {
         addLine: String,
         insertIndex: Int,
     ){
-        val context = editFragment.context
-            ?: return
         val binding = editFragment.binding
         val editListRecyclerView = binding.editListRecyclerView
         val listIndexAdapter =
@@ -92,6 +93,157 @@ object ExecAddForListIndexAdapter {
         )
     }
 
+    fun execAddByCopyFileListHere(
+        editFragment: EditFragment,
+        sourceFilePathList: List<String>,
+    ){
+        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val parentDirPath =
+            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                editFragment,
+                indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
+        sourceFilePathList.forEach {
+            sourceFilePath ->
+            val sourceFilePathObj = File(sourceFilePath)
+            if(
+                !sourceFilePathObj.isFile
+            ) return@forEach
+            val srcFileName = sourceFilePathObj.name
+            val destiFilePath = "${parentDirPath}/${srcFileName}"
+            FileSystems.execCopyFileWithDir(
+                File(sourceFilePath),
+                File(destiFilePath),
+            )
+        }
+        BroadcastSender.normalSend(
+            editFragment.context,
+            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+        )
+    }
+
+    fun execAddByCopyDirListHere(
+        editFragment: EditFragment,
+        sourceFilePathList: List<String>,
+    ){
+        val indexListMap = ListIndexForEditAdapter.indexListMap
+        val parentDirPath =
+            ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
+                editFragment,
+                indexListMap,
+                ListIndexForEditAdapter.listIndexTypeKey
+            )
+        sourceFilePathList.forEach {
+                sourceFilePath ->
+            val sourceFilePathObj = File(sourceFilePath)
+            if(
+                !sourceFilePathObj.isDirectory
+            ) return@forEach
+            val srcDirName = sourceFilePathObj.name
+            val destiDirPath = "${parentDirPath}/${srcDirName}"
+            FileSystems.copyDirectory(
+                sourceFilePath,
+                destiDirPath,
+            )
+        }
+        BroadcastSender.normalSend(
+            editFragment.context,
+            BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action
+        )
+    }
+
+    fun execAddListForTsv(
+        editFragment: EditFragment,
+        insertLineListSrc: List<String>
+    ){
+//        val context = editFragment.context
+//            ?: return
+//        val listIndexForEditAdapter =
+//            editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
+        val context = editFragment.context
+        val tsvPath =
+            FilePrefixGetter.get(
+                editFragment,
+                ListIndexForEditAdapter.indexListMap,
+                ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
+            )  ?: String()
+        if(
+            tsvPath.trim().isEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                "Retry unexpected err",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        val currentTsvConList = ReadText(
+            tsvPath
+        ).textToList()
+        val insertLineList = insertLineListSrc.filter {
+            !currentTsvConList.contains(it)
+        }
+        val updateTsvConList = insertLineList + currentTsvConList
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getfileList.txt").absolutePath,
+//            listOf(
+//                "indexListMap ${ListIndexForEditAdapter.indexListMap}",
+//                "insertLineListSrc: ${insertLineListSrc}",
+//                "tsvPath: ${tsvPath}",
+//                "insertLineList: ${insertLineList}",
+//                "updateTsvConList: ${updateTsvConList}",
+//            ).joinToString("\n\n\n")
+//        )
+        TsvTool.updateTsv(
+            tsvPath,
+            updateTsvConList
+        )
+//        if(
+//            currentTsvConList.contains(insertLine)
+//        ) {
+//            Toast.makeText(
+//                context,
+//                "Already exist",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            return
+//        }
+//        val sortType = ListSettingsForListIndex.getSortType(
+//            editFragment,
+//            ListIndexForEditAdapter.indexListMap
+//        )
+//        val insertIndex = getInsertIndex(
+//            sortType,
+//            listIndexForEditAdapter,
+//            insertLine,
+//        )
+//
+//        TsvTool.insertByLastUpdate(
+//            tsvPath,
+//            insertLine
+//        )
+//        when(sortType){
+//            ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
+//                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+//                    editFragment,
+//                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+//                        editFragment,
+//                        ListIndexForEditAdapter.indexListMap,
+//                        ListIndexForEditAdapter.listIndexTypeKey
+//                    )
+//                )
+//            ListSettingsForListIndex.SortByKey.SORT,
+//            ListSettingsForListIndex.SortByKey.REVERSE ->
+//                listUpdateByInsertItem(
+//                    editFragment,
+//                    insertLine,
+//                    insertIndex
+//                )
+//        }
+    }
+
+
     fun execAddForTsv(
         editFragment: EditFragment,
         insertLine: String,
@@ -109,8 +261,27 @@ object ExecAddForListIndexAdapter {
         val currentTsvConList = ReadText(
             tsvPath
         ).textToList()
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getFile.txt").absolutePath,
+//            listOf(
+//                "indexListMap ${ListIndexForEditAdapter.indexListMap}",
+//                "tsvPath: ${tsvPath}",
+//                "currentTsvConList: ${currentTsvConList}",
+//            ).joinToString("\n\n\n")
+//        )
         if(
-            currentTsvConList.contains(insertLine)
+            tsvPath.trim().isEmpty()
+        ) {
+            Toast.makeText(
+                context,
+                "Retry unexpected err",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+        if(
+            tsvPath.trim().isEmpty()
+            || currentTsvConList.contains(insertLine)
         ) {
             Toast.makeText(
                 context,

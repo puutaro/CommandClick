@@ -64,15 +64,18 @@ object DirOrFileChooseProducer {
         }
 
         insertButtonView.setOnClickListener { view ->
-            if(Build.VERSION.SDK_INT < 30){
-                getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
-                return@setOnClickListener
+            when(Build.VERSION.SDK_INT < 30){
+                true -> {
+                    getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
+                }
+                else -> {
+                    val listener = context as? EditFragment.OnFileChooserListenerForEdit
+                    listener?.onFileChooserListenerForEdit(
+                        onDirectoryPick,
+                        insertEditText
+                    )
+                }
             }
-            val listener = context as? EditFragment.OnFileChooserListenerForEdit
-            listener?.onFileChooserListenerForEdit(
-                onDirectoryPick,
-                insertEditText
-            )
         }
         val insertButtonViewParam = LinearLayout.LayoutParams(
             0,

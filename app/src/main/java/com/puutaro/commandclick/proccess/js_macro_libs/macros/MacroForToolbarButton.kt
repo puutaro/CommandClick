@@ -16,6 +16,8 @@ object MacroForToolbarButton{
         FANNEL_REPO_SYNC,
         GET_FILE,
         GET_DIR,
+        GET_FILES,
+        GET_DIRS,
         GET_QR_CON,
         INSTALL_FANNEL,
         JS_IMPORT,

@@ -170,13 +170,15 @@ class FormDialogForListIndexOrButton(
             SetVariableTyper.makeRecordNumToSetVariableMaps(
                 context,
                 setVariableForCmdHolder,
-                recordNumToMapNameValueInCommandHolder
+                recordNumToMapNameValueInCommandHolder,
+                null
             )
         } else {
             SetVariableTyper.makeRecordNumToSetVariableMaps(
                 context,
                 CommandClickScriptVariable.setVariableForSettingHolder,
-                recordNumToMapNameValueInSettingHolder
+                recordNumToMapNameValueInSettingHolder,
+                null
             )
         }
 

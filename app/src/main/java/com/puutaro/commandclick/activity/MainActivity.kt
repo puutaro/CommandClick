@@ -36,6 +36,8 @@ import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongPressPlayO
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnLongTermKeyBoardOpenAdjustForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecOnToolBarVisibleChangeForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.ExecTermMinimumForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.edit.GetFileForEdit
+import com.puutaro.commandclick.activity_lib.event.lib.edit.GetFileListForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.edit.MultiSelectListContentsDialogForEdit
 import com.puutaro.commandclick.activity_lib.event.lib.terminal.*
@@ -89,6 +91,8 @@ class MainActivity:
     TerminalFragment.OnMonitorSizeChangeingForTerm,
     TerminalFragment.OnPopStackImmediateListenerForTerm,
     TerminalFragment.OnCmdValSaveAndBackListenerForTerm,
+    TerminalFragment.OnGetFileListenerForTerm,
+    TerminalFragment.OnGetFileListListenerForTerm,
     CommandIndexFragment.OnListItemClickListener,
     CommandIndexFragment.OnKeyboardVisibleListener,
     CommandIndexFragment.OnToolbarMenuCategoriesListener,
@@ -130,6 +134,14 @@ class MainActivity:
             }
         }
     private val storageHelper = SimpleStorageHelper(this)
+    private val getFileForEdit = GetFileForEdit(
+        this,
+        storageHelper,
+    )
+    private val getFileListForEdit = GetFileListForEdit(
+        this,
+        storageHelper
+    )
 
     val storageAccessPermissionLauncher =
         StorageAccessSetter.set(this)
@@ -699,4 +711,38 @@ class MainActivity:
     override fun onSettingOkButtonForTerm() {
         ExecSettingOkButton.handle(this)
     }
+
+    override fun onGetFileForTerm(
+        parentDirPathSrc: String,
+        onDirectoryPickSrc: Boolean
+    ) {
+        getFileForEdit.get(
+            parentDirPathSrc,
+            onDirectoryPickSrc
+        )
+    }
+
+//    override fun onGetFileforEdit(parentDirPathSrc: String, onDirectoryPickSrc: Boolean) {
+//        getFileForEdit.get(
+//            parentDirPathSrc,
+//            onDirectoryPickSrc
+//        )
+//    }
+
+    override fun onGetFileListForTerm(
+        parentDirPathSrc: String,
+        onDirectoryPickSrc: Boolean,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
+        filterShellCon: String
+    ) {
+        getFileListForEdit.get(
+            parentDirPathSrc,
+            filterPrefixListCon,
+            filterSuffixListCon,
+            filterShellCon,
+            onDirectoryPickSrc,
+        )
+    }
+
  }

@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
@@ -19,10 +20,12 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.util.*
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePrefTool
+import java.io.File
 
 object ConfigFromScriptFileSetter {
 
@@ -96,6 +99,13 @@ object ConfigFromScriptFileSetter {
             editFragment.setReplaceVariableMap,
             String(),
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getfile_index_list_config_in_init.txt").absolutePath,
+//            listOf(
+//                "",
+//                "listIndexConfigMap: ${editFragment.listIndexConfigMap}",
+//            ).joinToString("\n\n\n")
+//        )
         editFragment.qrDialogConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
             settingVariableList,

@@ -1,6 +1,9 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileAdder
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsFileOrDirListGetter
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.ExecJsInterfaceAdder
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataMapKeyObj
 import com.puutaro.commandclick.proccess.intent.ExecJsLoad
@@ -45,8 +48,11 @@ object AddFileForEdit {
             "${EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key}=${compPrefix}",
             "${EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key}=${compSuffix}",
         ).joinToString("|")
+        val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
+            JsFileAdder::class.java.simpleName
+        )
         val jsCon = """
-            jsFileAdder.add(
+            ${useClassName}.add(
                 "${args}",
                 "|",
             );
