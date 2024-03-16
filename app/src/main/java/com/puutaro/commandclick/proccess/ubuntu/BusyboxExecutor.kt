@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.NetworkTool
+import com.puutaro.commandclick.util.map.CmdClickMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -51,21 +52,26 @@ class BusyboxExecutor(
     }
 
     fun getCmdOutput(
-        command: String,
+        commandSrc: String,
         envMapSrc: Map<String, String>? = null,
     ): String {
         val envMap = makeRepValHashMap(
             envMapSrc,
         )
+        val command = CmdClickMap.replace(
+            commandSrc,
+            envMap,
+        )
         return execCommandForOutput(
             listOf("sh", "-c", command),
-            envMap
+            null
+//            envMap
         )
     }
 
     private fun makeRepValHashMap(
         extraArgsMap: Map<String, String>?,
-    ): HashMap<String, String> {
+    ): Map<String, String> {
         if(
             extraArgsMap.isNullOrEmpty()
         ) return hashMapOf()
@@ -86,7 +92,8 @@ class BusyboxExecutor(
                 else -> keyName to value
             }
         }.toMap()
-        return HashMap(envMapSrc)
+        return envMapSrc
+//        HashMap(envMapSrc)
     }
 
     private fun execCommandForOutput(

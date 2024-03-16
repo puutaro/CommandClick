@@ -347,9 +347,9 @@ object SetVariableTyper {
                 alterMap,
                 replaceVariableMap,
             )
-            val repValHashMap = replaceVariableMap?.let {
-                HashMap(it)
-            }
+//            val repValHashMap = replaceVariableMap?.let {
+//                HashMap(it)
+//            }
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
 //                listOf(
