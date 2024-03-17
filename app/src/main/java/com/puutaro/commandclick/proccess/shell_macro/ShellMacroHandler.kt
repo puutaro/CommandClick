@@ -3,18 +3,34 @@ package com.puutaro.commandclick.proccess.shell_macro
 import android.content.Context
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
 
 object ShellMacroHandler {
+
+    fun makeShellCon(
+        context: Context,
+        shellPath: String,
+        setReplaceVariableMap: Map<String, String>?,
+        extraRepValMap: Map<String, String>?,
+    ): String {
+        val concatRepValMap =
+            (setReplaceVariableMap ?: mapOf()) +
+                    (extraRepValMap ?: mapOf())
+        return execMakeShellCon(
+            context,
+            shellPath,
+            concatRepValMap,
+        )
+    }
+
     fun handle(
         context: Context,
         busyboxExecutor: BusyboxExecutor?,
         shellPath: String,
         setReplaceVariableMap: Map<String, String>?,
-        repValMapForTts: Map<String, String>?,
+        extraRepValMap: Map<String, String>?,
     ){
         if(
             busyboxExecutor == null
@@ -23,14 +39,15 @@ object ShellMacroHandler {
             context,
             shellPath,
             setReplaceVariableMap,
+            extraRepValMap,
         )
         busyboxExecutor.getCmdOutput(
             shellCon,
-            repValMapForTts
+            extraRepValMap
         )
     }
 
-    private fun makeShellCon(
+    private fun execMakeShellCon(
         context: Context,
         shellPath: String,
         setReplaceVariableMap: Map<String, String>?,
@@ -73,6 +90,8 @@ object ShellMacroHandler {
     private enum class ShellMacro(
         val assetsPath: String
     ) {
-        SAVE_PLAY_LIST(AssetsFileManager.savePreviousPlayListPath)
+        SAVE_PLAY_LIST(AssetsFileManager.savePreviousPlayListShellPath),
+        JUDGE_TSV_VALUE(AssetsFileManager.judgeTsvValueShellPath),
+        JUDGE_LIST_DIR(AssetsFileManager.judgeListDirShellPath),
     }
 }

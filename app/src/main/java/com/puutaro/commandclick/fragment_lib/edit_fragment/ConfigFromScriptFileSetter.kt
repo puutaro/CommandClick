@@ -1,12 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
+import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
@@ -15,12 +15,17 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumTo
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterConfig
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
+import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
@@ -33,13 +38,20 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
+        val context = editFragment.context
+            ?: return
+        val busyboxExecutor = BusyboxExecutor(
+            context,
+            UbuntuFiles(context)
+        )
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
+        val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val onShortcut = SharePrefTool.getOnShortcut(
             readSharePreferenceMap
         ) == EditFragmentArgs.Companion.OnShortcutSettingKey.ON.key
         val settingVariableList = FannelStateRooterManager.makeSettingVariableList(
-            editFragment.readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             editFragment.settingSectionStart,
             editFragment.settingSectionEnd,
             editFragment.settingFannelPath
@@ -74,15 +86,23 @@ object ConfigFromScriptFileSetter {
         editFragment.editBoxTitleConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.EDIT_TITLE_CONFIG,
             settingVariableList,
-            editFragment.readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             String(),
-        )
+        ).let {
+            AlterToolForSetValType.updateConfigMapByAlter(
+                context,
+                it,
+                busyboxExecutor,
+                setReplaceVariableMap
+            )
+        }
         TitleImageAndViewSetter.set(
             editFragment
         )
         setToolbarButtonConfigMapFromSettingValList(
             editFragment,
+            busyboxExecutor,
             settingVariableList,
             onShortcut,
         )
@@ -95,10 +115,17 @@ object ConfigFromScriptFileSetter {
         editFragment.listIndexConfigMap = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.LIST_INDEX_CONFIG,
             settingVariableList,
-            editFragment.readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             String(),
-        )
+        ).let {
+            AlterToolForSetValType.updateConfigMapByAlter(
+                context,
+                it,
+                busyboxExecutor,
+                setReplaceVariableMap
+            )
+        }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "getfile_index_list_config_in_init.txt").absolutePath,
 //            listOf(
@@ -109,10 +136,17 @@ object ConfigFromScriptFileSetter {
         editFragment.qrDialogConfig = ListSettingVariableListMaker.makeConfigMapFromSettingValList(
             CommandClickScriptVariable.QR_DIALOG_CONFIG,
             settingVariableList,
-            editFragment.readSharePreferenceMap,
-            editFragment.setReplaceVariableMap,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             String(),
-        )
+        ).let {
+            AlterToolForSetValType.updateConfigMapByAlter(
+                context,
+                it,
+                busyboxExecutor,
+                setReplaceVariableMap
+            )
+        }
 
 
         if (
@@ -392,9 +426,12 @@ object ConfigFromScriptFileSetter {
 
     private fun setToolbarButtonConfigMapFromSettingValList(
         editFragment: EditFragment,
+        busyboxExecutor: BusyboxExecutor?,
         settingVariableList: List<String>?,
         onShortcut: Boolean,
     ){
+        val context = editFragment.context ?: return
+        val setReplaceVariableMap = editFragment.setReplaceVariableMap
         editFragment.toolbarButtonConfigMap =
             mapOf(
                 ToolbarButtonBariantForEdit.SETTING to execMakeToolbarButtonConfigMap(
@@ -403,26 +440,54 @@ object ConfigFromScriptFileSetter {
                     CommandClickScriptVariable.SETTING_BUTTON_CONFIG,
                     String(),
                     onShortcut,
-                ),
+                ).let {
+                    AlterToolForSetValType.updateConfigMapByAlter(
+                        context,
+                        it,
+                        busyboxExecutor,
+                        setReplaceVariableMap
+                    )
+                },
                 ToolbarButtonBariantForEdit.EXTRA to execMakeToolbarButtonConfigMap(
                     editFragment,
                     settingVariableList,
                     CommandClickScriptVariable.EXTRA_BUTTON_CONFIG,
                     String(),
                     onShortcut,
-                ),
+                ).let {
+                    AlterToolForSetValType.updateConfigMapByAlter(
+                        context,
+                        it,
+                        busyboxExecutor,
+                        setReplaceVariableMap
+                    )
+                },
                 ToolbarButtonBariantForEdit.EDIT to execMakeToolbarButtonConfigMap(
                     editFragment,
                     settingVariableList,
                     CommandClickScriptVariable.EDIT_BUTTON_CONFIG,
                     String(),
                     onShortcut,
-                ),
+                ).let {
+                    AlterToolForSetValType.updateConfigMapByAlter(
+                        context,
+                        it,
+                        busyboxExecutor,
+                        setReplaceVariableMap
+                    )
+                },
                 ToolbarButtonBariantForEdit.OK to makePlayButtonConfigMap(
                     editFragment,
                     settingVariableList,
                     onShortcut,
-                )
+                ).let {
+                    AlterToolForSetValType.updateConfigMapByAlter(
+                        context,
+                        it,
+                        busyboxExecutor,
+                        setReplaceVariableMap
+                    )
+                }
             )
     }
 
@@ -601,6 +666,213 @@ object ConfigFromScriptFileSetter {
         }
         return SettingVariableReader.setListFromPath(
             bottomScriptUrlPath
+        )
+    }
+}
+
+private object AlterToolForSetValType {
+
+    private val alterKeyName = AlterConfig.alterKeyName
+    private const val mainSeparator = '|'
+    private const val ifArgsSeparator = '!'
+
+    fun updateConfigMapByAlter(
+        context: Context,
+        configMap: Map<String, String>,
+        busyboxExecutor: BusyboxExecutor?,
+        replaceVariableMap: Map<String, String>?
+    ): Map<String, String> {
+        if(
+            busyboxExecutor == null
+        ) return configMap
+        val alterKeyEqualStr = "${alterKeyName}="
+        return configMap.map {
+                configMapEntry ->
+            val currentConfigKey = configMapEntry.key
+            val currentConfigValue = configMapEntry.value
+            val defaultConfigPair =
+                currentConfigKey to currentConfigValue
+            val currentConfigValueList = QuoteTool.splitBySurroundedIgnore(
+                currentConfigValue,
+                mainSeparator
+            )
+            val alterTypeValue = currentConfigValueList.firstOrNull {
+                it.startsWith(alterKeyEqualStr)
+            }
+            if(
+                alterTypeValue.isNullOrEmpty()
+            ) return@map defaultConfigPair
+            val alterValue = QuoteTool.trimBothEdgeQuote(
+                alterTypeValue.removePrefix(
+                    alterKeyEqualStr
+                ).trim()
+            )
+            val alterMap = makeAlterMap(
+                alterValue,
+                replaceVariableMap
+            )
+            val shellIfOutput = getShellIfOutput(
+                context,
+                alterMap,
+                replaceVariableMap,
+                busyboxExecutor,
+            )
+            val disableAlter = shellIfOutput.isEmpty()
+            if(
+                disableAlter
+            ) return@map currentConfigKey to QuoteTool.splitBySurroundedIgnore(
+                currentConfigValue,
+                mainSeparator
+            ).filter {
+                !it.startsWith(alterKeyEqualStr)
+            }.joinToString(mainSeparator.toString())
+            val updateConfigValue = execAlter(
+                currentConfigValueList,
+                alterMap,
+                alterValue,
+                shellIfOutput,
+            )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_makeVariableTypeValueByalter.txt").absolutePath,
+//                    listOf(
+//                        "alterTypeValue: ${alterTypeValue}",
+//                        "alterValue: ${alterValue}",
+//                        "alterMap: ${alterMap}",
+//                        "updateTypeValue: ${updateTypeValue}",
+//                    ).joinToString("\n\n-------\n")
+//                )
+            currentConfigKey to updateConfigValue
+        }.toMap()
+    }
+
+    private fun execAlter(
+        currentConfigValueList: List<String>,
+        alterMapSrc: Map<String, String>,
+        alterValue: String,
+        shellIfOutput: String,
+    ): String {
+        val alterIfKeyList =
+            AlterConfig.IfKey.values().map{ it.key }
+        val alterMap =
+            alterMapSrc +
+                    CmdClickMap.createMap(
+                        shellIfOutput,
+                        mainSeparator
+                    )
+        val alterMapKeyList = alterMap.keys
+        val currentConfigValueListWithAlterKeyRemove =
+            currentConfigValueList.map {
+                    configValue ->
+                val alterKey = alterMapKeyList.firstOrNull {
+                    configValue.startsWith("${it}=")
+                }
+                if(
+                    alterKey.isNullOrEmpty()
+                ) return@map configValue
+    //                FileSystems.updateFile(
+    //                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
+    //                    listOf(
+    //                        "alterMapKeyList: ${alterMapKeyList}",
+    //                        "typeValue: ${typeValue}",
+    //                        "alterKey: ${alterKey}",
+    //                    ).joinToString("\n\n-------\n")
+    //                )
+                String()
+            }.joinToString(mainSeparator.toString())
+        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
+            alterValue,
+            mainSeparator
+        ).filter {
+            !alterIfKeyList.contains(it)
+        }.joinToString(mainSeparator.toString())
+        return listOf(
+            currentConfigValueListWithAlterKeyRemove,
+            alterValueExcludeIfKey,
+            shellIfOutput,
+        ).joinToString(mainSeparator.toString())
+    }
+
+    private fun getShellIfOutput(
+        context: Context,
+        alterMap: Map<String, String>,
+        replaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor,
+    ): String {
+        val shellIfCon = makeShellIfCon(
+            context,
+            alterMap,
+            replaceVariableMap,
+        )
+//            val repValHashMap = replaceVariableMap?.let {
+//                HashMap(it)
+//            }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
+//            listOf(
+//                "alterMap: ${alterMap}",
+//                "shellIfCon: ${shellIfCon}",
+//                "alterMap: ${alterMap}",
+//                "shellIfCon: ${shellIfCon}",
+//                "val: ${busyboxExecutor.getCmdOutput(
+//                    shellIfCon,
+//                )}"
+//            ).joinToString("\n\n\n")
+//        )
+        return busyboxExecutor.getCmdOutput(
+            shellIfCon,
+        ).trim()
+    }
+
+    private fun makeAlterMap(
+        alterValue: String,
+        replaceVariableMap: Map<String, String>?,
+    ): Map<String, String> {
+        return SetReplaceVariabler.execReplaceByReplaceVariables(
+            alterValue,
+            replaceVariableMap,
+            String(),
+            String()
+        ).let {
+            CmdClickMap.createMap(
+                it,
+                mainSeparator,
+            ).toMap()
+        }
+    }
+
+    private fun makeShellIfCon(
+        context: Context,
+        alterMap: Map<String, String>?,
+        replaceVariableMap: Map<String, String>?,
+    ): String {
+        if(
+            alterMap.isNullOrEmpty()
+        ) return String()
+        val shellIfCon = alterMap.get(
+            AlterConfig.IfKey.SHELL_IF_CON.key
+        )
+        if(
+            !shellIfCon.isNullOrEmpty()
+        ) return SetReplaceVariabler.execReplaceByReplaceVariables(
+            shellIfCon,
+            replaceVariableMap,
+            String(),
+            String(),
+        )
+        val shellPath = alterMap.get(
+            AlterConfig.IfKey.SHELL_IF_PATH.key
+        ) ?: return String()
+        val extraRepValMap = CmdClickMap.createMap(
+            alterMap.get(
+                AlterConfig.IfKey.IF_ARGS.key
+            ),
+            ifArgsSeparator
+        ).toMap()
+        return ShellMacroHandler.makeShellCon(
+            context,
+            shellPath,
+            replaceVariableMap,
+            extraRepValMap,
         )
     }
 }

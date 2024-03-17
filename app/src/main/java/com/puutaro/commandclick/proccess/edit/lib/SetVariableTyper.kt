@@ -7,13 +7,14 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterConfig
+import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
 import com.puutaro.commandclick.util.file.FileSystems
-import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import java.io.File
 
@@ -77,7 +78,8 @@ object SetVariableTyper {
             val variableTypeValueSrc = currentFetchSetVariableType.substring(
                 equalIndex + 1, currentFetchSetVariableTypeLength
             )
-            val variableTypeValue = AlterTool.makeVariableTypeValueByAlter(
+            val variableTypeValue = AlterToolForSetValType.makeVariableTypeValueByAlter(
+                context,
                 variableTypeValueSrc,
                 busyboxExecutor,
                 replaceVariableMap,
@@ -149,9 +151,7 @@ object SetVariableTyper {
                     QuoteTool.trimBothEdgeQuote(it),
                     ','
                 )
-            }
-//            ?.split(',')
-            ?.filter { it.isNotEmpty() }
+            }?.filter { it.isNotEmpty() }
     }
 
     private fun makeSetVariableValueFromConfigFile(
@@ -192,15 +192,14 @@ object SetVariableTyper {
         currentSetVariableValue: String?,
         currentComponentIndex: Int
     ): Map<String, String>? {
-        val setVariableSetSeparator = '|'
         return currentSetVariableValue?.let {
             if(
                 it.contains(
-                    setVariableSetSeparator
+                   setValSeparator
                 )
             ) return@let QuoteTool.splitBySurroundedIgnore(
                 it,
-                setVariableSetSeparator
+                setValSeparator
             )
                 .getOrNull(currentComponentIndex).let {
                 QuoteTool.trimBothEdgeQuote(it)
@@ -209,213 +208,13 @@ object SetVariableTyper {
         }?.let {
             CmdClickMap.createMap(
                 it,
-                '!'
+                typeSeparator
             )
         }?.toMap()
     }
 
-    object AlterTool {
-
-        private const val alterKeyName = "alter"
-        enum class AlterIfKey(
-            val key: String,
-        ) {
-            SHELL_IF_PATH("shellIfPath"),
-            SHELL_IF_CON("shellIfCon"),
-            IF("if"),
-        }
-
-        fun makeVariableTypeValueByAlter(
-            variableTypeValue: String,
-            busyboxExecutor: BusyboxExecutor?,
-            replaceVariableMap: Map<String, String>?
-        ): String {
-            if(
-                busyboxExecutor == null
-            ) return variableTypeValue
-            val varValueElList = QuoteTool.splitBySurroundedIgnore(
-                variableTypeValue,
-                setValSeparator
-            )
-            val alterKeyEqualStr = "${alterKeyName}="
-            return varValueElList.map {
-                varValueEl ->
-                val typeValueList = QuoteTool.splitBySurroundedIgnore(
-                    varValueEl,
-                    typeSeparator
-                )
-                val alterTypeValue = typeValueList.firstOrNull {
-                    it.startsWith(alterKeyEqualStr)
-                }
-                if(
-                    alterTypeValue.isNullOrEmpty()
-                ) return@map varValueEl
-                val alterValue = QuoteTool.trimBothEdgeQuote(
-                    alterTypeValue.removePrefix(
-                        alterKeyEqualStr
-                    ).trim()
-                )
-                val alterMap = makeAlterMap(
-                    alterValue,
-                    replaceVariableMap
-                )
-                val shellIfOutput = getShellIfOutput(
-                    alterMap,
-                    replaceVariableMap,
-                    busyboxExecutor,
-                )
-                val disableAlter = shellIfOutput.isEmpty()
-                if(
-                    disableAlter
-                ) return@map QuoteTool.splitBySurroundedIgnore(
-                    varValueEl,
-                    typeSeparator
-                ).filter {
-                    !it.startsWith(alterKeyEqualStr)
-                }.joinToString(typeSeparator.toString())
-                val updateTypeValue = execAlter(
-                    typeValueList,
-                    alterMap,
-                    alterValue,
-                    shellIfOutput,
-                )
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_makeVariableTypeValueByalter.txt").absolutePath,
-//                    listOf(
-//                        "alterTypeValue: ${alterTypeValue}",
-//                        "alterValue: ${alterValue}",
-//                        "alterMap: ${alterMap}",
-//                        "updateTypeValue: ${updateTypeValue}",
-//                    ).joinToString("\n\n-------\n")
-//                )
-                updateTypeValue
-            }.joinToString(setValSeparator.toString())
-        }
-
-        private fun execAlter(
-            typeValueList: List<String>,
-            alterMapSrc: Map<String, String>,
-            alterValue: String,
-            shellIfOutput: String,
-        ): String {
-            val alterIfKeyList =
-                AlterTool.AlterIfKey.values().map{ it.key }
-            val alterMap =
-                alterMapSrc +
-                        CmdClickMap.createMap(
-                            shellIfOutput,
-                            typeSeparator
-                        )
-            val alterMapKeyList = alterMap.keys
-            val currentTypeValueWithAlterKeyRemove = typeValueList.map {
-                    typeValue ->
-                val alterKey = alterMapKeyList.firstOrNull {
-                    typeValue.startsWith("${it}=")
-                }
-                if(
-                    alterKey.isNullOrEmpty()
-                ) return@map typeValue
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
-//                    listOf(
-//                        "alterMapKeyList: ${alterMapKeyList}",
-//                        "typeValue: ${typeValue}",
-//                        "alterKey: ${alterKey}",
-//                    ).joinToString("\n\n-------\n")
-//                )
-                String()
-            }.joinToString(typeSeparator.toString())
-            val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
-                alterValue,
-                typeSeparator
-            ).filter {
-                !alterIfKeyList.contains(it)
-            }.joinToString(typeSeparator.toString())
-            return listOf(
-                currentTypeValueWithAlterKeyRemove,
-                alterValueExcludeIfKey,
-                shellIfOutput,
-            ).joinToString(typeSeparator.toString())
-        }
-
-        private fun getShellIfOutput(
-            alterMap: Map<String, String>,
-            replaceVariableMap: Map<String, String>?,
-            busyboxExecutor: BusyboxExecutor,
-        ): String {
-            val shellIfCon = makeShellIfCon(
-                alterMap,
-                replaceVariableMap,
-            )
-//            val repValHashMap = replaceVariableMap?.let {
-//                HashMap(it)
-//            }
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
-//                listOf(
-//                    "alterMap: ${alterMap}",
-//                    "shellIfCon: ${shellIfCon}",
-//                    "repValHashMap: ${repValHashMap}",
-//                    "val: ${busyboxExecutor.getCmdOutput(
-//                        shellIfCon,
-//                    )}"
-//                ).joinToString("\n\n\n")
-//            )
-            return busyboxExecutor.getCmdOutput(
-                shellIfCon,
-//                repValHashMap
-            ).trim()
-        }
-
-        private fun makeAlterMap(
-            alterValue: String,
-            replaceVariableMap: Map<String, String>?
-        ): Map<String, String> {
-            return SetReplaceVariabler.execReplaceByReplaceVariables(
-                alterValue,
-                replaceVariableMap,
-                String(),
-                String()
-            ).let {
-                CmdClickMap.createMap(
-                    it,
-                    '!',
-                ).toMap()
-            }
-        }
-
-        private fun makeShellIfCon(
-            alterMap: Map<String, String>?,
-            replaceVariableMap: Map<String, String>?,
-        ): String {
-            if(
-                alterMap.isNullOrEmpty()
-            ) return String()
-            val shellIfCon = alterMap.get(
-                AlterIfKey.SHELL_IF_CON.key
-            )
-            if(
-                !shellIfCon.isNullOrEmpty()
-            ) return SetReplaceVariabler.execReplaceByReplaceVariables(
-                shellIfCon,
-                replaceVariableMap,
-                String(),
-                String(),
-            )
-            val shellPath = alterMap.get(
-                AlterIfKey.SHELL_IF_PATH.key
-            ) ?: return String()
-            return SetReplaceVariabler.execReplaceByReplaceVariables(
-                ReadText(shellPath).readText(),
-                replaceVariableMap,
-                String(),
-                String(),
-            )
-        }
-    }
-
     private object VisibleTool {
-        val visibleOffValue = "OFF"
+        const val visibleOffValue = "OFF"
 
         fun howDisableVisible(
             variableTypeValue: String,
@@ -467,6 +266,213 @@ object SetVariableTyper {
                 enableVisible
             }.joinToString(setValSeparator.toString())
         }
+    }
+}
+
+private object AlterToolForSetValType {
+
+    private const val alterKeyName = AlterConfig.alterKeyName
+    private const val setValSeparator = '|'
+    private const val typeSeparator = '!'
+    private const val ifArgsSeparator = '&'
+
+    fun makeVariableTypeValueByAlter(
+        context: Context,
+        variableTypeValue: String,
+        busyboxExecutor: BusyboxExecutor?,
+        replaceVariableMap: Map<String, String>?
+    ): String {
+        if(
+            busyboxExecutor == null
+        ) return variableTypeValue
+        val varValueElList = QuoteTool.splitBySurroundedIgnore(
+            variableTypeValue,
+            setValSeparator
+        )
+        val alterKeyEqualStr = "${alterKeyName}="
+        return varValueElList.map {
+                varValueEl ->
+            val typeValueList = QuoteTool.splitBySurroundedIgnore(
+                varValueEl,
+                typeSeparator
+            )
+            val alterTypeValue = typeValueList.firstOrNull {
+                it.startsWith(alterKeyEqualStr)
+            }
+            if(
+                alterTypeValue.isNullOrEmpty()
+            ) return@map varValueEl
+            val alterValue = QuoteTool.trimBothEdgeQuote(
+                alterTypeValue.removePrefix(
+                    alterKeyEqualStr
+                ).trim()
+            )
+            val alterMap = makeAlterMap(
+                alterValue,
+                replaceVariableMap
+            )
+            val shellIfOutput = getShellIfOutput(
+                context,
+                alterMap,
+                replaceVariableMap,
+                busyboxExecutor,
+            )
+            val disableAlter = shellIfOutput.isEmpty()
+            if(
+                disableAlter
+            ) return@map QuoteTool.splitBySurroundedIgnore(
+                varValueEl,
+                typeSeparator
+            ).filter {
+                !it.startsWith(alterKeyEqualStr)
+            }.joinToString(typeSeparator.toString())
+            val updateTypeValue = execAlter(
+                typeValueList,
+                alterMap,
+                alterValue,
+                shellIfOutput,
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_makeVariableTypeValueByalter.txt").absolutePath,
+//                listOf(
+//                    "alterTypeValue: ${alterTypeValue}",
+//                    "alterValue: ${alterValue}",
+//                    "alterMap: ${alterMap}",
+//                    "updateTypeValue: ${updateTypeValue}",
+//                ).joinToString("\n\n-------\n")
+//            )
+            updateTypeValue
+        }.joinToString(setValSeparator.toString())
+    }
+
+    private fun execAlter(
+        typeValueList: List<String>,
+        alterMapSrc: Map<String, String>,
+        alterValue: String,
+        shellIfOutput: String,
+    ): String {
+        val alterIfKeyList =
+            AlterConfig.IfKey.values().map{ it.key }
+        val alterMap =
+            alterMapSrc +
+                    CmdClickMap.createMap(
+                        shellIfOutput,
+                        typeSeparator
+                    )
+        val alterMapKeyList = alterMap.keys
+        val currentTypeValueWithAlterKeyRemove = typeValueList.map {
+                typeValue ->
+            val alterKey = alterMapKeyList.firstOrNull {
+                typeValue.startsWith("${it}=")
+            }
+            if(
+                alterKey.isNullOrEmpty()
+            ) return@map typeValue
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
+//                listOf(
+//                    "alterMapKeyList: ${alterMapKeyList}",
+//                    "typeValue: ${typeValue}",
+//                    "alterKey: ${alterKey}",
+//                ).joinToString("\n\n-------\n")
+//            )
+            String()
+        }.joinToString(typeSeparator.toString())
+        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
+            alterValue,
+            typeSeparator
+        ).filter {
+            !alterIfKeyList.contains(it)
+        }.joinToString(typeSeparator.toString())
+        return listOf(
+            currentTypeValueWithAlterKeyRemove,
+            alterValueExcludeIfKey,
+            shellIfOutput,
+        ).joinToString(typeSeparator.toString())
+    }
+
+    private fun getShellIfOutput(
+        context: Context,
+        alterMap: Map<String, String>,
+        replaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor,
+    ): String {
+        val shellIfCon = makeShellIfCon(
+            context,
+            alterMap,
+            replaceVariableMap,
+        )
+//            val repValHashMap = replaceVariableMap?.let {
+//                HashMap(it)
+//            }
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
+//            listOf(
+//                "alterMap: ${alterMap}",
+//                "shellIfCon: ${shellIfCon}",
+//                "alterMap: ${alterMap}",
+//                "shellIfCon: ${shellIfCon}",
+//                "val: ${busyboxExecutor.getCmdOutput(
+//                    shellIfCon,
+//                )}"
+//            ).joinToString("\n\n\n")
+//        )
+        return busyboxExecutor.getCmdOutput(
+            shellIfCon,
+        ).trim()
+    }
+
+    private fun makeAlterMap(
+        alterValue: String,
+        replaceVariableMap: Map<String, String>?
+    ): Map<String, String> {
+        return SetReplaceVariabler.execReplaceByReplaceVariables(
+            alterValue,
+            replaceVariableMap,
+            String(),
+            String()
+        ).let {
+            CmdClickMap.createMap(
+                it,
+                typeSeparator,
+            ).toMap()
+        }
+    }
+
+    private fun makeShellIfCon(
+        context: Context,
+        alterMap: Map<String, String>?,
+        replaceVariableMap: Map<String, String>?,
+    ): String {
+        if(
+            alterMap.isNullOrEmpty()
+        ) return String()
+        val shellIfCon = alterMap.get(
+            AlterConfig.IfKey.SHELL_IF_CON.key
+        )
+        if(
+            !shellIfCon.isNullOrEmpty()
+        ) return SetReplaceVariabler.execReplaceByReplaceVariables(
+            shellIfCon,
+            replaceVariableMap,
+            String(),
+            String(),
+        )
+        val shellPath = alterMap.get(
+            AlterConfig.IfKey.SHELL_IF_PATH.key
+        ) ?: return String()
+        val extraRepValMap = CmdClickMap.createMap(
+            alterMap.get(
+                AlterConfig.IfKey.IF_ARGS.key
+            ),
+            ifArgsSeparator
+        ).toMap()
+        return ShellMacroHandler.makeShellCon(
+            context,
+            shellPath,
+            replaceVariableMap,
+            extraRepValMap,
+        )
     }
 }
 
