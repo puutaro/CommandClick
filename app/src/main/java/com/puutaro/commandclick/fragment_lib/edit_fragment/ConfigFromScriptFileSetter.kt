@@ -15,22 +15,19 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumTo
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterConfig
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterIfShellTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
-import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
 import com.puutaro.commandclick.util.state.FannelStateRooterManager
 import com.puutaro.commandclick.util.state.FragmentTagPrefix
 import com.puutaro.commandclick.util.state.SharePrefTool
-import java.io.File
 
 object ConfigFromScriptFileSetter {
 
@@ -430,7 +427,8 @@ object ConfigFromScriptFileSetter {
         settingVariableList: List<String>?,
         onShortcut: Boolean,
     ){
-        val context = editFragment.context ?: return
+        val context = editFragment.context
+            ?: return
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         editFragment.toolbarButtonConfigMap =
             mapOf(
@@ -672,7 +670,7 @@ object ConfigFromScriptFileSetter {
 
 private object AlterToolForSetValType {
 
-    private val alterKeyName = AlterConfig.alterKeyName
+    private val alterKeyName = AlterIfShellTool.alterKeyName
     private const val mainSeparator = '|'
     private const val ifArgsSeparator = '!'
 
@@ -682,14 +680,15 @@ private object AlterToolForSetValType {
         busyboxExecutor: BusyboxExecutor?,
         replaceVariableMap: Map<String, String>?
     ): Map<String, String> {
+
         if(
             busyboxExecutor == null
         ) return configMap
         val alterKeyEqualStr = "${alterKeyName}="
         return configMap.map {
-                configMapEntry ->
-            val currentConfigKey = configMapEntry.key
-            val currentConfigValue = configMapEntry.value
+
+            val currentConfigKey = it.key
+            val currentConfigValue = it.value
             val defaultConfigPair =
                 currentConfigKey to currentConfigValue
             val currentConfigValueList = QuoteTool.splitBySurroundedIgnore(
@@ -707,15 +706,28 @@ private object AlterToolForSetValType {
                     alterKeyEqualStr
                 ).trim()
             )
-            val alterMap = makeAlterMap(
+            val alterKeyValuePairList = makeAlterMap(
                 alterValue,
                 replaceVariableMap
             )
-            val shellIfOutput = getShellIfOutput(
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "setVal_configKeyPairList.txt").absolutePath,
+//                listOf(
+//                    "currentConfigKey: ${currentConfigKey}",
+//                    "currentConfigValue: ${currentConfigValue}",
+//                    "currentConfigValueList: ${currentConfigValueList}",
+//                    "alterTypeValue: ${alterTypeValue}",
+//                    "alterValue: ${alterValue}",
+//                    "alterValue: ${alterValue}",
+//                    "alterKeyValuePairList: $alterKeyValuePairList",
+//                ).joinToString("\n\n\n")
+//            )
+            val shellIfOutput = AlterIfShellTool.getShellIfOutput(
                 context,
-                alterMap,
-                replaceVariableMap,
                 busyboxExecutor,
+                alterKeyValuePairList,
+                replaceVariableMap,
+                ifArgsSeparator
             )
             val disableAlter = shellIfOutput.isEmpty()
             if(
@@ -728,31 +740,32 @@ private object AlterToolForSetValType {
             }.joinToString(mainSeparator.toString())
             val updateConfigValue = execAlter(
                 currentConfigValueList,
-                alterMap,
+                alterKeyValuePairList,
                 alterValue,
                 shellIfOutput,
             )
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_makeVariableTypeValueByalter.txt").absolutePath,
-//                    listOf(
-//                        "alterTypeValue: ${alterTypeValue}",
-//                        "alterValue: ${alterValue}",
-//                        "alterMap: ${alterMap}",
-//                        "updateTypeValue: ${updateTypeValue}",
-//                    ).joinToString("\n\n-------\n")
-//                )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_configValueByalter.txt").absolutePath,
+//                listOf(
+//                    "alterTypeValue: ${alterTypeValue}",
+//                    "alterValue: ${alterValue}",
+//                    "currentConfigKey: ${currentConfigKey}",
+//                    "updateConfigValue: ${updateConfigValue}",
+//                ).joinToString("\n\n-------\n")
+//            )
             currentConfigKey to updateConfigValue
         }.toMap()
     }
 
     private fun execAlter(
         currentConfigValueList: List<String>,
-        alterMapSrc: Map<String, String>,
+        alterKeyValuePairList: List<Pair<String, String>>,
         alterValue: String,
         shellIfOutput: String,
     ): String {
-        val alterIfKeyList =
-            AlterConfig.IfKey.values().map{ it.key }
+        val alterIfShellKeyList =
+            AlterIfShellTool.IfShellKey.values().map{ it.key }
+        val alterMapSrc = alterKeyValuePairList.toMap()
         val alterMap =
             alterMapSrc +
                     CmdClickMap.createMap(
@@ -783,7 +796,7 @@ private object AlterToolForSetValType {
             alterValue,
             mainSeparator
         ).filter {
-            !alterIfKeyList.contains(it)
+            !alterIfShellKeyList.contains(it)
         }.joinToString(mainSeparator.toString())
         return listOf(
             currentConfigValueListWithAlterKeyRemove,
@@ -792,41 +805,10 @@ private object AlterToolForSetValType {
         ).joinToString(mainSeparator.toString())
     }
 
-    private fun getShellIfOutput(
-        context: Context,
-        alterMap: Map<String, String>,
-        replaceVariableMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor,
-    ): String {
-        val shellIfCon = makeShellIfCon(
-            context,
-            alterMap,
-            replaceVariableMap,
-        )
-//            val repValHashMap = replaceVariableMap?.let {
-//                HashMap(it)
-//            }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
-//            listOf(
-//                "alterMap: ${alterMap}",
-//                "shellIfCon: ${shellIfCon}",
-//                "alterMap: ${alterMap}",
-//                "shellIfCon: ${shellIfCon}",
-//                "val: ${busyboxExecutor.getCmdOutput(
-//                    shellIfCon,
-//                )}"
-//            ).joinToString("\n\n\n")
-//        )
-        return busyboxExecutor.getCmdOutput(
-            shellIfCon,
-        ).trim()
-    }
-
     private fun makeAlterMap(
         alterValue: String,
         replaceVariableMap: Map<String, String>?,
-    ): Map<String, String> {
+    ): List<Pair<String, String>> {
         return SetReplaceVariabler.execReplaceByReplaceVariables(
             alterValue,
             replaceVariableMap,
@@ -836,43 +818,7 @@ private object AlterToolForSetValType {
             CmdClickMap.createMap(
                 it,
                 mainSeparator,
-            ).toMap()
+            )
         }
-    }
-
-    private fun makeShellIfCon(
-        context: Context,
-        alterMap: Map<String, String>?,
-        replaceVariableMap: Map<String, String>?,
-    ): String {
-        if(
-            alterMap.isNullOrEmpty()
-        ) return String()
-        val shellIfCon = alterMap.get(
-            AlterConfig.IfKey.SHELL_IF_CON.key
-        )
-        if(
-            !shellIfCon.isNullOrEmpty()
-        ) return SetReplaceVariabler.execReplaceByReplaceVariables(
-            shellIfCon,
-            replaceVariableMap,
-            String(),
-            String(),
-        )
-        val shellPath = alterMap.get(
-            AlterConfig.IfKey.SHELL_IF_PATH.key
-        ) ?: return String()
-        val extraRepValMap = CmdClickMap.createMap(
-            alterMap.get(
-                AlterConfig.IfKey.IF_ARGS.key
-            ),
-            ifArgsSeparator
-        ).toMap()
-        return ShellMacroHandler.makeShellCon(
-            context,
-            shellPath,
-            replaceVariableMap,
-            extraRepValMap,
-        )
     }
 }

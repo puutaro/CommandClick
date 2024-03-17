@@ -133,6 +133,7 @@ class EditFragment: Fragment() {
     var recordNumToMapNameValueInCommandHolder: Map<Int, Map<String, String>?>? = null
     var recordNumToMapNameValueInSettingHolder: Map<Int, Map<String, String>?>? = null
     var firstUpdate = false
+    val alterIfShellResultMap: MutableMap<String, String> = mutableMapOf()
 
 
     private var broadcastReceiverForEdit: BroadcastReceiver = object : BroadcastReceiver() {
@@ -414,6 +415,7 @@ class EditFragment: Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         jsExecuteJob?.cancel()
+        alterIfShellResultMap.clear()
     }
 
     interface onToolBarButtonClickListenerForEditFragment {

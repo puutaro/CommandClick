@@ -140,7 +140,7 @@ class FormJsDialog(
         }?.split("\n")
 
         val recordNumToSetVariableMaps = SetVariableTyper.makeRecordNumToSetVariableMaps(
-            context,
+            terminalFragment,
             setVariableTypeList,
             recordNumToMapNameValueInCommandHolder,
             setReplaceVariableMap,

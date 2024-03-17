@@ -168,14 +168,14 @@ class FormDialogForListIndexOrButton(
                 editFragment.setReplaceVariableMap
             )
             SetVariableTyper.makeRecordNumToSetVariableMaps(
-                context,
+                editFragment,
                 setVariableForCmdHolder,
                 recordNumToMapNameValueInCommandHolder,
                 null
             )
         } else {
             SetVariableTyper.makeRecordNumToSetVariableMaps(
-                context,
+                editFragment,
                 CommandClickScriptVariable.setVariableForSettingHolder,
                 recordNumToMapNameValueInSettingHolder,
                 null
