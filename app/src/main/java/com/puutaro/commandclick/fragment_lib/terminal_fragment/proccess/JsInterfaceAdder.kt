@@ -20,6 +20,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsHt
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.JsIconSelectBox
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsIntent
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsLinux
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsToolbar
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMap
@@ -193,6 +194,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsMusic(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsCon(terminalFragment)
         )
         dialogAdder(
             terminalFragment,

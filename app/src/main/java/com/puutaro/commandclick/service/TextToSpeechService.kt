@@ -411,18 +411,6 @@ class TextToSpeechService:
         )
         currentOrder = 0
         currentBlockNum = 0
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "tts.txt").absolutePath,
-            listOf(
-                "currentSrcPlayList: ${currentSrcPlayList}",
-                "pastSrcPlayList: ${pastSrcPlayList}",
-                "readPlayMode: ${readPlayMode}",
-                "onTrack: ${onTrack}",
-                "bool: ${currentSrcPlayList == pastSrcPlayList
-                        && readPlayMode == playMode
-                        && !onTrack.isNullOrEmpty()}"
-            ).joinToString("\n\n\n")
-        )
         if(
             currentSrcPlayList == pastSrcPlayList
             && readPlayMode == playMode
