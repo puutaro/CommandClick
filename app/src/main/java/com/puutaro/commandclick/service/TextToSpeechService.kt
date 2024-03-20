@@ -40,6 +40,8 @@ class TextToSpeechService:
     private val channelNum = ServiceChannelNum.textToSpeech
     private var notificationIdToImportance =
         NotificationIdToImportance.HIGH
+    private var notificationBuilder: NotificationCompat.Builder? = null
+    private var cancelPendingIntent: PendingIntent? = null
     private var textToSpeech: TextToSpeech? = null
     private var textToSpeechJob: Job? = null
     private var execTextToSpeechJob: Job? = null
@@ -212,7 +214,7 @@ class TextToSpeechService:
             applicationContext,
             UbuntuFiles(applicationContext)
         )
-        val cancelPendingIntent = PendingIntentCreator.create(
+        cancelPendingIntent = PendingIntentCreator.create(
             applicationContext,
             BroadCastIntentSchemeTextToSpeech.STOP_TEXT_TO_SPEECH.action,
         )
@@ -249,7 +251,7 @@ class TextToSpeechService:
 
         notificationManager = NotificationManagerCompat.from(context)
         notificationManager?.createNotificationChannel(channel)
-        val notificationBuilder = NotificationCompat.Builder(
+        notificationBuilder = NotificationCompat.Builder(
             context,
             notificationIdToImportance.id
         )
@@ -291,15 +293,16 @@ class TextToSpeechService:
             .setDeleteIntent(
                 cancelPendingIntent
             )
-        val notificationInstance = notificationBuilder.build()
-        notificationManager?.notify(
-            channelNum,
-            notificationInstance
-        )
-        startForeground(
-            channelNum,
-            notificationInstance
-        )
+        notificationBuilder?.build()?.let {
+            notificationManager?.notify(
+                channelNum,
+                it
+            )
+            startForeground(
+                channelNum,
+                it
+            )
+        }
         val listFilePath = intent?.getStringExtra(
             TextToSpeechIntentExtra.listFilePath.scheme
         ) ?: return Service.START_NOT_STICKY
@@ -328,6 +331,8 @@ class TextToSpeechService:
             TextToSpeechIntentExtra.scriptRawName.scheme
         )
         val currentTrackFileName = "${currentAppDirName}${fannelRawName}.txt"
+        val playListConAlbumName =
+            "${currentAppDirName}${fannelRawName}PlayList.txt"
         val shellPath = intent.getStringExtra(
             TextToSpeechIntentExtra.shellPath.scheme
         )?: String()
@@ -340,8 +345,9 @@ class TextToSpeechService:
         instantiateTextToSpeech(
             intent
         )
+        val currentSrcPlayList = ReadText(listFilePath).textToList()
         val fileList = makePlayList(
-            listFilePath,
+            currentSrcPlayList,
             playMode,
             onRoop,
             playNumber,
@@ -349,20 +355,24 @@ class TextToSpeechService:
         if(
             fileList.isNullOrEmpty()
         ) {
-            notificationBuilder.setContentTitle(
+            notificationBuilder?.setContentTitle(
                 "File list no exist"
             )
-            notificationBuilder
-                .setContentText("File list no exist")
-                .clearActions()
-                .addAction(
+            notificationBuilder?.apply {
+                setContentText("File list no exist")
+                clearActions()
+                addAction(
                     R.drawable.ic_menu_close_clear_cancel,
                     "cancel",
                     cancelPendingIntent
                 ).setStyle(null)
-            notificationManager?.notify(
-                channelNum, notificationBuilder.build()
-            )
+            }
+
+            notificationBuilder?.build()?.let {
+                notificationManager?.notify(
+                    channelNum, it
+                )
+            }
             return Service.START_NOT_STICKY
         }
 
@@ -384,19 +394,37 @@ class TextToSpeechService:
                 currentTrackFileName
             ).absolutePath,
         ).textToList()
-        val readLength = getIntValue(
-            pastTrackKeyValueList,
-            PlayTrackFileKey.length.name
-        )
+        val pastSrcPlayList = ReadText(
+            File(
+                UsePath.cmdclickTempTextToSpeechDirPath,
+                playListConAlbumName,
+            ).absolutePath,
+        ).textToList()
+//        val readLength = getIntValue(
+//            pastTrackKeyValueList,
+//            PlayTrackFileKey.length.name
+//        )
         val readPlayMode = getStrValue(
             pastTrackKeyValueList,
             PlayTrackFileKey.playMode.name,
-            "ordinaly"
+            PlayModeType.ordinaly.name
         )
         currentOrder = 0
         currentBlockNum = 0
+        FileSystems.writeFile(
+            File(UsePath.cmdclickDefaultAppDirPath, "tts.txt").absolutePath,
+            listOf(
+                "currentSrcPlayList: ${currentSrcPlayList}",
+                "pastSrcPlayList: ${pastSrcPlayList}",
+                "readPlayMode: ${readPlayMode}",
+                "onTrack: ${onTrack}",
+                "bool: ${currentSrcPlayList == pastSrcPlayList
+                        && readPlayMode == playMode
+                        && !onTrack.isNullOrEmpty()}"
+            ).joinToString("\n\n\n")
+        )
         if(
-            fileList.joinToString("").length == readLength
+            currentSrcPlayList == pastSrcPlayList
             && readPlayMode == playMode
             && !onTrack.isNullOrEmpty()
         ){
@@ -408,8 +436,14 @@ class TextToSpeechService:
                 pastTrackKeyValueList,
                 PlayTrackFileKey.blockNum.name
             )
-
         }
+        FileSystems.writeFile(
+            File(
+                UsePath.cmdclickTempTextToSpeechDirPath,
+                playListConAlbumName,
+            ).absolutePath,
+            currentSrcPlayList.joinToString("\n")
+        )
         textToSpeech?.setSpeechRate(
             convertFloat(speed)
         )
@@ -433,39 +467,28 @@ class TextToSpeechService:
                     currentOrder > fileListLastIndex
                 ) {
                     textToSpeech?.stop()
-                    notificationManager?.notify(
-                        channelNum, notificationBuilder.build()
-                    )
+                    notificationBuilder?.build()?.let {
+                        notificationManager?.notify(
+                            channelNum, it,
+                        )
+                    }
                     stopForeground(Service.STOP_FOREGROUND_DETACH)
                     notificationManager?.cancel(channelNum)
                     break
                 }
 
                 val playFile = fileList[currentOrder]
-//                if(factListSize == 0) {
-//                    notificationBuilder.setContentTitle(
-//                        "play list size must be more zero"
-//                    )
-//                    notificationManager?.notify(
-//                        channelNum, notificationBuilder.build()
-//                    )
-//                    return@launch
-//                }
                 val displayRoopTimes = "${currentOrder % factListSize + 1}"
-//                  (${fileListSize}
                 withContext(Dispatchers.IO) {
                     try {
                         execPlay(
                             playFile,
                             playMode,
-                            fileList,
-                            notificationBuilder,
                             shellPath,
                             shellArgs,
                             extraContent,
                             displayRoopTimes,
-                            cancelPendingIntent,
-                            currentTrackFileName
+                            currentTrackFileName,
                         )
                     } catch(e: Exception){
                         Log.e("textToSpeech", e.toString())
@@ -486,7 +509,9 @@ class TextToSpeechService:
             }
             withContext(Dispatchers.IO){
                 textToSpeech?.stop()
-                notificationManager?.notify(channelNum, notificationBuilder.build())
+                notificationBuilder?.build()?.let {
+                    notificationManager?.notify(channelNum, it)
+                }
                 stopForeground(Service.STOP_FOREGROUND_DETACH)
                 notificationManager?.cancel(channelNum)
 
@@ -540,14 +565,12 @@ class TextToSpeechService:
     }
 
     private fun makePlayList(
-        listFilePath: String,
+        srcPlayList: List<String>,
         playMode: String?,
         onRoop: String?,
         playNumber: String?,
     ): List<String>? {
-        val fileListBeforePlayMode = ReadText(
-            listFilePath
-        ).textToList().filter {
+        val fileListBeforePlayMode = srcPlayList.filter {
             File(it).isFile
         }
         val repeatTimes = 100
@@ -602,13 +625,10 @@ class TextToSpeechService:
     private fun execPlay(
         playPath: String,
         playMode: String?,
-        fileList: List<String>,
-        notificationBuilder: NotificationCompat.Builder,
         shellPath: String,
         shellArgs: String,
         extraContent: String,
         displayRoopTimes: String,
-        cancelPendingIntent: PendingIntent,
         currentTrackFileName: String,
     ){
         val text = getText(
@@ -617,10 +637,7 @@ class TextToSpeechService:
         if(
             text.isNullOrEmpty()
         ){
-            downNotification(
-                notificationBuilder,
-                cancelPendingIntent
-            )
+            downNotification()
             return
         }
         done = true
@@ -657,7 +674,6 @@ class TextToSpeechService:
                         currentBlockNum * lengthLimit >= stringLength
                     ) break
                     val trackFileCon = """
-                        |${PlayTrackFileKey.length.name}=${fileList.joinToString("").length}
                         |${PlayTrackFileKey.playMode.name}=${playMode}
                         |${PlayTrackFileKey.order.name}=${currentOrder}
                         |${PlayTrackFileKey.blockNum.name}=${currentBlockNum}
@@ -723,7 +739,6 @@ class TextToSpeechService:
                         extraContent,
                     ).joinToString(" ")
                     makeProgressNotification(
-                        notificationBuilder,
                         displayTitle,
                         displayTimesAndExtra,
                     )
@@ -809,19 +824,19 @@ class TextToSpeechService:
     }
 
     private fun makeProgressNotification(
-        notificationBuilder: NotificationCompat.Builder,
         displayTitle: String,
         displayTimesAntExtra: String,
     ){
-        val notificationInstance = notificationBuilder
-            .setContentTitle(displayTitle)
-            .setContentText(displayTimesAntExtra)
-            .setOngoing(false)
-            .build()
-        notificationManager?.notify(
-            channelNum,
-            notificationInstance
-        )
+        notificationBuilder?.apply {
+            setContentTitle(displayTitle)
+            setContentText(displayTimesAntExtra)
+            setOngoing(false)
+        }?.build()?.let {
+            notificationManager?.notify(
+                channelNum,
+                it
+            )
+        }
     }
 
     private fun getText(
@@ -852,11 +867,6 @@ class TextToSpeechService:
     }
 
     private fun monitorUtterLanceProgressListener(){
-//        if(
-//            textToSpeech?.isSpeaking != true
-//        ) return
-//        done = true
-//        return
         textToSpeech?.setOnUtteranceProgressListener(
             object : UtteranceProgressListener() {
                 override fun onDone(utteranceId: String) {
@@ -890,21 +900,20 @@ class TextToSpeechService:
             })
     }
 
-    private fun downNotification(
-        notificationBuilder:  NotificationCompat.Builder,
-        pendingIntent: PendingIntent,
-    ){
-        notificationBuilder.setSmallIcon(R.drawable.progress_indeterminate_horizontal)
-        notificationBuilder.setContentText("text to speech blank")
-        notificationBuilder.setDeleteIntent(
-            pendingIntent
-        )
-        notificationBuilder.setAutoCancel(true)
-        notificationBuilder.clearActions()
-        notificationManager?.notify(
-            channelNum,
-            notificationBuilder.build()
-        )
+    private fun downNotification(){
+        notificationBuilder?.apply {
+            setSmallIcon(R.drawable.progress_indeterminate_horizontal)
+            setContentText("text to speech blank")
+            setDeleteIntent(cancelPendingIntent)
+            setAutoCancel(true)
+            clearActions()
+        }
+        notificationBuilder?.build()?.let {
+            notificationManager?.notify(
+                channelNum,
+                it
+            )
+        }
         stopForeground(Service.STOP_FOREGROUND_DETACH)
         notificationManager?.cancel(channelNum)
     }
@@ -913,7 +922,6 @@ class TextToSpeechService:
 private fun chunkText(
     text: String
 ): String {
-    val lineLimitCharNum = 25
     return text.replace(
         Regex(
             "(https|http)://[^ \n]*"),
@@ -968,7 +976,6 @@ private enum class PlayModeType {
 }
 
 private enum class PlayTrackFileKey {
-    length,
     playMode,
     order,
     blockNum,
