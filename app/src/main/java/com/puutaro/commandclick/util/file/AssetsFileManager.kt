@@ -23,11 +23,13 @@ object AssetsFileManager {
     const val iconSelectBox = "$assetsEditDirPath/iconSelectBox.js"
     const val fannelShellDirPath = "$assetsFannelsDirName/shell"
     const val fannelIfShellDirPath = "${fannelShellDirPath}/if"
+    const val fannelMakeShellDirPath = "${fannelShellDirPath}/make"
     const val fannelSaveShellDirPath = "${fannelShellDirPath}/save"
     const val savePreviousPlayListShellPath =
         "${fannelSaveShellDirPath}/savePreviousPlayList.sh"
     const val judgeTsvValueShellPath = "${fannelIfShellDirPath}/judge_tsv_value.sh"
     const val judgeListDirShellPath = "${fannelIfShellDirPath}/judge_list_dir.sh"
+    const val makeHeaderTitlePath = "${fannelMakeShellDirPath}/makeHeaderTitle.sh"
     const val ubuntuSetupDirPath = "ubuntu_setup"
     const val ubunutSupportDirPath = "$ubuntuSetupDirPath/support"
     const val ubunutSupportCmdDirPath = "$ubunutSupportDirPath/cmd"

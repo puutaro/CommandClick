@@ -93,5 +93,6 @@ object ShellMacroHandler {
         SAVE_PLAY_LIST(AssetsFileManager.savePreviousPlayListShellPath),
         JUDGE_TSV_VALUE(AssetsFileManager.judgeTsvValueShellPath),
         JUDGE_LIST_DIR(AssetsFileManager.judgeListDirShellPath),
+        MAKE_HEADER_TITLE(AssetsFileManager.makeHeaderTitlePath)
     }
 }
