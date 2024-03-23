@@ -294,7 +294,8 @@ object JsPathHandlerForToolbarButton {
                     fragment !is EditFragment
                 ) return
                 GeneralFileGetter.get(
-                    fragment
+                    fragment,
+                    jsActionMap
                 )
             }
             MacroForToolbarButton.Macro.GET_DIR
@@ -304,6 +305,7 @@ object JsPathHandlerForToolbarButton {
                 ) return
                 GeneralFileGetter.get(
                     fragment,
+                    jsActionMap,
                     true
                 )
             }

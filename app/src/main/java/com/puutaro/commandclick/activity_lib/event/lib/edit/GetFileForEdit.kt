@@ -10,6 +10,7 @@ import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -27,6 +28,10 @@ class GetFileForEdit(
 
     private var onDirectoryPick = false
     private var parentDirPath = String()
+    private var prefixSuffixSeparator = "&"
+    private var filterPrefixListCon = String()
+    private var filterSuffixListCon = String()
+    private var filterShellCon = String()
 
     private val getFile = activity.registerForActivityResult(
         ActivityResultContracts.OpenDocument()) { uri ->
@@ -35,16 +40,25 @@ class GetFileForEdit(
             || uri.toString() == String()
         ) return@registerForActivityResult
         val sourceFileOrDirPath = makeSourceFileOrDirPath(uri)
+        if(
+            sourceFileOrDirPath.isEmpty()
+        ) return@registerForActivityResult
         registerFileHandler(sourceFileOrDirPath)
     }
 
     fun get(
         parentDirPathSrc: String,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
+        filterShellCon: String,
         onDirectoryPickSrc: Boolean = false
     ){
         onDirectoryPick = onDirectoryPickSrc
         parentDirPath =
             parentDirPathSrc
+        this.filterPrefixListCon = filterPrefixListCon
+        this.filterSuffixListCon = filterSuffixListCon
+        this.filterShellCon = filterSuffixListCon
         when(Build.VERSION.SDK_INT < 30){
             true -> {
                 getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
@@ -60,6 +74,15 @@ class GetFileForEdit(
                 storageHelper.onFolderSelected = {
                         requestCode, folder ->
                     val absolutePath = folder.getAbsolutePath(activity)
+                        .split("\n").filter {
+                            FilterPathTool.isFilterByDir(
+                                it,
+                                parentDirPath,
+                                filterPrefixListCon,
+                                filterSuffixListCon,
+                                prefixSuffixSeparator,
+                            )
+                        }.firstOrNull() ?: String()
                     registerFileHandler(absolutePath)
                 }
                 return
@@ -70,9 +93,17 @@ class GetFileForEdit(
                 storageHelper.onFileSelected = {
                         requestCode, file ->
                     file.getOrNull(0)
-                        ?.getAbsolutePath(activity)?.let {
+                        ?.getAbsolutePath(activity)?.split("\n")?.filter{
+                            FilterPathTool.isFilterByFile(
+                                it,
+                                parentDirPath,
+                                filterPrefixListCon,
+                                filterSuffixListCon,
+                                prefixSuffixSeparator,
+                            )
+                        }?.firstOrNull()?.let {
                             registerFileHandler(it)
-                        }
+                        } ?: String()
 
                 }
             }
@@ -133,18 +164,34 @@ class GetFileForEdit(
             File(
                 withContext(Dispatchers.IO) {
                     URLDecoder.decode(
-                        uri.toString(), Charsets.UTF_8.name()
+                        uri.toString(),
+                        Charsets.UTF_8.name(),
                     )
                 }.replace(prefixRegex, "/storage")
             )
         }
         return if(onDirectoryPick) {
-            pathSource.parent
+            listOf(pathSource.parent ?: String()).filter {
+                FilterPathTool.isFilterByDir(
+                    it,
+                    parentDirPath,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    prefixSuffixSeparator,
+                )
+            }.firstOrNull() ?: String()
         } else {
-            pathSource.absolutePath
-        }  ?: String()
+            listOf(pathSource.absolutePath).filter {
+                FilterPathTool.isFilterByFile(
+                    it,
+                    parentDirPath,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    prefixSuffixSeparator,
+                )
+            }.firstOrNull() ?: String()
+        }
     }
-
     private fun registerFileHandler(
         sourceFileOrDirPath: String
     ){

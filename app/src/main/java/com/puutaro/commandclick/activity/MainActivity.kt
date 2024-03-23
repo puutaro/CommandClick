@@ -714,10 +714,16 @@ class MainActivity:
 
     override fun onGetFileForTerm(
         parentDirPathSrc: String,
-        onDirectoryPickSrc: Boolean
+        onDirectoryPickSrc: Boolean,
+        filterPrefixListCon: String,
+        filterSuffixListCon: String,
+        filterShellCon: String
     ) {
         getFileForEdit.get(
             parentDirPathSrc,
+            filterPrefixListCon,
+            filterSuffixListCon,
+            filterShellCon,
             onDirectoryPickSrc
         )
     }

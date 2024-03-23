@@ -420,7 +420,10 @@ class TerminalFragment: Fragment() {
     interface OnGetFileListenerForTerm {
         fun onGetFileForTerm(
             parentDirPathSrc: String,
-            onDirectoryPickSrc: Boolean = false
+            onDirectoryPickSrc: Boolean = false,
+            filterPrefixListCon: String,
+            filterSuffixListCon: String,
+            filterShellCon: String
         )
     }
 

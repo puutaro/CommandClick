@@ -11,8 +11,8 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
+import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.ScreenSizeCalculator
@@ -123,6 +123,8 @@ object EditTextSetter {
 
 private object EditTextMaker {
 
+    private val argsSeparator = '&'
+
     fun make(
         fragment: Fragment,
         editTextPropertyMap: Map<String, String>?,
@@ -173,9 +175,17 @@ private object EditTextMaker {
         val shellCon = when (
             shellConSrc.isNullOrEmpty()
         ) {
-            true ->
-                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
-
+            true ->{
+                ShellMacroHandler.makeShellCon(
+                    context,
+                    editTextPropertyMap.get(
+                        EditTextSetter.EditTextPropertySettingKey.SHELL_PATH.key
+                    ) ?: String(),
+                    null,
+                    null
+                )
+            }
+//                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
             else -> shellConSrc
         }.let {
             SetReplaceVariabler.execReplaceByReplaceVariables(
@@ -192,7 +202,7 @@ private object EditTextMaker {
                     it
                 )
             }
-        } ?: return null
+        }
         val busyboxExecutor = BusyboxExecutor(
             context,
             UbuntuFiles(context),
@@ -202,7 +212,7 @@ private object EditTextMaker {
         ).let {
             CmdClickMap.createMap(
                 it,
-                '&'
+                argsSeparator
             )
         }.toMap()
         return busyboxExecutor.getCmdOutput(

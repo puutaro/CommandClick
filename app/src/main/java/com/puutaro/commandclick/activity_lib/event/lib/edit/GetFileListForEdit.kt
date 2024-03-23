@@ -8,8 +8,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
@@ -32,6 +30,9 @@ class GetFileListForEdit (
     private var onDirectoryPick = false
     private var parentDirPath = String()
     private var prefixSuffixSeparator = "&"
+    private var filterPrefixListCon = String()
+    private var filterSuffixListCon = String()
+    private var filterShellCon = String()
 
     private val getFile = activity.registerForActivityResult(
         ActivityResultContracts.OpenDocument()) { uri ->
@@ -65,6 +66,9 @@ class GetFileListForEdit (
         onDirectoryPick = onDirectoryPickSrc
         parentDirPath =
             parentDirPathSrc
+        this.filterPrefixListCon = filterPrefixListCon
+        this.filterSuffixListCon = filterSuffixListCon
+        this.filterShellCon = filterSuffixListCon
         when(Build.VERSION.SDK_INT < 30){
             true -> getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
             else -> getFileOverSdk30(
@@ -195,10 +199,28 @@ class GetFileListForEdit (
         return when(onDirectoryPick) {
             true -> FileSystems.showDirList(
                 parentDirPath
-            )
-            else ->  FileSystems.sortedFiles(
-                parentDirPath
-            )
+            ).filter {
+                FilterPathTool.isFilterByDir(
+                    it,
+                    parentDirPath,
+                    filterPrefixListCon,
+                    filterSuffixListCon,
+                    prefixSuffixSeparator,
+                )
+            }
+            else -> {
+                FileSystems.sortedFiles(
+                    parentDirPath
+                ).filter {
+                    FilterPathTool.isFilterByFile(
+                        it,
+                        parentDirPath,
+                        filterPrefixListCon,
+                        filterSuffixListCon,
+                        prefixSuffixSeparator,
+                    )
+                }
+            }
         }.map {
             File(parentDirPath, it).absolutePath
         }
