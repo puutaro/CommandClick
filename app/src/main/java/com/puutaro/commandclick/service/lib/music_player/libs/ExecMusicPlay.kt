@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.service.lib.music_player.libs
 
-import android.widget.Toast
 import com.maxrave.kotlinyoutubeextractor.State
 import com.maxrave.kotlinyoutubeextractor.YTExtractor
 import com.puutaro.commandclick.service.MusicPlayerService
@@ -24,13 +23,6 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ){
-        CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(
-                musicPlayerService.applicationContext,
-                "play",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
         musicPlayerService.notiSetter?.setOnStop()
         val isYtUrl = judgeYtUri(
             playList,
