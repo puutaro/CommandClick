@@ -145,7 +145,7 @@ internal fun queryUrlToText(
             true -> sharpPosi
             else -> anpasadPosi
         }
-    return decordedUrl.take(subStrEndPosi + 1)
+    return decordedUrl.take(subStrEndPosi)
 }
 
 
