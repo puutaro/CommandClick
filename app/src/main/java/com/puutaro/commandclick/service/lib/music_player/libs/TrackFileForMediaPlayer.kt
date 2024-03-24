@@ -11,14 +11,12 @@ class InfoFileForMediaPlayer(
     private val playInfoFilePath: String? = null
 ) {
 
-
     fun makeFirstPlayPosi(
         onTrack: String?,
         infoFileName: String?,
         playMode: String?,
-        playListLength: String?,
+        fileListConBeforePlayMode: String?,
     ): Int {
-        val defaultIndex = 0
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "musicInfo.txt").absolutePath,
 //            listOf(
@@ -28,6 +26,7 @@ class InfoFileForMediaPlayer(
 //
 //            ).joinToString("\n")
 //        )
+        val defaultIndex = 0
         if(
             onTrack.isNullOrEmpty()
             || infoFileName.isNullOrEmpty()
@@ -37,7 +36,7 @@ class InfoFileForMediaPlayer(
         )
         val currentPlayInfoMap = makeCurrentPlayInfoMap(
             playMode,
-            playListLength,
+            fileListConBeforePlayMode,
         )
        val isEqual = PlayListInfoMapEqual.judge(
             previousPlayInfoMap,
@@ -66,11 +65,13 @@ class InfoFileForMediaPlayer(
 
     private fun makeCurrentPlayInfoMap(
         playMode: String?,
-        playListLength: String?,
+        inFileListConBeforePlayMode: String?,
     ): Map<String, String?> {
         return mapOf (
-            InfoKey.PLAY_MODE.key to playMode,
-            InfoKey.PLAY_LIST_LENGTH.key to playListLength,
+            InfoKey.PLAY_MODE.key
+                    to playMode,
+            InfoKey.PLAY_LIST_CON.key
+                    to makeConpareSrcFileListCon(inFileListConBeforePlayMode),
         )
     }
 
@@ -93,20 +94,18 @@ class InfoFileForMediaPlayer(
 
     fun savePlayInfo(
         index: Int,
-        playList: List<String>,
+        fileListConBeforePlayMode: String?
     ){
         if(
             playInfoFilePath.isNullOrEmpty()
         ) return
         val playInfoCon = mapOf (
             InfoKey.INDEX.key to index.toString(),
-            InfoKey.PLAY_MODE.key to playMode,
-            InfoKey.PLAY_LIST_LENGTH.key
-                    to playList.joinToString(
-                String()
-            ).length.toString(),
+            InfoKey.PLAY_MODE.key
+                    to playMode,
+            InfoKey.PLAY_LIST_CON.key
+                    to makeConpareSrcFileListCon(fileListConBeforePlayMode),
         ).map {
-//            val str = it.value
             "${it.key}\t${it.value}"
         }.joinToString("\n")
         playInfoFilePath.let {
@@ -116,6 +115,21 @@ class InfoFileForMediaPlayer(
             )
         }
     }
+
+    private fun makeConpareSrcFileListCon(
+        fileListConBeforePlayMode: String?
+    ): String {
+        if(
+            fileListConBeforePlayMode.isNullOrEmpty()
+        ) return String()
+        return fileListConBeforePlayMode.replace(
+            "\n",
+            " "
+        ).replace(
+            "\t",
+        "TTTAAABBB",
+        )
+    }
 }
 
 private object PlayListInfoMapEqual {
@@ -123,15 +137,6 @@ private object PlayListInfoMapEqual {
         previousPlayInfoMap: Map<String, String?>?,
         currentPlayInfoMap: Map<String, String?>?,
     ): Boolean {
-//        val noIndexPreviousPlayInfoMap = excludeIndexKeyFromPlayInfoMap(
-//            previousPlayInfoMap
-//        )
-//        if(
-//            noIndexPreviousPlayInfoMap.isNullOrEmpty()
-//        ) return false
-//        val noIndexCurrentPlayInfoMap = excludeIndexKeyFromPlayInfoMap(
-//            currentPlayInfoMap
-//        )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "musicPlayInfoCompare.txt").absolutePath,
 //            listOf(
@@ -139,9 +144,10 @@ private object PlayListInfoMapEqual {
 //                "currentPlayInfoMap: ${currentPlayInfoMap}",
 //                "is2: ${currentPlayInfoMap?.all {
 //                    val keyName = it.key
-//                    previousPlayInfoMap?.get(keyName) == it.value
+//                    previousPlayInfoMap?.get(keyName).toString() ==
+//                            it.value.toString()
 //                } ?: false}"
-//            ).joinToString("\n")
+//            ).joinToString("\n\n\n")
 //        )
         return currentPlayInfoMap?.all {
             val keyName = it.key
@@ -158,5 +164,5 @@ private enum class InfoKey(
 ){
     INDEX("index"),
     PLAY_MODE("playMode"),
-    PLAY_LIST_LENGTH("playListLength"),
+    PLAY_LIST_CON("playListCon"),
 }

@@ -41,8 +41,7 @@ object Shell2Http {
             }
             return shellOutput
         } catch (e: Exception) {
-            LogSystems.stdErr(
-                context,
+            LogSystems.stdWarn(
                 e.toString()
             )
             return String()

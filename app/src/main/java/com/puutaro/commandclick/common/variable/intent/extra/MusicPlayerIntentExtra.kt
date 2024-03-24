@@ -11,4 +11,13 @@ enum class MusicPlayerIntentExtra(
     ON_TRACK("onTrack"),
     CURRENT_APP_DIR_NAME("currentAppDirName"),
     SCRIPT_RAW_NAME("scriptRawName"),
+    SHELL_PATH("shellPath"),
+    SHELL_ARGS("shellArgs"),
+}
+
+enum class MusicPlayerPlayExtra(
+    val scheme: String
+){
+    SHELL_PATH("shellPath"),
+    SHELL_ARGS("shellArgs"),
 }

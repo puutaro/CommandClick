@@ -4,6 +4,7 @@ import android.content.Intent
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.intent.MediaPlayerIntentSender
+import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.TextToSpeechService
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
@@ -34,7 +35,7 @@ class JsMusic(
     @JavascriptInterface
     fun stop(){
         context?.stopService(
-            Intent(terminalFragment.activity, TextToSpeechService::class.java)
+            Intent(terminalFragment.activity, MusicPlayerService::class.java)
         )
     }
 }

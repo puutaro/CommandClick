@@ -24,6 +24,7 @@ import com.puutaro.commandclick.service.lib.music_player.libs.InfoFileForMediaPl
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayListMaker
 import com.puutaro.commandclick.service.variable.ServiceChannelNum
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.Job
 import java.io.File
@@ -40,6 +41,9 @@ class MusicPlayerService: Service() {
     var currentTrackLength: Int = 0
     var currentTrackIndex = 0
     var notiSetter: NotiSetter? = null
+    private var shellPath = String()
+    private var shellArgs = String()
+    private var fileListConBeforePlayMode: String = String()
     private var playList: List<String> = emptyList()
     var infoFileForMediaPlayer: InfoFileForMediaPlayer? = null
     private var broadcastReceiverForMusicPlayerService: BroadcastReceiver = object : BroadcastReceiver() {
@@ -126,6 +130,12 @@ class MusicPlayerService: Service() {
         val fannelRawName = intent?.getStringExtra(
             MusicPlayerIntentExtra.SCRIPT_RAW_NAME.scheme
         )
+        shellPath = intent?.getStringExtra(
+            MusicPlayerIntentExtra.SHELL_PATH.scheme
+        )?: String()
+        shellArgs = intent?.getStringExtra(
+            MusicPlayerIntentExtra.SHELL_ARGS.scheme
+        ) ?: String()
         val infoFileName = "${currentAppDirName}${fannelRawName}.txt"
         val playInfoFilePath = File(
             UsePath.cmdclickTempMediaPlayerDirPath,
@@ -142,8 +152,11 @@ class MusicPlayerService: Service() {
                 it
             )
         }
+        fileListConBeforePlayMode = ReadText(
+            listFilePath
+        ).readText()
         playList = PlayListMaker.make(
-            listFilePath,
+            fileListConBeforePlayMode.split("\n"),
             playMode,
             onLoop,
             playNumber
@@ -156,36 +169,18 @@ class MusicPlayerService: Service() {
             onTrack,
             infoFileName,
             playMode,
-            playList.joinToString("").length.toString(),
+            fileListConBeforePlayMode,
         ) ?: 0
         mediaPlayer = MusicPlayerMaker.make(
             this,
             playList,
-        )
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "musicPlayer.txt").absolutePath,
-            listOf(
-                "onRoop: ${onLoop}",
-                "playNumber: ${playNumber}",
-                "playMode: ${playMode}",
-                "onTrack: ${onTrack}",
-                "currentAppDirName: ${currentAppDirName}",
-                "fannelRawName: ${fannelRawName}",
-                "LIST_FILE_PATH: ${intent.getStringExtra(
-                    MusicPlayerIntentExtra.LIST_FILE_PATH.scheme
-                )}",
-                "playInfoFilePath: ${playInfoFilePath}",
-                "playList: ${playList}",
-                "currentTrackIndex: ${currentTrackIndex}",
-                "currentTrackIndex.toString(): ${currentTrackIndex.toString()}",
-            ).joinToString("\n")
         )
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
             listOf(
                 BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.scheme
-                        to currentTrackIndex.toString()
+                        to currentTrackIndex.toString(),
             )
         )
         return Service.START_NOT_STICKY
@@ -205,5 +200,18 @@ class MusicPlayerService: Service() {
         super.onTaskRemoved(rootIntent)
         PlayerExit.exit(this)
         stopSelf()
+    }
+
+    fun getFileListBeforePlayMode(): String {
+        return fileListConBeforePlayMode
+    }
+
+
+    fun getShellArgs(): String {
+        return shellArgs
+    }
+
+    fun getShellPath(): String {
+        return shellPath
     }
 }

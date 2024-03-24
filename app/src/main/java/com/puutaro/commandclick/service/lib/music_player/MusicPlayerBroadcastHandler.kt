@@ -5,6 +5,8 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.libs.ExecMusicPlay
+import com.puutaro.commandclick.service.lib.music_player.libs.ExecShellForMusicPlayer
+import com.puutaro.commandclick.service.lib.music_player.libs.MiliToDisplayTimeForMusic
 import com.puutaro.commandclick.service.lib.music_player.libs.PlayNotiLauncher
 
 object MusicPlayerBroadcastHandler {
@@ -17,6 +19,7 @@ object MusicPlayerBroadcastHandler {
         intent: Intent,
         playList: List<String>
     ){
+        val context = musicPlayerService.applicationContext
         val action = intent.action
         val broadcastIntentAction = BroadCastIntentSchemeMusicPlayer.values().firstOrNull {
             it.action == action
@@ -38,7 +41,6 @@ object MusicPlayerBroadcastHandler {
                 val fromPosition =
                     if(fromPositionSrc > 0) fromPositionSrc
                     else 0
-                val context = musicPlayerService.applicationContext
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.action,
@@ -68,7 +70,6 @@ object MusicPlayerBroadcastHandler {
                         toPositionSrc < currentTrackLength
                     ) toPositionSrc
                     else return
-                val context = musicPlayerService.applicationContext
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.SEEK_MUSIC_PLAYER.action,
@@ -86,7 +87,6 @@ object MusicPlayerBroadcastHandler {
                 val previousIndex =
                     if(previousIndexSrc >= 0) previousIndexSrc
                     else maxTrackIndex
-                val context = musicPlayerService.applicationContext
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
@@ -114,7 +114,6 @@ object MusicPlayerBroadcastHandler {
 //                        "\bplayList: ${playList}",
 //                    ).joinToString("\n")
 //                )
-                val context = musicPlayerService.applicationContext
                 BroadcastSender.normalSend(
                     context,
                     BroadCastIntentSchemeMusicPlayer.PLAY_MUSIC_PLAYER.action,
@@ -170,34 +169,63 @@ object MusicPlayerBroadcastHandler {
                     musicPlayerService,
                     playList,
                     musicPlayerService.currentTrackIndex,
+                    musicPlayerService.getFileListBeforePlayMode(),
                 )
             }
             BroadCastIntentSchemeMusicPlayer.NOTI_UPDATE
-            -> {
-                val uriTitle = intent.getStringExtra(
-                    broadcastIntentAction.scheme
-                ) ?: return
-                val timeHolder = PlayNotiLauncher.timeHolderCreator(
-                    musicPlayerService.mediaPlayer?.currentPosition,
-                    musicPlayerService.currentTrackLength
-                )
-                val header = PlayNotiLauncher.notiTitleCreator(
-                    timeHolder,
-                    uriTitle,
-                    musicPlayerService.currentTrackIndex,
-                    playList,
-                )
-                PlayNotiLauncher.launch(
-                    musicPlayerService,
-                    header,
-                    uriTitle,
-                )
-                musicPlayerService.infoFileForMediaPlayer?.savePlayInfo(
-                    musicPlayerService.currentTrackIndex,
-                    playList,
-                )
-            }
+            -> execNotiUpdate(
+                musicPlayerService,
+                intent,
+                broadcastIntentAction,
+                playList,
+            )
         }
+    }
+
+    private fun execNotiUpdate(
+        musicPlayerService: MusicPlayerService,
+        intent: Intent,
+        broadcastIntentAction: BroadCastIntentSchemeMusicPlayer,
+        playList: List<String>,
+    ){
+        val context = musicPlayerService.applicationContext
+        val uriTitle = intent.getStringExtra(
+            broadcastIntentAction.scheme
+        ) ?: return
+        val currentPosition = musicPlayerService.mediaPlayer?.currentPosition
+        val currentTrackLength = musicPlayerService.currentTrackLength
+        val timeHolder = PlayNotiLauncher.timeHolderCreator(
+            musicPlayerService.mediaPlayer?.currentPosition,
+            musicPlayerService.currentTrackLength
+        )
+        val currentTrackIndex = musicPlayerService.currentTrackIndex
+        val header = PlayNotiLauncher.notiTitleCreator(
+            timeHolder,
+            uriTitle,
+            currentTrackIndex,
+            playList,
+        )
+        PlayNotiLauncher.launch(
+            musicPlayerService,
+            header,
+            uriTitle,
+        )
+        val shellPath = musicPlayerService.getShellPath()
+        val shellArgs = musicPlayerService.getShellArgs()
+        ExecShellForMusicPlayer.exec(
+            context,
+            shellPath,
+            shellArgs,
+            playList.getOrNull(currentTrackIndex) ?: String(),
+            currentTrackIndex,
+            playList.size.toString(),
+            MiliToDisplayTimeForMusic.convert(currentPosition),
+            MiliToDisplayTimeForMusic.convert(currentTrackLength),
+        )
+        musicPlayerService.infoFileForMediaPlayer?.savePlayInfo(
+            musicPlayerService.currentTrackIndex,
+            musicPlayerService.getFileListBeforePlayMode(),
+        )
     }
 
     private fun restartJudge(

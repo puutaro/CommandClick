@@ -110,6 +110,20 @@ object MediaPlayerIntentSender {
             scriptRawNameScheme,
             fannelRawName
         )
+        val shellPathScheme = MusicPlayerIntentExtra.SHELL_PATH.scheme
+        extraSettingMap.get(shellPathScheme).let {
+            musicPlayerServiceIntent.putExtra(
+                shellPathScheme,
+                it
+            )
+        }
+        val shellArgsScheme = MusicPlayerIntentExtra.SHELL_ARGS.scheme
+        extraSettingMap.get(shellArgsScheme).let {
+            musicPlayerServiceIntent.putExtra(
+                shellArgsScheme,
+                it
+            )
+        }
         context?.startForegroundService(musicPlayerServiceIntent)
     }
 }

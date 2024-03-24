@@ -39,30 +39,15 @@ object PlayNotiLauncher {
         currentTrackLength: Int?,
     ): String {
 
-        val displayCurrentPosi = convertMilliToDisplayTime(
+        val displayCurrentPosi = MiliToDisplayTimeForMusic.convert(
             currentPosi,
         )
-        val displayCurrentTrackLength = convertMilliToDisplayTime(
+        val displayCurrentTrackLength = MiliToDisplayTimeForMusic.convert(
             currentTrackLength,
         )
          return "[${displayCurrentPosi}/${displayCurrentTrackLength}]"
     }
 
-    private fun convertMilliToDisplayTime(
-        currentPosi: Int?
-    ): String {
-        if(
-            currentPosi == null
-        ) return String()
-        var millis = currentPosi.toLong()
-        val hours = TimeUnit.MILLISECONDS.toHours(millis)
-        millis -= TimeUnit.HOURS.toMillis(hours)
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(millis)
-        millis -= TimeUnit.MINUTES.toMillis(minutes)
-        val seconds = TimeUnit.MILLISECONDS.toSeconds(millis)
-        return "${hours}:${minutes}:${seconds}"
-
-    }
     fun notiTitleCreator(
         timeHolder: String,
         uriTitle: String,

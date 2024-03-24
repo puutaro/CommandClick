@@ -96,10 +96,6 @@ object IntentRequestMonitor {
                     )
                     ubuntuService.intentMonitorServerSocket?.accept()
                 } catch (e:Exception){
-                    LogSystems.stdErr(
-                        context,
-                        "${e}"
-                    )
                     isTerminated = true
                     null
                 }

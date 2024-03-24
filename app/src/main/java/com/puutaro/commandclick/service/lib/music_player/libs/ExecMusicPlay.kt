@@ -22,6 +22,7 @@ object ExecMusicPlay {
         musicPlayerService: MusicPlayerService,
         playList: List<String>,
         playIndex: Int,
+        fileListConBeforePlayMode: String,
     ){
         musicPlayerService.notiSetter?.setOnStop()
         val isYtUrl = judgeYtUri(
@@ -30,7 +31,7 @@ object ExecMusicPlay {
         ) ?: return
         musicPlayerService.infoFileForMediaPlayer?.savePlayInfo(
             playIndex,
-            playList,
+            fileListConBeforePlayMode,
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "musicExecPlay.txt").absolutePath,

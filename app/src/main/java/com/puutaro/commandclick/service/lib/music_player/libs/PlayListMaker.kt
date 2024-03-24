@@ -1,16 +1,14 @@
 package com.puutaro.commandclick.service.lib.music_player.libs
 
-import com.puutaro.commandclick.util.file.ReadText
-
 object PlayListMaker {
     fun make(
-        listFilePath: String,
+        inFileListBeforePlayMode: List<String>,
         playMode: String?,
         onRoop: String?,
         playNumber: String?,
     ): List<String> {
         return makePlayList(
-            listFilePath,
+            inFileListBeforePlayMode,
             playMode,
             onRoop,
             playNumber,
@@ -18,21 +16,18 @@ object PlayListMaker {
     }
 
     private fun makePlayList(
-        listFilePath: String,
+        inFileListBeforePlayMode: List<String>,
         playMode: String?,
         onRoop: String?,
         playNumber: String?,
     ): List<String>? {
-        val fileListBeforePlayMode = ReadText(
-            listFilePath
-        ).textToList()
         val repeatTimes = 100
         return when(
             playMode
         ){
             PlayModeType.reverse.name -> {
                 val fileListBeforePlayModeReversed =
-                    fileListBeforePlayMode.reversed()
+                    inFileListBeforePlayMode.reversed()
                 if(
                     onRoop.isNullOrEmpty()
                 ) return fileListBeforePlayModeReversed
@@ -43,9 +38,9 @@ object PlayListMaker {
             PlayModeType.shuffle.name -> {
                 if(
                     onRoop.isNullOrEmpty()
-                ) return fileListBeforePlayMode.shuffled()
+                ) return inFileListBeforePlayMode.shuffled()
                 (1..repeatTimes).map {
-                    fileListBeforePlayMode.shuffled()
+                    inFileListBeforePlayMode.shuffled()
                 }.flatten()
             }
             PlayModeType.number.name -> {
@@ -53,7 +48,7 @@ object PlayListMaker {
                     val numberModeNum = playNumber?.toInt()
                         ?: -1
                     val fileListBeforePlayModeNumber =
-                        listOf(fileListBeforePlayMode[numberModeNum-1])
+                        listOf(inFileListBeforePlayMode[numberModeNum-1])
                     if(
                         onRoop.isNullOrEmpty()
                     ) return fileListBeforePlayModeNumber
@@ -67,9 +62,9 @@ object PlayListMaker {
             else -> {
                 if(
                     onRoop.isNullOrEmpty()
-                ) return fileListBeforePlayMode
+                ) return inFileListBeforePlayMode
                 (0..repeatTimes).map {
-                    fileListBeforePlayMode
+                    inFileListBeforePlayMode
                 }.flatten()
             }
         }

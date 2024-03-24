@@ -61,7 +61,7 @@ object WebChromeClientSetter {
             override fun onShowFileChooser(
                 mWebView:WebView,
                 filePathCallback:ValueCallback<Array<Uri>>,
-                fileChooserParams: WebChromeClient.FileChooserParams
+                fileChooserParams: FileChooserParams
             ):Boolean {
 
                 if(!terminalFragment.isVisible) return false
@@ -104,8 +104,9 @@ object WebChromeClientSetter {
             }
 
             override fun onConsoleMessage(cm: ConsoleMessage): Boolean {
-                val message = cm.message()
-                val noOutPutErr = !message.contains("Uncaught")
+                val message = cm.message().trim()
+                val noOutPutErr = message.isEmpty()
+                        || !message.contains("Uncaught")
                         || !message.lowercase().contains("error")
                         || !message.lowercase().contains("syntax")
                 if(
@@ -168,8 +169,9 @@ object WebChromeClientSetter {
                 if(
                     message.isNullOrEmpty()
                 ) return true
-                val context = terminalFragment.context
-                    ?: return true
+                if(
+                    context == null
+                ) return true
                 alertDialogObj = Dialog(
                     context
                 )
@@ -222,8 +224,9 @@ object WebChromeClientSetter {
                 result: JsResult
             ): Boolean {
                 if(message.isNullOrEmpty()) return true
-                val context = terminalFragment.context
-                    ?: return false
+                if(
+                    context == null
+                ) return false
                 confirmDialogObj = Dialog(
                     context
                 )
@@ -283,8 +286,9 @@ object WebChromeClientSetter {
                 defaultValue: String?,
                 result: JsPromptResult
             ): Boolean {
-                val context = terminalFragment.context
-                    ?: return true
+                if(
+                    context == null
+                ) return true
 
                 promptDialogObj = Dialog(
                     context

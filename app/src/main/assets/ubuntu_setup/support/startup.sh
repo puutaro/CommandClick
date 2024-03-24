@@ -257,7 +257,7 @@ pulseaudioSetup(){
 			*)	
 				echo "UBUNTU_PC_PULSE_SET_SERVER_PORT ${UBUNTU_PC_PULSE_SET_SERVER_PORT}"
 				sh -c "\${shellCon}"
-				ok_count=\$((ok_count + 1))
+				ok_count=\$((\${ok_count} + 1))
 				echo "ok_count: \${ok_count}"
 				;;
 		esac

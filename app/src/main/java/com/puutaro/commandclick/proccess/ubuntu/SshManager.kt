@@ -100,10 +100,8 @@ object SshManager {
         } catch (e: java.lang.Exception) {
             channel?.disconnect()
             session?.disconnect()
-            LogSystems.stdErr(
-                context,
+            LogSystems.stdWarn(
                 e.toString()
-
             )
             return String()
         }
