@@ -67,9 +67,8 @@ object SearchViewAndAutoCompUpdater {
         } else url ?:return
         val searchViewText = if(
             searchViewTextSource.startsWith(escapeStr)
-        ) {
-            String()
-        } else searchViewTextSource
+        ) String()
+        else searchViewTextSource
         updateSearchViewString(
             terminalFragment,
             commandIndexFragment,
@@ -141,14 +140,12 @@ internal fun queryUrlToText(
         decordedUrlLength,
         '#'
     )
-    val subStrEndPosi = if(
-        anpasadPosi > sharpPosi
-    ){
-        sharpPosi
-    } else {
-        anpasadPosi
-    }
-    return decordedUrl.substring(0, subStrEndPosi)
+    val subStrEndPosi =
+        when(anpasadPosi > sharpPosi){
+            true -> sharpPosi
+            else -> anpasadPosi
+        }
+    return decordedUrl.take(subStrEndPosi + 1)
 }
 
 
@@ -159,11 +156,8 @@ internal fun makeStrPosi(
 ): Int {
     val escapeStrNum = decordedUrlLength
     val sharpPosiSource = targetUrl.indexOf(posiTargetChar)
-    return if (
-        sharpPosiSource == -1
-    ) {
-        escapeStrNum
-    } else {
-        sharpPosiSource
+    return when (sharpPosiSource == -1) {
+        true -> escapeStrNum
+        else -> sharpPosiSource
     }
 }

@@ -125,15 +125,12 @@ object WrapWebHistoryUpdater {
 
         val ulrTitle = QuoteTool.trimBothEdgeQuote(webViewTitle)
         val escapeStr = WebUrlVariables.escapeStr
-        if (ulrTitle.endsWith("\t${escapeStr}")) return
+        if (
+            ulrTitle.endsWith("\t${escapeStr}")
+        ) return
 
         val urlCheckResult = EnableUrlPrefix.isHttpOrFilePrefix(webViewUrl)
         if(!urlCheckResult) return
-//        val isFDialogFannelUri =
-//            FDialogTempFile.howFDialogFile(
-//                File(webViewUrl ?: String()).name
-//            )
-//        if(isFDialogFannelUri) return
         val searchViewTextSource = if(
             webViewUrl?.startsWith(WebUrlVariables.queryUrl) == true
         ) {
@@ -148,14 +145,17 @@ object WrapWebHistoryUpdater {
             searchViewText.isEmpty()
         ) return
 
-        val appUrlSystemDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
-        val cmdclickUrlHistoryFileName = UsePath.cmdclickUrlHistoryFileName
+        val appUrlSystemDirPath =
+            "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"
+        val cmdclickUrlHistoryFileName =
+            UsePath.cmdclickUrlHistoryFileName
         val takeHistoryNum = 500
-        val updatingHistory = "${ulrTitle}\t${webViewUrl}\n" + ReadText(
-            File(
-                appUrlSystemDirPath,
-                cmdclickUrlHistoryFileName
-            ).absolutePath
+        val updatingHistory =
+            "${ulrTitle}\t${webViewUrl}\n" + ReadText(
+                File(
+                    appUrlSystemDirPath,
+                    cmdclickUrlHistoryFileName
+                ).absolutePath
         ).textToList().take(takeHistoryNum).joinToString("\n")
         FileSystems.writeFile(
             File(
