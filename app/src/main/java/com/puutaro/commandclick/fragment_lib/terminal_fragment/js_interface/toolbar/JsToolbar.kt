@@ -120,10 +120,14 @@ class JsToolbar(
 
     @JavascriptInterface
     fun addUrl_S(
+        title: String,
         urlString: String,
     ){
         CoroutineScope(Dispatchers.Main).launch {
             val siteTitle = withContext(Dispatchers.IO) {
+                if(
+                    title.isNotEmpty()
+                ) return@withContext title
                 val siteTitleSrc = SiteUrl.getTitle(
                     context,
                     urlString

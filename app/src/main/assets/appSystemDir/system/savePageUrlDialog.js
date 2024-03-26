@@ -6,9 +6,6 @@ setReplaceVariables="file://"
 
 
 const urlString = makeUrl();
-// jsToast.short(
-//     urlString + "--"
-// );
 if(!urlString) exitZero();
 launchWebview(urlString);
 

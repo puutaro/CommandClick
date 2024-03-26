@@ -29,7 +29,9 @@ object AddUrl {
             currentAppDirPath,
             urlStringOrMacro
         ) ?: String()
-        val onSearchBtn = argsMap.get(onSearchBtnKey) ?: String()
+        val onSearchBtn =
+            argsMap.get(onSearchBtnKey)
+                ?: String()
         ExecJsLoad.execExternalJs(
             editFragment,
             UsePath.cmdclickSystemAppDirPath,
