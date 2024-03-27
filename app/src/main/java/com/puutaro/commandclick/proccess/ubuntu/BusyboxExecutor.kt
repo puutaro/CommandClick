@@ -62,6 +62,20 @@ class BusyboxExecutor(
             commandSrc,
             envMap,
         )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "shellLog_getOuput.txt").absolutePath,
+//            listOf(
+//                "commandSrc: ${commandSrc}",
+//                "envMapSrc: ${envMapSrc}",
+//                "envMap: ${envMap}",
+//                "command: ${command}",
+//                "out ${execCommandForOutput(
+//                    listOf("sh", "-c", command),
+//                    null
+////            envMap
+//                )}",
+//            ).joinToString("\n\n\n")
+//        )
         return execCommandForOutput(
             listOf("sh", "-c", command),
             null

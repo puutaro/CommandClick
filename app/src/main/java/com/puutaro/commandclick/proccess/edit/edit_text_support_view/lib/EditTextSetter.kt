@@ -74,6 +74,11 @@ object EditTextSetter {
             if(it != UnderLineValue.OFF.name) return@let
             insertEditText.setBackgroundResource(android.R.color.transparent)
         }
+        editTextPropertyMap?.get(
+            EditTextPropertySettingKey.HINT.key
+        )?.let {
+            insertEditText.hint = it
+        }
         insertEditText.setSelectAllOnFocus(true)
         val layoutHeight = editTextPropertyMap?.get(
             EditTextPropertySettingKey.HEIGHT.key
@@ -111,6 +116,7 @@ object EditTextSetter {
         SIZE("size"),
         HEIGHT("height"),
         ON_UNDER_LINE("onUnderLine"),
+        HINT("hint"),
         SHELL_PATH("shellPath"),
         SHELL_CON("shellCon"),
         ARGS("args"),

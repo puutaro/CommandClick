@@ -8,10 +8,11 @@ import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 
-private enum class RepValKeyForTts(
+private enum class RepValKeyForMusic(
     val key: String
 ){
     PLAY_PATH("playPath"),
+    PLAY_TITLE("playTitle"),
     CURRENT_POSI("currentPosi"),
     TOTAL_POSI("totalPosi"),
     CURRENT_SEEK("currentSeek"),
@@ -24,6 +25,7 @@ object ExecShellForMusicPlayer {
         shellPath: String,
         shellArgs: String,
         playPath: String,
+        uriTitle: String,
         currentOrder: Int,
         loopTimes: String,
         currentSeek: String,
@@ -34,11 +36,12 @@ object ExecShellForMusicPlayer {
             '!'
         ).toMap()
         val repValMapForTts = mapOf(
-            RepValKeyForTts.PLAY_PATH.key to playPath,
-            RepValKeyForTts.CURRENT_POSI.key to currentOrder.toString(),
-            RepValKeyForTts.TOTAL_POSI.key to loopTimes,
-            RepValKeyForTts.CURRENT_SEEK.key to currentSeek,
-            RepValKeyForTts.TOTAL_SEEK.key to totalSeek,
+            RepValKeyForMusic.PLAY_TITLE.key to uriTitle,
+            RepValKeyForMusic.PLAY_PATH.key to playPath,
+            RepValKeyForMusic.CURRENT_POSI.key to currentOrder.toString(),
+            RepValKeyForMusic.TOTAL_POSI.key to loopTimes,
+            RepValKeyForMusic.CURRENT_SEEK.key to currentSeek,
+            RepValKeyForMusic.TOTAL_SEEK.key to totalSeek,
         ) + shellRepValMap
         val setReplaceVariableMap =
             SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(

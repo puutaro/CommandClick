@@ -1,11 +1,25 @@
 
+function echoPlayTitle(){
+  local playTitle='${playTitle}'
+  local playTitleStr="$(printf "%c%s" '$' '{playTitle}')"
+  case "${playTitle}" in
+    "${playTitleStr}")
+      basename "${playPath}"
+        ;;
+    *)
+      echo "${playTitle}"
+      ;;
+  esac
+}
+
 if [ ! -f "${savePath}"  ]; then
   touch "${savePath}"
 fi
-insertCon="$(basename "${playPath}")\t${playPath}"
-previousCon=$(cat "${savePath}")
+
+readonly insertCon="$(echoPlayTitle)\t${playPath}"
+readonly previousCon=$(cat "${savePath}")
 sleep 0.1
-updatePriviousCon=$(\
+readonly updatePriviousCon=$(\
   echo -e "${insertCon}\n${previousCon}" \
   | ${b} sort \
   | ${b} uniq \

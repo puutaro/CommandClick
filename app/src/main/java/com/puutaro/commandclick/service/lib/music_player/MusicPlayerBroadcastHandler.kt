@@ -217,6 +217,7 @@ object MusicPlayerBroadcastHandler {
             shellPath,
             shellArgs,
             playList.getOrNull(currentTrackIndex) ?: String(),
+            uriTitle,
             currentTrackIndex,
             playList.size.toString(),
             MiliToDisplayTimeForMusic.convert(currentPosition),
