@@ -346,7 +346,7 @@ class EditFragment: Fragment() {
             )
             binding.editToolBarLinearLayout.isVisible = if(
                 isOpen
-            ) !existIndexList
+            ) !existIndexList || (existIndexList && !binding.editListSearchEditText.isVisible)
             else true
             val isOpenKeyboard = if(
                 isOpen
