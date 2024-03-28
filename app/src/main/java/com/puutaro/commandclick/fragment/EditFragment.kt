@@ -344,15 +344,22 @@ class EditFragment: Fragment() {
                 this,
                 isOpen
             )
-            binding.editToolBarLinearLayout.isVisible = if(
-                isOpen
-            ) !existIndexList || (existIndexList && !binding.editListSearchEditText.isVisible)
-            else true
-            val isOpenKeyboard = if(
-                isOpen
-            ) onTermVisibleWhenKeyboard !=
-                        SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
-            else isOpen
+            binding.editToolBarLinearLayout.isVisible =
+                when(isOpen) {
+                    true -> {
+                        val isNotSearchTextWhenIndexList =
+                            (existIndexList && !binding.editListSearchEditText.isVisible)
+                        !existIndexList
+                                || isNotSearchTextWhenIndexList
+                    }
+                    else -> true
+                }
+            val isOpenKeyboard =
+                when(isOpen) {
+                    true -> onTermVisibleWhenKeyboard !=
+                            SettingVariableSelects.OnTermVisibleWhenKeyboardSelects.ON.name
+                    else -> isOpen
+                }
             listener?.onKeyBoardVisibleChangeForEditFragment(
                 isOpenKeyboard,
                 this.isVisible
