@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSe
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsActionCompleterForToolbar
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
+import com.puutaro.commandclick.util.Keyboard
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 class ToolbarButtonHandler(
@@ -29,7 +30,7 @@ class ToolbarButtonHandler(
             toolbarButtonBariantForEdit,
             isLongClick,
         )
-
+        Keyboard.hiddenKeyboardForFragment(editFragment)
         MonitorSizing.handle(
             editFragment,
             toolbarButtonArgsMaker,
