@@ -199,15 +199,13 @@ object ButtonViewProducer {
                 it,
                 '!'
             )
-        }
-//            .split("!")
-            .firstOrNull()
+        }.firstOrNull()
             ?: String()
         if(
             execCmdEditable.isNullOrEmpty()
             && cmdPrefix.isEmpty()
         ) return
-        val innerExecCmd =  makeInnerExecCmd(
+        val innerExecCmd = makeInnerExecCmd(
             cmdPrefix,
             execCmdEditable.toString(),
         )
