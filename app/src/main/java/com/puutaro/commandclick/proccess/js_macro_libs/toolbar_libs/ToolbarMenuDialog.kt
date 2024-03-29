@@ -204,7 +204,8 @@ object ToolbarMenuDialog {
                         settingButtonMenuPairList,
                         clickedMenuName
                     ),
-                    setReplaceVariableMap
+                    setReplaceVariableMap,
+                    mainOrSubFannelPath
                 )
                 JsPathHandlerForToolbarButton.handle(
                     fragment,

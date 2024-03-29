@@ -381,12 +381,14 @@ object JavaScriptLoadUrl {
                 "})();"
     }
 
-    private fun makeReplaceVariableTableTsv(
+    fun makeReplaceVariableTableTsv(
         setReplaceVariableMap:  Map<String, String>?,
         recentAppDirPath: String,
         scriptFileName: String,
     ){
-        if(setReplaceVariableMap.isNullOrEmpty()) return
+        if(
+            setReplaceVariableMap.isNullOrEmpty()
+        ) return
         val preWordTsvTable = ScriptPreWordReplacer.makeTsvTable(
             recentAppDirPath,
             scriptFileName,

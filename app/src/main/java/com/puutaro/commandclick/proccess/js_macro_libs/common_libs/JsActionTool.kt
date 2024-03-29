@@ -13,12 +13,17 @@ import com.puutaro.commandclick.proccess.import.JsImportManager
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsPathMacroForListIndex
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.JsMacroForQr
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 
 object JsActionTool {
@@ -85,11 +90,16 @@ object JsActionTool {
         readSharePreferenceMap: Map<String, String>,
         keyToSubKeyCon: String?,
         setReplaceVariableMapSrc: Map<String, String>?,
+        mainOrSubFannelPath: String,
     ): Map<String, String>? {
         val setReplaceVariableMap = makeSetRepValMap(
             fragment,
             readSharePreferenceMap,
             setReplaceVariableMapSrc
+        )
+        makeReplaceVariableTsv(
+            setReplaceVariableMap,
+            mainOrSubFannelPath,
         )
         val keyToSubMapTypeMap = createKeyToSubMapTypeMap(
             readSharePreferenceMap,
@@ -1601,6 +1611,40 @@ private object AfterJsConMaker {
             "//_/_/_/ ${logVarName} start",
             "jsFileSystem.stdLog(\"${logVarName}\");",
         ).joinToString("\n")
+    }
+}
+
+private fun makeReplaceVariableTsv(
+    setReplaceVariableMap: Map<String, String>?,
+    execJsPath: String,
+){
+    if(
+        setReplaceVariableMap.isNullOrEmpty()
+        || execJsPath.isEmpty()
+    ) return
+    CoroutineScope(Dispatchers.IO).launch {
+        val mainCurrentAppDirPath = CcPathTool.getMainAppDirPath(
+            execJsPath
+        )
+        val mainFannelName = File(
+            CcPathTool.getMainFannelFilePath(
+                execJsPath
+            )
+        ).name
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "ubuntu.txt").absolutePath,
+//            listOf(
+//                "execJsPath: ${execJsPath}",
+//                "mainCurrentAppDirPath: ${mainCurrentAppDirPath}",
+//                "mainFannelName: ${mainFannelName}",
+//                "setReplaceVariableMap: ${setReplaceVariableMap}"
+//            ).joinToString("\n\n\n")
+//        )
+        JavaScriptLoadUrl.makeReplaceVariableTableTsv(
+            setReplaceVariableMap,
+            mainCurrentAppDirPath,
+            mainFannelName,
+        )
     }
 }
 

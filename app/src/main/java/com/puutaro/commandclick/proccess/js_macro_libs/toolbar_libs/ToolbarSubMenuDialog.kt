@@ -150,6 +150,7 @@ object ToolbarSubMenuDialog {
                     clickedSubMenuName
                 ),
                 setReplaceVariableMap,
+                mainOrSubFannelPath
             )
             JsPathHandlerForToolbarButton.handle(
                 fragment,

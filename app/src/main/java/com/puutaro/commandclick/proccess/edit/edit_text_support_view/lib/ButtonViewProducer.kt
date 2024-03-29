@@ -20,7 +20,7 @@ import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.Set
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.button.JsPathForEditButton
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
-import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
 import com.puutaro.commandclick.proccess.edit.lib.ListPathGetterForDragSort
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
@@ -186,7 +186,10 @@ object ButtonViewProducer {
         )
 
         buttonEventArgs.scriptFileSaver.save()
-        saveListContents(editFragment, currentButtonTag)
+        ListContentsSaverByTag.save(
+            editFragment,
+            listOf(currentButtonTag)
+        )
         val execCmdEditable = buttonEventArgs.insertEditText.text
         val isExecCmd = !buttonMap?.get(
             ButtonEditKey.cmd.name
@@ -562,94 +565,6 @@ object ButtonViewProducer {
             }
             else -> {}
         }
-    }
-
-    private fun saveListContents(
-        editFragment: EditFragment,
-        currentButtonTag: String?
-    ){
-        if(
-            currentButtonTag.isNullOrEmpty()
-        ) return
-        val saveTagsKey = ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveTags.name
-        val listContentsMap = editFragment.listConSelectBoxMapList.firstOrNull {
-            it?.get(saveTagsKey) == currentButtonTag
-        }
-        if(
-            listContentsMap.isNullOrEmpty()
-        ) return
-        val saveTargetListFilePath =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.listPath.name
-            )
-        if(
-            saveTargetListFilePath.isNullOrEmpty()
-        ) return
-        val saveValName =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveValName.name
-            )
-        if(
-            saveValName.isNullOrEmpty()
-        ) return
-        val saveFilterShellPath =
-            listContentsMap.get(
-                ListContentsSelectSpinnerViewProducer.ListContentsEditKey.saveFilterShellPath.name
-            )
-        val filterSaveValue = when(saveFilterShellPath.isNullOrEmpty()) {
-            true -> return
-            else -> makeShellConForListConSBFilter(
-                    editFragment,
-                    saveFilterShellPath,
-                    saveValName,
-                )
-        }
-        if(
-            filterSaveValue.isNullOrEmpty()
-        ) return
-        ListContentsSelectBoxTool.updateListFileCon(
-            saveTargetListFilePath,
-            filterSaveValue
-        )
-    }
-
-    private fun makeShellConForListConSBFilter(
-        editFragment: EditFragment,
-        saveFilterShellPath: String,
-        saveValName: String,
-    ): String? {
-        val saveTextCon = "\${CMDCLICK_TEXT_CONTENTS}"
-        val saveFilterShellPathObj = File(saveFilterShellPath)
-        val shellParentDirPath = saveFilterShellPathObj.parent
-            ?: return null
-        val readSharePreferenceMap = editFragment.readSharePreferenceMap
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
-        )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
-        )
-        val saveValue = EditVariableName.getText(
-            editFragment,
-            saveValName
-        )
-        val shellCon = ReadText(
-            File(
-                shellParentDirPath,
-                saveFilterShellPathObj.name
-            ).absolutePath
-        ).readText().replace(
-            saveTextCon,
-            saveValue
-        ).let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                editFragment.setReplaceVariableMap,
-                currentAppDirPath,
-                currentFannelName
-            )
-        }
-        return editFragment.busyboxExecutor?.getCmdOutput(shellCon)
     }
 
     private fun execListAddForSetting(

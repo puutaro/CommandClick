@@ -4,6 +4,10 @@ import android.widget.ImageButton
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ButtonViewProducer
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.ListContentsSelectSpinnerViewProducer
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSaverByTag
+import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.proccess.lib.ExecSetTermSizeForIntent
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ClickSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsActionCompleterForToolbar
@@ -25,6 +29,10 @@ class ToolbarButtonHandler(
             editFragment.toolbarButtonConfigMap?.get(
                 toolbarButtonBariantForEdit
             ) ?: mapOf()
+        ListContentsSaverByTag.save(
+            editFragment,
+            listOf(toolbarButtonBariantForEdit.str)
+        )
         val toolbarButtonArgsMaker = ToolbarButtonArgsMaker(
             editFragment,
             toolbarButtonBariantForEdit,
@@ -171,6 +179,7 @@ private object MonitorSizing{
         )
     }
 }
+
 
 enum class SettingButtonConfigMapKey(
     val key: String,

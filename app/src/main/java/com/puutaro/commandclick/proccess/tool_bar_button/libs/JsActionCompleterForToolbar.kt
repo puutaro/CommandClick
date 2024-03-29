@@ -5,6 +5,8 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonB
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs.ToolbarButtonArgsMaker
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
+import com.puutaro.commandclick.util.state.SharePrefTool
+import java.io.File
 
 object JsActionCompleterForToolbar {
 
@@ -44,11 +46,16 @@ object JsActionCompleterForToolbar {
     ): Map<String, String> {
         val readSharePreferenceMap =
             editFragment.readSharePreferenceMap
+        val mainFannelPath = File(
+            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
+            SharePrefTool.getCurrentFannelName(readSharePreferenceMap)
+        ).absolutePath
         val jsActionMapSrc = JsActionTool.makeJsActionMap(
             editFragment,
             readSharePreferenceMap,
             toolbarButtonConfigMap.get(buttonClickMapKey),
             editFragment.setReplaceVariableMap,
+            mainFannelPath
         )
 //        FileSystems.writeFile(
 //            File(

@@ -201,6 +201,7 @@ object ListIndexMenuLauncher {
                         clickedMenuName
                     ),
                     editFragment.setReplaceVariableMap,
+                    String()
                 )
                 JsPathHandlerForQrAndListIndex.handle(
                     editFragment,

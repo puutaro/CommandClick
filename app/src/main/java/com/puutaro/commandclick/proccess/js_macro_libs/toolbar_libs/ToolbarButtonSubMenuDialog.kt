@@ -121,6 +121,7 @@ object ToolbarButtonSubMenuDialog {
                     clickedSubMenu
                 ),
                 editFragment.setReplaceVariableMap,
+                String()
             )
             JsPathHandlerForToolbarButton.handle(
                 editFragment,

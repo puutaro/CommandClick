@@ -886,7 +886,7 @@ object IntentRequestMonitor {
     private fun makeHelpConForMusicPlayer(): String {
         val verticalBarSepalator = "|"
         val playModeSchema = MusicPlayerIntentExtra.PLAY_MODE.scheme
-        val onRoopSchema = MusicPlayerIntentExtra.ON_LOOP.scheme
+        val onLoopSchema = MusicPlayerIntentExtra.ON_LOOP.scheme
         val playNumberSchema = MusicPlayerIntentExtra.PLAY_NUMBER.scheme
         val onTrackSchema = MusicPlayerIntentExtra.ON_TRACK.scheme
         val importance = MusicPlayerIntentExtra.IMPORTANCE.scheme
@@ -911,7 +911,7 @@ object IntentRequestMonitor {
         optional key
             ${importance}: Notification importance, high/low
             ${playModeSchema}: Play mode switch: ordinaly(default), shuffle, reverse, number
-            ${onRoopSchema}: Some string: roop, "": no roop
+            ${onLoopSchema}: Some string: roop, "": no roop
             ${playNumberSchema}:  Play list order number string
             ${onTrackSchema}: Save track switch: "", on
         
@@ -925,10 +925,10 @@ object IntentRequestMonitor {
         
         ex)
             mplay \
-                -t "${TextToSpeechLaunchType.launch.name} \
+                -t "${MusicPlayerLaunchType.launch.name} \
                 -l "{play list path}" \
                 -e "${playModeSchema}=shuffle" \
-                -e "${onRoopSchema}=on" \
+                -e "${onLoopSchema}=on" \
                 -e "${onTrackSchema}=on" \
             
     """.trimIndent()

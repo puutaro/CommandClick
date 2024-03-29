@@ -141,6 +141,7 @@ object ListIndexSubMenuDialog {
                     clickedSubMenuName
                 ),
                 editFragment.setReplaceVariableMap,
+                String()
             )
             JsPathHandlerForQrAndListIndex.handle(
                 editFragment,

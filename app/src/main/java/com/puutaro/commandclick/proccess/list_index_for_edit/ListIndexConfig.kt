@@ -27,6 +27,7 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
 
 
@@ -67,11 +68,16 @@ object ListIndexEditConfig {
 //                "setReplaceVariableMap: ${editFragment.setReplaceVariableMap}"
 //            ).joinToString("\n\n")
 //        )
+        val mainFannelPath = File(
+            SharePrefTool.getCurrentAppDirPath(readSharePreferenceMap),
+            SharePrefTool.getCurrentFannelName(readSharePreferenceMap)
+        ).absolutePath
         val jsActionMap = JsActionTool.makeJsActionMap(
             editFragment,
             readSharePreferenceMap,
             clickConfigListCon,
             editFragment.setReplaceVariableMap,
+            mainFannelPath
         )
         val clickConfigPairList = CmdClickMap.createMap(
             clickConfigListCon,

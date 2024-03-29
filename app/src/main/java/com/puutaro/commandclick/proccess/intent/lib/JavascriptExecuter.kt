@@ -15,6 +15,7 @@ import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.BroadCastIntent
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.EnableTerminalWebView
 import com.puutaro.commandclick.util.JavaScriptLoadUrl

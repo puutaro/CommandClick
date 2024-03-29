@@ -1,4 +1,4 @@
-package com.puutaro.commandclick.fragment_lib.edit_fragment.common
+    package com.puutaro.commandclick.fragment_lib.edit_fragment.common
 
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment

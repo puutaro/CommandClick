@@ -86,6 +86,7 @@ object PopupSettingMenu {
                     menuPairList.first()
                 ),
                 editFragment.setReplaceVariableMap,
+                String()
             )
             JsPathHandlerForToolbarButton.handle(
                 editFragment,
@@ -234,6 +235,7 @@ object PopupSettingMenu {
                         clickedMenuName
                     ),
                     editFragment.setReplaceVariableMap,
+                    String()
                 )
 //                    FileSystems.writeFile(
 //                        File(UsePath.cmdclickDefaultAppDirPath, "jsNoHitMenu.txt").absolutePath,
