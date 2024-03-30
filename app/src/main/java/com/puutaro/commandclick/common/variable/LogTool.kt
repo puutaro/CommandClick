@@ -6,37 +6,107 @@ import com.puutaro.commandclick.util.file.FileSystems
 
 object LogTool {
     val logPrefix = "### "
-    val preTagHolder = "<pre style=\"color:%s;\">%s</pre>"
-    val spanTagHolder = "<span style=\"color:%s;\">%s</span>"
     val separator = "----------"
     val errMark = "ERROR"
     val errRedCode = "#ff0000"
-    val logGreen = "#086312"
-    val leadLogGreen = "#04b017"
-    val logBlack = "#000000"
-    val leadLogBlack = "#545454"
+    val logGreenPair = "#086312" to "#04b017"
+    val leadLogGreenPair = "#04b017" to "#077814"
+    val logBlackPair = "#000000" to "#0e6266"
+//    val logBluePair = "#0e6266" to "#2e888c"
+    val leadLogBlackPair = "#545454" to "#4f574d"
+
+    fun makeTopSpanLogTagHolder(
+        color: String,
+        con: String,
+    ): String {
+        val spanTagHolder = "<span style=\"color:%s;\">%s</span>"
+        return spanTagHolder.format(color, con)
+    }
+
+    fun makeTopPreTagLogTagHolder(
+        color: String,
+        con: String,
+    ): String {
+        val preTagHolder = "<pre style=\"color:%s;\">%s</pre>"
+        return preTagHolder.format(color, con)
+    }
+    private fun makePreTagHolder(
+        colorPair: Pair<String, String>,
+        conSrc: String,
+    ): String {
+//        val preTagHolder = "<pre style=\"color:%s;\">%s</pre>"
+        val preTagHolder = "<pre>%s</pre>"
+        val con = conSrc.split("\n").mapIndexed {
+            index, line ->
+            val colorStr = when(
+                index % 2 == 0
+            ){
+                true -> colorPair.first
+                else -> colorPair.second
+            }
+            execMakeSpanTagHolder(colorStr, line)
+        }.joinToString("\n")
+        return preTagHolder.format(con)
+    }
+
+    fun makeSpanTagHolder(
+        colorPair: Pair<String, String>,
+        conSrc: String,
+    ): String {
+//        val preTagHolder = "<pre style=\"color:%s;\">%s</pre>"
+        val preTagHolder = "<span>%s</span>"
+        return  conSrc.split("\n").mapIndexed {
+                index, line ->
+            val colorStr = when(
+                index % 2 == 0
+            ){
+                true -> colorPair.first
+                else -> colorPair.second
+            }
+            execMakeSpanTagHolder(colorStr, line)
+        }.joinToString("\n")
+//        return preTagHolder.format(con)
+    }
+
+    private fun execMakeSpanTagHolder(
+        color: String,
+        con: String,
+    ): String {
+        val spanTagHolder = "<span style=\"color:%s;\">%s</span>"
+        return spanTagHolder.format(color, con)
+    }
+
+
+    private val escapeErrMessageList = listOf(
+        "Java exception was raised during method invocation"
+    )
+    fun howEscapeErrMessage (errMessage: String): Boolean {
+        return escapeErrMessageList.any {
+            errMessage.contains(it)
+        }
+    }
 
     fun makeColorCode(
         times: Int,
-    ): String {
-        val logGreenCode = logGreen
-        val logBlackCode = logBlack
+    ): Pair<String, String> {
+        val logGreenCodePair = logGreenPair
+        val logBlackCodePair = logBlackPair
         val isEven = times % 2 == 0
         return when(isEven){
-            false -> logGreenCode
-            else -> logBlackCode
+            false -> logGreenCodePair
+            else -> logBlackCodePair
         }
     }
 
     fun makeLeadColorCode(
         times: Int,
-    ): String {
-        val leadLogGreenCode = leadLogGreen
-        val leadLogBlackCode = leadLogBlack
+    ): Pair<String, String> {
+        val leadLogGreenCodePair = leadLogGreenPair
+        val leadLogBlackCodePair = leadLogBlackPair
         val isEven = times % 2 == 0
         return when(isEven){
-            false -> leadLogGreenCode
-            else -> leadLogBlackCode
+            false -> leadLogGreenCodePair
+            else -> leadLogBlackCodePair
         }
     }
 
@@ -45,25 +115,34 @@ object LogTool {
         jsActionMap: Map<String, String>?
     ){
         var times = 0
-        val preTagHolder = LogTool.preTagHolder
+//        LogTool.preTagHolder
         val jsActionMapLogCon = jsActionMap?.filterKeys {
             it.isNotEmpty()
         }?.map {
-            val colorStr =
+            val colorStrPair =
                 makeColorCode(times)
             times++
-            preTagHolder.format(
-                colorStr,
+            makePreTagHolder(
+                colorStrPair,
                 "${it.key}: ${it.value}",
             )
+//            preTagHolder.format(
+//                colorStrPair,
+//                "${it.key}: ${it.value}",
+//            )
         }?.joinToString("\n")
         val displayJsAcSrc = makeDisplayJsAcSrc(
             jsAcKeyToSubKeyCon
         )
-        val srcPreTag = preTagHolder.format(
-            makeColorCode(times),
+        val colorStrPair = makeColorCode(times)
+        val srcPreTag = makePreTagHolder(
+            colorStrPair,
             "src: ${displayJsAcSrc}"
         )
+//            preTagHolder.format(
+//            makeColorCode(times),
+//            "src: ${displayJsAcSrc}"
+//        )
         FileSystems.writeFile(
             UsePath.jsDebugReportPath,
             listOf(

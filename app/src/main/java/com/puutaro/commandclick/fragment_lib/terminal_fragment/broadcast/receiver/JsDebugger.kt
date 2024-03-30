@@ -239,7 +239,7 @@ object JsDebugger {
         val logPrefixRegex = Regex(
             "^${LogSystems.logPrefix}"
         )
-        val spanTagHolder = LogTool.spanTagHolder
+//        val spanTagHolder = LogTool.spanTagHolder
         val errMark = LogTool.errMark
         var times = 0
         val sysLogCon = ReadText(
@@ -271,21 +271,33 @@ object JsDebugger {
             )
             times++
             listOf(
-                spanTagHolder.format(
+                LogTool.makeSpanTagHolder(
                     leadColorStr,
                     lead
                 ),
-                spanTagHolder.format(
+//                spanTagHolder.format(
+//                    leadColorStr,
+//                    lead
+//                ),
+                LogTool.makeSpanTagHolder(
                     colorStr,
                     body.trim().trim('\n')
                 )
+//                spanTagHolder.format(
+//                    colorStr,
+//                    body.trim().trim('\n')
+//                )
             ).joinToString("\n") + "\n\n"
         }.joinToString("\n").replace(
             errMark,
-            spanTagHolder.format(
+            LogTool.makeTopSpanLogTagHolder(
                 LogTool.errRedCode,
                 errMark
             )
+//            spanTagHolder.format(
+//                LogTool.errRedCode,
+//                errMark
+//            )
         ).replace(
             "\n{4,}".toRegex(),
             "\n\n\n"

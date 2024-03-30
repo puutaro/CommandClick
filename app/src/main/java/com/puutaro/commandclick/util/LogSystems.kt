@@ -44,10 +44,13 @@ object LogSystems {
         context: Context?,
         errContents: String,
         debugNotiJanre: String = BroadCastIntentExtraForJsDebug.DebugGenre.SYS_ERR.type,
-        notiLevel: String = BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level
+        notiLevelSrc: String = BroadCastIntentExtraForJsDebug.NotiLevelType.HIGH.level
     ){
         val st = Thread.currentThread().stackTrace[3]
         val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${LogTool.errMark}\n${errContents}"
+        val escapeErrMessageList = listOf(
+            "Java exception was raised during method invocation"
+        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(
@@ -59,6 +62,12 @@ object LogSystems {
                 )
             }
             withContext(Dispatchers.IO){
+                val notiLevel = when(
+                    LogTool.howEscapeErrMessage(line)
+                ){
+                    true -> BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
+                    else -> notiLevelSrc
+                }
                 sendDebugNoti(
                     context,
                     debugNotiJanre,

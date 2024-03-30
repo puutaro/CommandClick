@@ -201,10 +201,18 @@ class JsFileSystem(
         path: String,
         con: String,
     ){
-        val errEvidence = LogTool.preTagHolder.format(
+        val errEvidence = LogTool.makeTopPreTagLogTagHolder(
             LogTool.errRedCode,
             con
         )
+//            LogTool.preTagHolder.format(
+//            LogTool.errRedCode,
+//            con
+//        )
+//        val bodyCon = LogTool.makeSpanTagHolder(
+//            LogTool.logGreenPair,
+//            ReadText(path).readText()
+//        )
         val saveCon = errEvidence + ReadText(
             path
         ).readText()

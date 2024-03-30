@@ -134,10 +134,10 @@ object WebChromeClientSetter {
                         val jsDebugCon = ReadText(
                             execDebugJsPath
                         ).readText()
-                        val errEvidence = LogTool.preTagHolder.format(
-                        LogTool.errRedCode,
-                        "[${LogTool.errMark}]\n${output}"
-                    )
+                        val errEvidence = LogTool.makeTopSpanLogTagHolder(
+                            LogTool.errRedCode,
+                            "[${LogTool.errMark}]\n${output}"
+                        )
                         FileSystems.writeFile(
                             execDebugJsPath,
                             "\n${errEvidence}\n\n${jsDebugCon}"
@@ -148,7 +148,7 @@ object WebChromeClientSetter {
                             context,
                             output,
                             debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type,
-                            notiLevel = BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
+                            notiLevelSrc = BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
                         )
                         Log.e(
                             packageName,
