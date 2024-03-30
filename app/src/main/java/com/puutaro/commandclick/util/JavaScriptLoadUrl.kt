@@ -374,7 +374,7 @@ object JavaScriptLoadUrl {
                     "try{${loadJsUrl}} catch(error){" +
                         "const errMessage = error.message;" +
                         "if(errMessage.includes(\"exitZero\")){return;};" +
-                        "jsToast.short(`ERROR ${'$'}{errMessage}`);" +
+                        "jsToast.errLog(`ERROR ${'$'}{errMessage}`);" +
                         "jsFileSystem.revUpdateFile(\"${UsePath.jsDebugReportPath}\", `\\n[${LogTool.errMark}]\\n${'$'}{errMessage}\\n\\n`);" +
                         "jsFileSystem.errJsLog(errMessage);" +
                     "};" +

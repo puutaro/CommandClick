@@ -3,6 +3,7 @@ package com.puutaro.commandclick.proccess.intent.lib
 import android.webkit.WebView
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.R
+import com.puutaro.commandclick.common.variable.LogTool
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -119,7 +120,7 @@ object JavascriptExecuter {
             execJsPath
         )
 //        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad_.txt").absolutePath,
+//            File(UsePath.cmdclickDefaultAppDirPath, "jsexecLoad000_.txt").absolutePath,
 //            listOf(
 //                "execJsPath: ${execJsPath}",
 //                "jsContentsListSource: ${execJsConList}",
@@ -134,10 +135,6 @@ object JavascriptExecuter {
                         context,
                         execJsPath
                     )
-//                    SharePrefTool.getReplaceVariableMap(
-//                        fragment,
-//                        null
-//                    )
                 val jsKeyToSubKeyListCon = SettingFile.readFromList(
                     execJsConList,
                     execJsPath,
@@ -179,12 +176,16 @@ object JavascriptExecuter {
                     extraRepValMap = extraMapCon
                 ) ?: String()
                 val separator = "----------"
+                val logSrcCon = LogTool.makeSpanTagHolder(
+                    LogTool.logGreenPair,
+                    execJsCon.replace(";", ";\n"),
+                )
                 FileSystems.writeFile(
                     UsePath.jsDebugReportPath,
                     listOf(
                         "[Normal JS]\n",
                         separator,
-                        execJsCon.replace(";", ";\n"),
+                        logSrcCon
                     ).joinToString("\n")
                 )
                 jsUrlLaunchHandler(
