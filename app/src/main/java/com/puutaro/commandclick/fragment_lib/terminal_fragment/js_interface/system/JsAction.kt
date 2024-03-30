@@ -3,6 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.sys
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.edit.lib.SettingFile
 import com.puutaro.commandclick.proccess.tool_bar_button.JsActionHandler
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -16,9 +17,18 @@ class JsAction(
     fun execByPath_S(
         jsActionPath: String,
     ){
-        val jsActionPairListCon = ReadText(
-            jsActionPath
-        ).readText()
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
+            jsActionPath,
+        )
+        val jsActionPairListCon = SettingFile.readFromList(
+            ReadText(jsActionPath).textToList(),
+            jsActionPath,
+            setReplaceVariableMap
+        )
+//        val jsActionPairListCon = ReadText(
+//            jsActionPath
+//        ).readText()
         if(
             jsActionPairListCon.isEmpty()
         ) return

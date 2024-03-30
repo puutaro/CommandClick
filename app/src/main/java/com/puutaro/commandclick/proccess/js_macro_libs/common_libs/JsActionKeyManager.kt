@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 
 
@@ -9,6 +10,7 @@ object JsActionKeyManager {
         val key: String
     ) {
         JS("js"),
+        JS_VAR("var"),
         JS_CON("jsCon"),
         JS_PATH("jsPath"),
         JS_IMPORT("jsImport"),
@@ -32,10 +34,12 @@ object JsActionKeyManager {
         OVERRIDE("override"),
         ID("id"),
         ARGS("args"),
+        PREFIX("prefix"),
         LOOP_ARG_NAMES("loopArgNames"),
         ON_RETURN("onReturn"),
         IF("if"),
         VAR("var"),
+        VAR_VALUE("value"),
         AFTER_JS_CON("afterJsCon"),
         AFTER("after"),
         DESC("desc"),
@@ -45,6 +49,9 @@ object JsActionKeyManager {
         END_TOAST("endToast"),
         ON_LOG("onLog")
     }
+
+    private val noQuotePrefix = "NO_QUOTE:"
+    private val jsConPrefix = "con:"
 
     object OverrideManager {
         enum class NoOverrideJsSubKey(val key: String){
@@ -85,7 +92,7 @@ object JsActionKeyManager {
         enum class ARGS_SETTING(
             val str: String,
         ) {
-            NO_QUOTE_PREFIX("NO_QUOTE:"),
+            NO_QUOTE_PREFIX(noQuotePrefix),
         }
 
         fun makeVarArgs(
@@ -111,7 +118,7 @@ object JsActionKeyManager {
     enum class FuncFrag(
         val flag: String,
     ){
-        VAR_PREFIX("var"),
+        VAR("var"),
     }
 
     enum class OnLogValue{
@@ -131,7 +138,7 @@ object JsActionKeyManager {
             FILTER_METHOD_SUFFIX_(".filter"),
             MAP_METHOD_SUFFIX_(".map"),
             FOR_EACH_METHOD_SUFFIX_(".forEach"),
-            JS_CON_PREFIX("con:")
+            JS_CON_PREFIX(jsConPrefix)
         }
 
         private enum class PipUnableFuncSuffix(
@@ -140,17 +147,17 @@ object JsActionKeyManager {
             MACRO("_S"),
         }
 
-        fun howPipAbleFunc(
-            firstFuncName: String?
-        ): Boolean {
-            if(
-                firstFuncName.isNullOrEmpty()
-            ) return false
-            return true
-//            PipUnableFuncSuffix.values().any {
-//                !firstFuncName.endsWith(it.suffix)
-//            }
-        }
+//        fun howPipAbleFunc(
+//            firstFuncName: String?
+//        ): Boolean {
+//            if(
+//                firstFuncName.isNullOrEmpty()
+//            ) return false
+//            return true
+////            PipUnableFuncSuffix.values().any {
+////                !firstFuncName.endsWith(it.suffix)
+////            }
+//        }
 
 
 
@@ -182,13 +189,37 @@ object JsActionKeyManager {
         }
     }
 
+    object JsVarManager {
+
+        fun makeVarValue(
+            jsMap: Map<String, String>
+        ): String {
+            val noQuotePrefix =
+                ArgsManager.ARGS_SETTING.NO_QUOTE_PREFIX.str
+            val varValue = QuoteTool.trimBothEdgeQuote(
+                jsMap.get(JsSubKey.VAR_VALUE.key)
+            )
+            return when(varValue.startsWith(noQuotePrefix)){
+                true -> varValue.removePrefix(noQuotePrefix)
+                else -> "`${varValue}`"
+            }
+        }
+    }
+
+    object JsConManager {
+        enum class Flag(
+            val flag: String
+        ) {
+            JS_CON_PREFIX(jsConPrefix),
+        }
+    }
+
 
     object JsPathManager {
         enum class Flag(
             val flag: String
         ) {
             JS_INTERFACE_PREFIX("js"),
-            JS_CON_PREFIX("con:"),
         }
 
         fun isJsInterface(

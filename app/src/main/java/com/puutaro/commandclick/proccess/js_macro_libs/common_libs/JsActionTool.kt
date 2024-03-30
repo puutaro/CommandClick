@@ -17,7 +17,6 @@ import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.VirtualSubFannel
@@ -473,15 +472,18 @@ object JsActionTool {
         mainKeyNameToSubKeyCon: Pair<String, Map<String, String>>
     ): Boolean {
         val mainKeyName = mainKeyNameToSubKeyCon.first
-        if(
-            mainKeyName == jsPathKeyName
-        ) return true
-        if(
-            mainKeyName != jsKeyName
-        ) return false
-        val subKeyMap = mainKeyNameToSubKeyCon.second
-        val funcName = subKeyMap.get(funcSubKeyName)?.trim()
-        return !JsActionKeyManager.JsFuncManager.howPipAbleFunc(funcName)
+        return mainKeyName == jsPathKeyName
+//        if(
+//            mainKeyName == jsPathKeyName
+//        ) return true
+//        return false
+//        if(
+//            mainKeyName != jsKeyName
+//        ) return false
+////        val subKeyMap = mainKeyNameToSubKeyCon.second
+////        val funcName = subKeyMap.get(funcSubKeyName)?.trim()
+//        return false
+//        !JsActionKeyManager.JsFuncManager.howPipAbleFunc(funcName)
     }
 
     private fun howFuncMacroComponent(
@@ -576,12 +578,12 @@ object JsActionTool {
     }
 
     private fun makeJsMapList(
-        keyToSubMapMapList: List<Pair<String, Map<String, String>>>?,
+        keyToSubMapList: List<Pair<String, Map<String, String>>>?,
     ): List<Map<String, String>> {
         if(
-            keyToSubMapMapList.isNullOrEmpty()
+            keyToSubMapList.isNullOrEmpty()
         ) return emptyList()
-        return keyToSubMapMapList.map {
+        return keyToSubMapList.map {
             val mainKeyName = it.first
             if(
                 mainKeyName != jsKeyName
@@ -603,7 +605,10 @@ private object KeyToSubKeyMapListMaker {
 
     private const val keySeparator = '|'
     val jsActionsKeyPlusList =
-        listOf(JsActionKeyManager.JsSubKey.ARGS.key) +
+        listOf(
+            JsActionKeyManager.JsSubKey.ARGS.key,
+            JsActionKeyManager.JsSubKey.VAR_VALUE.key,
+        ) +
                 JsActionKeyManager.JsActionsKey.values().map {
                     it.key
                 }
@@ -751,21 +756,23 @@ private object PairToMapInList {
     private val jsConMainKeyName = JsActionKeyManager.JsActionsKey.JS_CON.key
     private val jsPathKeyName = JsActionKeyManager.JsActionsKey.JS_PATH.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
+    private val varSubKeyName = JsActionKeyManager.JsSubKey.VAR.key
+    private val varValueSubKeyName = JsActionKeyManager.JsSubKey.VAR_VALUE.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
     private val jsSubKeySeparator = '!'
     fun convert(
         keyToSubKeyConListByValidKey: List<Pair<String, String>>
-    ): List<Pair<String, Map<String, String>>>{
-        return keyToSubKeyConListByValidKey.mapIndexed {
-                index, el ->
+    ): List<Pair<String, Map<String, String>>> {
+        return keyToSubKeyConListByValidKey.mapIndexed { index, el ->
             val mainJsKeyName = el.first
             val mapConSrc = el.second
             val mainKey = JsActionKeyManager.JsActionsKey.values().firstOrNull {
                 it.key == mainJsKeyName
             } ?: return@mapIndexed String() to emptyMap()
-            when(mainKey){
+            when (mainKey) {
                 JsActionKeyManager.JsActionsKey.ACTION_IMPORT,
                 -> String() to emptyMap()
+
                 JsActionKeyManager.JsActionsKey.JS,
                 JsActionKeyManager.JsActionsKey.OVERRIDE,
                 JsActionKeyManager.JsActionsKey.REPLACE,
@@ -773,16 +780,26 @@ private object PairToMapInList {
                     QuoteTool.trimBothEdgeQuote(mapConSrc),
                     jsSubKeySeparator
                 ).toMap()
+
+                JsActionKeyManager.JsActionsKey.JS_VAR
+                -> toJsFuncForJsVar(
+                    index,
+                    keyToSubKeyConListByValidKey,
+                    QuoteTool.trimBothEdgeQuote(mapConSrc),
+                )
+
                 JsActionKeyManager.JsActionsKey.JS_CON
                 -> toJsFuncForJsCon(
                     mapConSrc
                 )
+
                 JsActionKeyManager.JsActionsKey.JS_PATH
                 -> convertJsPathToJsFunc(
                     QuoteTool.trimBothEdgeQuote(mapConSrc),
                     index,
                     keyToSubKeyConListByValidKey,
                 )
+
                 JsActionKeyManager.JsActionsKey.TSV_IMPORT,
                 JsActionKeyManager.JsActionsKey.JS_IMPORT ->
                     convertToImportMap(
@@ -796,7 +813,7 @@ private object PairToMapInList {
     private fun convertToImportMap(
         jsActionMainKey: JsActionKeyManager.JsActionsKey,
         importListCon: String,
-    ): Pair<String, Map<String, String>>{
+    ): Pair<String, Map<String, String>> {
         val importMsp = mapOf(
             JsActionKeyManager.CommonPathKey.PATH.key to importListCon
         )
@@ -813,7 +830,7 @@ private object PairToMapInList {
             jsPathCon
         )
         val isMacro = macroValueList.contains(jsPathCon)
-        return when(true) {
+        return when (true) {
             isMacro,
             isJsInterface
             -> macroOrJsInterToJsFuncForJsPath(
@@ -821,6 +838,7 @@ private object PairToMapInList {
                 keyToSubKeyConListWithoutAfterSubKey,
                 jsPathCon,
             )
+
             else -> toJsFuncForPath(
                 index,
                 keyToSubKeyConListWithoutAfterSubKey,
@@ -850,7 +868,7 @@ private object PairToMapInList {
         keyToSubKeyCon: List<Pair<String, String>>?,
         jsPathCon: String,
     ): Pair<String, Map<String, String>> {
-        if(
+        if (
             keyToSubKeyCon.isNullOrEmpty()
         ) return String() to emptyMap()
         val repMapPrefix = "repMapCon"
@@ -858,7 +876,7 @@ private object PairToMapInList {
             keyToSubKeyCon,
             index,
         ).let {
-            if(
+            if (
                 it.isNotEmpty()
             ) return@let it
             "${repMapPrefix}=CMDCLICK_BLANK_ARGS=-"
@@ -876,14 +894,14 @@ private object PairToMapInList {
     }
 
     private fun makeArgsForJsPathMacro(
-        keyToSubKeyConListWithAfterSubKey: List<Pair<String, String>>,
+        keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>,
         index: Int,
     ): String {
-        val nextKeyToSubCon = keyToSubKeyConListWithAfterSubKey.getOrNull(
+        val nextKeyToSubCon = keyToSubKeyConListWithoutAfterSubKey.getOrNull(
             index + 1
         ) ?: return String()
         val nextMainKeyName = nextKeyToSubCon.first
-        if(
+        if (
             nextMainKeyName != argsSubKeyName
         ) return String()
         val jsSubKeySeparator = '!'
@@ -896,10 +914,62 @@ private object PairToMapInList {
         )
     }
 
+    private fun makeValueForJsVarMacro(
+        keyToSubKeyConListWithoutAfterSubKey: List<Pair<String, String>>,
+        index: Int,
+    ): String {
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "var_makeValueForJsVarMacro.txt").absolutePath,
+//            listOf(
+//                "keyToSubKeyConListWithoutAfterSubKey: ${keyToSubKeyConListWithoutAfterSubKey}",
+//                "keyToSubKeyConListWithoutAfterSubKey.getOrNull(\n" +
+//                        "            index + 1\n" +
+//                        "        ): ${keyToSubKeyConListWithoutAfterSubKey.getOrNull(
+//                            index + 1
+//                        )}"
+//            ).joinToString("\n\n\n")
+//        )
+        val nextKeyToSubCon = keyToSubKeyConListWithoutAfterSubKey.getOrNull(
+            index + 1
+        ) ?: return String()
+        val nextMainKeyName = nextKeyToSubCon.first
+        if (
+            nextMainKeyName != varValueSubKeyName
+        ) return String()
+        val varValue = QuoteTool.trimBothEdgeQuote(nextKeyToSubCon.second)
+        return varValue
+    }
+
+    private fun toJsFuncForJsVar(
+        index: Int,
+        keyToSubKeyCon: List<Pair<String, String>>?,
+        jsVarName: String,
+    ): Pair<String, Map<String, String>> {
+        if (
+            keyToSubKeyCon.isNullOrEmpty()
+        ) return String() to emptyMap()
+        val varValueStr = makeValueForJsVarMacro(
+            keyToSubKeyCon,
+            index,
+        )
+        val jsKeyCon = mapOf(
+            varSubKeyName to jsVarName,
+            JsActionKeyManager.JsSubKey.VAR_VALUE.key to varValueStr,
+        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "var.txt").absolutePath,
+//            listOf(
+//                "jsKeyCon: ${jsKeyCon}"
+//            ).joinToString("\n\n\n")
+//        )
+        return jsMainKeyName to jsKeyCon
+    }
+
+
     private fun toJsFuncForJsCon(
         jsCon: String,
     ): Pair<String, Map<String, String>> {
-        val jsConPrefix = JsActionKeyManager.JsPathManager.Flag.JS_CON_PREFIX.flag
+        val jsConPrefix = JsActionKeyManager.JsConManager.Flag.JS_CON_PREFIX.flag
         val jsConWithPrefix = "${jsConPrefix}${jsCon}"
         val jsMap = mapOf(
             funcSubKeyName to jsConWithPrefix,
@@ -992,10 +1062,9 @@ private object JsConPutter {
         val functionName = jsMap.get(JsActionKeyManager.JsSubKey.FUNC.key)
         if(
             functionName.isNullOrEmpty()
-        ) {
-            LogSystems.stdWarn("Not found func: ${jsMap}")
-            return String()
-        }
+        ) LogSystems.stdSys(
+            "func name is null: ${jsMap}"
+        )
         val funcTemplate =
             makeFuncTemplate(jsMap)
         val loopMethodTemplate =
@@ -1303,19 +1372,19 @@ private object JsConPutter {
         jsMap: Map<String, String>,
         varargsStr: String,
     ): String {
-
         val functionName =
             jsMap.get(JsActionKeyManager.JsSubKey.FUNC.key)
         val method =
             jsMap.get(JsActionKeyManager.JsSubKey.METHOD.key)
-        val varPrefix = JsActionKeyManager.FuncFrag.VAR_PREFIX.flag
-        val isVar = functionName?.startsWith(varPrefix) == true
+        val isOnlyVar = howVarOnly(jsMap)
         val funcConSrc = when(true){
-            isVar -> QuoteTool
-                .splitBySurroundedIgnore(varargsStr, ',').firstOrNull()?.let {
-                    QuoteTool.trimBothEdgeQuote(it)
-                } ?: "\"\""
-            else -> "${functionName}(${varargsStr})"
+            isOnlyVar ->
+                JsActionKeyManager.JsVarManager.makeVarValue(jsMap)
+            else -> makeFuncSignature(
+                jsMap,
+                functionName,
+                varargsStr,
+            )
         }
         val isJsCon = JsActionKeyManager.JsFuncManager.isJsCon(functionName)
         val isMethod = !method.isNullOrEmpty()
@@ -1324,6 +1393,29 @@ private object JsConPutter {
             isMethod -> "${funcConSrc}.${method};"
             else -> "${funcConSrc};"
         }
+    }
+
+    private fun howVarOnly(
+        jsMap: Map<String, String>,
+    ): Boolean {
+        val isVarOnlyByVarValue =
+            jsMap.containsKey(JsActionKeyManager.JsSubKey.VAR.key)
+                    && jsMap.containsKey(JsActionKeyManager.JsSubKey.VAR_VALUE.key)
+        return isVarOnlyByVarValue
+    }
+
+    private fun makeFuncSignature(
+        jsMap: Map<String, String>,
+        functionName: String?,
+        varargsStr: String,
+    ): String {
+        if(
+            functionName.isNullOrEmpty()
+        ) return String()
+        val prefix =
+            jsMap.get(JsActionKeyManager.JsSubKey.PREFIX.key)
+                ?: String()
+        return "${prefix}${functionName}(${varargsStr})"
     }
 
     private fun makeVarArgsForLoopMethod(
