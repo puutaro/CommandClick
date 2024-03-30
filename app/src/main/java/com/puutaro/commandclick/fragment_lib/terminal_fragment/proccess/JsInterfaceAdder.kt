@@ -12,7 +12,6 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsDirect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsEditor
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsFDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsFannelInstaller
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFileSelect
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsFileSystem
@@ -46,6 +45,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file.JsF
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.judge.JsBeforeInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsCcUsage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsCopyItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDeleteItem
@@ -70,6 +70,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.syst
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsExit
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsFannelExecer
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsMonitorShower
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsSharePref
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddGmailCon
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddToUrlHistory
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar.JsAddUrlCon
@@ -235,6 +236,10 @@ object JsInterfaceAdder {
             terminalFragment,
             webView
         )
+        judgeAdder(
+            terminalFragment,
+            webView,
+        )
     }
 
     private fun dialogAdder(
@@ -244,10 +249,6 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsDialog(terminalFragment),
-        )
-        ExecJsInterfaceAdder.add(
-            webView,
-            JsFDialog(terminalFragment),
         )
     }
 
@@ -389,6 +390,10 @@ object JsInterfaceAdder {
             webView,
             JsExit(terminalFragment)
         )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsSharePref(terminalFragment)
+        )
     }
 
     private fun toolbarAdder(
@@ -509,6 +514,15 @@ object JsInterfaceAdder {
             webView,
             JsTsv(terminalFragment)
         )
+    }
 
+    private fun judgeAdder(
+        terminalFragment: TerminalFragment,
+        webView: WebView,
+    ){
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsBeforeInfo(terminalFragment)
+        )
     }
 }

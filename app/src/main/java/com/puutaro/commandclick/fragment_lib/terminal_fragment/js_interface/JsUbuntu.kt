@@ -7,13 +7,17 @@ import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentE
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.Intent.CurlManager
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.shell.LinuxCmd
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -230,6 +234,15 @@ class JsUbuntu(
     }
 
     @JavascriptInterface
+    fun isSetup(): Boolean {
+        if(
+            context == null
+        ) return false
+        val isSetupFile = UbuntuFiles(context).ubuntuSetupCompFile.isFile
+        return isSetupFile
+    }
+
+    @JavascriptInterface
     fun boot(){
         if(
             context == null
@@ -295,5 +308,57 @@ class JsUbuntu(
             context,
             processName
         )
+    }
+
+    @JavascriptInterface
+    fun untilSetupLoop(
+        launchJsPath: String,
+    ){
+        if(
+            isSetup()
+        ) return
+        JsUrl(terminalFragment).loadJsPath(launchJsPath, String())
+    }
+
+    @JavascriptInterface
+    fun isInstall(
+        installStampFilePath: String,
+        expectStampCon: String,
+        installConfirmTitleAndMessage: String,
+        installOneList: String,
+        cautionTitleAndMessage: String,
+    ): Boolean {
+        val stampCon =
+            ReadText(installStampFilePath).readText().trim()
+        if(
+            stampCon == expectStampCon
+        ) return true
+        val jsDialog = JsDialog(terminalFragment)
+        val installTitleToMsg = makeTitleToMsg(installConfirmTitleAndMessage)
+        val el = jsDialog.listDialog(
+            installTitleToMsg.first,
+            installTitleToMsg.second,
+            installOneList
+        )
+        if(
+            el.isNotEmpty()
+        ) return false
+        val cautionTitleToMsg = makeTitleToMsg(cautionTitleAndMessage)
+        JsDialog(terminalFragment).listDialog(
+            cautionTitleToMsg.first,
+            cautionTitleToMsg.second,
+            String()
+        )
+        JsUrl(terminalFragment).exit_S()
+        return false
+    }
+
+    private fun makeTitleToMsg(
+        titleAndMessage: String,
+    ): Pair<String, String> {
+        val titleAndMsgList = titleAndMessage.split("|")
+        val title = titleAndMsgList.firstOrNull() ?: String()
+        val msg = titleAndMsgList.getOrNull(1) ?: String()
+        return title to msg
     }
 }
