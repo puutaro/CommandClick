@@ -16,7 +16,7 @@ object ScriptArgsMapList {
     private val dirNameKey = ScriptArgsKey.DIR_NAME.key
     private val jsNameKey = ScriptArgsKey.JS_NAME.key
 
-    fun updateScriptArgsMapList(
+    fun makeUpdateScriptArgsMapList(
         context: Context?,
         scriptDirPath: String,
         scriptName: String,
@@ -24,6 +24,20 @@ object ScriptArgsMapList {
     ): List<Map<String, String>> {
         var updateScriptArgsMapList = scriptArgsMapList
         settingValAndArgNamePair.forEach {
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "args_makeUpdateScriptArgsMapList.txt").absolutePath,
+//                listOf(
+//                    "settingValAndArgNamePair: ${it}",
+//                    "execUpdateScriptArgsMapList: ${execUpdateScriptArgsMapList(
+//                        context,
+//                        updateScriptArgsMapList,
+//                        scriptDirPath,
+//                        scriptName,
+//                        settingSectionVariableList,
+//                        it
+//                    )}"
+//                ).joinToString("\n\n\n")
+//            )
             updateScriptArgsMapList = execUpdateScriptArgsMapList(
                 context,
                 updateScriptArgsMapList,
@@ -81,17 +95,9 @@ object ScriptArgsMapList {
 //            listOf(
 //                "scriptPath: ${scriptPath}",
 //                "autoExecArgMap: $settingArgMap",
-//                "autoExecPathSrc: ${CommandClickVariables.substituteFilePrefixPath(
-//                    settingSectionVariableList,
-//                    settingValName,
-//                    scriptPath,
-//                    listOf(
-//                        scriptDirPath,
-//                        settingArgMap.get(ScriptArgsKey.DIR_NAME.key),
-//                        settingArgMap.get(ScriptArgsKey.JS_NAME.key)
-//                    ).joinToString("/")
-//                ) }",
+//                "settingPathSrc: ${settingPathSrc}",
 //                "setReplaceVariableMap: ${SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+//                    context,
 //                    scriptPath
 //                )}",
 //                "autoExecPathObj: ${settingPathObj.absolutePath}",
@@ -136,10 +142,14 @@ object ScriptArgsMapList {
             ScriptArgsKey.DIR_NAME.key,
             dirName
         )
-//        FileSystems.writeFile(
+//        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath,
 //            "args_make.txt").absolutePath,
-//            "dirName: ${dirName}"
+//            listOf(
+//                "autoExecPath: ${autoExecPath}",
+//                "autoExecJsDirPath: ${autoExecJsDirPath}",
+//                "dirName: ${dirName}",
+//            ).joinToString("\n\n\n")
 //        )
         updateAutoExecArgMap.put(
             ScriptArgsKey.JS_NAME.key,

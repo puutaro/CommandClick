@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.intent
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -10,12 +9,15 @@ import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variant.ScriptArgsMapList
 import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.history.JsFilePathToHistory
 import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.intent.lib.UrlLaunchMacro
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.state.FannelStateRooterManager
+import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 
@@ -126,8 +128,8 @@ object ExecJsLoad {
         JavascriptExecuter.enableJsLoadInWebView(
             terminalViewModel
         )
-        val updateScriptArgsMapList = updateScriptArgsMapList(
-            currentFragment.context,
+        val updateScriptArgsMapList = makeUpdateScriptArgsMapList(
+            currentFragment,
             recentAppDirPath,
             selectedJsFileName,
         )
@@ -145,7 +147,9 @@ object ExecJsLoad {
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "jsActin_jsload.txt").absolutePath,
 //            listOf(
+//                "execJsPath: ${execJsPath}",
 //                "jsArgs: ${jsArgs}",
+//                "updateScriptArgsMapList: ${updateScriptArgsMapList}",
 //                "jsContentsListSource: ${jsContentsListSource}",
 //                "jsContentsList: ${jsContentsList}",
 //                "loadJsContentsList: ${loadJsContentsList}",
@@ -216,19 +220,6 @@ object ExecJsLoad {
         val jsContentsListSource = ReadText(
             execJsPathObj.absolutePath
         ).textToList()
-//            .let {
-//            srcJsCon ->
-//            var replacedJsCon = srcJsCon
-//            replaceMarkMap.forEach {
-//                val repMark = "\${${it.key}}"
-//                val repValue = it.value
-//                replacedJsCon = replacedJsCon.replace(
-//                    repMark,
-//                    repValue,
-//                )
-//            }
-//            replacedJsCon
-//        }.split("\n")
         val externalJsCon = JavaScriptLoadUrl.make(
             context,
             execJsPathObj.absolutePath,
@@ -241,17 +232,14 @@ object ExecJsLoad {
         )
     }
 
-    private fun updateScriptArgsMapList(
-        context: Context?,
+    private fun makeUpdateScriptArgsMapList(
+        fragment: Fragment,
         scriptDirPath: String,
         scriptName: String,
     ): List<Map<String, String>> {
-        val currentScriptPath =
-            File(scriptDirPath, scriptName).absolutePath
-        val currentScriptConList = ReadText(currentScriptPath).textToList()
+        val context = fragment.context
         val languageType =
             CommandClickVariables.judgeJsOrShellFromSuffix(scriptName)
-
         val languageTypeToSectionHolderMap =
             CommandClickScriptVariable.LANGUAGE_TYPE_TO_SECTION_HOLDER_MAP.get(languageType)
         val settingSectionStart = languageTypeToSectionHolderMap?.get(
@@ -260,14 +248,23 @@ object ExecJsLoad {
         val settingSectionEnd = languageTypeToSectionHolderMap.get(
             CommandClickScriptVariable.HolderTypeName.SETTING_SEC_END
         ) as String
-
-        val settingSectionVariableList = CommandClickVariables.extractValListFromHolder(
-            currentScriptConList,
+        val readSharePreferenceMap = SharePrefTool.getReadSharePrefMap(fragment, String())
+        val setReplaceVariableMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
+            File(scriptDirPath, scriptName).absolutePath
+        )
+        val currentSettingFannelPath = FannelStateRooterManager.getSettingFannelPath(
+            readSharePreferenceMap,
+            setReplaceVariableMap
+        )
+        val settingSectionVariableList = FannelStateRooterManager.makeSettingVariableList(
+            readSharePreferenceMap,
+            setReplaceVariableMap,
             settingSectionStart,
             settingSectionEnd,
+            currentSettingFannelPath,
         )
-
-        return ScriptArgsMapList.updateScriptArgsMapList(
+        return ScriptArgsMapList.makeUpdateScriptArgsMapList(
             context,
             scriptDirPath,
             scriptName,
@@ -313,6 +310,16 @@ object ExecJsLoad {
                 return@let currentScriptPath
             }
             val exeJsPath = "${scriptDirPath}/$fannelDirName/${dirName}/${jsName}"
+//            FileSystems.writeFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "args_decideLoadJsPath.txt").absolutePath,
+//                listOf(
+//                    "scriptDirPath: ${scriptDirPath}",
+//                    "fannelDirName: ${fannelDirName}",
+//                    "dirName: ${dirName}",
+//                    "jsName: ${jsName}",
+//                    "exeJsPath: ${exeJsPath}"
+//                ).joinToString("\n\n\n")
+//            )
             val exeJsPathObj = File(exeJsPath)
             if(
                 !exeJsPathObj.isFile
