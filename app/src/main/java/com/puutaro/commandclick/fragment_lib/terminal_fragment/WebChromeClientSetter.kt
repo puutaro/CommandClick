@@ -31,6 +31,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 
 
 object WebChromeClientSetter {
@@ -113,7 +114,7 @@ object WebChromeClientSetter {
                     noOutPutErr
                 ) return false
                 CoroutineScope(Dispatchers.IO).launch {
-                    val output = withContext(Dispatchers.IO) {
+                    val errOutput = withContext(Dispatchers.IO) {
                         listOf(
                             cm.sourceId(),
                             message
@@ -125,28 +126,21 @@ object WebChromeClientSetter {
                             BroadCastIntentSchemeTerm.MONITOR_TOAST.action,
                             listOf(
                                 BroadCastIntentSchemeTerm.MONITOR_TOAST.scheme
-                                        to output
+                                        to errOutput
                             )
                         )
                     }
                     withContext(Dispatchers.IO) {
                         val execDebugJsPath = UsePath.jsDebugReportPath
-                        val jsDebugCon = ReadText(
-                            execDebugJsPath
-                        ).readText()
-                        val errEvidence = LogTool.makeTopSpanLogTagHolder(
-                            LogTool.errRedCode,
-                            "[${LogTool.errMark}]\n${output}"
-                        )
-                        FileSystems.writeFile(
+                        LogTool.saveErrLogCon(
+                            errOutput,
                             execDebugJsPath,
-                            "\n${errEvidence}\n\n${jsDebugCon}"
                         )
                     }
                     withContext(Dispatchers.IO) {
                         LogSystems.stdErr(
                             context,
-                            output,
+                            errOutput,
                             debugNotiJanre = BroadCastIntentExtraForJsDebug.DebugGenre.JS_ERR.type,
                             notiLevelSrc = BroadCastIntentExtraForJsDebug.NotiLevelType.LOW.level
                         )

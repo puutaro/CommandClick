@@ -48,9 +48,6 @@ object LogSystems {
     ){
         val st = Thread.currentThread().stackTrace[3]
         val line = "${logPrefix}${LocalDateTime.now()} ${st.className} ${st.methodName} ${LogTool.errMark}\n${errContents}"
-        val escapeErrMessageList = listOf(
-            "Java exception was raised during method invocation"
-        )
         CoroutineScope(Dispatchers.IO).launch {
             withContext(Dispatchers.IO) {
                 FileSystems.updateFile(

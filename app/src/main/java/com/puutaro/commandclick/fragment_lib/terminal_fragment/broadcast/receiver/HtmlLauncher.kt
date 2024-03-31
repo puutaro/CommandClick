@@ -6,6 +6,7 @@ import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSch
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.WebViewMenuMapType
+import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
@@ -13,6 +14,21 @@ import java.io.File
 object HtmlLauncher{
 
     fun launch(
+        intent: Intent,
+        terminalFragment: TerminalFragment,
+    ){
+        try {
+            execLaunch(
+                intent,
+                terminalFragment,
+            )
+        } catch (e: Exception){
+            LogSystems.stdWarn(e.toString())
+            return
+        }
+    }
+
+    fun execLaunch(
         intent: Intent,
         terminalFragment: TerminalFragment,
     ) {

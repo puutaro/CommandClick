@@ -198,27 +198,12 @@ class JsFileSystem(
 
     @JavascriptInterface
     fun revUpdateFile(
-        path: String,
-        con: String,
+        bodyPath: String,
+        errCon: String,
     ){
-        val errEvidence = LogTool.makeTopPreTagLogTagHolder(
-            LogTool.errRedCode,
-            con
-        )
-//            LogTool.preTagHolder.format(
-//            LogTool.errRedCode,
-//            con
-//        )
-//        val bodyCon = LogTool.makeSpanTagHolder(
-//            LogTool.logGreenPair,
-//            ReadText(path).readText()
-//        )
-        val saveCon = errEvidence + ReadText(
-            path
-        ).readText()
-        FileSystems.writeFile(
-            path,
-            saveCon
+        LogTool.saveErrLogCon(
+            errCon,
+            bodyPath,
         )
     }
 
