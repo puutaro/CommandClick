@@ -14,14 +14,64 @@ let prefixEnum = {
 };
 
 
-const highlightUrlString = getSelectionText();
-if(!highlightUrlString) {
-	location.href = `${googleSearchUrl}`;
-	exitZero();
-};
-execCpSearch(
+const highlightUrlString = filterByWithinGgleSchBox(
+    getSelectionText()
+);
+schBoxFocusOrSearch(highlightUrlString);
+execSearch(
 	appendUrlPrefix(highlightUrlString)
 );
+
+function schBoxFocusOrSearch(highlightUrlString){
+    if(
+        highlightUrlString
+    ) return;
+    if(
+        !location.href.startsWith(googleSearchUrl)
+    ){
+        location.href = `${googleSearchUrl}`;
+        exitZero();
+        return;
+    }
+    var focusOk = false;
+    var textAreas = document.getElementsByTagName("textarea");
+    [...textAreas].forEach(
+        function(el, index){
+            if(!el) return;
+            const isAreaLabel = el.getAttribute('aria-label');
+            if(!isAreaLabel) return;
+            el.blur();
+            el.focus();
+            el.select();
+            focusOk = true;
+            return true;
+        });
+    if(focusOk) exitZero();
+}
+
+function filterByWithinGgleSchBox(selectedText){
+    if(
+        !selectedText
+    ) return "";
+    var schBoxStr = "";
+    var textAreas = document.getElementsByTagName("textarea");
+    [...textAreas].forEach(
+        function(el, index){
+            if(
+                !el
+            ) return;
+            const isAreaLabel = el.getAttribute('aria-label');
+            if(
+                !isAreaLabel
+            ) return;
+            schBoxStr = el.value;
+            return true;
+        });
+    if(
+        schBoxStr == selectedText
+    ) return "";
+    return selectedText;
+}
 
 
 function appendUrlPrefix(highlightUrlString){
@@ -37,7 +87,7 @@ function appendUrlPrefix(highlightUrlString){
 };
 
 
-function execCpSearch(urlString){
+function execSearch(urlString){
 	switch(true){
 		case urlString.startsWith(prefixEnum.https):
 		case urlString.startsWith(prefixEnum.http):
