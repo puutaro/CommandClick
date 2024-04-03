@@ -12,7 +12,6 @@ import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.menu_tool.MenuSettingTool
 import com.puutaro.commandclick.proccess.tool_bar_button.libs.JsPathHandlerForToolbarButton
-import com.puutaro.commandclick.util.state.VirtualSubFannel
 
 object ToolbarButtonSubMenuDialog {
 

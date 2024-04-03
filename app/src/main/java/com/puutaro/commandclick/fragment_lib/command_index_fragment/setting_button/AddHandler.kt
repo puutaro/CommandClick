@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
 import android.app.Dialog
-import android.content.SharedPreferences
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ListView

@@ -418,22 +418,9 @@ class QrScanJsDialog(
         }.let {
             CmdClickMap.createMap(
                 it,
-                '!'
+                '?'
             )
         }.toMap()
-//            .let {
-//            QuoteTool.splitBySurroundedIgnore(
-//                it,
-//                '!'
-//            )
-//        }
-//            .split("!")
-//            .map{
-//            CcScript.makeKeyValuePairFromSeparatedString(
-//                it,
-//                "="
-//            )
-//        }.toMap()
     }
 
     private fun makeMenu(

@@ -45,8 +45,8 @@ function makeUrl(){
 function makeMenuMapStr(){
     // const onSearchBtn = `${EXTERNAL_EXEC_REPLACE_TXT2}`;
     return  [
-        `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
-        `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
+        `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?iconName=back`,
+        `clickMenuFilePath=${rightMenuListFilePath}?iconName=download_done`,
     ].join("|");
     // switch(true){
     //     case onSearchBtn === "OFF":

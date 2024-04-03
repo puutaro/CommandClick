@@ -108,7 +108,7 @@ noti(){
 		concat(delete_key, "delete")
 		concat(notificationStyle, "notificationStyle")
 		concat(button, "button")
-		gsub(",", "!", output_con)
+		gsub(",", "?", output_con)
 		gsub(/\n/, ",\n", output_con)
 		print output_con
 	}' \

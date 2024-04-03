@@ -290,21 +290,9 @@ object FileSelectSpinnerViewProducer {
             }?.let{
                 CmdClickMap.createMap(
                     it,
-                    '!'
+                    '?'
                 )
             }?.toMap()
-//            .let {
-//                ReplaceVariableMapReflecter.reflect(
-//                    QuoteTool.trimBothEdgeQuote(it),
-//                    editParameters
-//                )
-//            }
-//            ?.split('!')?.map {
-//                CcScript.makeKeyValuePairFromSeparatedString(
-//                    it,
-//                    "="
-//                )
-//            }?.toMap()
     }
 
     private enum class FileSelectEditKey {

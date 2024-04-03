@@ -147,7 +147,7 @@ object InDeCrementerViewProducer {
     ): Map<String, String?>{
         val variableValueList = variableTypeValue?.split('|')
             ?.getOrNull(currentComponentIndex)
-            ?.split('!')
+            ?.split('?')
         val minMaxElement = variableValueList?.firstOrNull {
             it.contains("..")
         }

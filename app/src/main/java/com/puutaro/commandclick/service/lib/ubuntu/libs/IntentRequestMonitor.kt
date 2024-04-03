@@ -43,7 +43,7 @@ object IntentRequestMonitor {
 
     private val fieldSeparator = ','
     private const val elementSeparator = '|'
-    private const val keySeparator = '!'
+    private const val keySeparator = '?'
     private const val valueSeparator = '&'
     private val requireArgsErrMessage = "%s is required"
     private var responseString = String()

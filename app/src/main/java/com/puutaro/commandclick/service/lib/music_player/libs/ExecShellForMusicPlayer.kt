@@ -33,7 +33,7 @@ object ExecShellForMusicPlayer {
     ) {
         val shellRepValMap = CmdClickMap.createMap(
             shellArgs,
-            '!'
+            '?'
         ).toMap()
         val repValMapForTts = mapOf(
             RepValKeyForMusic.PLAY_TITLE.key to uriTitle,

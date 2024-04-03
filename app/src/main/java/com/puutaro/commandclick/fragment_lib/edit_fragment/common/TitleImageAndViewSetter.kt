@@ -204,7 +204,7 @@ private object EditTextMaker {
         ).let {
             CmdClickMap.createMap(
                 it,
-                '!'
+                '?'
             )
         }.toMap()
         return busyboxExecutor.getCmdOutput(

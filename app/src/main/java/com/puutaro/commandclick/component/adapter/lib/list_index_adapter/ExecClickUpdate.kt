@@ -70,7 +70,7 @@ object ExecClickUpdate {
             ListIndexForEditAdapter.indexListMap,
             ListSettingsForListIndex.ListSettingKey.LIST_DIR.key,
         )
-        TsvTool.updateTsvByClick(
+        TsvTool.inseartTsvInFirst(
             tsvPath,
             tsvLine
         )

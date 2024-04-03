@@ -20,7 +20,7 @@ import java.io.File
 object SetVariableTyper {
 
     private val setValSeparator = '|'
-    private val typeSeparator = '!'
+    private val typeSeparator = '?'
     private val filePrefix = EditSettings.filePrefix
     private val setVariableTypesConfigPathSrc = "${UsePath.fannelSettingVariablsDirPath}/${UsePath.setVariableTypesConfig}"
     private val noIndexTypeList = TypeVariable.noIndexTypeList
@@ -274,7 +274,7 @@ private object AlterToolForSetValType {
 
     private const val alterKeyName = AlterIfShellTool.alterKeyName
     private const val setValSeparator = '|'
-    private const val typeSeparator = '!'
+    private const val typeSeparator = '?'
     private const val ifArgsSeparator = '&'
 
     fun makeVariableTypeValueByAlter(

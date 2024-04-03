@@ -197,7 +197,7 @@ object LogTool {
         ).let {
             QuoteTool.replaceBySurroundedIgnore(
                 it,
-                '!',
+                '?',
                 "\n !"
             )
         }.let {

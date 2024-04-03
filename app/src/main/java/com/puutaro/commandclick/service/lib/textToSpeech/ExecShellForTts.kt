@@ -32,7 +32,7 @@ object ExecShellForTts {
     ) {
         val shellRepValMap = CmdClickMap.createMap(
             shellArgs,
-            '!'
+            '?'
         ).toMap()
         val repValMapForTts = mapOf(
             RepValKeyForTts.PLAY_PATH.key to playPath,

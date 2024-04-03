@@ -9,6 +9,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexMenuL
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyAppDir
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFile
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileHere
+import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyFileSimple
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecCopyPath
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecEditCmdVal
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecEditSettingVal
@@ -88,6 +89,12 @@ object ExecMacroHandlerForListIndex {
                     editFragment,
                     selectedItem,
                     listIndexPosition,
+                )
+            JsPathMacroForListIndex.COPY_FILE_SIMPLE ->
+                ExecCopyFileSimple.copy(
+                    editFragment,
+                    selectedItem,
+                    jsActionMap,
                 )
             JsPathMacroForListIndex.COPY_APP_DIR ->
                 ExecCopyAppDir.copyAppDir(

@@ -136,7 +136,7 @@ object ListSettingsForListIndex  {
         ).let{
             CmdClickMap.createMap(
                 it,
-                '!'
+                '?'
             )
         }.toMap()
     }

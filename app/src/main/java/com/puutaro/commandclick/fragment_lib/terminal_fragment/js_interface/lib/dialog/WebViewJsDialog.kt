@@ -466,7 +466,7 @@ class WebViewJsDialog(
         ).let {
             CmdClickMap.createMap(
                 it,
-                '!'
+                '?'
             )
         }.toMap()
     }

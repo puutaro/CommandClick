@@ -40,7 +40,7 @@ object EditableSpinnerViewProducer {
 //                    editParameters
 //                )
 //            }
-            ?.split('!')
+            ?.split('?')
             ?: listOf()
 
         val updatedEditableSpinnerList = listOf(throughMark) + editableSpinnerList

@@ -244,7 +244,7 @@ object ListContentsSelectSpinnerViewProducer {
             ?.let {
                 CmdClickMap.createMap(
                     it,
-                    '!'
+                    '?'
                 )
             }?.toMap()
     }

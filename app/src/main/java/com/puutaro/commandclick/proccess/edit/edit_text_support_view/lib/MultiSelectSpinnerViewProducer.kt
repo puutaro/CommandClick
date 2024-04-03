@@ -51,7 +51,7 @@ object MultiSelectSpinnerViewProducer {
 //                    editParameters
 //                )
 //            }
-            ?.split('!')
+            ?.split('?')
             ?: listOf()
         val currentExistItem = insertEditText.text.toString()
         val updatedSppinerList = if(

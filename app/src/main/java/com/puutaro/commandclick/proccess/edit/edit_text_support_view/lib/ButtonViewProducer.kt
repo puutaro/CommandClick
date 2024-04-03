@@ -200,7 +200,7 @@ object ButtonViewProducer {
         ).let{
             QuoteTool.splitBySurroundedIgnore(
                 it,
-                '!'
+                '?'
             )
         }.firstOrNull()
             ?: String()
@@ -690,7 +690,7 @@ object ButtonViewProducer {
             ?.let {
                 QuoteTool.splitBySurroundedIgnore(
                     it,
-                    '!'
+                    '?'
                 )
             }
             ?.filter {
@@ -943,7 +943,7 @@ object ButtonViewProducer {
         }.let {
             CmdClickMap.createMap(
                 it,
-                '!'
+                '?'
             ).toMap()
         }
     }

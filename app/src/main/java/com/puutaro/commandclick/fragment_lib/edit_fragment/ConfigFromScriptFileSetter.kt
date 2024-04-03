@@ -672,7 +672,7 @@ private object AlterToolForSetValType {
 
     private val alterKeyName = AlterIfShellTool.alterKeyName
     private const val mainSeparator = '|'
-    private const val ifArgsSeparator = '!'
+    private const val ifArgsSeparator = '?'
 
     fun updateConfigMapByAlter(
         context: Context,

@@ -79,7 +79,7 @@ isend(){
 		concat(extraInts, "extraInts")
 		concat(extraLongs, "extraLongs")
 		concat(extraFloats, "extraFloats")
-		gsub(",", "!", output_con)
+		gsub(",", "?", output_con)
 		gsub(/\n/, ",\n", output_con)
 		print output_con
 	}' \

@@ -42,7 +42,7 @@ object TsvTool {
         )
     }
 
-    fun updateTsvByClick(
+    fun inseartTsvInFirst(
         tsvPath: String?,
         recentUpdateTsvLine: String,
     ){

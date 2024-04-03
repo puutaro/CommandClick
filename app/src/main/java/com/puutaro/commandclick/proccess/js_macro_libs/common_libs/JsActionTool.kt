@@ -683,7 +683,7 @@ private object KeyToSubKeyMapListMaker {
         setReplaceVariableMap: Map<String, String>?,
         keyToSubKeyMap: Pair<String, String>,
     ): String {
-        val jsActionsPathSeparator = '!'
+        val jsActionsPathSeparator = '?'
         val subKeyCon = keyToSubKeyMap.second
         return QuoteTool.splitBySurroundedIgnore(
             subKeyCon,
@@ -759,7 +759,7 @@ private object PairToMapInList {
     private val varSubKeyName = JsActionKeyManager.JsSubKey.VAR.key
     private val varValueSubKeyName = JsActionKeyManager.JsSubKey.VAR_VALUE.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
-    private val jsSubKeySeparator = '!'
+    private val jsSubKeySeparator = '?'
     fun convert(
         keyToSubKeyConListByValidKey: List<Pair<String, String>>
     ): List<Pair<String, Map<String, String>>> {
@@ -904,7 +904,7 @@ private object PairToMapInList {
         if (
             nextMainKeyName != argsSubKeyName
         ) return String()
-        val jsSubKeySeparator = '!'
+        val jsSubKeySeparator = '?'
         val argsConSrc = nextKeyToSubCon.second
 
         return QuoteTool.replaceBySurroundedIgnore(
@@ -1006,7 +1006,7 @@ private object ImportConMaker {
         importPreWord: String,
         keyToSubKeyMap: Pair<String, Map<String, String>>,
     ): String {
-        val tsvImportPathSeparator = '!'
+        val tsvImportPathSeparator = '?'
         val subKeyCon = keyToSubKeyMap.second.get(
             JsActionKeyManager.CommonPathKey.PATH.key
         ) ?: return String()

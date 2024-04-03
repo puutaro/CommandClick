@@ -54,7 +54,7 @@ class PromptJsDialog(
     private val suggestDirPath = "${fannelDirPath}/${suggestDirName}"
     private val mapSeparator = ','
     private val firstSeparator = '|'
-    private val secondSeparator = '!'
+    private val secondSeparator = '?'
 
     fun create(
         title: String,

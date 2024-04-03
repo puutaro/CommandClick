@@ -51,7 +51,7 @@ send-broadcast(){
 		ouput_con = ouput_con"intentType=broadcast\n"
 		concat(action, "action")
 		concat(extras, "extras")
-		gsub(",", "!", ouput_con)
+		gsub(",", "?", ouput_con)
 		gsub(/\n/, ",\n", ouput_con)
 		print ouput_con
 	}' \

@@ -81,7 +81,7 @@ tspeech(){
 		concat(fannelRawName, "fannelRawName")
 		concat(listFilePath, "listFilePath")
 		concat(extraSettingMapStr, "extraSettingMapStr")
-		gsub(",", "!", output_con)
+		gsub(",", "?", output_con)
 		gsub(/\n/, ",\n", output_con)
 		print output_con
 	}' \
