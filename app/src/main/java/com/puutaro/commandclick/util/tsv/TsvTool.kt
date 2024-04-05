@@ -42,13 +42,17 @@ object TsvTool {
         )
     }
 
-    fun inseartTsvInFirst(
+    fun insertTsvInFirst(
         tsvPath: String?,
         recentUpdateTsvLine: String,
     ){
-        if(tsvPath.isNullOrEmpty()) return
+        if(
+            tsvPath.isNullOrEmpty()
+        ) return
         val tsvPathObj = File(tsvPath)
-        if(!tsvPathObj.isFile) return
+        if(
+            !tsvPathObj.isFile
+        ) return
         val srcTsvConList = ReadText(tsvPath).textToList()
         val updateTsvCon = listOf(recentUpdateTsvLine) + srcTsvConList.filter {
             it != recentUpdateTsvLine
