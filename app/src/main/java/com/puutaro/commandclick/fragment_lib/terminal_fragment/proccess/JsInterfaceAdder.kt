@@ -48,6 +48,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.file
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.judge.JsBeforeInfo
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.JsCcUsage
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsCopyItem
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsCopySItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDeleteItem
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsDesc
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.JsEditorItem
@@ -473,6 +474,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsCopyItem(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsCopySItem(terminalFragment)
         )
         ExecJsInterfaceAdder.add(
             webView,

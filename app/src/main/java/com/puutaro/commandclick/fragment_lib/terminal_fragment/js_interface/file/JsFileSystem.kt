@@ -7,9 +7,11 @@ import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtr
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
 import java.io.File
 import java.time.ZoneId
@@ -254,6 +256,100 @@ class JsFileSystem(
         ).filter {
             File("$dirPath/$it").isFile
         }.joinToString("\t")
+    }
+
+    @JavascriptInterface
+    fun showFullFileList(
+        dirPath: String,
+        extraMapCon: String,
+    ): String {
+        val extraMap = CmdClickMap.createMap(
+            extraMapCon,
+            '|'
+        ).toMap()
+        val separator = "?"
+        val prefixList =
+            extraMap.get(FullFileOrDirListKey.PREFIX.key)
+                ?.split(separator)
+                ?: emptyList()
+        val suffixList =
+            extraMap.get(FullFileOrDirListKey.SUFFIX.key)
+                ?.split(separator)
+                ?: emptyList()
+        val excludeFileNameList =
+            extraMap.get(FullFileOrDirListKey.EXCLUDE_FILES.key)
+                ?.split(separator)
+                ?: emptyList()
+        return FileSystems.sortedFiles(
+            dirPath,
+        ).filter {
+            fileName ->
+            val isPrefix = prefixList.all {
+                fileName.startsWith(it)
+            } || prefixList.isEmpty()
+            val isSuffix = suffixList.all {
+                fileName.endsWith(it)
+            } || suffixList.isEmpty()
+            val isExclude =
+                !excludeFileNameList.contains(fileName)
+            File("$dirPath/$fileName").isFile
+                    && isExclude
+                    && isPrefix
+                    && isSuffix
+        }.map {
+            File(dirPath, it).absolutePath
+        }.joinToString("\t")
+    }
+
+    @JavascriptInterface
+    fun showFullDirList(
+        dirPath: String,
+        extraMapCon: String,
+    ): String {
+        val extraMap = CmdClickMap.createMap(
+            extraMapCon,
+            '|'
+        ).toMap()
+        val separator = "?"
+        val prefixList =
+            extraMap.get(FullFileOrDirListKey.PREFIX.key)
+                ?.split(separator)
+                ?: emptyList()
+        val suffixList =
+            extraMap.get(FullFileOrDirListKey.SUFFIX.key)
+                ?.split(separator)
+                ?: emptyList()
+        val excludeDirNameList =
+            extraMap.get(FullFileOrDirListKey.EXCLUDE_FILES.key)
+                ?.split(separator)
+                ?: emptyList()
+        return FileSystems.showDirList(
+            dirPath,
+        ).filter {
+                dirName ->
+            val isPrefix = prefixList.all {
+                dirName.startsWith(it)
+            } || prefixList.isEmpty()
+            val isSuffix = suffixList.all {
+                dirName.endsWith(it)
+            } || suffixList.isEmpty()
+            val isExclude =
+                !excludeDirNameList.contains(dirName)
+            File("$dirPath/$dirName").isDirectory
+                    && isExclude
+                    && isPrefix
+                    && isSuffix
+        }.map {
+            File(dirPath, it).absolutePath
+        }.joinToString("\t")
+    }
+
+    private enum class FullFileOrDirListKey(
+        val key: String
+    ) {
+        PREFIX(EditSettingExtraArgsTool.ExtraKey.PREFIX.key),
+        SUFFIX(EditSettingExtraArgsTool.ExtraKey.SUFFIX.key),
+        EXCLUDE_FILES("excludeFiles")
     }
 
     @JavascriptInterface
