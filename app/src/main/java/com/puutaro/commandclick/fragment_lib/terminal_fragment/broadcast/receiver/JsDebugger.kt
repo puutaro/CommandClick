@@ -219,7 +219,7 @@ object JsDebugger {
             jsDialog.webView_S(
                 "${launchUrl}",
                 "",
-                "dismissType=both!iconName=cancel",
+                "dismissType=both?iconName=cancel",
                 "",
             );
         """.trimIndent()
