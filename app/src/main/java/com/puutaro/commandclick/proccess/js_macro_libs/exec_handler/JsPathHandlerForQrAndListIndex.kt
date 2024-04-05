@@ -65,8 +65,16 @@ object JsPathHandlerForQrAndListIndex {
                 .split("\t")
                 .lastOrNull()
                 ?: String()
+        val selectedTitle =
+            selectedItem
+                .split("\t")
+                .firstOrNull()
+                ?: String()
         val jsConSrc = jsActionMap.get(
             JsActionDataMapKeyObj.JsActionDataMapKey.JS_CON.key
+        )?.replace(
+            "\${ITEM_TITLE}",
+            selectedTitle,
         )?.replace(
             "\${ITEM_NAME}",
             selectedFileNameOrPath,
