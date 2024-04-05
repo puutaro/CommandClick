@@ -12,18 +12,6 @@ object QrDialogClickHandler {
         clickFileName: String,
         listIndexPosition: Int
     ){
-        val context = editFragment.context
-        if(
-            clickFileName.isEmpty()
-            || clickFileName == "-"
-        ) {
-            Toast.makeText(
-                context,
-                "no file",
-                Toast.LENGTH_SHORT
-            ).show()
-            return
-        }
         val clickKey = when(isLongClick){
             true -> QrDialogConfig.QrDialogConfigKey.LONG_CLICK.key
             false -> QrDialogConfig.QrDialogConfigKey.CLICK.key
