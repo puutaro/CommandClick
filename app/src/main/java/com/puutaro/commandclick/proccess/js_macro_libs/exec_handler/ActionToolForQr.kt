@@ -29,11 +29,11 @@ object ActionToolForQr {
         if(
             !clicFilePathObj.isFile
         ){
-            Toast.makeText(
-                context,
-                "no File con",
-                Toast.LENGTH_SHORT
-            ).show()
+//            Toast.makeText(
+//                context,
+//                "no File con",
+//                Toast.LENGTH_SHORT
+//            ).show()
             return null
         }
         return ReadText(
