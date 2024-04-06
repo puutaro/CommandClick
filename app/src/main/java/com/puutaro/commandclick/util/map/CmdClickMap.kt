@@ -29,6 +29,31 @@ object CmdClickMap {
          }
     }
 
+    fun createMapFromTsv(
+        mapEntryStr: String?,
+        separator: Char
+    ):List<Pair<String, String>> {
+        if(
+            mapEntryStr.isNullOrEmpty()
+        ) return emptyList()
+        val normalSplitSeparatorList = listOf('\n', '\t')
+        val mapEntryStrList = when(
+            normalSplitSeparatorList.contains(separator)
+        ) {
+            true -> mapEntryStr.split(separator)
+            else -> QuoteTool.splitBySurroundedIgnore(
+                mapEntryStr,
+                separator,
+            )
+        }
+        return mapEntryStrList.map {
+            CcScript.makeKeyValuePairFromSeparatedString(
+                it,
+                "\t"
+            )
+        }
+    }
+
     fun replace(
         targetCon: String,
         repMap: Map<String, String>?
