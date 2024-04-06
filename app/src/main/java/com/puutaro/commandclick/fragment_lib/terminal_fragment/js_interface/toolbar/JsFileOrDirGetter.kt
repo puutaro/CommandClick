@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.toolbar
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
@@ -53,11 +52,11 @@ class JsFileOrDirGetter(
             filterMapCon,
             filterMapSeparator,
         ).toMap()
-        val filterPrefixListCon = filterMap.get(
-            EditSettingExtraArgsTool.ExtraKey.PREFIX.key,
+        val filterFILTERPrefixListCon = filterMap.get(
+            EditSettingExtraArgsTool.ExtraKey.FILTER_PREFIX.key,
         ) ?: String()
-        val filterSuffixListCon = filterMap.get(
-            EditSettingExtraArgsTool.ExtraKey.SUFFIX.key,
+        val filterFILTERSuffixListCon = filterMap.get(
+            EditSettingExtraArgsTool.ExtraKey.FILTER_SUFFIX.key,
         ) ?: String()
         val filterShellPathCon =
             EditSettingExtraArgsTool.makeShellCon(
@@ -69,8 +68,8 @@ class JsFileOrDirGetter(
         listener.onGetFileForTerm(
             parentDirPath,
             onDirectoryPick,
-            filterPrefixListCon,
-            filterSuffixListCon,
+            filterFILTERPrefixListCon,
+            filterFILTERSuffixListCon,
             filterShellPathCon,
         )
 //        fileOrDirGetterForSettingButton?.get(

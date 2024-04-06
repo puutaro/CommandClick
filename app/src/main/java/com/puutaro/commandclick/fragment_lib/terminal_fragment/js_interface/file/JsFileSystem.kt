@@ -347,8 +347,8 @@ class JsFileSystem(
     private enum class FullFileOrDirListKey(
         val key: String
     ) {
-        PREFIX(EditSettingExtraArgsTool.ExtraKey.PREFIX.key),
-        SUFFIX(EditSettingExtraArgsTool.ExtraKey.SUFFIX.key),
+        PREFIX(EditSettingExtraArgsTool.ExtraKey.FILTER_PREFIX.key),
+        SUFFIX(EditSettingExtraArgsTool.ExtraKey.FILTER_SUFFIX.key),
         EXCLUDE_FILES("excludeFiles")
     }
 
