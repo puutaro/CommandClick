@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CcPathTool
 import java.io.File
 
@@ -58,18 +57,28 @@ class JsPath(
 
     @JavascriptInterface
     fun removeExtend(
-        path: String,
-        extend: String
+        fileName: String,
+        extendListCon: String
     ): String {
-        return path.removeSuffix(extend)
+        val extendList = extendListCon.split('&')
+        var removeSuffixFileName = fileName
+        extendList.forEach {
+            removeSuffixFileName = removeSuffixFileName.removeSuffix(it)
+        }
+        return removeSuffixFileName
     }
 
     @JavascriptInterface
     fun removePrefix(
-        path: String,
-        prefix: String
+        fileName: String,
+        prefixListCon: String
     ): String {
-        return path.removePrefix(prefix)
+        val prefixList = prefixListCon.split('&')
+        var removePrefixFileName = fileName
+        prefixList.forEach {
+            removePrefixFileName = removePrefixFileName.removePrefix(it)
+        }
+        return removePrefixFileName
     }
 
     @JavascriptInterface
