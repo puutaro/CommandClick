@@ -16,4 +16,5 @@
     <color name="cmdclick_text_black">#3A3A3A</color>
     <color name="setting_menu_footer">#dcf4f5</color>
     <color name="checked_item_color">#36B3E0</color>
+    <color name="yellow">#f4f728</color>
 </resources>
