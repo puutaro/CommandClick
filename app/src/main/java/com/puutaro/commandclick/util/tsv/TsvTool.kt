@@ -45,6 +45,7 @@ object TsvTool {
     fun insertTsvInFirst(
         tsvPath: String?,
         recentUpdateTsvLine: String,
+        tsvConList: List<String>? = null
     ){
         if(
             tsvPath.isNullOrEmpty()
@@ -53,7 +54,10 @@ object TsvTool {
         if(
             !tsvPathObj.isFile
         ) return
-        val srcTsvConList = ReadText(tsvPath).textToList()
+        val srcTsvConList = when(tsvConList.isNullOrEmpty()) {
+            false -> tsvConList
+            else -> ReadText(tsvPath).textToList()
+        }
         val updateTsvCon = listOf(recentUpdateTsvLine) + srcTsvConList.filter {
             it != recentUpdateTsvLine
         }
