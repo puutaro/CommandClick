@@ -540,9 +540,9 @@ private object CompPathManager {
         indexListMap: Map<String, String>,
         tsvConList: List<String>
     ): List<String> {
-        if(
-            tsvConList.isNotEmpty()
-        ) return tsvConList
+//        if(
+//            tsvConList.isNotEmpty()
+//        ) return tsvConList
         val initTsvPath = FilePrefixGetter.get(
             editFragment,
             indexListMap,
@@ -640,6 +640,6 @@ private object CompPathManager {
         if(
             insertInitTsvConList.isEmpty()
         ) return conList
-        return conList + insertInitTsvConList
+        return insertInitTsvConList + conList
     }
 }
