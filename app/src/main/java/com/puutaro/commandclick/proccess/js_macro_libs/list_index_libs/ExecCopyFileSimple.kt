@@ -11,7 +11,6 @@ import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.R
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
@@ -21,6 +20,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
+import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
@@ -72,14 +72,14 @@ object ExecSimpleCopy {
             editFragment,
             selectedItem,
         ) ?: return
-        FileSystems.writeFile(
-            File(UsePath.cmdclickDefaultAppDirPath, "copy_execCopy.txt").absolutePath,
-            listOf(
-                "selectedItem: ${selectedItem}",
-                "srcItem: ${srcItem}",
-                "copyDirOrTsvPathToTypeCon: ${copyDirOrTsvPathToTypeCon}",
-            ).joinToString("\n\n\n")
-        )
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "copy_execCopy.txt").absolutePath,
+//            listOf(
+//                "selectedItem: ${selectedItem}",
+//                "srcItem: ${srcItem}",
+//                "copyDirOrTsvPathToTypeCon: ${copyDirOrTsvPathToTypeCon}",
+//            ).joinToString("\n\n\n")
+//        )
         val copyDirOrTsvList = makeCopyDirOrTsvList(
             editFragment,
             copyDirOrTsvPathToTypeCon,
@@ -162,17 +162,17 @@ object ExecSimpleCopy {
                 val type = it.first
                 type == dirOrTsvType
             }?.second ?: -1
-            FileSystems.updateFile(
-                File(UsePath.cmdclickDefaultAppDirPath, "copy.txt").absolutePath,
-                listOf(
-                    "it: ${it}",
-                    "dirOrTsvPathAndTypeList:${dirOrTsvPathAndTypeList}",
-                    "dirOrTsvPath: ${dirOrTsvPath}",
-                    "defaultDirOrTsvType: ${defaultDirOrTsvType}",
-                    "dirOrTsvTypeName: ${dirOrTsvTypeName}",
-                    "dirOrTsvType: ${dirOrTsvType}",
-                ).joinToString("\n\n\n")
-            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "copy.txt").absolutePath,
+//                listOf(
+//                    "it: ${it}",
+//                    "dirOrTsvPathAndTypeList:${dirOrTsvPathAndTypeList}",
+//                    "dirOrTsvPath: ${dirOrTsvPath}",
+//                    "defaultDirOrTsvType: ${defaultDirOrTsvType}",
+//                    "dirOrTsvTypeName: ${dirOrTsvTypeName}",
+//                    "dirOrTsvType: ${dirOrTsvType}",
+//                ).joinToString("\n\n\n")
+//            )
             dirOrTsvPath to iconId
         }.filter {
             val iconId = it.second
@@ -371,7 +371,9 @@ private object ExecCopyToOther {
             getSrcItemPathForDir(srcItem)
         if(
             !File(srcItemPath).isFile
-        ) return
+        ) {
+            return
+        }
         if(
             !File(selectedDirPath).isDirectory
         ) FileSystems.createDirs(selectedDirPath)
@@ -379,9 +381,13 @@ private object ExecCopyToOther {
             selectedDirPath,
             File(srcItemPath).name
         )
+        val context = editFragment.context
         if(
             destiFilePathObj.isFile
-        ) return
+        ) {
+            alreadyOkToast(context)
+            return
+        }
         val destiFilePath = destiFilePathObj.absolutePath
         FileSystems.execCopyFileWithDir(
             File(srcItemPath),
@@ -405,9 +411,20 @@ private object ExecCopyToOther {
         )
         val insertTsvLine =
             makeInsertTsvLine(srcItemPath)
+        val tsvConList = ReadText(selectedTsvPath)
+            .textToList()
+        val isAlreadyOk =
+            tsvConList
+                .contains(insertTsvLine)
+        val context = editFragment.context
+        if(isAlreadyOk){
+            alreadyOkToast(context)
+            return
+        }
         TsvTool.insertTsvInFirst(
             selectedTsvPath,
             insertTsvLine,
+            tsvConList,
         )
         copyOkToast(
             editFragment.context
@@ -428,10 +445,29 @@ private object ExecCopyToOther {
     private fun copyOkToast(
         context: Context?
     ){
+        toastMsg(
+            context,
+            "copy ok",
+        )
+    }
+
+    private fun alreadyOkToast(
+        context: Context?
+    ){
+        toastMsg(
+            context,
+            "Already ok",
+        )
+    }
+
+    private fun toastMsg(
+        context: Context?,
+        msg: String,
+    ){
         CoroutineScope(Dispatchers.Main).launch {
             Toast.makeText(
                 context,
-                "copy ok",
+                msg,
                 Toast.LENGTH_SHORT
             ).show()
         }

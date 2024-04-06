@@ -14,6 +14,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrDialogMethod
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrTypeSettingsForQrDialog
 import com.puutaro.commandclick.util.CcPathTool
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +33,9 @@ object QrLogoEditDialogLauncher {
         qrDialogConfigMap: Map<String, String>,
     ){
 
-        val logoConfigMap = QrDialogConfig.makeLogoConfigMap(qrDialogConfigMap)
+        val logoConfigMap = QrLogoSettingsForQrDialog.makeLogoConfigMap(qrDialogConfigMap)
         val disableLogo =
-            QrDialogConfig.howDisableQrLogo(logoConfigMap)
+            QrLogoSettingsForQrDialog.Disable.how(logoConfigMap)
         when(disableLogo){
             true -> QrDialogMethod.launchPassDialog(
                 fragment,
@@ -77,7 +78,7 @@ object QrLogoEditDialogLauncher {
             R.id.qr_logo_list_index_dialog_top_image
         )?.load(qrLogoPath)
         val isFileCon =
-            QrDialogConfig.howQrType(logoConfigMap) ==
+            QrLogoSettingsForQrDialog.Type.how(logoConfigMap) ==
                     QrTypeSettingsForQrDialog.QrTypeSettingKey.FILE_CON.type
         val buttonWeight = decideButtonWeight(isFileCon)
         setPassButton(

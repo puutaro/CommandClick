@@ -1,9 +1,9 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config
 
-import android.widget.Toast
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.ClickSettingsForQrDialog
 
 object QrDialogClickHandler {
     fun handle(
@@ -18,7 +18,7 @@ object QrDialogClickHandler {
         }
         val qrDialogConfigMap = editFragment.qrDialogConfig
             ?: emptyMap()
-        val isThisClickEnable = QrDialogConfig.howEnableClick(
+        val isThisClickEnable = ClickSettingsForQrDialog.howEnableClick(
             clickKey,
             qrDialogConfigMap,
         )
@@ -26,7 +26,7 @@ object QrDialogClickHandler {
             return
         }
 
-        val clickConfigListCon = QrDialogConfig.makeClickConfigListStr(
+        val clickConfigListCon = ClickSettingsForQrDialog.makeClickConfigListStr(
             qrDialogConfigMap,
             clickKey,
         )

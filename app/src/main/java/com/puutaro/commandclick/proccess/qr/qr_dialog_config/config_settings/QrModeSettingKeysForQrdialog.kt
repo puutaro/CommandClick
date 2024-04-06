@@ -15,10 +15,10 @@ object QrModeSettingKeysForQrDialog {
         qrDialogConfigMap: Map<String, String>,
     ): QrMode {
         val defaultQrMode = QrMode.NORMAL
-        val modeKey = QrDialogConfig.QrDialogConfigKey.MODE.key
         if(
             qrDialogConfigMap.isEmpty()
         ) return defaultQrMode
+        val modeKey = QrDialogConfig.QrDialogConfigKey.MODE.key
         val setModeStr = qrDialogConfigMap.get(modeKey).let {
             if(
                 it.isNullOrEmpty()

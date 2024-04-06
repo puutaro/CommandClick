@@ -11,7 +11,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variables.FannelListVariable
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -21,6 +20,7 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.PerformSettingForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
+import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -53,12 +53,21 @@ class ListIndexForEditAdapter(
         UbuntuFiles(context as Context)
     )
 
-    val qrDialogConfigMap =
+    private val qrDialogConfigMap =
         editFragment.qrDialogConfig ?: mapOf()
 
-    val qrLogoConfigMap = QrDialogConfig.makeLogoConfigMap(
+    private val qrLogoConfigMap = QrLogoSettingsForQrDialog.makeLogoConfigMap(
         qrDialogConfigMap
     )
+    private val iconConfigMap =
+        QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.makeIconConfigMap(
+            qrLogoConfigMap
+        )
+    private val itemNameToNameColorConfigMap =
+        QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.makeIconNameConfigMap(
+            editFragment,
+            iconConfigMap,
+        )
     private val listIndexConfigMap = editFragment.listIndexConfigMap
     private var performMap: Map<String, String> = mapOf()
 
@@ -217,7 +226,7 @@ class ListIndexForEditAdapter(
                 }
             }
             withContext(Dispatchers.Main) {
-                QrDialogConfig.setOneSideLength(
+                QrLogoSettingsForQrDialog.OneSideLength.set(
                     editFragment,
                     holder.fileContentsQrLogoLinearLayout,
                     qrLogoConfigMap
@@ -225,8 +234,10 @@ class ListIndexForEditAdapter(
             }
             withContext(Dispatchers.Main) {
                 val disableQrLogo =
-                    QrDialogConfig.howDisableQrLogo(qrLogoConfigMap)
-                if(disableQrLogo) return@withContext
+                    QrLogoSettingsForQrDialog.Disable.how(qrLogoConfigMap)
+                if(
+                    disableQrLogo
+                ) return@withContext
                 qrLogoSetHandler(
                     holder,
                     recentAppDirPath,
@@ -348,6 +359,17 @@ class ListIndexForEditAdapter(
         holder: ListIndexListViewHolder,
         recentAppDirPath: String,
     ){
+        val itemName = holder.fileName.split("\t").lastOrNull() ?: String()
+        val okSetIcon = QrLogoSettingsForQrDialog.QrIconSettingKeysForQrDialog.set(
+            context,
+            itemName,
+            holder.fileContentsQrLogoView,
+            holder.fileContentsQrLogoLinearLayout,
+            qrLogoConfigMap,
+            iconConfigMap,
+            itemNameToNameColorConfigMap
+        )
+        if(okSetIcon) return
         val qrMode = QrModeSettingKeysForQrDialog.getQrMode(qrDialogConfigMap)
         when(qrMode){
             QrModeSettingKeysForQrDialog.QrMode.TSV_EDIT -> {}
@@ -362,10 +384,11 @@ class ListIndexForEditAdapter(
                         filterDir,
                         holder.fileName,
                         holder.fileContentsQrLogoView,
+                        holder.fileContentsQrLogoLinearLayout,
                     )
                 }
                 withContext(Dispatchers.Main) {
-                    QrDialogConfig.setQrLogoHandler(
+                    QrLogoSettingsForQrDialog.setQrLogoHandler(
                         qrLogoHandlerArgsMaker
                     )
                 }
