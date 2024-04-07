@@ -10,10 +10,12 @@ object QrSchema {
         val qrCon = qrConWithNewLine.replace("\n", "")
         return when (true) {
             qrCon.startsWith(QrLaunchType.CpFile.prefix),
-            -> makeQrMap(
-                qrCon,
-                CpFileKey.values().map { it.key }
-            )
+            -> {
+                makeQrMap(
+                    qrCon,
+                    CpFileKey.values().map { it.key }
+                )
+            }
             qrCon.startsWith(QrLaunchType.ScpDir.prefix),
             -> makeQrMap(
                 qrCon,
@@ -87,11 +89,11 @@ object QrSchema {
         qrMap: Map<String, String?>?,
         keyList: List<String>
     ): Map<String, String> {
-        if(
-            qrMap.isNullOrEmpty()
-        ) return mapOf()
+//        if(
+//            qrMap.isNullOrEmpty()
+//        ) return mapOf()
         return keyList.map {
-            it to (qrMap.get(it) ?: String())
+            it to (qrMap?.get(it) ?: String())
         }.toMap().filterKeys { it.isNotEmpty() }
     }
 }

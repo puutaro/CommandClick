@@ -38,7 +38,7 @@ class JsPath(
         path: String,
         extendTabSeparateStr: String
     ): Boolean {
-        val extendList = extendTabSeparateStr.split("\t")
+        val extendList = extendTabSeparateStr.split("&")
         return extendList.any {
             path.endsWith(it)
         }

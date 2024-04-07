@@ -35,7 +35,7 @@ ex1)
 ```js.js
 jsPath.checkExtend(  
   "${01]/${001}/file.txt",  
-  ".txt\t.csv"
+  ".txt&.csv"
 )
 -> true
 ```
@@ -48,7 +48,7 @@ ex2)
 ```js.js
 jsPath.checkExtend(  
   "${01]/${001}/file.tsv",  
-  ".txt\t.csv"
+  ".txt&.csv"
 )
 -> false
 

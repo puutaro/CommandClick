@@ -255,7 +255,7 @@ class JsFileSystem(
             dirPath,
         ).filter {
             File("$dirPath/$it").isFile
-        }.joinToString("\t")
+        }.joinToString("\n")
     }
 
     @JavascriptInterface
@@ -298,7 +298,7 @@ class JsFileSystem(
                     && isSuffix
         }.map {
             File(dirPath, it).absolutePath
-        }.joinToString("\t")
+        }.joinToString("\n")
     }
 
     @JavascriptInterface

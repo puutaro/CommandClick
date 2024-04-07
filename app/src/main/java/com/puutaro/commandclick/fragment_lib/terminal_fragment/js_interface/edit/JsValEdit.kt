@@ -64,23 +64,18 @@ class JsValEdit(
         setVariableTypes: String,
         targetVariables: String,
     ): String {
-        val resultKeyValueConSrc = JsDialog(terminalFragment).formDialog(
+        val resultKeyValueCon = JsDialog(terminalFragment).formDialog(
             title,
             setVariableTypes,
             targetVariables,
         )
         if(
-            resultKeyValueConSrc.isEmpty()
+            resultKeyValueCon.isEmpty()
         ) return cancelReturnCode
-        val resultKeyValueCon =
-            resultKeyValueConSrc.replace(
-                "\n",
-                "\t"
-            )
 
         val variableMap = CmdClickMap.createMap(
             resultKeyValueCon,
-            '\t'
+            '\n'
         )
         val jsEdit = JsEdit(terminalFragment)
         variableMap.forEach {

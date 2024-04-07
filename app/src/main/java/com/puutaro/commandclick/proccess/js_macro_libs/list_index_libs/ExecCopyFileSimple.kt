@@ -19,8 +19,10 @@ import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionDataM
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
+import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.map.FilePrefixGetter
 import com.puutaro.commandclick.util.tsv.TsvTool
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +32,8 @@ import kotlinx.coroutines.withContext
 import java.io.File
 
 object ExecCopyFileSimple {
+
+    const val extraMapSeparator = '|'
 
     fun copy(
         editFragment: EditFragment,
@@ -42,12 +46,41 @@ object ExecCopyFileSimple {
         val copyDirOrTsvPathToTypeCon = argsMap.get(
             CopyFileSimpleKey.COPY_DESTI_TSV_PATH_CON.key
         ) ?: return
+        val extraMap = CmdClickMap.createMap(
+            argsMap.get(CopyFileSimpleKey.EXTRA.key),
+            extraMapSeparator
+        ).toMap()
+        val onWithFile = WithCpFile.howWithFile(extraMap)
         ExecSimpleCopy.execCopy(
             editFragment,
             copyDirOrTsvPathToTypeCon,
             selectedItem,
+            onWithFile,
         )
     }
+
+    object WithCpFile {
+        fun howWithFile(
+            extraMap: Map<String, String>?
+        ): Boolean {
+            if(
+                extraMap.isNullOrEmpty()
+            ) return false
+            val withFileOnValue = "ON"
+            return extraMap.get(
+                ExtraMapKey.WITH_FILE.key
+            ) == withFileOnValue
+        }
+
+
+    }
+
+    private enum class ExtraMapKey(
+        val key: String
+    ){
+        WITH_FILE("withFile"),
+    }
+
 }
 
 object ExecSimpleCopy {
@@ -63,10 +96,12 @@ object ExecSimpleCopy {
         DirOrTsvType.DIR.type to CmdClickIcons.FOLDA.id,
         DirOrTsvType.TSV.type to CmdClickIcons.FILE.id,
     )
+
     fun execCopy(
         editFragment: EditFragment,
         copyDirOrTsvPathToTypeCon: String,
         selectedItem: String,
+        onWithFile: Boolean,
     ) {
         val srcItem = getCurrentItem(
             editFragment,
@@ -95,6 +130,7 @@ object ExecSimpleCopy {
                 copyDirOrTsvList,
                 selectedDirOrTsvName,
                 srcItem,
+                onWithFile,
             )
             return
         }
@@ -104,6 +140,7 @@ object ExecSimpleCopy {
                     editFragment,
                     copyDirOrTsvList,
                     srcItem,
+                    onWithFile,
                 )
             }
         }
@@ -213,6 +250,7 @@ object CopyListDialog {
         editFragment: EditFragment,
         copyDirOrTsvList: List<Pair<String, Int>>,
         srcItem: String,
+        onWithFile: Boolean,
     ) {
         val context = editFragment.context
             ?: return
@@ -236,6 +274,7 @@ object CopyListDialog {
             editFragment,
             copyDirOrTsvList,
             srcItem,
+            onWithFile,
         )
         setCancelListener()
         copyListDialog?.window?.setLayout(
@@ -267,6 +306,7 @@ object CopyListDialog {
         editFragment: EditFragment,
         copyDirOrTsvList: List<Pair<String, Int>>,
         srcItem: String,
+        onWithFile: Boolean,
     ) {
         val context = editFragment.context
             ?: return
@@ -288,7 +328,8 @@ object CopyListDialog {
             editFragment,
             copyListView,
             srcItem,
-            copyDirOrTsvList
+            copyDirOrTsvList,
+            onWithFile,
         )
     }
 
@@ -296,7 +337,8 @@ object CopyListDialog {
         editFragment: EditFragment,
         copyListView: ListView?,
         srcItem: String,
-        copyDirOrTsvList: List<Pair<String, Int>>
+        copyDirOrTsvList: List<Pair<String, Int>>,
+        onWithFile: Boolean,
     ) {
         copyListView?.setOnItemClickListener { parent, view, position, id ->
             copyListDialog?.dismiss()
@@ -308,6 +350,7 @@ object CopyListDialog {
                 copyDirOrTsvList,
                 selectedDirOrTsvName,
                 srcItem,
+                onWithFile,
             )
         }
     }
@@ -319,6 +362,7 @@ private object ExecCopyToOther {
         copyDirOrTsvList: List<Pair<String, Int>>,
         selectedDirOrTsvName: String,
         srcItem: String,
+        onWithFile: Boolean,
     ){
         val copyDirOrTsvPathToIconId = copyDirOrTsvList.firstOrNull {
             val selectedDirOrTsvPath = it.first
@@ -343,6 +387,7 @@ private object ExecCopyToOther {
                 editFragment,
                 srcItem,
                 selectedDirOrTsvPath,
+                onWithFile,
             )
         }
     }
@@ -382,26 +427,24 @@ private object ExecCopyToOther {
             File(srcItemPath).name
         )
         val context = editFragment.context
-        if(
-            destiFilePathObj.isFile
-        ) {
-            alreadyOkToast(context)
-            return
-        }
+        val isUpdateOk = destiFilePathObj.isFile
         val destiFilePath = destiFilePathObj.absolutePath
         FileSystems.execCopyFileWithDir(
             File(srcItemPath),
-            File(destiFilePath)
+            File(destiFilePath),
+            true,
         )
-        copyOkToast(
-            editFragment.context
-        )
+        when(isUpdateOk) {
+            true -> updateOkToast(context)
+            else -> copyOkToast(context)
+        }
     }
 
     private fun insertTsvInFirst(
         editFragment: EditFragment,
         srcItemPath: String,
         selectedTsvPath: String,
+        onWithFile: Boolean,
     ){
         if(
             !File(selectedTsvPath).isFile
@@ -413,22 +456,78 @@ private object ExecCopyToOther {
             makeInsertTsvLine(srcItemPath)
         val tsvConList = ReadText(selectedTsvPath)
             .textToList()
-        val isAlreadyOk =
+        val updateInsertTsvLine = saveByWithFile(
+            onWithFile,
+            insertTsvLine,
+            selectedTsvPath,
+        )
+        val isUpdateOk =
             tsvConList
-                .contains(insertTsvLine)
+                .contains(updateInsertTsvLine)
         val context = editFragment.context
-        if(isAlreadyOk){
-            alreadyOkToast(context)
-            return
-        }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "copy_update.txt").absolutePath,
+//            listOf(
+//                "selectedTsvPath: ${selectedTsvPath}",
+//                "selectedTsvPath.isfile: ${File(selectedTsvPath).isFile}"
+//            ).joinToString("\n\n")
+//        )
         TsvTool.insertTsvInFirst(
             selectedTsvPath,
-            insertTsvLine,
+            updateInsertTsvLine,
             tsvConList,
         )
-        copyOkToast(
-            editFragment.context
+        when(isUpdateOk){
+            true -> updateOkToast(context)
+            else -> copyOkToast(context)
+        }
+    }
+
+    private fun saveByWithFile(
+        onWithFile: Boolean,
+        insertTsvLine: String,
+        selectedTsvPath: String,
+    ): String {
+        if(
+            !onWithFile
+        ) return insertTsvLine
+        val titleAndSrcPathList = insertTsvLine
+            .split("\t")
+        val title = titleAndSrcPathList.first()
+        val srcItemPath =
+            titleAndSrcPathList
+                .lastOrNull()
+                ?: return insertTsvLine
+        val srcFilePathObj = File(srcItemPath)
+        if(
+            !srcFilePathObj.isFile
+        ) return insertTsvLine
+        val grandParentDirPath = srcFilePathObj.parent
+            ?: return insertTsvLine
+        val saveDirName = CcPathTool.trimAllExtend(File(selectedTsvPath).name)
+        val parentDirPath = File(grandParentDirPath, saveDirName).absolutePath
+        FileSystems.createDirs(parentDirPath)
+        val destiFilePathObj = File(parentDirPath, srcFilePathObj.name)
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "copy_saveByWithFile.txt").absolutePath,
+//            listOf(
+//                "onWithFile: ${onWithFile}",
+//                "srcItemPath: ${srcFilePathObj.absolutePath}",
+//                "srcFilePathObj.isFile: ${srcFilePathObj.isFile}",
+//                "File(srcItemPath).parent: ${File(insertTsvLine).parent}",
+//                "parentDirPath ${parentDirPath}",
+//                "destiFilePathObj.ab ${destiFilePathObj.absolutePath}",
+//            ).joinToString("\n\n")
+//        )
+        FileSystems.execCopyFileWithDir(
+            srcFilePathObj,
+            destiFilePathObj,
+            true,
         )
+        return listOf(
+            title,
+            destiFilePathObj.absolutePath,
+        ).joinToString("\t")
     }
 
     private fun makeInsertTsvLine(srcItem: String): String {
@@ -451,12 +550,12 @@ private object ExecCopyToOther {
         )
     }
 
-    private fun alreadyOkToast(
+    private fun updateOkToast(
         context: Context?
     ){
         toastMsg(
             context,
-            "Already ok",
+            "Update ok",
         )
     }
 
@@ -472,11 +571,11 @@ private object ExecCopyToOther {
             ).show()
         }
     }
-
 }
 
 private enum class CopyFileSimpleKey(
     val key: String
 ){
-    COPY_DESTI_TSV_PATH_CON("copyDestiTsvPathCon")
+    COPY_DESTI_TSV_PATH_CON("copyDestiTsvPathCon"),
+    EXTRA("extra"),
 }

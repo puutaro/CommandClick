@@ -237,7 +237,7 @@ object CommandClickVariables {
 
     fun replaceVariableInHolder(
         scriptContents: String,
-        replaceTabList: String,
+        replaceNewlineSepaCon: String,
         startHolder: String?,
         endHolder: String?,
     ): String {
@@ -250,9 +250,9 @@ object CommandClickVariables {
             endHolder.isNullOrEmpty()
         ) return scriptContents
         if(
-            replaceTabList.isEmpty()
+            replaceNewlineSepaCon.isEmpty()
         ) return scriptContents
-        val replaceMap = replaceTabList.split("\t").map {
+        val replaceMap = replaceNewlineSepaCon.split("\n").map {
             val keyValueList = it.split("=")
             val keyValueListSize = keyValueList.size
             if(

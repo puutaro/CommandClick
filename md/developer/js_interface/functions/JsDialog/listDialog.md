@@ -17,21 +17,21 @@ Show list dialog
 ```js.js
 
 jsDialog.listDialog(
-	listSource: String(tab sepalate)
+	listSource: String(new line sepalate)
 )
 
 ```
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| listSource | string | list string sepalated by tab |
+| arg name | type | description                       |
+| -------- | -------- |-----------------------------------|
+| listSource | string | list string sepalated by new line |
 
 ex1)
 
 ```js.js
 jsDialog.listDialog(
-	"${el1}\t${el2}\t${el3}\t.."
+	"${el1}\n${el2}\n${el3}\n.."
 );
 ```

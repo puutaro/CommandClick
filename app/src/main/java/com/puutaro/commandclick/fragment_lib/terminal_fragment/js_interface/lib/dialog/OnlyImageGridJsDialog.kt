@@ -97,7 +97,7 @@ class OnlyImageGridJsDialog(
     ) {
         val imagePathList =
             imagePathListTabSepaStr
-                .split("\t")
+                .split("\n  ")
                 .toMutableList()
         val context = context ?: return
         val linearLayoutForGridView = createLinearLayoutForGridView(

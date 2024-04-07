@@ -250,15 +250,22 @@ class FormJsDialog(
     ): List<String> {
         val setVariableTypeSource =
             formSettingVariables
-                .split("\t")
+                .split("\n")
                 .map{
                     "${CommandClickScriptVariable.SET_VARIABLE_TYPE}=\"${it}\""
                 }.joinToString("\n")
         val settingSectionContents =
-            "${settingSectionStart}\n${setVariableTypeSource}\n${settingSectionEnd}"
+            listOf(
+                settingSectionStart,
+                setVariableTypeSource,
+                settingSectionEnd,
+            ).joinToString("\n")
         val commandSectionContents =
-            "${commandSectionStart}\t${formCommandVariables}\t${commandSectionEnd}"
-                .replace("\t", "\n")
+            listOf(
+                commandSectionStart,
+                formCommandVariables,
+                commandSectionEnd,
+            ).joinToString("\n")
         return "\n\n${settingSectionContents}\n\n\n${commandSectionContents}\n".split("\n")
     }
 

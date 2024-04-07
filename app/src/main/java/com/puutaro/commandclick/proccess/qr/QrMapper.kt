@@ -2,8 +2,6 @@ package com.puutaro.commandclick.proccess.qr
 
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
-import com.puutaro.commandclick.util.CcScript
-import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.UrlFileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 
@@ -69,19 +67,6 @@ object QrMapper {
                     '&'
                 )
             }?.toMap()
-//            ?.let {
-//                QuoteTool.splitBySurroundedIgnore(
-//                    it,
-//                    '&'
-//                )
-//            }
-////            ?.split("&")
-//            ?.map {
-//            CcScript.makeKeyValuePairFromSeparatedString(
-//                it,
-//                "="
-//            )
-//        }?.toMap()
         if (
             subjectBodyMap.isNullOrEmpty()
         ) return mailAdMap
@@ -101,12 +86,6 @@ object QrMapper {
             scanConMapSrcStr,
             ';'
         ).toMap()
-//        scanConMapSrcStr.split(";").map {
-//            CcScript.makeKeyValuePairFromSeparatedString(
-//                it,
-//                "="
-//            )
-//        }.toMap()
     }
 
     fun makeMainUrl(

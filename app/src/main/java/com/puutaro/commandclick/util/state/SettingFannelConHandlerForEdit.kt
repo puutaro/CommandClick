@@ -10,28 +10,11 @@ object SettingFannelConHandlerForEdit {
         editFragment: EditFragment
     ): List<String> {
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
-//            when(fragment){
-//            is EditFragment -> fragment.readSharePreferenceMap
-//            is TerminalFragment -> fragment.readSharePreferenceMap
-//            else -> return emptyList()
-//        }
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
-//            when(fragment){
-//            is EditFragment -> fragment.setReplaceVariableMap
-//            is TerminalFragment -> fragment.setReplaceVariableMap
-//            else -> return emptyList()
-//        }
         val currentFannelPath =
             getFannelPath(editFragment)
 
         val currentScriptContentsList = editFragment.currentFannelConList
-//            when(fragment){
-//            is EditFragment -> fragment.currentFannelConList
-//            is TerminalFragment -> ReadText(
-//                currentFannelPath
-//            ).textToList()
-//            else -> return emptyList()
-//        }
         return execMakeSettingFanenlConList(
             readSharePreferenceMap,
             setReplaceVariableMap,
@@ -67,11 +50,6 @@ object SettingFannelConHandlerForEdit {
     ): String {
         val readSharePreferenceMap =
             editFragment.readSharePreferenceMap
-//            when(editFragment){
-//            is EditFragment -> editFragment.readSharePreferenceMap
-//            is TerminalFragment -> editFragment.readSharePreferenceMap
-//            else -> return String()
-//        }
         val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
             readSharePreferenceMap
         )

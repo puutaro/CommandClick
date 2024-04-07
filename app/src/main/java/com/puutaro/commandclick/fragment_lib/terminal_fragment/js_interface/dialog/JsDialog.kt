@@ -133,6 +133,9 @@ class JsDialog(
         formSettingVariables: String,
         formCommandVariables: String
     ): String{
+        if(
+            formCommandVariables.trim().isEmpty()
+        ) return String()
         return try {
             formJsDialog.create(
                 title,
@@ -152,10 +155,10 @@ class JsDialog(
     @JavascriptInterface
     fun getFormValue(
         targetVariableName: String,
-        contentsTabSepaListCon: String
+        contentsNewlineSepaListCon: String
     ): String {
-        val renameDirNameKeyValue = contentsTabSepaListCon
-            .split("\t").filter {
+        val renameDirNameKeyValue = contentsNewlineSepaListCon
+            .split("\n").filter {
             it.contains(targetVariableName)
         }.firstOrNull() ?: return String()
         if(renameDirNameKeyValue.isEmpty()) return String()
@@ -171,6 +174,9 @@ class JsDialog(
         currentItemListStr: String,
         preSelectedItemListStr: String,
     ): String {
+        if(
+            preSelectedItemListStr.trim().isEmpty()
+        ) return String()
         return multiSelectJsDialog.create(
             title,
             currentItemListStr,
@@ -182,12 +188,15 @@ class JsDialog(
     fun gridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return gridJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -195,12 +204,15 @@ class JsDialog(
     fun onlyImageGridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return onlyImageGridJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -208,12 +220,15 @@ class JsDialog(
     fun onlySpannableGridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return onlySpannableGridJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -221,12 +236,15 @@ class JsDialog(
     fun multiSelectGridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return multiSelectGridViewJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -234,12 +252,15 @@ class JsDialog(
     fun multiSelectOnlyImageGridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return multiSelectOnlyImageGridViewJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -247,12 +268,15 @@ class JsDialog(
     fun multiSelectSpannableGridDialog(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String
+        imagePathListNewlineSepaStr: String
     ): String {
+        if(
+            imagePathListNewlineSepaStr.trim().isEmpty()
+        ) return String()
         return multiSelectSpannableJsDialog.create(
             title,
             message,
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
     }
 
@@ -261,6 +285,9 @@ class JsDialog(
         title: String,
         imagePath: String
     ){
+        if(
+            imagePath.trim().isEmpty()
+        ) return
        asciiArtJsDialog.create(
            title,
            imagePath

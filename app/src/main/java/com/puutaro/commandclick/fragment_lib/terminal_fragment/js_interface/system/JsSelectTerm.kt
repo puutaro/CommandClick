@@ -16,16 +16,16 @@ class JsSelectTerm(
 ) {
     val context = terminalFragment.context
     val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
-    val subMenuPairListScr = SettingSubMenuEnums.values().map {
-        "${it.itemName}|${it.imageId}"
-    }.reversed().joinToString("\t")
+    val subMenuPairListStr = SettingSubMenuEnums.values().map {
+        "${it.itemName}\t${it.imageId}"
+    }.reversed().joinToString("\n")
 
     @JavascriptInterface
     fun launch(){
         val selectedMonitorFile = JsDialog(terminalFragment).listDialog(
             String(),
             String(),
-            subMenuPairListScr
+            subMenuPairListStr
         )
         if(
             selectedMonitorFile.isEmpty()

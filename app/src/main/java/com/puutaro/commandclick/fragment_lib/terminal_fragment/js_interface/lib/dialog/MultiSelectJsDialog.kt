@@ -20,8 +20,8 @@ class MultiSelectJsDialog(
         preSelectedItemListStr: String,
     ): String {
         terminalViewModel.multiSelectTabString = String()
-        val currentItemList = currentItemListStr.split("\t")
-        val preSelectedItemList = preSelectedItemListStr.split("\t")
+        val currentItemList = currentItemListStr.split("\n")
+        val preSelectedItemList = preSelectedItemListStr.split("\n")
         val updatedMultiModelArray = ArrayList(
             (currentItemList.indices).map {
                 MultiSelectModel(it, currentItemList[it])

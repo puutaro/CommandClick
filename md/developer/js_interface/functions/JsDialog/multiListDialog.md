@@ -7,7 +7,7 @@ Table
 ## Result
 
 Show multi select list dialog
--> selected elements string seplated by tab 
+-> selected elements string seprated by newline 
 
 
 ```js.js
@@ -21,11 +21,11 @@ jsDialog.multiListDialog(
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| title | string | title string |
-| currentItemListStr | string | list string sepalated by tab |
-| preSelectedItemListStr | string | selected elements string sepalated by tab |
+| arg name | type | description                               |
+| -------- | -------- |-------------------------------------------|
+| title | string | title string                              |
+| currentItemListStr | string | list string sepalated by newline          |
+| preSelectedItemListStr | string | selected elements string sepalated by newline |
 
 
 ex1)   

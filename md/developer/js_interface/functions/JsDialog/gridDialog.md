@@ -19,7 +19,7 @@ Show grid dialog
 jsDialog.gridDialog(
 	title: String,
 	message: String,
-	imagePathListTabSepalateString: String
+	imagePathListNewlineSepalateString: String
 )
 	-> selected image path
 
@@ -28,11 +28,11 @@ jsDialog.gridDialog(
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| title | string | string |
-| message | string | string |
-| imagePathListTabSepalateString | string | list image path string sepalated by tab |
+| arg name | type | description                                 |
+| -------- | -------- |---------------------------------------------|
+| title | string | string                                      |
+| message | string | string                                      |
+| imagePathListNewlineSepalateString | string | list image path string sepalated by newline |
 
 ex1)
 

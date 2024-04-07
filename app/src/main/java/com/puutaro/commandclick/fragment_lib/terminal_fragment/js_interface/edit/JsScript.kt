@@ -166,11 +166,11 @@ class JsScript(
     @JavascriptInterface
     fun replaceCommandVariable(
         scriptContents: String,
-        replaceTabList: String,
+        replaceNewlineSepaCon: String,
     ): String {
         return CommandClickVariables.replaceVariableInHolder(
             scriptContents,
-            replaceTabList,
+            replaceNewlineSepaCon,
             commandStartHolder,
             commandEndHolder,
         )

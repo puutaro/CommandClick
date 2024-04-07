@@ -105,9 +105,6 @@ class UrlHistoryAddToTsv (
     }
 
     private fun takeFromUrlHistoryList(): List<String> {
-        if(
-            editFragment !is EditFragment
-        ) return emptyList()
         val historyFirstExtractNum = 50
         val busyboxExecutor = editFragment.busyboxExecutor
         val argsMap = JsActionDataMapKeyObj.getJsMacroArgs(

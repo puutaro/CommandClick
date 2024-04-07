@@ -3,7 +3,6 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 import android.content.Intent
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListSelect
@@ -120,23 +119,17 @@ class JsQrEdit(
             qrConFilePath
         )
         val listSaveDirPath = "${fannelDirPath}/cmdclickQrList"
-        val resultKeyValueConSrc = makeResultKeyValueConSrc(
+        val resultKeyValueCon = makeResultKeyValueCon(
             qrConFilePath,
             qrMap,
             listSaveDirPath,
         )
         if(
-            resultKeyValueConSrc.isEmpty()
+            resultKeyValueCon.isEmpty()
         ) return
-        val resultKeyValueCon =
-            resultKeyValueConSrc.replace(
-                "\n",
-                "\t"
-            )
-
         val updateQrMap = CmdClickMap.createMap(
             resultKeyValueCon,
-            '\t'
+            '\n'
         ).toMap()
         val jsListSelect = JsListSelect(terminalFragment)
         updateQrMap.keys.forEach {
@@ -160,7 +153,7 @@ class JsQrEdit(
         )
     }
 
-    private fun makeResultKeyValueConSrc(
+    private fun makeResultKeyValueCon(
         qrConFilePath: String,
         qrMap: Map<String, String>,
         listSaveDirPath: String,
@@ -182,7 +175,7 @@ class JsQrEdit(
             ).joinToString(":")
             val valValueListStr = listOf(
                 "label=this",
-                "${listConListPathKey}=${listPath}!${listConLimitNumKey}=20!${listConInitMark}=DELETE"
+                "${listConListPathKey}=${listPath}?${listConLimitNumKey}=20?${listConInitMark}=DELETE"
             ).joinToString("|")
             "${valNameAndMacro}=${valValueListStr}"
         }.joinToString("\t")
@@ -192,7 +185,7 @@ class JsQrEdit(
                 it,
             )
             "${it}=${variableValue}"
-        }.joinToString("\t")
+        }.joinToString("\n")
         return JsDialog(terminalFragment).formDialog(
             "Edit: ${qrConFileName}",
             setVariableTypes,

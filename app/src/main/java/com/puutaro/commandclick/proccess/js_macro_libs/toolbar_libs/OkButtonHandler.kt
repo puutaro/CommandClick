@@ -46,7 +46,6 @@ object OkButtonHandler {
                 && onPassCmdVariableEdit
         val isSettingEdit = !enableCmdEdit
 
-//            val isFdialogFannel = FDialogTempFile.howFDialogFile(currentScriptFileName)
         val isOnlyCmdEditNoFdialog = enableCmdEdit
                 && !editFragment.enableEditExecute
         when (true) {
@@ -83,21 +82,6 @@ object OkButtonHandler {
             else -> {}
         }
     }
-
-//        private fun fDialogOkButtonProcess() {
-//            FreeDialogReflector.reflect(
-//                editFragment.srcReadSharePreffernceMap,
-//                editFragment.readSharePreferenceMap,
-//            )
-//            val listener =
-//                this.context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-//            listener?.onToolBarButtonClickForEditFragment(
-//                String(),
-//                ToolbarButtonBariantForEdit.CANCEL,
-//                mapOf(),
-//                false
-//            )
-//        }
 
     fun cmdValSaveAndBack(
         editFragment: EditFragment

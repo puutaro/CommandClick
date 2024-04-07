@@ -184,7 +184,7 @@ class JsFileAdder(
     ): String {
         val nextSeparator = EditSeparator.getNextSeparator(separator) ?: '|'
         val compTitleMap = CmdClickMap.createMap(
-            compFileNameMap.get(AddFileForEdit.AddArgsKey.TITLE_ARGS.key),
+            compFileNameMap.get(AddFileForEdit.AddFileExtraArgs.TITLE_ARGS.key),
             nextSeparator
         ).toMap()
 //        FileSystems.updateFile(

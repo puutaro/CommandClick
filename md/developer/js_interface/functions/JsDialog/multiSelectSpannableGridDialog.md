@@ -18,7 +18,7 @@ Show spannable multi select grid dialog
 jsDialog.multiSelectSpannableGridDialog(
 	title: String,
 	message: String,
-	imagePathListTabSepalateString: String
+	imagePathListNewlineSepalateString: String
 );
 
 ```
@@ -29,7 +29,7 @@ jsDialog.multiSelectSpannableGridDialog(
 | -------- | -------- | -------- |
 | title | string | string |
 | message | string | string |
-| imagePathListTabSepalateString | string | list image path string sepalated by tab |
+| imagePathListNewlineSepalateString | string | list image path string sepalated by Newline |
 
 ex1)
 

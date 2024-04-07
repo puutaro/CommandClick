@@ -139,7 +139,7 @@ function modeSwitcher(){
 			const fannelName = jsDialog.gridDialog(
 		        "select add fannel",
 		        "",
-		        fannelList.join("\t")
+		        fannelList.join("\n")
 		    );
 		    alert(fannelName);
 		    // const currentFannelsCon = jsFileSystem.readLocalFile(

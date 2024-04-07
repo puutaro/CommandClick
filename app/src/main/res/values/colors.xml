@@ -17,4 +17,6 @@
     <color name="setting_menu_footer">#dcf4f5</color>
     <color name="checked_item_color">#36B3E0</color>
     <color name="yellow">#f4f728</color>
+    <color name="ligthBlue">#0cadf2</color>
+    <color name="navy">#020c3b</color>
 </resources>

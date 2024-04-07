@@ -34,7 +34,7 @@ class ListJsDialog(
     companion object {
         val icons8Wheel = com.puutaro.commandclick.R.drawable.icons8_wheel
         val iconNameIndex = 1
-        val nameIconNameSeparator = '|'
+        const val nameIconNameSeparator = '\t'
     }
 
     fun create(
@@ -214,14 +214,13 @@ class ListJsDialog(
     private fun makeNameToIconList(
         listSource: String
     ): List<Pair<String, Int>> {
-        return listSource.split("\t").filter{
+        return listSource.split("\n").filter{
             it.trim().isNotEmpty()
         }.map {
             val nameIconNameList = QuoteTool.splitBySurroundedIgnore(
                 it,
                 nameIconNameSeparator
             )
-//                it.split(nameIconNameSeparator)
             val itemName = nameIconNameList.first().trim()
             val iconId = nameIconNameList.getOrNull(iconNameIndex).let {
                     getIconNameSrc ->

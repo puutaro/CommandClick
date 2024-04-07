@@ -21,7 +21,7 @@ Show grid dialog
 jsDialog.multiSelectOnlyImageGridDialog(
 	title: String,
 	message: String,
-	imagePathListTabSepalateString: String
+	imagePathListNewLineSepalateString: String
 );
 -> selected image paths
 ```
@@ -32,7 +32,7 @@ jsDialog.multiSelectOnlyImageGridDialog(
 | -------- | -------- | -------- |
 | title | string | string |
 | message | string | string |
-| imagePathListTabSepalateString | string | list image path string sepalated by tab |
+| imagePathListNewLineSepalateString | string | list image path string sepalated by newLine |
 
 ex1)
 

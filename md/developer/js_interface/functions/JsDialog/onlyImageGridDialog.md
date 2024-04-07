@@ -21,7 +21,7 @@ Show grid dialog
 jsDialog.onlyImageGridDialog(
 	title: String,
 	message: String,
-	imagePathListTabSepalateString: String
+	imagePathListNewlineSepalateString: String
 )
 ```
 
@@ -31,7 +31,7 @@ jsDialog.onlyImageGridDialog(
 | -------- | -------- | -------- |
 | title | string | string |
 | message | string | string |
-| imagePathListTabSepalateString | string | list image path strings sepalated by tab |
+| imagePathListNewlineSepalateString | string | list image path strings sepalated by newline |
 
 ex1)
 

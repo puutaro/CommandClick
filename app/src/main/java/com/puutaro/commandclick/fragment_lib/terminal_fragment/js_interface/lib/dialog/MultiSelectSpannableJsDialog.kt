@@ -27,7 +27,7 @@ class MultiSelectSpannableJsDialog(
     fun create(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ): String {
         terminalViewModel.onDialog = true
         returnValue = String()
@@ -36,7 +36,7 @@ class MultiSelectSpannableJsDialog(
                 execCreate(
                     title,
                     message,
-                    imagePathListTabSepaStr
+                    imagePathListNewlineSepaStr
                 )
             }
             withContext(Dispatchers.IO) {
@@ -52,7 +52,7 @@ class MultiSelectSpannableJsDialog(
     private fun execCreate(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ) {
 
         if(
@@ -79,7 +79,7 @@ class MultiSelectSpannableJsDialog(
         ) messageTextView.text = message
         else messageTextView.isVisible = false
         setGridView(
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
         val cancelButton = gridDialogObj?.findViewById<ImageButton>(
             com.puutaro.commandclick.R.id.multi_select_spannable_grid_dialog_cancel
@@ -110,10 +110,10 @@ class MultiSelectSpannableJsDialog(
     }
 
     private fun setGridView(
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ){
         val imagePathList = makeImagePathList(
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
         val multiSelectGridView = gridDialogObj?.findViewById<GridView>(
             com.puutaro.commandclick.R.id.multi_select_spannable_grid_dialog_grid_view
@@ -145,15 +145,15 @@ class MultiSelectSpannableJsDialog(
                 pos
             )
             returnValue =
-                multiSelectSpannableAdapter.selectedItemList.joinToString("\t")
+                multiSelectSpannableAdapter.selectedItemList.joinToString("\n")
             return@setOnItemClickListener
         }
     }
 
     private fun makeImagePathList(
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ): List<String> {
-        return imagePathListTabSepaStr
-            .split("\t")
+        return imagePathListNewlineSepaStr
+            .split("\n")
     }
 }

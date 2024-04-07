@@ -246,9 +246,11 @@ object LogTool {
         ): String? {
             val errWordExtractRegexList = listOf(
                 Regex("([^ \t]+?) is not defined"),
+                Regex("(.*) is not a function"),
                 Regex("SyntaxError: Missing initializer in (const) declaration"),
                 Regex("SyntaxError: Unexpected token '(.*)'"),
                 Regex("SyntaxError: Missing (.*) in template expression"),
+                Regex("SyntaxError: missing (.*) after argument list"),
             )
             errWordExtractRegexList.forEach {
                 try {

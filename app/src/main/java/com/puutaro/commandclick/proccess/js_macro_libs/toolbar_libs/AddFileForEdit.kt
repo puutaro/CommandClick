@@ -30,7 +30,7 @@ object AddFileForEdit {
             ) ?: String()
         val addTitleArgs =
             argsMap.get(
-                AddArgsKey.TITLE_ARGS.key
+                AddFileExtraArgs.TITLE_ARGS.key
             ) ?: String()
         val dirPath =
             argsMap.get(
@@ -59,7 +59,7 @@ object AddFileForEdit {
             "${EditSettingExtraArgsTool.ExtraKey.COMP_PREFIX.key}=${compPrefix}",
             "${EditSettingExtraArgsTool.ExtraKey.COMP_SUFFIX.key}=${compSuffix}",
             "${AddFileExtraArgs.DIR_PATH.key}=${dirPath}",
-            "${AddArgsKey.TITLE_ARGS.key}=${addTitleArgs}",
+            "${AddFileExtraArgs.TITLE_ARGS.key}=${addTitleArgs}",
         ).joinToString("|")
         val useClassName = ExecJsInterfaceAdder.convertUseJsInterfaceName(
             JsFileAdder::class.java.simpleName
@@ -79,12 +79,8 @@ object AddFileForEdit {
     enum class AddFileExtraArgs(
         val key: String
     ){
-        DIR_PATH("dirPath")
-    }
-
-    enum class AddArgsKey(
-        val key: String
-    ){
+        DIR_PATH("dirPath"),
         TITLE_ARGS("titleArgs")
     }
+
 }

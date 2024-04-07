@@ -27,7 +27,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
     fun create(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ): String {
         terminalViewModel.onDialog = true
         returnValue = String()
@@ -36,7 +36,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
                 execCreate(
                     title,
                     message,
-                    imagePathListTabSepaStr
+                    imagePathListNewlineSepaStr
                 )
             }
             withContext(Dispatchers.IO) {
@@ -53,7 +53,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
     private fun execCreate(
         title: String,
         message: String,
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ) {
         if(
             context == null
@@ -79,7 +79,7 @@ class MultiSelectOnlyImageGridViewJsDialog(
         ) messageTextView.text = message
         else messageTextView.isVisible = false
         setGridView(
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
         val cancelButton = gridDialogObj?.findViewById<ImageButton>(
             com.puutaro.commandclick.R.id.multi_select_grid_dialog_cancel
@@ -110,10 +110,10 @@ class MultiSelectOnlyImageGridViewJsDialog(
     }
 
     private fun setGridView(
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ){
         val imagePathList = makeImagePathList(
-            imagePathListTabSepaStr
+            imagePathListNewlineSepaStr
         )
         val multiSelectGridView = gridDialogObj?.findViewById<GridView>(
             com.puutaro.commandclick.R.id.multi_select_grid_dialog_grid_view
@@ -144,15 +144,15 @@ class MultiSelectOnlyImageGridViewJsDialog(
                 pos
             )
             returnValue =
-                multiSelectOnlyImageAdapter.selectedItemList.joinToString("\t")
+                multiSelectOnlyImageAdapter.selectedItemList.joinToString("\n")
             return@setOnItemClickListener
         }
     }
 
     private fun makeImagePathList(
-        imagePathListTabSepaStr: String,
+        imagePathListNewlineSepaStr: String,
     ): List<String> {
-        return imagePathListTabSepaStr
-                .split("\t")
+        return imagePathListNewlineSepaStr
+                .split("\n")
     }
 }

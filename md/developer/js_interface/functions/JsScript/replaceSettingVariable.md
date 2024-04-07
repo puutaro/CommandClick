@@ -16,17 +16,17 @@ Replace [setting variables](https://github.com/puutaro/CommandClick/blob/master/
 ```js.js
 jsScript.replaceSettingVariable(
   jsContents: String,
-  replaceTabList: String
+  replaceNewlineSepaList: String
 )
 
 ```
 
 ## Argument
 
-| arg name | type | description |
-| -------- | -------- | -------- |
-| jsContents | string | js script contents |
-| replaceTabList | string | variable name to value string list sepalated by tab |
+| arg name | type | description                                             |
+| -------- | -------- |---------------------------------------------------------|
+| jsContents | string | js script contents                                      |
+| replaceNewlineSepaList | string | variable name to value string list sepalated by newline |
 
 
 
