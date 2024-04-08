@@ -11,16 +11,18 @@ object AlterIfShellTool {
     enum class IfShellKey(
         val key: String,
     ) {
-        SHELL_IF_PATHShell("shellIfPath"),
-        SHELL_IF_CONShell("shellIfCon"),
-        IF_GET("ifGet"),
+        SHELL_IF_PATH_SHELL("shellIfPath"),
+        SHELL_IF_CON_SHELL("shellIfCon"),
+        MACRO_IF("macroIf"),
+//        IF_GET("ifGet"),
         IF_SHELL_ARGS("ifArgs"),
-        SAVE_RESULT("saveResult")
+//        SAVE_RESULT("saveResult")
     }
 
 
-    private val shellIfConKey = IfShellKey.SHELL_IF_CONShell.key
-    private val shellIfPathKey = IfShellKey.SHELL_IF_PATHShell.key
+    private val shellIfConKey = IfShellKey.SHELL_IF_CON_SHELL.key
+    private val shellIfPathKey = IfShellKey.SHELL_IF_PATH_SHELL.key
+    private val macroIfKey = IfShellKey.MACRO_IF.key
     private val shellIfArgsKey = IfShellKey.IF_SHELL_ARGS.key
     private val ifKeyList = IfShellKey.values().map { it.key }.filter {
         val isNotShellIfArgsKey =
@@ -108,6 +110,38 @@ object AlterIfShellTool {
        return busyboxExecutor.getCmdOutput(
             shellCon,
         ).trim()
+    }
+
+    private fun getFromIfMacro(
+        context: Context,
+        alterKeyValuePairList: List<Pair<String, String>>,
+        currentIndex: Int,
+        alterKey: String,
+        alterPair: Pair<String, String>,
+        replaceVariableMap: Map<String, String>?,
+        ifArgsSeparator: Char,
+    ): String {
+        if (
+            alterKey != macroIfKey
+        ) return String()
+        val shellIfPath = alterPair.second
+        val currentAlterIfMap = makeCurrentShellIfMap(
+            alterKeyValuePairList,
+            currentIndex,
+        )
+        val extraRepValMap =CmdClickMap.createMap(
+            currentAlterIfMap.get(
+                shellIfArgsKey
+            ),
+            ifArgsSeparator
+        ).toMap()
+        val shellCon = ShellMacroHandler.makeShellCon(
+            context,
+            shellIfPath,
+            replaceVariableMap,
+            extraRepValMap,
+        )
+        return
     }
 
     private fun getFromIfShellPath(
