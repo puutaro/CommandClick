@@ -200,7 +200,7 @@ object ListIndexEditConfig {
         fileNameTextView: AppCompatTextView?,
         fileName: String,
         listIndexConfigMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor,
+        busyboxExecutor: BusyboxExecutor?,
     ) {
         val fileNameConfigMap = CmdClickMap.createMap(
             listIndexConfigMap?.get(
@@ -232,7 +232,7 @@ object ListIndexEditConfig {
         listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor,
+        busyboxExecutor: BusyboxExecutor?,
     ): String {
         return when(listIndexTypeKey){
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
@@ -258,7 +258,7 @@ object ListIndexEditConfig {
     private fun makeFannelName(
         fileNameSrc: String,
         fileNameConfigMap: Map<String, String>?,
-        busyboxExecutor: BusyboxExecutor,
+        busyboxExecutor: BusyboxExecutor?,
     ): String {
         if (
             fileNameConfigMap.isNullOrEmpty()
@@ -282,6 +282,9 @@ object ListIndexEditConfig {
                 ) return@let compPrefixedFileName
                 UsePath.compExtend(fileNameSrc, it)
             }
+        if(
+            busyboxExecutor == null
+        ) return compSuffixedFileName
         return fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.SHELL_PATH.key).let {
             if (
                 it.isNullOrEmpty()
@@ -307,7 +310,7 @@ object ListIndexEditConfig {
         val fileNameOrInstallFannelLine: String,
         val fileCon: String,
         val listIndexConfigMap: Map<String, String>?,
-        val busyboxExecutor: BusyboxExecutor
+        val busyboxExecutor: BusyboxExecutor?
     )
     fun makeFileDesc(
         makeFileDescArgsMaker: MakeFileDescArgsMaker
@@ -361,6 +364,7 @@ object ListIndexEditConfig {
             )
         }
         val busyboxExecutor = makeFileDescArgsMaker.busyboxExecutor
+            ?: return null
         return descConfigMap.get(
             DescSettingsForListIndex.ListIndexDescKey.SHELL_PATH.key
         ).let {

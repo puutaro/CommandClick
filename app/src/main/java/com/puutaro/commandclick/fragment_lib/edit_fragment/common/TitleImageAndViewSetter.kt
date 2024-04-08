@@ -7,8 +7,6 @@ import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.EditSettingExtraArgsTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrLogo
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 
@@ -155,8 +153,9 @@ private object EditTextMaker {
         if(
             editTextPropertyMap.isNullOrEmpty()
         ) return null
-        val context = editFragment.context
-            ?: return null
+        val busyboxExecutor =
+            editFragment.busyboxExecutor
+                ?: return null
         val setReplaceVariableMap =
             editFragment.setReplaceVariableMap
 
@@ -195,10 +194,10 @@ private object EditTextMaker {
                 )
             }
         }
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            UbuntuFiles(context),
-        )
+//        val busyboxExecutor = BusyboxExecutor(
+//            context,
+//            UbuntuFiles(context),
+//        )
         val repValMap = editTextPropertyMap.get(
             TitleTextSettingKey.ARGS.key
         ).let {

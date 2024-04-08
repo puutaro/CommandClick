@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.edit.lib
 
-import android.content.Context
 import androidx.fragment.app.Fragment
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.edit.RecordNumToMapNameValueInHolderColumn
@@ -8,9 +7,8 @@ import com.puutaro.commandclick.common.variable.edit.SetVariableTypeColumn
 import com.puutaro.commandclick.common.variable.edit.TypeVariable
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.settings.EditSettings
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterIfShellTool
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -30,6 +28,7 @@ object SetVariableTyper {
         setVariableTypeList: List<String>?,
         recordNumToMapNameValueInCommandHolder: Map<Int, Map<String,String>?>?,
         replaceVariableMap: Map<String, String>?,
+        busyboxExecutor: BusyboxExecutor?,
     ): Map<Int, Map<String, String>>? {
         val context = fragment.context
             ?: return null
@@ -41,10 +40,10 @@ object SetVariableTyper {
         if(
             setVariableTypeListLength < 0
         ) return null
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            UbuntuFiles(context)
-        )
+//        val busyboxExecutor = BusyboxExecutor(
+//            context,
+//            UbuntuFiles(context)
+//        )
         return (0..setVariableTypeListLength).map {
             val currentFetchSetVariableType = setVariableTypeList[it]
             val currentFetchSetVariableTypeLength = currentFetchSetVariableType.length
@@ -80,7 +79,6 @@ object SetVariableTyper {
                 equalIndex + 1, currentFetchSetVariableTypeLength
             )
             val variableTypeValue = AlterToolForSetValType.makeVariableTypeValueByAlter(
-                context,
                 variableTypeValueSrc,
                 busyboxExecutor,
                 replaceVariableMap,
@@ -272,13 +270,12 @@ object SetVariableTyper {
 
 private object AlterToolForSetValType {
 
-    private const val alterKeyName = AlterIfShellTool.alterKeyName
+    private const val alterKeyName = JsAcAlterIfTool.alterKeyName
     private const val setValSeparator = '|'
     private const val typeSeparator = '?'
     private const val ifArgsSeparator = '&'
 
     fun makeVariableTypeValueByAlter(
-        context: Context,
         variableTypeValue: String,
         busyboxExecutor: BusyboxExecutor?,
         replaceVariableMap: Map<String, String>?
@@ -312,14 +309,13 @@ private object AlterToolForSetValType {
                 alterValue,
                 replaceVariableMap
             )
-            val shellIfOutput = AlterIfShellTool.getShellIfOutput(
-                context,
+            val ifOutput = JsAcAlterIfTool.getIfOutput(
                 busyboxExecutor,
                 alterKeyValuePairList,
                 replaceVariableMap,
                 ifArgsSeparator
             )
-            val disableAlter = shellIfOutput.isEmpty()
+            val disableAlter = ifOutput.isEmpty()
             if(
                 disableAlter
             ) return@map QuoteTool.splitBySurroundedIgnore(
@@ -328,11 +324,12 @@ private object AlterToolForSetValType {
             ).filter {
                 !it.startsWith(alterKeyEqualStr)
             }.joinToString(typeSeparator.toString())
-            val updateTypeValue = execAlter(
+            val updateTypeValue = JsAcAlterIfTool.execAlter(
                 typeValueList,
                 alterKeyValuePairList,
                 alterValue,
-                shellIfOutput,
+                ifOutput,
+                typeSeparator
             )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_makeVariableTypeValueByalter.txt").absolutePath,
@@ -345,54 +342,6 @@ private object AlterToolForSetValType {
 //            )
             updateTypeValue
         }.joinToString(setValSeparator.toString())
-    }
-
-    private fun execAlter(
-        typeValueList: List<String>,
-        alterKeyValuePairList: List<Pair<String, String>>,
-        alterValue: String,
-        shellIfOutput: String,
-    ): String {
-        val alterIfShellKeyList =
-            AlterIfShellTool.IfShellKey.values().map{ it.key }
-        val alterMapSrc =
-            alterKeyValuePairList.toMap()
-        val alterMap =
-            alterMapSrc +
-                    CmdClickMap.createMap(
-                        shellIfOutput,
-                        typeSeparator
-                    )
-        val alterMapKeyList = alterMap.keys
-        val currentTypeValueWithAlterKeyRemove = typeValueList.map {
-                typeValue ->
-            val alterKey = alterMapKeyList.firstOrNull {
-                typeValue.startsWith("${it}=")
-            }
-            if(
-                alterKey.isNullOrEmpty()
-            ) return@map typeValue
-//            FileSystems.updateFile(
-//                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
-//                listOf(
-//                    "alterMapKeyList: ${alterMapKeyList}",
-//                    "typeValue: ${typeValue}",
-//                    "alterKey: ${alterKey}",
-//                ).joinToString("\n\n-------\n")
-//            )
-            String()
-        }.joinToString(typeSeparator.toString())
-        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
-            alterValue,
-            typeSeparator
-        ).filter {
-            !alterIfShellKeyList.contains(it)
-        }.joinToString(typeSeparator.toString())
-        return listOf(
-            currentTypeValueWithAlterKeyRemove,
-            alterValueExcludeIfKey,
-            shellIfOutput,
-        ).joinToString(typeSeparator.toString())
     }
 
     private fun makeAlterKeyValuePairList(

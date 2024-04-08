@@ -53,7 +53,6 @@ object ExecShellForMusicPlayer {
             UbuntuFiles(context),
         )
         ShellMacroHandler.handle(
-            context,
             busyboxExecutor,
             shellPath,
             setReplaceVariableMap,

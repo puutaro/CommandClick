@@ -10,6 +10,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.*
 import com.puutaro.commandclick.proccess.ScriptFileDescription
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.*
 import com.puutaro.commandclick.proccess.edit.lib.SetVariableTyper
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.LogSystems
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -61,11 +62,11 @@ class EditTextProducerForEdit(
         when (onSettingEdit) {
             true -> execAddEditComponent(
                 editFragment.recordNumToMapNameValueInSettingHolder,
-                EditTextIdForEdit.SETTING_VARIABLE.id
+                EditTextIdForEdit.SETTING_VARIABLE.id,
             )
             false -> execAddEditComponent(
                 editFragment.recordNumToMapNameValueInCommandHolder,
-                EditTextIdForEdit.COMMAND_VARIABLE.id
+                EditTextIdForEdit.COMMAND_VARIABLE.id,
             )
         }
         val disableDesc =
@@ -89,6 +90,7 @@ class EditTextProducerForEdit(
                 editFragment.setVariableTypeList,
                 recordNumToMapNameValueInCommandOrSettingHolder,
                 editFragment.setReplaceVariableMap,
+                editFragment.busyboxExecutor,
             )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "setValMap.txt").absolutePath,

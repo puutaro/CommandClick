@@ -1,38 +1,33 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
-import android.content.Context
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
+import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 
-object AlterIfShellTool {
+object JsAcAlterIfTool {
     const val alterKeyName = "alter"
     enum class IfShellKey(
         val key: String,
     ) {
         SHELL_IF_PATH_SHELL("shellIfPath"),
         SHELL_IF_CON_SHELL("shellIfCon"),
-        MACRO_IF("macroIf"),
-//        IF_GET("ifGet"),
-        IF_SHELL_ARGS("ifArgs"),
-//        SAVE_RESULT("saveResult")
+        IF_ARGS("ifArgs"),
     }
 
 
     private val shellIfConKey = IfShellKey.SHELL_IF_CON_SHELL.key
     private val shellIfPathKey = IfShellKey.SHELL_IF_PATH_SHELL.key
-    private val macroIfKey = IfShellKey.MACRO_IF.key
-    private val shellIfArgsKey = IfShellKey.IF_SHELL_ARGS.key
+    private val ifArgsKey = IfShellKey.IF_ARGS.key
     private val ifKeyList = IfShellKey.values().map { it.key }.filter {
         val isNotShellIfArgsKey =
-            it != shellIfArgsKey
+            it != ifArgsKey
         isNotShellIfArgsKey
     }
 
 
-    fun getShellIfOutput(
-        context: Context,
+    fun getIfOutput(
         busyboxExecutor: BusyboxExecutor,
         alterKeyValuePairList: List<Pair<String, String>>?,
         replaceVariableMap: Map<String, String>?,
@@ -42,31 +37,20 @@ object AlterIfShellTool {
             alterKeyValuePairList.isNullOrEmpty()
         ) return String()
 
-        var shellIfOutput = String()
         run loop@{
             alterKeyValuePairList.forEachIndexed {
                     currentIndex, alterPair ->
                 val alterKey = alterPair.first
-//                FileSystems.updateFile(
-//                    File(UsePath.cmdclickDefaultAppDirPath, "setVal_loop.txt").absolutePath,
-//                    listOf(
-//                        "alterKeyValuePairList: ${alterKeyValuePairList}",
-//                        "alterKey: $alterKey",
-//                        "currentIndex ${currentIndex}",
-//                        "alterPair: ${alterPair}",
-//                    ).joinToString("\n\n\n")
-//                )
-                shellIfOutput = getFromIfShellCon(
+                val shellIfConOutput = getFromIfShellCon(
                     busyboxExecutor,
                     alterKey,
                     alterPair,
                     replaceVariableMap
                 )
-                if (shellIfOutput.isNotEmpty()) {
-                    return shellIfOutput
-                }
-                shellIfOutput = getFromIfShellPath(
-                    context,
+                if (
+                    shellIfConOutput.isNotEmpty()
+                ) return shellIfConOutput
+                val shellIfPathOutput = getFromIfShellPath(
                     busyboxExecutor,
                     alterKeyValuePairList,
                     currentIndex,
@@ -75,9 +59,9 @@ object AlterIfShellTool {
                     replaceVariableMap,
                     ifArgsSeparator,
                 )
-                if (shellIfOutput.isNotEmpty()) {
-                    return shellIfOutput
-                }
+                if (
+                    shellIfPathOutput.isNotEmpty()
+                ) return shellIfPathOutput
             }
         }
 //        FileSystems.updateFile(
@@ -89,6 +73,56 @@ object AlterIfShellTool {
 //            ).joinToString("\n\n\n")
 //        )
         return String()
+    }
+
+
+    fun execAlter(
+        currentConfigValueList: List<String>,
+        alterKeyValuePairList: List<Pair<String, String>>,
+        alterValue: String,
+        shellIfOutput: String,
+        separator: Char,
+    ): String {
+        val alterIfShellKeyList =
+            JsAcAlterIfTool.IfShellKey.values().map{ it.key }
+        val alterMapSrc = alterKeyValuePairList.toMap()
+        val alterMap =
+            alterMapSrc +
+                    CmdClickMap.createMap(
+                        shellIfOutput,
+                        separator
+                    )
+        val alterMapKeyList = alterMap.keys
+        val currentConfigValueListWithAlterKeyRemove =
+            currentConfigValueList.map {
+                    configValue ->
+                val alterKey = alterMapKeyList.firstOrNull {
+                    configValue.startsWith("${it}=")
+                }
+                if(
+                    alterKey.isNullOrEmpty()
+                ) return@map configValue
+                //                FileSystems.updateFile(
+                //                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
+                //                    listOf(
+                //                        "alterMapKeyList: ${alterMapKeyList}",
+                //                        "typeValue: ${typeValue}",
+                //                        "alterKey: ${alterKey}",
+                //                    ).joinToString("\n\n-------\n")
+                //                )
+                String()
+            }.joinToString(separator.toString())
+        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
+            alterValue,
+            separator
+        ).filter {
+            !alterIfShellKeyList.contains(it)
+        }.joinToString(separator.toString())
+        return listOf(
+            currentConfigValueListWithAlterKeyRemove,
+            alterValueExcludeIfKey,
+            shellIfOutput,
+        ).joinToString(separator.toString())
     }
 
     private fun getFromIfShellCon(
@@ -112,40 +146,7 @@ object AlterIfShellTool {
         ).trim()
     }
 
-    private fun getFromIfMacro(
-        context: Context,
-        alterKeyValuePairList: List<Pair<String, String>>,
-        currentIndex: Int,
-        alterKey: String,
-        alterPair: Pair<String, String>,
-        replaceVariableMap: Map<String, String>?,
-        ifArgsSeparator: Char,
-    ): String {
-        if (
-            alterKey != macroIfKey
-        ) return String()
-        val shellIfPath = alterPair.second
-        val currentAlterIfMap = makeCurrentShellIfMap(
-            alterKeyValuePairList,
-            currentIndex,
-        )
-        val extraRepValMap =CmdClickMap.createMap(
-            currentAlterIfMap.get(
-                shellIfArgsKey
-            ),
-            ifArgsSeparator
-        ).toMap()
-        val shellCon = ShellMacroHandler.makeShellCon(
-            context,
-            shellIfPath,
-            replaceVariableMap,
-            extraRepValMap,
-        )
-        return
-    }
-
     private fun getFromIfShellPath(
-        context: Context,
         busyboxExecutor: BusyboxExecutor,
         alterKeyValuePairList: List<Pair<String, String>>,
         currentIndex: Int,
@@ -164,16 +165,22 @@ object AlterIfShellTool {
         )
         val extraRepValMap =CmdClickMap.createMap(
             currentAlterIfMap.get(
-                shellIfArgsKey
+                ifArgsKey
             ),
             ifArgsSeparator
         ).toMap()
-        val shellCon = ShellMacroHandler.makeShellCon(
-            context,
+        return ShellMacroHandler.handle(
+            busyboxExecutor,
             shellIfPath,
             replaceVariableMap,
             extraRepValMap,
         )
+//        val shellCon = ShellMacroHandler.makeShellCon(
+//            context,
+//            shellIfPath,
+//            replaceVariableMap,
+//            extraRepValMap,
+//        )
 //        FileSystems.updateFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_getFromIfShellPath.txt").absolutePath,
 //            listOf(
@@ -189,9 +196,9 @@ object AlterIfShellTool {
 //                ).trim()}",
 //            ).joinToString("\n\n\n")
 //        )
-        return busyboxExecutor.getCmdOutput(
-            shellCon,
-        ).trim()
+//        return busyboxExecutor.getCmdOutput(
+//            shellCon,
+//        ).trim()
     }
 
     private fun makeCurrentShellIfMap(

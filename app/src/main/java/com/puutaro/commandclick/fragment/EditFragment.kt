@@ -31,7 +31,6 @@ import com.puutaro.commandclick.databinding.EditFragmentBinding
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.variable.ToolbarMenuCategoriesVariantForCmdIndex
 import com.puutaro.commandclick.fragment_lib.edit_fragment.*
 import com.puutaro.commandclick.fragment_lib.edit_fragment.broadcast.receiver.BroadcastReceiveHandlerForEdit
-import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TerminalShowByTerminalDoWhenReuse
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.KeyboardWhenTermLongForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ListIndexSizingToKeyboard
@@ -192,6 +191,12 @@ class EditFragment: Fragment() {
         Keyboard.hiddenKeyboardForFragment(
             this
         )
+        context?.let {
+            busyboxExecutor = BusyboxExecutor(
+                it,
+                UbuntuFiles(it)
+            )
+        }
         SetConfigInfo.set(this)
         SharePrefTool.putAllSharePref(
             sharePref,
@@ -293,7 +298,6 @@ class EditFragment: Fragment() {
         }
         val editModeHandler = EditModeHandler(
             this,
-            binding,
         )
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "edit.txt").absolutePath,

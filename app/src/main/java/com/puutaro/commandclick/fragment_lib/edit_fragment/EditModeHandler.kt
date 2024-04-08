@@ -8,16 +8,17 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModi
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
+import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import kotlinx.coroutines.*
 
 
 class EditModeHandler(
     private val editFragment: EditFragment,
-    binding: EditFragmentBinding,
 ) {
     private val context = editFragment.context
     private val readSharePreferenceMap = editFragment.readSharePreferenceMap
     private val editExecuteValue = editFragment.editExecuteValue
+    private val binding = editFragment.binding
     private val toolbarButtonProducerForEdit = ToolbarButtonProducerForEdit(
         binding,
         editFragment,

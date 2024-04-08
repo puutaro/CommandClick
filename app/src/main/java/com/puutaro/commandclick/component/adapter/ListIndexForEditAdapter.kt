@@ -48,10 +48,11 @@ class ListIndexForEditAdapter(
     private val maxTakeSize = 150
     private val listLimitSize = 300
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
-    private val busyboxExecutor = BusyboxExecutor(
-        context,
-        UbuntuFiles(context as Context)
-    )
+    private val busyboxExecutor = editFragment.busyboxExecutor
+//        BusyboxExecutor(
+//        context,
+//        UbuntuFiles(context as Context)
+//    )
 
     private val qrDialogConfigMap =
         editFragment.qrDialogConfig ?: mapOf()

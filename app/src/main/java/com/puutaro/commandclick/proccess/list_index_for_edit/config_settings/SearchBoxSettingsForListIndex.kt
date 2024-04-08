@@ -18,7 +18,7 @@ object SearchBoxSettingsForListIndex {
         OFF
     }
 
-    private const val backstackCountMarkForInsertEditText = "\${BACKSTACK_COUNT}"
+    const val backstackCountMarkForInsertEditText = "\${BACKSTACK_COUNT}"
     private const val fannelTitleMarkForInsertEditText = "\${FANNEL_TITLE}"
 
     fun makeCurrentVariableValueInEditText(

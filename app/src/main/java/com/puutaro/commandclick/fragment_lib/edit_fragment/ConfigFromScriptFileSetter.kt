@@ -15,7 +15,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.RecordNumTo
 import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
-import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.AlterIfShellTool
+import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.JsAcAlterIfTool
 import com.puutaro.commandclick.proccess.js_macro_libs.macros.MacroForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapKey
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
@@ -37,10 +37,10 @@ object ConfigFromScriptFileSetter {
     ){
         val context = editFragment.context
             ?: return
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            UbuntuFiles(context)
-        )
+//        val busyboxExecutor = BusyboxExecutor(
+//            context,
+//            UbuntuFiles(context)
+//        )
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val onShortcut = SharePrefTool.getOnShortcut(
@@ -90,7 +90,7 @@ object ConfigFromScriptFileSetter {
             AlterToolForSetValType.updateConfigMapByAlter(
                 context,
                 it,
-                busyboxExecutor,
+                editFragment.busyboxExecutor,
                 setReplaceVariableMap
             )
         }
@@ -99,7 +99,7 @@ object ConfigFromScriptFileSetter {
         )
         setToolbarButtonConfigMapFromSettingValList(
             editFragment,
-            busyboxExecutor,
+            editFragment.busyboxExecutor,
             settingVariableList,
             onShortcut,
         )
@@ -119,7 +119,7 @@ object ConfigFromScriptFileSetter {
             AlterToolForSetValType.updateConfigMapByAlter(
                 context,
                 it,
-                busyboxExecutor,
+                editFragment.busyboxExecutor,
                 setReplaceVariableMap
             )
         }
@@ -140,7 +140,7 @@ object ConfigFromScriptFileSetter {
             AlterToolForSetValType.updateConfigMapByAlter(
                 context,
                 it,
-                busyboxExecutor,
+                editFragment.busyboxExecutor,
                 setReplaceVariableMap
             )
         }
@@ -670,7 +670,7 @@ object ConfigFromScriptFileSetter {
 
 private object AlterToolForSetValType {
 
-    private val alterKeyName = AlterIfShellTool.alterKeyName
+    private val alterKeyName = JsAcAlterIfTool.alterKeyName
     private const val mainSeparator = '|'
     private const val ifArgsSeparator = '?'
 
@@ -722,8 +722,7 @@ private object AlterToolForSetValType {
 //                    "alterKeyValuePairList: $alterKeyValuePairList",
 //                ).joinToString("\n\n\n")
 //            )
-            val shellIfOutput = AlterIfShellTool.getShellIfOutput(
-                context,
+            val shellIfOutput = JsAcAlterIfTool.getIfOutput(
                 busyboxExecutor,
                 alterKeyValuePairList,
                 replaceVariableMap,
@@ -738,11 +737,12 @@ private object AlterToolForSetValType {
             ).filter {
                 !it.startsWith(alterKeyEqualStr)
             }.joinToString(mainSeparator.toString())
-            val updateConfigValue = execAlter(
+            val updateConfigValue = JsAcAlterIfTool.execAlter(
                 currentConfigValueList,
                 alterKeyValuePairList,
                 alterValue,
                 shellIfOutput,
+                mainSeparator
             )
 //            FileSystems.updateFile(
 //                File(UsePath.cmdclickDefaultAppDirPath, "setValMap_configValueByalter.txt").absolutePath,
@@ -755,54 +755,6 @@ private object AlterToolForSetValType {
 //            )
             currentConfigKey to updateConfigValue
         }.toMap()
-    }
-
-    private fun execAlter(
-        currentConfigValueList: List<String>,
-        alterKeyValuePairList: List<Pair<String, String>>,
-        alterValue: String,
-        shellIfOutput: String,
-    ): String {
-        val alterIfShellKeyList =
-            AlterIfShellTool.IfShellKey.values().map{ it.key }
-        val alterMapSrc = alterKeyValuePairList.toMap()
-        val alterMap =
-            alterMapSrc +
-                    CmdClickMap.createMap(
-                        shellIfOutput,
-                        mainSeparator
-                    )
-        val alterMapKeyList = alterMap.keys
-        val currentConfigValueListWithAlterKeyRemove =
-            currentConfigValueList.map {
-                    configValue ->
-                val alterKey = alterMapKeyList.firstOrNull {
-                    configValue.startsWith("${it}=")
-                }
-                if(
-                    alterKey.isNullOrEmpty()
-                ) return@map configValue
-    //                FileSystems.updateFile(
-    //                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_exec_alter.txt").absolutePath,
-    //                    listOf(
-    //                        "alterMapKeyList: ${alterMapKeyList}",
-    //                        "typeValue: ${typeValue}",
-    //                        "alterKey: ${alterKey}",
-    //                    ).joinToString("\n\n-------\n")
-    //                )
-                String()
-            }.joinToString(mainSeparator.toString())
-        val alterValueExcludeIfKey = QuoteTool.splitBySurroundedIgnore(
-            alterValue,
-            mainSeparator
-        ).filter {
-            !alterIfShellKeyList.contains(it)
-        }.joinToString(mainSeparator.toString())
-        return listOf(
-            currentConfigValueListWithAlterKeyRemove,
-            alterValueExcludeIfKey,
-            shellIfOutput,
-        ).joinToString(mainSeparator.toString())
     }
 
     private fun makeAlterMap(

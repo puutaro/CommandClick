@@ -10,11 +10,10 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -95,7 +94,6 @@ object EditTextSetter {
                     context,
                     it.toInt()
                 )
-//                it.toInt()
 
             }catch (e: Exception){
                 defaultHeight
@@ -178,41 +176,6 @@ private object EditTextMaker {
         val shellConSrc = editTextPropertyMap.get(
             EditTextSetter.EditTextPropertySettingKey.SHELL_CON.key
         )
-        val shellCon = when (
-            shellConSrc.isNullOrEmpty()
-        ) {
-            true ->{
-                ShellMacroHandler.makeShellCon(
-                    context,
-                    editTextPropertyMap.get(
-                        EditTextSetter.EditTextPropertySettingKey.SHELL_PATH.key
-                    ) ?: String(),
-                    null,
-                    null
-                )
-            }
-//                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
-            else -> shellConSrc
-        }.let {
-            SetReplaceVariabler.execReplaceByReplaceVariables(
-                it,
-                setReplaceVariableMap,
-                currentAppDirPath,
-                currentFannelName
-            ).replace(
-                "\${currentVariableValue}",
-                currentVariableValue ?: String(),
-            ).let {
-                SearchBoxSettingsForListIndex.backStackMarkReplace(
-                    fragment,
-                    it
-                )
-            }
-        }
-        val busyboxExecutor = BusyboxExecutor(
-            context,
-            UbuntuFiles(context),
-        )
         val repValMap = editTextPropertyMap.get(
             EditTextSetter.EditTextPropertySettingKey.ARGS.key
         ).let {
@@ -221,10 +184,69 @@ private object EditTextMaker {
                 argsSeparator
             )
         }.toMap()
-        return busyboxExecutor.getCmdOutput(
-            shellCon,
-            repValMap
+        val extraRepValMap = repValMap + mapOf(
+            "\${currentVariableValue}"
+                    to (currentVariableValue ?: String()),
+            SearchBoxSettingsForListIndex.backstackCountMarkForInsertEditText
+                    to TitleImageAndViewSetter.makeBackstackCount(fragment).toString()
         )
-
+        val busyboxExecutor = when(fragment){
+            is EditFragment -> fragment.busyboxExecutor
+            is TerminalFragment -> fragment.busyboxExecutor
+            else -> return String()
+        } ?: return String()
+        return when (
+            shellConSrc.isNullOrEmpty()
+        ) {
+            true -> {
+                ShellMacroHandler.handle(
+                    busyboxExecutor,
+                    editTextPropertyMap.get(
+                        EditTextSetter.EditTextPropertySettingKey.SHELL_PATH.key
+                    ) ?: String(),
+                    setReplaceVariableMap,
+                    extraRepValMap
+                )
+            }
+//                EditSettingExtraArgsTool.makeShellCon(editTextPropertyMap)
+            else -> {
+                val envMap = extraRepValMap +
+                        (setReplaceVariableMap ?: mapOf())
+                busyboxExecutor.getCmdOutput(
+                    shellConSrc,
+                    envMap
+                )
+            }
+            //        shellConSrc
+//        }.let {
+//            SetReplaceVariabler.execReplaceByReplaceVariables(
+//                it,
+//                setReplaceVariableMap,
+//                currentAppDirPath,
+//                currentFannelName
+//            ).replace(
+//                "\${currentVariableValue}",
+//                currentVariableValue ?: String(),
+//            ).let {
+//                SearchBoxSettingsForListIndex.backStackMarkReplace(
+//                    fragment,
+//                    it
+//                )
+//            }
+//        }
+//        val repValMap = editTextPropertyMap.get(
+//            EditTextSetter.EditTextPropertySettingKey.ARGS.key
+//        ).let {
+//            CmdClickMap.createMap(
+//                it,
+//                argsSeparator
+//            )
+//        }.toMap()
+//        return busyboxExecutor.getCmdOutput(
+//            shellCon,
+//            repValMap
+//        )
+        }
     }
+
 }

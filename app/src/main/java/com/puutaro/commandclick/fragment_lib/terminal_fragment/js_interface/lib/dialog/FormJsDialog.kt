@@ -144,6 +144,7 @@ class FormJsDialog(
             setVariableTypeList,
             recordNumToMapNameValueInCommandHolder,
             setReplaceVariableMap,
+            terminalFragment.busyboxExecutor,
         )
 
         formDialog = Dialog(
