@@ -176,20 +176,6 @@ object ListIndexMenuLauncher {
             else -> {
                 val readSharePreferenceMap =
                     editFragment.readSharePreferenceMap
-//                val filterDir = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
-//                    editFragment,
-//                    ListIndexForEditAdapter.indexListMap,
-//                    ListIndexForEditAdapter.listIndexTypeKey
-//                )
-//                val extraRepValMap = mapOf(
-//                    "ITEM_NAME" to selectedItem,
-//                    "INDEX_LIST_DIR_PATH" to filterDir,
-//                    "POSITION" to listIndexPosition.toString()
-//                )
-//                val setReplaceVariableMap = CmdClickMap.concatRepValMap(
-//                    editFragment.setReplaceVariableMap,
-//                    extraRepValMap
-//                )
                 val updateJsActionMap = JsActionTool.makeJsActionMap(
                     editFragment,
                     readSharePreferenceMap,

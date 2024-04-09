@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.proccess.shell_macro
 
-import android.content.Context
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex

@@ -1,10 +1,13 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.QuoteTool
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
+import java.io.File
 
 object JsAcAlterIfTool {
     const val alterKeyName = "alter"
@@ -59,19 +62,18 @@ object JsAcAlterIfTool {
                     replaceVariableMap,
                     ifArgsSeparator,
                 )
+//                FileSystems.updateFile(
+//                    File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
+//                    listOf(
+//                        "alterKeyValuePairList: ${alterKeyValuePairList}",
+//                        "shellIfPathOutput: ${shellIfPathOutput}",
+//                    ).joinToString("\n\n\n")
+//                )
                 if (
                     shellIfPathOutput.isNotEmpty()
                 ) return shellIfPathOutput
             }
         }
-//        FileSystems.updateFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "setValMap_shellIf.txt").absolutePath,
-//            listOf(
-//                "alterKeyValuePairList: ${alterKeyValuePairList}",
-//                "shellIfOutput: ${shellIfOutput}",
-//                "val: ${shellIfOutput}"
-//            ).joinToString("\n\n\n")
-//        )
         return String()
     }
 

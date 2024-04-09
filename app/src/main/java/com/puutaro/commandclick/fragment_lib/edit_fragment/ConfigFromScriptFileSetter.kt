@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.edit.EditTextSupportViewName
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
@@ -21,7 +20,6 @@ import com.puutaro.commandclick.proccess.tool_bar_button.SettingButtonConfigMapK
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonIconSettingsForToolbarButton
 import com.puutaro.commandclick.proccess.tool_bar_button.config_settings.ButtonVisibleSettingForToolbarButton
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.*
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.EditFragmentArgs
@@ -35,8 +33,6 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
-        val context = editFragment.context
-            ?: return
 //        val busyboxExecutor = BusyboxExecutor(
 //            context,
 //            UbuntuFiles(context)
@@ -88,7 +84,6 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
-                context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
@@ -117,7 +112,6 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
-                context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
@@ -138,7 +132,6 @@ object ConfigFromScriptFileSetter {
             String(),
         ).let {
             AlterToolForSetValType.updateConfigMapByAlter(
-                context,
                 it,
                 editFragment.busyboxExecutor,
                 setReplaceVariableMap
@@ -427,8 +420,6 @@ object ConfigFromScriptFileSetter {
         settingVariableList: List<String>?,
         onShortcut: Boolean,
     ){
-        val context = editFragment.context
-            ?: return
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         editFragment.toolbarButtonConfigMap =
             mapOf(
@@ -440,7 +431,6 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
-                        context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -454,7 +444,6 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
-                        context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -468,7 +457,6 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
-                        context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -480,7 +468,6 @@ object ConfigFromScriptFileSetter {
                     onShortcut,
                 ).let {
                     AlterToolForSetValType.updateConfigMapByAlter(
-                        context,
                         it,
                         busyboxExecutor,
                         setReplaceVariableMap
@@ -675,7 +662,6 @@ private object AlterToolForSetValType {
     private const val ifArgsSeparator = '?'
 
     fun updateConfigMapByAlter(
-        context: Context,
         configMap: Map<String, String>,
         busyboxExecutor: BusyboxExecutor?,
         replaceVariableMap: Map<String, String>?
