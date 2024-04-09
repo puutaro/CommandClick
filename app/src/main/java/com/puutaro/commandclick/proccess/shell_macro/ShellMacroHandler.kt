@@ -201,10 +201,11 @@ object ShellMacroHandler {
                 extraRepValMap,
                 JudgeArg.TSV_KEY.arg
             ) ?: return String()
-            val tsvValue = ArgsManager.get(
+            val valueSeparator = '&'
+            val tsvValueList = ArgsManager.get(
                 extraRepValMap,
                 JudgeArg.TSV_VALUE.arg
-            ) ?: String()
+            )?.split(valueSeparator) ?: emptyList()
             val alterCon = ArgsManager.get(
                 extraRepValMap,
                 JudgeArg.ALTER_CON.arg
@@ -216,7 +217,7 @@ object ShellMacroHandler {
                 )
             )
             val isMatch =
-                currentValue == tsvValue
+                tsvValueList.contains(currentValue)
             return when(isMatch){
                 true -> alterCon
                 else -> String()
@@ -295,8 +296,6 @@ object ShellMacroHandler {
                 }
                 else -> argStrValue
             }
-
-
         }
     }
 
