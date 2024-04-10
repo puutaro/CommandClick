@@ -9,6 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray_out">#D9D9D9</color>
     <color name="fannel_icon_color">#49d1a2</color>
+    <color name="olive_green">#5f6527</color>
     <color name="file_icon_color">#f5a571</color>
     <color name="terminal_color">#043d02</color>
     <color name="web_icon_color">#1b8ef2</color>
@@ -18,5 +19,11 @@
     <color name="checked_item_color">#36B3E0</color>
     <color name="yellow">#f4f728</color>
     <color name="ligthBlue">#0cadf2</color>
+    <color name="ao">#007F89</color>
+    <color name="light_ao">#ebfeff</color>
     <color name="navy">#020c3b</color>
+    <color name="orange">#F78F20</color>
+    <color name="light_orange">#fcefe1</color>
+    <color name="brown">#42280E</color>
 </resources>
+    <!--    #FF6D0A-->
