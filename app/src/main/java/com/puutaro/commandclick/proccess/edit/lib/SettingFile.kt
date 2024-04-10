@@ -112,11 +112,6 @@ object SettingFile {
         scriptFileName: String,
         setReplaceVariableCompleteMap: Map<String, String>?
     ): String {
-//        val fannelPathObj = File(fannelPath)
-//        if (!fannelPathObj.isFile) return String()
-//        val recentAppDirPath = fannelPathObj.parent
-//            ?: return row
-//        val scriptFileName = fannelPathObj.name
         val trimRow = row
             .trim()
             .trim(';')
@@ -134,15 +129,7 @@ object SettingFile {
                     recentAppDirPath,
                     scriptFileName
                 )
-            }
-//            .let {
-//                ScriptPreWordReplacer.replace(
-//                    it,
-//                    recentAppDirPath,
-//                    scriptFileName
-//                )
-//            }
-            .let {
+            }.let {
                 QuoteTool.trimBothEdgeQuote(it)
             }.let {
                 catImportContents(

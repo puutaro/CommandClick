@@ -206,6 +206,8 @@ object UsePath {
     val fannelStateConfigPath =  "$fannelSettingsDirPath/${fannelStateConfigName}"
     private val editTitleConfig = "editTitleConfig.js"
     val editTitleConfigPath =  "$fannelSettingsDirPath/${editTitleConfig}"
+    private val importDisableValList = "importDisableValList.js"
+    val importDisableValListPath =  "$fannelSettingsDirPath/${importDisableValList}"
     val longPressMenuDirPath = "\${01}/\${001}/longPressMenuDir"
     val srcImageAnchorLongPressMenuFilePath =
         "$longPressMenuDirPath/srcImageAnchorLongPressMenu.txt"

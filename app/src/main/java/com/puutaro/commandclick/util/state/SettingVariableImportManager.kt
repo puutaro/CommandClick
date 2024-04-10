@@ -8,6 +8,7 @@ import com.puutaro.commandclick.util.file.ReadText
 object SettingVariableImportManager {
     fun import(
         settingVariableList: List<String>?,
+        importDisableValList: List<String>,
         currentAppDirPath: String,
         currentFannelName: String,
         setReplaceVariableMap: Map<String, String>?,
@@ -28,7 +29,13 @@ object SettingVariableImportManager {
                         ReadText(it).textToList(),
                         settingSectionStart,
                         settingSectionEnd
-                    ) ?: emptyList()
+                    )?.filter {
+                        importedValNameValueLine ->
+                        val onImport = !importDisableValList.any {
+                            importedValNameValueLine.startsWith(it)
+                        }
+                        onImport
+                    } ?: emptyList()
                 }.flatten().joinToString("\n")
                 else -> it
             }

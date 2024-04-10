@@ -15,15 +15,15 @@ object ShellMacroHandler {
 
     fun handle(
         busyboxExecutor: BusyboxExecutor?,
-        shellPath: String,
+        shellPathOrMacro: String,
         setReplaceVariableMap: Map<String, String>?,
         extraRepValMap: Map<String, String>?,
     ): String {
         val macro = ShellMacro.values().firstOrNull {
-            it.name == shellPath
+            it.name == shellPathOrMacro
         } ?: return getOutputByShell(
             busyboxExecutor,
-            shellPath,
+            shellPathOrMacro,
             setReplaceVariableMap,
             extraRepValMap,
         ) ?: String()

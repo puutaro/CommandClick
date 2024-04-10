@@ -1,6 +1,8 @@
 package com.puutaro.commandclick.util.state
 
 import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
+import com.puutaro.commandclick.proccess.edit.lib.ListSettingVariableListMaker
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -26,24 +28,29 @@ object FannelStateRooterManager {
         val currentFannelName = SharePrefTool.getCurrentFannelName(
             readSharePreferenceMap
         )
-
-        return getSettingVariableList(
-                settingFannelPath,
-                currentAppDirPath,
-                currentFannelName,
-                setReplaceVariableMap,
-                settingSectionStart,
-                settingSectionEnd,
-            ).let {
-            SettingVariableImportManager.import(
-                it,
-                currentAppDirPath,
-                currentFannelName,
-                setReplaceVariableMap,
-                settingSectionStart,
-                settingSectionEnd,
-            )
-        }
+        val settingVariableBeforeImportList = getSettingVariableList(
+            settingFannelPath,
+            currentAppDirPath,
+            currentFannelName,
+            setReplaceVariableMap,
+            settingSectionStart,
+            settingSectionEnd,
+        )
+        val importDisableValList = ListSettingVariableListMaker.makeFromSettingVariableList(
+            CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST,
+            readSharePreferenceMap,
+            setReplaceVariableMap,
+            settingVariableBeforeImportList
+        )
+        return SettingVariableImportManager.import(
+            settingVariableBeforeImportList,
+            importDisableValList,
+            currentAppDirPath,
+            currentFannelName,
+            setReplaceVariableMap,
+            settingSectionStart,
+            settingSectionEnd,
+        )
     }
 
     fun getSettingFannelPath(

@@ -271,6 +271,8 @@ object ListSettingVariableListMaker {
             -> UsePath.qrDialogConfigPath
             CommandClickScriptVariable.EDIT_BOX_TITLE
             -> UsePath.editTitleConfigPath
+            CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST
+            -> UsePath.importDisableValListPath
             else -> String()
         }
     }
