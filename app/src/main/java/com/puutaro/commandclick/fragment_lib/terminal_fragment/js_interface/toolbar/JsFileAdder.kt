@@ -2,6 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.too
 
 import android.webkit.JavascriptInterface
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -151,6 +152,18 @@ class JsFileAdder(
             separator,
         )
         val insertLine = "${title}\t${compFilePath}"
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "add_makeCompfileName.txt").absolutePath,
+//            listOf(
+//                "compFileNameMap: ${compFileNameMap}",
+//                "separator: ${separator}",
+//                "next_separator: ${EditSeparator.getNextSeparator(separator)}",
+//                "fileName: ${fileName}",
+//                "compFilePath: ${compFilePath}",
+//                "title: ${title}",
+//                "insertLine: ${insertLine}",
+//            ).joinToString("\n\n\n")
+//        )
         ExecAddForListIndexAdapter.execAddForTsv(
             editFragment,
             insertLine,
@@ -193,7 +206,13 @@ class JsFileAdder(
 //                "compFileNameMap: ${compFileNameMap}",
 //                "separator: ${separator}",
 //                "next_separator: ${EditSeparator.getNextSeparator(separator)}",
-//                "compTitleMap: ${compTitleMap}"
+//                "compTitleMap: ${compTitleMap}",
+//                "filename: ${fileName}",
+//                "compF: ${EditSettingExtraArgsTool.makeCompFileName(
+//                    editFragment,
+//                    fileName,
+//                    compTitleMap,
+//                )}"
 //            ).joinToString("\n\n\n")
 //        )
         return EditSettingExtraArgsTool.makeCompFileName(
