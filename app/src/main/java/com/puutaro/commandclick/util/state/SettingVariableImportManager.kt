@@ -21,6 +21,8 @@ object SettingVariableImportManager {
                     listOf(it),
                     CommandClickScriptVariable.SETTING_IMPORT
                 )
+            val importDisableSettingVanName =
+                CommandClickScriptVariable.IMPORT_DISABLE_VAL_LIST
             when(
                 settingImportConList.isNullOrEmpty()
             ) {
@@ -31,10 +33,12 @@ object SettingVariableImportManager {
                         settingSectionEnd
                     )?.filter {
                         importedValNameValueLine ->
+                        val isNotImportDisableSettingValName =
+                            !importDisableSettingVanName.startsWith("${importDisableSettingVanName}=")
                         val onImport = !importDisableValList.any {
-                            importedValNameValueLine.startsWith(it)
+                            importedValNameValueLine.startsWith("${it}=")
                         }
-                        onImport
+                        onImport && isNotImportDisableSettingValName
                     } ?: emptyList()
                 }.flatten().joinToString("\n")
                 else -> it
