@@ -2,7 +2,6 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -157,10 +156,6 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertLineListSrc: List<String>
     ){
-//        val context = editFragment.context
-//            ?: return
-//        val listIndexForEditAdapter =
-//            editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
         val context = editFragment.context
         val tsvPath =
             FilePrefixGetter.get(
@@ -199,48 +194,6 @@ object ExecAddForListIndexAdapter {
             tsvPath,
             updateTsvConList
         )
-//        if(
-//            currentTsvConList.contains(insertLine)
-//        ) {
-//            Toast.makeText(
-//                context,
-//                "Already exist",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            return
-//        }
-//        val sortType = ListSettingsForListIndex.getSortType(
-//            editFragment,
-//            ListIndexForEditAdapter.indexListMap
-//        )
-//        val insertIndex = getInsertIndex(
-//            sortType,
-//            listIndexForEditAdapter,
-//            insertLine,
-//        )
-//
-//        TsvTool.insertByLastUpdate(
-//            tsvPath,
-//            insertLine
-//        )
-//        when(sortType){
-//            ListSettingsForListIndex.SortByKey.LAST_UPDATE ->
-//                ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-//                    editFragment,
-//                    ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
-//                        editFragment,
-//                        ListIndexForEditAdapter.indexListMap,
-//                        ListIndexForEditAdapter.listIndexTypeKey
-//                    )
-//                )
-//            ListSettingsForListIndex.SortByKey.SORT,
-//            ListSettingsForListIndex.SortByKey.REVERSE ->
-//                listUpdateByInsertItem(
-//                    editFragment,
-//                    insertLine,
-//                    insertIndex
-//                )
-//        }
     }
 
 
