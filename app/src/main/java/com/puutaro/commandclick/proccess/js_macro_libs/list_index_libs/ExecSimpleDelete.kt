@@ -63,6 +63,7 @@ object ExecSimpleDelete {
             listIndexForEditAdapter.listIndexList.removeAt(listIndexPosition)
             withContext(Dispatchers.IO) {
                 ExecRemoveForListIndexAdapter.removeCon(
+                    editFragment,
                     ListIndexForEditAdapter.listIndexTypeKey,
                     removeItemLine
                 )
