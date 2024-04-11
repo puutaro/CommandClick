@@ -143,7 +143,6 @@ object TsvLineRenamer {
                 ?: return
         val fileNameOrTitle = titleFileNameAndPathConPair.first
         val compExtend = CcPathTool.subExtend(fileNameOrTitle)
-        val filePathOrCon = titleFileNameAndPathConPair.second
         val renamedFileNameOrTitle = UsePath.compExtend(
             inputEditable.toString(),
             compExtend
@@ -151,8 +150,13 @@ object TsvLineRenamer {
         if(
             fileNameOrTitle == renamedFileNameOrTitle
         ) return
+        val filePathOrCon = titleFileNameAndPathConPair.second
         val filePathOrConObj = File(filePathOrCon)
-        val isWithFileRename = filePathOrConObj.isFile
+        val isTitleEqualPathOrCon =
+            fileNameOrTitle == filePathOrConObj.name
+        val isWithFileRename =
+            filePathOrConObj.isFile
+                    && isTitleEqualPathOrCon
         val renameFilePathOrCon = when(isWithFileRename){
             true -> {
                 val tsvParentDirPath = filePathOrConObj.parent
