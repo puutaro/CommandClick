@@ -48,17 +48,4 @@ function makeMenuMapStr(){
         `clickMenuFilePath=${leftMenuListFilePath}?longPressMenuFilePath=${leftLongPressMenuListFilePath}?dismissType=longpress?iconName=back`,
         `clickMenuFilePath=${rightMenuListFilePath}?iconName=download_done`,
     ].join("|");
-    // switch(true){
-    //     case onSearchBtn === "OFF":
-    //         return [
-    //             `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
-    //             `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
-    //         ].join("|");
-    //     default:
-    //         return [
-    //             `clickMenuFilePath=${leftMenuListFilePath}!longPressMenuFilePath=${leftLongPressMenuListFilePath}!dismissType=longpress!iconName=back`,
-    //             `clickMenuFilePath=${centerMenuListFilePath}!longPressMenuFilePath=${centerLongPressMenuListFilePath}!iconName=search`,
-    //             `clickMenuFilePath=${rightMenuListFilePath}!iconName=download_done`,
-    //         ].join("|");
-    // }
 }

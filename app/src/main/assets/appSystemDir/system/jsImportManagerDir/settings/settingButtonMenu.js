@@ -2,7 +2,7 @@
 name=add
 |icon=plus
 |jsPath=ADD
-|args=
+?args=
 	compSuffix=.js,
 
 name=get by file

@@ -1,12 +1,12 @@
 
 longClick=
 	jsPath=MENU
-	|args=
+	?args=
 		menuPath=`${JS_IMPORT_MANAGER_MENU_PATH}`
-		?onHideFooter=,
+		&onHideFooter=,
 click=
 	jsPath=MENU
-	|args=
+	?args=
 		menuPath=`${JS_IMPORT_MANAGER_MENU_PATH}`
-		?onHideFooter=,
+		&onHideFooter=,
 icon=plus,

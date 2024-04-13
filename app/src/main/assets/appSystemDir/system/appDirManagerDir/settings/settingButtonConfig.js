@@ -1,12 +1,12 @@
 
 longClick=
 	jsPath=MENU
-	|args=
+	?args=
 		menuPath=`${CMDCLICK_APP_DIR_ADMIN_MENU_PATH}`
-		?onHideFooter=,
+		&onHideFooter=,
 click=
 	jsPath=MENU
-	|args=
+	?args=
 		menuPath=`${CMDCLICK_APP_DIR_ADMIN_MENU_PATH}`
-		?onHideFooter=,
+		&onHideFooter=,
 icon=plus,

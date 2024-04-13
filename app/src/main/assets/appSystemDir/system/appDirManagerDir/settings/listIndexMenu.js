@@ -2,8 +2,6 @@
 name=Delete
 |icon=delete
 |jsPath=DELETE,
-// |extra=
-//     parentDirPath=`${CMDCLICK_APP_DIR_ADMIN_DIR_PATH}`,
 
 
 name=Copy app dir
