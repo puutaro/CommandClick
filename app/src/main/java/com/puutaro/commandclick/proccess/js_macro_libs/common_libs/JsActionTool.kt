@@ -756,7 +756,7 @@ private object PairToMapInList {
     private val jsMainKeyName = JsActionKeyManager.JsActionsKey.JS.key
     private val funcSubKeyName = JsActionKeyManager.JsSubKey.FUNC.key
     private val argsSubKeyName = JsActionKeyManager.JsSubKey.ARGS.key
-    private val jsSubKeySeparator = '?'
+    private const val jsSubKeySeparator = '?'
     fun convert(
         keyToSubKeyConListByValidKey: List<Pair<String, String>>
     ): List<Pair<String, Map<String, String>>> {
