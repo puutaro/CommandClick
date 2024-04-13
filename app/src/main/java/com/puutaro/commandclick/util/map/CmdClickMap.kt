@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.util.map
 
+import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionKeyManager
 import com.puutaro.commandclick.util.CcScript
 import com.puutaro.commandclick.util.QuoteTool
 
@@ -54,6 +55,16 @@ object CmdClickMap {
         }
     }
 
+    fun getFirst(
+        pairList: List<Pair<String, String>>,
+        keyName: String,
+    ): String? {
+        return pairList.firstOrNull {
+            val mainKeyName = it.first
+            mainKeyName == keyName
+        }?.second
+    }
+
     fun replace(
         targetCon: String,
         repMap: Map<String, String>?
@@ -71,7 +82,7 @@ object CmdClickMap {
         return repCon
     }
 
-    fun replaceHolder(
+    fun replaceHolderForJsAction(
         targetCon: String,
         repMap: Map<String, String>?
     ): String {
@@ -81,13 +92,24 @@ object CmdClickMap {
                 repMap
         )
         var repCon = targetCon
+        val noQuotePrefix = JsActionKeyManager.noQuotePrefix
         holderNameToValueMap.forEach {
             val holderMark = it.key
-            val repValue = it.value
-            repCon = repCon.replace(
-                holderMark,
-                repValue
-            )
+            val repValueSrc = it.value
+            val isNoQuote = repValueSrc.startsWith(noQuotePrefix)
+            val repValue = repValueSrc.removePrefix(noQuotePrefix)
+            when(isNoQuote) {
+                true -> {
+                    repCon = repCon.replace(
+                        "`${holderMark}`",
+                        repValue
+                    )
+                }
+                else -> repCon = repCon.replace(
+                    holderMark,
+                    repValue
+                )
+            }
         }
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "rep.txt").absolutePath,
