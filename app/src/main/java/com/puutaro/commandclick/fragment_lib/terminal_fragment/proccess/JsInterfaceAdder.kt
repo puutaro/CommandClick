@@ -41,6 +41,7 @@ import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUb
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUrl
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsUtil
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsMusic
+import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.JsVar
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsFannelConSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsListConSBSaver
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit.JsValEdit
@@ -200,6 +201,10 @@ object JsInterfaceAdder {
         ExecJsInterfaceAdder.add(
             webView,
             JsCon(terminalFragment)
+        )
+        ExecJsInterfaceAdder.add(
+            webView,
+            JsVar(terminalFragment)
         )
         dialogAdder(
             terminalFragment,

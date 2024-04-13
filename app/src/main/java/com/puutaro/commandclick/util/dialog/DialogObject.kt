@@ -85,7 +85,7 @@ object DialogObject {
         }
         simpleTextDialogObj?.setOnCancelListener {
             simpleTextDialogObj?.dismiss()
-            }
+        }
         simpleTextDialogObj?.window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT

@@ -75,7 +75,12 @@ object QuoteTool {
             "`" to "\"",
             "both double & back quote exist",
         ).let {
-            val compStr = it.first
+            val compStrSrc = it.first
+            val isReturn = it.second
+            val compStr = when(isReturn){
+                true -> compStrSrc
+                false -> "`${compStrSrc}`"
+            }
             compStr
         }
     }

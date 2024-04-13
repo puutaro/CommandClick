@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.common_libs
 
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 
@@ -50,7 +51,7 @@ object JsActionKeyManager {
         ON_LOG("onLog")
     }
 
-    private val noQuotePrefix = "NO_QUOTE:"
+    val noQuotePrefix = "NO_QUOTE:"
     private val jsConPrefix = "con:"
 
     object OverrideManager {
@@ -228,6 +229,242 @@ object JsActionKeyManager {
             return jsPathCon.startsWith(
                 Flag.JS_INTERFACE_PREFIX.flag
             )
+        }
+    }
+
+    object AfterJsConMaker {
+
+        const val ifSentence = "if"
+        private const val ifAfterMinnerKey = "ifAfter"
+        private const val afterValSeprator = ":"
+        private const val ifAfterPrefix = "${ifAfterMinnerKey}${afterValSeprator}"
+        const val afterJsConSeparator = '&'
+        enum class SignalPrefix(
+            val signal: String
+        ){
+            QUOTE("QUOTE:"),
+        }
+
+        fun make(
+            jsMap: Map<String, String>,
+        ): String {
+            val varNameToJsConPairCon = jsMap.get(
+                JsSubKey.AFTER_JS_CON.key
+            )
+            val varNameJsConPairList = CmdClickMap.createMap(
+                varNameToJsConPairCon,
+                afterJsConSeparator
+            )
+            val afterJsConList = varNameJsConPairList.mapIndexed {
+                    index, jsConSrc ->
+                val last2IndexPairList =
+                    takeLast2IndexInThis(
+                        varNameJsConPairList,
+                        index,
+                    )
+                execMakeAfterJsCon(
+                    jsConSrc,
+                    last2IndexPairList,
+                )
+            }
+            return afterJsConList.joinToString("\n")
+        }
+
+        private fun takeLast2IndexInThis(
+            varNameJsConPairList: List<Pair<String, String>>,
+            index: Int,
+        ): List<Pair<String, String>> {
+            return varNameJsConPairList.filterIndexed {
+                    innerIndex, el ->
+                if(
+                    innerIndex >= index
+                ) return@filterIndexed false
+                !QuoteTool.trimBothEdgeQuote(
+                    el.first
+                ).startsWith(ifAfterPrefix)
+            }.takeLast(2)
+        }
+
+        private fun execMakeAfterJsCon(
+            varNameToJsCon: Pair<String, String>,
+            last2IndexPairList: List<Pair<String, String>?>
+        ): String {
+            val varName = varNameToJsCon.first.trim()
+            val jsCon = varNameToJsCon.second.trim()
+            val isIfSentence =
+                varName == ifSentence
+            val afterAndValCon = QuoteTool.trimBothEdgeQuote(varName)
+            val isIfAfter =
+                afterAndValCon.startsWith(
+                    ifAfterPrefix
+                )
+            return when(true){
+                isIfSentence -> String()
+                isIfAfter -> execMakeIfAfterJsCon(
+                    afterAndValCon,
+                    jsCon,
+                    last2IndexPairList,
+                )
+                else -> execMakeAfterJsCon(
+                    varName,
+                    jsCon,
+                    last2IndexPairList.lastOrNull(),
+                )
+            }
+        }
+
+        private fun execMakeIfAfterJsCon(
+            afterAndValCon: String,
+            jsCon: String,
+            last2IndexPairList: List<Pair<String, String>?>
+        ): String {
+            val varName =
+                afterAndValCon.removePrefix(ifAfterPrefix)
+            val beforePreIfPair =
+                last2IndexPairList.firstOrNull()
+            val isBeforeIf =
+                beforePreIfPair?.first == ifSentence
+                        && last2IndexPairList.getOrNull(1)?.first != ifSentence
+            if(
+                !isBeforeIf
+            ) return String()
+            val funcTemplate = makeFuncTemplaceForAfterJsCon(
+                beforePreIfPair
+            )
+            val logJsCon = makeLogConForAfterJsCon(varName)
+            val ifAfterJsCon = makeAfterJsCon(
+                varName,
+                jsCon,
+            )
+            return makeIfCon(
+                funcTemplate,
+                logJsCon,
+                ifAfterJsCon,
+            )
+        }
+
+        private fun execMakeAfterJsCon(
+            varName: String,
+            jsCon: String,
+            preIndexPair: Pair<String, String>?,
+        ): String {
+            val logJsCon = makeLogConForAfterJsCon(varName)
+            val afterJsCon = makeAfterJsCon(
+                varName,
+                jsCon,
+            )
+            val funcTemplate = makeFuncTemplaceForAfterJsCon(
+                preIndexPair
+            )
+            return makeIfCon(
+                funcTemplate,
+                logJsCon,
+                afterJsCon,
+            )
+        }
+
+        fun makeIfCon(
+            funcTemplate: String,
+            logJsCon: String,
+            afterJsCon: String,
+        ): String {
+            val isIf = funcTemplate.contains(ifSentence)
+            val afterJsConWithLog = listOf(
+                logJsCon,
+                afterJsCon
+            ).joinToString("\n").let{
+                when(isIf){
+                    true -> it.replace("\n", "\n\t")
+                    else -> it
+                }
+            }
+            return funcTemplate.format(
+                afterJsConWithLog
+            )
+        }
+
+        private fun makeAfterJsCon(
+            varName: String,
+            jsConSrc: String,
+        ): String {
+            val disableVar = varName
+                .contains(" ")
+                    || varName.contains("\"")
+                    || varName.contains("\'")
+                    || varName.contains("`")
+                    || varName.isEmpty()
+            val varNameCon = when(disableVar) {
+                true -> String()
+                else -> listOf(
+                    "var",
+                    varName,
+                    "="
+                ).joinToString(" ")
+            }
+            val jsCon =
+                makeJsConForAfterJsCon(jsConSrc)
+            return listOf(
+                varNameCon,
+                UsePath.compExtend(
+                    jsCon,
+                    ";"
+                ),
+            ).joinToString(" ").trim()
+        }
+
+        private fun makeJsConForAfterJsCon(
+            jsConSrc: String
+        ): String {
+            val quotePrefix = SignalPrefix.QUOTE.signal
+            return when(true) {
+                jsConSrc.startsWith(quotePrefix)
+                -> "`${jsConSrc.removePrefix(quotePrefix)}`"
+                else -> jsConSrc
+            }
+        }
+
+        private fun makeFuncTemplaceForAfterJsCon(
+            preIndexPair: Pair<String, String>?
+        ): String {
+            val preIndexVarName = preIndexPair?.first
+            val isIf =
+                preIndexVarName == ifSentence
+            val ifCondition = when(isIf){
+                true -> QuoteTool.trimBothEdgeQuote(preIndexPair?.second)
+                else -> String()
+            }
+            return makeFuncTemplateForIf(
+                ifCondition
+            )
+        }
+
+        private fun makeLogConForAfterJsCon(
+            varName: String,
+        ): String {
+            val logVarName = QuoteTool.trimBothEdgeQuote(
+                varName
+            )
+            return listOf(
+                "//_/_/_/ ${logVarName} start",
+                "jsFileSystem.stdLog(\"${logVarName}\");",
+            ).joinToString("\n")
+        }
+    }
+
+
+    fun makeFuncTemplateForIf(
+        ifCondition: String?
+    ): String {
+        return when (
+            ifCondition.isNullOrEmpty()
+        ) {
+            false -> """
+            |if(${ifCondition}){ 
+            |    %s 
+            |}   
+            |""".trimMargin()
+
+            else -> "%s"
         }
     }
 }
