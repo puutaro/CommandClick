@@ -6,6 +6,7 @@ import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
 import com.puutaro.commandclick.common.variable.edit.EditParameters
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
@@ -20,6 +21,8 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Lis
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
 import com.puutaro.commandclick.util.Keyboard
+import com.puutaro.commandclick.util.file.FileSystems
+import java.io.File
 
 
 class WithIndexListView(
@@ -72,7 +75,7 @@ class WithIndexListView(
             ListIndexEditConfig.ListIndexConfigKey.LIST.key
         )
 //        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "listWith.txt").absolutePath,
+//            File(UsePath.cmdclickDefaultAppDirPath, "glistWith.txt").absolutePath,
 //            listOf(
 //                "tag: ${editFragment.tag}",
 //                "listIndexConfigMap: ${listIndexConfigMap}",

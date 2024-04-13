@@ -2,6 +2,7 @@ package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import android.widget.Toast
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender

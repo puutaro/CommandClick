@@ -1,6 +1,5 @@
 package com.puutaro.commandclick.component.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,8 +21,6 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.Typ
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrLogoSettingsForQrDialog
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings.QrModeSettingKeysForQrDialog
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
-import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
 import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.SettingVariableReader
 import com.puutaro.commandclick.util.file.FileSystems
@@ -49,10 +46,6 @@ class ListIndexForEditAdapter(
     private val listLimitSize = 300
     private val editExecuteAlways = SettingVariableSelects.EditExecuteSelects.ALWAYS.name
     private val busyboxExecutor = editFragment.busyboxExecutor
-//        BusyboxExecutor(
-//        context,
-//        UbuntuFiles(context as Context)
-//    )
 
     private val qrDialogConfigMap =
         editFragment.qrDialogConfig ?: mapOf()
@@ -82,6 +75,12 @@ class ListIndexForEditAdapter(
     private var filterDir = String()
     private var filterPrefix = String()
     private var filterSuffix = String()
+
+    init {
+        if(listIndexList.size == 0) {
+            setListProperty()
+        }
+    }
 
 
     companion object {

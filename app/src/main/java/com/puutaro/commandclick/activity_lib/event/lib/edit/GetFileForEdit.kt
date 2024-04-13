@@ -8,11 +8,14 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.path.UsePath
+import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
@@ -59,6 +62,17 @@ class GetFileForEdit(
         this.filterPrefixListCon = filterPrefixListCon
         this.filterSuffixListCon = filterSuffixListCon
         this.filterShellCon = filterSuffixListCon
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getFile.txt").absolutePath,
+//            listOf(
+//                "ListIndexForEditAdapter.indexListMap,: ${ListIndexForEditAdapter.indexListMap}",
+//                "onDirectoryPick: ${onDirectoryPick}",
+//                "parentDirPath: ${parentDirPath}",
+//                "filterPrefixListCon: ${filterPrefixListCon}",
+//                "filterSuffixListCon: ${filterSuffixListCon}",
+//                "filterShellCon: ${filterShellCon}",
+//            ).joinToString("\n\n")
+//        )
         when(Build.VERSION.SDK_INT < 30){
             true -> {
                 getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
@@ -170,6 +184,17 @@ class GetFileForEdit(
                 }.replace(prefixRegex, "/storage")
             )
         }
+//        FileSystems.writeFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "getFile_getter.txt").absolutePath,
+//            listOf(
+//                "ListIndexForEditAdapter.indexListMap,: ${ListIndexForEditAdapter.indexListMap}",
+//                "onDirectoryPick: ${onDirectoryPick}",
+//                "parentDirPath: ${parentDirPath}",
+//                "filterPrefixListCon: ${filterPrefixListCon}",
+//                "filterSuffixListCon: ${filterSuffixListCon}",
+//                "filterShellCon: ${filterShellCon}",
+//            ).joinToString("\n\n")
+//        )
         return if(onDirectoryPick) {
             listOf(pathSource.parent ?: String()).filter {
                 FilterPathTool.isFilterByDir(

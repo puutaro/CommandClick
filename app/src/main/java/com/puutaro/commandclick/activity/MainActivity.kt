@@ -728,13 +728,6 @@ class MainActivity:
         )
     }
 
-//    override fun onGetFileforEdit(parentDirPathSrc: String, onDirectoryPickSrc: Boolean) {
-//        getFileForEdit.get(
-//            parentDirPathSrc,
-//            onDirectoryPickSrc
-//        )
-//    }
-
     override fun onGetFileListForTerm(
         parentDirPathSrc: String,
         onDirectoryPickSrc: Boolean,

@@ -52,10 +52,10 @@ class JsFileOrDirGetter(
             filterMapCon,
             filterMapSeparator,
         ).toMap()
-        val filterFILTERPrefixListCon = filterMap.get(
+        val filterFilterPrefixListCon = filterMap.get(
             EditSettingExtraArgsTool.ExtraKey.FILTER_PREFIX.key,
         ) ?: String()
-        val filterFILTERSuffixListCon = filterMap.get(
+        val filterFilterSuffixListCon = filterMap.get(
             EditSettingExtraArgsTool.ExtraKey.FILTER_SUFFIX.key,
         ) ?: String()
         val filterShellPathCon =
@@ -68,8 +68,8 @@ class JsFileOrDirGetter(
         listener.onGetFileForTerm(
             parentDirPath,
             onDirectoryPick,
-            filterFILTERPrefixListCon,
-            filterFILTERSuffixListCon,
+            filterFilterPrefixListCon,
+            filterFilterSuffixListCon,
             filterShellPathCon,
         )
 //        fileOrDirGetterForSettingButton?.get(
