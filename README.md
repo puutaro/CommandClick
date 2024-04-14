@@ -103,7 +103,7 @@ Detail is bellow.
 <br>
 
 
-| Janre | builtin or addon(fannel) |
+| Janre | builtin fannel(addon) / external fannel(addon) name |
 | ------- | ---------------- |
 | History oriented Web browser | builtin |  
 | AdBlock | builtin |  
