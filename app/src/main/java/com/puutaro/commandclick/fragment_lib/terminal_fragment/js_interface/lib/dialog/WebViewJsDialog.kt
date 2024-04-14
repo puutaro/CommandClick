@@ -68,6 +68,68 @@ class WebViewJsDialog(
     private val clickMenuGroupId = 120000
     private val positionHashMap = hashMapOf<String, Int>()
 
+
+    private object UrlToFinishJs {
+
+        private var pageFinishJs = String()
+        private val autoFocusGgleSearchUrl = "https://www.google.co.id/search?q=%20"
+        private enum class UrlMacro(
+            val macro: String,
+            val url: String,
+            val pageFinishedJsAssetsPath: String,
+        ) {
+            GGLE_SEARCH(
+                "GGLE_SEARCH",
+                autoFocusGgleSearchUrl,
+                String()
+            ),
+        }
+
+        fun makePair(
+            urlStrSrc: String
+        ): Pair<String, String> {
+            val macroEnum = UrlMacro.values().firstOrNull {
+                it.macro == urlStrSrc
+            } ?: return urlStrSrc to String()
+            return macroEnum.url to macroEnum.pageFinishedJsAssetsPath
+        }
+
+        fun setFinishJs(pageFinishedJsAssetsPath: String){
+            pageFinishJs = pageFinishedJsAssetsPath
+        }
+
+        fun execPageFinishJs(
+            context: Context?,
+            webView: WebView,
+            url: String?
+        ){
+            when(true){
+                url.isNullOrEmpty() -> {
+                    pageFinishJs = String()
+                    return
+                }
+                (url == autoFocusGgleSearchUrl) -> {
+                    pageFinishJs = AssetsFileManager.ggleSchBoxFocus
+                }
+                else -> {}
+            }
+            if(
+                pageFinishJs.isEmpty()
+            ) return
+            val jsContents = AssetsFileManager.readFromAssets(
+                context,
+                pageFinishJs
+            ).split("\n")
+            setFinishJs(String())
+            val jsScriptUrl = JavaScriptLoadUrl.makeFromContents(
+                context,
+                jsContents
+            ) ?: return
+            webView.loadUrl(jsScriptUrl)
+        }
+    }
+
+
     fun create(
         urlStrSrc: String,
         currentScriptPath: String,
@@ -75,14 +137,17 @@ class WebViewJsDialog(
         longPressMenuMapListStr: String,
     ) {
         positionHashMap.clear()
+        val urlToFinishJs = UrlToFinishJs.makePair(urlStrSrc)
+        UrlToFinishJs.setFinishJs(urlToFinishJs.second)
+        val madeUrl = urlToFinishJs.first
         val urlStr = if(
-            urlStrSrc.startsWith(WebUrlVariables.slashPrefix)
-            || urlStrSrc.startsWith(WebUrlVariables.filePrefix)
-            || urlStrSrc.startsWith(WebUrlVariables.httpPrefix)
-            || urlStrSrc.startsWith(WebUrlVariables.httpsPrefix)
-            || urlStrSrc.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
-        ) urlStrSrc
-        else "${WebUrlVariables.queryUrl}${urlStrSrc}"
+            madeUrl.startsWith(WebUrlVariables.slashPrefix)
+            || madeUrl.startsWith(WebUrlVariables.filePrefix)
+            || madeUrl.startsWith(WebUrlVariables.httpPrefix)
+            || madeUrl.startsWith(WebUrlVariables.httpsPrefix)
+            || madeUrl.startsWith(WevViewDialogUriPrefix.TEXT_CON.prefix)
+        ) madeUrl
+        else "${WebUrlVariables.queryUrl}${madeUrl}"
         CoroutineScope(Dispatchers.Main).launch{
             terminalFragment.webViewDialogInstance?.dismiss()
             terminalFragment.webViewDialogInstance = Dialog(
@@ -438,10 +503,16 @@ class WebViewJsDialog(
                         webView.scrollY = it
                     }
                 }
+                UrlToFinishJs.execPageFinishJs(
+                    context,
+                    webView,
+                    url,
+                )
                 super.onPageFinished(webview, url)
             }
         }
     }
+
 
     private fun makeBtnOptionMap(
         currentScriptPath: String,

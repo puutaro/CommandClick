@@ -4,6 +4,8 @@ import android.os.SystemClock
 import android.view.KeyCharacterMap
 import android.view.KeyEvent
 import android.webkit.JavascriptInterface
+import android.webkit.WebView
+import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -17,6 +19,25 @@ class JsSendKey(
 
 
     @JavascriptInterface
+    fun sendPocket(
+        keyName: String,
+    ){
+        val webView = terminalFragment.webViewDialogInstance?.findViewById<WebView>(
+            R.id.webview_dialog_webview
+        ) ?: return
+        SpecialKeys.values().filter {
+            it.str == keyName
+        }.firstOrNull()?.let {
+            keyDownEvent(
+                it.keyCode,
+                webView
+            )
+            return
+        }
+        normalOrModiferHandler(keyName)
+    }
+
+    @JavascriptInterface
     fun send(
         keyName: String,
     ){
@@ -24,7 +45,8 @@ class JsSendKey(
             it.str == keyName
         }.firstOrNull()?.let {
             keyDownEvent(
-                it.keyCode
+                it.keyCode,
+                terminalFragment.binding.terminalWebView
             )
             return
         }
@@ -32,9 +54,10 @@ class JsSendKey(
     }
 
     private fun keyDownEvent(
-        keycode: Int
+        keycode: Int,
+        webview: WebView?
     ){
-        terminalFragment.binding.terminalWebView.dispatchKeyEvent(
+        webview?.dispatchKeyEvent(
             KeyEvent(
                 KeyEvent.ACTION_DOWN,
                 keycode

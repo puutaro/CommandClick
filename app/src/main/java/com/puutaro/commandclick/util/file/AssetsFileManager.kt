@@ -19,6 +19,7 @@ object AssetsFileManager {
         "$assetsDialogWebViewDirPath/highlightSchForDialogWebView.js"
     const val assetsHighlightCopy =
         "$assetsDialogWebViewDirPath/highlightCopy.js"
+    const val ggleSchBoxFocus = "${assetsDialogWebViewDirPath}/ggleSchBoxFocus.js"
     private const val assetsEditDirPath = "$assetsFannelsDirName/edit"
     const val iconSelectBox = "$assetsEditDirPath/iconSelectBox.js"
     const val fannelShellDirPath = "$assetsFannelsDirName/shell"

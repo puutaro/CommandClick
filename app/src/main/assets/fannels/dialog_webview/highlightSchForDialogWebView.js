@@ -29,7 +29,7 @@ function schBoxFocusOrSearch(highlightUrlString){
     if(
         !location.href.startsWith(googleSearchUrl)
     ){
-        location.href = `${googleSearchUrl}`;
+        location.href = `${googleSearchUrl}${encodeURIComponent(" ")}`;
         exitZero();
         return;
     }
