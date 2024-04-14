@@ -85,7 +85,7 @@ Addon Table
 
 <details>
 
-<summary>Addon table</summary>
+<summary>Add-ons: **Ubuntu**, `Terminal`, QR reader & creator, `youtube` player, file manager ...</summary>
 
 `CommandClick` has multiple feature  by addon.   
 Detail is bellow.
