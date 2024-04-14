@@ -11,7 +11,6 @@
 <br>
 
 Are you satisfied with existing web browsers life ?
-`CommandClick` is android browser powered by ubuntu without root access and termux.  
 <br>
 <br>
 <br>
