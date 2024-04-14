@@ -37,9 +37,10 @@ object FocusToGgleSearchBox {
             ) ?: return@OnFocusChangeListener
             val isGgleSearchUrl =
                 terminalFragment.binding.terminalWebView.url?.startsWith(
-                    WebUrlVariables.queryUrl
+                    WebUrlVariables.queryUrlBase
                 ) == true
             if (!isGgleSearchUrl) return@OnFocusChangeListener
+            cmdSearchEditText.setSelection(0)
             cmdSearchEditText.clearFocus()
             ExecJsLoad.jsConLaunchHandler(
                 cmdIndexFragment,

@@ -5,7 +5,8 @@
 /// LABELING_SECTION_END
 
 
-const googleSearchUrl="https://www.google.co.id/search?q=";
+const ggleSearchBase = "https://www.google.co.id/search?";
+const googleSearchUrl = `${ggleSearchBase}q=`;
 
 
 let prefixEnum = {
@@ -27,7 +28,7 @@ function schBoxFocusOrSearch(highlightUrlString){
         highlightUrlString
     ) return;
     if(
-        !location.href.startsWith(googleSearchUrl)
+        !location.href.startsWith(ggleSearchBase)
     ){
         location.href = `${googleSearchUrl}${encodeURIComponent(" ")}`;
         exitZero();

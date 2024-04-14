@@ -2,9 +2,9 @@
 schBoxFocusOrSearch();
 
 function schBoxFocusOrSearch(){
-    const googleSearchUrl="https://www.google.co.id/search?q=";
+    const ggleSearchBase = "https://www.google.co.id/search?";
     if(
-        !location.href.startsWith(googleSearchUrl)
+        !location.href.startsWith(ggleSearchBase)
     ){
         exitZero();
         return;

@@ -7,7 +7,8 @@ import java.io.File
 
 object WebUrlVariables {
 
-    val queryUrl = "https://www.google.co.id/search?q="
+    val queryUrlBase = "https://www.google.co.id/search?"
+    val queryUrl = "${queryUrlBase}q="
     val escapeStr = "about:blank"
     val httpPrefix = "http://"
     val httpsPrefix = "https://"

@@ -20,8 +20,9 @@ object KeyListenerSetter {
         val cmdListView = binding.cmdList
         cmdSearchEditText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
-                if (event.action != KeyEvent.ACTION_DOWN ||
-                    keyCode != KeyEvent.KEYCODE_ENTER
+                if (
+                    event.action != KeyEvent.ACTION_DOWN
+                    || keyCode != KeyEvent.KEYCODE_ENTER
                 ) return false
                 val linearLayoutParam =
                     cmdIndexFragment.binding.commandIndexFragment.layoutParams as LinearLayout.LayoutParams
