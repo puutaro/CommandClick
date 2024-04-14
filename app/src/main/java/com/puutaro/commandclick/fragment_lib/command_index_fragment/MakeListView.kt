@@ -9,6 +9,7 @@ import com.puutaro.commandclick.fragment.CommandIndexFragment
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.common.CommandListManager
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelQrLogoClickListener
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.click.FannelNameClickListenerSetter
+import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.FocusToGgleSearchBox
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.KeyListenerSetter
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.filter.TextChangedListenerAdder
 import com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.ExecOnLongClickDo
@@ -50,6 +51,8 @@ class MakeListView(
     fun makeTextFilter(
         cmdListAdapter: FannelIndexListAdapter,
     ){
+
+        FocusToGgleSearchBox.handle(cmdIndexFragment)
 
         TextChangedListenerAdder.add(
             cmdIndexFragment,
