@@ -502,6 +502,14 @@ class UrlHistoryButtonEvent(
             cmdclickUrlHistoryFilePath,
             urlHistoryCon
         )
+        val cmdclickUrlHistoryBkFilePath = File(
+            urlHistoryDirPath,
+            UsePath.cmdclickUrlHistoryBackupFileName
+        ).absolutePath
+        FileSystems.writeFile(
+            cmdclickUrlHistoryBkFilePath,
+            urlHistoryCon
+        )
         val urlHistoryList = makeUrlHistoryList()
         val urlHistoryAdapter = urlHistoryListView.adapter as UrlHistoryAdapter
         urlHistoryAdapter.clear()
