@@ -11,7 +11,6 @@
 <br>
 
 Are you satisfied with existing web browsers life ?
-`CommandClick` is android browser powered by ubuntu without root access and termux.  
 <br>
 <br>
 <br>
@@ -72,7 +71,7 @@ Screenshots
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/1808e7c1-90a7-4ab2-9aaf-25fa3b10f322"><img src="https://github.com/puutaro/CommandClick/assets/55217593/1808e7c1-90a7-4ab2-9aaf-25fa3b10f322" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2bed519f-1908-4d1d-bb75-4c455595998e" width="30%" /></a>
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6"><img src="https://github.com/puutaro/CommandClick/assets/55217593/2b04e38d-ba96-4194-85fc-d8302650bee6" width="30%" /></a>
-<a href="https://github.com/puutaro/CommandClick/assets/55217593/b2014b7e-3782-4ecd-83f6-5eb0d134e349"><img src="https://github.com/puutaro/CommandClick/assets/55217593/b2014b7e-3782-4ecd-83f6-5eb0d134e349" width="30%" />
+<a href="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568"><img src="https://github.com/puutaro/CommandClick/assets/55217593/101da895-a578-4667-b8e2-7728bbd9e568" width="30%" />
 <a href="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537"><img src="https://github.com/puutaro/CommandClick/assets/55217593/c8593de5-c408-4f05-ba5d-e611e6696537" width="30%" /></a>
 <a href="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612"><img src="https://github.com/puutaro/commandclick-repository/assets/55217593/6f62911e-772c-4c04-8375-0998d1353612" width="30%" /></a>
 <!-- <a href="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a"><img src="https://github.com/puutaro/CommandClick/assets/55217593/f4d1263e-c390-4e45-b26f-8ae103a4f73a" width="30%" /></a> -->
