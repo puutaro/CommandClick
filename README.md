@@ -157,7 +157,7 @@ Usage
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
-For Addon maker
+For Addon developer
 --------
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
