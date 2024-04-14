@@ -49,6 +49,8 @@ Table of Contents
 * [beforeCommand](#before_command)
 * [afterCommand](#after_command)
 * [terminalDo](#terminal_do)
+* [settingImport](#settingimport)
+* [importDisableValList](#importdisablevallist)
 
  
 ## editExecute
@@ -374,3 +376,14 @@ Where to display script result
 | `Termux` | In termux (only shell) |
 | `OFF` | backgrond exec (only shell) |
 
+## settingImport
+
+Import setting variable from js file
+
+- Set js file full paths by comma separated or multiple specify this variable
+
+## importDisableValList
+
+`settingImport` cancel
+
+- Set `setting variable name` by comma separated or multiple specify this variable
