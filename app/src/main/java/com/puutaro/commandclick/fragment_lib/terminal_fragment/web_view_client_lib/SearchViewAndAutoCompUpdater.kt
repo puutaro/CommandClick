@@ -1,6 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.web_view_client_lib
 
 import android.webkit.WebView
+import android.widget.Toast
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variables.WebUrlVariables
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -11,6 +12,9 @@ import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.state.FragmentTagManager
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.net.URLDecoder
 
 
@@ -114,8 +118,9 @@ object SearchViewAndAutoCompUpdater {
             !commandIndexFragment.isVisible
         ) return
         val listener = terminalFragment.context as? TerminalFragment.OnSearchTextChangeListener
+        val searchWordForEditText = searchViewText.replace("　", " ")
         listener?.onSearchTextChange(
-            searchViewText,
+            searchWordForEditText,
         )
     }
 }
