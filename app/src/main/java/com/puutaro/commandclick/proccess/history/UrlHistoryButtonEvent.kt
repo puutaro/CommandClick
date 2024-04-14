@@ -279,12 +279,13 @@ class UrlHistoryButtonEvent(
                 context,
                 listSelectedView,
             )
-            val selectedLine =
-                makeSearchFilteredUrlHistoryList(
-                    searchText
-                ).getOrNull(position)
-                ?.split("\t")
-                ?.lastOrNull()
+            val selectedTitleToUrl = makeTitleToUrl(
+                searchText,
+                position,
+            )
+            val selectedTitle = selectedTitleToUrl.first
+            val selectedUrl =
+                selectedTitleToUrl.second
                 ?: return@setOnItemLongClickListener true
             val inflater = popup.menuInflater
             inflater.inflate(
@@ -317,7 +318,7 @@ class UrlHistoryButtonEvent(
                         ).show()
                         execCopyUrl(
                             listSelectedView,
-                            selectedLine,
+                            selectedUrl,
                         )
                     }
                     UrlHistoryMenuEnums.DELETE.itemId -> {
@@ -327,7 +328,8 @@ class UrlHistoryButtonEvent(
                             Toast.LENGTH_SHORT
                         ).show()
                         execDeleteUrl(
-                            selectedLine,
+                            selectedTitle,
+                            selectedUrl,
                             urlHistoryListView
 
                         )
@@ -338,6 +340,23 @@ class UrlHistoryButtonEvent(
             popup.show()
             true
         }
+    }
+
+    private fun makeTitleToUrl(
+        searchText: EditText,
+        position: Int,
+    ): Pair<String?, String?> {
+        return makeSearchFilteredUrlHistoryList(
+            searchText
+        ).getOrNull(position)?.let {
+            val titleAndUrlList = it.split("\t")
+            if (
+                titleAndUrlList.size != 2
+            ) return@let null to null
+            val title = titleAndUrlList.first()
+            val url = titleAndUrlList.last()
+            title to url
+        } ?: (null to null)
     }
 
     private fun makeBottomScriptUrlList(
@@ -468,13 +487,14 @@ class UrlHistoryButtonEvent(
         clipboard.setPrimaryClip(clip)
     }
     private fun execDeleteUrl(
-        selectedLine: String?,
+        selectedTitle: String?,
+        selectedUrl: String?,
         urlHistoryListView: ListView,
     ){
         val bottomScriptUrlList = makeBottomScriptUrlList()
         val isBottomScript = bottomScriptUrlList.filter {
             val url = it.split("\t").lastOrNull()
-            url == selectedLine
+            url == selectedUrl
         }.isNotEmpty()
         if(isBottomScript) {
             Toast.makeText(
@@ -495,8 +515,16 @@ class UrlHistoryButtonEvent(
         val urlHistoryCon = ReadText(
             cmdclickUrlHistoryFilePath
         ).textToList().filter {
-            val url = it.split("\t").lastOrNull()
-            url != selectedLine
+            val titleAndUrlList = it.split("\t")
+            val title = titleAndUrlList.firstOrNull()
+            val url = titleAndUrlList.lastOrNull()
+            val isNotEqualTitle =
+                title != selectedTitle
+                        && !title.isNullOrEmpty()
+            val isNotEqualUrl =
+                url != selectedUrl
+            isNotEqualTitle
+                    && isNotEqualUrl
         }.joinToString("\n")
         FileSystems.writeFile(
             cmdclickUrlHistoryFilePath,
