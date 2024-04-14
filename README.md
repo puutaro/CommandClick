@@ -63,7 +63,7 @@ CommandClick
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
 - For existing browsers, add-ons are just a supporting role. But, for `CommandClick` addon is the main character.  
-- With existing browsers, add-ons can only play an active role within that framework. But, with `CommandClick`, add-ons can have infinite roll: **`Ubuntu`**, `Terminal`, QR reader & creator, youtube player, tts player and more.  
+- With existing browsers, add-ons can only play an active role within that framework. But, with `CommandClick`, add-ons can have infinite roll: **`Ubuntu`**, `Terminal`, QR reader & creator, youtube player, file manager and more.  
 - Existing browsers do not support add-on development. But, `CommandClick` strongly supports add-on development.  
 
 
