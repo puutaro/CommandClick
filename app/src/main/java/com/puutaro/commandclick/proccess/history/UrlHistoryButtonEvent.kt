@@ -512,20 +512,11 @@ class UrlHistoryButtonEvent(
             urlHistoryDirPath,
             cmdclickUrlHistoryFileName
         ).absolutePath
-        val urlHistoryCon = ReadText(
-            cmdclickUrlHistoryFilePath
-        ).textToList().filter {
-            val titleAndUrlList = it.split("\t")
-            val title = titleAndUrlList.firstOrNull()
-            val url = titleAndUrlList.lastOrNull()
-            val isNotEqualTitle =
-                title != selectedTitle
-                        && !title.isNullOrEmpty()
-            val isNotEqualUrl =
-                url != selectedUrl
-            isNotEqualTitle
-                    && isNotEqualUrl
-        }.joinToString("\n")
+        val urlHistoryCon = makeDeletedUrlHistoryCon(
+            cmdclickUrlHistoryFilePath,
+            selectedTitle,
+            selectedUrl,
+        )
         FileSystems.writeFile(
             cmdclickUrlHistoryFilePath,
             urlHistoryCon
@@ -543,5 +534,26 @@ class UrlHistoryButtonEvent(
         urlHistoryAdapter.clear()
         urlHistoryAdapter.addAll(urlHistoryList)
         urlHistoryAdapter.notifyDataSetChanged()
+    }
+
+    private fun makeDeletedUrlHistoryCon(
+        cmdclickUrlHistoryFilePath: String,
+        selectedTitle: String?,
+        selectedUrl: String?,
+    ): String {
+        return ReadText(
+            cmdclickUrlHistoryFilePath
+        ).textToList().filter {
+            val titleAndUrlList = it.split("\t")
+            val title = titleAndUrlList.firstOrNull()
+            val url = titleAndUrlList.lastOrNull()
+            val isNotEqualTitle =
+                title != selectedTitle
+                        && !title.isNullOrEmpty()
+            val isNotEqualUrl =
+                url != selectedUrl
+            isNotEqualTitle
+                    && isNotEqualUrl
+        }.joinToString("\n")
     }
 }
