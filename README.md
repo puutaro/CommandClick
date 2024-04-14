@@ -115,7 +115,7 @@ Detail is bellow.
 | Ubuntu terminal | builtin after [installing ubuntu](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu-addon) <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
 | Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
 | Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
-| Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
+| Youtube scraping player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
 | Text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
 | Pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
 | News scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
