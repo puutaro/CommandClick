@@ -85,12 +85,22 @@ Addon Table
 
 <details>
 
-<summary>Add-ons: **Ubuntu**, `Terminal`, QR reader & creator, `youtube` player, file manager ...</summary>
+<summary>Add-ons: <strong>Ubuntu</strong>, <code>Terminal</code>, <code>QR</code> reader & creator, <code>youtube</code> player, file manager ...</summary>
+
+<br>
+<br>
 
 `CommandClick` has multiple feature  by addon.   
+
+<br>
+
 Detail is bellow.
 
+<br>
+
 - In `CommandClick`, call addon `fannel`.
+
+<br>
 
 
 | Janre | builtin or addon(fannel) |
