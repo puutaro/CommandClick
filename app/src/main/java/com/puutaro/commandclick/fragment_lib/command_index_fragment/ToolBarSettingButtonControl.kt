@@ -38,7 +38,7 @@ class ToolBarSettingButtonControl(
     )
 
     private val settingButtonView = binding.cmdindexSettingButton
-    private val menuListMap = MenuEnums.values().toList().map{
+    private val menuMapList = MenuEnums.values().toList().map{
         it.itemName to it.imageId
     }
     private var menuPopupWindow: PopupWindow? = null
@@ -75,7 +75,7 @@ class ToolBarSettingButtonControl(
                         )
                     val menuListAdapter = SubMenuAdapter(
                         settingButtonViewContext,
-                        menuListMap.toMutableList()
+                        menuMapList.toMutableList()
                     )
                     menuListView.adapter = menuListAdapter
                     menuListViewSetOnItemClickListener(menuListView)

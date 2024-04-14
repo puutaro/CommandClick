@@ -38,6 +38,32 @@ object AppProcessManager {
         currentAppDirPath: String,
         fannelName: String,
     ){
+        execKillDialog(
+            fragment,
+            currentAppDirPath,
+            fannelName,
+            createKillTypeList()
+        )
+    }
+
+    fun killDialogForCmdIndex(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        fannelName: String,
+    ){
+        execKillDialog(
+            fragment,
+            currentAppDirPath,
+            fannelName,
+            createKillTypeListForCmdIndex()
+        )
+    }
+    private fun execKillDialog(
+        fragment: Fragment,
+        currentAppDirPath: String,
+        fannelName: String,
+        killTypeList: List<Pair<String, Int>>
+    ){
         val context = fragment.context
             ?: return
 
@@ -68,7 +94,7 @@ object AppProcessManager {
 
         setKillTypeListView(
             fragment,
-            createKillTypeList(),
+            killTypeList,
             currentAppDirPath,
             fannelName,
         )
@@ -131,6 +157,14 @@ object AppProcessManager {
 
     private fun createKillTypeList(): List<Pair<String, Int>> {
         return KillType.values().map {
+            it.str to icons8Wheel
+        }
+    }
+
+    private fun createKillTypeListForCmdIndex(): List<Pair<String, Int>> {
+        return KillType.values().filter{
+            it != KillType.KILL_THIS
+        }.map {
             it.str to icons8Wheel
         }
     }

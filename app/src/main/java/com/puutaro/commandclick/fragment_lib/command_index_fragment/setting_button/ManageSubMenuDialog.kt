@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.setting_button
 
 import android.app.Dialog
-import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -11,6 +10,7 @@ import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
+import com.puutaro.commandclick.proccess.AppProcessManager
 import com.puutaro.commandclick.proccess.SelectTermDialog
 import com.puutaro.commandclick.proccess.TermRefresh
 import com.puutaro.commandclick.proccess.tool_bar_button.SystemFannelLauncher
@@ -92,9 +92,6 @@ object ManageSubMenuDialog {
         currentAppDirPath: String,
         subMenuListView: ListView?
     ){
-        val activity = cmdIndexFragment.activity
-            ?: return
-        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
         val terminalViewModel: TerminalViewModel by cmdIndexFragment.activityViewModels()
         subMenuListView?.setOnItemClickListener {
                 parent, view, position, id ->
@@ -103,6 +100,13 @@ object ManageSubMenuDialog {
             val selectedSubMenu = menuListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             when(selectedSubMenu){
+                ManageSubMenuEnums.KILL.itemName -> {
+                    AppProcessManager.killDialogForCmdIndex(
+                        cmdIndexFragment,
+                        currentAppDirPath,
+                        String(),
+                    )
+                }
                 ManageSubMenuEnums.RESTART_UBUNTU.itemName -> {
                     UbuntuServiceManager.launch(
                         cmdIndexFragment.activity
@@ -137,6 +141,7 @@ object ManageSubMenuDialog {
         val itemName: String,
         val imageId: Int
     ){
+        KILL("kill", R.drawable.icons8_cancel),
         REFRESH_MONITOR("refresh monitor", R.drawable.icons8_refresh),
         SELECT_MONITOR("select monitor", R.drawable.icons8_file),
         RESTART_UBUNTU("restart ubuntu", R.drawable.icons8_launch),
