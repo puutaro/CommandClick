@@ -212,7 +212,7 @@ object FannelStateManager {
     enum class FannelStateTsvKey(
         val key: String
     ) {
-        FANNEL_STATE("fanenlState"),
+        FANNEL_STATE("fannelState"),
     }
 
     enum class FannelStateSettingKey(
