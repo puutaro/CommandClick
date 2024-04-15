@@ -61,9 +61,9 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
 
-- For existing browsers, add-ons are just a supporting role. But, for `CommandClick` addon is the main character.  
-- With existing browsers, add-ons can only play an active role within that framework. But, with `CommandClick`, add-ons can have infinite roll: **`Ubuntu`**, `Terminal`, QR reader & creator, youtube player, file manager and more.  
-- Existing browsers do not support add-on development. But, `CommandClick` strongly supports add-on development.  
+- For existing browsers, `add-ons` are just a supporting role. But, for `CommandClick` `add-ons`, is the **main character**.  
+- With existing browsers, `add-ons` can only play an active role within that framework. But, with `CommandClick`, `add-ons` can have **infinite roll**: **`Ubuntu`**, `Terminal`, QR reader & creator, youtube player, file manager and more.  
+- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development**.  
 
 
 Screenshots
@@ -85,15 +85,25 @@ Addon Table
 
 <details>
 
-<summary>Addon table</summary>
+<summary>Add-ons: <strong><code>Ubuntu</code></strong>, <code>Terminal</code>, <code>QR</code> reader & creator, <code>youtube</code> player, file manager ...</summary>
+
+<br>
+<br>
 
 `CommandClick` has multiple feature  by addon.   
+
+<br>
+
 Detail is bellow.
+
+<br>
 
 - In `CommandClick`, call addon `fannel`.
 
+<br>
 
-| Janre | builtin or addon(fannel) |
+
+| Janre | builtin fannel(addon) / external fannel(addon) name |
 | ------- | ---------------- |
 | History oriented Web browser | builtin |  
 | AdBlock | builtin |  
@@ -105,7 +115,7 @@ Detail is bellow.
 | Ubuntu terminal | builtin after [installing ubuntu](https://github.com/puutaro/CommandClick?tab=readme-ov-file#setup-ubuntu-addon) <br> [sshTerminal.js](https://github.com/puutaro/sshTerminal) |  
 | Termux client | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer)  <br> [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) | 
 | Music player | [cmdMusicPlayer.js](https://github.com/puutaro/cmdMusicPlayer) <br> [cmdMusicPlayerU.js](https://github.com/puutaro/cmdMusicPlayerU) |  
-| Youtube sound player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
+| Youtube scraping player | [cmdYoutuber.js](https://github.com/puutaro/cmdYoutuber) <br> [cmdYoutuberU.js](https://github.com/puutaro/cmdYoutuberU) |  
 | Text to speech | textToSpeech.js (builtin) <br> [ttsPlsyer.js](https://github.com/puutaro/ttsPlayer) <br> [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [newsSpeecher.js](https://github.com/puutaro/newsSpeecher)   |  
 | Pdf viewer |  [txtPdfViewer.js](https://github.com/puutaro/txtPdfViewer) <br> [ctsvViewer.js](https://github.com/puutaro/ctsvViewer) |
 | News scraping | [newsSpeecher.js](https://github.com/puutaro/newsSpeecher) |
@@ -147,7 +157,7 @@ Usage
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/USAGE.md" target="_blank">USAGE.md</a></p> 
 
 
-For Addon maker
+For Addon developer
 --------
 
 <p>-> <a href="https://github.com/puutaro/CommandClick/blob/master/TUTORIAL.md" target="_blank">TUTORIAL.md</a></p>  
