@@ -2,6 +2,8 @@ package com.puutaro.commandclick.service.lib.music_player.libs
 
 import com.maxrave.kotlinyoutubeextractor.State
 import com.maxrave.kotlinyoutubeextractor.YTExtractor
+import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeMusicPlayer
+import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
 import com.puutaro.commandclick.service.MusicPlayerService
 import com.puutaro.commandclick.service.lib.music_player.MusicPlayerMaker
 import com.puutaro.commandclick.util.LogSystems
@@ -67,6 +69,7 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ): Job {
+        val context = musicPlayerService.applicationContext
         musicPlayerService.execPlayJob?.cancel()
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO){
@@ -85,10 +88,20 @@ object ExecMusicPlay {
                     musicPlayerService,
                     uri,
                 )
-            } ?: return@launch
-            if (
-                yt.state != State.SUCCESS
-            ) return@launch
+            }
+            if(
+                yt == null
+                || yt.state != State.SUCCESS
+            ) {
+                LogSystems.stdWarn(
+                    "extract failure"
+                )
+                BroadcastSender.normalSend(
+                    context,
+                    BroadCastIntentSchemeMusicPlayer.NEXT_MUSIC_PLAYER.action,
+                )
+                return@launch
+            }
             val videoMeta = withContext(Dispatchers.IO) {
                 yt.getVideoMeta()
             }
@@ -141,12 +154,21 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ): Job {
+        val context = musicPlayerService.applicationContext
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO) {
                 playList.getOrNull(
                     playIndex
                 )
-            } ?: return@launch
+            }
+            if(
+                uri.isNullOrEmpty()
+            ){
+                LogSystems.stdWarn(
+                    "playList getIndex failure: ${playIndex} / ${playList.size}"
+                )
+                return@launch
+            }
             withContext(Dispatchers.IO) {
                 try {
                     execPlay(
@@ -154,7 +176,7 @@ object ExecMusicPlay {
                         uri,
                     )
                 } catch (e: Exception) {
-                    println("pass")
+                    LogSystems.stdWarn(e.toString())
                 }
             }
         }
@@ -166,7 +188,10 @@ object ExecMusicPlay {
     ){
         if(
             musicPlayerService.mediaPlayer == null
-        ) return
+        ) {
+            LogSystems.stdWarn("musicPlayer null")
+            return
+        }
 //        val url = "http://137.110.92.231/~chenyu/BBC.mp4"
 //        https://www.youtube.com/watch?v=5c1F8FzPfz8
 //            .setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -193,6 +218,7 @@ object ExecMusicPlay {
             try {
                 MusicPlayerMaker.prepare(musicPlayerService)
             } catch (e: IOException) {
+                LogSystems.stdWarn("$e")
                 e.printStackTrace()
             }
         }
