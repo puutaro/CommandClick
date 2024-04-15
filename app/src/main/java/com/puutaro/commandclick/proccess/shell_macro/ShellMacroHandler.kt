@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.shell_macro
 
+import android.content.Context
 import com.puutaro.commandclick.common.variable.settings.EditSettings
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
@@ -296,6 +297,22 @@ object ShellMacroHandler {
                 }
                 else -> argStrValue
             }
+        }
+    }
+
+    fun makeSetReplaceVariableMapFromSubFannel(
+        context: Context,
+        shellPath: String,
+    ): Map<String, String>? {
+        val isNotMacro = ShellMacro.values().firstOrNull {
+            it.name == shellPath
+        } == null
+        return when(isNotMacro) {
+            true -> SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+                context,
+                shellPath
+            )
+            else -> null
         }
     }
 

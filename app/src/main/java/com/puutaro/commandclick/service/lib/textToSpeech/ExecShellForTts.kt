@@ -42,7 +42,7 @@ object ExecShellForTts {
             RepValKeyForTts.TOTAL_BLOCK_NUM.key to totalTimes.toString(),
         ) + shellRepValMap
         val setReplaceVariableMap =
-            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            ShellMacroHandler.makeSetReplaceVariableMapFromSubFannel(
                 context,
                 shellPath
             )
@@ -56,31 +56,5 @@ object ExecShellForTts {
             setReplaceVariableMap,
             repValMapForTts
         )
-//        val currentAppDirPath = CcPathTool.getMainAppDirPath(
-//            shellPath
-//        )
-//
-//        val currentFannelName = CcPathTool.getMainFannelFilePath(
-//            currentAppDirPath
-//        )
-//
-//        val shellCon = ReadText(
-//            shellPath
-//        ).readText().let {
-//            SetReplaceVariabler.execReplaceByReplaceVariables(
-//                it,
-//                setReplaceVariableMap,
-//                currentAppDirPath,
-//                currentFannelName
-//            )
-//        }
-//        val busyboxExecutor = BusyboxExecutor(
-//            context,
-//            UbuntuFiles(context),
-//        )
-//        busyboxExecutor.getCmdOutput(
-//            shellCon,
-//            repValMapForTts
-//        )
     }
 }

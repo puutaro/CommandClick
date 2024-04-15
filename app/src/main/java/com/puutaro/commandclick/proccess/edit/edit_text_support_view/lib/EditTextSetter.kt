@@ -11,12 +11,10 @@ import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndViewSetter
-import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.shell_macro.ShellMacroHandler
 import com.puutaro.commandclick.util.ScreenSizeCalculator
 import com.puutaro.commandclick.util.map.CmdClickMap
-import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.view_model.activity.EditViewModel
 
 object EditTextSetter {
@@ -155,24 +153,11 @@ private object EditTextMaker {
         if(
             editTextPropertyMap.isNullOrEmpty()
         ) return null
-        val context = fragment.context
-            ?: return null
         val setReplaceVariableMap = when(fragment){
             is EditFragment -> fragment.setReplaceVariableMap
             is TerminalFragment -> fragment.setReplaceVariableMap
             else -> emptyMap()
         }
-        val readSharePreferenceMap = when(fragment){
-            is EditFragment -> fragment.readSharePreferenceMap
-            is TerminalFragment -> fragment.readSharePreferenceMap
-            else -> emptyMap()
-        }
-        val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
-            readSharePreferenceMap
-        )
-        val currentFannelName = SharePrefTool.getCurrentFannelName(
-            readSharePreferenceMap
-        )
         val shellConSrc = editTextPropertyMap.get(
             EditTextSetter.EditTextPropertySettingKey.SHELL_CON.key
         )

@@ -444,6 +444,7 @@ fun checkIndexNum(
     editParameters: EditParameters,
     noIndexTypeList: List<String>,
 ){
+    val currentVariableName = editParameters.currentVariableName
     CoroutineScope(Dispatchers.IO).launch {
         val variableTypeList =
             withContext(Dispatchers.IO) {
@@ -476,10 +477,18 @@ fun checkIndexNum(
 //                currentSetVariableValue?.split("|")
 //                    ?.size ?: 0
             }
-        if (variableTypeIsIndexListSize == currentSetVariableValueIndexSize) return@launch
+        val existVariableTypeIsIndexList =
+            variableTypeIsIndexList.joinToString(":").trim().isNotEmpty()
+        val existCurrentVariableName =
+            !currentVariableName.isNullOrEmpty()
+        if (
+            variableTypeIsIndexListSize == currentSetVariableValueIndexSize
+            || existVariableTypeIsIndexList
+            || existCurrentVariableName
+        ) return@launch
         withContext(Dispatchers.IO) {
             LogSystems.stdWarn(
-                "not match ${CommandClickScriptVariable.SET_VARIABLE_TYPE}; " +
+                "not match ${currentVariableName} ${CommandClickScriptVariable.SET_VARIABLE_TYPE}; " +
                         "options / values -> " +
                         "$variableTypeIsIndexListSize / $currentSetVariableValueIndexSize -> " +
                         "( ${variableTypeIsIndexList.joinToString(":")} ) / " +

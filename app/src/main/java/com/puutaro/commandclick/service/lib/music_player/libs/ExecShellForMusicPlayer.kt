@@ -44,9 +44,9 @@ object ExecShellForMusicPlayer {
             RepValKeyForMusic.TOTAL_SEEK.key to totalSeek,
         ) + shellRepValMap
         val setReplaceVariableMap =
-            SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            ShellMacroHandler.makeSetReplaceVariableMapFromSubFannel(
                 context,
-                shellPath
+                shellPath,
             )
         val busyboxExecutor = BusyboxExecutor(
             context,
