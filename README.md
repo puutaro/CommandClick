@@ -63,7 +63,8 @@ CommandClick
 
 - For existing browsers, `add-ons` are just a supporting role. But, for `CommandClick` `add-ons`, is the **main character**.  
 - With existing browsers, `add-ons` can only play an active role within that framework. But, with `CommandClick`, `add-ons` can have **infinite roll**: **`Ubuntu`**, `Terminal`, QR reader & creator, youtube player, file manager and more.  
-- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development**.  
+- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development**.
+- Existing browsers don't even think about distributing `add-ons`. But, `CommandClick` **strongly supports `add-ons` distributing** by QR builin `add-on`.
 
 
 Screenshots
