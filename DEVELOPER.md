@@ -11,7 +11,7 @@ Table of Contents
 <!-- vim-markdown-toc GFM -->
 
 * [Structure](#structure)
-* [Fannel structure](#fannel-structure)
+* [Fannel(addon) structure](#fannel_structure)
 * [Labeling section](#labeling-section)
 * [Cmd variables](#cmd-variables)
 * [Setting variables](#setting-variable)
@@ -37,9 +37,9 @@ Table of Contents
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/88af0178-4854-4f67-bf3a-928ba4519f27" width="500">  
 
-### Fannel structure
+### Fannel(addon) structure <a id="fannel_structure"></a>
 
-`fannel` is `ComamndClick` using script  
+`fannel` is `add-on` in `ComamndClick`  
 
 <img src="https://github.com/puutaro/CommandClick/assets/55217593/866958e3-8643-4cf0-b610-000f8245397f" width="400">  
 
