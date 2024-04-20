@@ -24,31 +24,33 @@ object FilterPathTool {
             separator
         )
         val isFile = File("${dirPath}/$targetFileName").isFile
+                || File(targetFileName).isFile
         return okPrefix
                 && okSuffix
                 && isFile
     }
 
     fun isFilterByDir(
-        targetFileName: String,
+        targetDirName: String,
         dirPath: String,
         filterPrefixListCon: String,
         filterSuffixListCon: String,
         separator: String
     ): Boolean {
         val okPrefix = judgeByPrefix(
-            targetFileName,
+            targetDirName,
             filterPrefixListCon,
             separator
         )
         val okSuffix =  judgeBySuffix(
-            targetFileName,
+            targetDirName,
             filterSuffixListCon,
             separator
         )
         val isDir = File(
-            "${dirPath}/$targetFileName"
+            "${dirPath}/$targetDirName"
         ).isDirectory
+                || File(targetDirName).isDirectory
         return okPrefix
                 && okSuffix
                 && isDir
@@ -59,8 +61,11 @@ object FilterPathTool {
         filterPrefixListCon: String,
         separator: String,
     ): Boolean {
+        val compareFileOrDirName = makeNameForComparePrefix(
+            targetStr,
+        )
         return filterPrefixListCon.split(separator).any {
-            targetStr.startsWith(it)
+            compareFileOrDirName.startsWith(it)
         }
     }
 
@@ -75,5 +80,18 @@ object FilterPathTool {
             }
         }
         return !Regex("\\..*$").containsMatchIn(targetStr)
+    }
+
+    private fun makeNameForComparePrefix(
+        name: String,
+    ): String {
+        val fileOrDirName = File(name).name
+        val isFileOrDirName =
+            fileOrDirName == name
+        if(
+            isFileOrDirName
+        ) return name
+        return fileOrDirName
+
     }
 }

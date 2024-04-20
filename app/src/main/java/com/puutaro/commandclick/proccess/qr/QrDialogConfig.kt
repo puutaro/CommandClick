@@ -31,6 +31,6 @@ object QrDialogConfig {
         val parentDirPath: String,
         val fileName: String,
         val fannelContentsQrLogoView: AppCompatImageView?,
-        val fileContentsQrLogoLinearLayout: LinearLayoutCompat?
+//        val fileContentsQrLogoLinearLayout: LinearLayoutCompat?
     )
 }

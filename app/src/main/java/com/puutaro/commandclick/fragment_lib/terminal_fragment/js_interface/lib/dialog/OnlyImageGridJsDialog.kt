@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.component.adapter.OnlyImageAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
+import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.EditableListContentsMultiSelectGridViewProducer
 import com.puutaro.commandclick.proccess.lib.LinearLayoutForTotal
 import com.puutaro.commandclick.proccess.lib.NestLinearLayout
 import com.puutaro.commandclick.proccess.lib.SearchTextLinearWeight
@@ -97,7 +98,7 @@ class OnlyImageGridJsDialog(
     ) {
         val imagePathList =
             imagePathListTabSepaStr
-                .split("\n  ")
+                .split("\n")
                 .toMutableList()
         val context = context ?: return
         val linearLayoutForGridView = createLinearLayoutForGridView(
@@ -127,6 +128,20 @@ class OnlyImageGridJsDialog(
                 .setView(linearLayoutForGridView)
                 .create()
         }
+        onlyImageGridDialog?.getButton(
+            DialogInterface.BUTTON_POSITIVE
+        )?.setTextColor(
+            context.getColor(
+                android.R.color.black
+            ) as Int
+        )
+        onlyImageGridDialog?.getButton(
+            DialogInterface.BUTTON_NEGATIVE
+        )?.setTextColor(
+            context.getColor(
+                android.R.color.black
+            ) as Int
+        )
         onlyImageGridDialog?.window?.setLayout(
             ViewGroup.LayoutParams.MATCH_PARENT,
             ViewGroup.LayoutParams.WRAP_CONTENT

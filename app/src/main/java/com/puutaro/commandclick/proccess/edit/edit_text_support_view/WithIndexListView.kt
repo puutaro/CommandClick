@@ -5,6 +5,8 @@ import android.text.TextWatcher
 import android.view.View
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.puutaro.commandclick.common.variable.edit.EditParameters
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -17,6 +19,7 @@ import com.puutaro.commandclick.fragment_lib.edit_fragment.common.TitleImageAndV
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.FannelLogoLongClickDoForListIndex
 import com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index.ItemTouchHelperCallbackForListIndexAdapter
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.SearchBoxSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrDialogClickHandler
@@ -102,14 +105,18 @@ class WithIndexListView(
         )
 
         editListRecyclerView.adapter = listIndexForEditAdapter
-        val preLoadLayoutManager = PreLoadLayoutManager(
-            context,
-        )
-        preLoadLayoutManager.reverseLayout = ListSettingsForListIndex.howReverseLayout(
+
+
+        val isReverseLayout = ListSettingsForListIndex.howReverseLayout(
             editFragment,
             indexListMap
         )
-        editListRecyclerView.layoutManager = preLoadLayoutManager
+        LayoutSettingsForListIndex.setLayout(
+            context,
+            listIndexForEditAdapter.getLayoutConfigMap(),
+            editListRecyclerView,
+            isReverseLayout,
+        )
         ListViewToolForListIndexAdapter.scrollToBottom(
             editListRecyclerView,
             listIndexForEditAdapter,

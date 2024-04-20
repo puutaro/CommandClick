@@ -7,11 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class PreLoadLayoutManager(
-    private val context: Context?) :
+    context: Context?,
+    reverseLayout: Boolean = false
+) :
     LinearLayoutManager(
         context,
         LinearLayoutManager.VERTICAL,
-        false
+        reverseLayout
     ) {
     private val mDisplayHeight: Int
 

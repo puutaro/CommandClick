@@ -37,6 +37,20 @@ object BitmapTool {
         )
     }
 
+    fun resizeByMaxHeight(
+        beforeResizeBitMap: Bitmap,
+        maxHeight: Double,
+    ): Bitmap {
+        val resizeScale: Double =
+            (maxHeight / beforeResizeBitMap.height)
+        return Bitmap.createScaledBitmap(
+            beforeResizeBitMap,
+            (beforeResizeBitMap.width * resizeScale).toInt(),
+            (beforeResizeBitMap.height * resizeScale).toInt(),
+            true
+        )
+    }
+
     fun getScreenShotFromView(v: View): Bitmap? {
         // create a bitmap object
         var screenshot: Bitmap? = null

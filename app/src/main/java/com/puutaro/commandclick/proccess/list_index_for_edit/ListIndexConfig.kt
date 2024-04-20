@@ -12,7 +12,6 @@ import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ClickScriptSaver
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecClickUpdate
 import com.puutaro.commandclick.fragment.EditFragment
-import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ScriptFileSaver
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.MaxStringLength
 import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.JsPathHandlerForQrAndListIndex
@@ -20,11 +19,9 @@ import com.puutaro.commandclick.proccess.list_index_for_edit.libs.ListIndexArgsM
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.CheckItemSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.DescSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.FileNameKeyForListIndex
-import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.util.CcPathTool
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -195,13 +192,13 @@ object ListIndexEditConfig {
         materialCardView.isChecked = true
     }
 
-    fun setFileNameTextView(
+    fun makeFileNameText(
         listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
         fileNameTextView: AppCompatTextView?,
         fileName: String,
         listIndexConfigMap: Map<String, String>?,
         busyboxExecutor: BusyboxExecutor?,
-    ) {
+    ): String? {
         val fileNameConfigMap = CmdClickMap.createMap(
             listIndexConfigMap?.get(
                 ListIndexConfigKey.NAME.key
@@ -213,7 +210,7 @@ object ListIndexEditConfig {
         )
         if (isHide) {
             fileNameTextView?.isVisible = false
-            return
+            return null
         }
         val fileNameBeforeCut = makeFileName(
             listIndexTypeKey,
@@ -221,11 +218,16 @@ object ListIndexEditConfig {
             fileNameConfigMap,
             busyboxExecutor
         )
-        fileNameTextView?.text = MaxStringLength.cut(
+        return MaxStringLength.cut(
             fileNameBeforeCut,
-        100,
-                fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.LENGTH.key)
+            100,
+            fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.LENGTH.key)
         )
+//        fileNameTextView?.text = MaxStringLength.cut(
+//            fileNameBeforeCut,
+//        100,
+//                fileNameConfigMap.get(FileNameKeyForListIndex.ListIndexFileNameKey.LENGTH.key)
+//        )
     }
 
     private fun makeFileName(
@@ -391,6 +393,7 @@ object ListIndexEditConfig {
         val key: String,
     ) {
         TYPE("type"),
+        LAYOUT("layout"),
         NAME("name"),
         DESC("desc"),
         CHECK_ITEM("checkItem"),

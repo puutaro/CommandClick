@@ -1,25 +1,37 @@
 package com.puutaro.commandclick.proccess.qr.qr_dialog_config.config_settings
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.view.Gravity
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.LinearLayoutCompat
+import androidx.core.view.marginBottom
 import androidx.fragment.app.Fragment
 import coil.load
+import com.google.android.material.card.MaterialCardView
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.res.CmdClickColor
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
+import com.puutaro.commandclick.component.adapter.lib.ImageAdapterTool
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.LayoutSettingsForListIndex
+import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
 import com.puutaro.commandclick.proccess.qr.QrDialogConfig
 import com.puutaro.commandclick.proccess.qr.QrLogo
 import com.puutaro.commandclick.util.CcPathTool
 import com.puutaro.commandclick.util.ScreenSizeCalculator
+import com.puutaro.commandclick.util.file.AssetsFileManager
 import com.puutaro.commandclick.util.file.ReadText
+import com.puutaro.commandclick.util.image_tools.BitmapTool
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
 import java.io.File
+
 
 object QrLogoSettingsForQrDialog {
     enum class QrLogoSettingKey(
@@ -180,15 +192,34 @@ object QrLogoSettingsForQrDialog {
 
     object OneSideLength {
 
-        fun set(
+        fun setLayout(
             fragment: Fragment,
-            fileContentsQrLogoLinearLayout: LinearLayoutCompat?,
-            qrLogoConfigMap: Map<String, String>
+            baseLinearLayoutCompat: LinearLayoutCompat?,
+            materialCardView: MaterialCardView?,
+            fileContentsQrLogoLinearLayout: RelativeLayout?,
+            qrLogoConfigMap: Map<String, String>,
+            layoutType: LayoutSettingsForListIndex.LayoutTypeValueStr,
         ){
-            val oneSideLength = culc(
-                fragment,
-                qrLogoConfigMap
-            )
+            when(layoutType) {
+                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
+                -> {}
+                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
+                -> {
+//                    val layoutParams =
+//                        baseLinearLayoutCompat?.layoutParams as ViewGroup.MarginLayoutParams
+//                    layoutParams.setMargins(0, 0, 0, 0)
+//                    baseLinearLayoutCompat.requestLayout()
+                }
+            }
+            val oneSideLength = when(layoutType) {
+                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
+                culc(
+                    fragment.context,
+                    qrLogoConfigMap
+                )
+                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+            }
             val linearLayoutParam = LinearLayoutCompat.LayoutParams(
                 oneSideLength,
                 oneSideLength
@@ -200,35 +231,27 @@ object QrLogoSettingsForQrDialog {
 //                "oneSideLength: ${oneSideLength}",
 //            ).joinToString("\n\n")
 //        )
-            linearLayoutParam.setMargins(10, 10, 0, 10)
+            when(layoutType) {
+                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR ->
+                    linearLayoutParam.setMargins(10, 10, 0, 10)
+                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID ->
+                    linearLayoutParam.apply {
+                        setMargins(0, 0, 0, 0)
+                    }
+            }
             linearLayoutParam.gravity = Gravity.CENTER
             fileContentsQrLogoLinearLayout?.layoutParams = linearLayoutParam
-        }
-        private fun culc(
-            fragment: Fragment,
-            qrLogoSettingMap: Map<String, String>,
-        ): Int {
-            val defaultOnsideLengthSrc = 100
-            val defaultOneSideLength = ScreenSizeCalculator.toDp(
-                fragment.context,
-                defaultOnsideLengthSrc
-            )
-            val oneSideLengthKeyName = QrLogoSettingKey.ONE_SIDE_LENGTH.key
-            if(
-                qrLogoSettingMap.isEmpty()
-            ) return defaultOneSideLength
-            return qrLogoSettingMap.get(oneSideLengthKeyName).let {
-                if(
-                    it.isNullOrEmpty()
-                ) return@let defaultOneSideLength
-                try {
-                    ScreenSizeCalculator.toDp(
-                        fragment.context,
-                        it.toFloat()
+            when(layoutType) {
+                LayoutSettingsForListIndex.LayoutTypeValueStr.LINEAR
+                -> {}
+                LayoutSettingsForListIndex.LayoutTypeValueStr.GRID
+                -> {
+                    val cardViewLayoutParams = materialCardView?.layoutParams as ViewGroup.MarginLayoutParams
+                    cardViewLayoutParams.setMargins(1, 1, 1, 1)
+                    materialCardView.requestLayout()
+                    fileContentsQrLogoLinearLayout?.setPadding(
+                        0, 0, 0, 0
                     )
-//                it.toInt()
-                } catch (e: Exception){
-                    defaultOneSideLength
                 }
             }
         }
@@ -244,15 +267,24 @@ object QrLogoSettingsForQrDialog {
             DISABLE("disable"),
         }
         private val disableOn = "ON"
+        enum class ImageMacro(
+            val str: String,
+            val id: Int,
+        ) {
+            IMAGE_PATH("imagePath", -10)
+        }
 
         fun set(
             context: Context?,
+            filterDir: String,
+            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
             itemName: String,
             fannelContentsQrLogoView: AppCompatImageView?,
-            fileContentsQrLogoLinearLayout: LinearLayoutCompat?,
+            fileContentsQrLogoLinearLayout: RelativeLayout?,
             qrLogoConfigMap: Map<String, String>,
             iconConfigMap: Map<String, String>,
             itemNameToNameColorConfigMap: Map<String, String>?,
+            textImagePngBitMap: Bitmap,
         ): Boolean {
             if(
                 context == null
@@ -282,11 +314,111 @@ object QrLogoSettingsForQrDialog {
             val iconId =
                 getIconId(iconNameColorConfigMap)
                     ?: return false
-            fannelContentsQrLogoView.load(
+            when(iconId){
+                ImageMacro.IMAGE_PATH.id -> setImagePath(
+                    context,
+                    fannelContentsQrLogoView,
+                    listIndexTypeKey,
+                    qrLogoConfigMap,
+                    filterDir,
+                    itemName,
+                    textImagePngBitMap,
+                )
+                else -> setIconOrQr(
+                    context,
+                    fannelContentsQrLogoView,
+                    fileContentsQrLogoLinearLayout,
+                    iconNameColorConfigMap,
+                    iconId,
+                )
+            }
+            return true
+        }
+
+        private fun setImagePath(
+            context: Context,
+            fannelContentsQrLogoView: AppCompatImageView?,
+            listIndexTypeKey: TypeSettingsForListIndex.ListIndexTypeKey,
+            qrLogoConfigMap: Map<String, String>,
+            filterDir: String,
+            itemName: String,
+            textImagePngBitMap: Bitmap,
+        ) {
+            val itemPath = when(listIndexTypeKey){
+                TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
+                -> return
+                TypeSettingsForListIndex.ListIndexTypeKey.TSV_EDIT ->
+                    itemName
+                TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
+                -> File(filterDir, itemName).absolutePath
+            }
+//            fannelContentsQrLogoView?.load(
+//                itemPath
+//            )
+            val maxHeight = culc(
+                context,
+                qrLogoConfigMap
+            )
+            val myBitmap = makeBitMap(
+                itemPath,
+                maxHeight,
+                textImagePngBitMap
+            )
+
+            fannelContentsQrLogoView?.setImageBitmap(myBitmap)
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "logo.txt").absolutePath,
+//                listOf(
+//                    "qrLogoConfigMap: ${qrLogoConfigMap}",
+//                    "macheigt: ${maxHeight}",
+//                    "listIndexTypeKey: ${listIndexTypeKey.key}",
+//                    "filterDir: ${filterDir}",
+//                    "itemName: ${itemName}",
+//                    "itemPath: ${itemPath}",
+//                    "itemPath.isFile: ${File(itemPath).isFile}",
+//                ).joinToString("\n\n")
+//            )
+            return
+        }
+
+        private fun makeBitMap(
+            itemPath: String,
+            maxHeight: Int,
+            textImagePngBitMap: Bitmap,
+        ): Bitmap {
+            val myBitmap: Bitmap = try {
+                BitmapFactory.decodeFile(itemPath)
+            } catch (e: Exception){
+                textImagePngBitMap
+            }
+            if(
+                myBitmap.height <= maxHeight
+            ) return myBitmap
+            val resizeBitmap = BitmapTool.resizeByMaxHeight(
+                myBitmap,
+                maxHeight.toDouble(),
+            )
+//            FileSystems.updateFile(
+//                File(UsePath.cmdclickDefaultAppDirPath, "log_bitmap.txt").absolutePath,
+//                listOf(
+//                    "resizeBitmap: ${resizeBitmap.height}"
+//                ).joinToString("\n\n")
+//            )
+            return resizeBitmap
+        }
+
+        private fun setIconOrQr(
+            context: Context,
+            fannelContentsQrLogoView: AppCompatImageView?,
+            fileContentsQrLogoLinearLayout: RelativeLayout?,
+            iconNameColorConfigMap: Map<String, String>?,
+            iconId: Int,
+        ){
+            fannelContentsQrLogoView?.load(
                 AppCompatResources.getDrawable(context, iconId)
             )
             getIconColor(iconNameColorConfigMap).let {
-                fannelContentsQrLogoView.imageTintList =
+                fannelContentsQrLogoView?.imageTintList =
                     context.getColorStateList(it)
             }
             getBkColor(
@@ -295,7 +427,6 @@ object QrLogoSettingsForQrDialog {
                 fileContentsQrLogoLinearLayout?.backgroundTintList =
                     context.getColorStateList(it)
             }
-            return true
         }
 
 
@@ -347,9 +478,15 @@ object QrLogoSettingsForQrDialog {
             if(
                 iconName.isNullOrEmpty()
             ) return null
-            return CmdClickIcons.values().firstOrNull {
-                it.str == iconName
-            }?.id
+            val imageStrToIdList = CmdClickIcons.values().map {
+                it.str to it.id
+            } + ImageMacro.values().map {
+                it.str to it.id
+            }
+            return imageStrToIdList.firstOrNull {
+                val imageMacroStr = it.first
+                imageMacroStr == iconName
+            }?.second
         }
 
         private fun getIconColor(
@@ -394,7 +531,7 @@ object QrLogoSettingsForQrDialog {
         }
 
         fun makeIconNameConfigMap(
-           editFragment: EditFragment,
+            editFragment: EditFragment,
             iconConfigMap: Map<String, String>,
         ): Map<String, String> {
             val nameConfigPathKey = QrIcon.NAME_CONFIG_PATH.key
@@ -430,6 +567,55 @@ object QrLogoSettingsForQrDialog {
             val key: String
         ){
             DEFAULT("default"),
+        }
+    }
+
+    private fun culc(
+        context: Context?,
+        qrLogoSettingMap: Map<String, String>,
+    ): Int {
+        val defaultOnsideLengthSrc = 100
+        val defaultOneSideLength = ScreenSizeCalculator.toDp(
+            context,
+            defaultOnsideLengthSrc
+        )
+        val oneSideLengthKeyName = QrLogoSettingKey.ONE_SIDE_LENGTH.key
+        if(
+            qrLogoSettingMap.isEmpty()
+        ) return defaultOneSideLength
+//        FileSystems.updateFile(
+//            File(UsePath.cmdclickDefaultAppDirPath, "logo_oneside.txt").absolutePath,
+//            listOf(
+//                "qrLogoSettingMap: ${qrLogoSettingMap}",
+//                "defaultOneSideLength: ${defaultOneSideLength}",
+//                "onesidelength: ${qrLogoSettingMap.get(oneSideLengthKeyName).let {
+//                    if(
+//                        it.isNullOrEmpty()
+//                    ) return@let defaultOneSideLength
+//                    try {
+//                        ScreenSizeCalculator.toDp(
+//                            context,
+//                            it.toFloat()
+//                        )
+//                    } catch (e: Exception){
+//                        defaultOneSideLength
+//                    }
+//                }}"
+//
+//                ).joinToString("\n\n")
+//        )
+        return qrLogoSettingMap.get(oneSideLengthKeyName).let {
+            if(
+                it.isNullOrEmpty()
+            ) return@let defaultOneSideLength
+            try {
+                ScreenSizeCalculator.toDp(
+                    context,
+                    it.toFloat()
+                )
+            } catch (e: Exception){
+                defaultOneSideLength
+            }
         }
     }
 }
