@@ -25,10 +25,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:background="@android:color/white"
         android:orientation="horizontal">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
+<!--"@android:color/white"-->
+<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--        android:id="@+id/list_index_edit_adapter_logo_linearlayout"-->
+<!--        android:layout_width="80dp"-->
+<!--        android:layout_height="80dp"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        android:layout_marginBottom="10dp"-->
+<!--        android:layout_marginStart="10dp"-->
+<!--        android:layout_marginEnd="0dp"-->
+<!--        android:padding="2dp"-->
+<!--        android:background="@android:color/white"-->
+<!--        android:orientation="vertical"-->
+<!--        android:layout_gravity="center_vertical"-->
+<!--        >-->
+<!--        -->
+        <RelativeLayout
             android:id="@+id/list_index_edit_adapter_logo_linearlayout"
             android:layout_width="80dp"
             android:layout_height="80dp"
@@ -47,9 +60,20 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:clickable="true"
+                android:scaleType="centerCrop"
                 android:background="?android:attr/selectableItemBackground"
                 />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/list_index_edit_adapter_image_caption"
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:textSize="20sp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/list_index_edit_adapter_vertical_linearlayout"

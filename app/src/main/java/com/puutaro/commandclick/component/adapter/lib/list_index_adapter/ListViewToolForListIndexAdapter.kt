@@ -1,9 +1,9 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
-import com.puutaro.commandclick.custom_manager.PreLoadLayoutManager
 import com.puutaro.commandclick.fragment.EditFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +46,8 @@ object ListViewToolForListIndexAdapter {
     ){
         listIndexScrollToBottomJob?.cancel()
         listIndexScrollToBottomJob = CoroutineScope(Dispatchers.Main).launch {
-            val layoutManager = editListRecyclerView.layoutManager as? PreLoadLayoutManager
+            val layoutManager =
+                editListRecyclerView.layoutManager as? LinearLayoutManager
             val scrollToPosi = listIndexForEditAdapter.itemCount - 1
             withContext(Dispatchers.Main){
                 for(i in 1..30){
@@ -74,7 +75,7 @@ object ListViewToolForListIndexAdapter {
     }
 
     private fun execScroll(
-        layoutManager: PreLoadLayoutManager?,
+        layoutManager: LinearLayoutManager?,
         scrollToPosi: Int,
     ){
         try {

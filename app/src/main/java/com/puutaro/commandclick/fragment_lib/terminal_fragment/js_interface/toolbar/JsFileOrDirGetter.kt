@@ -72,9 +72,5 @@ class JsFileOrDirGetter(
             filterFilterSuffixListCon,
             filterShellPathCon,
         )
-//        fileOrDirGetterForSettingButton?.get(
-//            parentDirPath,
-//            onDirectoryPick
-//        )
     }
 }
