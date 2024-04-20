@@ -17,6 +17,7 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ProgressBar
+import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity_lib.manager.AdBlocker
@@ -178,7 +179,7 @@ class WebViewJsDialog(
             terminalFragment.webViewDialogInstance?.show()
 
             terminalFragment.webViewDialogInstance?.setOnCancelListener {
-                terminalFragment.webViewDialogInstance?.dismiss()
+                stopWebView(webView)
             }
             val menuMapStrList = QuoteTool.splitBySurroundedIgnore(
                 menuMapStrListStr,
@@ -214,6 +215,12 @@ class WebViewJsDialog(
                 longPressMenuMapListStr
             )
         }
+    }
+
+    private fun stopWebView(webView: WebView){
+        webView.onPause()
+        webView.isVisible = false
+        terminalFragment.webViewDialogInstance?.dismiss()
     }
 
     private fun webViewSetting(
@@ -305,6 +312,7 @@ class WebViewJsDialog(
             currentScriptPath,
         )
         dismissHandler(
+            webView,
             btnOptionMap,
             dismissType,
         )
@@ -331,7 +339,6 @@ class WebViewJsDialog(
     ){
         val currentUrl = webView.url
             ?: return
-        terminalFragment.webViewDialogInstance?.dismiss()
         ScrollPosition.save(
             terminalFragment,
             currentUrl,
@@ -339,6 +346,7 @@ class WebViewJsDialog(
             100f,
             0f,
         )
+        stopWebView(webView)
         terminalFragment.binding.terminalWebView.loadUrl(currentUrl)
     }
 
@@ -637,6 +645,7 @@ class WebViewJsDialog(
     }
 
     private fun dismissHandler(
+        webView: WebView,
         btnOptionMap: Map<String, String>?,
         triggerType: String,
     ){
@@ -655,7 +664,7 @@ class WebViewJsDialog(
                     delay(delayMiliTime)
                 }
                 withContext(Dispatchers.Main) {
-                    terminalFragment.webViewDialogInstance?.dismiss()
+                    stopWebView(webView)
                 }
             }
         }
