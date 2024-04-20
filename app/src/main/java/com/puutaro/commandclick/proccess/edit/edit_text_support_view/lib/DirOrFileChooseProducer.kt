@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import androidx.activity.result.contract.ActivityResultContracts
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.edit.lib.ButtonSetter
+import com.puutaro.commandclick.proccess.edit.lib.GetFileEditTool
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -51,32 +52,8 @@ object DirOrFileChooseProducer {
                     uri.toString() == String()
                 ) return@registerForActivityResult
                 val pathSource = runBlocking {
-                    val nativePickerPathObj = File(
-                        withContext(Dispatchers.IO) {
-                            URLDecoder.decode(
-                                uri.toString(),
-                                Charsets.UTF_8.name(),
-                            )
-                        }.replace(
-                            Regex(
-                                "^content://com.android.externalstorage.documents/document/primary:"
-                            ),
-                            "/storage/emulated/0/"
-                        )
-                    )
-                    if(
-                        nativePickerPathObj.isFile
-                    ) return@runBlocking nativePickerPathObj
-                    File(
-                        withContext(Dispatchers.IO) {
-                            URLDecoder.decode(
-                                uri.toString(),
-                                Charsets.UTF_8.name(),
-                            )
-                        }.replace(
-                            Regex("^content.*fileprovider/root/storage"),
-                            "/storage"
-                        )
+                    GetFileEditTool.makeGetName(
+                        uri
                     )
                 }
                 val setPath = if(onDirectoryPick) {

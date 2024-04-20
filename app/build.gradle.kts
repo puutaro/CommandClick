@@ -98,7 +98,7 @@ dependencies {
     implementation("commons-io:commons-io:2.11.0")
     implementation("com.github.omadahealth:swipy:1.2.3@aar")
     implementation("com.github.skydoves:colorpickerview:2.2.4")
-    implementation("com.anggrayudi:storage:1.5.4")
+    implementation("com.anggrayudi:storage:1.5.5")
     implementation("com.github.sya-ri:kgit:1.0.5")
     implementation("com.github.abumoallim:Android-Multi-Select-Dialog:v1.9")
     implementation("com.github.doyaaaaaken:kotlin-csv-jvm:1.9.0")
@@ -116,11 +116,12 @@ dependencies {
 
 //    implementation ("com.github.alexzhirkevich:custom-qr-generator:1.6.2")
 
-    // or new v2.0 alpha
     implementation ("com.github.alexzhirkevich:custom-qr-generator:2.0.0-alpha01")
 
     implementation("io.coil-kt:coil:2.4.0")
     implementation("com.github.maxrave-dev:kotlin-youtubeExtractor:0.0.7")
+    implementation("com.blankj:utilcodex:1.31.1")
+
 
 //    implementation("androidx.camera:camera-camera2:1.2.2")
 //    implementation("androidx.camera:camera-lifecycle:1.2.2")

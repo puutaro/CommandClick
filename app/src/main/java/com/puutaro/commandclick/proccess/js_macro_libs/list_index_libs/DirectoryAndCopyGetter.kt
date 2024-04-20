@@ -10,6 +10,7 @@ import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAdd
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ListViewToolForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index.ItemPathMaker
+import com.puutaro.commandclick.proccess.edit.lib.GetFileEditTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
@@ -45,32 +46,8 @@ class DirectoryAndCopyGetter(
                 )
             ) return@registerForActivityResult
             val pathSource = runBlocking {
-                val nativePickerPathObj = File(
-                    withContext(Dispatchers.IO) {
-                        URLDecoder.decode(
-                            uri.toString(),
-                            Charsets.UTF_8.name(),
-                        )
-                    }.replace(
-                        Regex(
-                            "^content://com.android.externalstorage.documents/document/primary:"
-                        ),
-                        "/storage/emulated/0/"
-                    )
-                )
-                if(
-                    nativePickerPathObj.isFile
-                ) return@runBlocking nativePickerPathObj
-                File(
-                    withContext(Dispatchers.IO) {
-                        URLDecoder.decode(
-                            uri.toString(),
-                            Charsets.UTF_8.name(),
-                        )
-                    }.replace(
-                        Regex("^content.*fileprovider/root/storage"),
-                        "/storage"
-                    )
+                GetFileEditTool.makeGetName(
+                    uri
                 )
             }
             val targetDirectoryPath =
@@ -130,4 +107,5 @@ class DirectoryAndCopyGetter(
             intent
         )
     }
+
 }

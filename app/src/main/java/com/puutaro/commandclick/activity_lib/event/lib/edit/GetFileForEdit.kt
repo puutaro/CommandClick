@@ -8,12 +8,16 @@ import android.os.Build
 import androidx.activity.result.contract.ActivityResultContracts
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
+import com.blankj.utilcode.util.UriUtils
 import com.puutaro.commandclick.activity.MainActivity
+import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
+import com.puutaro.commandclick.proccess.edit.lib.GetFileEditTool
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
+import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
@@ -175,32 +179,8 @@ class GetFileForEdit(
         uri: Uri?
     ): String {
         val pathSource = runBlocking {
-            val nativePickerPathObj = File(
-                withContext(Dispatchers.IO) {
-                    URLDecoder.decode(
-                        uri.toString(),
-                        Charsets.UTF_8.name(),
-                    )
-                }.replace(
-                    Regex(
-                        "^content://com.android.externalstorage.documents/document/primary:"
-                    ),
-                    "/storage/emulated/0/"
-                )
-            )
-            if(
-                nativePickerPathObj.isFile
-            ) return@runBlocking nativePickerPathObj
-            File(
-                withContext(Dispatchers.IO) {
-                    URLDecoder.decode(
-                        uri.toString(),
-                        Charsets.UTF_8.name(),
-                    )
-                }.replace(
-                    Regex("^content.*fileprovider/root/storage"),
-                    "/storage"
-                )
+            GetFileEditTool.makeGetName(
+                uri
             )
         }
         return if(onDirectoryPick) {
