@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
+import android.app.Activity
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,64 +25,88 @@ class DirectoryAndCopyGetter(
     private val context = editFragment.context
     private var parentDirPath = String()
     private var selectedItemForCopy = String()
-    private val prefixRegex = Regex("^content.*fileprovider/root/storage")
+//    private val prefixRegex = Regex("^content.*fileprovider/root/storage")
 
     private val getDirectoryAndCopy = editFragment.registerForActivityResult(
-        ActivityResultContracts.OpenDocument()) { uri ->
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         if (
-            uri == null
-            || uri.toString() == String()
+            result.resultCode != Activity.RESULT_OK
         ) return@registerForActivityResult
-        if(
-            NoFileChecker.isNoFile(
-                editFragment.context,
-                parentDirPath,
-                selectedItemForCopy,
-            )
-        ) return@registerForActivityResult
-        val pathSource = runBlocking {
-            File(
-                withContext(Dispatchers.IO) {
-                    URLDecoder.decode(
-                        uri.toString(), Charsets.UTF_8.name()
+        result.data?.data?.let { uri ->
+            if (
+                uri.toString() == String()
+            ) return@registerForActivityResult
+            if(
+                NoFileChecker.isNoFile(
+                    editFragment.context,
+                    parentDirPath,
+                    selectedItemForCopy,
+                )
+            ) return@registerForActivityResult
+            val pathSource = runBlocking {
+                val nativePickerPathObj = File(
+                    withContext(Dispatchers.IO) {
+                        URLDecoder.decode(
+                            uri.toString(),
+                            Charsets.UTF_8.name(),
+                        )
+                    }.replace(
+                        Regex(
+                            "^content://com.android.externalstorage.documents/document/primary:"
+                        ),
+                        "/storage/emulated/0/"
                     )
-                }.replace(prefixRegex, "/storage")
+                )
+                if(
+                    nativePickerPathObj.isFile
+                ) return@runBlocking nativePickerPathObj
+                File(
+                    withContext(Dispatchers.IO) {
+                        URLDecoder.decode(
+                            uri.toString(),
+                            Charsets.UTF_8.name(),
+                        )
+                    }.replace(
+                        Regex("^content.*fileprovider/root/storage"),
+                        "/storage"
+                    )
+                )
+            }
+            val targetDirectoryPath =
+                pathSource.parent ?: String()
+            val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
+            val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
+            val targetScriptFilePath = when(
+                targetScriptFilePathSource == sourceScriptFilePath
+            ) {
+                true -> "${targetDirectoryPath}/" +
+                        "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
+                else -> targetScriptFilePathSource
+            }
+            val insertFilePath = FileSystems.execCopyFileWithDir(
+                File(sourceScriptFilePath),
+                File(targetScriptFilePath),
             )
-        }
-        val targetDirectoryPath =
-            pathSource.parent ?: String()
-        val sourceScriptFilePath = "${parentDirPath}/${selectedItemForCopy}"
-        val targetScriptFilePathSource = "${targetDirectoryPath}/${selectedItemForCopy}"
-        val targetScriptFilePath = when(
-            targetScriptFilePathSource == sourceScriptFilePath
-        ) {
-            true -> "${targetDirectoryPath}/" +
-                    "${CommandClickScriptVariable.makeCopyPrefix()}_${selectedItemForCopy}"
-            else -> targetScriptFilePathSource
-        }
-        val insertFilePath = FileSystems.execCopyFileWithDir(
-            File(sourceScriptFilePath),
-            File(targetScriptFilePath),
-        )
-        ExecAddForListIndexAdapter.sortInAddFile(
-            editFragment,
-            insertFilePath,
-        )
-        ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
-            editFragment,
-            ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+            ExecAddForListIndexAdapter.sortInAddFile(
                 editFragment,
-                ListIndexForEditAdapter.indexListMap,
-                ListIndexForEditAdapter.listIndexTypeKey
+                insertFilePath,
             )
-        )
-        Toast.makeText(
-            context,
-            "copy file ok",
-            Toast.LENGTH_LONG
-        ).show()
+            ListViewToolForListIndexAdapter.listIndexListUpdateFileList(
+                editFragment,
+                ListSettingsForListIndex.ListIndexListMaker.makeFileListHandler(
+                    editFragment,
+                    ListIndexForEditAdapter.indexListMap,
+                    ListIndexForEditAdapter.listIndexTypeKey
+                )
+            )
+            Toast.makeText(
+                context,
+                "copy file ok",
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
-
     fun get(
         selectedItem: String,
         listIndexPosition: Int,
@@ -97,8 +122,12 @@ class DirectoryAndCopyGetter(
         parentDirPath = copySrcFileParentDirPath
         val srcFileName = copySrcFilePathObj.name
         selectedItemForCopy = srcFileName
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"  // Set the MIME type to filter files
+        }
         getDirectoryAndCopy.launch(
-            arrayOf(Intent.CATEGORY_OPENABLE)
+            intent
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.edit
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -8,14 +9,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.anggrayudi.storage.SimpleStorageHelper
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.puutaro.commandclick.activity.MainActivity
-import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.edit_setting_extra.FilterPathTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.ListIndexEditConfig
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.TypeSettingsForListIndex
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.state.SharePrefTool
 import com.puutaro.commandclick.util.state.TargetFragmentInstance
 import kotlinx.coroutines.Dispatchers
@@ -37,16 +35,21 @@ class GetFileForEdit(
     private var filterShellCon = String()
 
     private val getFile = activity.registerForActivityResult(
-        ActivityResultContracts.OpenDocument()) { uri ->
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
         if (
-            uri == null
-            || uri.toString() == String()
+            result.resultCode != Activity.RESULT_OK
         ) return@registerForActivityResult
-        val sourceFileOrDirPath = makeSourceFileOrDirPath(uri)
-        if(
-            sourceFileOrDirPath.isEmpty()
-        ) return@registerForActivityResult
-        registerFileHandler(sourceFileOrDirPath)
+        result.data?.data?.let { uri ->
+            if (
+                uri.toString() == String()
+            ) return@registerForActivityResult
+            val sourceFileOrDirPath = makeSourceFileOrDirPath(uri)
+            if(
+                sourceFileOrDirPath.isEmpty()
+            ) return@registerForActivityResult
+            registerFileHandler(sourceFileOrDirPath)
+        }
     }
 
     fun get(
@@ -62,20 +65,18 @@ class GetFileForEdit(
         this.filterPrefixListCon = filterPrefixListCon
         this.filterSuffixListCon = filterSuffixListCon
         this.filterShellCon = filterSuffixListCon
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getFile.txt").absolutePath,
-//            listOf(
-//                "ListIndexForEditAdapter.indexListMap,: ${ListIndexForEditAdapter.indexListMap}",
-//                "onDirectoryPick: ${onDirectoryPick}",
-//                "parentDirPath: ${parentDirPath}",
-//                "filterPrefixListCon: ${filterPrefixListCon}",
-//                "filterSuffixListCon: ${filterSuffixListCon}",
-//                "filterShellCon: ${filterShellCon}",
-//            ).joinToString("\n\n")
-//        )
         when(Build.VERSION.SDK_INT < 30){
             true -> {
-                getFile.launch(arrayOf(Intent.CATEGORY_OPENABLE))
+                val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                    addCategory(Intent.CATEGORY_OPENABLE)
+                    type = "*/*"  // Set the MIME type to filter files
+//            val uri = Uri.parse(
+//                "content://com.android.externalstorage.documents/document/primary:$folderName")
+//            putExtra(DocumentsContract.EXTRA_INITIAL_URI, uri)
+                }
+                getFile.launch(
+                    intent
+                )
             }
             else -> getFileOverSdk30()
         }
@@ -174,27 +175,34 @@ class GetFileForEdit(
         uri: Uri?
     ): String {
         val pathSource = runBlocking {
-            val prefixRegex = Regex("^content.*fileprovider/root/storage")
+            val nativePickerPathObj = File(
+                withContext(Dispatchers.IO) {
+                    URLDecoder.decode(
+                        uri.toString(),
+                        Charsets.UTF_8.name(),
+                    )
+                }.replace(
+                    Regex(
+                        "^content://com.android.externalstorage.documents/document/primary:"
+                    ),
+                    "/storage/emulated/0/"
+                )
+            )
+            if(
+                nativePickerPathObj.isFile
+            ) return@runBlocking nativePickerPathObj
             File(
                 withContext(Dispatchers.IO) {
                     URLDecoder.decode(
                         uri.toString(),
                         Charsets.UTF_8.name(),
                     )
-                }.replace(prefixRegex, "/storage")
+                }.replace(
+                    Regex("^content.*fileprovider/root/storage"),
+                    "/storage"
+                )
             )
         }
-//        FileSystems.writeFile(
-//            File(UsePath.cmdclickDefaultAppDirPath, "getFile_getter.txt").absolutePath,
-//            listOf(
-//                "ListIndexForEditAdapter.indexListMap,: ${ListIndexForEditAdapter.indexListMap}",
-//                "onDirectoryPick: ${onDirectoryPick}",
-//                "parentDirPath: ${parentDirPath}",
-//                "filterPrefixListCon: ${filterPrefixListCon}",
-//                "filterSuffixListCon: ${filterSuffixListCon}",
-//                "filterShellCon: ${filterShellCon}",
-//            ).joinToString("\n\n")
-//        )
         return if(onDirectoryPick) {
             listOf(pathSource.parent ?: String()).filter {
                 FilterPathTool.isFilterByDir(
