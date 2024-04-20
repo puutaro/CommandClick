@@ -42,8 +42,15 @@ function schBoxFocusOrSearch(highlightUrlString){
             const isAreaLabel = el.getAttribute('aria-label');
             if(!isAreaLabel) return;
             el.blur();
-            el.focus();
-            el.select();
+            jsKeyboard.show();
+            setTimeout(
+                function(){
+                    el.blur();
+                    el.focus();
+                    el.select();
+                },
+                200
+            );
             focusOk = true;
             return true;
         });
