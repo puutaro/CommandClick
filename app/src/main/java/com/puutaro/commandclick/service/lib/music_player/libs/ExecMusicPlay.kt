@@ -49,6 +49,7 @@ object ExecMusicPlay {
             playList,
             playIndex,
         )
+        musicPlayerService.execPlayJob?.cancel()
         musicPlayerService.execPlayJob = when(isYtUrl){
             true -> playByYtExtract(
                     musicPlayerService,
@@ -70,7 +71,6 @@ object ExecMusicPlay {
         playIndex: Int,
     ): Job {
         val context = musicPlayerService.applicationContext
-        musicPlayerService.execPlayJob?.cancel()
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO){
                 playList.getOrNull(playIndex)
@@ -154,7 +154,6 @@ object ExecMusicPlay {
         playList: List<String>,
         playIndex: Int,
     ): Job {
-        val context = musicPlayerService.applicationContext
         return CoroutineScope(Dispatchers.IO).launch {
             val uri = withContext(Dispatchers.IO) {
                 playList.getOrNull(
