@@ -1,9 +1,12 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
 import android.content.Context
+import android.media.AudioManager
 import android.view.KeyEvent
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.blankj.utilcode.util.VolumeUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.common.variable.variant.ReadLines
@@ -20,9 +23,30 @@ object ExecBackstackHandle {
         keyCode: Int,
         activity: MainActivity,
     ) {
-        if(keyCode != KeyEvent.KEYCODE_BACK) return
-        doExecBackstack(activity)
-        return
+        when(keyCode){
+            KeyEvent.KEYCODE_BACK -> doExecBackstack(activity)
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
+                Toast.makeText(
+                    activity,
+                    "${curVol} -> ${curVol + 1}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                VolumeUtils.setVolume(AudioManager.STREAM_MUSIC,curVol + 1, AudioManager.FLAG_SHOW_UI)
+            }
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
+                Toast.makeText(
+                    activity,
+                    "${curVol} -> ${curVol - 1}",
+                    Toast.LENGTH_SHORT
+                ).show()
+                VolumeUtils.setVolume(AudioManager.STREAM_MUSIC,curVol - 1, AudioManager.FLAG_SHOW_UI)
+            }
+        }
+//        if(keyCode != KeyEvent.KEYCODE_BACK) return
+//        doExecBackstack(activity)
+//        return
     }
 
 
