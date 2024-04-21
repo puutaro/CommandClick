@@ -35,10 +35,6 @@ object ConfigFromScriptFileSetter {
         editFragment: EditFragment,
         mainFannelConList: List<String>
     ){
-//        val busyboxExecutor = BusyboxExecutor(
-//            context,
-//            UbuntuFiles(context)
-//        )
         val readSharePreferenceMap = editFragment.readSharePreferenceMap
         val setReplaceVariableMap = editFragment.setReplaceVariableMap
         val onShortcut = SharePrefTool.getOnShortcut(

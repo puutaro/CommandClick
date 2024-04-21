@@ -3,9 +3,11 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.proccess.libs.lo
 import android.content.Context
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
+import com.puutaro.commandclick.common.variable.variant.LanguageTypeSelects
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.SetReplaceVariabler
 import com.puutaro.commandclick.util.CcPathTool
+import com.puutaro.commandclick.util.CommandClickVariables
 import com.puutaro.commandclick.util.QuoteTool
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.ScriptPreWordReplacer
@@ -80,6 +82,29 @@ object LongPressMenuTool {
         }.filter {
             it.isNotEmpty()
         }.firstOrNull()
+    }
+
+    fun extractSettingValList(
+        context: Context?,
+        srcFannelPath: String,
+    ): List<String>? {
+        val repValMap = SetReplaceVariabler.makeSetReplaceVariableMapFromSubFannel(
+            context,
+            srcFannelPath,
+        )
+        val longPressFannelMainAppDirPath = CcPathTool.getMainAppDirPath(srcFannelPath)
+        val longPressFannelName =  File(srcFannelPath).name
+        return CommandClickVariables.returnSettingVariableList(
+            ReadText(srcFannelPath).textToList(),
+            LanguageTypeSelects.JAVA_SCRIPT,
+        )?.joinToString("\n")?.let {
+            SetReplaceVariabler.execReplaceByReplaceVariables(
+                it,
+                repValMap,
+                longPressFannelMainAppDirPath,
+                longPressFannelName
+            )
+        }?.split("\n")
     }
 
 
