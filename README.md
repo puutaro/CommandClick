@@ -61,8 +61,9 @@ CommandClick
 <img src="https://img.shields.io/endpoint?url=https://apt.izzysoft.de/fdroid/api/v1/shield/com.mirfatif.permissionmanagerx&label=IzzyOnDroid&cacheSeconds=86400">  
 ![GitHub all releases](https://img.shields.io/github/downloads/puutaro/CommandClick/total)  
   
-- With existing browsers, `add-ons` can only play an active role within that framework. But, with `CommandClick`, `add-ons` can have **infinite roll**: **`Ubuntu`**, `Terminal`, file manager and more.  
-- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development**by low code.
+- With existing browsers, `add-ons` can only play an active role within that framework. But, with `CommandClick`, `add-ons` can have **infinite roll**. ex) **`Ubuntu`**, `Terminal`, file manager and more.  
+- Existing browsers do not support `add-ons` development. But, `CommandClick` **strongly supports `add-ons` development** by low code.
+- Existing browsers do not support cooperation between add-ons. But, `CommandClick` **can link `add-ons`**.  ex) Other addons can use `Ubuntu` as a backend.. etc  
 - Existing browsers don't even think about distributing `add-ons`. But, `CommandClick` **strongly supports `add-ons` distributing** by builin QR `add-on`.
 
 
