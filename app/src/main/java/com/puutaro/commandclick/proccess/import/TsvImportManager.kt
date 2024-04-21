@@ -30,7 +30,12 @@ object TsvImportManager {
         val tsvImportRegex = "\n${tsvImportPreWord}([^\n]*)".toRegex()
         val result = tsvImportRegex.findAll(jsConForTsv)
 
-        val tsvKeyValueMap = makeTsvKeyValueMap(result)
+        val tsvKeyValueMap = makeTsvKeyValueMap(
+            result,
+            setReplaceVariableCompleteMap,
+            recentAppDirPath,
+            scriptFileName
+        )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap
             else ->  setReplaceVariableCompleteMap + tsvKeyValueMap
@@ -42,7 +47,12 @@ object TsvImportManager {
         setReplaceVariableCompleteMap: Map<String, String>? = null
     ): Map<String, String> {
         val result = tsvImportRegex.findAll(jsConForTsv)
-        val tsvKeyValueMap = makeTsvKeyValueMap(result)
+        val tsvKeyValueMap = makeTsvKeyValueMap(
+            result,
+            setReplaceVariableCompleteMap,
+            String(),
+            String()
+        )
         return when(setReplaceVariableCompleteMap.isNullOrEmpty()){
             true -> tsvKeyValueMap
             else ->  setReplaceVariableCompleteMap + tsvKeyValueMap
@@ -51,6 +61,9 @@ object TsvImportManager {
 
     private fun makeTsvKeyValueMap(
         result: Sequence<MatchResult>,
+        setReplaceVariableCompleteMap: Map<String, String>?,
+        currentAppDirPath: String,
+        fanneName: String,
     ): Map<String, String> {
         val tsvKeyValueListSrc =
             result.map {
@@ -72,7 +85,14 @@ object TsvImportManager {
                 }
                 ReadText(
                     tsvImportPathObj.absolutePath
-                ).readText()
+                ).readText().let {
+                    SetReplaceVariabler.execReplaceByReplaceVariables(
+                        it,
+                        setReplaceVariableCompleteMap,
+                        currentAppDirPath,
+                        fanneName,
+                    )
+                }
             }.distinct()
         val tsvKeyValueList = tsvKeyValueListSrc
             .distinct()
