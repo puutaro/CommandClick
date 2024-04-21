@@ -5,13 +5,13 @@ import android.content.Intent
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -257,11 +257,7 @@ object AppProcessManager {
         if(
             !ubuntuFiles.ubuntuLaunchCompFile.isFile
         ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Launch ubuntu")
             return
         }
         killDialog = Dialog(
@@ -360,21 +356,13 @@ object AppProcessManager {
         if(
             !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
         ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Launch ubuntu")
             return
         }
         if(
             selectedProcessTabSepa.isEmpty()
         ) return
-        Toast.makeText(
-            context,
-            "killing..",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("killing..")
         val killProcessIntent = Intent()
         killProcessIntent.action = BroadCastIntentSchemeUbuntu.CMD_KILL_BY_ADMIN.action
         killProcessIntent.putExtra(
@@ -398,11 +386,7 @@ object AppProcessManager {
         val execCmd = " touch \"${fannelName}\"; " +
                 "echo \"### \$(date \"+%Y/%m/%d-%H:%M:%S\") ${factExecCmd}\" " +
                 ">> \"${outputPath}\";" + "${factExecCmd} >> \"${outputPath}\"; "
-        Toast.makeText(
-            context,
-            "killing..",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("killing..")
         ExecBashScriptIntent.ToTermux(
             context,
             execCmd

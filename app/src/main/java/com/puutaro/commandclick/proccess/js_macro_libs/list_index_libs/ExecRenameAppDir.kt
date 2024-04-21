@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -100,11 +100,7 @@ object ExecRenameAppDir {
             if(
                 inputEditable.isNullOrEmpty()
             ) {
-                Toast.makeText(
-                    context,
-                    "No type item name",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("No type item name")
                 return@setOnClickListener
             }
             val renamedAppDirNameSource = inputEditable.toString()

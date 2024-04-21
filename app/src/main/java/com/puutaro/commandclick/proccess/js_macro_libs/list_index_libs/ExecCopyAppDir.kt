@@ -58,7 +58,6 @@ object ExecCopyAppDir {
         promptOkButtonView?.setOnClickListener {
             promptDialog?.dismiss()
             CopyAppDirEventForEdit.execCopyAppDir(
-                editFragment,
                 UsePath.cmdclickAppDirAdminPath,
                 selectedItem,
                 promptEditText

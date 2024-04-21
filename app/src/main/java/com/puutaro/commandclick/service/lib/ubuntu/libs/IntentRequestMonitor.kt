@@ -4,9 +4,9 @@ import android.R
 import android.app.NotificationChannel
 import android.app.PendingIntent
 import android.content.Intent
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.BuildConfig
 import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
@@ -179,10 +179,7 @@ object IntentRequestMonitor {
                 broadcastMap,
             )
             ReceiveIntentType.toast.name
-            -> execToast(
-                ubuntuService,
-                broadcastMap,
-            )
+            -> execToast(broadcastMap,)
             ReceiveIntentType.textToSpeech.name
             -> execTextToSpeech(
                 ubuntuService,
@@ -347,7 +344,6 @@ object IntentRequestMonitor {
     }
 
     private fun execToast(
-        ubuntuService: UbuntuService,
         broadcastMap: Map<String, String>,
     ){
         val helpOption = broadcastMap.get(HelpKey.help.name)
@@ -362,24 +358,15 @@ object IntentRequestMonitor {
         val span = broadcastMap.get(
             ToastSchema.span.name
         )
-        val context = ubuntuService.applicationContext
         when(span){
             ToastSpan.long.name -> {
                 CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(
-                        context,
-                        message,
-                        Toast.LENGTH_LONG
-                    ).show()
+                    ToastUtils.showLong(message)
                 }
             }
             else -> {
                 CoroutineScope(Dispatchers.Main).launch {
-                    Toast.makeText(
-                        context,
-                        message,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort(message)
                 }
             }
         }

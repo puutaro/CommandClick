@@ -1,10 +1,9 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.extra.BroadCastIntentExtraForUrl
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeTerm
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.QrLaunchType
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -12,16 +11,9 @@ import com.puutaro.commandclick.proccess.intent.lib.JavascriptExecuter
 import com.puutaro.commandclick.proccess.qr.QrUriHandler
 import com.puutaro.commandclick.util.BroadCastIntent
 import com.puutaro.commandclick.util.JavaScriptLoadUrl
-import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.ReadText
 import com.puutaro.commandclick.util.map.CmdClickMap
 import com.puutaro.commandclick.util.state.SharePrefTool
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
 
 class JsUrl(
     private val terminalFragment: TerminalFragment
@@ -112,11 +104,7 @@ class JsUrl(
                 -> loadQrUrl(
                 loadCon
                 )
-            else -> Toast.makeText(
-                context,
-                "unKnown: $loadCon",
-                Toast.LENGTH_SHORT
-            ).show()
+            else -> ToastUtils.showShort("unKnown: $loadCon")
         }
 
     }

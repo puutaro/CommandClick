@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs.ExecItemDelete
@@ -63,11 +63,9 @@ class JsDeleteItem(
         if(
             isInValidIndex
         ) {
-            Toast.makeText(
-                context,
-                "Invalid Index: ${listIndexListPosition} / ${listIndexListLastIndex}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(
+                "Invalid Index: ${listIndexListPosition} / ${listIndexListLastIndex}"
+            )
             return
         }
         ExecSimpleDelete.removeController(

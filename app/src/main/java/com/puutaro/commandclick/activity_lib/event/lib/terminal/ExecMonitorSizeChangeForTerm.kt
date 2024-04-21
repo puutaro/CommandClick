@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.terminal
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.proccess.monitor.MonitorSizeManager
 import com.puutaro.commandclick.util.LogSystems
@@ -26,11 +26,7 @@ object ExecMonitorSizeChangeForTerm {
                 }
             }
         } catch (e: Exception){
-            Toast.makeText(
-                activity,
-                "${e}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(e.toString())
             LogSystems.stdErr(
                 activity,
                 e.toString()

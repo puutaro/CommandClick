@@ -4,13 +4,13 @@ import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.view.Gravity
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import coil.load
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.extra.FileUploadExtra
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
@@ -280,11 +280,7 @@ object QrDialogMethod {
                     if(isBreak) break
                     withContext(Dispatchers.Main) toast@ {
                         if(i != 1) return@toast
-                        Toast.makeText(
-                            context,
-                            "Change..",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("Change..")
                     }
                     delay(100)
                 }
@@ -322,7 +318,6 @@ object QrDialogMethod {
         dialogObj: Dialog?,
         replace_qr_logo_int: Int,
     ){
-        val context = fragment.context ?: return
         val fannelDirName = CcPathTool.makeFannelDirName(fannelName)
         val fannelDirPath = "${currentAppDirPath}/${fannelDirName}"
         val qrDesignFilePath = "${fannelDirPath}/${UsePath.qrDesignRelativePath}"
@@ -358,11 +353,7 @@ object QrDialogMethod {
                     if(isBreak) break
                     withContext(Dispatchers.Main) toast@ {
                         if(i != 1) return@toast
-                        Toast.makeText(
-                            context,
-                            "Contents Change..",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("Contents Change..")
                     }
                     delay(100)
                 }

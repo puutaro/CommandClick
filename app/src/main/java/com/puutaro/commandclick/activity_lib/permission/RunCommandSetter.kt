@@ -7,12 +7,12 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.view.Gravity
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.util.dialog.DialogObject
@@ -164,11 +164,7 @@ object RunCommandSetter {
             activity.packageManager.getLaunchIntentForPackage(
                 TermuxConstants.TERMUX_PACKAGE_NAME
             ) ?: return
-        Toast.makeText(
-            activity,
-            "Long press and click paste popup on termux",
-            Toast.LENGTH_LONG
-        ).show()
+        ToastUtils.showLong("Long press and click paste popup on termux")
         activity.startActivity(launchIntent)
     }
 

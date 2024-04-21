@@ -11,7 +11,6 @@ object ExecEditCmdVal {
         editFragment: EditFragment,
         selectedItem: String,
     ){
-        val context = editFragment.context ?: return
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
@@ -19,7 +18,6 @@ object ExecEditCmdVal {
         )
         if(
             NoFileChecker.isNoFile(
-                context,
                 parentDirPath,
                 selectedItem,
             )

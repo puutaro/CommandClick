@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -43,11 +43,7 @@ class JsSelectTerm(
             ).absolutePath
         )
         terminalViewModel.currentMonitorFileName = selectedMonitorFile
-        Toast.makeText(
-            context,
-            "set ${selectedMonitorFile}",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("set ${selectedMonitorFile}")
     }
 
     private enum class SettingSubMenuEnums(

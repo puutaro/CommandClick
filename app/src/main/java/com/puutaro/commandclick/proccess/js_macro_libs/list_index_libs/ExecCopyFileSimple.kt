@@ -1,15 +1,14 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.app.Dialog
-import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.res.CmdClickIcons
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
@@ -126,7 +125,6 @@ object ExecSimpleCopy {
             val selectedDirOrTsvName =
                 makeSelectedDirOrTsvName(copyDirOrTsvList)
             ExecCopyToOther.exec(
-                editFragment,
                 copyDirOrTsvList,
                 selectedDirOrTsvName,
                 srcItem,
@@ -325,7 +323,6 @@ object CopyListDialog {
         )
         copyListView?.adapter = copyListAdapter
         copyListItemClickListener(
-            editFragment,
             copyListView,
             srcItem,
             copyDirOrTsvList,
@@ -334,7 +331,6 @@ object CopyListDialog {
     }
 
     private fun copyListItemClickListener(
-        editFragment: EditFragment,
         copyListView: ListView?,
         srcItem: String,
         copyDirOrTsvList: List<Pair<String, Int>>,
@@ -346,7 +342,6 @@ object CopyListDialog {
             val selectedDirOrTsvName = copyListAdapter.getItem(position)
                 ?: return@setOnItemClickListener
             ExecCopyToOther.exec(
-                editFragment,
                 copyDirOrTsvList,
                 selectedDirOrTsvName,
                 srcItem,
@@ -358,7 +353,6 @@ object CopyListDialog {
 
 private object ExecCopyToOther {
     fun exec(
-        editFragment: EditFragment,
         copyDirOrTsvList: List<Pair<String, Int>>,
         selectedDirOrTsvName: String,
         srcItem: String,
@@ -378,13 +372,11 @@ private object ExecCopyToOther {
         when(iconId){
             foldaId
             -> copyFileToDir(
-                editFragment,
                 srcItem,
                 selectedDirOrTsvPath,
             )
             tsvId
             -> insertTsvInFirst(
-                editFragment,
                 srcItem,
                 selectedDirOrTsvPath,
                 onWithFile,
@@ -408,7 +400,6 @@ private object ExecCopyToOther {
     }
 
     private fun copyFileToDir(
-        editFragment: EditFragment,
         srcItem: String,
         selectedDirPath: String,
     ){
@@ -426,7 +417,6 @@ private object ExecCopyToOther {
             selectedDirPath,
             File(srcItemPath).name
         )
-        val context = editFragment.context
         val isUpdateOk = destiFilePathObj.isFile
         val destiFilePath = destiFilePathObj.absolutePath
         FileSystems.execCopyFileWithDir(
@@ -435,13 +425,12 @@ private object ExecCopyToOther {
             true,
         )
         when(isUpdateOk) {
-            true -> updateOkToast(context)
-            else -> copyOkToast(context)
+            true -> updateOkToast()
+            else -> copyOkToast()
         }
     }
 
     private fun insertTsvInFirst(
-        editFragment: EditFragment,
         srcItemPath: String,
         selectedTsvPath: String,
         onWithFile: Boolean,
@@ -464,7 +453,6 @@ private object ExecCopyToOther {
         val isUpdateOk =
             tsvConList
                 .contains(updateInsertTsvLine)
-        val context = editFragment.context
 //        FileSystems.writeFile(
 //            File(UsePath.cmdclickDefaultAppDirPath, "copy_update.txt").absolutePath,
 //            listOf(
@@ -478,8 +466,8 @@ private object ExecCopyToOther {
             tsvConList,
         )
         when(isUpdateOk){
-            true -> updateOkToast(context)
-            else -> copyOkToast(context)
+            true -> updateOkToast()
+            else -> copyOkToast()
         }
     }
 
@@ -541,34 +529,21 @@ private object ExecCopyToOther {
             ).joinToString("\t")
         }
     }
-    private fun copyOkToast(
-        context: Context?
-    ){
+    private fun copyOkToast(){
         toastMsg(
-            context,
             "copy ok",
         )
     }
 
-    private fun updateOkToast(
-        context: Context?
-    ){
-        toastMsg(
-            context,
-            "Update ok",
-        )
+    private fun updateOkToast(){
+        toastMsg("Update ok",)
     }
 
     private fun toastMsg(
-        context: Context?,
         msg: String,
     ){
         CoroutineScope(Dispatchers.Main).launch {
-            Toast.makeText(
-                context,
-                msg,
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(msg)
         }
     }
 }

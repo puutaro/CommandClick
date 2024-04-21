@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.ubuntu
 
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -25,11 +25,7 @@ object UbuntuController {
         if(
             !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
         ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Launch ubuntu")
             return
         }
         val monitorFileName = UsePath.decideMonitorName(monitorNum)
@@ -71,11 +67,7 @@ object UbuntuController {
         if(
             !UbuntuFiles(context).ubuntuSetupCompFile.isFile
         ){
-            Toast.makeText(
-                context,
-                "Setup ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Setup ubuntu")
             return
         }
         if(
@@ -88,11 +80,7 @@ object UbuntuController {
             for (i in 1..50) {
                 withContext(Dispatchers.Main) toast@ {
                     if(i % 5 != 0) return@toast
-                    Toast.makeText(
-                        context,
-                        "boot${".".repeat(i / 10 + 1)}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort("boot${".".repeat(i / 10 + 1)}")
                 }
                 if (
                     LinuxCmd.isBasicProcess(context)
@@ -104,17 +92,9 @@ object UbuntuController {
             }
         }
         if(!isBootSuccess) {
-            Toast.makeText(
-                context,
-                "boot failure",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("boot failure")
             return
         }
-        Toast.makeText(
-            context,
-            "boot ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("boot ok")
     }
 }

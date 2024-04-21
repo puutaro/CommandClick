@@ -1,8 +1,7 @@
 package com.puutaro.commandclick.component.adapter.lib.list_index_adapter
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
-import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -63,7 +62,6 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         sourceFilePath: String,
     ){
-        val context = editFragment.context ?: return
         val indexListMap = ListIndexForEditAdapter.indexListMap
         val parentDirPath =
             ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
@@ -77,7 +75,6 @@ object ExecAddForListIndexAdapter {
         val srcFileName = sourceFilePathObj.name
         if(
             NoFileChecker.isNoFile(
-                context,
                 srcParentDirPath,
                 srcFileName,
             )
@@ -157,7 +154,6 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertLineListSrc: List<String>
     ){
-        val context = editFragment.context
         val tsvPath =
             FilePrefixGetter.get(
                 editFragment,
@@ -167,11 +163,7 @@ object ExecAddForListIndexAdapter {
         if(
             tsvPath.trim().isEmpty()
         ) {
-            Toast.makeText(
-                context,
-                "Retry unexpected err",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Retry unexpected err")
             return
         }
         val currentTsvConList = ReadText(
@@ -202,8 +194,6 @@ object ExecAddForListIndexAdapter {
         editFragment: EditFragment,
         insertLine: String,
     ){
-        val context = editFragment.context
-            ?: return
         val listIndexForEditAdapter =
             editFragment.binding.editListRecyclerView.adapter as ListIndexForEditAdapter
         val tsvPath =
@@ -226,22 +216,14 @@ object ExecAddForListIndexAdapter {
         if(
             tsvPath.trim().isEmpty()
         ) {
-            Toast.makeText(
-                context,
-                "Retry unexpected err",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Retry unexpected err")
             return
         }
         if(
             tsvPath.trim().isEmpty()
             || currentTsvConList.contains(insertLine)
         ) {
-            Toast.makeText(
-                context,
-                "Already exist",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Already exist")
             return
         }
         val sortType = ListSettingsForListIndex.getSortType(

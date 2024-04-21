@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.util.file.FileSystems
@@ -23,7 +23,6 @@ import java.io.File
 class JsDirSelect(
     private val terminalFragment: TerminalFragment
 ) {
-    private val context = terminalFragment.context
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
     private var confirmDialog: Dialog? = null
 
@@ -175,22 +174,14 @@ class JsDirSelect(
             if(
                 !removeDirPathObj.isDirectory
             ){
-                Toast.makeText(
-                    context,
-                    "not exist editDirNameForDialog ${removeDirPath}",
-                    Toast.LENGTH_LONG
-                ).show()
+                ToastUtils.showLong("not exist editDirNameForDialog ${removeDirPath}")
                 terminalViewModel.onDialog = false
                 return@setOnClickListener
             }
             FileSystems.removeDir(
                 removeDirPath
             )
-            Toast.makeText(
-                context,
-                "delete ok",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("delete ok")
             terminalViewModel.onDialog = false
             val recentDirName = FileSystems.showDirList(targetDirPath).filter {
                 File(it).isDirectory
@@ -219,11 +210,7 @@ class JsDirSelect(
         if (
             editDirNameForDialog == renameDirNameForDialog
         ) {
-            Toast.makeText(
-                context,
-                "rename dir is same current dir",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("rename dir is same current dir")
             return
         }
         val srcDirPath = "${targetDirPath}/${editDirNameForDialog}"
@@ -258,11 +245,7 @@ class JsDirSelect(
         if(
             !scriptFilePathObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exist : ${scriptFileName}",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist : ${scriptFileName}")
             return
         }
         val jsScript = JsScript(terminalFragment)

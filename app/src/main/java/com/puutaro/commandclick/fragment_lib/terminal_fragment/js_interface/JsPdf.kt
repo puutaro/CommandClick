@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.util.Log
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.itextpdf.text.pdf.PdfReader
 import com.itextpdf.text.pdf.parser.PdfTextExtractor
 import com.itextpdf.text.pdf.parser.SimpleTextExtractionStrategy
@@ -54,11 +54,7 @@ class JsPdf(
                 val readingMark = "extracting" +
                         ".".repeat(i)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        readingMark,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort(readingMark)
                 }
                 delay(2000)
             }

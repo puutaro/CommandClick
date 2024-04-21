@@ -6,7 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.webkit.DownloadListener
 import android.webkit.WebView
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 
 
@@ -22,11 +22,7 @@ object ExecDownLoadManager {
                 val i = Intent(Intent.ACTION_VIEW)
                 i.data = Uri.parse(url)
                 terminalFragment.startActivity(i)
-                Toast.makeText(
-                    context,
-                    "Select download browser",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("Select download browser")
             } catch(e: Exception){
                 openChorme(
                     context,
@@ -51,11 +47,7 @@ object ExecDownLoadManager {
         intent.setPackage("com.android.chrome")
         try {
             context.startActivity(intent)
-            Toast.makeText(
-                context,
-                "Select download link by chrome",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Select download link by chrome")
         } catch (ex: ActivityNotFoundException) {
             // Chrome browser presumably not installed so allow user to choose instead
             intent.setPackage(null)

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.AsciiArtJsDialog
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.dialog.CopyJsDialog
@@ -143,11 +143,7 @@ class JsDialog(
                 formCommandVariables
             )
         } catch(e: Exception){
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
             return String()
         }
     }

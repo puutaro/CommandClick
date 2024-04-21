@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -20,7 +20,6 @@ import java.io.File
 class JsQrGetter(
     private val terminalFragment: TerminalFragment
 ) {
-    private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap = terminalFragment.readSharePreferenceMap
     private val currentAppDirPath = SharePrefTool.getCurrentAppDirPath(
@@ -84,11 +83,7 @@ class JsQrGetter(
         if(
             File(filePath).isFile
         ) {
-            Toast.makeText(
-                context,
-                "Already exist: ${filePath}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Already exist: ${filePath}")
             return
         }
         val stockDirAndCompMap = mapOf(

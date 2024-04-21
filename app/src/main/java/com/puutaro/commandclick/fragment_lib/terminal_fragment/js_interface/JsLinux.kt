@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuFiles
@@ -16,11 +16,7 @@ class JsLinux(
     fun runCmd(
         cmdStr: String
     ): String {
-        Toast.makeText(
-            context,
-            cmdStr,
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort(cmdStr)
         return LinuxCmd.execCommand(
             context,
             listOf("sh", "-c", cmdStr).joinToString("\t")

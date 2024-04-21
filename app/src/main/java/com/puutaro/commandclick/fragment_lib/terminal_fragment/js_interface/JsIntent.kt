@@ -3,7 +3,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 import android.content.Intent
 import android.net.Uri
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.fragment.TerminalFragment
@@ -129,11 +129,7 @@ class JsIntent(
         if(
             !imageFilePathObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exist\n ${imageFilePath}",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist\n ${imageFilePath}")
         }
         IntentVariant.sharePngImage(
             imageFilePathObj,

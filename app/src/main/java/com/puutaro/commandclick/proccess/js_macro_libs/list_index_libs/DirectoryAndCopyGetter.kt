@@ -2,8 +2,8 @@ package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.app.Activity
 import android.content.Intent
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -14,16 +14,12 @@ import com.puutaro.commandclick.proccess.edit.lib.GetFileEditTool
 import com.puutaro.commandclick.proccess.list_index_for_edit.config_settings.ListSettingsForListIndex
 import com.puutaro.commandclick.util.file.FileSystems
 import com.puutaro.commandclick.util.file.NoFileChecker
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.io.File
-import java.net.URLDecoder
 
 class DirectoryAndCopyGetter(
     private val editFragment: EditFragment,
 ) {
-    private val context = editFragment.context
     private var parentDirPath = String()
     private var selectedItemForCopy = String()
 //    private val prefixRegex = Regex("^content.*fileprovider/root/storage")
@@ -40,7 +36,6 @@ class DirectoryAndCopyGetter(
             ) return@registerForActivityResult
             if(
                 NoFileChecker.isNoFile(
-                    editFragment.context,
                     parentDirPath,
                     selectedItemForCopy,
                 )
@@ -77,11 +72,7 @@ class DirectoryAndCopyGetter(
                     ListIndexForEditAdapter.listIndexTypeKey
                 )
             )
-            Toast.makeText(
-                context,
-                "copy file ok",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("copy file ok")
         }
     }
     fun get(

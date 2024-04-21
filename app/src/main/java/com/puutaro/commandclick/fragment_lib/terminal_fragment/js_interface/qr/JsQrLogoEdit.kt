@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.qr
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.js_macro_libs.exec_handler.ActionToolForQr
 import com.puutaro.commandclick.proccess.qr.qr_dialog_config.QrLogoEditDialogLauncher
@@ -15,7 +15,6 @@ import kotlinx.coroutines.withContext
 class JsQrLogoEdit(
     terminalFragment: TerminalFragment
 ) {
-    private val context = terminalFragment.context
     private val activity = terminalFragment.activity
     private val readSharePreferenceMap =
         terminalFragment.readSharePreferenceMap
@@ -42,11 +41,7 @@ class JsQrLogoEdit(
         val parentDirPath = ActionToolForQr.getParentDirPath(
             editFragment
         )
-        Toast.makeText(
-           context,
-           "show: ${parentDirPath}: ${clickFileName}",
-           Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("show: ${parentDirPath}: ${clickFileName}")
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.Main) {
                 QrLogoEditDialogLauncher.launch(

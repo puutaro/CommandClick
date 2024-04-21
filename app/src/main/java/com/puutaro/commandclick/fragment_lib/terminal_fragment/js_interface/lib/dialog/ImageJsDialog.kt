@@ -6,11 +6,11 @@ import android.graphics.BitmapFactory
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.util.image_tools.BitmapTool
@@ -41,11 +41,7 @@ class ImageJsDialog(
         if(
             !File(imageSrcFilePath).isFile
         ) {
-            Toast.makeText(
-                context,
-                "no image file\n ${imageSrcFilePath}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("no image file\n ${imageSrcFilePath}")
             return
         }
         terminalViewModel.onDialog = true

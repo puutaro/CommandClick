@@ -1,7 +1,6 @@
 package com.puutaro.commandclick.util.file
 
-import android.content.Context
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import java.io.File
 
 object NoFileChecker {
@@ -10,7 +9,6 @@ object NoFileChecker {
     private val blankListMark = "Let's press sync button at right bellow"
 
     fun isNoFile(
-        context: Context?,
         parentDirPath: String,
         selectedItem: String,
         message: String = "No file"
@@ -19,22 +17,14 @@ object NoFileChecker {
                 || selectedItem.trim() == blankListMark
                 || !File(parentDirPath, selectedItem).isFile
         if(isNoFile){
-            noFileToast(
-                context,
-                message,
-            )
+            noFileToast(message)
         }
         return isNoFile
     }
 
     private fun noFileToast(
-        context: Context?,
         message: String = "No file"
     ){
-        Toast.makeText(
-            context,
-            message,
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort(message)
     }
 }

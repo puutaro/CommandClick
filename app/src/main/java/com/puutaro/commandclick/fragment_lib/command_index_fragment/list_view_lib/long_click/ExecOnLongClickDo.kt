@@ -8,12 +8,12 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.FannelIndexListAdapter
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
@@ -143,12 +143,6 @@ object ExecOnLongClickDo {
                     currentAppDirPath,
                     selectedScriptName
                 )
-//                ContextMenuEnums.WRITE.itemName
-//                -> Editor(
-//                        currentAppDirPath,
-//                        selectedScriptName,
-//                        context
-//                    ).open()
                 ContextMenuEnums.DELETE.itemName
                 -> ConfirmDialogForDelete.show(
                     cmdIndexFragment,
@@ -444,11 +438,7 @@ private object UtilitySubMenuDialog {
                         shellFilePathByTermux
                     )
                     clipboard.setPrimaryClip(clip)
-                    Toast.makeText(
-                        context,
-                        "copy ok ${shellFilePathByTermux}",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort("copy ok ${shellFilePathByTermux}")
                 }
 
                 UtilitySubMenuEnums.COPY_FILE

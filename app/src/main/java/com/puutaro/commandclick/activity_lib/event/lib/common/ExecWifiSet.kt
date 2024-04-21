@@ -3,9 +3,9 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.wifi.ScanResult
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.activity_lib.permission.LocationSetter
 import com.puutaro.commandclick.view_model.activity.TerminalViewModel
@@ -56,19 +56,11 @@ object ExecWifiSet {
                     }
                     .onConnectionResult(object : ConnectionSuccessListener {
                         override fun success() {
-                            Toast.makeText(
-                                activity,
-                                "Connect ok",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            ToastUtils.showShort("Connect ok")
                         }
 
                         override fun failed(errorCode: ConnectionErrorCode) {
-                            Toast.makeText(
-                                activity,
-                                "Fail! location permission ok? $errorCode",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            ToastUtils.showShort("Fail! location permission ok? $errorCode")
                         }
                     })
                     .start()
@@ -80,20 +72,12 @@ object ExecWifiSet {
                     .setTimeout(50000)
                     .onConnectionResult(object : ConnectionSuccessListener {
                         override fun success() {
-                            Toast.makeText(
-                                activity,
-                                "Connect ok",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            ToastUtils.showShort("Connect ok")
                         }
 
                         override fun failed(errorCode: ConnectionErrorCode) {
-                                Toast.makeText(
-                                    activity,
-                                    "Fail! location permission ok? $errorCode",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                            }
+                            ToastUtils.showShort("Fail! location permission ok? $errorCode")
+                        }
                     })
                     .start()
             }

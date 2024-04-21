@@ -4,10 +4,10 @@ import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
@@ -25,7 +25,6 @@ import java.io.File
 class JsFileSelect(
     private val terminalFragment: TerminalFragment
 ) {
-    private val context = terminalFragment.context
     private val noSuffixMacroWord = FileSelectSpinnerViewProducer.noExtend
     private val totalExtendRegex = Regex("\\.[a-zA-Z0-9]*$")
     private val terminalViewModel: TerminalViewModel by terminalFragment.activityViewModels()
@@ -193,11 +192,7 @@ class JsFileSelect(
                     editFileNameForDialog
                 ).isFile
             ){
-                Toast.makeText(
-                    context,
-                    "not exist editFileNameForDialog ${editFileNameForDialog}",
-                    Toast.LENGTH_LONG
-                ).show()
+                ToastUtils.showLong("not exist editFileNameForDialog ${editFileNameForDialog}")
                 terminalViewModel.onDialog = false
                 return@setOnClickListener
             }
@@ -207,11 +202,7 @@ class JsFileSelect(
                     editFileNameForDialog
                 ).absolutePath
             )
-            Toast.makeText(
-                context,
-                "delete ok",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("delete ok")
             terminalViewModel.onDialog = false
             val recentLogFile = FileSystems.sortedFiles(
                 targetDirPath
@@ -255,11 +246,7 @@ class JsFileSelect(
         if(
             editFileNameForDialog == renameFileNameOkForDialog
         ){
-            Toast.makeText(
-                context,
-                "rename file is same current file",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("rename file is same current file")
             return
         }
         FileSystems.copyFile(
@@ -295,11 +282,7 @@ class JsFileSelect(
         if(
             !scriptFilePathObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exist: ${scriptFileName}",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist: ${scriptFileName}")
             return
         }
         val jsScript = JsScript(terminalFragment)

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.proccess.edit.lib.ListContentsSelectBoxTool
 import com.puutaro.commandclick.util.file.FileSystems
@@ -11,7 +11,6 @@ import java.io.File
 class JsListSelect(
     private val terminalFragment: TerminalFragment
 ) {
-    private val context = terminalFragment.context
     private val escapeCharHyphen = "-"
 
 
@@ -59,11 +58,7 @@ class JsListSelect(
         if(
             findSearchText.isNullOrEmpty()
         ) {
-            Toast.makeText(
-                context,
-                "no exist itemText: $itemText",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("no exist itemText: $itemText")
             return
         }
         val updateListContents = ReadText(
@@ -93,21 +88,13 @@ class JsListSelect(
         if(
             !searchListFileObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exist targetListFilePath ${targetListFilePath}",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist targetListFilePath ${targetListFilePath}")
             return
         }
         if(
             removeTargetItem.isEmpty()
         ) {
-            Toast.makeText(
-                context,
-                "blank removeTargetItem",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("blank removeTargetItem")
             return
         }
         val currentScriptObj = File(
@@ -116,11 +103,7 @@ class JsListSelect(
         if(
             !currentScriptObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exist currentScriptPath $currentScriptPath",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist currentScriptPath $currentScriptPath")
             return
         }
         removeItemInListFileCon(

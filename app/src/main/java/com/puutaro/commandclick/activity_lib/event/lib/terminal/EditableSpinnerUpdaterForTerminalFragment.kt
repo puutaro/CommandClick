@@ -4,7 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.ArrayAdapter
 import android.widget.Spinner
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.settings.SharePrefferenceSetting
 import com.puutaro.commandclick.util.state.SharePrefTool
@@ -64,11 +64,7 @@ object EditableSpinnerUpdaterForTerminalFragment {
                 it != throughMark
                         && it != variableValue
             }
-            Toast.makeText(
-                activity,
-                spinnerId.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(spinnerId.toString())
             CoroutineScope(Dispatchers.Main).launch {
                 execSpinnerUpdate(
                     spinnerInEditFragment,
@@ -78,11 +74,7 @@ object EditableSpinnerUpdaterForTerminalFragment {
             }
         } catch(e: Exception){
             Log.e("edit", e.toString())
-            Toast.makeText(
-                activity,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
         }
     }
 

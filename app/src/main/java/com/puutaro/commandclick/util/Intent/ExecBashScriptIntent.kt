@@ -2,7 +2,7 @@ package com.puutaro.commandclick.util.Intent
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.termux.shared.termux.TermuxConstants
 
 
@@ -20,11 +20,9 @@ object ExecBashScriptIntent {
             )
             context?.startService(intent)
         } catch(e: Exception) {
-            Toast.makeText(
-                context,
-                "failure intent to Termux \n Does add permission or start it?",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(
+                "failure intent to Termux \n Does add permission or start it?"
+            )
         }
     }
 }

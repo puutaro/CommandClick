@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.filer.FileRenamer
@@ -46,7 +46,6 @@ object ExecRenameFile {
         editFragment: EditFragment,
         selectedItem: String,
     ){
-        val context = editFragment.context ?: return
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
@@ -55,7 +54,6 @@ object ExecRenameFile {
 
         if(
             NoFileChecker.isNoFile(
-                context,
                 parentDirPath,
                 selectedItem,
             )
@@ -71,7 +69,6 @@ object ExecRenameFile {
         editFragment: EditFragment,
         listIndexPosition: Int,
     ){
-        val context = editFragment.context ?: return
         val binding = editFragment.binding
         val listIndexForEditAdapter =
             binding.editListRecyclerView.adapter as ListIndexForEditAdapter
@@ -88,11 +85,7 @@ object ExecRenameFile {
             tsvPath
         ).textToList().contains(selectedTsvLine)
         if(!isExist){
-            Toast.makeText(
-                context,
-                "No exist",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("No exist")
             return
         }
         TsvLineRenamer.rename(

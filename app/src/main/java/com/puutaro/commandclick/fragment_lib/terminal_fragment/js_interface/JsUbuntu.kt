@@ -1,16 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
 import com.puutaro.commandclick.common.variable.network.UsePort
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
-import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system.JsAction
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
-import com.puutaro.commandclick.proccess.js_macro_libs.common_libs.JsActionTool
 import com.puutaro.commandclick.proccess.ubuntu.Shell2Http
 import com.puutaro.commandclick.proccess.ubuntu.SshManager
 import com.puutaro.commandclick.proccess.ubuntu.UbuntuController
@@ -58,11 +56,7 @@ class JsUbuntu(
         if (
             !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
         ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Launch ubuntu")
             return String()
         }
         return Shell2Http.runCmd(
@@ -86,11 +80,7 @@ class JsUbuntu(
         if(
             !UbuntuFiles(context).ubuntuLaunchCompFile.isFile
         ) {
-            Toast.makeText(
-                context,
-                "Launch ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Launch ubuntu")
             return  String()
         }
         val monitorFileName = UsePath.decideMonitorName(monitorNum)
@@ -170,11 +160,7 @@ class JsUbuntu(
                     }
                     withContext(Dispatchers.Main) boot@ {
                         if( i % 10 != 0) return@boot
-                        Toast.makeText(
-                            context,
-                            "boot..",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("boot..")
                     }
                     delay(300)
                 }
@@ -189,11 +175,7 @@ class JsUbuntu(
             }
             if(retryTimesProcess == bootFailureTimes){
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        "boot failure",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort("boot failure")
                 }
                 return@launch
             }
@@ -217,11 +199,7 @@ class JsUbuntu(
                         val remainder = i % 10
                         if( remainder != 0) return@boot
                         val quotient = i / 10
-                        Toast.makeText(
-                            context,
-                            "ready${".".repeat(quotient)}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("ready${".".repeat(quotient)}")
                     }
                     delay(500)
                 }
@@ -251,11 +229,7 @@ class JsUbuntu(
         if(
             !UbuntuFiles(context).ubuntuSetupCompFile.isFile
         ){
-            Toast.makeText(
-                context,
-                "Setup ubuntu",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Setup ubuntu")
             return
         }
         if(
@@ -269,11 +243,7 @@ class JsUbuntu(
                 for (i in 1..50) {
                     withContext(Dispatchers.Main) toast@ {
                         if(i % 5 != 0) return@toast
-                        Toast.makeText(
-                            context,
-                            "boot${".".repeat(i / 10 + 1)}",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("boot${".".repeat(i / 10 + 1)}")
                     }
                     if (
                         LinuxCmd.isBasicProcess(context)
@@ -286,18 +256,10 @@ class JsUbuntu(
             }
         }
         if(!isBootSuccess) {
-            Toast.makeText(
-                context,
-                "boot failure",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("boot failure")
             return
         }
-        Toast.makeText(
-            context,
-            "boot ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("boot ok")
     }
 
     @JavascriptInterface

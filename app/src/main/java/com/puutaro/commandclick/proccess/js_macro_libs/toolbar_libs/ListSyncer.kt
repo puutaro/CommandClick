@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.toolbar_libs
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.proccess.broadcast.BroadcastSender
@@ -12,11 +12,7 @@ object ListSyncer {
         val context = editFragment.context
             ?: return
 
-        Toast.makeText(
-            context,
-            "sync ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("sync ok")
         BroadcastSender.normalSend(
             context,
             BroadCastIntentSchemeForEdit.UPDATE_INDEX_LIST.action

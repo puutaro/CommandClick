@@ -2,7 +2,7 @@ package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface
 
 import android.util.Log
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.github.doyaaaaaken.kotlincsv.dsl.csvReader
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.lib.ToastErrMessage
@@ -85,11 +85,7 @@ class JsCsv(
                 val readingMark = "reading" +
                         ".".repeat(i)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        readingMark,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort(readingMark)
                 }
                 delay(2000)
             }
@@ -120,11 +116,7 @@ class JsCsv(
             else -> {
                 terminalFragment.rowsMap[tag] = emptyList()
                 terminalFragment.headerMap[tag] = emptyList()
-                Toast.makeText(
-                    context,
-                    "Extend must be csv or tsv",
-                    Toast.LENGTH_LONG
-                ).show()
+                ToastUtils.showLong("Extend must be csv or tsv")
                 return
             }
         }
@@ -180,11 +172,7 @@ class JsCsv(
         } catch(e: Exception) {
             terminalFragment.rowsMap[tag] = emptyList()
             terminalFragment.headerMap[tag] = emptyList()
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
         }
     }
 
@@ -290,11 +278,7 @@ class JsCsv(
                     ?: String()
             }.joinToString("\n")
         } catch (e: Exception){
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
             return String()
         }
     }
@@ -407,11 +391,7 @@ class JsCsv(
                 val selectingMark = "column selecting" +
                         ".".repeat(i)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        selectingMark,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort(selectingMark)
                 }
                 delay(2000)
             }
@@ -494,11 +474,7 @@ class JsCsv(
                 val filteringMark = "filtering" +
                         ".".repeat(i)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(
-                        context,
-                        filteringMark,
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    ToastUtils.showShort(filteringMark)
                 }
                 delay(2000)
             }

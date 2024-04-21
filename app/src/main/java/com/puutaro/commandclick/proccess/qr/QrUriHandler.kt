@@ -1,13 +1,12 @@
 package com.puutaro.commandclick.proccess.qr
 
-import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.CalendarContract
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.extra.FileDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.GitDownloadExtra
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
@@ -38,7 +37,7 @@ import kotlinx.coroutines.withContext
 object QrUriHandler {
 
     private val jsDescSeparator = QrSeparator.sepalator.str
-    private val keyMissingErrStr = "Must specify %s"
+    private const val keyMissingErrStr = "Must specify %s"
 
     fun handle(
         fragment: Fragment,
@@ -126,11 +125,7 @@ object QrUriHandler {
         copyString: String,
     ){
         JsUtil(fragment).copyToClipboard(copyString, 10)
-        Toast.makeText(
-            fragment.context,
-            "Copy ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("Copy ok")
     }
 
 
@@ -144,13 +139,11 @@ object QrUriHandler {
         val context = fragment.context
         val cpFileMap = QrMapper.convertScanConToMap(cpQrString)
         val mainUrlSrc = getRequireKey(
-            context,
             cpFileMap,
             CpFileKey.ADDRESS.key,
         ) ?: return
         val mainUrl = QrMapper.makeMainUrl(mainUrlSrc)
         val filePath = getRequireKey(
-            context,
             cpFileMap,
             CpFileKey.PATH.key,
         ) ?: return
@@ -208,7 +201,6 @@ object QrUriHandler {
             ?: return
         val scpDirMap = QrMapper.convertScanConToMap(cpQrString)
         val srcDirPath = getRequireKey(
-            context,
             scpDirMap,
             ScpDirKey.DIR_PATH.key,
         ) ?: return
@@ -217,22 +209,18 @@ object QrUriHandler {
             currentAppDirPath,
         )
         val ipv4Address = getRequireKey(
-            context,
             scpDirMap,
             ScpDirKey.IPV4AD.key,
         ) ?: return
         val port = getRequireKey(
-            context,
             scpDirMap,
             ScpDirKey.PORT.key,
         ) ?: return
         val userName = getRequireKey(
-            context,
             scpDirMap,
             ScpDirKey.USER_NAME.key,
         ) ?: return
         val password = getRequireKey(
-            context,
             scpDirMap,
             ScpDirKey.PASSWORD.key,
         ) ?: return
@@ -314,14 +302,12 @@ object QrUriHandler {
             onGitMap.isEmpty()
         ) return
         val prefix = getRequireKey(
-            context,
             onGitMap,
             OnGitKey.PREFIX.key,
         ) ?: return
         val fannelListPath = onGitMap.get(OnGitKey.LIST_PATH.key)
         val parentDirRelativePathPATH = onGitMap.get(OnGitKey.DIR_PATH.key)
         val fannelRawName = getRequireKey(
-            context,
             onGitMap,
             OnGitKey.NAME.key,
         ) ?: return
@@ -492,7 +478,6 @@ object QrUriHandler {
     }
 
     fun getRequireKey(
-        context: Context?,
         scanConMap: Map<String, String?>,
         keyName: String,
     ): String? {
@@ -500,11 +485,7 @@ object QrUriHandler {
         if(
             targetValue.isNullOrEmpty()
         ) {
-            Toast.makeText(
-                context,
-                keyMissingErrStr.format(keyName),
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(keyMissingErrStr.format(keyName))
             return null
         }
         return targetValue

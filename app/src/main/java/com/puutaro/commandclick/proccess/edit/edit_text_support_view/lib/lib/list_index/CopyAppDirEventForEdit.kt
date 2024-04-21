@@ -1,21 +1,18 @@
 package com.puutaro.commandclick.proccess.edit.edit_text_support_view.lib.lib.list_index
 
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
-import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.util.file.FileSystems
 import java.io.File
 
 object CopyAppDirEventForEdit {
 
     fun execCopyAppDir(
-        editFragment: EditFragment,
         currentAppDirPath: String,
         scriptScriptName: String,
         editText: AutoCompleteTextView
     ){
-        val context = editFragment.context
         val destiDirNameEditable = editText.text
         if(
             destiDirNameEditable.isNullOrEmpty()
@@ -38,11 +35,7 @@ object CopyAppDirEventForEdit {
                 destiAppFileName
             ).isFile
         ) {
-            Toast.makeText(
-                context,
-                "Exist: ${destiDirName}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Exist: ${destiDirName}")
             return
         }
         FileSystems.createFiles(

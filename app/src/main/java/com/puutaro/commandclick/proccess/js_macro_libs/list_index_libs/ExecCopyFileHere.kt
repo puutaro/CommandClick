@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -19,11 +19,7 @@ object ExecCopyFileHere {
         val type = ListIndexEditConfig.getListIndexType(
             editFragment
         )
-        Toast.makeText(
-            editFragment.context,
-            "Copy ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("Copy ok")
         when(type){
             TypeSettingsForListIndex.ListIndexTypeKey.INSTALL_FANNEL
             -> {}

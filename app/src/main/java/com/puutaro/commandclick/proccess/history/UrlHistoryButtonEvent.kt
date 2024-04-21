@@ -14,8 +14,8 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
@@ -311,22 +311,14 @@ class UrlHistoryButtonEvent(
                 terminalViewModel.onDialog = false
                 when(menuItem.itemId){
                     UrlHistoryMenuEnums.COPY_URL.itemId -> {
-                        Toast.makeText(
-                            context,
-                            "copy",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("copy")
                         execCopyUrl(
                             listSelectedView,
                             selectedUrl,
                         )
                     }
                     UrlHistoryMenuEnums.DELETE.itemId -> {
-                        Toast.makeText(
-                            context,
-                            "delete",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        ToastUtils.showShort("delete")
                         execDeleteUrl(
                             selectedTitle,
                             selectedUrl,
@@ -497,13 +489,11 @@ class UrlHistoryButtonEvent(
             url == selectedUrl
         }.isNotEmpty()
         if(isBottomScript) {
-            Toast.makeText(
-                context,
+            ToastUtils.showShort(
                 "Bottom script must be deleted bellow\n" +
-                        "\tat ${CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH}\n" +
-                        "\t\tin start up script",
-                Toast.LENGTH_SHORT
-            ).show()
+                    "\tat ${CommandClickScriptVariable.HOME_SCRIPT_URLS_PATH}\n" +
+                    "\t\tin start up script"
+            )
             return
         }
         val urlHistoryDirPath = "${currentAppDirPath}/${UsePath.cmdclickUrlSystemDirRelativePath}"

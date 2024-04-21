@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.proccess.monitor
 
 import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.variant.ReadLines
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -87,11 +87,7 @@ object MonitorSizeManager {
         if (
             existEditExecuteTerminalFragment?.isVisible != true
         ) {
-            Toast.makeText(
-                context,
-                "no terminal",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("no terminal")
             return
         }
         val linearLayoutParam =

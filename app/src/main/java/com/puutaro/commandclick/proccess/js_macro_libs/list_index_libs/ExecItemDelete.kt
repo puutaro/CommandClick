@@ -40,12 +40,9 @@ object ExecItemDelete {
             TypeSettingsForListIndex.ListIndexTypeKey.NORMAL
             -> {}
         }
-        val context = editFragment.context
-            ?: return
         CoroutineScope(Dispatchers.Main).launch {
             if (
                 NoFileChecker.isNoFile(
-                    context,
                     parentDirPath,
                     selectedItem,
                 )

@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.dialog.JsDialog
 import com.puutaro.commandclick.util.map.CmdClickMap
@@ -34,11 +34,7 @@ class JsValEdit(
                 targetVariables,
             )
         } catch (e: Exception){
-            Toast.makeText(
-                context,
-                "$e",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(e.toString())
             LogSystems.stdErr(
                 context,
                 "$e"

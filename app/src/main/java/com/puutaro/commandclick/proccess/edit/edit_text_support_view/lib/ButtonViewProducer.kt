@@ -4,6 +4,7 @@ import android.content.Intent
 import android.view.MotionEvent
 import android.widget.*
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.common.variable.variant.SettingCmdArgs
 import com.puutaro.commandclick.common.variable.variant.SettingVariableSelects
@@ -573,7 +574,6 @@ object ButtonViewProducer {
         listConSlSpiOptionsStr: String?,
         setFOptionMap: Map<String, String>
     ){
-        val context = editFragment.context
         val suffixList = setFOptionMap.get(
             SET_F_OPTION_MAP_KEY.ListAdd.suffix.name
         )?.let {
@@ -634,11 +634,7 @@ object ButtonViewProducer {
             if(
                 selectedScript == currentScriptName
             ) {
-                Toast.makeText(
-                    context,
-                    "this script cannot register\n ${selectedScript}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("this script cannot register\n ${selectedScript}")
                 return@launch
             }
             val listFilePath = getListPathForDragSort(
@@ -657,11 +653,7 @@ object ButtonViewProducer {
                     it == selectedScript
                 }.isNotEmpty()
             ) {
-                Toast.makeText(
-                    context,
-                    "this script already register\n ${selectedScript}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("this script already register\n ${selectedScript}")
                 return@launch
             }
             withContext(Dispatchers.IO){

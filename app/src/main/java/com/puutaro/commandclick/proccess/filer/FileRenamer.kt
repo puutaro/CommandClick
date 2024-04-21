@@ -4,11 +4,11 @@ import android.app.Dialog
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForCmdIndex
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
@@ -92,11 +92,7 @@ object FileRenamer {
             if(
                 inputEditable.isNullOrEmpty()
             ) {
-                Toast.makeText(
-                    context,
-                    "No type item name",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("No type item name")
                 return@setOnClickListener
             }
             val renamedFileName = UsePath.compExtend(

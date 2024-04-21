@@ -6,7 +6,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.common.variable.variant.PageSearchToolbarButtonVariant
@@ -77,20 +77,12 @@ class PageSearchToolbarManagerForEdit(
                             searchText,
                         )
                     }catch(e: Exception){
-                        Toast.makeText(
-                            context,
-                            e.toString(),
-                            Toast.LENGTH_LONG
-                        ).show()
+                        ToastUtils.showLong(e.toString())
                     }
                 }
             })
         } catch(e: Exception){
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
         }
     }
 

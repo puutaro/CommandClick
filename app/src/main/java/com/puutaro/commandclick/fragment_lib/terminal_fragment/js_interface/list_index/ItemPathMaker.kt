@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.list_index
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
 import com.puutaro.commandclick.fragment.EditFragment
@@ -18,7 +18,6 @@ object ItemPathMaker {
         selectedItem: String,
         listIndexPosition: Int,
     ): String? {
-        val context = editFragment.context
         val type = ListIndexEditConfig.getListIndexType(
             editFragment
         )
@@ -38,21 +37,13 @@ object ItemPathMaker {
         if(
             extractedPath.isNullOrEmpty()
         ) {
-            Toast.makeText(
-                context,
-                "Not exist: ${extractedPath}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Not exist: ${extractedPath}")
             return null
         }
         if(
             !File(extractedPath).isFile
         ) {
-            Toast.makeText(
-                context,
-                "Not exist: ${extractedPath}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("Not exist: ${extractedPath}")
             return null
         }
         return extractedPath
@@ -75,8 +66,6 @@ object ItemPathMaker {
         editFragment: EditFragment,
         listIndexPosition: Int,
     ): String? {
-        val context = editFragment.context
-            ?: return null
         val binding = editFragment.binding
         val listIndexForEditAdapter =
             binding.editListRecyclerView.adapter as ListIndexForEditAdapter
@@ -93,11 +82,7 @@ object ItemPathMaker {
             tsvPath
         ).textToList().contains(selectedTsvLine)
         if(!isExist){
-            Toast.makeText(
-                context,
-                "No exist tsv path",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("No exist tsv path")
             return null
         }
         val titleFileNameAndPathConPair =

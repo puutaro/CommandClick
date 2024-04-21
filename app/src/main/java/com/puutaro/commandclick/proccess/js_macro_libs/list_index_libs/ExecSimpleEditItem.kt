@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.proccess.js_macro_libs.list_index_libs
 
 import android.content.Intent
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeForEdit
 import com.puutaro.commandclick.component.adapter.ListIndexForEditAdapter
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.TitleFileNameAndPathConPairForListIndexAdapter
@@ -45,7 +45,6 @@ object ExecSimpleEditItem {
         editFragment: EditFragment,
         selectedItem: String,
     ){
-        val context = editFragment.context
         val parentDirPath = ListSettingsForListIndex.ListIndexListMaker.getFilterDir(
             editFragment,
             ListIndexForEditAdapter.indexListMap,
@@ -53,7 +52,6 @@ object ExecSimpleEditItem {
         )
         if(
             NoFileChecker.isNoFile(
-                context,
                 parentDirPath,
                 selectedItem,
             )
@@ -72,7 +70,6 @@ object ExecSimpleEditItem {
         editFragment: EditFragment,
         listIndexPosition: Int,
     ){
-        val context = editFragment.context ?: return
         val binding = editFragment.binding
         val listIndexForEditAdapter =
             binding.editListRecyclerView.adapter as ListIndexForEditAdapter
@@ -89,11 +86,7 @@ object ExecSimpleEditItem {
             tsvPath
         ).textToList().contains(selectedTsvLine)
         if(!isExist){
-            Toast.makeText(
-                context,
-                "No exist",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("No exist")
             return
         }
         val titleFileNameAndPathConPair =

@@ -42,7 +42,6 @@ object BroadcastHandlerForTerm {
             )
             BroadCastIntentSchemeTerm.MONITOR_TOAST
             -> MonitorToast.launch(
-                terminalFragment,
                 intent
             )
             BroadCastIntentSchemeTerm.DEBUGGER_NOTI

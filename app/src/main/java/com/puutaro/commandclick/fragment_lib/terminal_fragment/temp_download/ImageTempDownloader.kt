@@ -1,9 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.temp_download
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.util.Base64
-import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.bumptech.glide.Glide
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -44,10 +42,7 @@ object ImageTempDownloader {
                     terminalFragment,
                     url
                 )
-                else -> fromBase64(
-                    terminalFragment,
-                    url
-                )
+                else -> fromBase64(url)
 
             }
         }
@@ -57,7 +52,6 @@ object ImageTempDownloader {
         terminalFragment: TerminalFragment,
         url: String
     ){
-        val context = terminalFragment.context
         val bitmap =
             makeBitMap(
                 terminalFragment,
@@ -79,13 +73,11 @@ object ImageTempDownloader {
     }
 
     private suspend fun fromBase64(
-        terminalFragment: TerminalFragment,
         fileContent: String?
     ) {
         if(
             fileContent.isNullOrEmpty()
         ) return
-        val context = terminalFragment.context
         try {
             val attachment = parseBase64(fileContent)
             val extend = fileContent.removePrefix(
@@ -123,7 +115,7 @@ object ImageTempDownloader {
     }
 
 
-    suspend fun makeBitMap(
+    private suspend fun makeBitMap(
         terminalFragment: TerminalFragment,
         url: String
     ): Bitmap {
@@ -158,15 +150,5 @@ object ImageTempDownloader {
             e.printStackTrace()
         }
         return ""
-    }
-
-    private fun finishToast(
-        context: Context?,
-    ){
-        Toast.makeText(
-            context,
-            "File downloaded",
-            Toast.LENGTH_SHORT
-        ).show()
     }
 }

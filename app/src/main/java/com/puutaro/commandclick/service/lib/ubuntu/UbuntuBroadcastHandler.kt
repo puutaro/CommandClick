@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.service.lib.ubuntu
 
 import android.content.Intent
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.common.variable.intent.scheme.BroadCastIntentSchemeUbuntu
 import com.puutaro.commandclick.common.variable.intent.extra.UbuntuServerIntentExtra
@@ -308,11 +308,7 @@ object UbuntuBroadcastHandler {
             ubuntuService.ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) {
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                    ubuntuService.applicationContext,
-                    "Launch ubuntu",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("Launch ubuntu")
             }
             return
         }
@@ -339,11 +335,7 @@ object UbuntuBroadcastHandler {
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) {
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                    ubuntuService.applicationContext,
-                    "Launch ubuntu",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("Launch ubuntu")
             }
             return
         }
@@ -381,17 +373,12 @@ object UbuntuBroadcastHandler {
         ubuntuService: UbuntuService,
         intent: Intent
     ){
-        val context = ubuntuService.applicationContext
         val ubuntuFiles = ubuntuService.ubuntuFiles
         if(
             ubuntuFiles?.ubuntuLaunchCompFile?.isFile != true
         ) {
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                   context,
-                    "Launch ubuntu",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("Launch ubuntu")
             }
             return
         }
@@ -432,11 +419,7 @@ object UbuntuBroadcastHandler {
             !LinuxCmd.isBasicProcess(context)
         ){
             withContext(Dispatchers.Main){
-                Toast.makeText(
-                    context,
-                    "Restart proc: lost base proc",
-                    Toast.LENGTH_LONG
-                ).show()
+                ToastUtils.showLong("Restart proc: lost base proc")
             }
             val processRestartDelayTime = 3000L
             withContext(Dispatchers.IO){
@@ -485,11 +468,7 @@ object UbuntuBroadcastHandler {
             !ubuntuFiles.ubuntuLaunchCompFile.isFile
         ) {
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(
-                    context,
-                    "Launch ubuntu",
-                    Toast.LENGTH_SHORT
-                ).show()
+                ToastUtils.showShort("Launch ubuntu")
             }
             return
         }

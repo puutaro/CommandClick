@@ -11,11 +11,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.FannelHistoryAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -202,11 +202,7 @@ class CmdClickHistoryButtonEvent (
                 if(
                     !File(selectedAppDirPath).isDirectory
                 ) {
-                    Toast.makeText(
-                        fragment.context,
-                        "No exist: ${selectedAppDirPath}",
-                        Toast.LENGTH_LONG
-                    ).show()
+                    ToastUtils.showLong("No exist: ${selectedAppDirPath}")
                     FileSystems.removeFiles(
                         selectedHistoryFilePath
                     )

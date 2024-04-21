@@ -1,6 +1,6 @@
 package com.puutaro.commandclick.activity_lib.event.lib.common
 
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.activity.MainActivity
 import com.puutaro.commandclick.common.variable.path.UsePath
@@ -58,7 +58,6 @@ object ExecUpdateNoSaveUrlPaths {
         currentAppDirPath: String,
         fannelName: String,
     ){
-        val context = terminalFragment.context
         val domain =
             makeDomain(terminalFragment)
                 ?: return
@@ -87,28 +86,19 @@ object ExecUpdateNoSaveUrlPaths {
             noScrollSaveUrlsFileCon
         )
         terminalFragment.noScrollSaveUrls = noScrollSaveUrlsFileCon.split("\n")
-        Toast.makeText(
-            context,
-            "save ok",
-            Toast.LENGTH_SHORT
-        ).show()
+        ToastUtils.showShort("save ok")
     }
 
     private fun makeDomain(
         terminalFragment: TerminalFragment,
     ): String? {
-        val context = terminalFragment.context
         val url = terminalFragment.binding.terminalWebView.url
             ?: return null
         val isUrl = url.startsWith(WebUrlVariables.filePrefix)
                 || url.startsWith(WebUrlVariables.httpPrefix)
                 || url.startsWith(WebUrlVariables.httpsPrefix)
         if(!isUrl) {
-            Toast.makeText(
-                context,
-                "no url",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("no url")
             return null
         }
         if(

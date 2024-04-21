@@ -8,10 +8,10 @@ import android.webkit.WebView
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
 import com.budiyev.android.codescanner.CodeScannerView
@@ -109,8 +109,7 @@ class QrScanJsDialog(
         codeScanner.decodeCallback = DecodeCallback {
             CoroutineScope(Dispatchers.Main).launch {
                 val decodeText = it.text
-//                    .replace("\\`", "`").replace("\\$", "$");
-                Toast.makeText(context, "Scan result: ${decodeText}", Toast.LENGTH_LONG).show()
+                ToastUtils.showLong("Scan result: ${decodeText}")
                 codeScanner.releaseResources()
                 qrScanDialogObj?.dismiss()
                 terminalViewModel.onDialog = false
@@ -125,8 +124,7 @@ class QrScanJsDialog(
         }
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
             CoroutineScope(Dispatchers.Main).launch {
-                Toast.makeText(context, "Camera initialization error: ${it.message}",
-                    Toast.LENGTH_LONG).show()
+                ToastUtils.showLong("Camera initialization error: ${it.message}")
                 dismissProcess(codeScanner)
             }
         }

@@ -2,7 +2,7 @@ package com.puutaro.commandclick.proccess.intent
 
 import android.content.Context
 import android.content.Intent
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.intent.extra.MusicPlayerIntentExtra
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.service.MusicPlayerService
@@ -28,11 +28,7 @@ object MediaPlayerIntentSender {
                 extraSettingMapStr,
             )
         }catch (e: Exception){
-            Toast.makeText(
-                context,
-                e.toString(),
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong(e.toString())
         }
     }
 

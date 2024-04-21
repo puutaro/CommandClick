@@ -1,8 +1,8 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.edit
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
 import androidx.fragment.app.activityViewModels
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.TerminalFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.variable.EditTextSupportViewId
 import com.puutaro.commandclick.proccess.edit.lib.EditVariableName
@@ -111,11 +111,7 @@ class JsEdit(
         if(
             !editPathObj.isFile
         ) {
-            Toast.makeText(
-                context,
-                "no exsit\n ${editPath}",
-                Toast.LENGTH_LONG
-            ).show()
+            ToastUtils.showLong("no exist\n ${editPath}")
             return
         }
         val removedUrlList = ReadText(

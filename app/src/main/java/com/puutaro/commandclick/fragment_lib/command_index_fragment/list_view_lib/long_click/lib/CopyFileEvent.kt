@@ -1,15 +1,14 @@
 package com.puutaro.commandclick.fragment_lib.command_index_fragment.list_view_lib.long_click.lib
 
 import android.app.Dialog
-import android.content.Context
 import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.fragment.CommandIndexFragment
@@ -138,7 +137,6 @@ class CopyFileEvent(
             File(selectedFannelPath),
         )
         copyResultToast(
-            context,
             selectedFannelPath
         )
         CommandListManager.execListUpdateForCmdIndex(
@@ -150,7 +148,6 @@ class CopyFileEvent(
 }
 
 private fun copyResultToast(
-    context: Context?,
     selectedShellFilePath: String
 ){
     if(
@@ -158,18 +155,14 @@ private fun copyResultToast(
             selectedShellFilePath
         ).isFile
     ){
-        Toast.makeText(
-            context,
+        ToastUtils.showShort(
             "copy, ok\n" +
-                    "file: ${selectedShellFilePath}",
-            Toast.LENGTH_SHORT
-        ).show()
+                "file: ${selectedShellFilePath}"
+        )
         return
     }
-    Toast.makeText(
-        context,
+    ToastUtils.showLong(
         "copy, failure\n" +
-                "file: ${selectedShellFilePath}",
-        Toast.LENGTH_LONG
-    ).show()
+                "file: ${selectedShellFilePath}"
+    )
 }

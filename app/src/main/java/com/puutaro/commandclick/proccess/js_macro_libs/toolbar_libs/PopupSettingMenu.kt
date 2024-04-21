@@ -5,10 +5,10 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.PopupWindow
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.appcompat.widget.LinearLayoutCompat
 import androidx.core.view.isVisible
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.R
 import com.puutaro.commandclick.component.adapter.SubMenuAdapter
 import com.puutaro.commandclick.custom_view.NoScrollListView
@@ -46,11 +46,7 @@ object PopupSettingMenu {
         if (
             existEditExecuteTerminalFragment == null
         ) {
-            Toast.makeText(
-                context,
-                "no working",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort("no working")
             return
         }
         createPopUpForSetting(

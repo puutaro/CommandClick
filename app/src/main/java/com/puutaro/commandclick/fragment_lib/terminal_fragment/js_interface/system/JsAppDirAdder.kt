@@ -1,7 +1,7 @@
 package com.puutaro.commandclick.fragment_lib.terminal_fragment.js_interface.system
 
 import android.webkit.JavascriptInterface
-import android.widget.Toast
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.common.variable.path.UsePath
 import com.puutaro.commandclick.common.variable.variables.CommandClickScriptVariable
 import com.puutaro.commandclick.component.adapter.lib.list_index_adapter.ExecAddForListIndexAdapter
@@ -76,11 +76,7 @@ class JsAppDirAdder(
                 }
             }
         } catch (e: Exception){
-            Toast.makeText(
-                context,
-                "${e}",
-                Toast.LENGTH_SHORT
-            ).show()
+            ToastUtils.showShort(e.toString())
             LogSystems.stdErr(
                 context,
                 "$e"

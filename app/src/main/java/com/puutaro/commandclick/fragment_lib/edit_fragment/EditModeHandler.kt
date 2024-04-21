@@ -1,14 +1,12 @@
 package com.puutaro.commandclick.fragment_lib.edit_fragment
 
-import android.widget.Toast
-import com.puutaro.commandclick.databinding.EditFragmentBinding
+import com.blankj.utilcode.util.ToastUtils
 import com.puutaro.commandclick.fragment.EditFragment
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.IsCmdEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.UpdateLastModifiedForAppHistory
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.EditTextProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.processor.ToolbarButtonProducerForEdit
 import com.puutaro.commandclick.fragment_lib.edit_fragment.common.ToolbarButtonBariantForEdit
-import com.puutaro.commandclick.proccess.ubuntu.BusyboxExecutor
 import kotlinx.coroutines.*
 
 
@@ -111,22 +109,10 @@ class EditModeHandler(
                 delay(200)
             }
             withContext(Dispatchers.Main){
-                Toast.makeText(
-                    context,
-                    "No editable variable therefore, go back",
-                    Toast.LENGTH_LONG
-                ).show()
+                ToastUtils.showLong("No editable variable therefore, go back")
                 val listener = context
                         as? EditFragment.OnInitEditFragmentListener
                 listener?.onInitEditFragment()
-//
-//                val listener = context as? EditFragment.onToolBarButtonClickListenerForEditFragment
-//                listener?.onToolBarButtonClickForEditFragment(
-//                    editFragment.tag,
-//                    ToolbarButtonBariantForEdit.CANCEL,
-//                    readSharePreferenceMap,
-//                    enableCmdEdit,
-//                )
             }
         }
     }
