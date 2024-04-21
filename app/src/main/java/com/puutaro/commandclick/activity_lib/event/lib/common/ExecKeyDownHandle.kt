@@ -3,7 +3,6 @@ package com.puutaro.commandclick.activity_lib.event.lib.common
 import android.content.Context
 import android.media.AudioManager
 import android.view.KeyEvent
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import com.blankj.utilcode.util.VolumeUtils
@@ -24,33 +23,21 @@ object ExecBackstackHandle {
         activity: MainActivity,
     ) {
         when(keyCode){
-            KeyEvent.KEYCODE_BACK -> doExecBackstack(activity)
-            KeyEvent.KEYCODE_VOLUME_UP -> {
-                val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
-                Toast.makeText(
-                    activity,
-                    "${curVol} -> ${curVol + 1}",
-                    Toast.LENGTH_SHORT
-                ).show()
-                VolumeUtils.setVolume(AudioManager.STREAM_MUSIC,curVol + 1, AudioManager.FLAG_SHOW_UI)
-            }
-            KeyEvent.KEYCODE_VOLUME_DOWN -> {
-                val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
-                Toast.makeText(
-                    activity,
-                    "${curVol} -> ${curVol - 1}",
-                    Toast.LENGTH_SHORT
-                ).show()
-                VolumeUtils.setVolume(AudioManager.STREAM_MUSIC,curVol - 1, AudioManager.FLAG_SHOW_UI)
-            }
+            KeyEvent.KEYCODE_BACK
+            -> BackstackManager.exec(activity)
+            KeyEvent.KEYCODE_VOLUME_UP
+            -> VolumeAdjuster.up()
+            KeyEvent.KEYCODE_VOLUME_DOWN
+            -> VolumeAdjuster.down()
         }
-//        if(keyCode != KeyEvent.KEYCODE_BACK) return
-//        doExecBackstack(activity)
-//        return
     }
 
 
-    private fun doExecBackstack(
+
+}
+
+private object BackstackManager {
+    fun exec(
         activity: MainActivity
     ){
         val targetFragmentInstance = TargetFragmentInstance()
@@ -102,104 +89,126 @@ object ExecBackstackHandle {
             cmdVariableEditFragmentTag,
         )
     }
-}
 
-
-private fun execBack(
-    activity: MainActivity,
-    terminalFragment: TerminalFragment,
-    currentBottomFragment: Fragment,
-    cmdVariableEditFragmentTag: String,
-){
-    val supportFragmentManager = activity.supportFragmentManager
-    val webVeiw = try {
-        terminalFragment.binding.terminalWebView
-    } catch(e: Exception) {
-        execPopBackStackImmediate(
-            activity,
-            supportFragmentManager,
-        )
-        return
-    }
-    val enableGoBack = webVeiw.canGoBack()
-    if (enableGoBack) {
-        webVeiw.goBack()
-        terminalFragment.goBackFlag = enableGoBack
-        return
-    }
-    when(currentBottomFragment){
-        is CommandIndexFragment -> {
-            MonitorSizeManager.changeForCmdIndexFragment(
-                currentBottomFragment
+    private fun execBack(
+        activity: MainActivity,
+        terminalFragment: TerminalFragment,
+        currentBottomFragment: Fragment,
+        cmdVariableEditFragmentTag: String,
+    ){
+        val supportFragmentManager = activity.supportFragmentManager
+        val webVeiw = try {
+            terminalFragment.binding.terminalWebView
+        } catch(e: Exception) {
+            execPopBackStackImmediate(
+                activity,
+                supportFragmentManager,
             )
             return
         }
-        is EditFragment -> {
-            EditLayoutViewHideShow.exec(
-                currentBottomFragment,
-                true
-            )
-            ExecTerminalLongOrShort.open<EditFragment>(
-                cmdVariableEditFragmentTag,
-                activity.supportFragmentManager,
-            )
+        val enableGoBack = webVeiw.canGoBack()
+        if (enableGoBack) {
+            webVeiw.goBack()
+            terminalFragment.goBackFlag = enableGoBack
+            return
+        }
+        when(currentBottomFragment){
+            is CommandIndexFragment -> {
+                MonitorSizeManager.changeForCmdIndexFragment(
+                    currentBottomFragment
+                )
+                return
+            }
+            is EditFragment -> {
+                EditLayoutViewHideShow.exec(
+                    currentBottomFragment,
+                    true
+                )
+                ExecTerminalLongOrShort.open<EditFragment>(
+                    cmdVariableEditFragmentTag,
+                    activity.supportFragmentManager,
+                )
+            }
         }
     }
+
+
+    private fun execPopBackStackImmediate(
+        activity: MainActivity,
+        supportFragmentManager: FragmentManager,
+    ){
+        if(
+            supportFragmentManager.backStackEntryCount == 0
+        ) {
+            activity.finish()
+            return
+        }
+        removeEditAndTermFragment(
+            activity,
+            supportFragmentManager,
+        )
+        supportFragmentManager.popBackStackImmediate()
+    }
+
+    private fun removeEditAndTermFragment(
+        activity: MainActivity,
+        supportFragmentManager: FragmentManager,
+    ){
+        val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
+        val currentAppDirPath = SharePrefTool.getStringFromSharePref(
+            sharedPref,
+            SharePrefferenceSetting.current_app_dir
+        )
+        val currentFannelName = SharePrefTool.getStringFromSharePref(
+            sharedPref,
+            SharePrefferenceSetting.current_fannel_name
+        )
+        val currentFannelState = SharePrefTool.getStringFromSharePref(
+            sharedPref,
+            SharePrefferenceSetting.current_fannel_state
+        )
+        val targetFragmentInstance = TargetFragmentInstance()
+        val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
+            activity,
+            currentAppDirPath,
+            currentFannelName,
+            currentFannelState,
+        )
+        val currentTerminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
+            activity,
+        )
+        val removeFragmentList = listOf(
+            currentEditFragment,
+            currentTerminalFragment
+        )
+        val transaction = supportFragmentManager.beginTransaction()
+        removeFragmentList.forEach {
+            if(it == null) return@forEach
+            transaction.remove(it)
+        }
+        transaction.commit()
+    }
 }
 
 
-private fun execPopBackStackImmediate(
-    activity: MainActivity,
-    supportFragmentManager: FragmentManager,
-){
-    if(
-        supportFragmentManager.backStackEntryCount == 0
-    ) {
-        activity.finish()
-        return
+private object VolumeAdjuster {
+    fun up(){
+        val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
+        val oneUpVol = curVol + 1
+        VolumeUtils.setVolume(
+            AudioManager.STREAM_MUSIC,
+            oneUpVol,
+            AudioManager.FLAG_SHOW_UI
+        )
     }
-    removeEditAndTermFragment(
-        activity,
-        supportFragmentManager,
-    )
-    supportFragmentManager.popBackStackImmediate()
-}
 
-private fun removeEditAndTermFragment(
-    activity: MainActivity,
-    supportFragmentManager: FragmentManager,
-){
-    val sharedPref = activity.getPreferences(Context.MODE_PRIVATE)
-    val currentAppDirPath = SharePrefTool.getStringFromSharePref(
-        sharedPref,
-        SharePrefferenceSetting.current_app_dir
-    )
-    val currentFannelName = SharePrefTool.getStringFromSharePref(
-        sharedPref,
-        SharePrefferenceSetting.current_fannel_name
-    )
-    val currentFannelState = SharePrefTool.getStringFromSharePref(
-        sharedPref,
-        SharePrefferenceSetting.current_fannel_state
-    )
-    val targetFragmentInstance = TargetFragmentInstance()
-    val currentEditFragment = targetFragmentInstance.getCurrentEditFragmentFromFragment(
-        activity,
-        currentAppDirPath,
-        currentFannelName,
-        currentFannelState,
-    )
-    val currentTerminalFragment = targetFragmentInstance.getCurrentTerminalFragment(
-        activity,
-    )
-    val removeFragmentList = listOf(
-        currentEditFragment,
-        currentTerminalFragment
-    )
-    val transaction = supportFragmentManager.beginTransaction()
-    removeFragmentList.forEach {
-        if(it == null) return@forEach
-        transaction.remove(it)
+    fun down(){
+        val curVol = VolumeUtils.getVolume(AudioManager.STREAM_MUSIC)
+        val oneDownVol = curVol - 1
+        VolumeUtils.setVolume(
+            AudioManager.STREAM_MUSIC,
+            oneDownVol,
+            AudioManager.FLAG_SHOW_UI
+        )
     }
-    transaction.commit()
 }
